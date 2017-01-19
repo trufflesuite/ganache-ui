@@ -1,0 +1,15 @@
+{
+  "name": "Zircon",
+  "productName": "Zircon",
+  "version": "0.0.1",
+  "description": "An Electron UI for TestRPC",
+  "main": "./main.js",
+  "author": {
+    "name": "John McDowall",
+    "email": "john@kantan.io",
+    "url": "https://github.com/johnmcdowall"
+  },
+  "license": "MIT",
+  "dependencies": {
+  }
+}
