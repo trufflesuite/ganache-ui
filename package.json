@@ -161,6 +161,11 @@
     "eslint-config-standard": "^6.2.1",
     "eslint-plugin-standard": "^2.0.1",
     "font-awesome": "^4.7.0",
+    "node-sass": "^4.3.0",
+    "postcss": "^5.2.11",
+    "postcss-import": "^9.1.0",
+    "postcss-loader": "^1.2.2",
+    "precss": "^1.4.0",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-redux": "^5.0.2",
@@ -168,6 +173,7 @@
     "react-router-redux": "^4.0.7",
     "redux": "^3.6.0",
     "redux-thunk": "^2.1.0",
+    "sass-loader": "^4.1.1",
     "source-map-support": "^0.4.8"
   },
   "devEngines": {

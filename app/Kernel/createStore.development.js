@@ -5,7 +5,7 @@ import { routerMiddleware, push } from 'react-router-redux'
 import createLogger from 'redux-logger'
 
 const actionCreators = {
-  push,
+  push
 }
 
 const logger = createLogger({
@@ -20,7 +20,7 @@ const router = routerMiddleware(hashHistory)
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
   ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
     // Options: http://zalmoxisus.github.io/redux-devtools-extension/API/Arguments.html
-    actionCreators,
+    actionCreators
   })
   : compose
 

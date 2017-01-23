@@ -11,6 +11,9 @@ import HtmlWebpackPlugin from 'html-webpack-plugin'
 import BabiliPlugin from 'babili-webpack-plugin'
 import baseConfig from './webpack.config.base'
 
+import precss from 'precss'
+import postcssImport from 'postcss-import'
+
 export default validate(merge(baseConfig, {
   devtool: 'cheap-module-source-map',
 
@@ -40,7 +43,9 @@ export default validate(merge(baseConfig, {
         test: /^((?!\.global).)*\.css$/,
         loader: ExtractTextPlugin.extract(
           'style-loader',
-          'css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]'
+          'css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
+          'sass',
+          'postcss'
         )
       },
 
@@ -56,6 +61,14 @@ export default validate(merge(baseConfig, {
         test: /\.(?:ico|gif|png|jpg|jpeg|webp)$/,
         loader: 'url-loader'
       }
+    ]
+  },
+
+  // We use PostCSS for autoprefixing and PreCSS.
+  postcss: function (webpack) {
+    return [
+      postcssImport(),
+      precss()
     ]
   },
 

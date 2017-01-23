@@ -7,6 +7,8 @@ import ready from 'Kernel/ready'
 
 import './app.global.css'
 
+import '../resources/fonts/RopaSans-Regular.ttf'
+
 const Zircon = new Application('ZIRCON')
 
 Zircon

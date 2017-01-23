@@ -4,11 +4,16 @@
  * https://webpack.github.io/docs/hot-module-replacement-with-webpack.html
  */
 
+import path from 'path'
 import webpack from 'webpack'
 import validate from 'webpack-validator'
 import merge from 'webpack-merge'
 import formatter from 'eslint-formatter-pretty'
 import baseConfig from './webpack.config.base'
+
+import postcss from 'postcss'
+import precss from 'precss'
+import postcssImport from 'postcss-import'
 
 const port = process.env.PORT || 3000
 
@@ -48,7 +53,9 @@ export default validate(merge(baseConfig, {
         test: /^((?!\.global).)*\.css$/,
         loaders: [
           'style-loader',
-          'css-loader?modules&sourceMap&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]'
+          'css-loader?modules&sourceMap&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
+          'sass',
+          'postcss'
         ]
       },
 
@@ -56,12 +63,25 @@ export default validate(merge(baseConfig, {
       { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/font-woff' },
       { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/octet-stream' },
       { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: 'file' },
-      { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=image/svg+xml' },
+      { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=image/svg+xml' }
+    ]
+  },
+
+  // We use PostCSS for autoprefixing and PreCSS.
+  postcss: function (webpack) {
+    return [
+      postcssImport(),
+      precss()
     ]
   },
 
   eslint: {
-    formatter
+    formatter,
+    'import/resolver': {
+      'webpack': {
+        'config': path.resolve(__dirname, 'webpack.config.eslint.js')
+      }
+    }
   },
 
   plugins: [

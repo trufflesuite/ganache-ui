@@ -1,5 +1,9 @@
 import React, {Component} from 'react'
 
+import DynamicNavSwitcher from './Navs/DynamicNavSwitcher'
+
+import Styles from './AppShell.css'
+
 export default class AppShell extends Component {
   constructor (props) {
     super(props)
@@ -18,7 +22,8 @@ export default class AppShell extends Component {
     const segment = path.split('/')[1] || 'dashboard'
 
     return (
-      <div className='AppShell'>
+      <div className={Styles.AppShell}>
+        <DynamicNavSwitcher currentPath={this.props.location.pathname}/>
         { this.renderClonedChildrenWithPropsAndPathKey(this.props.children, {...this.props}, segment) }
       </div>
     )
