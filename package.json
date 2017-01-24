@@ -31,6 +31,9 @@
     "productName": "Zircon",
     "appId": "org.trufflesuite.Zircon",
     "category": "public.app-category.tools",
+    "mac": {
+      "icon": "resources/icon.icns"
+    },
     "dmg": {
       "contents": [
         {

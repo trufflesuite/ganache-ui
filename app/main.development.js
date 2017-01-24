@@ -1,4 +1,5 @@
 import { app, BrowserWindow, Menu, shell } from 'electron'
+import path from 'path'
 
 let menu
 let template
@@ -19,6 +20,10 @@ if (process.env.NODE_ENV === 'development') {
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit()
 })
+
+if (process.platform === 'darwin') {
+  app.dock.setIcon(path.resolve(__dirname, '../resources/icon.png'))
+}
 
 const installExtensions = async () => {
   if (process.env.NODE_ENV === 'development') {
