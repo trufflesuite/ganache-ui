@@ -4,6 +4,7 @@
 
   h3 {
     text-align: center;
+    margin-bottom: 2em;
   }
 
   form {
@@ -13,11 +14,22 @@
       border-bottom: 1px solid rgba(80, 87, 121, 1);
 
       display: flex;
+      flex-direction: column;
       justify-content: space-between;
       align-items: center;
 
       &:last-of-type {
         border: none;
+      }
+
+      section {
+        display: flex;
+        width:100%;
+        justify-content: space-between;
+      }
+
+      section + section {
+
       }
 
       h4 {
