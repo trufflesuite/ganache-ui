@@ -11,6 +11,7 @@ import HtmlWebpackPlugin from 'html-webpack-plugin'
 import BabiliPlugin from 'babili-webpack-plugin'
 import baseConfig from './webpack.config.base'
 
+import colorFunction from 'postcss-color-function'
 import precss from 'precss'
 import postcssImport from 'postcss-import'
 
@@ -34,7 +35,9 @@ export default validate(merge(baseConfig, {
         test: /\.global\.css$/,
         loader: ExtractTextPlugin.extract(
           'style-loader',
-          'css-loader'
+          'css-loader',
+          'sass',
+          'postcss'
         )
       },
 
@@ -68,7 +71,8 @@ export default validate(merge(baseConfig, {
   postcss: function (webpack) {
     return [
       postcssImport(),
-      precss()
+      precss(),
+      colorFunction()
     ]
   },
 

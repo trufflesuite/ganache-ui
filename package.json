@@ -166,6 +166,7 @@
     "font-awesome": "^4.7.0",
     "node-sass": "^4.3.0",
     "postcss": "^5.2.11",
+    "postcss-color-function": "^2.0.1",
     "postcss-import": "^9.1.0",
     "postcss-loader": "^1.2.2",
     "precss": "^1.4.0",

@@ -1,0 +1,28 @@
+.ConfigScreen {
+  composes: Panel from 'CoreStyles/panels.css';
+  composes: TextColor from 'CoreStyles/colors.css';
+
+  h3 {
+    text-align: center;
+  }
+
+  form {
+    > div {
+      padding-bottom: 1em;
+      margin-bottom: 1em;
+      border-bottom: 1px solid rgba(80, 87, 121, 1);
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      &:last-of-type {
+        border: none;
+      }
+
+      h4 {
+        margin: 0;
+      }
+    }
+  }
+}

@@ -1,5 +1,18 @@
 .AppShell {
   display: flex;
+  flex-direction: column;
   width: 100vw;
   height: 100vh;
+}
+
+.ShellContainer {
+  display: flex;
+  overflow-y: scroll;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+  min-height: calc(100vh - 195px - 2rem);
+  padding: 2rem 0;
 }

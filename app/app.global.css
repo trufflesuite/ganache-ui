@@ -1,8 +1,28 @@
+@import "./Styles/colors.css";
+@import "./Styles/normalize.css";
+@import "./Styles/buttons.css";
+@import "./Styles/forms.css";
+
+html {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  font-smooth: always;
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.004);
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
 html,
 body {
-  margin: 0;
   padding: 0;
   background-color: #1e202f;
 
   font-family: 'Ropa Sans', sans-serif;
+}
+
+a {
+  -webkit-font-smoothing: antialiased;
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.004);
 }

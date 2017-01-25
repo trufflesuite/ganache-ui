@@ -11,7 +11,7 @@ import merge from 'webpack-merge'
 import formatter from 'eslint-formatter-pretty'
 import baseConfig from './webpack.config.base'
 
-import postcss from 'postcss'
+import colorFunction from 'postcss-color-function'
 import precss from 'precss'
 import postcssImport from 'postcss-import'
 
@@ -45,12 +45,14 @@ export default validate(merge(baseConfig, {
         test: /\.global\.css$/,
         loaders: [
           'style-loader',
-          'css-loader?sourceMap'
+          'css-loader?sourceMap',
+          'sass',
+          'postcss'
         ]
       },
 
       {
-        test: /^((?!\.global).)*\.css$/,
+        test: /^((?!\.global).)*.css$/,
         loaders: [
           'style-loader',
           'css-loader?modules&sourceMap&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
@@ -71,7 +73,8 @@ export default validate(merge(baseConfig, {
   postcss: function (webpack) {
     return [
       postcssImport(),
-      precss()
+      precss(),
+      colorFunction()
     ]
   },
 

@@ -1,0 +1,44 @@
+button {
+  margin: 0;
+  padding: 0;
+
+  resize: none;
+
+  border: 0;
+  outline: 0;
+
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.btn {
+  height: 31.2px;
+  margin-left: 20px;
+  padding: 0 20px;
+
+  cursor: pointer;
+  white-space: nowrap;
+  text-transform: uppercase;
+
+  color: #eee;
+  border-radius: 3px;
+  box-shadow: 0 0 16px rgba(0,0,0,.1);
+
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 30.2px;
+
+  transition: color, background-color .3s;
+  transition: margin .1s;
+}
+
+.btn-primary {
+  background-color: $primary-color;
+
+  &:hover {
+    margin-top: 3px;
+    background-color: color($primary-color tint(20%));
+    color: #fff;
+  }
+}

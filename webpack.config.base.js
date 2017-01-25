@@ -34,7 +34,10 @@ export default validate({
     root: path.resolve(__dirname, './app'),
     extensions: ['', '.js', '.jsx', '.json'],
     packageMains: ['webpack', 'browser', 'web', 'browserify', ['jam', 'main'], 'main'],
-    modulesDirectories: [ path.resolve(__dirname, './app'), 'node_modules' ]
+    modulesDirectories: [ path.resolve(__dirname, './app'), 'node_modules' ],
+    alias: {
+      CoreStyles: path.resolve('./app/Styles')
+    }
   },
 
   plugins: [],

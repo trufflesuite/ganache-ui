@@ -1,4 +1,5 @@
 import AppShell from 'Modules/AppShell'
+import ConfigScreen from 'Modules/ConfigScreen'
 
 // Use this function to register your modules and/or your datasources, or your
 // event listeners. The Redux Store is not yet available at this point
@@ -7,6 +8,7 @@ export default async function (app, done, error) {
 
   // Modules
   app.register(AppShell)
+  app.register(ConfigScreen)
 
   // Data Sources
 

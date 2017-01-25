@@ -24,7 +24,9 @@ export default class AppShell extends Component {
     return (
       <div className={Styles.AppShell}>
         <DynamicNavSwitcher currentPath={this.props.location.pathname}/>
-        { this.renderClonedChildrenWithPropsAndPathKey(this.props.children, {...this.props}, segment) }
+        <div className={Styles.ShellContainer}>
+          { this.renderClonedChildrenWithPropsAndPathKey(this.props.children, {...this.props}, segment) }
+        </div>
       </div>
     )
   }

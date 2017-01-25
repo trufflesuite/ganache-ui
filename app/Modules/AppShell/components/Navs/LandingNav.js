@@ -7,13 +7,13 @@ class LandingNav extends Component {
     return (
       <nav className={Styles.nav}>
         <div className={Styles.nav_left}>
-          <h1>TRUFFLE SUITE | ZIRCON</h1>
+          <p>TRUFFLE SUITE | ZIRCON</p>
         </div>
         <div className={Styles.nav_center}>
 
         </div>
         <div className={Styles.nav_right}>
-
+          <button className="btn btn-primary">START TESTRPC</button>
         </div>
       </nav>
     )

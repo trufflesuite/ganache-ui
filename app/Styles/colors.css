@@ -1,0 +1,9 @@
+$primary-color: rgba(38, 191, 149, 1);
+
+$text-color: rgba(176, 198, 255, 1);
+
+
+
+.TextColor {
+  color: $text-color;
+}
