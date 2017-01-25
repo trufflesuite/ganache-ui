@@ -1,8 +1,10 @@
 import React, {Component} from 'react'
 
+import TestRPCProvider from 'Data/Providers/TestRPCProvider'
+
 import Styles from './ConfigScreen.css'
 
-export default class ConfigScreen extends Component {
+class ConfigScreen extends Component {
   state = {
     specificTime: false,
     opcodeDebug: false,
@@ -66,8 +68,8 @@ export default class ConfigScreen extends Component {
               </section>
               <section>
               { this.state.mnemonic
-                ? <span><input ref={(i) => { this.seedData = i }} name="seedDataValue" defaultValue="" type="text" placeholder="Enter Seed Data" /></span>
-                : <span><input ref={(i) => { this.mnemonic = i }} name="mnemonicValue" defaultValue="" type="text" placeholder="Enter Mnemonic to use" /></span>
+                ? <span><input ref={(i) => { this.mnemonic = i }} name="mnemonicValue" defaultValue="" type="text" placeholder="Enter Mnemonic to use" /></span>
+                : <span><input ref={(i) => { this.seedData = i }} name="seedDataValue" defaultValue="" type="text" placeholder="Enter Seed Data" /></span>
                 }
               </section>
             </div>
@@ -98,10 +100,18 @@ export default class ConfigScreen extends Component {
                   ? <section><input type="text" placeholder="URL to target Chain" /></section>
                   : null }
             </div>
-            <button className="btn btn-primary">START TESTRPC</button>
           </form>
         </section>
+        <footer>
+          <button className="btn btn-primary" onClick={this._startTestRpc}>START TESTRPC</button>
+        </footer>
       </div>
     )
   }
+
+  _startTestRpc = () => {
+    this.props.appStartRpcService()
+  }
 }
+
+export default TestRPCProvider(ConfigScreen)

@@ -13,6 +13,6 @@
   align-items: center;
 
   width: 100%;
-  min-height: calc(100vh - 195px - 2rem);
+  min-height: calc(100vh - 35px - 2rem);
   padding: 2rem 0;
 }

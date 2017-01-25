@@ -13,7 +13,6 @@ class LandingNav extends Component {
 
         </div>
         <div className={Styles.nav_right}>
-          <button className="btn btn-primary">START TESTRPC</button>
         </div>
       </nav>
     )

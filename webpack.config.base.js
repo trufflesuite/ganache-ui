@@ -22,7 +22,7 @@ export default validate({
   },
 
   output: {
-    path: path.join(__dirname, 'app'),
+    path: path.resolve('./app'),
     filename: 'bundle.js',
 
     // https://github.com/webpack/webpack/issues/1114
@@ -31,10 +31,10 @@ export default validate({
 
   // https://webpack.github.io/docs/configuration.html#resolve
   resolve: {
-    root: path.resolve(__dirname, './app'),
+    root: path.resolve('./app'),
     extensions: ['', '.js', '.jsx', '.json'],
     packageMains: ['webpack', 'browser', 'web', 'browserify', ['jam', 'main'], 'main'],
-    modulesDirectories: [ path.resolve(__dirname, './app'), 'node_modules' ],
+    modulesDirectories: [ path.resolve('./app'), 'node_modules' ],
     alias: {
       CoreStyles: path.resolve('./app/Styles')
     }

@@ -1,9 +1,13 @@
-import { app, BrowserWindow, Menu, shell } from 'electron'
+import { app, BrowserWindow, Menu, shell, ipcMain } from 'electron'
 import path from 'path'
+
+import TestRPCService from './Services/TestRPCService'
 
 let menu
 let template
 let mainWindow = null
+
+let testRpcService = new TestRPCService(ipcMain) // eslint-disable-line
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support'); // eslint-disable-line
