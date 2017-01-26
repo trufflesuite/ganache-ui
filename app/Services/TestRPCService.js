@@ -16,9 +16,8 @@ export default class TestRPCService {
   }
 
   _handleStartTestRpc = (event, arg) => {
-    console.log(event, arg)
     this.testRpc = TestRPC.server()
-    this.testRpc.listen(8545, (err, bkChain) => {
+    this.testRpc.listen(arg.port, (err, bkChain) => {
       if (err) {
         this.webView.send('APP/FAILEDTOSTART', err)
         console.log('ERR: ', err)
