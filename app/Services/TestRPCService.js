@@ -1,8 +1,11 @@
 import TestRPC from 'ethereumjs-testrpc'
 
+import { ipcRenderer } from 'electron'
+
 export default class TestRPCService {
-  constructor (ipcMain) {
+  constructor (ipcMain, webView) {
     this.ipcMain = ipcMain
+    this.webView = webView
 
     this.testRpc = null
     this.blockChain = null
@@ -13,11 +16,14 @@ export default class TestRPCService {
   }
 
   _handleStartTestRpc = (event, arg) => {
-    console.log(event, arg)
     this.testRpc = TestRPC.server()
-    this.testRpc.listen(8454, (err, bkChain) => {
-      console.log('ERR: ', err)
-      console.log(bkChain)
+    this.testRpc.listen(8545, (err, bkChain) => {
+      if (err) {
+        this.webView.send('APP/FAILEDTOSTART', err)
+        console.log('ERR: ', err)
+      }
+
+      this.webView.send('APP/TESTRPCSTARTED')
       this.blockChain = bkChain
     })
   }

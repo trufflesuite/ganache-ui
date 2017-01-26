@@ -6,8 +6,7 @@ import TestRPCService from './Services/TestRPCService'
 let menu
 let template
 let mainWindow = null
-
-let testRpcService = new TestRPCService(ipcMain) // eslint-disable-line
+let testRpcService = null
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support'); // eslint-disable-line
@@ -55,10 +54,12 @@ app.on('ready', async () => {
   mainWindow = new BrowserWindow({
     show: false,
     width: 1024,
-    height: 728
+    height: 830
   })
 
   mainWindow.loadURL(`file://${__dirname}/app.html`)
+
+  testRpcService = new TestRPCService(ipcMain, mainWindow) // eslint-disable-line
 
   mainWindow.webContents.on('did-finish-load', () => {
     mainWindow.show()
