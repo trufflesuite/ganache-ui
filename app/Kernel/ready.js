@@ -1,4 +1,5 @@
 import { ipcRenderer } from 'electron'
+import { push } from 'react-router-redux'
 
 // This will be called before the very first render, so you can do whatever
 // you want here. The Redux Store is available at this point, so you can
@@ -9,6 +10,13 @@ export default async function (app, done, error) {
       body: 'TestRPC Started',
       silent: true
     })
+
+    app.store.dispatch({type: 'APP/TESTRPCRUNNING'})
+    app.store.dispatch(push('/dashboard'))
+  })
+
+  ipcRenderer.on('APP/TESTRPCLOG', (event, message) => {
+    console.log(message)
   })
 
   done()

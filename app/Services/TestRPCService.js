@@ -15,8 +15,30 @@ export default class TestRPCService {
     ipcMain.on('APP/STARTRPC', this._handleStartTestRpc)
   }
 
+  log = (message) => {
+    console.log(message)
+    this.webView.send('APP/TESTRPCLOG', {message, level: 'log'})
+  }
+
+  info = (message) => {
+    console.info(message)
+    this.webView.send('APP/TESTRPCLOG', {message, level: 'info'})
+  }
+
+  warning = (message) => {
+    console.warning(message)
+    this.webView.send('APP/TESTRPCLOG', {message, level: 'warning'})
+  }
+
+  error = (message) => {
+    console.error(message)
+    this.webView.send('APP/TESTRPCLOG', {message, level: 'error'})
+  }
+
   _handleStartTestRpc = (event, arg) => {
-    this.testRpc = TestRPC.server()
+    arg.logger = this
+
+    this.testRpc = TestRPC.server(arg)
     this.testRpc.listen(arg.port, (err, bkChain) => {
       if (err) {
         this.webView.send('APP/FAILEDTOSTART', err)

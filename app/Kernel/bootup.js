@@ -1,5 +1,6 @@
 import AppShell from 'Modules/AppShell'
 import ConfigScreen from 'Modules/ConfigScreen'
+import Dashboard from 'Modules/Dashboard'
 
 import TestRPCSource from 'Data/Sources/TestRPC'
 
@@ -11,6 +12,7 @@ export default async function (app, done, error) {
   // Modules
   app.register(AppShell)
   app.register(ConfigScreen)
+  app.register(Dashboard)
 
   // Data Sources
   app.register(TestRPCSource)
