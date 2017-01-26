@@ -9,6 +9,8 @@ class Dashboard extends Component {
     return (
       <div className={Styles.Dashboard}>
         <h1>Dashboard</h1>
+        <textarea value={this.props.logs}>
+        </textarea>
       </div>
     )
   }

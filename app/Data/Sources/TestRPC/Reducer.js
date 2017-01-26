@@ -4,12 +4,13 @@ import * as TestRPCActions from './Actions'
 import ReduceWith from 'Data/Sources/ReduceWith'
 
 const mutators = {
-  [TestRPCActions.appStartRpcServiceType]: {
-    recentBlocks: action => action.payload
-  },
-
   'APP/TESTRPCRUNNING': ({
     testRpcServerRunning: true
+  }),
+
+  'APP/TESTRPCLOG': (state, { type, payload }) => ({
+    ...state,
+    logs: state.logs.concat(payload.message)
   })
 }
 

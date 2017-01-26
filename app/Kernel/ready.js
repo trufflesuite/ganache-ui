@@ -17,6 +17,7 @@ export default async function (app, done, error) {
 
   ipcRenderer.on('APP/TESTRPCLOG', (event, message) => {
     console.log(message)
+    app.store.dispatch({type: 'APP/TESTRPCLOG', payload: message})
   })
 
   done()
