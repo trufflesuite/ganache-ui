@@ -1,7 +1,7 @@
 import * as ApiHelpers from 'Data/Sources/ApiHelpers'
 
 export default {
-  startRpcService: () => {
-    return ApiHelpers.sendIpcMessage('APP/STARTRPC')
+  startRpcService: (config) => {
+    return ApiHelpers.sendIpcMessage('APP/STARTRPC', config)
   }
 }

@@ -16,6 +16,7 @@ export default class TestRPCService {
   }
 
   _handleStartTestRpc = (event, arg) => {
+    console.log(event, arg)
     this.testRpc = TestRPC.server()
     this.testRpc.listen(8545, (err, bkChain) => {
       if (err) {
