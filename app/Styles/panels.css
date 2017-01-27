@@ -2,7 +2,6 @@
 
 .Panel {
   width: 666px;
-  min-height: 70vh;
   border: 1px solid #414566;
   background: #31344c;
   box-shadow: 0 2px 21px 15px rgba(0,0,0,.16);

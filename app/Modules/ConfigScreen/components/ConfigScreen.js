@@ -10,7 +10,8 @@ class ConfigScreen extends Component {
     opcodeDebug: false,
     mnemonic: false,
     accountsLocked: false,
-    forkChain: false
+    forkChain: false,
+    verboseLogging: false
   }
 
   render () {
@@ -29,6 +30,39 @@ class ConfigScreen extends Component {
             </div>
             <div>
               <section>
+                <label>TOTAL ACCOUNTS TO GENERATE</label>
+                <input ref="totalAccounts" type="text" defaultValue="6" />
+              </section>
+            </div>
+            <div>
+              <section>
+                <label>GAS PRICE</label>
+                <input ref="gasPrice" type="text" defaultValue="6" />
+              </section>
+            </div>
+            <div>
+              <section>
+                <label>GAS LIMIT</label>
+                <input ref="gasLimit" type="text" defaultValue="6" />
+              </section>
+            </div>
+            <div>
+              <section>
+                <h4>AUTOGENERATE HD MNEMONIC</h4>
+                <div className="Switch">
+                  <input type="checkbox" name="mnemonic" id="Mnemonic" onChange={this._handleInputChange} />
+                  <label htmlFor="Mnemonic">AUTOGENERATE HD MNEMONIC</label>
+                </div>
+              </section>
+              <section>
+                { this.state.mnemonic
+                  ? <span><input ref={(i) => { this.mnemonic = i }} name="mnemonicValue" defaultValue="" type="text" placeholder="Enter Mnemonic to use" /></span>
+                  : <span><input ref={(i) => { this.seedData = i }} name="seedDataValue" defaultValue="" type="text" placeholder="Enter Optional Seed Data" /></span>
+              }
+            </section>
+          </div>
+            <div>
+              <section>
                 <h4>USE SPECIFIC TIME</h4>
                 <div className="Switch">
                   <input type="checkbox" name="specificTime" id="SpecificTime" onChange={this._handleInputChange} />
@@ -41,6 +75,15 @@ class ConfigScreen extends Component {
               </div>
               <div>
                 <section>
+                  <h4>VERBOSE LOGGING</h4>
+                  <div className="Switch">
+                    <input type="checkbox" name="verboseLogging" id="VerboseLogging" onChange={this._handleInputChange} />
+                    <label htmlFor="VerboseLogging">ENABLE VM OPCODE DEBUG LOGGING</label>
+                  </div>
+                </section>
+              </div>
+              <div>
+                <section>
                   <h4>ENABLE VM OPCODE DEBUG LOGGING</h4>
                   <div className="Switch">
                     <input type="checkbox" name="opcodeDebug" id="OpcodeDebug" onChange={this._handleInputChange} />
@@ -48,30 +91,9 @@ class ConfigScreen extends Component {
                   </div>
                 </section>
               </div>
-              <div>
-                <section>
-                  <h4>AUTOGENERATE HD MNEMONIC</h4>
-                  <div className="Switch">
-                    <input type="checkbox" name="mnemonic" id="Mnemonic" onChange={this._handleInputChange} />
-                    <label htmlFor="Mnemonic">AUTOGENERATE HD MNEMONIC</label>
-                  </div>
-                </section>
-                <section>
-                  { this.state.mnemonic
-                    ? <span><input ref={(i) => { this.mnemonic = i }} name="mnemonicValue" defaultValue="" type="text" placeholder="Enter Mnemonic to use" /></span>
-                    : <span><input ref={(i) => { this.seedData = i }} name="seedDataValue" defaultValue="" type="text" placeholder="Enter Seed Data" /></span>
-                }
-              </section>
-            </div>
             <div>
               <section>
-                <label>TOTAL ACCOUNTS TO GENERATE</label>
-                <input ref="totalAccounts" type="text" defaultValue="6" />
-              </section>
-            </div>
-            <div>
-              <section>
-                <label>ACCOUNTS LOCKED</label>
+                <label>CREATE LOCKED ACCOUNTS</label>
                 <div className="Switch">
                   <input type="checkbox" name="accountsLocked" id="AccountsLocked" onChange={this._handleInputChange} />
                   <label htmlFor="AccountsLocked">ACCOUNTS LOCKED</label>
@@ -114,11 +136,14 @@ class ConfigScreen extends Component {
       port: this.refs.portNumber.value,
       time: this.refs.time ? this.refs.time.value : null,
       fork: this.refs.fork ? this.refs.fork.value : null,
+      gasPrice: this.refs.gasPrice.value,
+      gasLimit: this.refs.gasLimit.value,
       debug: this.state.opcodeDebug,
+      verbose: this.state.verboseLogging,
       mnemonic: this.mnemonic ? this.mnemonic.value : null,
       seed: this.seedData ? this.seedData.value : null,
       total_accounts: this.refs.totalAccounts ? this.refs.totalAccounts.value : null,
-      locked: this.state.accountsLocked
+      secure: this.state.accountsLocked
     }
 
     Object.keys(config).forEach((key) => { !config[key] ? delete config[key] : null })
