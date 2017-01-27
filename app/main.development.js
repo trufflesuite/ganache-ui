@@ -86,7 +86,7 @@ app.on('ready', async () => {
 
   if (process.platform === 'darwin') {
     template = [{
-      label: 'Electron',
+      label: 'Zircon',
       submenu: [{
         label: 'About Zircon',
         selector: 'orderFrontStandardAboutPanel:'
