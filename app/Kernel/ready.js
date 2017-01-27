@@ -11,7 +11,7 @@ export default async function (app, done, error) {
       silent: true
     })
 
-    app.store.dispatch({type: 'APP/TESTRPCRUNNING'})
+    app.store.dispatch({type: 'APP/TESTRPCRUNNING', payload: message})
     app.store.dispatch(push('/dashboard'))
   })
 

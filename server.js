@@ -20,6 +20,7 @@ const PORT = process.env.PORT || 3000
 
 const wdm = webpackDevMiddleware(compiler, {
   publicPath: config.output.publicPath,
+  noInfo: true,
   stats: {
     colors: true
   }

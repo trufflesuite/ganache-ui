@@ -4,8 +4,19 @@ import * as TestRPCActions from './Actions'
 import ReduceWith from 'Data/Sources/ReduceWith'
 
 const mutators = {
-  'APP/TESTRPCRUNNING': ({
-    testRpcServerRunning: true
+  'APP/TESTRPCRUNNING': (state, {type, payload}) => ({
+    ...state,
+    testRpcServerRunning: true,
+    accounts: payload.accounts,
+    unlockedAccounts: payload.unlockedAccounts,
+    mnemonic: payload.mnemonic,
+    hdPath: payload.hdPath,
+    gasPrice: payload.gasPrice,
+    totalAccounts: payload.totalAccounts,
+    coinbase: payload.coinbase,
+    isMiningOnInterval: payload.isMiningOnInterval,
+    isMining: payload.isMining,
+    blocktime: payload.blocktime
   }),
 
   'APP/TESTRPCLOG': (state, { type, payload }) => ({

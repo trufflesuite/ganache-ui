@@ -117,7 +117,7 @@ class ConfigScreen extends Component {
       debug: this.state.opcodeDebug,
       mnemonic: this.mnemonic ? this.mnemonic.value : null,
       seed: this.seedData ? this.seedData.value : null,
-      total_account: this.refs.totalAccounts ? this.refs.totalAccounts.value : null,
+      total_accounts: this.refs.totalAccounts ? this.refs.totalAccounts.value : null,
       locked: this.state.accountsLocked
     }
 

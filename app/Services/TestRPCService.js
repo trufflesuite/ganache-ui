@@ -45,7 +45,21 @@ export default class TestRPCService {
         console.log('ERR: ', err)
       }
 
-      this.webView.send('APP/TESTRPCSTARTED')
+      const blockChainParams = {
+        accounts: Object.keys(bkChain.accounts).map((address, index) => { return { index, address, privateKey: bkChain.accounts[address].secretKey.toString('hex'), isUnlocked: bkChain.isUnlocked(address) } }),
+        unlockedAccounts: Object.keys(bkChain.unlocked_accounts).map((address, index) => { return { index, address, privateKey: bkChain.accounts[address].secretKey.toString('hex'), isUnlocked: bkChain.isUnlocked(address) } }),
+        mnemonic: bkChain.mnemonic,
+        hdPath: bkChain.wallet_hdpath,
+        gasPrice: bkChain.gasPriceVal,
+        totalAccounts: bkChain.total_accounts,
+        coinbase: bkChain.coinbase,
+        isMiningOnInterval: bkChain.is_mining_on_interval,
+        isMining: bkChain.is_mining,
+        blocktime: bkChain.blocktime,
+        networkId: bkChain.net_version
+      }
+
+      this.webView.send('APP/TESTRPCSTARTED', blockChainParams)
       this.blockChain = bkChain
     })
   }

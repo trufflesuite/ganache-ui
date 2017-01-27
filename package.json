@@ -180,6 +180,7 @@
     "react-router-redux": "^4.0.7",
     "redux": "^3.6.0",
     "redux-thunk": "^2.1.0",
+    "reselect": "^2.5.4",
     "sass-loader": "^4.1.1",
     "source-map-support": "^0.4.8"
   },
