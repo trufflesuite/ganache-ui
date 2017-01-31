@@ -1,0 +1,14 @@
+.MnemonicAndHdPath {
+  display: flex;
+  width: 100%;
+  background-color: #EBF3FD;
+
+  div {
+    flex-grow: 1;
+    margin: 1em 2em;
+
+    h4 {
+      margin: 0;
+    }
+  }
+}

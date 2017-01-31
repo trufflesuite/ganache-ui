@@ -1,4 +1,5 @@
 import TestRPC from 'ethereumjs-testrpc'
+import ConversionUtils from 'ethereumjs-testrpc/lib/utils/to'
 
 import { ipcRenderer } from 'electron'
 
@@ -46,8 +47,16 @@ export default class TestRPCService {
       }
 
       const blockChainParams = {
-        accounts: Object.keys(bkChain.accounts).map((address, index) => { return { index, address, privateKey: bkChain.accounts[address].secretKey.toString('hex'), isUnlocked: bkChain.isUnlocked(address) } }),
-        unlockedAccounts: Object.keys(bkChain.unlocked_accounts).map((address, index) => { return { index, address, privateKey: bkChain.accounts[address].secretKey.toString('hex'), isUnlocked: bkChain.isUnlocked(address) } }),
+        accounts: Object.keys(bkChain.accounts).map((address, index) => {
+          return {
+            index,
+            address,
+            balance: ConversionUtils.number(bkChain.accounts[address].account.balance),
+            nonce: ConversionUtils.number(bkChain.accounts[address].account.nonce),
+            privateKey: bkChain.accounts[address].secretKey.toString('hex'),
+            isUnlocked: bkChain.isUnlocked(address)
+          }
+        }),
         mnemonic: bkChain.mnemonic,
         hdPath: bkChain.wallet_hdpath,
         gasPrice: bkChain.gasPriceVal,

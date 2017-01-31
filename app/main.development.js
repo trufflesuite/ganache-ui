@@ -54,7 +54,7 @@ app.on('ready', async () => {
   mainWindow = new BrowserWindow({
     show: false,
     width: 1024,
-    height: 830
+    height: 930
   })
 
   mainWindow.loadURL(`file://${__dirname}/app.html`)
@@ -281,6 +281,6 @@ app.on('ready', async () => {
       }]
     }]
     menu = Menu.buildFromTemplate(template)
-    mainWindow.setMenu(menu)
+    Menu.setApplicationMenu(menu)
   }
 })
