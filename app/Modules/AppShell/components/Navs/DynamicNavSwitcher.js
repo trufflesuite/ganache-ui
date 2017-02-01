@@ -12,7 +12,7 @@ export default class DynamicNavSwitcher extends Component {
     switch (this.props.currentPath) {
       case (this.props.currentPath.match(/\/app$/) || {}).input:
         return <LandingNav {...this.props} />
-      case (this.props.currentPath.match(/\/app\/vault\/\d+/) || {}).input:
+      case (this.props.currentPath.match(/\/dashboard$/) || {}).input:
         return <RunningRpcNav {...this.props} />
       default:
         return <LandingNav {...this.props} />

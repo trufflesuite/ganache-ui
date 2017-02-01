@@ -62,17 +62,47 @@
   box-shadow: 0 2px 21px 15px rgba(0,0,0,.16);
 
   header {
+    display: flex;
+    align-items: center;
 
+    span {
+    }
+  }
+
+  main {
+    dl {
+      margin: 1rem 0 1rem .5rem;
+      padding: 0;
+      color: rgba(206, 206, 212, 1);
+
+      dt {
+        font-weight: 700;
+      }
+
+      dd {
+        margin: 0;
+        padding: 0;
+        margin-bottom: 1em;
+      }
+    }
   }
 }
 
 .AccountIndex {
-  padding: .5rem;
-  background: white;
-  position: absolute;
+  padding: .5rem .7rem;
+  background: rgba(206, 206, 212, 1);
   margin-right: 1rem;
 }
 
 .Address {
   margin-right: 2rem;
+  color: rgba(206, 206, 212, 1);
+  text-transform: uppercase;
+  flex: 2;
+  font-weight: 700;
+  font-size: 1.2em;
+}
+
+.LockStatus {
+  margin-right: .5rem;
 }

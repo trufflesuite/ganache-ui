@@ -41,14 +41,32 @@ class Dashboard extends Component {
       return (
         <li key={account.address} className={Styles.AccountDetails}>
           <header>
-            <span className={Styles.AccountIndex}>{account.index}</span><span className={Styles.Address}>{account.address}</span>
+            <span className={Styles.AccountIndex}>{account.index}</span>
+            <span className={Styles.Address}>{account.address}</span>
+            <span className={Styles.LockStatus}>
+              { account.isUnlocked ? '🔓' : '🔐' }
+            </span>
           </header>
           <main>
-            <div>{account.balance}</div>
-            <div>{account.nonce}</div>
+            <div>
+              <dl>
+                <dt>BALANCE</dt>
+                <dd>{account.balance} WEI</dd>
+              </dl>
+            </div>
+            <div>
+              <dl>
+                <dt>NONCE</dt>
+                <dd>{account.nonce}</dd>
+              </dl>
+            </div>
+            <div>
+              <dl>
+                <dt>PRIVATE KEY</dt>
+                <dd>{account.privateKey}</dd>
+              </dl>
+            </div>
           </main>
-          <div>{account.isUnlocked}</div>
-          <div>{account.privateKey}</div>
         </li>
       )
     })
