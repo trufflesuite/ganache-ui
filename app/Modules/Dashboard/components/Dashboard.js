@@ -26,8 +26,10 @@ class Dashboard extends Component {
             <div className={Styles.Controls}>
 
             </div>
-            <textarea value={this.props.testRpcState.logs.join('\n')}>
-            </textarea>
+            <div className={Styles.Log}>
+              <textarea value={this.props.testRpcState.logs.join('\n')}>
+              </textarea>
+            </div>
           </div>
         </div>
       </div>
@@ -35,12 +37,16 @@ class Dashboard extends Component {
   }
 
   _renderAccountList = () => {
-    return this.props.testRpcState.accounts.map((account) => {
+    return this.props.testRpcState.accounts.sort((a, b) => { return a.index > b.index }).map((account) => {
       return (
-        <li key={account.address}>
-          <div>{account.address}</div>
-          <div>{account.balnce}</div>
-          <div>{account.nonce}</div>
+        <li key={account.address} className={Styles.AccountDetails}>
+          <header>
+            <span className={Styles.AccountIndex}>{account.index}</span><span className={Styles.Address}>{account.address}</span>
+          </header>
+          <main>
+            <div>{account.balance}</div>
+            <div>{account.nonce}</div>
+          </main>
           <div>{account.isUnlocked}</div>
           <div>{account.privateKey}</div>
         </li>

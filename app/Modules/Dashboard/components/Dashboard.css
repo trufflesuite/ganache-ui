@@ -9,6 +9,16 @@
     width: 100%;
     height: 500px;
   }
+
+  ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      margin-bottom: 1em;
+    }
+  }
 }
 
 .MainContainer {
@@ -21,6 +31,7 @@
 .LeftSplit {
   display: flex;
   flex: 1;
+  padding: 2em;
 }
 
 .RightSplit {
@@ -30,4 +41,38 @@
 
 .Controls {
 
+}
+
+.AccountList {
+  width: 100%;
+}
+
+.Log {
+  padding: 2em;
+  width: 100%;
+
+  textarea {
+    width: 100%;
+  }
+}
+
+.AccountDetails {
+  border: 1px solid #414566;
+  background: #31344c;
+  box-shadow: 0 2px 21px 15px rgba(0,0,0,.16);
+
+  header {
+
+  }
+}
+
+.AccountIndex {
+  padding: .5rem;
+  background: white;
+  position: absolute;
+  margin-right: 1rem;
+}
+
+.Address {
+  margin-right: 2rem;
 }
