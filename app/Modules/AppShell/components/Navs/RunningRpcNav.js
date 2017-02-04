@@ -16,7 +16,7 @@ class RunningRpcNav extends React.Component {
 
         </div>
         <div className={Styles.nav_right}>
-          { this.props.testRpcState.testRpcServerRunning ? "TestRPC Running" : "TestRPC Stopped"}
+          { this.props.testRpcState.testRpcServerRunning ? <span>TestRPC Running</span> : <span>TestRPC Stopped</span>}
         </div>
       </nav>
     )

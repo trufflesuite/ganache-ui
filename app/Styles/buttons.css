@@ -1,3 +1,5 @@
+@import "./colors";
+
 button {
   margin: 0;
   padding: 0;
@@ -13,7 +15,7 @@ button {
 }
 
 .btn {
-  height: 31.2px;
+  height: 32px;
   padding: 0 20px;
 
   cursor: pointer;
@@ -26,7 +28,7 @@ button {
 
   font-size: 12px;
   font-weight: 600;
-  line-height: 30.2px;
+  line-height: 34px;
 
   transition: color, background-color .3s;
   transition: margin .1s;

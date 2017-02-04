@@ -24,7 +24,11 @@ class Dashboard extends Component {
           </div>
           <div className={Styles.RightSplit}>
             <div className={Styles.Controls}>
-
+              <section>
+                <h4>MINING CONTROLS</h4>
+                <button className={Styles.StopMiningBtn}>Stop Mining</button>
+                <button className={Styles.StartMiningBtn}>Start Mining</button>
+              </section>
             </div>
             <div className={Styles.Log}>
               <textarea value={this.props.testRpcState.logs.join('\n')}>

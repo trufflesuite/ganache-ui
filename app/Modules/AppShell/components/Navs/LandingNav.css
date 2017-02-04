@@ -122,6 +122,10 @@ $nav-height: 70px;
   padding-right: 1rem;
 
   text-align: right;
+
+  span {
+    color: aliceblue;
+  }
 }
 
 .nav_menu {

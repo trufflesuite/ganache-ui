@@ -37,18 +37,40 @@
 .RightSplit {
   display: flex;
   flex: 1;
+  flex-direction: column;
+  padding: 2em;
 }
 
 .Controls {
+  composes: Panel from 'CoreStyles/panels.css';
+  margin-bottom: 1em;
 
+  h4 {
+    margin: 0 0 1em 0;
+    color: aliceblue;
+  }
+
+  button {
+    margin-right:1em;
+
+    &:last-of-type {
+      margin-right: 0;
+    }
+  }
+}
+
+.StopMiningBtn,
+.StartMiningBtn {
+  composes: btn from 'CoreStyles/buttons.css';
+  background-color: #465b6d;
 }
 
 .AccountList {
   width: 100%;
+  overflow: scroll;
 }
 
 .Log {
-  padding: 2em;
   width: 100%;
 
   textarea {
@@ -59,7 +81,6 @@
 .AccountDetails {
   border: 1px solid #414566;
   background: #31344c;
-  box-shadow: 0 2px 21px 15px rgba(0,0,0,.16);
 
   header {
     display: flex;
