@@ -20,7 +20,9 @@ body {
   padding: 0;
   background-color: #1e202f;
 
-  font-family: 'Ropa Sans', sans-serif;
+  /*font-family: 'Ropa Sans', sans-serif;*/
+  font-family: "Helvetica Neue Light", HelveticaNeue-Light, "Helvetica Neue", Helvetica, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",  sans-serif;
+  font-weight: 200;
 }
 
 a {

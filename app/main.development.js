@@ -54,9 +54,11 @@ app.on('ready', async () => {
   mainWindow = new BrowserWindow({
     show: false,
     width: 1024,
-    height: 930
+    height: 930,
+    title: 'Zircon'
   })
 
+  mainWindow.maximize()
   mainWindow.loadURL(`file://${__dirname}/app.html`)
 
   testRpcService = new TestRPCService(ipcMain, mainWindow) // eslint-disable-line

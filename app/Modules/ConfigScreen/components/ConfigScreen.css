@@ -2,6 +2,8 @@
   composes: Panel from 'CoreStyles/panels.css';
   composes: TextColor from 'CoreStyles/colors.css';
 
+  width: 60%;
+
   h3 {
     text-align: center;
     margin-bottom: 2em;

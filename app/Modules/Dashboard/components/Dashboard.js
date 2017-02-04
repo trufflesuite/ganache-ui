@@ -10,17 +10,21 @@ class Dashboard extends Component {
   render () {
     return (
       <div className={Styles.Dashboard}>
-        <MnemonicAndHdPath
-          mnemonic={this.props.testRpcState.mnemonic}
-          hdPath={this.props.testRpcState.hdPath}
-          />
+
         <div className={Styles.MainContainer}>
           <div className={Styles.LeftSplit}>
-            <div className={Styles.AccountList}>
-              <ol>
+            <table className={Styles.AccountList}>
+              <thead>
+                <tr>
+                  <td>INDEX</td>
+                  <td>STATUS</td>
+                  <td></td>
+                </tr>
+              </thead>
+              <tbody>
                 {this._renderAccountList()}
-              </ol>
-            </div>
+              </tbody>
+            </table>
           </div>
           <div className={Styles.RightSplit}>
             <div className={Styles.Controls}>
@@ -30,9 +34,28 @@ class Dashboard extends Component {
                 <button className={Styles.StartMiningBtn}>Start Mining</button>
               </section>
             </div>
+            <div className={Styles.Controls}>
+              <section>
+                <h4>SNAPSHOT CONTROLS</h4>
+                <button className={Styles.StopMiningBtn}>Create Snapshot</button>
+                <button className={Styles.StartMiningBtn}>Revert Snapshot</button>
+                <button className={Styles.StartMiningBtn}>Increase Time</button>
+                <button className={Styles.StartMiningBtn}>Force Mine</button>
+              </section>
+            </div>
             <div className={Styles.Log}>
-              <textarea value={this.props.testRpcState.logs.join('\n')}>
-              </textarea>
+              <h4>TESTRPC LOG</h4>
+              <ul>
+                {
+                  this.props.testRpcState.logs.map((log)=>{
+                    return (
+                      <li>
+                        {log}
+                      </li>
+                    )
+                  })
+                }
+              </ul>
             </div>
           </div>
         </div>
@@ -43,35 +66,41 @@ class Dashboard extends Component {
   _renderAccountList = () => {
     return this.props.testRpcState.accounts.sort((a, b) => { return a.index > b.index }).map((account) => {
       return (
-        <li key={account.address} className={Styles.AccountDetails}>
-          <header>
-            <span className={Styles.AccountIndex}>{account.index}</span>
-            <span className={Styles.Address}>{account.address}</span>
-            <span className={Styles.LockStatus}>
-              { account.isUnlocked ? '🔓' : '🔐' }
-            </span>
-          </header>
-          <main>
-            <div>
-              <dl>
-                <dt>BALANCE</dt>
-                <dd>{account.balance} WEI</dd>
-              </dl>
-            </div>
-            <div>
-              <dl>
-                <dt>NONCE</dt>
-                <dd>{account.nonce}</dd>
-              </dl>
-            </div>
-            <div>
-              <dl>
-                <dt>PRIVATE KEY</dt>
-                <dd>{account.privateKey}</dd>
-              </dl>
-            </div>
-          </main>
-        </li>
+        <tr key={account.address}>
+          <td>{account.index}</td>
+          <td>{ account.isUnlocked ? '🔓' : '🔐' }</td>
+          <td>
+            <table>
+              <thead></thead>
+              <tbody>
+                <tr>
+                  <td className={Styles.RowHeader}>
+                    ADDRESS
+                  </td>
+                  <td>{account.address}</td>
+                </tr>
+                <tr>
+                  <td className={Styles.RowHeader}>
+                    PRIV. KEY
+                  </td>
+                  <td>{account.privateKey}</td>
+                </tr>
+                <tr>
+                  <td className={Styles.RowHeader}>
+                    BALANCE
+                  </td>
+                  <td>{account.balance} WEI</td>
+                </tr>
+                <tr>
+                  <td className={Styles.RowHeader}>
+                    NONCE
+                  </td>
+                  <td>{account.nonce}</td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
       )
     })
   }

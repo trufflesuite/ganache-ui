@@ -31,18 +31,19 @@
 .LeftSplit {
   display: flex;
   flex: 1;
-  padding: 2em;
+  padding: 0 1em 0 2em;
 }
 
 .RightSplit {
   display: flex;
   flex: 1;
   flex-direction: column;
-  padding: 2em;
+  padding: 0 2em 0 1em;
 }
 
 .Controls {
   composes: Panel from 'CoreStyles/panels.css';
+  padding: 1em;
   margin-bottom: 1em;
 
   h4 {
@@ -51,7 +52,7 @@
   }
 
   button {
-    margin-right:1em;
+    margin: 0 1em 1em 0;
 
     &:last-of-type {
       margin-right: 0;
@@ -65,47 +66,73 @@
   background-color: #465b6d;
 }
 
-.AccountList {
-  width: 100%;
-  overflow: scroll;
-}
-
 .Log {
   width: 100%;
+  display: flex;
+  flex: 1;
+  overflow: scroll;
+  flex-direction: column;
+  composes: Panel from 'CoreStyles/panels.css';
+  padding: 1em;
 
-  textarea {
-    width: 100%;
+  ul {
+    background: black;
+    color: aliceblue;
+    list-style: none;
+    padding: 1em;
+    margin: 0;
   }
 }
 
-.AccountDetails {
+.AccountList {
   border: 1px solid #414566;
   background: #31344c;
+  width: 100%;
+  overflow: scroll;
+  padding: 1em;
+  border-collapse: collapse;
 
-  header {
-    display: flex;
-    align-items: center;
+  thead {
+    text-transform: uppercase;
+    color: aliceblue;
+    border-bottom: 2px solid rgba(106, 137, 165, 1);
+    font-weight: 700;
 
-    span {
+    td {
+      padding: .7em;
     }
   }
 
-  main {
-    dl {
-      margin: 1rem 0 1rem .5rem;
-      padding: 0;
-      color: rgba(206, 206, 212, 1);
+  > tbody {
+    > tr {
+      background: rgba(68, 70, 92, 1);
 
-      dt {
-        font-weight: 700;
+      > td {
+        padding: 1em;
+
+        &:nth-child(1),
+        &:nth-child(2) {
+          text-align: center;
+        }
+
+        table {
+          text-transform: uppercase;;
+        }
       }
 
-      dd {
-        margin: 0;
-        padding: 0;
-        margin-bottom: 1em;
+      &:nth-child(2n) {
+        background: rgba(49, 52, 76, 1);
       }
     }
+  }
+
+  td {
+    color: rgba(206, 206, 212, 1);
+    vertical-align: middle;
+    font-size: .9em;
+    padding: 0;
+    margin: 0;
+    border: 1px solid transparent;
   }
 }
 
@@ -115,13 +142,9 @@
   margin-right: 1rem;
 }
 
-.Address {
-  margin-right: 2rem;
-  color: rgba(206, 206, 212, 1);
-  text-transform: uppercase;
-  flex: 2;
+.RowHeader {
   font-weight: 700;
-  font-size: 1.2em;
+  width: 70px;
 }
 
 .LockStatus {

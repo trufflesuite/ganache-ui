@@ -1,6 +1,8 @@
 import React from 'react'
 import TestRPCProvider from 'Data/Providers/TestRPCProvider'
 
+import Spinner from 'Elements/Spinner'
+
 import Styles from './LandingNav.css'
 
 class RunningRpcNav extends React.Component {
@@ -17,6 +19,7 @@ class RunningRpcNav extends React.Component {
         </div>
         <div className={Styles.nav_right}>
           { this.props.testRpcState.testRpcServerRunning ? <span>TestRPC Running</span> : <span>TestRPC Stopped</span>}
+          <Spinner width={20} height={20}/>
         </div>
       </nav>
     )

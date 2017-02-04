@@ -125,6 +125,13 @@ $nav-height: 70px;
 
   span {
     color: aliceblue;
+    text-transform: uppercase;
+    font-size: .7em;
+    font-weight: 700;
+  }
+
+  svg {
+    margin-left: .5em;
   }
 }
 

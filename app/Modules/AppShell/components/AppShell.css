@@ -11,7 +11,7 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-
+  padding: 2rem 0;
   width: 100%;
-  min-height: calc(100vh - 35px - 2rem);
+  min-height: calc(100vh - 70px -2rem);
 }
