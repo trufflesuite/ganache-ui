@@ -75,12 +75,17 @@
   composes: Panel from 'CoreStyles/panels.css';
   padding: 1em;
 
-  ul {
-    background: black;
-    color: aliceblue;
-    list-style: none;
+  pre {
+    font-size: 13px;
+    color: #eff1f5;
+    border-radius: 2px;
+    background: #2b303b;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    box-sizing: border-box;
     padding: 1em;
-    margin: 0;
+    font-family: "Ropa Sans";
+    min-height: calc(100vh - 205px);
   }
 }
 

@@ -69,6 +69,7 @@ export default class TestRPCService {
       }
 
       this.webView.send('APP/TESTRPCSTARTED', blockChainParams)
+      this.log('TESTRPC STARTED')
       this.blockChain = bkChain
     })
   }

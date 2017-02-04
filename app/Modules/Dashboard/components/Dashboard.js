@@ -45,17 +45,15 @@ class Dashboard extends Component {
             </div>
             <div className={Styles.Log}>
               <h4>TESTRPC LOG</h4>
-              <ul>
+              <pre>
                 {
-                  this.props.testRpcState.logs.map((log)=>{
+                  this.props.testRpcState.logs.map((log) => {
                     return (
-                      <li>
-                        {log}
-                      </li>
+                      `[${new Date().toLocaleTimeString()}] ${log}\n`
                     )
                   })
                 }
-              </ul>
+              </pre>
             </div>
           </div>
         </div>
