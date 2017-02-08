@@ -93,6 +93,17 @@ class Application extends EventEmitter {
     return this
   }
 
+  render () {
+    ReactDOM.render(
+      <Provider store={this.store}>
+        <Router history={this.history}>
+          {this.resolveRoutes()}
+        </Router>
+      </Provider>,
+      root
+    )
+  }
+
   async start (id) {
     const root = document.getElementById(id)
     if (!root) {
@@ -121,14 +132,7 @@ class Application extends EventEmitter {
       await this._ready()
     }
 
-    ReactDOM.render(
-      <Provider store={this.store}>
-        <Router history={this.history}>
-          {this.resolveRoutes()}
-        </Router>
-      </Provider>,
-      root
-    )
+    this.render()
 
     this.emit('applicationDidStart', this)
   }
