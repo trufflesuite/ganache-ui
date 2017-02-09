@@ -69,11 +69,7 @@ class AccountList extends Component {
 class LoadingAccounts extends Component {
   render () {
     return (
-      <tr>
-        <td colSpan={3}>
-          <Spinner width={40} height={40}/>
-        </td>
-      </tr>
+      <Spinner width={40} height={40}/>
     )
   }
 }
