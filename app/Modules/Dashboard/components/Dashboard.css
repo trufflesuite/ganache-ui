@@ -85,7 +85,7 @@
     box-sizing: border-box;
     padding: 1em;
     font-family: "Ropa Sans";
-    min-height: calc(100vh - 205px);
+    height: 100%;
   }
 }
 

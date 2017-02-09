@@ -20,5 +20,10 @@ export default async function (app, done, error) {
     app.store.dispatch({type: 'APP/TESTRPCLOG', payload: message})
   })
 
+  ipcRenderer.on('APP/BLOCKCHAINSTATE', (event, message) => {
+    console.log(message)
+    app.store.dispatch({type: 'APP/BLOCKCHAINSTATE', payload: message})
+  })
+
   done()
 }

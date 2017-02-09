@@ -93,7 +93,12 @@ class Application extends EventEmitter {
     return this
   }
 
-  render () {
+  renderRoutes (id) {
+    const root = document.getElementById(id)
+    if (!root) {
+      throw new Error(`DOM Node #${id} does not exist!`)
+    }
+
     ReactDOM.render(
       <Provider store={this.store}>
         <Router history={this.history}>
@@ -105,11 +110,6 @@ class Application extends EventEmitter {
   }
 
   async start (id) {
-    const root = document.getElementById(id)
-    if (!root) {
-      throw new Error(`DOM Node #${id} does not exist!`)
-    }
-
     if (this._init) {
       await this._init()
     }
@@ -132,7 +132,7 @@ class Application extends EventEmitter {
       await this._ready()
     }
 
-    this.render()
+    this.renderRoutes(id)
 
     this.emit('applicationDidStart', this)
   }

@@ -7,3 +7,10 @@ export const appStartRpcService = createRequestThunk({
   key: appStartRpcServiceType,
   success: []
 })
+
+export const appGetBlockchainStateType = 'APP/GETBLOCKCHAINSTATE'
+export const appGetBlockChainState = createRequestThunk({
+  request: Api.getBlockchainState,
+  key: appGetBlockchainStateType,
+  success: []
+})

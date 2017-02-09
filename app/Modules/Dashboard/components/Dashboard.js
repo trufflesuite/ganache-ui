@@ -4,27 +4,95 @@ import TestRPCProvider from 'Data/Providers/TestRPCProvider'
 
 import MnemonicAndHdPath from './MnemonicAndHdPath'
 
+import WithEmptyState from 'Elements/WithEmptyState'
+import Spinner from 'Elements/Spinner'
+
 import Styles from './Dashboard.css'
 
+class AccountList extends Component {
+  render () {
+    return <table className={Styles.AccountList}>
+      <thead>
+        <tr>
+          <td>INDEX</td>
+          <td>STATUS</td>
+          <td></td>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          this.props.accounts.sort((a, b) => { return a.index > b.index }).map((account) => {
+            return (
+              <tr key={account.address}>
+                <td>{account.index}</td>
+                <td>{ account.isUnlocked ? '🔓' : '🔐' }</td>
+                <td>
+                  <table>
+                    <thead></thead>
+                    <tbody>
+                      <tr>
+                        <td className={Styles.RowHeader}>
+                          ADDRESS
+                        </td>
+                        <td>{account.address}</td>
+                      </tr>
+                      <tr>
+                        <td className={Styles.RowHeader}>
+                          PRIV. KEY
+                        </td>
+                        <td>{account.privateKey}</td>
+                      </tr>
+                      <tr>
+                        <td className={Styles.RowHeader}>
+                          BALANCE
+                        </td>
+                        <td>{account.balance} WEI</td>
+                      </tr>
+                      <tr>
+                        <td className={Styles.RowHeader}>
+                          NONCE
+                        </td>
+                        <td>{account.nonce}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            )
+          })
+        }
+      </tbody>
+    </table>
+  }
+}
+
+class LoadingAccounts extends Component {
+  render () {
+    return (
+      <tr>
+        <td colSpan={3}>
+          <Spinner width={40} height={40}/>
+        </td>
+      </tr>
+    )
+  }
+}
+
 class Dashboard extends Component {
+  componentDidMount () {
+    this.props.appGetBlockChainState()
+  }
+
   render () {
     return (
       <div className={Styles.Dashboard}>
-
         <div className={Styles.MainContainer}>
           <div className={Styles.LeftSplit}>
-            <table className={Styles.AccountList}>
-              <thead>
-                <tr>
-                  <td>INDEX</td>
-                  <td>STATUS</td>
-                  <td></td>
-                </tr>
-              </thead>
-              <tbody>
-                {this._renderAccountList()}
-              </tbody>
-            </table>
+            <WithEmptyState test={this.props.testRpcState.accounts.length === 0} emptyStateComponent={LoadingAccounts}>
+              <AccountList
+                accounts={this.props.testRpcState.accounts}
+                />
+            </WithEmptyState>
           </div>
           <div className={Styles.RightSplit}>
             <div className={Styles.Controls}>
@@ -59,48 +127,6 @@ class Dashboard extends Component {
         </div>
       </div>
     )
-  }
-
-  _renderAccountList = () => {
-    return this.props.testRpcState.accounts.sort((a, b) => { return a.index > b.index }).map((account) => {
-      return (
-        <tr key={account.address}>
-          <td>{account.index}</td>
-          <td>{ account.isUnlocked ? '🔓' : '🔐' }</td>
-          <td>
-            <table>
-              <thead></thead>
-              <tbody>
-                <tr>
-                  <td className={Styles.RowHeader}>
-                    ADDRESS
-                  </td>
-                  <td>{account.address}</td>
-                </tr>
-                <tr>
-                  <td className={Styles.RowHeader}>
-                    PRIV. KEY
-                  </td>
-                  <td>{account.privateKey}</td>
-                </tr>
-                <tr>
-                  <td className={Styles.RowHeader}>
-                    BALANCE
-                  </td>
-                  <td>{account.balance} WEI</td>
-                </tr>
-                <tr>
-                  <td className={Styles.RowHeader}>
-                    NONCE
-                  </td>
-                  <td>{account.nonce}</td>
-                </tr>
-              </tbody>
-            </table>
-          </td>
-        </tr>
-      )
-    })
   }
 }
 
