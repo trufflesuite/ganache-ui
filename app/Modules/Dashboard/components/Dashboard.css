@@ -121,7 +121,11 @@
         }
 
         table {
-          text-transform: uppercase;;
+          text-transform: uppercase;
+
+          td:nth-child(2) {
+            font-family: "Lucida Console", "Monaco", "Andale Mono", monospace;
+          }
         }
       }
 

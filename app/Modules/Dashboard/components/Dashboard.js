@@ -1,9 +1,5 @@
 import React, {Component} from 'react'
 
-import TestRPCProvider from 'Data/Providers/TestRPCProvider'
-
-import MnemonicAndHdPath from './MnemonicAndHdPath'
-
 import WithEmptyState from 'Elements/WithEmptyState'
 import Spinner from 'Elements/Spinner'
 
@@ -126,4 +122,4 @@ class Dashboard extends Component {
   }
 }
 
-export default TestRPCProvider(Dashboard)
+export default Dashboard

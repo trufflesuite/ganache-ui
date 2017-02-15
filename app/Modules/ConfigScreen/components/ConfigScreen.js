@@ -24,25 +24,25 @@ class ConfigScreen extends Component {
           <form>
             <div>
               <section>
-                <label>TESTRPC PORT NUMBER</label>
+                <h4>TESTRPC PORT NUMBER</h4>
                 <input ref="portNumber" type="text" name="portNumber" defaultValue="8545"/>
               </section>
             </div>
             <div>
               <section>
-                <label>TOTAL ACCOUNTS TO GENERATE</label>
+                <h4>TOTAL ACCOUNTS TO GENERATE</h4>
                 <input ref="totalAccounts" type="text" defaultValue="6" />
               </section>
             </div>
             <div>
               <section>
-                <label>GAS PRICE</label>
+                <h4>GAS PRICE</h4>
                 <input ref="gasPrice" type="text" defaultValue="6" />
               </section>
             </div>
             <div>
               <section>
-                <label>GAS LIMIT</label>
+                <h4>GAS LIMIT</h4>
                 <input ref="gasLimit" type="text" defaultValue="6" />
               </section>
             </div>
@@ -93,7 +93,7 @@ class ConfigScreen extends Component {
               </div>
             <div>
               <section>
-                <label>CREATE LOCKED ACCOUNTS</label>
+                <h4>CREATE LOCKED ACCOUNTS</h4>
                 <div className="Switch">
                   <input type="checkbox" name="accountsLocked" id="AccountsLocked" onChange={this._handleInputChange} />
                   <label htmlFor="AccountsLocked">ACCOUNTS LOCKED</label>
