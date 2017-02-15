@@ -1,0 +1,19 @@
+.MnemonicAndHdPath {
+  display: flex;
+  width: 100%;
+  background-color: #EBF3FD;
+
+  div {
+    flex-grow: 1;
+    margin: 1em 2em 2em 2em;
+
+    h4 {
+      margin: 0;
+    }
+
+    span {
+      text-transform: uppercase;
+      font-family: "Lucida Console", "Monaco", "Andale Mono", monospace;
+    }
+  }
+}
