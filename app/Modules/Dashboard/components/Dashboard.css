@@ -95,6 +95,7 @@
   width: 100%;
   overflow: scroll;
   padding: 1em;
+  margin-bottom: 2em;
   border-collapse: collapse;
 
   thead {
@@ -122,6 +123,17 @@
 
         table {
           text-transform: uppercase;
+
+          td {
+            padding: .3em 0;
+          }
+
+          td:nth-child(1) {
+            letter-spacing: -1px;
+            color: rgba(146, 147, 160, 1.000);
+            white-space: pre;
+            padding-right: 1em;
+          }
 
           td:nth-child(2) {
             font-family: "Lucida Console", "Monaco", "Andale Mono", monospace;

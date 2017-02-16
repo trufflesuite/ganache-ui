@@ -34,9 +34,9 @@ class AccountList extends Component {
                       </tr>
                       <tr>
                         <td className={Styles.RowHeader}>
-                          PRIV. KEY
+                          PRIVATE KEY
                         </td>
-                        <td>{account.privateKey}</td>
+                        <td>0x{account.privateKey}</td>
                       </tr>
                       <tr>
                         <td className={Styles.RowHeader}>
