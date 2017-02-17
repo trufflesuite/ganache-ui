@@ -7,5 +7,17 @@ export default {
 
   getBlockchainState: () => {
     return ApiHelpers.sendIpcMessage('APP/GETBLOCKCHAINSTATE')
+  },
+
+  startMining: () => {
+    return ApiHelpers.sendIpcMessage('APP/STARTMINING')
+  },
+
+  stopMining: () => {
+    return ApiHelpers.sendIpcMessage('APP/STOPMINING')
+  },
+
+  forceMine: () => {
+    return ApiHelpers.sendIpcMessage('APP/FORCEMINE')
   }
 }

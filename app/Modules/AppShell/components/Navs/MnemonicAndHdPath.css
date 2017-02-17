@@ -3,9 +3,11 @@
   width: 100%;
   background-color: #EBF3FD;
 
+  font-size: 0.8em;
+
   div {
     flex-grow: 1;
-    margin: 1em 2em 2em 2em;
+    margin: 1rem 2rem 1rem 2rem;
 
     h4 {
       margin: 0;

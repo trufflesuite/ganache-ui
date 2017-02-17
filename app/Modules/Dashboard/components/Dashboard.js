@@ -10,8 +10,7 @@ class AccountList extends Component {
     return <table className={Styles.AccountList}>
       <thead>
         <tr>
-          <td>INDEX</td>
-          <td>STATUS</td>
+          <td>Accounts</td>
           <td></td>
         </tr>
       </thead>
@@ -20,12 +19,17 @@ class AccountList extends Component {
           this.props.accounts.sort((a, b) => { return a.index > b.index }).map((account) => {
             return (
               <tr key={account.address}>
-                <td>{account.index}</td>
                 <td>{ account.isUnlocked ? '🔓' : '🔐' }</td>
                 <td>
                   <table>
                     <thead></thead>
                     <tbody>
+                      <tr>
+                        <td className={Styles.RowHeader}>
+                          INDEX
+                        </td>
+                        <td>{account.index}</td>
+                      </tr>
                       <tr>
                         <td className={Styles.RowHeader}>
                           ADDRESS
@@ -75,6 +79,18 @@ class Dashboard extends Component {
     this.props.appGetBlockChainState()
   }
 
+  _handleStopMining = (e) => {
+    this.props.appStopMining()
+  }
+
+  _handleStartMining = (e) => {
+    this.props.appStartMining()
+  }
+
+  _handleForceMine = (e) => {
+    this.props.appForceMine()
+  }
+
   render () {
     return (
       <div className={Styles.Dashboard}>
@@ -90,8 +106,9 @@ class Dashboard extends Component {
             <div className={Styles.Controls}>
               <section>
                 <h4>MINING CONTROLS</h4>
-                <button className={Styles.StopMiningBtn}>Stop Mining</button>
-                <button className={Styles.StartMiningBtn}>Start Mining</button>
+                <button className={Styles.StopMiningBtn} disabled={!this.props.testRpcState.isMining} onClick={this._handleStopMining}>Stop Mining</button>
+                <button className={Styles.StartMiningBtn} disabled={this.props.testRpcState.isMining} onClick={this._handleStartMining}>Start Mining</button>
+                <button className={Styles.StartMiningBtn} onClick={this._handleForceMine}>Force Mine</button>
               </section>
             </div>
             <div className={Styles.Controls}>
@@ -100,7 +117,6 @@ class Dashboard extends Component {
                 <button className={Styles.StopMiningBtn}>Create Snapshot</button>
                 <button className={Styles.StartMiningBtn}>Revert Snapshot</button>
                 <button className={Styles.StartMiningBtn}>Increase Time</button>
-                <button className={Styles.StartMiningBtn}>Force Mine</button>
               </section>
             </div>
             <div className={Styles.Log}>

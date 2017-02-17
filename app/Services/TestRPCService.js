@@ -13,6 +13,9 @@ export default class TestRPCService {
 
     ipcMain.on('APP/STARTRPC', this._handleStartTestRpc)
     ipcMain.on('APP/GETBLOCKCHAINSTATE', this._handleGetBlockchainState)
+    ipcMain.on('APP/STARTMINING', this._handleStartMining)
+    ipcMain.on('APP/STOPMINING', this._handleStopMining)
+    ipcMain.on('APP/FORCEMINE', this._handleForceMine)
   }
 
   log = (message) => {
@@ -33,6 +36,21 @@ export default class TestRPCService {
   error = (message) => {
     console.error(message)
     this.webView.send('APP/TESTRPCLOG', {message, level: 'error'})
+  }
+
+  _handleStartMining = (event, arg) => {
+    this.log('Starting Mining....')
+    this.blockChain.startMining(this._handleGetBlockchainState)
+  }
+
+  _handleStopMining = (event, arg) => {
+    this.log('Stopping Mining....')
+    this.blockChain.stopMining(this._handleGetBlockchainState)
+  }
+
+  _handleForceMine = (event, arg) => {
+    this.log('Forcing Mine....')
+    this.blockChain.processBlocks(1, this._handleGetBlockchainState)
   }
 
   _handleStartTestRpc = (event, arg) => {
@@ -83,6 +101,7 @@ export default class TestRPCService {
       isMiningOnInterval: bkChain.is_mining_on_interval,
       isMining: bkChain.is_mining,
       blocktime: bkChain.blocktime,
+      blockNumber: bkChain.blockNumber(),
       networkId: bkChain.net_version
     }
   }

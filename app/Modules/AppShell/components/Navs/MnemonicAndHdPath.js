@@ -14,6 +14,10 @@ export default class MnemonicAndHdPath extends Component {
           <h4>HD PATH</h4>
           <span>{this.props.hdPath}account_index</span>
         </div>
+        <div>
+          <h4>BLOCK NUMBER</h4>
+          <span>{this.props.blockNumber}</span>
+        </div>
       </section>
     )
   }

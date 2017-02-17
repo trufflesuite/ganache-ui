@@ -3,7 +3,6 @@ import React, {Component} from 'react'
 import TestRPCProvider from 'Data/Providers/TestRPCProvider'
 
 import DynamicNavSwitcher from './Navs/DynamicNavSwitcher'
-import MnemonicAndHdPath from './MnemonicAndHdPath'
 
 import Styles from './AppShell.css'
 
@@ -23,10 +22,6 @@ class AppShell extends Component {
     return (
       <div className={Styles.AppShell}>
         <DynamicNavSwitcher currentPath={this.props.location.pathname}/>
-        <MnemonicAndHdPath
-          mnemonic={this.props.testRpcState.mnemonic}
-          hdPath={this.props.testRpcState.hdPath}
-          />
         <div className={Styles.ShellContainer}>
           { this.renderClonedChildrenWithPropsAndPathKey(this.props.children, {...this.props}, segment) }
         </div>

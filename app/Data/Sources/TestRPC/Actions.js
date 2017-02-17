@@ -14,3 +14,24 @@ export const appGetBlockChainState = createRequestThunk({
   key: appGetBlockchainStateType,
   success: []
 })
+
+export const appStartMiningType = 'APP/STARTMINING'
+export const appStartMining = createRequestThunk({
+  request: Api.startMining,
+  key: appStartMiningType,
+  success: []
+})
+
+export const appStopMiningType = 'APP/STOPMINING'
+export const appStopMining = createRequestThunk({
+  request: Api.stopMining,
+  key: appStopMiningType,
+  success: []
+})
+
+export const appForceMineType = 'APP/FORCEMINE'
+export const appForceMine = createRequestThunk({
+  request: Api.forceMine,
+  key: appForceMineType,
+  success: []
+})

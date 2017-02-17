@@ -28,10 +28,17 @@ button {
 
   font-size: 12px;
   font-weight: 600;
-  line-height: 34px;
+  line-height: 32px;
 
   transition: color, background-color .3s;
   transition: margin .1s;
+
+  &[disabled] {
+    background-color: transparent;
+    color: #888;
+    border: 1px solid #888;
+    cursor: not-allowed;
+  }
 }
 
 .btn-primary {
