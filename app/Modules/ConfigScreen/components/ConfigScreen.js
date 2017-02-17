@@ -36,14 +36,20 @@ class ConfigScreen extends Component {
             </div>
             <div>
               <section>
+                <h4>BLOCK TIME (SECONDS)</h4>
+                <input ref="blockTime" type="text" defaultValue="1" />
+              </section>
+            </div>
+            <div>
+              <section>
                 <h4>GAS PRICE</h4>
-                <input ref="gasPrice" type="text" defaultValue="6" />
+                <input ref="gasPrice" type="text" defaultValue="1" />
               </section>
             </div>
             <div>
               <section>
                 <h4>GAS LIMIT</h4>
-                <input ref="gasLimit" type="text" defaultValue="6" />
+                <input ref="gasLimit" type="text" defaultValue="4712388" />
               </section>
             </div>
             <div>
@@ -137,6 +143,7 @@ class ConfigScreen extends Component {
       fork: this.refs.fork ? this.refs.fork.value : null,
       gasPrice: this.refs.gasPrice.value,
       gasLimit: this.refs.gasLimit.value,
+      blocktime: this.refs.blockTime.value,
       debug: this.state.opcodeDebug,
       verbose: this.state.verboseLogging,
       mnemonic: this.mnemonic ? this.mnemonic.value : null,

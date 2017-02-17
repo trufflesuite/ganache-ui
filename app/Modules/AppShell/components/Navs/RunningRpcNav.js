@@ -29,6 +29,7 @@ class RunningRpcNav extends React.Component {
           mnemonic={this.props.testRpcState.mnemonic}
           hdPath={this.props.testRpcState.hdPath}
           blockNumber={this.props.testRpcState.blockNumber}
+          blockTime={this.props.testRpcState.blocktime}
           />
       </header>
     )
