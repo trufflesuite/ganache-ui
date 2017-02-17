@@ -73,6 +73,7 @@ export default class TestRPCService {
       this.webView.send('APP/TESTRPCSTARTED', blockChainParams)
       this.log('TESTRPC STARTED')
       this.blockChain = bkChain
+      this.refreshTimer = setInterval(this._handleGetBlockchainState, 1000)
     })
   }
 
