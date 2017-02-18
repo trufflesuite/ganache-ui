@@ -117,6 +117,7 @@ class Dashboard extends Component {
                 <button className={Styles.StopMiningBtn} disabled={!this.props.testRpcState.isMining} onClick={this._handleStopMining}>Stop Mining</button>
                 <button className={Styles.StartMiningBtn} disabled={this.props.testRpcState.isMining} onClick={this._handleStartMining}>Start Mining</button>
                 <button className={Styles.StartMiningBtn} onClick={this._handleForceMine}>Force Mine</button>
+                <button className={Styles.StartMiningBtn}>Increase Time</button>
               </section>
             </div>
             <div className={Styles.Controls}>
@@ -124,7 +125,6 @@ class Dashboard extends Component {
                 <h4>SNAPSHOT CONTROLS</h4>
                 <button className={Styles.StopMiningBtn} onClick={this._handleMakeSnapshot}>Create Snapshot</button>
                 <button className={Styles.StartMiningBtn} onClick={this._handleRevertSnapshot}>Revert Snapshot</button>
-                <button className={Styles.StartMiningBtn}>Increase Time</button>
               </section>
             </div>
             <div className={Styles.Log}>

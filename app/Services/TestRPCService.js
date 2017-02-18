@@ -109,6 +109,7 @@ export default class TestRPCService {
       mnemonic: bkChain.mnemonic,
       hdPath: bkChain.wallet_hdpath,
       gasPrice: bkChain.gasPriceVal,
+      gasLimit: bkChain.blockchain.blockGasLimit,
       totalAccounts: bkChain.total_accounts,
       coinbase: bkChain.coinbase,
       isMiningOnInterval: bkChain.is_mining_on_interval,

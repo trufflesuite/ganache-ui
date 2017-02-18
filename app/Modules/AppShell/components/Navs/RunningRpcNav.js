@@ -30,6 +30,8 @@ class RunningRpcNav extends React.Component {
           hdPath={this.props.testRpcState.hdPath}
           blockNumber={this.props.testRpcState.blockNumber}
           blockTime={this.props.testRpcState.blocktime}
+          gasPrice={this.props.testRpcState.gasPrice}
+          gasLimit={this.props.testRpcState.gasLimit}
           />
       </header>
     )
