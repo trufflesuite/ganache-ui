@@ -16,6 +16,8 @@ export default class TestRPCService {
     ipcMain.on('APP/STARTMINING', this._handleStartMining)
     ipcMain.on('APP/STOPMINING', this._handleStopMining)
     ipcMain.on('APP/FORCEMINE', this._handleForceMine)
+    ipcMain.on('APP/MAKESNAPSHOT', this._handleMakeSnapshot)
+    ipcMain.on('APP/REVERTSNAPSHOT', this._handleRevertSnapshot)
   }
 
   log = (message) => {
@@ -51,6 +53,16 @@ export default class TestRPCService {
   _handleForceMine = (event, arg) => {
     this.log('Forcing Mine....')
     this.blockChain.processBlocks(1, this._handleGetBlockchainState)
+  }
+
+  _handleMakeSnapshot = (event, arg) => {
+    this.log('Making Snapshot...')
+    this.blockChain.snapshot()
+  }
+
+  _handleRevertSnapshot = (event, arg) => {
+    this.log('Reverting Snapshot...')
+    this.blockChain.revert()
   }
 
   _handleStartTestRpc = (event, arg) => {
@@ -103,7 +115,8 @@ export default class TestRPCService {
       isMining: bkChain.is_mining,
       blocktime: bkChain.blocktime,
       blockNumber: bkChain.blockNumber(),
-      networkId: bkChain.net_version
+      networkId: bkChain.net_version,
+      snapshots: bkChain.snapshots
     }
   }
 

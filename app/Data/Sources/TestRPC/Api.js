@@ -19,5 +19,13 @@ export default {
 
   forceMine: () => {
     return ApiHelpers.sendIpcMessage('APP/FORCEMINE')
+  },
+
+  makeSnapshot: () => {
+    return ApiHelpers.sendIpcMessage('APP/MAKESNAPSHOT')
+  },
+
+  revertSnapshot: (snapshotId) => {
+    return ApiHelpers.sendIpcMessage('APP/REVERTSNAPSHOT', snapshotId)
   }
 }

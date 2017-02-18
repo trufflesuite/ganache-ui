@@ -91,6 +91,14 @@ class Dashboard extends Component {
     this.props.appForceMine()
   }
 
+  _handleMakeSnapshot = (e) => {
+    this.props.appMakeSnapshot()
+  }
+
+  _handleRevertSnapshot = (e) => {
+    this.props.appRevertSnapshot()
+  }
+
   render () {
     return (
       <div className={Styles.Dashboard}>
@@ -114,8 +122,8 @@ class Dashboard extends Component {
             <div className={Styles.Controls}>
               <section>
                 <h4>SNAPSHOT CONTROLS</h4>
-                <button className={Styles.StopMiningBtn}>Create Snapshot</button>
-                <button className={Styles.StartMiningBtn}>Revert Snapshot</button>
+                <button className={Styles.StopMiningBtn} onClick={this._handleMakeSnapshot}>Create Snapshot</button>
+                <button className={Styles.StartMiningBtn} onClick={this._handleRevertSnapshot}>Revert Snapshot</button>
                 <button className={Styles.StartMiningBtn}>Increase Time</button>
               </section>
             </div>

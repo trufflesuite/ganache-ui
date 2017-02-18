@@ -19,8 +19,8 @@ export default class MnemonicAndHdPath extends Component {
           <span>{this.props.blockNumber}</span>
         </div>
         <div>
-          <h4>BLOCK TIME (SEC)</h4>
-          <span>{this.props.blockTime}</span>
+          <h4>BLOCK INTERVAL TIME</h4>
+          <span>{this.props.blockTime} (SEC)</span>
         </div>
       </section>
     )

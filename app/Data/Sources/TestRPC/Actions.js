@@ -35,3 +35,17 @@ export const appForceMine = createRequestThunk({
   key: appForceMineType,
   success: []
 })
+
+export const appMakeSnapshotType = 'APP/MAKESNAPSHOT'
+export const appMakeSnapshot = createRequestThunk({
+  request: Api.makeSnapshot,
+  key: appMakeSnapshotType,
+  success: []
+})
+
+export const appRevertSnapshotType = 'APP/REVERTSNAPSHOT'
+export const appRevertSnapshot = createRequestThunk({
+  request: Api.revertSnapshot,
+  key: appRevertSnapshotType,
+  success: []
+})
