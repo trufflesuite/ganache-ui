@@ -66,27 +66,15 @@
   background-color: #465b6d;
 }
 
-.Log {
+.Logs {
   width: 100%;
   display: flex;
   flex: 1;
-  overflow: scroll;
+  overflow: hidden;
   flex-direction: column;
   composes: Panel from 'CoreStyles/panels.css';
   padding: 1em;
-
-  pre {
-    font-size: 13px;
-    color: #eff1f5;
-    border-radius: 2px;
-    background: #2b303b;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    box-sizing: border-box;
-    padding: 1em;
-    font-family: "Ropa Sans";
-    height: 100%;
-  }
+  position: relative;
 }
 
 .AccountList {

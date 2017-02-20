@@ -1,5 +1,7 @@
 import React, {Component} from 'react'
 
+import LogContainer from './LogContainer'
+
 import WithEmptyState from 'Elements/WithEmptyState'
 import Spinner from 'Elements/Spinner'
 
@@ -127,17 +129,11 @@ class Dashboard extends Component {
                 <button className={Styles.StartMiningBtn} onClick={this._handleRevertSnapshot}>Revert Snapshot</button>
               </section>
             </div>
-            <div className={Styles.Log}>
+            <div className={Styles.Logs}>
               <h4>TESTRPC LOG</h4>
-              <pre>
-                {
-                  this.props.testRpcState.logs.map((log) => {
-                    return (
-                      `[${new Date().toLocaleTimeString()}] ${log}\n`
-                    )
-                  })
-                }
-              </pre>
+              <LogContainer
+                logs={this.props.testRpcState.logs}
+              />
             </div>
           </div>
         </div>
