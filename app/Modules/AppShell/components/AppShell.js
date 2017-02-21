@@ -17,8 +17,6 @@ class AppShell extends Component {
     const path = this.props.location.pathname
     const segment = path.split('/')[1] || 'dashboard'
 
-    console.log(this.props)
-
     return (
       <div className={Styles.AppShell}>
         <DynamicNavSwitcher currentPath={this.props.location.pathname}/>

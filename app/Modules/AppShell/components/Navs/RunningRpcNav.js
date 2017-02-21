@@ -10,7 +10,6 @@ import Styles from './LandingNav.css'
 class RunningRpcNav extends React.Component {
 
   render () {
-    console.log(this.props)
     return (
       <header>
         <nav className={Styles.nav}>
