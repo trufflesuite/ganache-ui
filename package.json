@@ -24,7 +24,8 @@
     "package-win": "npm run build && build --win --x64",
     "package-linux": "npm run build && build --linux",
     "package-all": "npm run build && build -mwl",
-    "cleanup": "mop -v"
+    "cleanup": "mop -v",
+    "rebuild": "electron-rebuild -f"
   },
   "browserslist": "chrome 50",
   "build": {

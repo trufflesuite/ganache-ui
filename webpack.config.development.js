@@ -72,7 +72,9 @@ export default validate(merge(baseConfig, {
   // We use PostCSS for autoprefixing and PreCSS.
   postcss: function (webpack) {
     return [
-      postcssImport(),
+      postcssImport({
+        path: [path.resolve('./app/Styles')]
+      }),
       precss(),
       colorFunction()
     ]

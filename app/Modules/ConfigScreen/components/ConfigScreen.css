@@ -1,6 +1,9 @@
+@import 'colors.css';
+
 .ConfigScreen {
   composes: Panel from 'CoreStyles/panels.css';
-  composes: TextColor from 'CoreStyles/colors.css';
+
+  color: var(--text-color);
 
   width: 60%;
 
