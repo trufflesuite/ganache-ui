@@ -16,6 +16,17 @@
   flex-direction: column;
 }
 
+header {
+  padding: 0 1rem 1rem 1rem;
+  border-bottom: 1px solid var(--app-sidebar-divider-color);
+
+  h1 {
+    margin: 0;
+    color: var(--app-highlight-color);
+    font-size: 22px;
+  }
+}
+
 .footer {
   display: flex;
   flex-direction: column;
@@ -26,6 +37,10 @@
     flex-direction: column;
     width: 100%;
     padding: 1rem;
+
+    &:last-of-type {
+      padding-bottom: 0;
+    }
   }
 
   h4 {
@@ -36,8 +51,17 @@
   }
 }
 
-.StopMiningBtn,
-.StartMiningBtn {
+.MiningBtn {
   composes: btn from 'CoreStyles/buttons.css';
-  background-color: #465b6d;
+  background-color: var(--app-button-primary-background-color);
+  color: var(--app-button-primary-color);
+  margin-bottom: .5rem;
+
+  &[disabled] {
+    border-color: var(--app-button-primary-disabled-border-color);
+  }
+
+  &:first-of-type {
+    margin-top: .5rem;
+  }
 }

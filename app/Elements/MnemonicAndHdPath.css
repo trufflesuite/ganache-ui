@@ -1,6 +1,7 @@
 @import "colors.css";
 
 .MnemonicAndHdPath {
+  display: flex;
   width: 100%;
   background-color: var(--app-mnemonic-background-color);
 
@@ -8,7 +9,6 @@
   margin-bottom: 1em;
 
   div {
-    flex-grow: 1;
     margin: 1rem;
 
     h4 {
@@ -20,4 +20,8 @@
       font-family: "Lucida Console", "Monaco", "Andale Mono", monospace;
     }
   }
+}
+
+.Mnemonic {
+  flex-grow: 1;
 }

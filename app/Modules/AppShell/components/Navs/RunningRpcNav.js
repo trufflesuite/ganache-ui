@@ -45,10 +45,10 @@ class RunningRpcNav extends React.Component {
           </div>
           <div>
             <h4>MINING CONTROLS</h4>
-            <button className={Styles.StopMiningBtn} disabled={!this.props.testRpcState.isMining} onClick={this._handleStopMining}>Stop Mining</button>
-            <button className={Styles.StartMiningBtn} disabled={this.props.testRpcState.isMining} onClick={this._handleStartMining}>Start Mining</button>
-            <button className={Styles.StartMiningBtn} onClick={this._handleForceMine}>Force Mine</button>
-            <button className={Styles.StartMiningBtn}>Increase Time</button>
+            <button className={Styles.MiningBtn} disabled={!this.props.testRpcState.isMining} onClick={this._handleStopMining}>Stop Mining</button>
+            <button className={Styles.MiningBtn} disabled={this.props.testRpcState.isMining} onClick={this._handleStartMining}>Start Mining</button>
+            <button className={Styles.MiningBtn} onClick={this._handleForceMine}>Force Mine</button>
+            <button className={Styles.MiningBtn}>Increase Time</button>
           </div>
         </footer>
       </nav>
