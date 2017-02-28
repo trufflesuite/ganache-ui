@@ -29,6 +29,11 @@ class RunningRpcNav extends React.Component {
           <span>v0.1</span>
         </header>
         <main className={Styles.main}>
+          <h4>MENU</h4>
+          <a href="#" className={Styles.Active}>Dashboard</a>
+          <a href="#">Block Explorer</a>
+          <a href="#">Snapshots <span className={Styles.Badge}>2</span></a>
+          <a href="#">REPL</a>
         </main>
         <footer className={Styles.footer}>
           <div>
