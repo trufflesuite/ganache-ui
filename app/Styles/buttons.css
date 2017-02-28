@@ -42,11 +42,11 @@ button {
 }
 
 .btn-primary {
-  background-color: var(--primary-color);
+  background-color: var(--app-button-primary-background-color);
 
   &:hover {
     margin-top: 3px;
-    background-color: color(var(--primary-color) tint(20%));
+    background-color: color(var(--app-button-primary-background-color) tint(20%));
     color: #fff;
   }
 }

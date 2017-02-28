@@ -14,18 +14,6 @@ export default class MnemonicAndHdPath extends Component {
           <h4>HD PATH</h4>
           <span>{this.props.hdPath}account_index</span>
         </div>
-        <div>
-          <h4>CURRENT BLOCK NUMBER</h4>
-          <span>{this.props.blockNumber}</span>
-        </div>
-        <div>
-          <h4>BLOCK INTERVAL TIME</h4>
-          <span>{this.props.blockTime} (SEC)</span>
-        </div>
-        <div>
-          <h4>GAS PRICE / LIMIT</h4>
-          <span>{this.props.gasPrice} / {this.props.gasLimit}</span>
-        </div>
       </section>
     )
   }

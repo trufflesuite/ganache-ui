@@ -1,38 +1,57 @@
 import React from 'react'
 import TestRPCProvider from 'Data/Providers/TestRPCProvider'
 
-import MnemonicAndHdPath from './MnemonicAndHdPath'
-
-import Spinner from 'Elements/Spinner'
-
-import Styles from './LandingNav.css'
+import Styles from './RunningRpcNav.css'
 
 class RunningRpcNav extends React.Component {
 
+  componentDidMount () {
+    this.props.appGetBlockChainState()
+  }
+
+  _handleStopMining = (e) => {
+    this.props.appStopMining()
+  }
+
+  _handleStartMining = (e) => {
+    this.props.appStartMining()
+  }
+
+  _handleForceMine = (e) => {
+    this.props.appForceMine()
+  }
+
   render () {
     return (
-      <header>
-        <nav className={Styles.nav}>
-          <div className={Styles.nav_left}>
-            <p>TRUFFLE SUITE | ZIRCON</p>
+      <nav className={Styles.nav}>
+        <header>
+          <h1>ZIRCON</h1>
+          <span>v0.1</span>
+        </header>
+        <main className={Styles.main}>
+        </main>
+        <footer className={Styles.footer}>
+          <div>
+            <h4>CURRENT BLOCK NUMBER</h4>
+            <span>{this.props.testRpcState.blockNumber}</span>
           </div>
-          <div className={Styles.nav_center}>
-
+          <div>
+            <h4>BLOCK INTERVAL TIME</h4>
+            <span>{this.props.testRpcState.blocktime} (SEC)</span>
           </div>
-          <div className={Styles.nav_right}>
-            { this.props.testRpcState.testRpcServerRunning ? <span>TestRPC Running</span> : <span>TestRPC Stopped</span>}
-            <Spinner width={20} height={20}/>
+          <div>
+            <h4>GAS PRICE / LIMIT</h4>
+            <span>{this.props.testRpcState.gasPrice} / {this.props.testRpcState.gasLimit}</span>
           </div>
-        </nav>
-        <MnemonicAndHdPath
-          mnemonic={this.props.testRpcState.mnemonic}
-          hdPath={this.props.testRpcState.hdPath}
-          blockNumber={this.props.testRpcState.blockNumber}
-          blockTime={this.props.testRpcState.blocktime}
-          gasPrice={this.props.testRpcState.gasPrice}
-          gasLimit={this.props.testRpcState.gasLimit}
-          />
-      </header>
+          <div>
+            <h4>MINING CONTROLS</h4>
+            <button className={Styles.StopMiningBtn} disabled={!this.props.testRpcState.isMining} onClick={this._handleStopMining}>Stop Mining</button>
+            <button className={Styles.StartMiningBtn} disabled={this.props.testRpcState.isMining} onClick={this._handleStartMining}>Start Mining</button>
+            <button className={Styles.StartMiningBtn} onClick={this._handleForceMine}>Force Mine</button>
+            <button className={Styles.StartMiningBtn}>Increase Time</button>
+          </div>
+        </footer>
+      </nav>
     )
   }
 

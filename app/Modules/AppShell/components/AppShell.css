@@ -1,11 +1,17 @@
-.AppShell {
+.ConfigShell {
   display: flex;
   flex-direction: column;
   width: 100vw;
   height: 100vh;
 }
 
-.ShellContainer {
+.AppShell {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+}
+
+.ConfigScreen {
   display: flex;
   overflow-y: scroll;
   flex-direction: column;
@@ -14,4 +20,11 @@
   padding: 2rem 0;
   width: 100%;
   min-height: calc(100vh - 70px -2rem);
+}
+
+.ShellContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  width: 100%;
 }

@@ -1,7 +1,8 @@
+@import 'colors.css';
 
 input {
-  color: rgba(176, 198, 255, 1);
-  border: 1px solid rgba(176, 198, 255, 1);
+  color: var(--text-color);
+  border: 1px solid var(--text-color);
   background-color: transparent;
   padding: .5rem;
 }

@@ -1,14 +1,25 @@
 @import './colors';
 
 .Panel {
-  border: 1px solid #414566;
-  background: #31344c;
-  box-shadow: 0 2px 21px 15px rgba(0,0,0,.16);
-  border-top: 2px solid var(--primary-color);
-  padding: 2em;
+  background: var(--app-panel-background-color);
+  padding: 0 1em 1em 1em;
 
-  h4 {
+  border-bottom: 1px solid var(--app-panel-divider-color);
+
+  overflow-y: scroll;
+
+  > h3 {
+    color: var(--app-panel-text-color);
+  }
+
+  > h4 {
     margin: 0 0 1em 0;
-    color: aliceblue;
+    color: var(--app-panel-text-color);
+  }
+
+  > h3,
+  > h4 {
+    border-top: 4px solid var(--app-highlight-color);
+    display: inline-table;
   }
 }

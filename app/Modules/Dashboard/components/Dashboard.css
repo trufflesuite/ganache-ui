@@ -1,8 +1,8 @@
+@import 'colors.css';
+
 .Dashboard {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
   width: 100%;
 
   textarea {
@@ -23,47 +23,18 @@
 
 .MainContainer {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   width: 100%;
   height: 100vh;
 }
 
-.LeftSplit {
-  display: flex;
-  flex: 1;
-  padding: 0 1em 0 2em;
-}
-
-.RightSplit {
+.Accounts {
+  width: 100%;
   display: flex;
   flex: 1;
   flex-direction: column;
-  padding: 0 2em 0 1em;
-}
-
-.Controls {
   composes: Panel from 'CoreStyles/panels.css';
-  padding: 1em;
-  margin-bottom: 1em;
-
-  h4 {
-    margin: 0 0 1em 0;
-    color: aliceblue;
-  }
-
-  button {
-    margin: 0 1em 1em 0;
-
-    &:last-of-type {
-      margin-right: 0;
-    }
-  }
-}
-
-.StopMiningBtn,
-.StartMiningBtn {
-  composes: btn from 'CoreStyles/buttons.css';
-  background-color: #465b6d;
+  position: relative;
 }
 
 .Logs {
@@ -73,88 +44,29 @@
   overflow: hidden;
   flex-direction: column;
   composes: Panel from 'CoreStyles/panels.css';
-  padding: 1em;
   position: relative;
 }
 
 .AccountList {
-  border: 1px solid #414566;
-  background: #31344c;
+  background-color: var(--app-account-list-background);
   width: 100%;
-  overflow: scroll;
-  padding: 1em;
-  margin-bottom: 2em;
-  border-collapse: collapse;
+  padding: 1rem;
 
   thead {
-    text-transform: uppercase;
-    color: aliceblue;
-    border-bottom: 2px solid rgba(106, 137, 165, 1);
-    font-weight: 700;
+    td {
+      font-size: 12px;
+      font-weight: bold;
+      border-bottom: 1px solid var(--app-account-list-header-divider-color);
+    }
+  }
+
+  tbody {
+    font-size: 12px;
+    font-family: "Lucida Console", "Monaco", "Andale Mono", monospace;
 
     td {
-      padding: .7em;
+      padding: .5rem 0;
+      text-transform: uppercase;
     }
   }
-
-  > tbody {
-    > tr {
-      background: rgba(68, 70, 92, 1);
-
-      > td {
-        padding: 1em;
-
-        &:nth-child(1) {
-          text-align: center;
-        }
-
-        table {
-          text-transform: uppercase;
-
-          td {
-            padding: .3em 0;
-          }
-
-          td:nth-child(1) {
-            letter-spacing: -1px;
-            color: rgba(146, 147, 160, 1.000);
-            white-space: pre;
-            padding-right: 1em;
-          }
-
-          td:nth-child(2) {
-            font-family: "Lucida Console", "Monaco", "Andale Mono", monospace;
-          }
-        }
-      }
-
-      &:nth-child(2n) {
-        background: rgba(49, 52, 76, 1);
-      }
-    }
-  }
-
-  td {
-    color: rgba(206, 206, 212, 1);
-    vertical-align: middle;
-    font-size: .9em;
-    padding: 0;
-    margin: 0;
-    border: 1px solid transparent;
-  }
-}
-
-.AccountIndex {
-  padding: .5rem .7rem;
-  background: rgba(206, 206, 212, 1);
-  margin-right: 1rem;
-}
-
-.RowHeader {
-  font-weight: 700;
-  width: 70px;
-}
-
-.LockStatus {
-  margin-right: .5rem;
 }

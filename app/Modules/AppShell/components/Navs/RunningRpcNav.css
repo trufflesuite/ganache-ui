@@ -1,0 +1,43 @@
+
+@import 'colors.css';
+
+.nav {
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 0;
+  background-color: var(--app-sidebar-background-color);
+  border-right: 1px solid var(--app-sidebar-divider-color);
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.footer {
+  display: flex;
+  flex-direction: column;
+
+  div {
+    border-top: 1px solid var(--app-sidebar-divider-color);
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 1rem;
+  }
+
+  h4 {
+    font-size: 12px;
+    color: #7F8FA4;
+    line-height: 14px;
+    margin: 0;
+  }
+}
+
+.StopMiningBtn,
+.StartMiningBtn {
+  composes: btn from 'CoreStyles/buttons.css';
+  background-color: #465b6d;
+}

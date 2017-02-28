@@ -17,10 +17,12 @@ class AppShell extends Component {
     const path = this.props.location.pathname
     const segment = path.split('/')[1] || 'dashboard'
 
+    const isConfigScreen = path === '/'
+
     return (
-      <div className={Styles.AppShell}>
-        <DynamicNavSwitcher currentPath={this.props.location.pathname}/>
-        <div className={Styles.ShellContainer}>
+      <div className={isConfigScreen ? Styles.ConfigShell : Styles.AppShell}>
+        <DynamicNavSwitcher currentPath={this.props.location.pathname} {...this.props}/>
+        <div className={isConfigScreen ? Styles.ConfigScreen : Styles.ShellContainer}>
           { this.renderClonedChildrenWithPropsAndPathKey(this.props.children, {...this.props}, segment) }
         </div>
       </div>

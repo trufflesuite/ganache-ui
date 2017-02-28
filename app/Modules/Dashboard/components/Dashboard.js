@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 
+import MnemonicAndHdPath from 'Elements/MnemonicAndHdPath'
 import LogContainer from './LogContainer'
 
 import WithEmptyState from 'Elements/WithEmptyState'
@@ -12,8 +13,12 @@ class AccountList extends Component {
     return <table className={Styles.AccountList}>
       <thead>
         <tr>
-          <td>Accounts</td>
-          <td></td>
+          <td>INDEX</td>
+          <td>ADDRESS</td>
+          <td>PRIVATE KEY</td>
+          <td>BALANCE (WEI)</td>
+          <td>NONCE</td>
+          <td>STATE</td>
         </tr>
       </thead>
       <tbody>
@@ -21,44 +26,12 @@ class AccountList extends Component {
           this.props.accounts.sort((a, b) => { return a.index > b.index }).map((account) => {
             return (
               <tr key={account.address}>
+                <td>{account.index}</td>
+                <td>{account.address}</td>
+                <td>0x{account.privateKey}</td>
+                <td>{account.balance} WEI</td>
+                <td>{account.nonce}</td>
                 <td>{ account.isUnlocked ? '🔓' : '🔐' }</td>
-                <td>
-                  <table>
-                    <thead></thead>
-                    <tbody>
-                      <tr>
-                        <td className={Styles.RowHeader}>
-                          INDEX
-                        </td>
-                        <td>{account.index}</td>
-                      </tr>
-                      <tr>
-                        <td className={Styles.RowHeader}>
-                          ADDRESS
-                        </td>
-                        <td>{account.address}</td>
-                      </tr>
-                      <tr>
-                        <td className={Styles.RowHeader}>
-                          PRIVATE KEY
-                        </td>
-                        <td>0x{account.privateKey}</td>
-                      </tr>
-                      <tr>
-                        <td className={Styles.RowHeader}>
-                          BALANCE
-                        </td>
-                        <td>{account.balance} WEI</td>
-                      </tr>
-                      <tr>
-                        <td className={Styles.RowHeader}>
-                          NONCE
-                        </td>
-                        <td>{account.nonce}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </td>
               </tr>
             )
           })
@@ -81,18 +54,6 @@ class Dashboard extends Component {
     this.props.appGetBlockChainState()
   }
 
-  _handleStopMining = (e) => {
-    this.props.appStopMining()
-  }
-
-  _handleStartMining = (e) => {
-    this.props.appStartMining()
-  }
-
-  _handleForceMine = (e) => {
-    this.props.appForceMine()
-  }
-
   _handleMakeSnapshot = (e) => {
     this.props.appMakeSnapshot()
   }
@@ -104,38 +65,23 @@ class Dashboard extends Component {
   render () {
     return (
       <div className={Styles.Dashboard}>
-        <div className={Styles.MainContainer}>
-          <div className={Styles.LeftSplit}>
-            <WithEmptyState test={this.props.testRpcState.accounts.length === 0} emptyStateComponent={LoadingAccounts}>
-              <AccountList
-                accounts={this.props.testRpcState.accounts}
-                />
-            </WithEmptyState>
-          </div>
-          <div className={Styles.RightSplit}>
-            <div className={Styles.Controls}>
-              <section>
-                <h4>MINING CONTROLS</h4>
-                <button className={Styles.StopMiningBtn} disabled={!this.props.testRpcState.isMining} onClick={this._handleStopMining}>Stop Mining</button>
-                <button className={Styles.StartMiningBtn} disabled={this.props.testRpcState.isMining} onClick={this._handleStartMining}>Start Mining</button>
-                <button className={Styles.StartMiningBtn} onClick={this._handleForceMine}>Force Mine</button>
-                <button className={Styles.StartMiningBtn}>Increase Time</button>
-              </section>
-            </div>
-            <div className={Styles.Controls}>
-              <section>
-                <h4>SNAPSHOT CONTROLS</h4>
-                <button className={Styles.StopMiningBtn} onClick={this._handleMakeSnapshot}>Create Snapshot</button>
-                <button className={Styles.StartMiningBtn} onClick={this._handleRevertSnapshot}>Revert Snapshot</button>
-              </section>
-            </div>
-            <div className={Styles.Logs}>
-              <h4>TESTRPC LOG</h4>
-              <LogContainer
-                logs={this.props.testRpcState.logs}
-              />
-            </div>
-          </div>
+        <div className={Styles.Accounts}>
+          <h4>ACCOUNTS ({this.props.testRpcState.accounts.length})</h4>
+          <MnemonicAndHdPath
+            mnemonic={this.props.testRpcState.mnemonic}
+            hdPath={this.props.testRpcState.hdPath}
+          />
+          <WithEmptyState test={this.props.testRpcState.accounts.length === 0} emptyStateComponent={LoadingAccounts}>
+            <AccountList
+              accounts={this.props.testRpcState.accounts}
+            />
+          </WithEmptyState>
+        </div>
+        <div className={Styles.Logs}>
+          <h4>TESTRPC LOG</h4>
+          <LogContainer
+            logs={this.props.testRpcState.logs}
+          />
         </div>
       </div>
     )
