@@ -3,6 +3,27 @@
 @import "./Styles/buttons.css";
 @import "./Styles/forms.css";
 
+@font-face{
+  font-family: 'Fira Sans';
+  src: url("../resources/fonts/FiraSans-Regular.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face{
+  font-family: 'Fira Sans Bold';
+  src: url("../resources/fonts/FiraSans-Bold.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face{
+  font-family: 'Fira Sans SemiBold';
+  src: url("../resources/fonts/FiraSans-SemiBold.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+
 html {
   box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
@@ -21,7 +42,8 @@ body {
   background-color: var(--app-background-color);
 
   /*font-family: 'Ropa Sans', sans-serif;*/
-  font-family: "Helvetica Neue Light", HelveticaNeue-Light, "Helvetica Neue", Helvetica, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",  sans-serif;
+  font-family: 'Fira Sans', sans-serif;
+  /* font-family: "Helvetica Neue Light", HelveticaNeue-Light, "Helvetica Neue", Helvetica, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",  sans-serif; */
   font-weight: 200;
 }
 
