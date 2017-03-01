@@ -46,6 +46,10 @@
   flex-direction: column;
 
   padding: 1rem;
+
+  h4 {
+    margin-bottom: 1rem
+  }
 }
 
 header {
