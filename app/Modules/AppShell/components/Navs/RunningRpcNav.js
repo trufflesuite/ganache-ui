@@ -1,4 +1,6 @@
 import React from 'react'
+import { Link } from 'react-router'
+
 import TestRPCProvider from 'Data/Providers/TestRPCProvider'
 
 import Styles from './RunningRpcNav.css'
@@ -30,10 +32,10 @@ class RunningRpcNav extends React.Component {
         </header>
         <main className={Styles.main}>
           <h4>MENU</h4>
-          <a href="#" className={Styles.Active}>Dashboard</a>
-          <a href="#">Block Explorer</a>
-          <a href="#">Snapshots <span className={Styles.Badge}>2</span></a>
-          <a href="#">REPL</a>
+          <Link to="/dashboard" activeClassName={Styles.Active}>Dashboard</Link>
+          <Link to="/block_explorer" activeClassName={Styles.Active}>Block Explorer</Link>
+          <Link to="/snapshots" activeClassName={Styles.Active}>Snapshots <span className={Styles.Badge}>2</span></Link>
+          <Link to="/repl" activeClassName={Styles.Active}>REPL</Link>
         </main>
         <footer className={Styles.footer}>
           <div>

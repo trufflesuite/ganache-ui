@@ -1,6 +1,9 @@
 import AppShell from 'Modules/AppShell'
 import ConfigScreen from 'Modules/ConfigScreen'
 import Dashboard from 'Modules/Dashboard'
+import BlockExplorer from 'Modules/BlockExplorer'
+import Snapshots from 'Modules/Snapshots'
+import Repl from 'Modules/Repl'
 
 import TestRPCSource from 'Data/Sources/TestRPC'
 
@@ -13,6 +16,9 @@ export default async function (app, done, error) {
   app.register(AppShell)
   app.register(ConfigScreen)
   app.register(Dashboard)
+  app.register(BlockExplorer)
+  app.register(Snapshots)
+  app.register(Repl)
 
   // Data Sources
   app.register(TestRPCSource)
