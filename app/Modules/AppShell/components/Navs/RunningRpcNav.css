@@ -81,6 +81,11 @@ header {
     }
   }
 
+  span {
+    font-family: "Fira Code Regular", monospace;
+    font-size: 12px;
+  }
+
 }
 
 .MiningBtn {

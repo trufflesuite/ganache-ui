@@ -17,7 +17,7 @@
 
     span {
       text-transform: uppercase;
-      font-family: "Lucida Console", "Monaco", "Andale Mono", monospace;
+      font-family: "Fira Code Regular", monospace;
     }
   }
 }

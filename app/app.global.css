@@ -24,6 +24,13 @@
   font-style: normal;
 }
 
+@font-face{
+  font-family: 'Fira Code Regular';
+  src: url("../resources/fonts/FiraCode-Regular.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+
 html {
   box-sizing: border-box;
   -webkit-font-smoothing: antialiased;

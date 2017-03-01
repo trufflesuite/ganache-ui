@@ -14,7 +14,7 @@
     word-wrap: break-word;
     box-sizing: border-box;
     padding: 1em;
-    font-family: "Ropa Sans";
+    font-family: "Fira Code Regular", monospace;
     overflow: scroll;
     position: absolute;
     top: 0em;
