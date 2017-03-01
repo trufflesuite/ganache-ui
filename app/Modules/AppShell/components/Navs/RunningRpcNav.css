@@ -93,9 +93,6 @@ header {
 }
 
 .MiningBtn {
-  composes: btn from 'CoreStyles/buttons.css';
-  background-color: var(--app-button-primary-background-color);
-  color: var(--app-button-primary-color);
   margin-bottom: .5rem;
 
   &[disabled] {

@@ -9,12 +9,8 @@ button {
   border: 0;
   outline: 0;
 
-  font-family: inherit;
-  font-size: inherit;
-  line-height: inherit;
-}
+  background-color: var(--app-button-primary-background-color);
 
-.btn {
   height: 32px;
   padding: 0 20px;
 
@@ -22,7 +18,7 @@ button {
   white-space: nowrap;
   text-transform: uppercase;
 
-  color: #eee;
+  color: var(--app-button-primary-color);
   border-radius: 3px;
   box-shadow: 0 0 16px rgba(0,0,0,.1);
 
@@ -30,8 +26,7 @@ button {
   font-weight: 600;
   line-height: 32px;
 
-  transition: color, background-color .3s;
-  transition: margin .1s;
+  transition: all .3s;
 
   &[disabled] {
     background-color: transparent;
@@ -39,14 +34,11 @@ button {
     border: 1px solid #888;
     cursor: not-allowed;
   }
-}
-
-.btn-primary {
-  background-color: var(--app-button-primary-background-color);
 
   &:hover {
-    margin-top: 3px;
-    background-color: color(var(--app-button-primary-background-color) tint(20%));
-    color: #fff;
+    background-color: color(var(--app-button-primary-background-color) shade(10%));
+    color: color(var(--app-button-primary-color) shade(20%));
+    box-shadow: 0;
   }
 }
+

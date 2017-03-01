@@ -1,0 +1,25 @@
+@import 'colors.css';
+
+.AccountList {
+  background-color: var(--app-account-list-background);
+  width: 100%;
+  padding: 1rem;
+
+  thead {
+    td {
+      font-size: 12px;
+      font-weight: bold;
+      border-bottom: 1px solid var(--app-account-list-header-divider-color);
+    }
+  }
+
+  tbody {
+    font-size: 12px;
+    font-family: "Fira Code Regular", monospace;
+
+    td {
+      padding: .5rem 0;
+      text-transform: uppercase;
+    }
+  }
+}
