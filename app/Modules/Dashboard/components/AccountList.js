@@ -4,7 +4,7 @@ import Styles from './AccountList.css'
 
 export default class AccountList extends Component {
   accountListRows = (accounts) => {
-    return accounts.sort((a, b) => { return a.index > b.index }).map((account) => {
+    return accounts.sort((a, b) => { return parseInt(a.index, 10) - parseInt(b.index, 10) }).map((account) => {
       return (
         <tr key={account.address}>
           <td>{account.index}</td>
@@ -31,7 +31,6 @@ export default class AccountList extends Component {
         </tr>
       </thead>
       <tbody>
-        { this.accountListRows(this.props.accounts) }
         { this.accountListRows(this.props.accounts) }
       </tbody>
     </table>

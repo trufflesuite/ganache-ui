@@ -49,3 +49,10 @@ export const appRevertSnapshot = createRequestThunk({
   key: appRevertSnapshotType,
   success: []
 })
+
+export const appAddAccountType = 'APP/ADDACCOUNT'
+export const appAddAccount = createRequestThunk({
+  request: Api.addAccount,
+  key: appAddAccountType,
+  success: []
+})

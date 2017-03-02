@@ -22,12 +22,12 @@ class Dashboard extends Component {
     this.props.appGetBlockChainState()
   }
 
-  _handleMakeSnapshot = (e) => {
-    this.props.appMakeSnapshot()
+  nextAccountIndex = () => {
+    return this.props.testRpcState.accounts.length + 1
   }
 
-  _handleRevertSnapshot = (e) => {
-    this.props.appRevertSnapshot()
+  _handleAddAccount = () => {
+    this.props.appAddAccount({index: this.nextAccountIndex()})
   }
 
   render () {
@@ -52,7 +52,7 @@ class Dashboard extends Component {
             </WithEmptyState>
           </main>
           <footer>
-            <button className={Styles.MiningBtn} disabled={!this.props.testRpcState.isMining} onClick={this._handleStopMining}>Add Account</button>
+            <button className={Styles.MiningBtn} onClick={this._handleAddAccount}>Add Account</button>
           </footer>
         </div>
         <div className={Styles.Logs}>

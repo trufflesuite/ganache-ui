@@ -18,6 +18,7 @@ export default class TestRPCService {
     ipcMain.on('APP/FORCEMINE', this._handleForceMine)
     ipcMain.on('APP/MAKESNAPSHOT', this._handleMakeSnapshot)
     ipcMain.on('APP/REVERTSNAPSHOT', this._handleRevertSnapshot)
+    ipcMain.on('APP/ADDACCOUNT', this._handleAddAccount)
   }
 
   log = (message) => {
@@ -63,6 +64,16 @@ export default class TestRPCService {
   _handleRevertSnapshot = (event, arg) => {
     this.log('Reverting Snapshot...')
     this.blockChain.revert()
+  }
+
+  _handleAddAccount = (event, arg) => {
+    this.log('Adding account...')
+    const newAccount = this.blockChain.createAccount(arg)
+    this.blockChain.accounts[newAccount.address] = newAccount
+    if (!this.blockChain.secure) {
+      this.blockChain.unlocked_accounts[newAccount.address] = newAccount
+    }
+    this.log('...account added: ' + newAccount.address)
   }
 
   _handleStartTestRpc = (event, arg) => {

@@ -27,5 +27,9 @@ export default {
 
   revertSnapshot: (snapshotId) => {
     return ApiHelpers.sendIpcMessage('APP/REVERTSNAPSHOT', snapshotId)
+  },
+
+  addAccount: (opts) => {
+    return ApiHelpers.sendIpcMessage('APP/ADDACCOUNT', opts)
   }
 }
