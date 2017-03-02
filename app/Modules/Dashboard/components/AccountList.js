@@ -3,6 +3,21 @@ import React, {Component} from 'react'
 import Styles from './AccountList.css'
 
 export default class AccountList extends Component {
+  accountListRows = (accounts) => {
+    return accounts.sort((a, b) => { return a.index > b.index }).map((account) => {
+      return (
+        <tr key={account.address}>
+          <td>{account.index}</td>
+          <td>{account.address}</td>
+          <td>0x{account.privateKey}</td>
+          <td>{account.balance} WEI</td>
+          <td>{account.nonce}</td>
+          <td>{ account.isUnlocked ? '🔓' : '🔐' }</td>
+        </tr>
+      )
+    })
+  }
+
   render () {
     return <table className={Styles.AccountList}>
       <thead>
@@ -16,20 +31,8 @@ export default class AccountList extends Component {
         </tr>
       </thead>
       <tbody>
-        {
-          this.props.accounts.sort((a, b) => { return a.index > b.index }).map((account) => {
-            return (
-              <tr key={account.address}>
-                <td>{account.index}</td>
-                <td>{account.address}</td>
-                <td>0x{account.privateKey}</td>
-                <td>{account.balance} WEI</td>
-                <td>{account.nonce}</td>
-                <td>{ account.isUnlocked ? '🔓' : '🔐' }</td>
-              </tr>
-            )
-          })
-        }
+        { this.accountListRows(this.props.accounts) }
+        { this.accountListRows(this.props.accounts) }
       </tbody>
     </table>
   }

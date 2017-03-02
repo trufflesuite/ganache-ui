@@ -57,9 +57,16 @@ class Dashboard extends Component {
         </div>
         <div className={Styles.Logs}>
           <h4>TESTRPC LOG</h4>
-          <LogContainer
-            logs={this.props.testRpcState.logs}
-          />
+          <main>
+            <LogContainer
+              logs={this.props.testRpcState.logs}
+            />
+          </main>
+          <footer>
+            <button className={Styles.MiningBtn} disabled={!this.props.testRpcState.isMining} onClick={this._handleStopMining}>Save Logs</button>
+            <button className={Styles.MiningBtn} disabled={!this.props.testRpcState.isMining} onClick={this._handleStopMining}>Copy Logs</button>
+            <button className={Styles.MiningBtn} disabled={!this.props.testRpcState.isMining} onClick={this._handleStopMining}>Clear Logs</button>
+          </footer>
         </div>
       </div>
     )

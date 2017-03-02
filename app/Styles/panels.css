@@ -23,4 +23,20 @@
     border-top: 4px solid var(--app-highlight-color);
     display: inline-table;
   }
+
+  header,
+  main,
+  footer {
+    display: flex;
+  }
+
+  header,
+  footer {
+    flex-shrink: 0;
+  }
+
+  main {
+    overflow: scroll;
+    height: 100%;
+  }
 }
