@@ -56,3 +56,10 @@ export const appAddAccount = createRequestThunk({
   key: appAddAccountType,
   success: []
 })
+
+export const appClearLogsType = 'APP/CLEARLOGS'
+export const appClearLogs = () => {
+  return (dispatch, getState) => {
+    dispatch({ type: appClearLogsType })
+  }
+}

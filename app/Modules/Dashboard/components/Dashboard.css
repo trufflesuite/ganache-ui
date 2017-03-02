@@ -55,5 +55,15 @@
   flex-direction: column;
   composes: Panel from 'CoreStyles/panels.css';
   position: relative;
+
+  footer {
+    padding: 1rem 0;
+    display: flex;
+    justify-content: flex-end;
+
+    button {
+      margin-left: 1rem;
+    }
+  }
 }
 

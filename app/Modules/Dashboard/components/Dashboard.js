@@ -30,6 +30,18 @@ class Dashboard extends Component {
     this.props.appAddAccount({index: this.nextAccountIndex()})
   }
 
+  _handleSaveLog = () => {
+
+  }
+
+  _handleCopyLogs = () => {
+
+  }
+
+  _handleClearLogs = () => {
+    this.props.appClearLogs()
+  }
+
   render () {
     return (
       <div className={Styles.Dashboard}>
@@ -63,9 +75,9 @@ class Dashboard extends Component {
             />
           </main>
           <footer>
-            <button className={Styles.MiningBtn} disabled={!this.props.testRpcState.isMining} onClick={this._handleStopMining}>Save Logs</button>
-            <button className={Styles.MiningBtn} disabled={!this.props.testRpcState.isMining} onClick={this._handleStopMining}>Copy Logs</button>
-            <button className={Styles.MiningBtn} disabled={!this.props.testRpcState.isMining} onClick={this._handleStopMining}>Clear Logs</button>
+            <button className={Styles.MiningBtn} onClick={this._handleSaveLog}>Save Logs</button>
+            <button className={Styles.MiningBtn} onClick={this._handleCopyLogs}>Copy Logs</button>
+            <button className={Styles.MiningBtn} onClick={this._handleClearLogs}>Clear Log</button>
           </footer>
         </div>
       </div>
