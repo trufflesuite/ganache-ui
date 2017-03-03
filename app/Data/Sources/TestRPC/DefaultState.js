@@ -1,7 +1,9 @@
 const DefaultState = {
   testRpcServerRunning: false,
   logs: [],
-  accounts: []
+  accounts: [],
+  blocks: [],
+  transactions: {}
 }
 
 export default DefaultState

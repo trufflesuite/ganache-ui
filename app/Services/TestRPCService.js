@@ -128,7 +128,9 @@ export default class TestRPCService {
       blocktime: bkChain.blocktime,
       blockNumber: bkChain.blockNumber(),
       networkId: bkChain.net_version,
-      snapshots: bkChain.snapshots
+      snapshots: bkChain.snapshots,
+      blocks: bkChain.blockchain.blocks,
+      transactions: bkChain.blockchain.transactions
     }
   }
 

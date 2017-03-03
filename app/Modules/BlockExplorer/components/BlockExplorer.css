@@ -1,0 +1,25 @@
+
+@import 'colors.css';
+
+.BlockExplorer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+
+.Blocks,
+.Transactions {
+  composes: Panel from 'CoreStyles/panels.css';
+  width: 100%;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  position: relative;
+
+  footer {
+    padding: 1rem 0 0 0;
+    display: flex;
+    justify-content: flex-end;
+  }
+}

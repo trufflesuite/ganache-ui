@@ -18,7 +18,9 @@ const mutators = {
     isMining: payload.isMining,
     blocktime: payload.blocktime,
     blockNumber: payload.blockNumber,
-    snapshots: payload.snapshots
+    snapshots: payload.snapshots,
+    blocks: payload.blocks,
+    transactions: payload.transactions
   }),
 
   'APP/BLOCKCHAINSTATE': (state, {type, payload}) => ({
@@ -36,7 +38,9 @@ const mutators = {
     isMining: payload.isMining,
     blocktime: payload.blocktime,
     blockNumber: payload.blockNumber,
-    snapshots: payload.snapshots
+    snapshots: payload.snapshots,
+    blocks: payload.blocks,
+    transactions: payload.transactions
   }),
 
   'APP/TESTRPCLOG': (state, { type, payload }) => ({
