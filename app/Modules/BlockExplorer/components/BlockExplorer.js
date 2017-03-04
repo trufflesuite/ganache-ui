@@ -1,10 +1,14 @@
 import React, { Component } from 'react'
 
+import EtherUtil from 'ethereumjs-util'
+
 import Styles from './BlockExplorer.css'
 
 export default class BlockExplorer extends Component {
   shouldComponentUpdate (nextProps, nextState) {
-    return this.props.testRpcState.blocks.length !== nextProps.testRpcState.blocks.length
+    return true
+    // console.log(this.props.testRpcState.blocks)
+    // return this.props.testRpcState.blocks[0].header.number !== nextProps.testRpcState.blocks[0].header.number
   }
 
   render () {
@@ -22,7 +26,7 @@ export default class BlockExplorer extends Component {
                         <dt>Number</dt>
                         <dd>{block.header.number}</dd>
                         <dt>Hash</dt>
-                        <dd>{block.header.hash}</dd>
+                        <dd>{EtherUtil.bufferToHex(block.hash)}</dd>
                         <dt>Mined On</dt>
                         <dd>{block.header.timestamp}</dd>
                         <dt>Gas Used / Gas Limit</dt>
@@ -32,13 +36,13 @@ export default class BlockExplorer extends Component {
                         <dt>Total Difficulty</dt>
                         <dd>{block.header.difficulty}</dd>
                         <dt>Parent Hash</dt>
-                        <dd>{block.header.parentHash}</dd>
+                        <dd>{EtherUtil.bufferToHex(block.header.parentHash)}</dd>
                         <dt>Nonce</dt>
                         <dd>{block.header.nonce}</dd>
                         <dt>Receipts Root</dt>
-                        <dd>{block.header.receiptTrie}</dd>
+                        <dd>{EtherUtil.bufferToHex(block.header.receiptTrie)}</dd>
                         <dt>State Root</dt>
-                        <dd>{block.header.stateRoot}</dd>
+                        <dd>{EtherUtil.bufferToHex(block.header.stateRoot)}</dd>
                         <dt>Bloom</dt>
                         <dd>{block.header.bloom}</dd>
                         <dt>Extra Data</dt>

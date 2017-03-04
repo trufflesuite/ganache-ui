@@ -1,4 +1,5 @@
 import TestRPC from 'ethereumjs-testrpc'
+import EtherUtil from 'ethereumjs-util'
 import ConversionUtils from 'ethereumjs-testrpc/lib/utils/to'
 
 export default class TestRPCService {
@@ -129,9 +130,23 @@ export default class TestRPCService {
       blockNumber: bkChain.blockNumber(),
       networkId: bkChain.net_version,
       snapshots: bkChain.snapshots,
-      blocks: bkChain.blockchain.blocks,
+      blocks: this._getRecentBlocks(bkChain),
       transactions: bkChain.blockchain.transactions
     }
+  }
+
+  _getRecentBlocks = (bkChain) => {
+    let blocks = bkChain.blockchain.blocks.sort((a, b) => {
+      return EtherUtil.bufferToInt(a.header.number) - EtherUtil.bufferToInt(b.header.number)
+    }).reverse().slice(0, 5)
+
+    // The block objects will loose prototype functions when serialized up to the Renderer
+    return blocks.map((block) => {
+      let newBlock = Object.assign({}, block)
+      console.log(block.header.parentHash)
+      newBlock.hash = block.hash()
+      return newBlock
+    })
   }
 
 }
