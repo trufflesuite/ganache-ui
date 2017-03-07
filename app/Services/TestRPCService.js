@@ -137,10 +137,11 @@ export default class TestRPCService {
 
   _getRecentBlocks = (bkChain) => {
     let blocks = bkChain.blockchain.blocks.sort((a, b) => {
+      console.log(a.header.parentHash, b.header.parentHash)
       return EtherUtil.bufferToInt(a.header.number) - EtherUtil.bufferToInt(b.header.number)
     }).reverse().slice(0, 5)
 
-    // The block objects will loose prototype functions when serialized up to the Renderer
+    // The block objects will lose prototype functions when serialized up to the Renderer
     return blocks.map((block) => {
       let newBlock = Object.assign({}, block)
       console.log(block.header.parentHash)

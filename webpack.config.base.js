@@ -18,7 +18,8 @@ export default validate({
     }, {
       test: /\.json$/,
       loader: 'json-loader'
-    }]
+    }],
+    noParse: /bindings/
   },
 
   output: {
