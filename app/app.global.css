@@ -3,43 +3,52 @@
 @import "./Styles/buttons.css";
 @import "./Styles/forms.css";
 
-@font-face{
-  font-family: 'Fira Sans';
+@font-face {
+  font-family: "Fira Sans";
+  font-weight: 300;
+  font-style: normal;
+
   src: url("../resources/fonts/FiraSans-Regular.ttf") format("truetype");
-  font-weight: 300;
-  font-style: normal;
 }
 
-@font-face{
-  font-family: 'Fira Sans Bold';
+@font-face {
+  font-family: "Fira Sans Bold";
+  font-weight: 300;
+  font-style: normal;
+
   src: url("../resources/fonts/FiraSans-Bold.ttf") format("truetype");
-  font-weight: 300;
-  font-style: normal;
 }
 
-@font-face{
-  font-family: 'Fira Sans SemiBold';
+@font-face {
+  font-family: "Fira Sans SemiBold";
+  font-weight: 300;
+  font-style: normal;
+
   src: url("../resources/fonts/FiraSans-SemiBold.ttf") format("truetype");
-  font-weight: 300;
-  font-style: normal;
 }
 
-@font-face{
-  font-family: 'Fira Code Regular';
-  src: url("../resources/fonts/FiraCode-Regular.ttf") format("truetype");
+@font-face {
+  font-family: "Fira Code Regular";
   font-weight: 300;
   font-style: normal;
+
+  src: url("../resources/fonts/FiraCode-Regular.ttf") format("truetype");
 }
 
 html {
   box-sizing: border-box;
+
+  text-shadow: 1px 1px 1px rgba(0,0,0,.004);
+
+  font-smooth: always;
+
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-smooth: always;
-  text-shadow: 1px 1px 1px rgba(0,0,0,0.004);
 }
 
-*, *:before, *:after {
+*,
+*:before,
+*:after {
   box-sizing: inherit;
 }
 
@@ -54,19 +63,20 @@ a {
 html,
 body {
   padding: 0;
+  /* Disable text selection */
+
+  -webkit-user-select: none;
+
   background-color: var(--app-background-color);
 
-  /*font-family: 'Ropa Sans', sans-serif;*/
-  font-family: 'Fira Sans', sans-serif;
-  /* font-family: "Helvetica Neue Light", HelveticaNeue-Light, "Helvetica Neue", Helvetica, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",  sans-serif; */
+  font-family: "Fira Sans", sans-serif;
   font-weight: 200;
 
-   /* Disable text selection */
-  -webkit-user-select: none;
   -webkit-app-region: drag;
 }
 
 a {
+  text-shadow: 1px 1px 1px rgba(0,0,0,.004);
+
   -webkit-font-smoothing: antialiased;
-  text-shadow: 1px 1px 1px rgba(0,0,0,0.004);
 }

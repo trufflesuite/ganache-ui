@@ -17,37 +17,87 @@ export default class BlockExplorer extends Component {
         <div className={Styles.Blocks}>
           <h4>BLOCKS ({this.props.testRpcState.blocks.length})</h4>
           <main>
-            <ul>
+            <ul className={Styles.BlockList}>
               {
                 this.props.testRpcState.blocks.map((block) => {
                   return (
-                    <li key={block.header.stateRoot}>
-                      <dl className={Styles.BlockData}>
-                        <dt>Number</dt>
-                        <dd>{block.header.number}</dd>
-                        <dt>Hash</dt>
-                        <dd>{EtherUtil.bufferToHex(block.hash)}</dd>
-                        <dt>Mined On</dt>
-                        <dd>{block.header.timestamp}</dd>
-                        <dt>Gas Used / Gas Limit</dt>
-                        <dd>{block.header.gasUsed} / {block.header.gasLimit}</dd>
-                        <dt>Size</dt>
-                        <dd>{block.header.size} bytes</dd>
-                        <dt>Total Difficulty</dt>
-                        <dd>{block.header.difficulty}</dd>
-                        <dt>Parent Hash</dt>
-                        <dd>{EtherUtil.bufferToHex(block.header.parentHash)}</dd>
-                        <dt>Nonce</dt>
-                        <dd>{block.header.nonce}</dd>
-                        <dt>Receipts Root</dt>
-                        <dd>{EtherUtil.bufferToHex(block.header.receiptTrie)}</dd>
-                        <dt>State Root</dt>
-                        <dd>{EtherUtil.bufferToHex(block.header.stateRoot)}</dd>
-                        <dt>Bloom</dt>
-                        <dd>{block.header.bloom}</dd>
-                        <dt>Extra Data</dt>
-                        <dd><pre>{block.header.extraData}</pre></dd>
-                      </dl>
+                    <li className={Styles.Block} key={block.header.stateRoot}>
+                      <span className={Styles.BlockNumber}>
+                        <p>Block Number</p>
+                        {block.header.number}
+                      </span>
+                      <table className={Styles.BlockData}>
+                        <tr>
+                          <td>
+                            <dl>
+                              <dt>Block Hash</dt>
+                              <dd>{EtherUtil.bufferToHex(block.hash)}</dd>
+                            </dl>
+                          </td>
+                          <td>
+                            <dl>
+                              <dt>Parent Hash</dt>
+                              <dd>{EtherUtil.bufferToHex(block.header.parentHash)}</dd>
+                            </dl>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <dl>
+                              <dt>Mined On</dt>
+                              <dd>{block.header.timestamp}</dd>
+                            </dl>
+                          </td>
+                          <td>
+                            <dl>
+                              <dt>Gas Used / Gas Limit</dt>
+                              <dd>{block.header.gasUsed} / {block.header.gasLimit}</dd>
+                            </dl>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <dl>
+                              <dt>Size</dt>
+                              <dd>{block.header.size} bytes</dd>
+                            </dl>
+                          </td>
+                          <td>
+                            <dl>
+                              <dt>Receipts Root</dt>
+                              <dd>{EtherUtil.bufferToHex(block.header.receiptTrie)}</dd>
+                            </dl>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <dl>
+                              <dt>Nonce</dt>
+                              <dd>{block.header.nonce || '0x0'}</dd>
+                            </dl>
+                          </td>
+                          <td>
+                            <dl>
+                              <dt>State Root</dt>
+                              <dd>{EtherUtil.bufferToHex(block.header.stateRoot)}</dd>
+                            </dl>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <dl>
+                              <dt>Bloom</dt>
+                              <dd className={Styles.Bloom}>{block.header.bloom}</dd>
+                            </dl>
+                          </td>
+                          <td>
+                            <dl>
+                              <dt>Extra Data</dt>
+                              <dd><pre>{block.header.extraData || '0x0'}</pre></dd>
+                            </dl>
+                          </td>
+                        </tr>
+                      </table>
                     </li>
                   )
                 })

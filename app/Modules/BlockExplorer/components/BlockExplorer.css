@@ -1,25 +1,105 @@
-
-@import 'colors.css';
+@import "colors.css";
 
 .BlockExplorer {
   display: flex;
   flex-direction: column;
+
   width: 100%;
 }
 
 
 .Blocks,
 .Transactions {
-  composes: Panel from 'CoreStyles/panels.css';
-  width: 100%;
-  display: flex;
-  flex: 1;
-  flex-direction: column;
   position: relative;
 
-  footer {
-    padding: 1rem 0 0 0;
-    display: flex;
-    justify-content: flex-end;
-  }
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+
+  width: 100%;
+
+  composes: Panel from "CoreStyles/panels.css";
+}
+
+.Blocks footer,
+.Transactions footer {
+  display: flex;
+  justify-content: flex-end;
+
+  padding: 1rem 0 0 0;
+}
+
+.BlockList {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+
+  list-style: none;
+}
+
+.Block {
+  display: flex;
+  overflow: hidden;
+
+  margin-bottom: 1rem;
+  padding: 1rem;
+
+  background: #fff;
+
+  font-family: "Fira Code", monospaced;
+}
+
+.BlockData {
+  flex: 1;
+
+  width: 100%;
+  margin: 0;
+  padding: 0;
+
+  border-collapse: collapse;
+
+  font-size: .8rem;
+}
+
+.BlockData tr td {
+  padding: 0 0 1rem 0;
+  vertical-align: top;
+}
+
+.BlockData dl {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.BlockData  dt {
+  text-transform: uppercase;
+
+  font-weight: 900;
+}
+
+.BlockData  dd {
+  margin: 0;
+}
+
+.BlockNumber {
+  flex: 0;
+}
+
+.BlockNumber p {
+  margin: 0 1rem 0 0;
+  padding: 0;
+
+  text-transform: uppercase;
+
+  font-weight: 900;
+}
+
+.Bloom {
+  display: inline-block;
+
+  width: 300px;
+
+  word-wrap: break-word;
+  word-break: break-word;
 }
