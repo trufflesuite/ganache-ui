@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-
+import Moment from 'react-moment'
 import EtherUtil from 'ethereumjs-util'
 
 import Styles from './BlockExplorer.css'
@@ -15,7 +15,7 @@ export default class BlockExplorer extends Component {
     return (
       <div className={Styles.BlockExplorer}>
         <div className={Styles.Blocks}>
-          <h4>BLOCKS ({this.props.testRpcState.blocks.length})</h4>
+          <h4>LAST 5 BLOCKS</h4>
           <main>
             <ul className={Styles.BlockList}>
               {
@@ -45,21 +45,21 @@ export default class BlockExplorer extends Component {
                           <td>
                             <dl>
                               <dt>Mined On</dt>
-                              <dd>{block.header.timestamp}</dd>
+                              <dd><Moment unix>{EtherUtil.bufferToInt(block.header.timestamp)}</Moment></dd>
                             </dl>
                           </td>
                           <td>
                             <dl>
                               <dt>Gas Used / Gas Limit</dt>
-                              <dd>{block.header.gasUsed} / {block.header.gasLimit}</dd>
+                              <dd>{EtherUtil.bufferToHex(block.header.gasUsed)} / {EtherUtil.bufferToHex(block.header.gasLimit)}</dd>
                             </dl>
                           </td>
                         </tr>
                         <tr>
                           <td>
                             <dl>
-                              <dt>Size</dt>
-                              <dd>{block.header.size} bytes</dd>
+                              <dt>Mix Hash</dt>
+                              <dd>{EtherUtil.bufferToHex(block.header.mixHash)}</dd>
                             </dl>
                           </td>
                           <td>
@@ -73,7 +73,7 @@ export default class BlockExplorer extends Component {
                           <td>
                             <dl>
                               <dt>Nonce</dt>
-                              <dd>{block.header.nonce || '0x0'}</dd>
+                              <dd>{EtherUtil.bufferToHex(block.header.nonce)}</dd>
                             </dl>
                           </td>
                           <td>
@@ -87,13 +87,17 @@ export default class BlockExplorer extends Component {
                           <td>
                             <dl>
                               <dt>Bloom</dt>
-                              <dd className={Styles.Bloom}>{block.header.bloom}</dd>
+                              <dd className={Styles.Bloom}>{EtherUtil.bufferToHex(block.header.bloom)}</dd>
                             </dl>
                           </td>
                           <td>
                             <dl>
+                              <dt>Transactions</dt>
+                              <dd><pre>{block.transactions}</pre></dd>
+                            </dl>
+                            <dl>
                               <dt>Extra Data</dt>
-                              <dd><pre>{block.header.extraData || '0x0'}</pre></dd>
+                              <dd><pre>{EtherUtil.bufferToHex(block.header.extraData)}</pre></dd>
                             </dl>
                           </td>
                         </tr>

@@ -147,6 +147,7 @@ export default class TestRPCService {
     // The block objects will lose prototype functions when serialized up to the Renderer
     return blocks.map((block) => {
       let newBlock = Object.assign({}, block)
+      console.log(block.transactions)
       newBlock.hash = block.hash()
       return newBlock
     })
