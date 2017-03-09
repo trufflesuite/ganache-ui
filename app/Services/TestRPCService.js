@@ -131,7 +131,7 @@ export default class TestRPCService {
       networkId: bkChain.net_version,
       snapshots: bkChain.snapshots,
       blocks: this._getRecentBlocks(bkChain),
-      transactions: bkChain.blockchain.transactions
+      transactions: this._getRecentTransactions(bkChain)
     }
   }
 
@@ -147,10 +147,19 @@ export default class TestRPCService {
     // The block objects will lose prototype functions when serialized up to the Renderer
     return blocks.map((block) => {
       let newBlock = Object.assign({}, block)
-      console.log(block.transactions)
       newBlock.hash = block.hash()
+      newBlock.transactions = newBlock.transactions.map((tx) => {
+        let newTx = Object.assign({}, tx)
+        newTx.hash = tx.hash()
+        return newTx
+      })
       return newBlock
     })
+  }
+
+  _getRecentTransactions = (bkChain) => {
+    const transactions = bkChain.blockchain.transactions
+    return transactions
   }
 
 }

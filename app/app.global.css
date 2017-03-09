@@ -64,15 +64,14 @@ html,
 body {
   padding: 0;
   /* Disable text selection */
-
-  -webkit-user-select: none;
+  /* -webkit-user-select: none; */
 
   background-color: var(--app-background-color);
 
   font-family: "Fira Sans", sans-serif;
   font-weight: 200;
 
-  -webkit-app-region: drag;
+  /* -webkit-app-region: drag; */
 }
 
 a {

@@ -11,6 +11,16 @@ export default class BlockExplorer extends Component {
     // return this.props.testRpcState.blocks[0].header.number !== nextProps.testRpcState.blocks[0].header.number
   }
 
+  _renderRecentTransaction = (transactions) => {
+    if (transactions.length === 0) {
+      return "NO TRANSACTIONS"
+    }
+
+    return transactions.map((tx) => {
+      return EtherUtil.bufferToHex(tx.hash)
+    })
+  }
+
   render () {
     return (
       <div className={Styles.BlockExplorer}>
@@ -92,8 +102,10 @@ export default class BlockExplorer extends Component {
                           </td>
                           <td>
                             <dl>
-                              <dt>Transactions</dt>
-                              <dd><pre>{block.transactions}</pre></dd>
+                              <dt>Transactions ({block.transactions.length})</dt>
+                              <dd>{
+                                this._renderRecentTransaction(block.transactions)
+                              }</dd>
                             </dl>
                             <dl>
                               <dt>Extra Data</dt>
