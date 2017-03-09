@@ -173,6 +173,62 @@ export default class BlockExplorer extends Component {
                             </dl>
                           </td>
                         </tr>
+                        <tr>
+                          <td>
+                            <dl>
+                              <dt>Init</dt>
+                              <dd>{EtherUtil.bufferToHex(tx.init)}</dd>
+                            </dl>
+                          </td>
+                          <td>
+                            <dl>
+                              <dt>Value</dt>
+                              <dd>{EtherUtil.bufferToHex(tx.value)}</dd>
+                            </dl>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <dl>
+                              <dt>Gas Price</dt>
+                              <dd>{EtherUtil.bufferToHex(tx.gasPrice)}</dd>
+                            </dl>
+                          </td>
+                          <td>
+                            <dl>
+                              <dt>Gas Limit</dt>
+                              <dd>{EtherUtil.bufferToHex(tx.gasLimit)}</dd>
+                            </dl>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td colspan={2}>
+                            <dl>
+                              <dt>Data</dt>
+                              <dd className={Styles.TxData}>{EtherUtil.bufferToHex(tx.data)}</dd>
+                            </dl>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <dl>
+                              <dt>V</dt>
+                              <dd>{EtherUtil.bufferToHex(tx.v)}</dd>
+                            </dl>
+                          </td>
+                          <td>
+                            <dl>
+                              <dt>R</dt>
+                              <dd>{EtherUtil.bufferToHex(tx.r)}</dd>
+                            </dl>
+                          </td>
+                          <td>
+                            <dl>
+                              <dt>S</dt>
+                              <dd>{EtherUtil.bufferToHex(tx.s)}</dd>
+                            </dl>
+                          </td>
+                        </tr>
                       </table>
                     </li>
                   )

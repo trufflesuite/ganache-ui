@@ -101,7 +101,8 @@
   font-weight: 900;
 }
 
-.Bloom {
+.Bloom,
+.TxData {
   display: inline-block;
 
   width: 300px;
