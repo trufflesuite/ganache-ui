@@ -30,7 +30,7 @@ export default class ReplService {
     this.replStream = new ReplStream()
 
     const _repl = Repl.REPLServer(
-      'testrpc > ',
+      '',
       this.replStream
     )
     Object.defineProperty(this, 'repl', {
@@ -40,7 +40,7 @@ export default class ReplService {
   }
 
   getReplContents = () => {
-    return this.replStream.messages
+    return this.replStream.messages.shift()
   }
 
   sendReplInput = (input) => {
