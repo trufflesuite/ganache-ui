@@ -3,8 +3,8 @@ import { Route } from 'react-router'
 
 import Repl from './components/Repl'
 
-export default function routes (store, children = null) {
+export default function routes (store, children = null, appServices) {
   return (
-    <Route path="/repl" component={Repl} />
+    <Route path="/repl" component={props => <Repl {...this.props} appServices={appServices} />} />
   )
 }

@@ -179,6 +179,7 @@
     "precss": "^1.4.0",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
+    "react-input-text": "0.0.2",
     "react-moment": "^0.2.2",
     "react-redux": "^5.0.2",
     "react-router": "^3.0.1",

@@ -2,6 +2,8 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import EventEmitter from 'events'
 
+import ReplService from 'Services/ReplService'
+
 import { combineReducers } from 'redux'
 import { Provider } from 'react-redux'
 import { Router } from 'react-router'
@@ -27,6 +29,14 @@ class Application extends EventEmitter {
     Object.defineProperty(this, 'reducers', {
       enumerable: false,
       get: () => _reducers
+    })
+
+    const _appServices = {
+      repl: new ReplService()
+    }
+    Object.defineProperty(this, 'appServices', {
+      enumerable: false,
+      get: () => _appServices
     })
 
     const _modules = []
@@ -70,7 +80,7 @@ class Application extends EventEmitter {
       .filter(m => !!m.routes)
       .map((c, i) => this.resolveRoutesForModule(c))
 
-    return React.cloneElement(m.routes(this.store, children), {key: m.name})
+    return React.cloneElement(m.routes(this.store, children, this.appServices), {key: m.name})
   }
 
   getSubmodulesOf (module) {
