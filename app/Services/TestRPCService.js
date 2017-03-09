@@ -148,18 +148,32 @@ export default class TestRPCService {
     return blocks.map((block) => {
       let newBlock = Object.assign({}, block)
       newBlock.hash = block.hash()
-      newBlock.transactions = newBlock.transactions.map((tx) => {
-        let newTx = Object.assign({}, tx)
-        newTx.hash = tx.hash()
-        return newTx
-      })
+      newBlock.transactions = newBlock.transactions.map(this._marshallTransaction)
       return newBlock
     })
   }
 
   _getRecentTransactions = (bkChain) => {
-    const transactions = bkChain.blockchain.transactions
+    const blocks = bkChain.blockchain.blocks
+    const blockHeight = bkChain.blockchain.blocks.length - 1
+
+    let transactions = []
+    let blockIndex = blockHeight
+
+    while (transactions.length < 5 && blockIndex > 0) {
+      if (blocks[blockIndex].transactions.length > 0) {
+        transactions = transactions.concat(blocks[blockIndex].transactions.map(this._marshallTransaction))
+      }
+      blockIndex--
+    }
+
     return transactions
+  }
+
+  _marshallTransaction = (transaction) => {
+    let newTx = Object.assign({}, transaction)
+    newTx.hash = transaction.hash()
+    return newTx
   }
 
 }

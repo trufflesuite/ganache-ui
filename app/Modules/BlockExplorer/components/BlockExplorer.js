@@ -13,7 +13,7 @@ export default class BlockExplorer extends Component {
 
   _renderRecentTransaction = (transactions) => {
     if (transactions.length === 0) {
-      return "NO TRANSACTIONS"
+      return 'NO TRANSACTIONS'
     }
 
     return transactions.map((tx) => {
@@ -22,6 +22,8 @@ export default class BlockExplorer extends Component {
   }
 
   render () {
+    let { transactions } = this.props.testRpcState
+
     return (
       <div className={Styles.BlockExplorer}>
         <div className={Styles.Blocks}>
@@ -124,8 +126,59 @@ export default class BlockExplorer extends Component {
           </footer>
         </div>
         <div className={Styles.Transactions}>
-          <h4>TRANSACTIONS ({Object.keys(this.props.testRpcState.transactions).length})</h4>
+          <h4>LAST 5 TRANSACTIONS</h4>
           <main>
+            <ul className={Styles.TransactionList}>
+              {
+                transactions.map((tx) => {
+                  console.log(tx)
+                  return (
+                    <li className={Styles.Transaction} key={tx.hash}>
+                      <table className={Styles.TransactionData}>
+                        <tr>
+                          <td>
+                            <dl>
+                              <dt>Transaction Hash</dt>
+                              <dd>{EtherUtil.bufferToHex(tx.hash)}</dd>
+                            </dl>
+                          </td>
+                          <td>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <dl>
+                              <dt>From</dt>
+                              <dd>{EtherUtil.bufferToHex(tx.from)}</dd>
+                            </dl>
+                          </td>
+                          <td>
+                            <dl>
+                              <dt>To</dt>
+                              <dd>{EtherUtil.bufferToHex(tx.to)}</dd>
+                            </dl>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <dl>
+                              <dt>Nonce</dt>
+                              <dd>{EtherUtil.bufferToHex(tx.nonce)}</dd>
+                            </dl>
+                          </td>
+                          <td>
+                            <dl>
+                              <dt>Value</dt>
+                              <dd>{EtherUtil.bufferToHex(tx.value)}</dd>
+                            </dl>
+                          </td>
+                        </tr>
+                      </table>
+                    </li>
+                  )
+                })
+              }
+            </ul>
           </main>
           <footer>
           </footer>
