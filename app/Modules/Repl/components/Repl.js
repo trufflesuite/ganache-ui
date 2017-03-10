@@ -15,7 +15,7 @@ export default class Repl extends Component {
     }
   }
 
-  _buildLogObj = (message, {isCommand = false, isResult = false}) => {
+  _buildLogObj = (message, {isCommand = false, isResult = false}={}) => {
     let type = 'plain'
 
     if (isCommand) {
