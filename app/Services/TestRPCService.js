@@ -8,6 +8,7 @@ export default class TestRPCService {
     this.webView = webView
 
     this.testRpc = null
+    this.port = null
     this.blockChain = null
 
     console.log('Starting TestRPCService')
@@ -92,6 +93,7 @@ export default class TestRPCService {
         console.log('ERR: ', err)
       }
 
+      this.port = arg.port
       const blockChainParams = this._buildBlockChainState(bkChain)
 
       this.webView.send('APP/TESTRPCSTARTED', blockChainParams)
@@ -131,7 +133,9 @@ export default class TestRPCService {
       networkId: bkChain.net_version,
       snapshots: bkChain.snapshots,
       blocks: this._getRecentBlocks(bkChain),
-      transactions: this._getRecentTransactions(bkChain)
+      transactions: this._getRecentTransactions(bkChain),
+      host: 'localhost',
+      port: this.port
     }
   }
 

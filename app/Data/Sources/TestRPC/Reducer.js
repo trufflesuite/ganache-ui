@@ -6,41 +6,13 @@ const mutators = {
   'APP/TESTRPCRUNNING': (state, {type, payload}) => ({
     ...state,
     testRpcServerRunning: true,
-    accounts: payload.accounts,
-    unlockedAccounts: payload.unlockedAccounts,
-    mnemonic: payload.mnemonic,
-    hdPath: payload.hdPath,
-    gasPrice: payload.gasPrice,
-    gasLimit: payload.gasLimit,
-    totalAccounts: payload.totalAccounts,
-    coinbase: payload.coinbase,
-    isMiningOnInterval: payload.isMiningOnInterval,
-    isMining: payload.isMining,
-    blocktime: payload.blocktime,
-    blockNumber: payload.blockNumber,
-    snapshots: payload.snapshots,
-    blocks: payload.blocks,
-    transactions: payload.transactions
+    ...payload
   }),
 
   'APP/BLOCKCHAINSTATE': (state, {type, payload}) => ({
     ...state,
     testRpcServerRunning: true,
-    accounts: payload.accounts,
-    unlockedAccounts: payload.unlockedAccounts,
-    mnemonic: payload.mnemonic,
-    hdPath: payload.hdPath,
-    gasPrice: payload.gasPrice,
-    gasLimit: payload.gasLimit,
-    totalAccounts: payload.totalAccounts,
-    coinbase: payload.coinbase,
-    isMiningOnInterval: payload.isMiningOnInterval,
-    isMining: payload.isMining,
-    blocktime: payload.blocktime,
-    blockNumber: payload.blockNumber,
-    snapshots: payload.snapshots,
-    blocks: payload.blocks,
-    transactions: payload.transactions
+    ...payload
   }),
 
   'APP/TESTRPCLOG': (state, { type, payload }) => ({

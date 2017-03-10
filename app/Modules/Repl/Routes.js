@@ -5,6 +5,6 @@ import Repl from './components/Repl'
 
 export default function routes (store, children = null, appServices) {
   return (
-    <Route path="/repl" component={props => <Repl {...this.props} appServices={appServices} />} />
+    <Route path="/repl" component={props => <Repl {...props} appServices={appServices} />} />
   )
 }

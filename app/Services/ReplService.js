@@ -29,14 +29,16 @@ export default class ReplService {
   constructor () {
     this.replStream = new ReplStream()
 
-    const _repl = Repl.REPLServer(
-      '',
-      this.replStream
-    )
-    Object.defineProperty(this, 'repl', {
-      enumerable: false,
-      get: () => _repl
+    this._repl = Repl.start({
+      prompt: '',
+      input: this.replStream,
+      output: this.replStream
     })
+  }
+
+  setReplContextItem = (key, value) => {
+    console.log('Setting REPL context: ' + key + '=' + value)
+    this._repl.context[key] = value
   }
 
   getReplContents = () => {
