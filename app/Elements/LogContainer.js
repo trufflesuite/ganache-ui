@@ -25,8 +25,8 @@ export default class LogContainer extends Component {
           {
             this.props.logs.map((log, index) => {
               return (
-                <li key={index + log.time}>
-                  [{log.time}] {log.message}
+                <li key={index} className={Styles[log.type || 'plain']}>
+                  {log.time ? `[${log.time}]` : ''} {log.message}
                 </li>
               )
             })

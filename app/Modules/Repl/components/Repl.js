@@ -15,13 +15,33 @@ export default class Repl extends Component {
     }
   }
 
-  _buildLogObj = (message) => {
-    return { time: new Date().toLocaleTimeString(), message }
+  _buildLogObj = (message, {isCommand = false, isResult = false}) => {
+    let type = 'plain'
+
+    if (isCommand) {
+      type = 'command'
+    }
+
+    if (isResult) {
+      type = 'result'
+    }
+
+    if (message.match(/.*Error:/)) {
+      type = 'error'
+    }
+
+    let log = { message, type }
+
+    if (type !== 'error' && !isResult) {
+      log.time = new Date().toLocaleTimeString()
+    }
+
+    return log
   }
 
   _handleReplInput = (value) => {
     this.props.appServices.repl.sendReplInput(value)
-    let log = this._buildLogObj(value + '\n')
+    let log = this._buildLogObj(value + '\n', {isCommand: true})
     this.buffer = this.buffer.concat(log)
     this.setState({currentLine: ''})
   }
@@ -34,7 +54,7 @@ export default class Repl extends Component {
     const newData = this.props.appServices.repl.getReplContents()
 
     if (newData) {
-      let log = this._buildLogObj(newData)
+      let log = this._buildLogObj(newData, {isResult: true})
       this.buffer = this.buffer.concat(log)
       return true
     }
@@ -55,7 +75,7 @@ export default class Repl extends Component {
             value={this.state.currentLine}
             onEnter={this._handleReplInput}
             onChange={this._handleChange}
-            placeholder={"> READY"}
+            placeholder={'> READY'}
           />
         </footer>
       </div>

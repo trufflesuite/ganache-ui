@@ -22,5 +22,22 @@
     left: 0em;
     right: 0em;
     bottom: 0em;
+
+    li {
+      margin-bottom: .3rem;
+    }
   }
+}
+
+.LogContainer .plain {
+  font-weight: 100;
+}
+
+.LogContainer .command {
+  font-weight: 500;
+}
+
+.LogContainer .error {
+  font-weight: 500;
+  color: red;
 }
