@@ -1,0 +1,11 @@
+.Snapshots {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+
+  width: 100%;
+
+  composes: Panel from "CoreStyles/panels.css";
+}
