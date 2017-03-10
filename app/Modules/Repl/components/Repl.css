@@ -9,3 +9,7 @@
 
   composes: Panel from "CoreStyles/panels.css";
 }
+
+.Repl footer input {
+  width: 100%;
+}

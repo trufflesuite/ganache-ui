@@ -3,7 +3,7 @@ import React, {Component} from 'react'
 import Web3 from 'web3'
 
 import MnemonicAndHdPath from 'Elements/MnemonicAndHdPath'
-import LogContainer from './LogContainer'
+import LogContainer from 'Elements/LogContainer'
 import AccountList from './AccountList'
 
 import WithEmptyState from 'Elements/WithEmptyState'

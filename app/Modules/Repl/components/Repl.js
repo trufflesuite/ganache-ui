@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import InputText from 'Elements/InputText'
+import LogContainer from 'Elements/LogContainer'
 import Styles from './Repl.css'
 
 export default class Repl extends Component {
@@ -14,9 +15,14 @@ export default class Repl extends Component {
     }
   }
 
+  _buildLogObj = (message) => {
+    return { time: new Date().toLocaleTimeString(), message }
+  }
+
   _handleReplInput = (value) => {
     this.props.appServices.repl.sendReplInput(value)
-    this.buffer = this.buffer.concat('testrpc > ' + value + '\n')
+    let log = this._buildLogObj(value + '\n')
+    this.buffer = this.buffer.concat(log)
     this.setState({currentLine: ''})
   }
 
@@ -27,8 +33,9 @@ export default class Repl extends Component {
   shouldComponentUpdate (nextProps, nextState) {
     const newData = this.props.appServices.repl.getReplContents()
 
-    if (newData !== '') {
-      this.buffer = this.buffer.concat(newData)
+    if (newData) {
+      let log = this._buildLogObj(newData)
+      this.buffer = this.buffer.concat(log)
       return true
     }
 
@@ -40,9 +47,7 @@ export default class Repl extends Component {
       <div className={Styles.Repl}>
         <h4>REPL</h4>
         <main>
-          <pre>
-            {this.buffer}
-          </pre>
+          <LogContainer logs={this.buffer} />
         </main>
         <footer>
           <InputText
@@ -50,6 +55,7 @@ export default class Repl extends Component {
             value={this.state.currentLine}
             onEnter={this._handleReplInput}
             onChange={this._handleChange}
+            placeholder={"> READY"}
           />
         </footer>
       </div>
