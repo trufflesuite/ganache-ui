@@ -7,7 +7,6 @@ class ReplStream extends EventEmitter {
   constructor (webView) {
     super()
 
-    this.messages = []
     this.readable = true
     this.writeable = true
 
@@ -15,8 +14,6 @@ class ReplStream extends EventEmitter {
   }
 
   write (data) {
-    this.messages.push(data)
-
     if (data !== '') {
       this.webView.send('APP/REPLSTATE', data)
     }
@@ -27,7 +24,7 @@ class ReplStream extends EventEmitter {
   pause () {}
   resume () {}
   destroy () {
-    this.messages = null
+    this.webView = null
   }
   destroySoon () {}
 
@@ -68,7 +65,6 @@ export default class ReplService {
   }
 
   sendReplInput = (e, input) => {
-    console.log(input)
     this.replStream.emit('data', input + '\n')
   }
 }
