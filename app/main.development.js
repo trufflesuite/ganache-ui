@@ -2,11 +2,13 @@ import { app, BrowserWindow, Menu, shell, ipcMain } from 'electron'
 import path from 'path'
 
 import TestRPCService from './Services/TestRPCService'
+import ReplService from './Services/ReplService'
 
 let menu
 let template
 let mainWindow = null
 let testRpcService = null
+let replService = null
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support'); // eslint-disable-line
@@ -62,6 +64,7 @@ app.on('ready', async () => {
   mainWindow.loadURL(`file://${__dirname}/app.html`)
 
   testRpcService = new TestRPCService(ipcMain, mainWindow) // eslint-disable-line
+  replService = new ReplService(ipcMain, mainWindow, testRpcService)
 
   mainWindow.webContents.on('did-finish-load', () => {
     mainWindow.show()

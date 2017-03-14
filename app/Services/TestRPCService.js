@@ -2,12 +2,16 @@ import TestRPC from 'ethereumjs-testrpc'
 import EtherUtil from 'ethereumjs-util'
 import ConversionUtils from 'ethereumjs-testrpc/lib/utils/to'
 
-export default class TestRPCService {
+import EventEmitter from 'events'
+
+export default class TestRPCService extends EventEmitter {
   constructor (ipcMain, webView) {
+    super()
     this.ipcMain = ipcMain
     this.webView = webView
 
     this.testRpc = null
+    this.host = null
     this.port = null
     this.blockChain = null
 
@@ -94,21 +98,25 @@ export default class TestRPCService {
       }
 
       this.port = arg.port
-      const blockChainParams = this._buildBlockChainState(bkChain)
+      this.host = 'localhost'
+      this.blockChain = bkChain
+      const blockChainParams = this._buildBlockChainState()
 
       this.webView.send('APP/TESTRPCSTARTED', blockChainParams)
       this.log('TESTRPC STARTED')
-      this.blockChain = bkChain
+      this.emit('testRpcServiceStarted', this)
       this.refreshTimer = setInterval(this._handleGetBlockchainState, 1000)
     })
   }
 
   _handleGetBlockchainState = () => {
-    const blockChainParams = this._buildBlockChainState(this.blockChain)
+    const blockChainParams = this._buildBlockChainState()
     this.webView.send('APP/BLOCKCHAINSTATE', blockChainParams)
   }
 
-  _buildBlockChainState = (bkChain) => {
+  _buildBlockChainState = () => {
+    const bkChain = this.blockChain
+
     return {
       accounts: Object.keys(bkChain.accounts).map((address, index) => {
         return {

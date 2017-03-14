@@ -2,8 +2,6 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import EventEmitter from 'events'
 
-import ReplService from 'Services/ReplService'
-
 import { combineReducers } from 'redux'
 import { Provider } from 'react-redux'
 import { Router } from 'react-router'
@@ -32,7 +30,6 @@ class Application extends EventEmitter {
     })
 
     const _appServices = {
-      repl: new ReplService()
     }
     Object.defineProperty(this, 'appServices', {
       enumerable: false,

@@ -1,7 +1,5 @@
 import React, {Component} from 'react'
 
-import Web3 from 'web3'
-
 import MnemonicAndHdPath from 'Elements/MnemonicAndHdPath'
 import LogContainer from 'Elements/LogContainer'
 import AccountList from './AccountList'
@@ -21,11 +19,7 @@ class LoadingAccounts extends Component {
 
 class Dashboard extends Component {
   componentDidMount () {
-    this.props.appGetBlockChainState().then(() => {
-      this.props.appServices.repl.setReplContextItem('accounts', this.props.testRpcState.accounts.length)
-      this.props.appServices.repl.setReplContextItem('web3',
-                                                      new Web3(new Web3.providers.HttpProvider(`http://${this.props.testRpcState.host}:${this.props.testRpcState.port}`)))
-    })
+    this.props.appGetBlockChainState()
   }
 
   nextAccountIndex = () => {

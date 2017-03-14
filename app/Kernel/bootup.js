@@ -6,6 +6,7 @@ import Snapshots from 'Modules/Snapshots'
 import Repl from 'Modules/Repl'
 
 import TestRPCSource from 'Data/Sources/TestRPC'
+import ReplSource from 'Data/Sources/Repl'
 
 // Use this function to register your modules and/or your datasources, or your
 // event listeners. The Redux Store is not yet available at this point
@@ -22,6 +23,7 @@ export default async function (app, done, error) {
 
   // Data Sources
   app.register(TestRPCSource)
+  app.register(ReplSource)
 
   app.on('applicationDidStart', async function (app) {
 

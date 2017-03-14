@@ -34,10 +34,10 @@ export const makeApiRequest = (url, options = {}) => {
   return fetch(url, options).then(checkStatus).then(toJson)
 }
 
-export const sendIpcMessage = (type, args) => {
+export const sendIpcMessage = (type, args, returnValue=null) => {
   return new Promise((resolve, reject) => {
     console.log(`IPC SEND: ${type} - ${args}`)
     ipcRenderer.send(type, args)
-    resolve()
+    resolve(returnValue)
   })
 }
