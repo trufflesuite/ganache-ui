@@ -11,6 +11,7 @@ export default class TestRPCService extends EventEmitter {
     this.webView = webView
 
     this.testRpc = null
+    this.web3 = null
     this.host = null
     this.port = null
     this.blockChain = null
@@ -100,6 +101,7 @@ export default class TestRPCService extends EventEmitter {
       this.port = arg.port
       this.host = 'localhost'
       this.blockChain = bkChain
+
       const blockChainParams = this._buildBlockChainState()
 
       this.webView.send('APP/TESTRPCSTARTED', blockChainParams)
