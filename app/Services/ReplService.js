@@ -11,11 +11,21 @@ class ReplStream extends EventEmitter {
     this.writeable = true
 
     this.webView = webView
+
+    this.streamOpen = true
+  }
+
+  closeStream () {
+    this.streamOpen = false
+  }
+
+  openStream () {
+    this.streamOpen = true
   }
 
   write (data) {
-    if (data !== '') {
-      this.webView.send('APP/REPLSTATE', data)
+    if (data !== '' && this.streamOpen) {
+      this.webView.send('APP/REPLSTATE', data.trim())
     }
   }
   end () {}
@@ -36,6 +46,7 @@ export default class ReplService {
     this.ipcMain = ipcMain
     this.webView = webView
     this.replStream = new ReplStream(webView)
+    this.replStream.closeStream()
 
     this._repl = Repl.start({
       prompt: '',
@@ -51,6 +62,7 @@ export default class ReplService {
   _handleStartTestRpc = (testRpcService) => {
     new Web3InitScript(testRpcService.host, testRpcService.port).exportedScript().then((bootScript) => {
       this.replStream.emit('data', bootScript)
+      this.replStream.openStream()
     })
   }
 
@@ -64,6 +76,8 @@ export default class ReplService {
   }
 
   sendReplInput = (e, input) => {
-    this.replStream.emit('data', input + '\n')
+    if (!input.match(/\..+/)) {
+      this.replStream.emit('data', input + '\n')
+    }
   }
 }
