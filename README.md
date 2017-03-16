@@ -1,6 +1,16 @@
 ## ZIRCON
 
-ZIRCON is an Electron based UI for TestRPC. The goals of the project are:
+ZIRCON is an Electron based UI for TestRPC.
+
+This is what it looks like:
+
+[!Zircon](https://github.com/trufflesuite/zircon/blob/master/.github/images/zircon_screenshot.jpg)
+
+It is currently in active development towards a Beta release.
+
+It is not ready for production (but you can play with it now if you want).
+
+The goals of the project are:
 
 - Provide an easier path to getting started with Ethereum Blockchain.
 - Provide a robust cross-platform Desktop Application that bypasses all of the current cross-platform installation issues some people experience with `ethereum-testrpc`.
