@@ -4,7 +4,7 @@ ZIRCON is an Electron based UI for TestRPC.
 
 This is what it looks like:
 
-[!Zircon](https://github.com/trufflesuite/zircon/blob/master/.github/images/zircon_screenshot.jpg)
+![Zircon](https://github.com/trufflesuite/zircon/blob/master/.github/images/zircon_screenshot.jpg)
 
 It is currently in active development towards a Beta release.
 
