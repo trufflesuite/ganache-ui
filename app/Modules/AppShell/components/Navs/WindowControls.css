@@ -13,7 +13,7 @@
   width: 12px;
   height: 12px;
   margin-right: .5rem;
-  color: var(--app-primary-color);
+  color: var(--text-color);
 
   &:hover {
     text-indent: 0;
