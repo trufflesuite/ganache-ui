@@ -24,6 +24,7 @@ class ReplStream extends EventEmitter {
   }
 
   write (data) {
+    console.log(data)
     if (data !== '' && this.streamOpen) {
       this.webView.send('APP/REPLSTATE', data.trim())
     }
@@ -71,12 +72,8 @@ export default class ReplService {
     this._repl.context[key] = value
   }
 
-  getReplContents = () => {
-    return this.replStream.messages.shift()
-  }
-
   sendReplInput = (e, input) => {
-    if (!input.match(/\..+/)) {
+    if (!input.match(/^\..+/)) {
       this.replStream.emit('data', input + '\n')
     }
   }
