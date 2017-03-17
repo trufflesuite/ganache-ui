@@ -8,6 +8,7 @@
   padding: 1rem 0;
   background-color: var(--app-sidebar-background-color);
   border-right: 1px solid var(--app-sidebar-divider-color);
+  -webkit-app-region: drag;
 
   h4 {
     font-size: 12px;
@@ -55,6 +56,7 @@
 header {
   padding: 0 1rem 1rem 1rem;
   border-bottom: 1px solid var(--app-sidebar-divider-color);
+  position: relative;
 
   h1 {
     margin: 0;
@@ -67,6 +69,11 @@ header {
     color: var(--app-sidebar-header-color);
     font-weight: 700;
   }
+}
+
+.RunningRpcWindowButtons {
+  position: absolute;
+  right: .5rem;
 }
 
 .footer {

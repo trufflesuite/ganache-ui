@@ -1,6 +1,10 @@
 import React, { Component } from 'react'
 
+import {remote as Remote} from 'electron'
+
 import Logo from 'Elements/Logo'
+
+import WindowControls from './WindowControls'
 import Styles from './LandingNav.css'
 
 class LandingNav extends Component {
@@ -8,6 +12,7 @@ class LandingNav extends Component {
     return (
       <nav className={Styles.nav}>
         <div className={Styles.nav_left}>
+          <WindowControls />
         </div>
         <div className={Styles.nav_center}>
           <Logo />

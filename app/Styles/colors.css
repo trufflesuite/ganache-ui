@@ -22,4 +22,8 @@
   --app-account-list-header-divider-color: rgba(223, 226, 229, 1.000);
 
   --app-mnemonic-background-color: rgba(255, 255, 255, 1.000);
+
+  --app-title-bar-btn-close: rgba(255, 96, 88, 1.000);
+  --app-title-bar-btn-min: rgba(255, 191, 47, 1.000);
+  --app-title-bar-btn-max: rgba(40, 201, 64, 1.000);
 }

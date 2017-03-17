@@ -57,7 +57,8 @@ app.on('ready', async () => {
     show: false,
     width: 1024,
     height: 930,
-    title: 'Zircon'
+    title: 'Zircon',
+    frame: false
   })
 
   mainWindow.maximize()

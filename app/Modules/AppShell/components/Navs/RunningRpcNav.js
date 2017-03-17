@@ -3,6 +3,8 @@ import { Link } from 'react-router'
 
 import TestRPCProvider from 'Data/Providers/TestRPCProvider'
 
+import WindowControls from './WindowControls'
+
 import Styles from './RunningRpcNav.css'
 
 class RunningRpcNav extends React.Component {
@@ -57,6 +59,7 @@ class RunningRpcNav extends React.Component {
     return (
       <nav className={Styles.nav}>
         <header>
+          <WindowControls className={Styles.RunningRpcWindowButtons} />
           <h1>ZIRCON</h1>
           <span>v0.1</span>
         </header>

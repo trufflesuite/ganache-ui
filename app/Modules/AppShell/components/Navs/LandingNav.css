@@ -6,6 +6,7 @@ $nav-height: 70px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  -webkit-app-region: drag;
 
   width: 100%;
   height: $nav-height;
@@ -147,3 +148,4 @@ $nav-height: 70px;
 .nav_left p {
   color: #B0C7FF;
 }
+
