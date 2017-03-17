@@ -69,8 +69,8 @@ export default class TestRPCService extends EventEmitter {
   }
 
   _handleRevertSnapshot = (event, arg) => {
-    this.log('Reverting Snapshot...')
-    this.blockChain.revert()
+    this.log(`Reverting Snapshot #${arg}...`)
+    this.blockChain.revert(arg)
   }
 
   _handleAddAccount = (event, arg) => {
@@ -162,6 +162,7 @@ export default class TestRPCService extends EventEmitter {
     return blocks.map((block) => {
       let newBlock = Object.assign({}, block)
       newBlock.hash = block.hash()
+      newBlock.header.number = EtherUtil.bufferToInt(block.header.number)
       newBlock.transactions = newBlock.transactions.map(this._marshallTransaction)
       return newBlock
     })

@@ -18,43 +18,37 @@ export const appGetBlockChainState = createRequestThunk({
 export const appStartMiningType = 'APP/STARTMINING'
 export const appStartMining = createRequestThunk({
   request: Api.startMining,
-  key: appStartMiningType,
-  success: []
+  key: appStartMiningType
 })
 
 export const appStopMiningType = 'APP/STOPMINING'
 export const appStopMining = createRequestThunk({
   request: Api.stopMining,
-  key: appStopMiningType,
-  success: []
+  key: appStopMiningType
 })
 
 export const appForceMineType = 'APP/FORCEMINE'
 export const appForceMine = createRequestThunk({
   request: Api.forceMine,
-  key: appForceMineType,
-  success: []
+  key: appForceMineType
 })
 
 export const appMakeSnapshotType = 'APP/MAKESNAPSHOT'
 export const appMakeSnapshot = createRequestThunk({
   request: Api.makeSnapshot,
-  key: appMakeSnapshotType,
-  success: []
+  key: appMakeSnapshotType
 })
 
 export const appRevertSnapshotType = 'APP/REVERTSNAPSHOT'
 export const appRevertSnapshot = createRequestThunk({
   request: Api.revertSnapshot,
-  key: appRevertSnapshotType,
-  success: []
+  key: appRevertSnapshotType
 })
 
 export const appAddAccountType = 'APP/ADDACCOUNT'
 export const appAddAccount = createRequestThunk({
   request: Api.addAccount,
-  key: appAddAccountType,
-  success: []
+  key: appAddAccountType
 })
 
 export const appClearLogsType = 'APP/CLEARLOGS'

@@ -3,7 +3,8 @@ const DefaultState = {
   logs: [],
   accounts: [],
   blocks: [],
-  transactions: {}
+  transactions: {},
+  snapshots: []
 }
 
 export default DefaultState

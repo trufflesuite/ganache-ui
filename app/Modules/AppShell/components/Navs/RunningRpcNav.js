@@ -27,7 +27,33 @@ class RunningRpcNav extends React.Component {
     this.props.appMakeSnapshot()
   }
 
+  _handleRevertSnapshot = (e) => {
+    this.props.appRevertSnapshot(this.props.testRpcState.snapshots.length)
+  }
+
+  _renderSnapshotControls = () => {
+    const { snapshots } = this.props.testRpcState
+    const currentSnapshotId = snapshots.length
+    const hasSnapshots = currentSnapshotId > 0
+    const firstSnapshot = currentSnapshotId === 1
+
+    return (
+      hasSnapshots
+      ? <button className={Styles.MiningBtn}
+          onClick={this._handleRevertSnapshot}
+          disabled={snapshots.length === 0}
+        >
+          { firstSnapshot ? `REVERT TO BASE` : `REVERT TO SNAPSHOT #${currentSnapshotId - 1}` }
+        </button>
+      : null
+    )
+  }
+
   render () {
+    const { isMining, blockNumber, blocktime, gasPrice, snapshots } = this.props.testRpcState
+    const miningPaused = !isMining
+    const currentSnapshotId = snapshots.length
+
     return (
       <nav className={Styles.nav}>
         <header>
@@ -43,15 +69,15 @@ class RunningRpcNav extends React.Component {
         <footer className={Styles.footer}>
           <div>
             <h4>CURRENT BLOCK NUMBER</h4>
-            <span>{this.props.testRpcState.blockNumber}</span>
+            <span>{blockNumber}</span>
           </div>
           <div>
             <h4>BLOCK INTERVAL TIME</h4>
-            <span>{this.props.testRpcState.blocktime} (SEC)</span>
+            <span>{blocktime} (SEC)</span>
           </div>
           <div>
             <h4>GAS PRICE / LIMIT</h4>
-            <span>{this.props.testRpcState.gasPrice} / {this.props.testRpcState.gasLimit}</span>
+            <span>{gasPrice} / {this.props.testRpcState.gasLimit}</span>
           </div>
           <div>
             <h4>MINING CONTROLS</h4>
@@ -59,8 +85,8 @@ class RunningRpcNav extends React.Component {
             <button className={Styles.MiningBtn} disabled={this.props.testRpcState.isMining} onClick={this._handleStartMining}>Start Mining</button>
             <button className={Styles.MiningBtn} onClick={this._handleForceMine}>Force Mine</button>
             <button className={Styles.MiningBtn}>Increase Time</button>
-            <button className={Styles.MiningBtn} onClick={this._handleMakeSnapshot}>TAKE SNAPSHOT</button>
-            <button className={Styles.MiningBtn} onClick={this._handleRevertSnapshot}>REVERT SNAPSHOT</button>
+            { miningPaused ? <button className={Styles.MiningBtn} onClick={this._handleMakeSnapshot}>TAKE SNAPSHOT #{currentSnapshotId + 1}</button> : null }
+            { miningPaused ? this._renderSnapshotControls() : null }
           </div>
         </footer>
       </nav>
