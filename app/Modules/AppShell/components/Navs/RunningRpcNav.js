@@ -23,6 +23,10 @@ class RunningRpcNav extends React.Component {
     this.props.appForceMine()
   }
 
+  _handleMakeSnapshot = (e) => {
+    this.props.appMakeSnapshot()
+  }
+
   render () {
     return (
       <nav className={Styles.nav}>
@@ -34,7 +38,6 @@ class RunningRpcNav extends React.Component {
           <h4>MENU</h4>
           <Link to="/dashboard" activeClassName={Styles.Active}>Dashboard</Link>
           <Link to="/block_explorer" activeClassName={Styles.Active}>Block Explorer</Link>
-          <Link to="/snapshots" activeClassName={Styles.Active}>Snapshots <span className={Styles.Badge}>2</span></Link>
           <Link to="/repl" activeClassName={Styles.Active}>REPL</Link>
         </main>
         <footer className={Styles.footer}>
@@ -56,6 +59,8 @@ class RunningRpcNav extends React.Component {
             <button className={Styles.MiningBtn} disabled={this.props.testRpcState.isMining} onClick={this._handleStartMining}>Start Mining</button>
             <button className={Styles.MiningBtn} onClick={this._handleForceMine}>Force Mine</button>
             <button className={Styles.MiningBtn}>Increase Time</button>
+            <button className={Styles.MiningBtn} onClick={this._handleMakeSnapshot}>TAKE SNAPSHOT</button>
+            <button className={Styles.MiningBtn} onClick={this._handleRevertSnapshot}>REVERT SNAPSHOT</button>
           </div>
         </footer>
       </nav>

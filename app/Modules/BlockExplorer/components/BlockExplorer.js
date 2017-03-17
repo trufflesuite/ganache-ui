@@ -33,7 +33,7 @@ export default class BlockExplorer extends Component {
               {
                 this.props.testRpcState.blocks.map((block) => {
                   return (
-                    <li className={Styles.Block} key={block.header.stateRoot}>
+                    <li className={Styles.Block} key={block.header.number}>
                       <span className={Styles.BlockNumber}>
                         <p>Block Number</p>
                         {block.header.number}
