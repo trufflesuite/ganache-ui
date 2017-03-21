@@ -163,36 +163,24 @@ export default class BlockExplorer extends Component {
                               <dt>Gas Price</dt>
                               <dd>{EtherUtil.bufferToHex(tx.gasPrice)}</dd>
                             </dl>
+                            <dl>
+                              <dt>Data</dt>
+                              <dd className={Styles.TxData}>{EtherUtil.bufferToHex(tx.data)}</dd>
+                            </dl>
                           </td>
                           <td>
                             <dl>
                               <dt>Gas Limit</dt>
                               <dd>{EtherUtil.bufferToHex(tx.gasLimit)}</dd>
                             </dl>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td colspan={2}>
-                            <dl>
-                              <dt>Data</dt>
-                              <dd className={Styles.TxData}>{EtherUtil.bufferToHex(tx.data)}</dd>
-                            </dl>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
                             <dl>
                               <dt>V</dt>
                               <dd>{EtherUtil.bufferToHex(tx.v)}</dd>
                             </dl>
-                          </td>
-                          <td>
                             <dl>
                               <dt>R</dt>
                               <dd>{EtherUtil.bufferToHex(tx.r)}</dd>
                             </dl>
-                          </td>
-                          <td>
                             <dl>
                               <dt>S</dt>
                               <dd>{EtherUtil.bufferToHex(tx.s)}</dd>
