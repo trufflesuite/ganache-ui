@@ -22,6 +22,13 @@ export default class BlockExplorer extends Component {
       <div className={Styles.BlockExplorer}>
         <div className={Styles.Blocks}>
           <h4>LAST 5 BLOCKS</h4>
+          <header>
+            <input
+              type={'text'}
+              className={Styles.BlockSearchInput}
+              placeholder={'Search for Block Number'}
+            />
+          </header>
           <main>
             <ul className={Styles.BlockList}>
               {
@@ -97,6 +104,13 @@ export default class BlockExplorer extends Component {
         </div>
         <div className={Styles.Transactions}>
           <h4>LAST 5 TRANSACTIONS</h4>
+          <header>
+            <input
+              type={'text'}
+              className={Styles.TxSearchInput}
+              placeholder={'Search for TX Hash'}
+            />
+          </header>
           <main>
             <ul className={Styles.TransactionList}>
               {
