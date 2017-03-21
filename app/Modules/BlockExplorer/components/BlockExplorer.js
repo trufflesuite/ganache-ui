@@ -5,12 +5,6 @@ import EtherUtil from 'ethereumjs-util'
 import Styles from './BlockExplorer.css'
 
 export default class BlockExplorer extends Component {
-  shouldComponentUpdate (nextProps, nextState) {
-    return true
-    // console.log(this.props.testRpcState.blocks)
-    // return this.props.testRpcState.blocks[0].header.number !== nextProps.testRpcState.blocks[0].header.number
-  }
-
   _renderRecentTransaction = (transactions) => {
     if (transactions.length === 0) {
       return 'NO TRANSACTIONS'
@@ -45,58 +39,12 @@ export default class BlockExplorer extends Component {
                               <dt>Block Hash</dt>
                               <dd>{EtherUtil.bufferToHex(block.hash)}</dd>
                             </dl>
-                          </td>
-                          <td>
                             <dl>
-                              <dt>Parent Hash</dt>
-                              <dd>{EtherUtil.bufferToHex(block.header.parentHash)}</dd>
+                              <dt>Transactions ({block.transactions.length})</dt>
+                              <dd>{
+                                this._renderRecentTransaction(block.transactions)
+                              }</dd>
                             </dl>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <dl>
-                              <dt>Mined On</dt>
-                              <dd><Moment unix>{EtherUtil.bufferToInt(block.header.timestamp)}</Moment></dd>
-                            </dl>
-                          </td>
-                          <td>
-                            <dl>
-                              <dt>Gas Used / Gas Limit</dt>
-                              <dd>{EtherUtil.bufferToHex(block.header.gasUsed)} / {EtherUtil.bufferToHex(block.header.gasLimit)}</dd>
-                            </dl>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <dl>
-                              <dt>Mix Hash</dt>
-                              <dd>{EtherUtil.bufferToHex(block.header.mixHash)}</dd>
-                            </dl>
-                          </td>
-                          <td>
-                            <dl>
-                              <dt>Receipts Root</dt>
-                              <dd>{EtherUtil.bufferToHex(block.header.receiptTrie)}</dd>
-                            </dl>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <dl>
-                              <dt>Nonce</dt>
-                              <dd>{EtherUtil.bufferToHex(block.header.nonce)}</dd>
-                            </dl>
-                          </td>
-                          <td>
-                            <dl>
-                              <dt>State Root</dt>
-                              <dd>{EtherUtil.bufferToHex(block.header.stateRoot)}</dd>
-                            </dl>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
                             <dl>
                               <dt>Bloom</dt>
                               <dd className={Styles.Bloom}>{EtherUtil.bufferToHex(block.header.bloom)}</dd>
@@ -104,10 +52,32 @@ export default class BlockExplorer extends Component {
                           </td>
                           <td>
                             <dl>
-                              <dt>Transactions ({block.transactions.length})</dt>
-                              <dd>{
-                                this._renderRecentTransaction(block.transactions)
-                              }</dd>
+                              <dt>Parent Hash</dt>
+                              <dd>{EtherUtil.bufferToHex(block.header.parentHash)}</dd>
+                            </dl>
+                            <dl>
+                              <dt>Gas Used / Gas Limit</dt>
+                              <dd>{EtherUtil.bufferToHex(block.header.gasUsed)} / {EtherUtil.bufferToHex(block.header.gasLimit)}</dd>
+                            </dl>
+                            <dl>
+                              <dt>Nonce</dt>
+                              <dd>{EtherUtil.bufferToHex(block.header.nonce)}</dd>
+                            </dl>
+                            <dl>
+                              <dt>Mined On</dt>
+                              <dd><Moment unix>{EtherUtil.bufferToInt(block.header.timestamp)}</Moment></dd>
+                            </dl>
+                            <dl>
+                              <dt>Mix Hash</dt>
+                              <dd>{EtherUtil.bufferToHex(block.header.mixHash)}</dd>
+                            </dl>
+                            <dl>
+                              <dt>Receipts Root</dt>
+                              <dd>{EtherUtil.bufferToHex(block.header.receiptTrie)}</dd>
+                            </dl>
+                            <dl>
+                              <dt>State Root</dt>
+                              <dd>{EtherUtil.bufferToHex(block.header.stateRoot)}</dd>
                             </dl>
                             <dl>
                               <dt>Extra Data</dt>
