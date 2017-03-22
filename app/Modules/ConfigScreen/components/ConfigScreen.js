@@ -17,7 +17,7 @@ class ConfigScreen extends Component {
   render () {
     return (
       <div className={Styles.ConfigScreen}>
-        <header>
+        <header className={Styles.ConfigScreenHeader}>
           <h3>TESTRPC CONFIG OPTIONS</h3>
         </header>
         <section>
