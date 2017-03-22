@@ -2,7 +2,19 @@ import React, { Component } from 'react'
 import Moment from 'react-moment'
 import EtherUtil from 'ethereumjs-util'
 
+import WithEmptyState from 'Elements/WithEmptyState'
+
 import Styles from './BlockExplorer.css'
+
+class EmptyTransactions extends Component {
+  render () {
+    return (
+      <div className={Styles.EmptyTransactions}>
+        <p>No transactions have occured.</p>
+      </div>
+    )
+  }
+}
 
 export default class BlockExplorer extends Component {
   _renderRecentTransaction = (transactions) => {
@@ -112,101 +124,106 @@ export default class BlockExplorer extends Component {
             />
           </header>
           <main>
-            <ul className={Styles.TransactionList}>
-              {
-                transactions.map((tx) => {
-                  console.log(tx)
-                  return (
-                    <li className={Styles.Transaction} key={tx.hash}>
-                      <table className={Styles.TransactionData}>
-                        <tr>
-                          <td>
-                            <dl>
-                              <dt>Transaction Hash</dt>
-                              <dd>{EtherUtil.bufferToHex(tx.hash)}</dd>
-                            </dl>
-                          </td>
-                          <td>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <dl>
-                              <dt>From</dt>
-                              <dd>{EtherUtil.bufferToHex(tx.from)}</dd>
-                            </dl>
-                          </td>
-                          <td>
-                            <dl>
-                              <dt>To</dt>
-                              <dd>{EtherUtil.bufferToHex(tx.to)}</dd>
-                            </dl>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <dl>
-                              <dt>Nonce</dt>
-                              <dd>{EtherUtil.bufferToHex(tx.nonce)}</dd>
-                            </dl>
-                          </td>
-                          <td>
-                            <dl>
-                              <dt>Value</dt>
-                              <dd>{EtherUtil.bufferToHex(tx.value)}</dd>
-                            </dl>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <dl>
-                              <dt>Init</dt>
-                              <dd>{EtherUtil.bufferToHex(tx.init)}</dd>
-                            </dl>
-                          </td>
-                          <td>
-                            <dl>
-                              <dt>Value</dt>
-                              <dd>{EtherUtil.bufferToHex(tx.value)}</dd>
-                            </dl>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <dl>
-                              <dt>Gas Price</dt>
-                              <dd>{EtherUtil.bufferToHex(tx.gasPrice)}</dd>
-                            </dl>
-                            <dl>
-                              <dt>Data</dt>
-                              <dd className={Styles.TxData}>{EtherUtil.bufferToHex(tx.data)}</dd>
-                            </dl>
-                          </td>
-                          <td>
-                            <dl>
-                              <dt>Gas Limit</dt>
-                              <dd>{EtherUtil.bufferToHex(tx.gasLimit)}</dd>
-                            </dl>
-                            <dl>
-                              <dt>V</dt>
-                              <dd>{EtherUtil.bufferToHex(tx.v)}</dd>
-                            </dl>
-                            <dl>
-                              <dt>R</dt>
-                              <dd>{EtherUtil.bufferToHex(tx.r)}</dd>
-                            </dl>
-                            <dl>
-                              <dt>S</dt>
-                              <dd>{EtherUtil.bufferToHex(tx.s)}</dd>
-                            </dl>
-                          </td>
-                        </tr>
-                      </table>
-                    </li>
-                  )
-                })
-              }
-            </ul>
+            <WithEmptyState
+              test={transactions.length === 0}
+              emptyStateComponent={EmptyTransactions}
+            >
+              <ul className={Styles.TransactionList}>
+                {
+                  transactions.map((tx) => {
+                    console.log(tx)
+                    return (
+                      <li className={Styles.Transaction} key={tx.hash}>
+                        <table className={Styles.TransactionData}>
+                          <tr>
+                            <td>
+                              <dl>
+                                <dt>Transaction Hash</dt>
+                                <dd>{EtherUtil.bufferToHex(tx.hash)}</dd>
+                              </dl>
+                            </td>
+                            <td>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <dl>
+                                <dt>From</dt>
+                                <dd>{EtherUtil.bufferToHex(tx.from)}</dd>
+                              </dl>
+                            </td>
+                            <td>
+                              <dl>
+                                <dt>To</dt>
+                                <dd>{EtherUtil.bufferToHex(tx.to)}</dd>
+                              </dl>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <dl>
+                                <dt>Nonce</dt>
+                                <dd>{EtherUtil.bufferToHex(tx.nonce)}</dd>
+                              </dl>
+                            </td>
+                            <td>
+                              <dl>
+                                <dt>Value</dt>
+                                <dd>{EtherUtil.bufferToHex(tx.value)}</dd>
+                              </dl>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <dl>
+                                <dt>Init</dt>
+                                <dd>{EtherUtil.bufferToHex(tx.init)}</dd>
+                              </dl>
+                            </td>
+                            <td>
+                              <dl>
+                                <dt>Value</dt>
+                                <dd>{EtherUtil.bufferToHex(tx.value)}</dd>
+                              </dl>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <dl>
+                                <dt>Gas Price</dt>
+                                <dd>{EtherUtil.bufferToHex(tx.gasPrice)}</dd>
+                              </dl>
+                              <dl>
+                                <dt>Data</dt>
+                                <dd className={Styles.TxData}>{EtherUtil.bufferToHex(tx.data)}</dd>
+                              </dl>
+                            </td>
+                            <td>
+                              <dl>
+                                <dt>Gas Limit</dt>
+                                <dd>{EtherUtil.bufferToHex(tx.gasLimit)}</dd>
+                              </dl>
+                              <dl>
+                                <dt>V</dt>
+                                <dd>{EtherUtil.bufferToHex(tx.v)}</dd>
+                              </dl>
+                              <dl>
+                                <dt>R</dt>
+                                <dd>{EtherUtil.bufferToHex(tx.r)}</dd>
+                              </dl>
+                              <dl>
+                                <dt>S</dt>
+                                <dd>{EtherUtil.bufferToHex(tx.s)}</dd>
+                              </dl>
+                            </td>
+                          </tr>
+                        </table>
+                      </li>
+                    )
+                  })
+                }
+              </ul>
+            </WithEmptyState>
           </main>
           <footer>
           </footer>

@@ -133,3 +133,12 @@
     outline: none;
   }
 }
+
+.EmptyTransactions {
+  display: flex;
+  width: 100%;
+  background-color: var(--app-mnemonic-background-color);
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
