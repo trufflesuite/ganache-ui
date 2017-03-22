@@ -113,7 +113,7 @@ export default class TestRPCService extends EventEmitter {
 
   _handleGetBlockchainState = () => {
     const blockChainParams = this._buildBlockChainState()
-    this.webView.send('APP/BLOCKCHAINSTATE', blockChainParams)
+    this.webView && this.webView.send('APP/BLOCKCHAINSTATE', blockChainParams)
   }
 
   _buildBlockChainState = () => {
