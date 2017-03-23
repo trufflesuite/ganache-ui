@@ -14,7 +14,11 @@ export default class TestRPCService extends EventEmitter {
     this.web3 = null
     this.host = null
     this.port = null
-    this.blockChain = null
+    this.stateManager = null
+
+    this._getLatestAccountInfo = this._getLatestAccountInfo.bind(this)
+    this._buildBlockChainState = this._buildBlockChainState.bind(this)
+    this._handleGetBlockchainState = this._handleGetBlockchainState.bind(this)
 
     console.log('Starting TestRPCService')
 
@@ -50,35 +54,35 @@ export default class TestRPCService extends EventEmitter {
 
   _handleStartMining = (event, arg) => {
     this.log('Starting Mining....')
-    this.blockChain.startMining(this._handleGetBlockchainState)
+    this.stateManager.startMining(this._handleGetBlockchainState)
   }
 
   _handleStopMining = (event, arg) => {
     this.log('Stopping Mining....')
-    this.blockChain.stopMining(this._handleGetBlockchainState)
+    this.stateManager.stopMining(this._handleGetBlockchainState)
   }
 
   _handleForceMine = (event, arg) => {
     this.log('Forcing Mine....')
-    this.blockChain.processBlocks(1, this._handleGetBlockchainState)
+    this.stateManager.processBlocks(1, this._handleGetBlockchainState)
   }
 
   _handleMakeSnapshot = (event, arg) => {
     this.log('Making Snapshot...')
-    this.blockChain.snapshot()
+    this.stateManager.snapshot()
   }
 
   _handleRevertSnapshot = (event, arg) => {
     this.log(`Reverting Snapshot #${arg}...`)
-    this.blockChain.revert(arg)
+    this.stateManager.revert(arg)
   }
 
   _handleAddAccount = (event, arg) => {
     this.log('Adding account...')
-    const newAccount = this.blockChain.createAccount(arg)
-    this.blockChain.accounts[newAccount.address] = newAccount
-    if (!this.blockChain.secure) {
-      this.blockChain.unlocked_accounts[newAccount.address] = newAccount
+    const newAccount = this.stateManager.createAccount(arg)
+    this.stateManager.accounts[newAccount.address] = newAccount
+    if (!this.stateManager.secure) {
+      this.stateManager.unlocked_accounts[newAccount.address] = newAccount
     }
     this.log('...account added: ' + newAccount.address)
   }
@@ -92,7 +96,7 @@ export default class TestRPCService extends EventEmitter {
     }
 
     this.testRpc = TestRPC.server(arg)
-    this.testRpc.listen(arg.port, (err, bkChain) => {
+    this.testRpc.listen(arg.port, (err, stateManager) => {
       if (err) {
         this.webView.send('APP/FAILEDTOSTART', err)
         console.log('ERR: ', err)
@@ -100,50 +104,66 @@ export default class TestRPCService extends EventEmitter {
 
       this.port = arg.port
       this.host = 'localhost'
-      this.blockChain = bkChain
+      this.stateManager = stateManager
 
-      const blockChainParams = this._buildBlockChainState()
+      const stateManagerParams = this._buildBlockChainState()
 
-      this.webView.send('APP/TESTRPCSTARTED', blockChainParams)
+      this.webView.send('APP/TESTRPCSTARTED', stateManagerParams)
       this.log('TESTRPC STARTED')
       this.emit('testRpcServiceStarted', this)
       this.refreshTimer = setInterval(this._handleGetBlockchainState, 1000)
     })
   }
 
-  _handleGetBlockchainState = () => {
-    const blockChainParams = this._buildBlockChainState()
-    this.webView && this.webView.send('APP/BLOCKCHAINSTATE', blockChainParams)
+  async _handleGetBlockchainState () {
+    const stateManagerParams = await this._buildBlockChainState()
+    this.webView && this.webView.send('APP/BLOCKCHAINSTATE', stateManagerParams)
   }
 
-  _buildBlockChainState = () => {
-    const bkChain = this.blockChain
+  _getLatestAccountInfo (account) {
+    return new Promise((resolve, reject) => {
+      this.stateManager.blockchain.getAccount(account, 'latest', (err, res) => {
+        if (err) {
+          reject(err)
+        }
+
+        resolve(res)
+      })
+    })
+  }
+
+  async _buildBlockChainState () {
+    const stateManager = this.stateManager
+
+    let accounts = await Promise.all(Object.keys(stateManager.accounts).map(async (address, index) => {
+      let latestAccountInfo = await this._getLatestAccountInfo(address)
+
+      return {
+        index,
+        address,
+        balance: ConversionUtils.number(latestAccountInfo.balance),
+        nonce: ConversionUtils.number(latestAccountInfo.nonce),
+        privateKey: stateManager.accounts[address].secretKey.toString('hex'),
+        isUnlocked: stateManager.isUnlocked(address)
+      }
+    }))
 
     const payload = {
-      accounts: Object.keys(bkChain.accounts).map((address, index) => {
-        return {
-          index,
-          address,
-          balance: ConversionUtils.number(bkChain.accounts[address].account.balance),
-          nonce: ConversionUtils.number(bkChain.accounts[address].account.nonce),
-          privateKey: bkChain.accounts[address].secretKey.toString('hex'),
-          isUnlocked: bkChain.isUnlocked(address)
-        }
-      }),
-      mnemonic: bkChain.mnemonic,
-      hdPath: bkChain.wallet_hdpath,
-      gasPrice: bkChain.gasPriceVal,
-      gasLimit: bkChain.blockchain.blockGasLimit,
-      totalAccounts: bkChain.total_accounts,
-      coinbase: bkChain.coinbase,
-      isMiningOnInterval: bkChain.is_mining_on_interval,
-      isMining: bkChain.is_mining,
-      blocktime: bkChain.blocktime,
-      blockNumber: bkChain.blockNumber(),
-      networkId: bkChain.net_version,
-      snapshots: bkChain.snapshots,
-      blocks: this._getRecentBlocks(bkChain),
-      transactions: this._getRecentTransactions(bkChain),
+      accounts: accounts,
+      mnemonic: stateManager.mnemonic,
+      hdPath: stateManager.wallet_hdpath,
+      gasPrice: stateManager.gasPriceVal,
+      gasLimit: stateManager.blockchain.blockGasLimit,
+      totalAccounts: stateManager.total_accounts,
+      coinbase: stateManager.coinbase,
+      isMiningOnInterval: stateManager.is_mining_on_interval,
+      isMining: stateManager.is_mining,
+      blocktime: stateManager.blocktime,
+      blockNumber: stateManager.blockNumber(),
+      networkId: stateManager.net_version,
+      snapshots: stateManager.snapshots,
+      blocks: this._getRecentBlocks(stateManager),
+      transactions: this._getRecentTransactions(stateManager),
       host: 'localhost',
       port: this.port
     }
@@ -151,12 +171,12 @@ export default class TestRPCService extends EventEmitter {
     return payload
   }
 
-  _getRecentBlocks = (bkChain) => {
-    let blockHeight = bkChain.blockchain.blocks.length
+  _getRecentBlocks = (stateManager) => {
+    let blockHeight = stateManager.blockchain.blocks.length
 
     // Slice out the last 5 blocks so that we don't inadvertently sort
     // the original blocks array and cause ALL SORTS OF BAD PROBLEMS
-    let blocks = bkChain.blockchain.blocks.slice(blockHeight - 5, blockHeight).sort((a, b) => {
+    let blocks = stateManager.blockchain.blocks.slice(blockHeight - 5, blockHeight).sort((a, b) => {
       return EtherUtil.bufferToInt(a.header.number) - EtherUtil.bufferToInt(b.header.number)
     }).reverse()
 
@@ -170,9 +190,9 @@ export default class TestRPCService extends EventEmitter {
     })
   }
 
-  _getRecentTransactions = (bkChain) => {
-    const blocks = bkChain.blockchain.blocks
-    const blockHeight = bkChain.blockchain.blocks.length - 1
+  _getRecentTransactions = (stateManager) => {
+    const blocks = stateManager.blockchain.blocks
+    const blockHeight = stateManager.blockchain.blocks.length - 1
 
     let transactions = []
     let blockIndex = blockHeight
