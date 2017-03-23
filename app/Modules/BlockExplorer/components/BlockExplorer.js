@@ -49,7 +49,7 @@ export default class BlockExplorer extends Component {
                     <li className={Styles.Block} key={EtherUtil.bufferToHex(block.hash)}>
                       <span className={Styles.BlockNumber}>
                         <p>Block Number</p>
-                        {block.header.number}
+                        {EtherUtil.bufferToInt(block.header.number)}
                       </span>
                       <table className={Styles.BlockData}>
                         <tr>

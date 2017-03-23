@@ -119,7 +119,7 @@ export default class TestRPCService extends EventEmitter {
   _buildBlockChainState = () => {
     const bkChain = this.blockChain
 
-    return {
+    const payload = {
       accounts: Object.keys(bkChain.accounts).map((address, index) => {
         return {
           index,
@@ -147,6 +147,8 @@ export default class TestRPCService extends EventEmitter {
       host: 'localhost',
       port: this.port
     }
+
+    return payload
   }
 
   _getRecentBlocks = (bkChain) => {
