@@ -152,7 +152,7 @@ export default class TestRPCService extends EventEmitter {
       accounts: accounts,
       mnemonic: stateManager.mnemonic,
       hdPath: stateManager.wallet_hdpath,
-      gasPrice: stateManager.gasPriceVal,
+      gasPrice: parseInt(`0x${stateManager.gasPriceVal}`, 16),
       gasLimit: stateManager.blockchain.blockGasLimit,
       totalAccounts: stateManager.total_accounts,
       coinbase: stateManager.coinbase,
