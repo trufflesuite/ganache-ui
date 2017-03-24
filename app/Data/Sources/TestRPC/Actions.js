@@ -57,3 +57,9 @@ export const appClearLogs = () => {
     dispatch({ type: appClearLogsType })
   }
 }
+
+export const appSearchBlockType = 'APP/SEARCHBLOCK'
+export const appSearchBlock = createRequestThunk({
+  request: Api.searchForBlock,
+  key: appSearchBlockType
+})

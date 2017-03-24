@@ -30,6 +30,8 @@ export default class TestRPCService extends EventEmitter {
     ipcMain.on('APP/MAKESNAPSHOT', this._handleMakeSnapshot)
     ipcMain.on('APP/REVERTSNAPSHOT', this._handleRevertSnapshot)
     ipcMain.on('APP/ADDACCOUNT', this._handleAddAccount)
+
+    ipcMain.on('APP/SEARCHBLOCK', this._handleBlockSearch)
   }
 
   log = (message) => {
@@ -50,6 +52,13 @@ export default class TestRPCService extends EventEmitter {
   error = (message) => {
     console.error(message)
     this.webView.send('APP/TESTRPCLOG', {message, level: 'error'})
+  }
+
+  _handleBlockSearch = (event, arg) => {
+    this.stateManager.blockchain.getBlock(arg, (block) => {
+      console.log('block: ', block)
+      this.webView.send('APP/BLOCKSEARCHRESULT', block)
+    })
   }
 
   _handleStartMining = (event, arg) => {

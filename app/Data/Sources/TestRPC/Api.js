@@ -31,5 +31,9 @@ export default {
 
   addAccount: (opts) => {
     return ApiHelpers.sendIpcMessage('APP/ADDACCOUNT', opts)
+  },
+
+  searchForBlock: (blockNumber) => {
+    return ApiHelpers.sendIpcMessage('APP/SEARCHBLOCK', blockNumber)
   }
 }

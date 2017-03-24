@@ -23,6 +23,11 @@ const mutators = {
   'APP/CLEARLOGS': (state, { type, payload }) => ({
     ...state,
     logs: []
+  }),
+
+  'APP/BLOCKSEARCHRESULT': (state, { type, payload }) => ({
+    ...state,
+    currentBlockSearchMatch: payload
   })
 }
 

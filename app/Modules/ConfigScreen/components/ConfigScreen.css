@@ -7,11 +7,6 @@
 
   width: 60%;
 
-  header {
-    margin: 0;
-    padding: 0;
-  }
-
   h3 {
     text-align: center;
     margin-bottom: 2em;
@@ -54,3 +49,9 @@
     margin: 2em 0 0 0;
   }
 }
+
+.ConfigScreenHeader {
+  margin: 0;
+  padding: 0;
+}
+
