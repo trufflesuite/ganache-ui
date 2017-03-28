@@ -1,5 +1,6 @@
 import BlockFetcher from './TestRPCService/BlockFetcher'
 import AccountDetailFetcher from './TestRPCService/AccountDetailFetcher'
+import TxFetcher from './TestRPCService/TxFetcher'
 import TestRPC from 'ganache-core'
 
 import EventEmitter from 'events'
@@ -119,8 +120,9 @@ export default class TestRPCService extends EventEmitter {
       this.port = arg.port
       this.host = 'localhost'
       this.stateManager = stateManager
-      this.blockFetcher = new BlockFetcher(this.stateManager, this._marshallTransaction)
+      this.blockFetcher = new BlockFetcher(this.stateManager)
       this.accountFetcher = new AccountDetailFetcher(this.stateManager)
+      this.txFetcher = new TxFetcher(this.stateManager)
 
       const blockChainState = await this._getBlockchainState()
       this.webView.send('APP/TESTRPCSTARTED', blockChainState)
@@ -132,33 +134,11 @@ export default class TestRPCService extends EventEmitter {
   }
 
   async _getBlockchainState () {
-    let blockChainState = await this.blockFetcher.buildBlockChainState()
-    blockChainState.transactions = await this._getRecentTransactions()
+    const currentBlockNumber = await this.blockFetcher.getCurrentBlockNumber()
+    let blockChainState = await this.blockFetcher.buildBlockChainState(this.txFetcher._marshallTransaction)
+
+    blockChainState.transactions = await this.txFetcher.getRecentTransactions(currentBlockNumber, this.blockFetcher)
     blockChainState.accounts = await this.accountFetcher.getAccountInfo()
     return blockChainState
   }
-
-  async _getRecentTransactions () {
-    const currentBlockNumber = await this.blockFetcher.getCurrentBlockNumber()
-
-    let transactions = []
-    let blockIndex = currentBlockNumber
-
-    while (transactions.length < 5 && blockIndex > 0) {
-      const block = await this.blockFetcher.getBlock(blockIndex)
-      if (block.transactions.length > 0) {
-        transactions = transactions.concat(block.transactions.map(this._marshallTransaction))
-      }
-      blockIndex--
-    }
-
-    return transactions
-  }
-
-  _marshallTransaction = (transaction) => {
-    let newTx = Object.assign({}, transaction)
-    newTx.hash = transaction.hash()
-    return newTx
-  }
-
 }

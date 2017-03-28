@@ -1,9 +1,8 @@
 import EtherUtil from 'ethereumjs-util'
 
 export default class BlockFetcher {
-  constructor (stateManager, transactionMarshaller) {
+  constructor (stateManager) {
     this.stateManager = stateManager
-    this.transactionMarshaller = transactionMarshaller
   }
 
   async getCurrentBlockNumber () {
@@ -33,21 +32,23 @@ export default class BlockFetcher {
       return await this.getBlock(requiredBlockNumber)
     }))
 
-    // The block objects will lose prototype functions when serialized up to the Renderer
-    return blocks.map((block) => {
-      let newBlock = Object.assign({}, block)
-      newBlock.hash = block.hash()
-      newBlock.header.number = EtherUtil.bufferToInt(block.header.number)
-      newBlock.transactions = newBlock.transactions.map(this.transactionMarshaller)
-      return newBlock
-    })
+    return blocks
   }
 
-  async buildBlockChainState () {
+  async buildBlockChainState (transactionMarshaller) {
     const stateManager = this.stateManager
 
     const currentBlockNumber = await this.getCurrentBlockNumber()
-    const blocks = await this.getRecentBlocks(stateManager)
+    let blocks = await this.getRecentBlocks(stateManager)
+
+    // The block objects will lose prototype functions when serialized up to the Renderer
+    blocks = blocks.map((block) => {
+      let newBlock = Object.assign({}, block)
+      newBlock.hash = block.hash()
+      newBlock.header.number = EtherUtil.bufferToInt(block.header.number)
+      newBlock.transactions = newBlock.transactions.map(transactionMarshaller)
+      return newBlock
+    })
 
     const payload = {
       blocks,
