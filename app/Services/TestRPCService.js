@@ -1,5 +1,6 @@
 import TestRPC from 'ganache-core'
 import EtherUtil from 'ethereumjs-util'
+import BN from 'bn.js'
 import ConversionUtils from 'ganache-core/lib/utils/to'
 
 import EventEmitter from 'events'
@@ -19,6 +20,8 @@ export default class TestRPCService extends EventEmitter {
     this._getLatestAccountInfo = this._getLatestAccountInfo.bind(this)
     this._buildBlockChainState = this._buildBlockChainState.bind(this)
     this._handleGetBlockchainState = this._handleGetBlockchainState.bind(this)
+    this._getCurrentBlockNumber = this._getCurrentBlockNumber.bind(this)
+    this._getRecentBlocks = this._getRecentBlocks.bind(this)
 
     console.log('Starting TestRPCService')
 
@@ -133,10 +136,21 @@ export default class TestRPCService extends EventEmitter {
     return new Promise((resolve, reject) => {
       this.stateManager.blockchain.getAccount(account, 'latest', (err, res) => {
         if (err) {
+          console.log(err)
           reject(err)
         }
 
         resolve(res)
+      })
+    }).catch((err) => {
+      console.log(err)
+    })
+  }
+
+  _getCurrentBlockNumber () {
+    return new Promise((resolve, reject) => {
+      this.stateManager.blockNumber((err, blockNumber) => {
+        err ? reject(err) : resolve(blockNumber)
       })
     })
   }
@@ -150,12 +164,18 @@ export default class TestRPCService extends EventEmitter {
       return {
         index,
         address,
-        balance: ConversionUtils.number(latestAccountInfo.balance),
+        balance: new BN(latestAccountInfo.balance).toString(),
         nonce: ConversionUtils.number(latestAccountInfo.nonce),
         privateKey: stateManager.accounts[address].secretKey.toString('hex'),
         isUnlocked: stateManager.isUnlocked(address)
       }
-    }))
+    })).catch((err) => {
+      console.log(err)
+    })
+
+    const currentBlockNumber = await this._getCurrentBlockNumber()
+    const blocks = await this._getRecentBlocks(stateManager)
+    const transactions = await this._getRecentTransactions(stateManager)
 
     const payload = {
       accounts: accounts,
@@ -168,11 +188,11 @@ export default class TestRPCService extends EventEmitter {
       isMiningOnInterval: stateManager.is_mining_on_interval,
       isMining: stateManager.is_mining,
       blocktime: stateManager.blocktime,
-      blockNumber: stateManager.blockNumber(),
+      blockNumber: currentBlockNumber,
       networkId: stateManager.net_version,
       snapshots: stateManager.snapshots,
-      blocks: this._getRecentBlocks(stateManager),
-      transactions: this._getRecentTransactions(stateManager),
+      blocks,
+      transactions,
       host: 'localhost',
       port: this.port
     }
@@ -180,14 +200,24 @@ export default class TestRPCService extends EventEmitter {
     return payload
   }
 
-  _getRecentBlocks = (stateManager) => {
-    let blockHeight = stateManager.blockchain.blocks.length
+  _getBlock = (blockNumber) => {
+    return new Promise((resolve, reject) => {
+      this.stateManager.getBlock(blockNumber, (err, block) => {
+        err ? reject(err) : resolve(block)
+      })
+    })
+  }
 
-    // Slice out the last 5 blocks so that we don't inadvertently sort
-    // the original blocks array and cause ALL SORTS OF BAD PROBLEMS
-    let blocks = stateManager.blockchain.blocks.slice(blockHeight - 5, blockHeight).sort((a, b) => {
-      return EtherUtil.bufferToInt(a.header.number) - EtherUtil.bufferToInt(b.header.number)
-    }).reverse()
+  async _getRecentBlocks (stateManager) {
+    const tailLength = 5
+    const currentBlockNumber = await this._getCurrentBlockNumber()
+    const blockTailLength = currentBlockNumber < tailLength ? currentBlockNumber : tailLength
+    const blockPlaceholders = new Array(blockTailLength).fill(null)
+
+    let blocks = await Promise.all(blockPlaceholders.map(async (_, index) => {
+      const requiredBlockNumber = currentBlockNumber - index
+      return await this._getBlock(requiredBlockNumber)
+    }))
 
     // The block objects will lose prototype functions when serialized up to the Renderer
     return blocks.map((block) => {
@@ -199,16 +229,16 @@ export default class TestRPCService extends EventEmitter {
     })
   }
 
-  _getRecentTransactions = (stateManager) => {
-    const blocks = stateManager.blockchain.blocks
-    const blockHeight = stateManager.blockchain.blocks.length - 1
+  async _getRecentTransactions (stateManager) {
+    const currentBlockNumber = await this._getCurrentBlockNumber()
 
     let transactions = []
-    let blockIndex = blockHeight
+    let blockIndex = currentBlockNumber
 
     while (transactions.length < 5 && blockIndex > 0) {
-      if (blocks[blockIndex].transactions.length > 0) {
-        transactions = transactions.concat(blocks[blockIndex].transactions.map(this._marshallTransaction))
+      const block = await this._getBlock(blockIndex)
+      if (block.transactions.length > 0) {
+        transactions = transactions.concat(block.transactions.map(this._marshallTransaction))
       }
       blockIndex--
     }
