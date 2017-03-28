@@ -15,7 +15,6 @@ export default class BlockFetcher {
   }
 
   async getBlock (blockNumber) {
-    console.log(`Getting block number: ${blockNumber}`)
     return new Promise((resolve, reject) => {
       this.stateManager.getBlock(blockNumber, (err, block) => {
         err ? reject(err) : resolve(block)
@@ -42,5 +41,32 @@ export default class BlockFetcher {
       newBlock.transactions = newBlock.transactions.map(this.transactionMarshaller)
       return newBlock
     })
+  }
+
+  async buildBlockChainState () {
+    const stateManager = this.stateManager
+
+    const currentBlockNumber = await this.getCurrentBlockNumber()
+    const blocks = await this.getRecentBlocks(stateManager)
+
+    const payload = {
+      blocks,
+      mnemonic: stateManager.mnemonic,
+      hdPath: stateManager.wallet_hdpath,
+      gasPrice: parseInt(`0x${stateManager.gasPriceVal}`, 16),
+      gasLimit: stateManager.blockchain.blockGasLimit,
+      totalAccounts: stateManager.total_accounts,
+      coinbase: stateManager.coinbase,
+      isMiningOnInterval: stateManager.is_mining_on_interval,
+      isMining: stateManager.is_mining,
+      blocktime: stateManager.blocktime,
+      blockNumber: currentBlockNumber,
+      networkId: stateManager.net_version,
+      snapshots: stateManager.snapshots,
+      host: 'localhost',
+      port: this.port
+    }
+
+    return payload
   }
 }

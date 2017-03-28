@@ -1,9 +1,9 @@
 import BlockFetcher from './TestRPCService/BlockFetcher'
+import AccountDetailFetcher from './TestRPCService/AccountDetailFetcher'
 import TestRPC from 'ganache-core'
-import BN from 'bn.js'
-import ConversionUtils from 'ganache-core/lib/utils/to'
 
 import EventEmitter from 'events'
+import autobind from 'class-autobind'
 
 export default class TestRPCService extends EventEmitter {
   constructor (ipcMain, webView) {
@@ -18,10 +18,7 @@ export default class TestRPCService extends EventEmitter {
     this.stateManager = null
     this.blockFetcher = null
 
-    this._getLatestAccountInfo = this._getLatestAccountInfo.bind(this)
-    this._buildBlockChainState = this._buildBlockChainState.bind(this)
-    this._handleGetBlockchainState = this._handleGetBlockchainState.bind(this)
-    this._handleBlockSearch = this._handleBlockSearch.bind(this)
+    autobind(this)
 
     console.log('Starting TestRPCService')
 
@@ -59,7 +56,7 @@ export default class TestRPCService extends EventEmitter {
 
   async _handleBlockSearch (event, arg) {
     console.log(`Search for block: ${arg}`)
-    const block = await this._getBlock(arg)
+    const block = await this.blockFetcher.getBlock(arg)
     console.log('block: ', block)
     this.webView.send('APP/BLOCKSEARCHRESULT', block)
   }
@@ -99,7 +96,12 @@ export default class TestRPCService extends EventEmitter {
     this.log('...account added: ' + newAccount.address)
   }
 
-  _handleStartTestRpc = (event, arg) => {
+  async _handleGetBlockchainState () {
+    let blockChainState = await this._getBlockchainState()
+    this.webView && this.webView.send('APP/BLOCKCHAINSTATE', blockChainState)
+  }
+
+  _handleStartTestRpc (event, arg) {
     arg.logger = this
 
     if (this.testRpc) {
@@ -108,7 +110,7 @@ export default class TestRPCService extends EventEmitter {
     }
 
     this.testRpc = TestRPC.server(arg)
-    this.testRpc.listen(arg.port, (err, stateManager) => {
+    this.testRpc.listen(arg.port, async (err, stateManager) => {
       if (err) {
         this.webView.send('APP/FAILEDTOSTART', err)
         console.log('ERR: ', err)
@@ -118,82 +120,25 @@ export default class TestRPCService extends EventEmitter {
       this.host = 'localhost'
       this.stateManager = stateManager
       this.blockFetcher = new BlockFetcher(this.stateManager, this._marshallTransaction)
+      this.accountFetcher = new AccountDetailFetcher(this.stateManager)
 
-      const stateManagerParams = this._buildBlockChainState()
+      const blockChainState = await this._getBlockchainState()
+      this.webView.send('APP/TESTRPCSTARTED', blockChainState)
 
-      this.webView.send('APP/TESTRPCSTARTED', stateManagerParams)
       this.log('TESTRPC STARTED')
       this.emit('testRpcServiceStarted', this)
       this.refreshTimer = setInterval(this._handleGetBlockchainState, 1000)
     })
   }
 
-  async _handleGetBlockchainState () {
-    const stateManagerParams = await this._buildBlockChainState()
-    this.webView && this.webView.send('APP/BLOCKCHAINSTATE', stateManagerParams)
+  async _getBlockchainState () {
+    let blockChainState = await this.blockFetcher.buildBlockChainState()
+    blockChainState.transactions = await this._getRecentTransactions()
+    blockChainState.accounts = await this.accountFetcher.getAccountInfo()
+    return blockChainState
   }
 
-  _getLatestAccountInfo (account) {
-    return new Promise((resolve, reject) => {
-      this.stateManager.blockchain.getAccount(account, 'latest', (err, res) => {
-        if (err) {
-          console.log(err)
-          reject(err)
-        }
-
-        resolve(res)
-      })
-    }).catch((err) => {
-      console.log(err)
-    })
-  }
-
-  async _buildBlockChainState () {
-    const stateManager = this.stateManager
-
-    let accounts = await Promise.all(Object.keys(stateManager.accounts).map(async (address, index) => {
-      let latestAccountInfo = await this._getLatestAccountInfo(address)
-
-      return {
-        index,
-        address,
-        balance: new BN(latestAccountInfo.balance).toString(),
-        nonce: ConversionUtils.number(latestAccountInfo.nonce),
-        privateKey: stateManager.accounts[address].secretKey.toString('hex'),
-        isUnlocked: stateManager.isUnlocked(address)
-      }
-    })).catch((err) => {
-      console.log(err)
-    })
-
-    const currentBlockNumber = await this.blockFetcher.getCurrentBlockNumber()
-    const blocks = await this.blockFetcher.getRecentBlocks(stateManager)
-    const transactions = await this._getRecentTransactions(stateManager)
-
-    const payload = {
-      accounts: accounts,
-      mnemonic: stateManager.mnemonic,
-      hdPath: stateManager.wallet_hdpath,
-      gasPrice: parseInt(`0x${stateManager.gasPriceVal}`, 16),
-      gasLimit: stateManager.blockchain.blockGasLimit,
-      totalAccounts: stateManager.total_accounts,
-      coinbase: stateManager.coinbase,
-      isMiningOnInterval: stateManager.is_mining_on_interval,
-      isMining: stateManager.is_mining,
-      blocktime: stateManager.blocktime,
-      blockNumber: currentBlockNumber,
-      networkId: stateManager.net_version,
-      snapshots: stateManager.snapshots,
-      blocks,
-      transactions,
-      host: 'localhost',
-      port: this.port
-    }
-
-    return payload
-  }
-
-  async _getRecentTransactions (stateManager) {
+  async _getRecentTransactions () {
     const currentBlockNumber = await this.blockFetcher.getCurrentBlockNumber()
 
     let transactions = []

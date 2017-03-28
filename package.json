@@ -164,6 +164,7 @@
   },
   "dependencies": {
     "bn.js": "^4.11.6",
+    "class-autobind": "^0.1.4",
     "core-js": "^2.4.1",
     "electron-debug": "^1.1.0",
     "eslint-config-standard": "^6.2.1",
