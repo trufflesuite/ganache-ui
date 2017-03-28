@@ -1,6 +1,6 @@
-import TestRPC from 'ethereumjs-testrpc'
+import TestRPC from 'ganache-core'
 import EtherUtil from 'ethereumjs-util'
-import ConversionUtils from 'ethereumjs-testrpc/lib/utils/to'
+import ConversionUtils from 'ganache-core/lib/utils/to'
 
 import EventEmitter from 'events'
 
