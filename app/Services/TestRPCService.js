@@ -1,5 +1,5 @@
+import BlockFetcher from './TestRPCService/BlockFetcher'
 import TestRPC from 'ganache-core'
-import EtherUtil from 'ethereumjs-util'
 import BN from 'bn.js'
 import ConversionUtils from 'ganache-core/lib/utils/to'
 
@@ -16,12 +16,12 @@ export default class TestRPCService extends EventEmitter {
     this.host = null
     this.port = null
     this.stateManager = null
+    this.blockFetcher = null
 
     this._getLatestAccountInfo = this._getLatestAccountInfo.bind(this)
     this._buildBlockChainState = this._buildBlockChainState.bind(this)
     this._handleGetBlockchainState = this._handleGetBlockchainState.bind(this)
-    this._getCurrentBlockNumber = this._getCurrentBlockNumber.bind(this)
-    this._getRecentBlocks = this._getRecentBlocks.bind(this)
+    this._handleBlockSearch = this._handleBlockSearch.bind(this)
 
     console.log('Starting TestRPCService')
 
@@ -57,11 +57,11 @@ export default class TestRPCService extends EventEmitter {
     this.webView.send('APP/TESTRPCLOG', {message, level: 'error'})
   }
 
-  _handleBlockSearch = (event, arg) => {
-    this.stateManager.blockchain.getBlock(arg, (block) => {
-      console.log('block: ', block)
-      this.webView.send('APP/BLOCKSEARCHRESULT', block)
-    })
+  async _handleBlockSearch (event, arg) {
+    console.log(`Search for block: ${arg}`)
+    const block = await this._getBlock(arg)
+    console.log('block: ', block)
+    this.webView.send('APP/BLOCKSEARCHRESULT', block)
   }
 
   _handleStartMining = (event, arg) => {
@@ -117,6 +117,7 @@ export default class TestRPCService extends EventEmitter {
       this.port = arg.port
       this.host = 'localhost'
       this.stateManager = stateManager
+      this.blockFetcher = new BlockFetcher(this.stateManager, this._marshallTransaction)
 
       const stateManagerParams = this._buildBlockChainState()
 
@@ -147,14 +148,6 @@ export default class TestRPCService extends EventEmitter {
     })
   }
 
-  _getCurrentBlockNumber () {
-    return new Promise((resolve, reject) => {
-      this.stateManager.blockNumber((err, blockNumber) => {
-        err ? reject(err) : resolve(blockNumber)
-      })
-    })
-  }
-
   async _buildBlockChainState () {
     const stateManager = this.stateManager
 
@@ -173,8 +166,8 @@ export default class TestRPCService extends EventEmitter {
       console.log(err)
     })
 
-    const currentBlockNumber = await this._getCurrentBlockNumber()
-    const blocks = await this._getRecentBlocks(stateManager)
+    const currentBlockNumber = await this.blockFetcher.getCurrentBlockNumber()
+    const blocks = await this.blockFetcher.getRecentBlocks(stateManager)
     const transactions = await this._getRecentTransactions(stateManager)
 
     const payload = {
@@ -200,43 +193,14 @@ export default class TestRPCService extends EventEmitter {
     return payload
   }
 
-  _getBlock = (blockNumber) => {
-    return new Promise((resolve, reject) => {
-      this.stateManager.getBlock(blockNumber, (err, block) => {
-        err ? reject(err) : resolve(block)
-      })
-    })
-  }
-
-  async _getRecentBlocks (stateManager) {
-    const tailLength = 5
-    const currentBlockNumber = await this._getCurrentBlockNumber()
-    const blockTailLength = currentBlockNumber < tailLength ? currentBlockNumber : tailLength
-    const blockPlaceholders = new Array(blockTailLength).fill(null)
-
-    let blocks = await Promise.all(blockPlaceholders.map(async (_, index) => {
-      const requiredBlockNumber = currentBlockNumber - index
-      return await this._getBlock(requiredBlockNumber)
-    }))
-
-    // The block objects will lose prototype functions when serialized up to the Renderer
-    return blocks.map((block) => {
-      let newBlock = Object.assign({}, block)
-      newBlock.hash = block.hash()
-      newBlock.header.number = EtherUtil.bufferToInt(block.header.number)
-      newBlock.transactions = newBlock.transactions.map(this._marshallTransaction)
-      return newBlock
-    })
-  }
-
   async _getRecentTransactions (stateManager) {
-    const currentBlockNumber = await this._getCurrentBlockNumber()
+    const currentBlockNumber = await this.blockFetcher.getCurrentBlockNumber()
 
     let transactions = []
     let blockIndex = currentBlockNumber
 
     while (transactions.length < 5 && blockIndex > 0) {
-      const block = await this._getBlock(blockIndex)
+      const block = await this.blockFetcher.getBlock(blockIndex)
       if (block.transactions.length > 0) {
         transactions = transactions.concat(block.transactions.map(this._marshallTransaction))
       }
