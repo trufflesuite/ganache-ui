@@ -13,11 +13,14 @@ export default class BlockFetcher {
     })
   }
 
-  async getBlock (blockNumber) {
+  async getBlockByNumber (blockNumber) {
     return new Promise((resolve, reject) => {
+      blockNumber = parseInt(blockNumber, 10)
       this.stateManager.getBlock(blockNumber, (err, block) => {
         err ? reject(err) : resolve(block)
       })
+    }).catch((err) => {
+      console.log(err)
     })
   }
 
@@ -29,7 +32,7 @@ export default class BlockFetcher {
 
     let blocks = await Promise.all(blockPlaceholders.map(async (_, index) => {
       const requiredBlockNumber = currentBlockNumber - index
-      return await this.getBlock(requiredBlockNumber)
+      return await this.getBlockByNumber(requiredBlockNumber)
     }))
 
     return blocks

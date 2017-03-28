@@ -9,7 +9,7 @@ export default class TransactionFetcher {
     let blockIndex = currentBlockNumber
 
     while (transactions.length < 5 && blockIndex > 0) {
-      const block = await blockFetcher.getBlock(blockIndex)
+      const block = await blockFetcher.getBlockByNumber(blockIndex)
       if (block.transactions.length > 0) {
         transactions = transactions.concat(block.transactions.map(this._marshallTransaction))
       }

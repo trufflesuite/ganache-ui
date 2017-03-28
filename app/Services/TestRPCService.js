@@ -57,7 +57,7 @@ export default class TestRPCService extends EventEmitter {
 
   async _handleBlockSearch (event, arg) {
     console.log(`Search for block: ${arg}`)
-    const block = await this.blockFetcher.getBlock(arg)
+    const block = await this.blockFetcher.getBlockByNumber(arg)
     console.log('block: ', block)
     this.webView.send('APP/BLOCKSEARCHRESULT', block)
   }
