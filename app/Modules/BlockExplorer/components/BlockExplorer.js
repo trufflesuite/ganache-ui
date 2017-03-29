@@ -59,8 +59,8 @@ export default class BlockExplorer extends Component {
               { !this.state.isSearchingForBlock && !this.state.blockSearchMatch
                 ? this._renderBlocks()
                 : this.state.currentBlockSearchMatch === null
-                  ? this._renderSearchingBlock()
-                  : this._renderBlockSearchMatch()
+                ? this._renderSearchingBlock()
+                : this._renderBlockSearchMatch()
               }
             </ul>
           </main>
@@ -125,101 +125,99 @@ export default class BlockExplorer extends Component {
 
   _renderTransactionCard = (tx) => {
     return (
-    <li className={Styles.Transaction} key={tx.hash}>
-      <section>
-        <table className={Styles.TransactionData}>
-          <tr>
-            <td>
-              <dl>
-                <dt>Transaction Hash</dt>
-                <dd>{EtherUtil.bufferToHex(tx.hash)}</dd>
-              </dl>
-            </td>
-            <td>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <dl>
-                <dt>From</dt>
-                <dd>{EtherUtil.bufferToHex(tx.from)}</dd>
-              </dl>
-            </td>
-            <td>
-              <dl>
-                <dt>To</dt>
-                <dd>{EtherUtil.bufferToHex(tx.to)}</dd>
-              </dl>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <dl>
-                <dt>Nonce</dt>
-                <dd>{EtherUtil.bufferToHex(tx.nonce)}</dd>
-              </dl>
-            </td>
-            <td>
-              <dl>
-                <dt>Value</dt>
-                <dd>{EtherUtil.bufferToHex(tx.value)}</dd>
-              </dl>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <dl>
-                <dt>Init</dt>
-                <dd>{EtherUtil.bufferToHex(tx.init)}</dd>
-              </dl>
-            </td>
-            <td>
-              <dl>
-                <dt>Value</dt>
-                <dd>{EtherUtil.bufferToHex(tx.value)}</dd>
-              </dl>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <dl>
-                <dt>Gas Price</dt>
-                <dd>{EtherUtil.bufferToHex(tx.gasPrice)}</dd>
-              </dl>
-              <dl>
-                <dt>Data</dt>
-                <dd className={Styles.TxData}>{EtherUtil.bufferToHex(tx.data)}</dd>
-              </dl>
-            </td>
-            <td>
-              <dl>
-                <dt>Gas Limit</dt>
-                <dd>{EtherUtil.bufferToHex(tx.gasLimit)}</dd>
-              </dl>
-              <dl>
-                <dt>V</dt>
-                <dd>{EtherUtil.bufferToHex(tx.v)}</dd>
-              </dl>
-              <dl>
-                <dt>R</dt>
-                <dd>{EtherUtil.bufferToHex(tx.r)}</dd>
-              </dl>
-              <dl>
-                <dt>S</dt>
-                <dd>{EtherUtil.bufferToHex(tx.s)}</dd>
-              </dl>
-            </td>
-          </tr>
-        </table>
-      </section>
-    </li>
+      <li className={Styles.Transaction} key={tx.hash}>
+        <section>
+          <table className={Styles.TransactionData}>
+            <tr>
+              <td>
+                <dl>
+                  <dt>Transaction Hash</dt>
+                  <dd>{EtherUtil.bufferToHex(tx.hash)}</dd>
+                </dl>
+              </td>
+              <td>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <dl>
+                  <dt>From</dt>
+                  <dd>{EtherUtil.bufferToHex(tx.from)}</dd>
+                </dl>
+              </td>
+              <td>
+                <dl>
+                  <dt>To</dt>
+                  <dd>{EtherUtil.bufferToHex(tx.to)}</dd>
+                </dl>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <dl>
+                  <dt>Nonce</dt>
+                  <dd>{EtherUtil.bufferToHex(tx.nonce)}</dd>
+                </dl>
+              </td>
+              <td>
+                <dl>
+                  <dt>Value</dt>
+                  <dd>{EtherUtil.bufferToHex(tx.value)}</dd>
+                </dl>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <dl>
+                  <dt>Init</dt>
+                  <dd>{EtherUtil.bufferToHex(tx.init)}</dd>
+                </dl>
+              </td>
+              <td>
+                <dl>
+                  <dt>Value</dt>
+                  <dd>{EtherUtil.bufferToHex(tx.value)}</dd>
+                </dl>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <dl>
+                  <dt>Gas Price</dt>
+                  <dd>{EtherUtil.bufferToHex(tx.gasPrice)}</dd>
+                </dl>
+                <dl>
+                  <dt>Data</dt>
+                  <dd className={Styles.TxData}>{EtherUtil.bufferToHex(tx.data)}</dd>
+                </dl>
+              </td>
+              <td>
+                <dl>
+                  <dt>Gas Limit</dt>
+                  <dd>{EtherUtil.bufferToHex(tx.gasLimit)}</dd>
+                </dl>
+                <dl>
+                  <dt>V</dt>
+                  <dd>{EtherUtil.bufferToHex(tx.v)}</dd>
+                </dl>
+                <dl>
+                  <dt>R</dt>
+                  <dd>{EtherUtil.bufferToHex(tx.r)}</dd>
+                </dl>
+                <dl>
+                  <dt>S</dt>
+                  <dd>{EtherUtil.bufferToHex(tx.s)}</dd>
+                </dl>
+              </td>
+            </tr>
+          </table>
+        </section>
+      </li>
     )
   }
 
   _renderTransactions = () => {
-    return this.props.testRpcState.transactions.map((tx) => {
-      return this._renderTransactionCard(tx)
-    })
+    return this.props.testRpcState.transactions.map(this._renderTransactionCard)
   }
 
   _renderSearchingBlock = () => {
@@ -303,8 +301,6 @@ export default class BlockExplorer extends Component {
   }
 
   _renderBlocks = () => {
-    return this.props.testRpcState.blocks.map((block) => {
-      return this._renderBlockCard(block)
-    })
+    return this.props.testRpcState.blocks.map(this._renderBlockCard)
   }
 }
