@@ -23,20 +23,20 @@ export default class BlockExplorer extends Component {
     }
   }
 
-  _renderSearchingBlock = () => {
-    return (
-      <section>
-        Searching for Block {this.state.currentBlockNumberSearch}
-      </section>
-    )
-  }
-
-  _renderBlockSearchMatch = (block) => {
-    return (
-      <section>
-        { this._renderBlockCard(block)}
-      </section>
-    )
+  componentWillReceiveProps (nextProps, nextState) {
+    if (nextProps.testRpcState.currentBlockSearchMatch !== null) {
+      this.setState({
+        currentBlockSearchMatch: nextProps.testRpcState.currentBlockSearchMatch,
+        isSearchingForBlock: false,
+        blockSearchMatch: true
+      })
+    } else {
+      this.setState({
+        currentBlockSearchMatch: null,
+        isSearchingForBlock: false,
+        blockSearchMatch: false
+      })
+    }
   }
 
   render () {
@@ -58,7 +58,7 @@ export default class BlockExplorer extends Component {
             <ul className={Styles.BlockList}>
               { !this.state.isSearchingForBlock && !this.state.blockSearchMatch
                 ? this._renderBlocks()
-                : this.state.isSearchingForBlock
+                : this.state.currentBlockSearchMatch === null
                   ? this._renderSearchingBlock()
                   : this._renderBlockSearchMatch()
               }
@@ -98,7 +98,7 @@ export default class BlockExplorer extends Component {
 
   _handleBlockNumberSearch = (value) => {
     this.setState({isSearchingForBlock: true})
-    this.props.appSearchBlock( value )
+    this.props.appSearchBlock(value)
   }
 
   _handleBlockNumberSearchChange = (value) => {
@@ -125,6 +125,7 @@ export default class BlockExplorer extends Component {
 
   _renderTransactionCard = (tx) => {
     return (
+    <li className={Styles.Transaction} key={tx.hash}>
       <section>
         <table className={Styles.TransactionData}>
           <tr>
@@ -211,21 +212,32 @@ export default class BlockExplorer extends Component {
           </tr>
         </table>
       </section>
+    </li>
     )
   }
 
   _renderTransactions = () => {
     return this.props.testRpcState.transactions.map((tx) => {
-      return (
-        <li className={Styles.Transaction} key={tx.hash}>
-          { this._renderTransactionCard(tx)}
-        </li>
-      )
+      return this._renderTransactionCard(tx)
     })
+  }
+
+  _renderSearchingBlock = () => {
+    return (
+      <section>
+        Searching for Block {this.state.currentBlockNumberSearch}
+      </section>
+    )
+  }
+
+  _renderBlockSearchMatch = () => {
+    const block = this.state.currentBlockSearchMatch
+    return this.state.currentBlockSearchMatch && this._renderBlockCard(block)
   }
 
   _renderBlockCard = (block) => {
     return (
+      <li className={Styles.Block} key={EtherUtil.bufferToHex(block.hash)}>
         <section>
           <span className={Styles.BlockNumber}>
             <p>Block Number</p>
@@ -286,16 +298,13 @@ export default class BlockExplorer extends Component {
           </tr>
         </table>
       </section>
+    </li>
     )
   }
 
   _renderBlocks = () => {
     return this.props.testRpcState.blocks.map((block) => {
-      return (
-        <li className={Styles.Block} key={EtherUtil.bufferToHex(block.hash)}>
-          {this._renderBlockCard(block)}
-        </li>
-      )
+      return this._renderBlockCard(block)
     })
   }
 }
