@@ -19,7 +19,6 @@ export default class EventHandler {
   }
 
   _handleBlockSearch = async (event, arg) => {
-    console.log(`Search for block: ${arg}`)
     const block = await this.testRpcService.blockFetcher.getBlockByNumber(arg)
     this.testRpcService.webView.send('APP/BLOCKSEARCHRESULT', block)
   }
