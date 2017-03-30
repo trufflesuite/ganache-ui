@@ -11,6 +11,10 @@
     padding: 0;
     border-bottom: 0;
   }
+
+  section {
+    display: flex;
+  }
 }
 
 

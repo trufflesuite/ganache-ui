@@ -15,6 +15,7 @@ export default class BlockExplorer extends Component {
 
     this.state = {
       currentBlockNumberSearch: '',
+      currentBlockSearchMatch: null,
       currentTxSearch: '',
       isSearchingForBlock: false,
       isSearchingForTx: false,
@@ -24,17 +25,11 @@ export default class BlockExplorer extends Component {
   }
 
   componentWillReceiveProps (nextProps, nextState) {
-    if (nextProps.testRpcState.currentBlockSearchMatch !== null) {
+    if (nextProps.testRpcState.currentBlockSearchMatch !== null && nextProps.testRpcState.currentBlockSearchMatch !== this.props.testRpcState.currentBlockSearchMatch) {
       this.setState({
         currentBlockSearchMatch: nextProps.testRpcState.currentBlockSearchMatch,
         isSearchingForBlock: false,
         blockSearchMatch: true
-      })
-    } else {
-      this.setState({
-        currentBlockSearchMatch: null,
-        isSearchingForBlock: false,
-        blockSearchMatch: false
       })
     }
   }
@@ -43,9 +38,18 @@ export default class BlockExplorer extends Component {
     return (
       <div className={Styles.BlockExplorer}>
         <div className={Styles.Blocks}>
-          <h4>LAST 5 BLOCKS</h4>
+          <h4>
+            { this.state.currentBlockSearchMatch
+              ? `Showing Block #${EtherUtil.bufferToInt(this.state.currentBlockSearchMatch.header.number)}`
+              : `LAST 5 BLOCKS`
+            }
+          </h4>
           <header>
-            <InputText
+          { this.state.currentBlockSearchMatch
+            ? <section className={Styles.DismissSearchResult}>
+              &larr; <a href="#" onClick={this._handleClearBlockSearch}>Go back to All Blocks</a>
+            </section>
+          : <InputText
               className={Styles.BlockSearchInput}
               placeholder={'Search for Block Number'}
               delay={0}
@@ -53,6 +57,7 @@ export default class BlockExplorer extends Component {
               onEnter={this._handleBlockNumberSearch}
               onChange={this._handleBlockNumberSearchChange}
             />
+          }
           </header>
           <main>
             <ul className={Styles.BlockList}>
@@ -113,14 +118,17 @@ export default class BlockExplorer extends Component {
     this.setState({currentTxSearch: value})
   }
 
+  _handleClearBlockSearch = (e) => {
+    e.preventDefault()
+    this.setState({blockSearchMatch: false, currentBlockNumberSearch: '', currentBlockSearchMatch: null})
+  }
+
   _renderRecentTransaction = (transactions) => {
     if (transactions.length === 0) {
       return 'NO TRANSACTIONS'
     }
 
-    return transactions.map((tx) => {
-      return EtherUtil.bufferToHex(tx.hash)
-    })
+    return transactions.map((tx) => { return EtherUtil.bufferToHex(tx.hash) })
   }
 
   _renderTransactionCard = (tx) => {
