@@ -16,11 +16,18 @@ export default class EventHandler {
     this.testRpcService.ipcMain.on('APP/ADDACCOUNT', this._handleAddAccount)
 
     this.testRpcService.ipcMain.on('APP/SEARCHBLOCK', this._handleBlockSearch)
+    this.testRpcService.ipcMain.on('APP/SEARCHTX', this._handleTxSearch)
   }
 
   _handleBlockSearch = async (event, arg) => {
     const block = await this.testRpcService.blockFetcher.getBlockByNumber(arg)
     this.testRpcService.webView.send('APP/BLOCKSEARCHRESULT', block)
+  }
+
+  _handleTxSearch = async (event, arg) => {
+    const tx = await this.testRpcService.txFetcher.getTxByHash(arg)
+    console.log(`tx: ${tx}`)
+    this.testRpcService.webView.send('APP/TXSEARCHRESULT', tx)
   }
 
   _handleStartMining = (event, arg) => {

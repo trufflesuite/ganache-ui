@@ -35,5 +35,9 @@ export default {
 
   searchForBlock: (blockNumber) => {
     return ApiHelpers.sendIpcMessage('APP/SEARCHBLOCK', blockNumber)
+  },
+
+  searchForTx: (txHash) => {
+    return ApiHelpers.sendIpcMessage('APP/SEARCHTX', txHash)
   }
 }

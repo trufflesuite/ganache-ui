@@ -63,3 +63,9 @@ export const appSearchBlock = createRequestThunk({
   request: Api.searchForBlock,
   key: appSearchBlockType
 })
+
+export const appSearchTxType = 'APP/SEARCHTX'
+export const appSearchTx = createRequestThunk({
+  request: Api.searchForTx,
+  key: appSearchTxType
+})

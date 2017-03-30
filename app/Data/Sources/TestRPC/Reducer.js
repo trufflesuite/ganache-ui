@@ -28,6 +28,11 @@ const mutators = {
   'APP/BLOCKSEARCHRESULT': (state, { type, payload }) => ({
     ...state,
     currentBlockSearchMatch: payload
+  }),
+
+  'APP/TXSEARCHRESULT': (state, { type, payload }) => ({
+    ...state,
+    currentTxSearchMatch: payload
   })
 }
 

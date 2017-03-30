@@ -16,6 +16,7 @@ export default class BlockExplorer extends Component {
     this.state = {
       currentBlockNumberSearch: '',
       currentBlockSearchMatch: null,
+      currentTxSearchMatch: null,
       currentTxSearch: '',
       isSearchingForBlock: false,
       isSearchingForTx: false,
@@ -30,6 +31,14 @@ export default class BlockExplorer extends Component {
         currentBlockSearchMatch: nextProps.testRpcState.currentBlockSearchMatch,
         isSearchingForBlock: false,
         blockSearchMatch: true
+      })
+    }
+
+    if (nextProps.testRpcState.currentTxSearchMatch !== null && nextProps.testRpcState.currentTxSearchMatch !== this.props.testRpcState.currentTxSearchMatch) {
+      this.setState({
+        currentTxSearchMatch: nextProps.testRpcState.currentTxSearchMatch,
+        isSearchingForTx: false,
+        txSearchMatch: true
       })
     }
   }
@@ -73,9 +82,18 @@ export default class BlockExplorer extends Component {
           </footer>
         </div>
         <div className={Styles.Transactions}>
-          <h4>LAST 5 TRANSACTIONS</h4>
+          <h4>
+            { this.state.currentTxSearchMatch
+            ? `SHOWING TX ${this.state.currentTxSearchMatch.tx.hash}`
+            : `LAST 5 TRANSACTIONS`
+            }
+          </h4>
           <header>
-            <InputText
+          { this.state.currentTxSearchMatch
+            ? <section className={Styles.DismissSearchResult}>
+              &larr; <a href="#" onClick={this._handleClearTxSearch}>Go back to All TXs</a>
+            </section>
+            : <InputText
               className={Styles.TxSearchInput}
               placeholder={'Search for TX Hash'}
               delay={0}
@@ -83,6 +101,7 @@ export default class BlockExplorer extends Component {
               onEnter={this._handleTxSearch}
               onChange={this._handleTxSearchChange}
             />
+          }
           </header>
           <main>
             <WithEmptyState
@@ -90,7 +109,12 @@ export default class BlockExplorer extends Component {
               emptyStateComponent={EmptyTransactions}
             >
               <ul className={Styles.TransactionList}>
-                { this._renderTransactions() }
+                { !this.state.isSearchingForTx && !this.state.txSearchMatch
+                  ? this._renderTransactions()
+                  : this.state.currentTxSearchMatch === null
+                  ? this._renderSearchingTx()
+                  : this._renderTxSearchMatch()
+                }
               </ul>
             </WithEmptyState>
           </main>
@@ -111,7 +135,8 @@ export default class BlockExplorer extends Component {
   }
 
   _handleTxSearch = (value) => {
-    this.setState({currentTxSearch: ''})
+    this.setState({isSearchingForTx: true})
+    this.props.appSearchTx(value)
   }
 
   _handleTxSearchChange = (value) => {
@@ -123,12 +148,42 @@ export default class BlockExplorer extends Component {
     this.setState({blockSearchMatch: false, currentBlockNumberSearch: '', currentBlockSearchMatch: null})
   }
 
+  _handleClearTxSearch = (e) => {
+    e.preventDefault()
+    this.setState({txSearchMatch: false, currentTxNumberSearch: '', currentTxSearchMatch: null})
+  }
+
+  _handleTxShow = (txHash, e) => {
+    console.log(e, txHash)
+    e.preventDefault()
+    this._handleTxSearch(txHash)
+  }
+
   _renderRecentTransaction = (transactions) => {
     if (transactions.length === 0) {
       return 'NO TRANSACTIONS'
     }
 
-    return transactions.map((tx) => { return EtherUtil.bufferToHex(tx.hash) })
+    return transactions.map((tx) => {
+      const txHash = EtherUtil.bufferToHex(tx.hash)
+      return (
+        <a href="#" onClick={this._handleTxShow.bind(this, txHash)}>{txHash}</a>
+      )
+    })
+  }
+
+  _renderSearchingTx = () => {
+    return (
+      <section>
+        Searching for Transaction {this.state.currentTxNumberSearch}
+      </section>
+    )
+  }
+
+  _renderTxSearchMatch = () => {
+    const tx = this.state.currentTxSearchMatch
+    console.log(tx)
+    return this.state.currentTxSearchMatch && this._renderTransactionCard(tx.tx)
   }
 
   _renderTransactionCard = (tx) => {
