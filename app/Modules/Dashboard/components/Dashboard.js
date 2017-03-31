@@ -6,6 +6,7 @@ import AccountList from './AccountList'
 
 import WithEmptyState from 'Elements/WithEmptyState'
 import Spinner from 'Elements/Spinner'
+import SpinnerButton from 'Elements/SpinnerButton'
 
 import Styles from './Dashboard.css'
 
@@ -18,8 +19,22 @@ class LoadingAccounts extends Component {
 }
 
 class Dashboard extends Component {
+  constructor (props) {
+    super(props)
+
+    this.state = {
+      addAccountBtnDisabled: false
+    }
+  }
+
   componentDidMount () {
     this.props.appGetBlockChainState()
+  }
+
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.testRpcState.accounts.length === this.props.testRpcState.accounts.length + 1 && this.state.addAccountBtnDisabled) {
+      this.setState({addAccountBtnDisabled: false})
+    }
   }
 
   nextAccountIndex = () => {
@@ -27,6 +42,7 @@ class Dashboard extends Component {
   }
 
   _handleAddAccount = () => {
+    this.setState({addAccountBtnDisabled: true})
     this.props.appAddAccount({index: this.nextAccountIndex()})
   }
 
@@ -64,7 +80,11 @@ class Dashboard extends Component {
             </WithEmptyState>
           </main>
           <footer>
-            <button className={Styles.MiningBtn} onClick={this._handleAddAccount}>Add Account</button>
+            <SpinnerButton
+              label="ADD ACCOUNT"
+              isActive={this.state.addAccountBtnDisabled}
+              _handleOnClick={this._handleAddAccount}
+            />
           </footer>
         </div>
         <div className={Styles.Logs}>

@@ -1,0 +1,72 @@
+.SpinnerButton {
+	border: none;
+	cursor: pointer;
+	display: inline-block;
+  position: relative;
+	text-align: center;
+	text-decoration: none;
+	appearance: none;
+  transition:padding .25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.Active {
+	padding-right:3rem;
+}
+
+.Label {
+  cursor: pointer;
+}
+
+.Loader {
+	display:inline-block;
+	font-size:3px;
+	position:absolute;
+	overflow:hidden;
+	opacity:0;
+	pointer-events: none;
+	right:1rem;
+	top:50%;
+	margin-top:-3.25em;
+	animation: spin 1s infinite steps(8);
+	transition:opacity .5s ease-out .2s;
+	transform-origin: 3.25em;
+
+}
+
+.Active .Loader {
+	height:6.5em;
+	opacity:1;
+	width:6.5em;
+}
+
+.Loader:before,
+.Loader:after,
+.Loader div:before,
+.Loader div:after {
+	top:0;
+	left:3em;
+	background-color:#999;
+	border-radius:.2em;
+	content:"";
+	height:2.5em;
+	position:absolute;
+	width:.5em;
+	box-shadow:0 4em #eee;
+	transform-origin:50% 3.25em;
+}
+
+.Loader:after {
+	background-color:#aaa;
+	transform:rotate(45deg)}
+
+.Loader div:before {
+	background-color:#bbb;
+	transform:rotate(90deg)}
+
+.Loader div:after {
+	background-color:#ccc;
+	transform:rotate(135deg)}
+
+@keyframes spin {
+	to { transform: rotate(1turn); }
+}
