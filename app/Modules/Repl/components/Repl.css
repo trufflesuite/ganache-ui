@@ -12,4 +12,5 @@
 
 .Repl footer input {
   width: 100%;
+  font-family: "Fira Code", monospaced;
 }
