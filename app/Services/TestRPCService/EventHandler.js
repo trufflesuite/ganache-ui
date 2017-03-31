@@ -62,6 +62,7 @@ export default class EventHandler {
   _handleAddAccount = (event, arg) => {
     this.testRpcService.log('Adding account...')
     const newAccount = this.testRpcService.stateManager.createAccount(arg)
+    console.log(`NEW ACCOUNT: ${newAccount.account.balance}`)
     this.testRpcService.stateManager.accounts[newAccount.address] = newAccount
     if (!this.testRpcService.stateManager.secure) {
       this.testRpcService.stateManager.unlocked_accounts[newAccount.address] = newAccount
