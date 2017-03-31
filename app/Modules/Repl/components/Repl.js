@@ -11,17 +11,49 @@ class Repl extends Component {
 
     this.buffer = []
     this.state = {
-      currentLine: ''
+      currentLine: '',
+      commandHistory: [],
+      commandHistoryIndex: 0
     }
   }
 
   _handleReplInput = (value) => {
     this.props.appSendReplCommand(value)
-    this.setState({currentLine: ''})
+    this.setState({currentLine: '', commandHistory: this.state.commandHistory.concat(value)})
   }
 
   _handleChange = (value) => {
     this.setState({currentLine: value})
+  }
+
+  _handleKeyDown = (e) => {
+    const keyCode = e.keyCode
+
+    if (keyCode === 38) {
+      e.preventDefault()
+      this._goForwardInCommandHistory()
+    } else if (keyCode === 40) {
+      e.preventDefault()
+      this._goBackwardsInCommandHistory()
+    }
+  }
+
+  _goForwardInCommandHistory = () => {
+    if (this.state.commandHistoryIndex < this.state.commandHistory.length) {
+      this.setState({
+        currentLine: this.state.commandHistory[this.state.commandHistoryIndex],
+        commandHistoryIndex: this.state.commandHistoryIndex + 1
+      })
+    }
+  }
+
+  _goBackwardsInCommandHistory = () => {
+    if (this.state.commandHistoryIndex > 0) {
+      this.setState({
+        currentLine: this.state.commandHistory[this.state.commandHistoryIndex - 1],
+        commandHistoryIndex: this.state.commandHistoryIndex - 1
+      })
+    }
   }
 
   render () {
@@ -37,7 +69,8 @@ class Repl extends Component {
             value={this.state.currentLine}
             onEnter={this._handleReplInput}
             onChange={this._handleChange}
-            placeholder={'> READY'}
+            onKeyDown={this._handleKeyDown}
+            placeholder={'$'}
           />
         </footer>
       </div>

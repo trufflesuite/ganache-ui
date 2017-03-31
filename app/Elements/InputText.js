@@ -52,6 +52,7 @@ class InputSelect extends React.Component {
       <input {...extendProps}
         value={this.state.value}
         onKeyPress={this.handlePress.bind(this)}
+        onKeyDown={this.props.onKeyDown}
         onChange={this.handleChange.bind(this)}/>
     )
   }
