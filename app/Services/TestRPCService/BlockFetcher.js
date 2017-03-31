@@ -10,6 +10,8 @@ export default class BlockFetcher {
       this.stateManager.blockNumber((err, blockNumber) => {
         err ? reject(err) : resolve(blockNumber)
       })
+    }).catch((err) => {
+      console.log(err)
     })
   }
 
@@ -27,13 +29,15 @@ export default class BlockFetcher {
   async getRecentBlocks (stateManager) {
     const tailLength = 5
     const currentBlockNumber = await this.getCurrentBlockNumber()
-    const blockTailLength = currentBlockNumber < tailLength ? currentBlockNumber : tailLength
+    const blockTailLength = currentBlockNumber < tailLength ? currentBlockNumber + 1 : tailLength
     const blockPlaceholders = new Array(blockTailLength).fill(null)
 
     let blocks = await Promise.all(blockPlaceholders.map(async (_, index) => {
       const requiredBlockNumber = currentBlockNumber - index
       return await this.getBlockByNumber(requiredBlockNumber)
     }))
+
+    console.log(`currentBlockNumber: ${currentBlockNumber} blocks: ${blocks}`)
 
     return blocks
   }

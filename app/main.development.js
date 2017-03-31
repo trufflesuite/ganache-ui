@@ -22,6 +22,10 @@ if (process.env.NODE_ENV === 'development') {
   require('module').globalPaths.push(p); // eslint-disable-line
 }
 
+process.on('uncaughtException', (err) => {
+  console.log(`ERROR!!!!!!: ${err}`)
+})
+
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit()
 })
