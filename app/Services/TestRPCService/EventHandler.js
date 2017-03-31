@@ -47,12 +47,16 @@ export default class EventHandler {
 
   _handleMakeSnapshot = (event, arg) => {
     this.testRpcService.log('Making Snapshot...')
-    this.testRpcService.stateManager.snapshot()
+    this.testRpcService.stateManager.snapshot((err, cb) => {
+      err ? console.log(err) : null
+    })
   }
 
   _handleRevertSnapshot = (event, arg) => {
     this.testRpcService.log(`Reverting Snapshot #${arg}...`)
-    this.testRpcService.stateManager.revert(arg)
+    this.testRpcService.stateManager.revert(arg, (err, cb) => {
+      err ? console.log(err) : null
+    })
   }
 
   _handleAddAccount = (event, arg) => {
