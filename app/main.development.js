@@ -78,6 +78,8 @@ app.on('ready', async () => {
 
   mainWindow.on('closed', () => {
     mainWindow = null
+    testRpcService = null
+    replService = null
   })
 
   if (process.env.NODE_ENV === 'development') {
