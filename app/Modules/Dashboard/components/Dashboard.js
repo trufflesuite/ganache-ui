@@ -80,11 +80,6 @@ class Dashboard extends Component {
             </WithEmptyState>
           </main>
           <footer>
-            <SpinnerButton
-              label="ADD ACCOUNT"
-              isActive={this.state.addAccountBtnDisabled}
-              _handleOnClick={this._handleAddAccount}
-            />
           </footer>
         </div>
         <div className={Styles.Logs}>
