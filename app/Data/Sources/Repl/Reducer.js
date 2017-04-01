@@ -11,6 +11,7 @@ const mutators = {
     }
 
     let newState = {
+      ...state,
       replBuffer: state.replBuffer.concat({ message: payload, type: messageType })
     }
 
@@ -23,6 +24,11 @@ const mutators = {
       type: 'command',
       time: new Date().toLocaleTimeString()
     })
+  }),
+
+  'APP/REPLCOMMANDCOMPLETIONRESULT': (state, {type, payload}) => ({
+    ...state,
+    commandCompletions: payload.completions[0]
   })
 }
 

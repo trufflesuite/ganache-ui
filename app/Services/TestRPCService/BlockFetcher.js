@@ -37,7 +37,7 @@ export default class BlockFetcher {
       return await this.getBlockByNumber(requiredBlockNumber)
     }))
 
-    console.log(`currentBlockNumber: ${currentBlockNumber} blocks: ${blocks}`)
+    // console.log(`currentBlockNumber: ${currentBlockNumber} blocks: ${blocks}`)
 
     return blocks
   }

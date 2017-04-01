@@ -1,5 +1,6 @@
 const DefaultState = {
-  replBuffer: []
+  replBuffer: [],
+  commandCompletions: []
 }
 
 export default DefaultState

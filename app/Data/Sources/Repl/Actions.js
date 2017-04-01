@@ -14,3 +14,9 @@ export const appSendReplCommand = createRequestThunk({
     }
   ]
 })
+
+export const appSendReplCommandCompletionType = 'APP/SENDREPLCOMMANDCOMPLETION'
+export const appSendReplCommandCompletion = createRequestThunk({
+  request: Api.sendReplCommandCompletion,
+  key: appSendReplCommandCompletionType
+})

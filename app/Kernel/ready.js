@@ -27,6 +27,10 @@ export default async function (app, done, error) {
     app.store.dispatch({type: 'APP/REPLSTATE', payload: message})
   })
 
+  ipcRenderer.on('APP/REPLCOMMANDCOMPLETIONRESULT', (event, message) => {
+    app.store.dispatch({type: 'APP/REPLCOMMANDCOMPLETIONRESULT', payload: message})
+  })
+
   ipcRenderer.on('APP/BLOCKSEARCHRESULT', (event, message) => {
     app.store.dispatch({type: 'APP/BLOCKSEARCHRESULT', payload: message})
   })

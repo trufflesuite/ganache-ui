@@ -56,6 +56,7 @@ export default class ReplService {
     })
 
     ipcMain.on('APP/SENDREPLCOMMAND', this.sendReplInput)
+    ipcMain.on('APP/SENDREPLCOMMANDCOMPLETION', this._handleCommandCompletion)
 
     this.testRpcService.on('testRpcServiceStarted', this._handleStartTestRpc)
   }
@@ -64,6 +65,18 @@ export default class ReplService {
     new Web3InitScript(testRpcService.host, testRpcService.port).exportedScript().then((bootScript) => {
       this.replStream.emit('data', bootScript)
       this.replStream.openStream()
+    })
+  }
+
+  _handleCommandCompletion = (e, cmd) => {
+    this._repl.complete(cmd, (err, completions) => {
+      if (err) {
+        console.log(err)
+      }
+
+      console.log(`completions: ${completions}`)
+      const payload = { 'completions': completions }
+      this.webView.send('APP/REPLCOMMANDCOMPLETIONRESULT', payload)
     })
   }
 
