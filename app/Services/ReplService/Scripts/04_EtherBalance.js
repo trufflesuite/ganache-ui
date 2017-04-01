@@ -16,3 +16,5 @@ global.etherBalance = function(contract) {
     break
   }
 }
+
+global.helpList.push({ command: 'etherBalance(<address>)', description: 'Returns the balance in ether of the given address (whether account or contract)'})

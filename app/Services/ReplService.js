@@ -74,7 +74,6 @@ export default class ReplService {
         console.log(err)
       }
 
-      console.log(`completions: ${completions}`)
       const payload = { 'completions': completions }
       this.webView.send('APP/REPLCOMMANDCOMPLETIONRESULT', payload)
     })
@@ -88,6 +87,10 @@ export default class ReplService {
   sendReplInput = (e, input) => {
     if (!input.match(/^\..+/)) {
       this.replStream.emit('data', input + '\n')
+
+      if (input === 'clear()') {
+        this.webView.send('APP/REPLCLEAR')
+      }
     }
   }
 }

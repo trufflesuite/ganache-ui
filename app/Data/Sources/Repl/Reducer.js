@@ -29,7 +29,9 @@ const mutators = {
   'APP/REPLCOMMANDCOMPLETIONRESULT': (state, {type, payload}) => ({
     ...state,
     commandCompletions: payload.completions[0]
-  })
+  }),
+
+  'APP/REPLCLEAR': (state, {type, payload}) => (DefaultState)
 }
 
 export default ReduceWith(mutators, DefaultState)
