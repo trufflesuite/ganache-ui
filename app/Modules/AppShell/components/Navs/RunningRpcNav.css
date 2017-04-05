@@ -110,3 +110,13 @@ header {
     margin-top: .5rem;
   }
 }
+
+.MiningStatus {
+  flex-direction: row !important;
+  align-items: center;
+  justify-content: center;
+
+  span {
+    margin-left: 1rem;
+  }
+}

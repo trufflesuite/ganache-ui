@@ -5,6 +5,8 @@ import TestRPCProvider from 'Data/Providers/TestRPCProvider'
 
 import WindowControls from './WindowControls'
 
+import Spinner from 'Elements/Spinner'
+
 import Styles from './RunningRpcNav.css'
 
 class RunningRpcNav extends React.Component {
@@ -89,6 +91,10 @@ class RunningRpcNav extends React.Component {
             { miningPaused ? <button className={Styles.MiningBtn} onClick={this._handleForceMine}>Force Mine</button> : null }
             { miningPaused ? <button className={Styles.MiningBtn} onClick={this._handleMakeSnapshot}>TAKE SNAPSHOT #{currentSnapshotId + 1}</button> : null }
             { miningPaused ? this._renderSnapshotControls() : null }
+            { !miningPaused
+              ? <div className={Styles.MiningStatus}><Spinner width={'30px'} height={'30px'} /><span>Mining</span></div>
+              : null
+            }
           </div>
         </footer>
       </nav>
