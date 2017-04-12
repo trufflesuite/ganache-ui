@@ -61,7 +61,7 @@ app.on('ready', async () => {
     show: false,
     width: 1024,
     height: 930,
-    title: 'Zircon',
+    title: 'Ganache',
     frame: false
   })
 
@@ -98,9 +98,9 @@ app.on('ready', async () => {
 
   if (process.platform === 'darwin') {
     template = [{
-      label: 'Zircon',
+      label: 'Ganache',
       submenu: [{
-        label: 'About Zircon',
+        label: 'About Ganache',
         selector: 'orderFrontStandardAboutPanel:'
       }, {
         type: 'separator'
@@ -110,7 +110,7 @@ app.on('ready', async () => {
       }, {
         type: 'separator'
       }, {
-        label: 'Hide Zircon',
+        label: 'Hide Ganache',
         accelerator: 'Command+H',
         selector: 'hide:'
       }, {

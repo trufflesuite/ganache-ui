@@ -12,9 +12,9 @@ import '../resources/fonts/FiraSans-Regular.ttf'
 import '../resources/fonts/FiraSans-Bold.ttf'
 import '../resources/fonts/FiraSans-SemiBold.ttf'
 
-const Zircon = new Application('ZIRCON')
+const Ganache = new Application('GANACHE')
 
-Zircon
+Ganache
   .init(bootup)
   .ready(ready)
   .start('root')

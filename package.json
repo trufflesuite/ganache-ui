@@ -1,6 +1,6 @@
 {
-  "name": "zircon",
-  "productName": "Zircon",
+  "name": "ganache",
+  "productName": "Ganache",
   "version": "0.0.1",
   "description": "An Electron UI for TestRPC",
   "main": "main.js",
@@ -29,8 +29,8 @@
   },
   "browserslist": "chrome 50",
   "build": {
-    "productName": "Zircon",
-    "appId": "org.trufflesuite.Zircon",
+    "productName": "Ganache",
+    "appId": "org.trufflesuite.Ganache",
     "category": "public.app-category.tools",
     "mac": {
       "icon": "resources/icon.icns"
@@ -77,7 +77,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/trufflesuite/zircon.git"
+    "url": "git+https://github.com/trufflesuite/ganache.git"
   },
   "author": {
     "name": "John McDowall",
@@ -86,7 +86,7 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/trufflesuite/zircon/issues"
+    "url": "https://github.com/trufflesuite/ganache/issues"
   },
   "keywords": [
     "electron",
@@ -97,7 +97,7 @@
     "webpack",
     "react-hot"
   ],
-  "homepage": "https://github.com/trufflesuite/zircon#readme",
+  "homepage": "https://github.com/trufflesuite/ganache#readme",
   "devDependencies": {
     "asar": "^0.13.0",
     "babel-core": "^6.21.0",

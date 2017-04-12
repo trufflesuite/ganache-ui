@@ -1,10 +1,10 @@
-## ZIRCON
+## Ganache
 
-ZIRCON is an Electron based UI for TestRPC.
+Ganache is an Electron based UI for TestRPC.
 
 This is what it looks like:
 
-![Zircon](https://github.com/trufflesuite/zircon/blob/master/.github/images/zircon_screenshot.jpg)
+![Ganache](https://github.com/trufflesuite/Ganache/blob/master/.github/images/Ganache_screenshot.jpg)
 
 It is currently in active development towards a Beta release.
 
@@ -25,7 +25,7 @@ The goals of the project are:
 
 ### License
 
-MIT - See LICENSE file
+GPL - See LICENSE file
 
 ### Authors & Contributors
 

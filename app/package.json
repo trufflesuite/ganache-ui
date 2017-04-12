@@ -1,6 +1,6 @@
 {
-  "name": "Zircon",
-  "productName": "Zircon",
+  "name": "Ganache",
+  "productName": "Ganache",
   "version": "0.0.1",
   "description": "An Electron UI for TestRPC",
   "main": "./main.js",
