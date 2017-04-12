@@ -62,7 +62,7 @@ class RunningRpcNav extends React.Component {
       <nav className={Styles.nav}>
         <header>
           <WindowControls className={Styles.RunningRpcWindowButtons} />
-          <h1>ZIRCON</h1>
+          <h1>GANACHE</h1>
           <span>v0.1</span>
         </header>
         <main className={Styles.main}>
