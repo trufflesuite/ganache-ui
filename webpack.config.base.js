@@ -11,14 +11,21 @@ import {
 
 export default validate({
   module: {
-    loaders: [{
+    loaders: [
+      {
       test: /\.jsx?$/,
       loaders: ['babel-loader'],
       exclude: /node_modules/
-    }, {
+    },
+    {
       test: /\.json$/,
       loader: 'json-loader'
-    }],
+    },
+    {
+      test: /\.svg$/,
+      loader: 'babel?presets[]=es2015,presets[]=react!svg-react'
+    }
+    ],
     noParse: /bindings/
   },
 

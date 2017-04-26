@@ -38,7 +38,7 @@ class ConfigScreen extends Component {
     return (
       <div className={Styles.ConfigScreen}>
         <header className={Styles.ConfigScreenHeader}>
-          <button className="btn btn-primary" onClick={this._startTestRpc}>START TESTRPC</button>
+          <button className="btn btn-primary" onClick={this._startTestRpc}>START GANACHE</button>
 
           <div className={Styles.ConfigTabs}>
             {
@@ -59,9 +59,9 @@ class ConfigScreen extends Component {
         <form>
           <section className={Styles.ConfigCard}>
               <div className={ this.state.activeTab === 'server' ? Styles.Visible : Styles.Hidden}>
-                <h2>TESTRPC SERVER OPTIONS</h2>
+                <h2>GANACHE SERVER OPTIONS</h2>
                 <section>
-                  <h4>TESTRPC PORT NUMBER</h4>
+                  <h4>GANACHE PORT NUMBER</h4>
                   <input ref="portNumber" type="text" name="portNumber" defaultValue="8545"/>
                 </section>
                 <section>

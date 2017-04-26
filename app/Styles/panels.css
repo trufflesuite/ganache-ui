@@ -20,7 +20,7 @@
 
   > h3,
   > h4 {
-    border-top: 4px solid var(--app-highlight-color);
+    border-top: 4px solid var(--app-panel-header-border-color);
     display: inline-table;
   }
 

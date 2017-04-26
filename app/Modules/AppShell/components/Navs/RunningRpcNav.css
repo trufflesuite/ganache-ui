@@ -7,7 +7,6 @@
   flex-direction: column;
   padding: 1rem 0;
   background-color: var(--app-sidebar-background-color);
-  border-right: 1px solid var(--app-sidebar-divider-color);
   -webkit-app-region: drag;
 
   h4 {
@@ -79,6 +78,8 @@ header {
 .footer {
   display: flex;
   flex-direction: column;
+
+  color: var(--app-highlight-color);
 
   div {
     border-top: 1px solid var(--app-sidebar-divider-color);

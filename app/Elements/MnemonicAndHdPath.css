@@ -18,6 +18,7 @@
     span {
       text-transform: uppercase;
       font-family: "Fira Code Regular", monospace;
+      color: var(--text-color);
     }
   }
 }

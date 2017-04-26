@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 import {remote as Remote} from 'electron'
 
-import Logo from 'Elements/Logo'
+import Logo from 'babel!svg-react!../../../../../resources/logo.svg?name=Icon'
 
 import WindowControls from './WindowControls'
 import Styles from './LandingNav.css'

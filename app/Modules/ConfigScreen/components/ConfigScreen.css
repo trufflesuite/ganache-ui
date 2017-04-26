@@ -24,7 +24,7 @@
   }
 
   .ActiveTab {
-    color: var(--app-highlight-color)
+    color: var(--app-config-tab-active-text-color);
   }
 
   .Hidden {
@@ -51,7 +51,7 @@
 
     &.active,
     &:hover {
-      color: blue;
+      color: lighten(var(--app-config-tab-active-text-color), 15%);
     }
 
     .ConfigTabItemImage {
@@ -69,7 +69,7 @@
     .ConfigTabItemName {
       margin-top: 16px;
       font-weight: 500;
-      color: pointer;
+      cursor: pointer;
       text-transform: uppercase;
     }
   }

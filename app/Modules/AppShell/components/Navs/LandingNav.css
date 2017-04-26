@@ -73,7 +73,7 @@ $nav-height: 70px;
   flex: 2;
   justify-content: center;
   align-items: center;
-
+  padding: 10px;
   text-align: center;
 
   font-size: 20px;

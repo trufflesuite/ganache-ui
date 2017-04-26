@@ -1,0 +1,29 @@
+:root {
+  --primary-color: rgba(38, 191, 149, 1);
+  --text-color: rgba(54, 65, 83, 1.000);
+
+  --app-highlight-color: rgba(138, 193, 238, 1.000);
+
+  --app-background-color: rgba(247, 249, 250, 1.000);
+
+  --app-panel-background-color: rgba(247, 249, 250, 1.000);
+  --app-panel-text-color: rgba(54, 65, 83, 1.000);
+  --app-panel-divider-color: rgba(223, 226, 229, 1.000);
+
+  --app-sidebar-background-color: rgba(255, 255, 255, 1.000);
+  --app-sidebar-header-color: rgba(127, 143, 164, 1.000);
+  --app-sidebar-divider-color: rgba(223, 226, 229, 1.000);
+
+  --app-button-primary-background-color: rgba(138, 193, 238, 1.000);
+  --app-button-primary-color: rgba(53, 64, 82, 1.000);
+  --app-button-primary-disabled-border-color: rgba(227, 227, 227, 1.000);
+
+  --app-account-list-background: rgba(255, 255, 255, 1.000);
+  --app-account-list-header-divider-color: rgba(223, 226, 229, 1.000);
+
+  --app-mnemonic-background-color: rgba(255, 255, 255, 1.000);
+
+  --app-title-bar-btn-close: rgba(255, 96, 88, 1.000);
+  --app-title-bar-btn-min: rgba(255, 191, 47, 1.000);
+  --app-title-bar-btn-max: rgba(40, 201, 64, 1.000);
+}

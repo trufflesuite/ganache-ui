@@ -33,7 +33,7 @@
     "appId": "org.trufflesuite.Ganache",
     "category": "public.app-category.tools",
     "mac": {
-      "icon": "resources/icon.icns"
+      "icon": "resources/icons/mac/icon.icns"
     },
     "dmg": {
       "contents": [
@@ -154,6 +154,7 @@
     "sinon": "^1.17.7",
     "spectron": "^3.4.1",
     "style-loader": "^0.13.1",
+    "svg-react-loader": "^0.3.7",
     "tcomb": "^3.2.16",
     "url-loader": "^0.5.7",
     "webpack": "^1.14.0",

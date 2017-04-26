@@ -83,7 +83,7 @@ class Dashboard extends Component {
           </footer>
         </div>
         <div className={Styles.Logs}>
-          <h4>TESTRPC LOG</h4>
+          <h4>LOG OUTPUT</h4>
           <main>
             <LogContainer
               logs={this.props.testRpcState.logs}

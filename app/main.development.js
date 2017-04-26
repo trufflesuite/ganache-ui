@@ -31,7 +31,7 @@ app.on('window-all-closed', () => {
 })
 
 if (process.platform === 'darwin') {
-  app.dock.setIcon(path.resolve(__dirname, '../resources/icon.png'))
+  app.dock.setIcon(path.resolve(__dirname, '../resources/icons/png/512x512.png'))
 }
 
 const installExtensions = async () => {
