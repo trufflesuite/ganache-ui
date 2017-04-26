@@ -86,8 +86,13 @@ class RunningRpcNav extends React.Component {
           </div>
           <div>
             <h4>MINING CONTROLS</h4>
-            <button className={Styles.MiningBtn} disabled={!this.props.testRpcState.isMining} onClick={this._handleStopMining}>Stop Mining</button>
-            <button className={Styles.MiningBtn} disabled={this.props.testRpcState.isMining} onClick={this._handleStartMining}>Start Mining</button>
+            {
+              this.props.testRpcState.isMining
+              ?
+                <button className={Styles.MiningBtn} disabled={!this.props.testRpcState.isMining} onClick={this._handleStopMining}>Stop Mining</button>
+              :
+                <button className={Styles.MiningBtn} disabled={this.props.testRpcState.isMining} onClick={this._handleStartMining}>Start Mining</button>
+            }
             { miningPaused ? <button className={Styles.MiningBtn} onClick={this._handleForceMine}>Force Mine</button> : null }
             { miningPaused ? <button className={Styles.MiningBtn} onClick={this._handleMakeSnapshot}>TAKE SNAPSHOT #{currentSnapshotId + 1}</button> : null }
             { miningPaused ? this._renderSnapshotControls() : null }
