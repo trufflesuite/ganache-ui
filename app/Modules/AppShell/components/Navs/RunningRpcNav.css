@@ -26,6 +26,16 @@
 
   .Active {
     color: var(--app-highlight-color);
+
+    &:before {
+      display: block;
+      content: ' ';
+      width: 4px;
+      height: 14px;
+      position: absolute;
+      left: 0;
+      background-color: var(--app-highlight-color);
+    }
   }
 
   .Badge {

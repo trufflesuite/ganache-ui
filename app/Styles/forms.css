@@ -43,7 +43,7 @@ $switch-height: 30px;
   }
 
   input:checked + label {
-    background: rgba(176, 198, 255, 1);
+    background: var(--primary-color);
   }
 
   input:checked + label:after {

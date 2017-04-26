@@ -4,16 +4,16 @@
 
   --app-highlight-color: rgba(208, 195, 188, 1.000);
 
-  --app-background-color: rgba(90, 85, 82, 1.000);
+  --app-background-color: rgba(220, 216, 212, 1.000);
 
   --app-panel-background-color: var(--app-background-color);
-  --app-panel-text-color: rgba(242, 175, 103, 1.000);
+  --app-panel-text-color: rgba(121, 113, 108, 1.000);
   --app-panel-divider-color: rgba(223, 226, 229, 1.000);
-  --app-panel-header-border-color: rgba(3, 169, 244, 1.000);
+  --app-panel-header-border-color: rgba(113, 156, 102, 1.000);
 
   --app-sidebar-background-color: rgba(42, 40, 37, 1.000);
-  --app-sidebar-header-color: var(--primary-color);
-  --app-sidebar-divider-color: rgba(242, 175, 103, 1.000);
+  --app-sidebar-header-color: rgba(113, 156, 102, 1.000);
+  --app-sidebar-divider-color: rgba(76, 75, 74, 1.000);
 
   --app-button-primary-background-color: rgba(78, 60, 65, 1.000);
   --app-button-primary-color: rgba(242, 175, 103, 1.000);
