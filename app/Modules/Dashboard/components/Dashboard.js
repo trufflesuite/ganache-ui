@@ -90,8 +90,6 @@ class Dashboard extends Component {
             />
           </main>
           <footer>
-            <button className={Styles.MiningBtn} onClick={this._handleSaveLog}>Save Logs</button>
-            <button className={Styles.MiningBtn} onClick={this._handleCopyLogs}>Copy Logs</button>
             <button className={Styles.MiningBtn} onClick={this._handleClearLogs}>Clear Log</button>
           </footer>
         </div>
