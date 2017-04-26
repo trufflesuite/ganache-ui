@@ -22,6 +22,12 @@
     font-size: 14px;
     margin-bottom: 1rem;
     color: var(--app-sidebar-header-color);
+
+    transition: color .3s, background-color .3s;
+
+    &:hover {
+      color: var(--app-highlight-color);
+    }
   }
 
   .Active {
