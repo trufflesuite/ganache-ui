@@ -4,7 +4,7 @@ Ganache is an Electron based UI for TestRPC.
 
 This is what it looks like:
 
-![Ganache](https://github.com/trufflesuite/Ganache/blob/master/.github/images/Ganache_screenshot.jpg)
+![Ganache](https://github.com/trufflesuite/ganache/blob/master/.github/images/ganache_screenshot.jpg)
 
 It is currently in active development towards a Beta release.
 
