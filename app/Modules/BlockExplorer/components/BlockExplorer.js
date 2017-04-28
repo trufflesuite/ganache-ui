@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import EtherUtil from 'ethereumjs-util'
 
 import EmptyTransactions from './EmptyTransactions'
-import BlockCard from './BlockCard'
+import MiniBlockCard from './MiniBlockCard'
+import MiniTxCard from './MiniTxCard'
 
 import WithEmptyState from 'Elements/WithEmptyState'
 import InputText from 'Elements/InputText'
@@ -69,14 +70,26 @@ export default class BlockExplorer extends Component {
           }
           </header>
           <main>
-            <ul className={Styles.BlockList}>
-              { !this.state.isSearchingForBlock && !this.state.blockSearchMatch
-                ? this._renderBlocks()
-                : this.state.currentBlockSearchMatch === null
-                ? this._renderSearchingBlock()
-                : this._renderBlockSearchMatch()
-              }
-            </ul>
+            <table className={Styles.BlockList}>
+              <thead>
+                <tr>
+                  <td>BLOCK #</td>
+                  <td>BLOCK HASH</td>
+                  <td>NONCE </td>
+                  <td>GAS USED / GAS LIMIT</td>
+                  <td>Mined On</td>
+                  <td>TX COUNT</td>
+                </tr>
+              </thead>
+              <tbody>
+                { !this.state.isSearchingForBlock && !this.state.blockSearchMatch
+                  ? this._renderBlocks()
+                  : this.state.currentBlockSearchMatch === null
+                  ? this._renderSearchingBlock()
+                  : this._renderBlockSearchMatch()
+                }
+              </tbody>
+            </table>
           </main>
           <footer>
           </footer>
@@ -108,14 +121,25 @@ export default class BlockExplorer extends Component {
               test={this.props.testRpcState.transactions.length === 0}
               emptyStateComponent={EmptyTransactions}
             >
-              <ul className={Styles.TransactionList}>
-                { !this.state.isSearchingForTx && !this.state.txSearchMatch
-                  ? this._renderTransactions()
-                  : this.state.currentTxSearchMatch === null
-                  ? this._renderSearchingTx()
-                  : this._renderTxSearchMatch()
-                }
-              </ul>
+              <table className={Styles.TransactionList}>
+                <thead>
+                  <tr>
+                    <td>TX HASH</td>
+                    <td>FROM</td>
+                    <td>TO</td>
+                    <td>NONCE</td>
+                    <td>VALUE</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  { !this.state.isSearchingForTx && !this.state.txSearchMatch
+                    ? this._renderTransactions()
+                    : this.state.currentTxSearchMatch === null
+                    ? this._renderSearchingTx()
+                    : this._renderTxSearchMatch()
+                  }
+                </tbody>
+              </table>
             </WithEmptyState>
           </main>
           <footer>
@@ -175,94 +199,11 @@ export default class BlockExplorer extends Component {
 
   _renderTransactionCard = (tx) => {
     return (
-      <li className={Styles.Transaction} key={tx.hash}>
-        <section>
-          <table className={Styles.TransactionData}>
-            <tr>
-              <td>
-                <dl>
-                  <dt>Transaction Hash</dt>
-                  <dd>{EtherUtil.bufferToHex(tx.hash)}</dd>
-                </dl>
-              </td>
-              <td>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <dl>
-                  <dt>From</dt>
-                  <dd>{EtherUtil.bufferToHex(tx.from)}</dd>
-                </dl>
-              </td>
-              <td>
-                <dl>
-                  <dt>To</dt>
-                  <dd>{EtherUtil.bufferToHex(tx.to)}</dd>
-                </dl>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <dl>
-                  <dt>Nonce</dt>
-                  <dd>{EtherUtil.bufferToHex(tx.nonce)}</dd>
-                </dl>
-              </td>
-              <td>
-                <dl>
-                  <dt>Value</dt>
-                  <dd>{EtherUtil.bufferToHex(tx.value)}</dd>
-                </dl>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <dl>
-                  <dt>Init</dt>
-                  <dd>{EtherUtil.bufferToHex(tx.init)}</dd>
-                </dl>
-              </td>
-              <td>
-                <dl>
-                  <dt>Value</dt>
-                  <dd>{EtherUtil.bufferToHex(tx.value)}</dd>
-                </dl>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <dl>
-                  <dt>Gas Price</dt>
-                  <dd>{EtherUtil.bufferToHex(tx.gasPrice)}</dd>
-                </dl>
-                <dl>
-                  <dt>Data</dt>
-                  <dd className={Styles.TxData}>{EtherUtil.bufferToHex(tx.data)}</dd>
-                </dl>
-              </td>
-              <td>
-                <dl>
-                  <dt>Gas Limit</dt>
-                  <dd>{EtherUtil.bufferToHex(tx.gasLimit)}</dd>
-                </dl>
-                <dl>
-                  <dt>V</dt>
-                  <dd>{EtherUtil.bufferToHex(tx.v)}</dd>
-                </dl>
-                <dl>
-                  <dt>R</dt>
-                  <dd>{EtherUtil.bufferToHex(tx.r)}</dd>
-                </dl>
-                <dl>
-                  <dt>S</dt>
-                  <dd>{EtherUtil.bufferToHex(tx.s)}</dd>
-                </dl>
-              </td>
-            </tr>
-          </table>
-        </section>
-      </li>
+      <MiniTxCard
+        className={Styles.Transaction}
+        key={tx.hash}
+        tx={tx}
+      />
     )
   }
 
@@ -285,9 +226,11 @@ export default class BlockExplorer extends Component {
 
   _renderBlockCard = (block) => {
     return (
-      <li className={Styles.Block} key={EtherUtil.bufferToHex(block.hash)}>
-        <BlockCard block={block} />
-      </li>
+      <MiniBlockCard
+        block={block}
+        key={block.hash}
+        showBlockDetail={this._handleBlockNumberSearch}
+      />
     )
   }
 

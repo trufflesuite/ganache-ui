@@ -1,0 +1,37 @@
+@import 'colors.css';
+
+@keyframe sizeIn {
+  0% {
+    height: 0;
+  }
+
+  100% {
+    height: 100%;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 100%;
+  }
+}
+
+.MiniBlockCard {
+  font-family: "Fira Code", monospaced;
+  font-size: .9rem;
+  cursor: pointer;
+
+  animation: sizeIn .3s, fadeIn .8s;
+
+  &:hover {
+    background-color: var(--app-highlight-color);
+  }
+
+  td {
+    cursor: pointer;
+  }
+}

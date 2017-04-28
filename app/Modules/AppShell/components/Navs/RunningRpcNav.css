@@ -9,6 +9,23 @@
   background-color: var(--app-sidebar-background-color);
   -webkit-app-region: drag;
 
+header {
+  padding: 0 1rem 1rem 1rem;
+  border-bottom: 1px solid var(--app-sidebar-divider-color);
+  position: relative;
+
+  h1 {
+    margin: 0;
+    color: var(--app-highlight-color);
+    font-size: 22px;
+  }
+
+  span {
+    font-size: 12px;
+    color: var(--app-sidebar-header-color);
+    font-weight: 700;
+  }
+}
   h4 {
     font-size: 12px;
     color: var(--app-sidebar-header-color);
@@ -68,23 +85,6 @@
   }
 }
 
-header {
-  padding: 0 1rem 1rem 1rem;
-  border-bottom: 1px solid var(--app-sidebar-divider-color);
-  position: relative;
-
-  h1 {
-    margin: 0;
-    color: var(--app-highlight-color);
-    font-size: 22px;
-  }
-
-  span {
-    font-size: 12px;
-    color: var(--app-sidebar-header-color);
-    font-weight: 700;
-  }
-}
 
 .RunningRpcWindowButtons {
   position: absolute;

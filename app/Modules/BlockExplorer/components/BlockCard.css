@@ -1,0 +1,95 @@
+
+.BlockCard {
+  dl,
+  dt,
+  dd {
+    margin: 0;
+    padding: 0;
+  }
+
+  dl {
+    margin-left: 1rem;
+  }
+
+  dt {
+    font-size: .8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  dd {
+    font-size: .7rem;
+    text-transform: uppercase;
+  }
+
+  .BlockNumber {
+    flex: 0;
+    font-size: .7rem;
+    text-transform: uppercase;
+    color: white;
+    padding: 4px;
+    background-color: black;
+  }
+
+  .BlockNumber div:first-of-type {
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  table {
+    td {
+      padding: .5rem;
+    }
+  }
+}
+
+
+.BlockData,
+.TransactionData {
+  flex: 1;
+
+  width: 100%;
+  margin: 0;
+  padding: 0;
+
+  border-collapse: collapse;
+
+  font-size: .8rem;
+}
+
+.BlockData tr td,
+.TransactionData tr td {
+  vertical-align: top;
+  width: 50%;
+}
+
+.BlockData dl,
+.TransactionData dl {
+  width: 100%;
+  margin: 0 0 1rem 0;
+  padding: 0;
+}
+
+.BlockData dt ,
+.TransactionData dt {
+  text-transform: uppercase;
+
+  font-weight: 900;
+}
+
+.BlockData dd ,
+.TransactionData dd {
+  margin: 0;
+}
+
+
+.Bloom,
+.TxData {
+  display: inline-block;
+
+  width: 100%;
+  padding-right: 2rem;
+
+  word-wrap: break-word;
+  word-break: break-word;
+}
