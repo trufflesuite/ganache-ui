@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import EtherUtil from 'ethereumjs-util'
 
 import EmptyTransactions from './EmptyTransactions'
-import MiniBlockCard from './MiniBlockCard'
+import BlockList from './BlockList'
+import BlockCard from './BlockCard'
 import MiniTxCard from './MiniTxCard'
 
 import WithEmptyState from 'Elements/WithEmptyState'
@@ -70,26 +71,17 @@ export default class BlockExplorer extends Component {
           }
           </header>
           <main>
-            <table className={Styles.BlockList}>
-              <thead>
-                <tr>
-                  <td>BLOCK #</td>
-                  <td>BLOCK HASH</td>
-                  <td>NONCE </td>
-                  <td>GAS USED / GAS LIMIT</td>
-                  <td>Mined On</td>
-                  <td>TX COUNT</td>
-                </tr>
-              </thead>
-              <tbody>
-                { !this.state.isSearchingForBlock && !this.state.blockSearchMatch
-                  ? this._renderBlocks()
-                  : this.state.currentBlockSearchMatch === null
-                  ? this._renderSearchingBlock()
-                  : this._renderBlockSearchMatch()
-                }
-              </tbody>
-            </table>
+            {
+              !this.state.isSearchingForBlock && !this.state.blockSearchMatch
+              ? <BlockList
+                  blocks={this.props.testRpcState.blocks}
+                  handleBlockNumberSearch={this._handleBlockNumberSearch}
+                  handleTxSearch={this._handleTxSearch}
+                />
+              : this.state.currentBlockSearchMatch === null
+              ? this._renderSearchingBlock()
+              : this._renderBlockSearchMatch()
+            }
           </main>
           <footer>
           </footer>
@@ -149,6 +141,55 @@ export default class BlockExplorer extends Component {
     )
   }
 
+  _renderSearchingTx = () => {
+    return (
+      <section>
+        Searching for Transaction {this.state.currentTxNumberSearch}
+      </section>
+    )
+  }
+
+  _renderTxSearchMatch = () => {
+    const tx = this.state.currentTxSearchMatch
+    console.log(tx)
+    return this.state.currentTxSearchMatch && this._renderTransactionCard(tx.tx)
+  }
+
+  _renderTransactionCard = (tx) => {
+    return (
+      <MiniTxCard
+        className={Styles.Transaction}
+        key={tx.hash}
+        tx={tx}
+      />
+    )
+  }
+
+  _renderBlockCard = (block) => {
+    return (
+      <BlockCard
+        block={block}
+      />
+    )
+  }
+
+  _renderTransactions = () => {
+    return this.props.testRpcState.transactions.map(this._renderTransactionCard)
+  }
+
+  _renderSearchingBlock = () => {
+    return (
+      <section>
+        Searching for Block {this.state.currentBlockNumberSearch}
+      </section>
+    )
+  }
+
+  _renderBlockSearchMatch = () => {
+    const block = this.state.currentBlockSearchMatch
+    return this.state.currentBlockSearchMatch && this._renderBlockCard(block)
+  }
+
   _handleBlockNumberSearch = (value) => {
     this.setState({isSearchingForBlock: true})
     this.props.appSearchBlock(value)
@@ -177,64 +218,4 @@ export default class BlockExplorer extends Component {
     this.setState({txSearchMatch: false, currentTxNumberSearch: '', currentTxSearchMatch: null})
   }
 
-  _handleTxShow = (txHash, e) => {
-    console.log(e, txHash)
-    e.preventDefault()
-    this._handleTxSearch(txHash)
-  }
-
-  _renderSearchingTx = () => {
-    return (
-      <section>
-        Searching for Transaction {this.state.currentTxNumberSearch}
-      </section>
-    )
-  }
-
-  _renderTxSearchMatch = () => {
-    const tx = this.state.currentTxSearchMatch
-    console.log(tx)
-    return this.state.currentTxSearchMatch && this._renderTransactionCard(tx.tx)
-  }
-
-  _renderTransactionCard = (tx) => {
-    return (
-      <MiniTxCard
-        className={Styles.Transaction}
-        key={tx.hash}
-        tx={tx}
-      />
-    )
-  }
-
-  _renderTransactions = () => {
-    return this.props.testRpcState.transactions.map(this._renderTransactionCard)
-  }
-
-  _renderSearchingBlock = () => {
-    return (
-      <section>
-        Searching for Block {this.state.currentBlockNumberSearch}
-      </section>
-    )
-  }
-
-  _renderBlockSearchMatch = () => {
-    const block = this.state.currentBlockSearchMatch
-    return this.state.currentBlockSearchMatch && this._renderBlockCard(block)
-  }
-
-  _renderBlockCard = (block) => {
-    return (
-      <MiniBlockCard
-        block={block}
-        key={block.hash}
-        showBlockDetail={this._handleBlockNumberSearch}
-      />
-    )
-  }
-
-  _renderBlocks = () => {
-    return this.props.testRpcState.blocks.map(this._renderBlockCard)
-  }
 }

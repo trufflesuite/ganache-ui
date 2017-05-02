@@ -1,4 +1,4 @@
-import EtherUtil from 'ethereumjs-util'
+import serializeBlock from './serializers/block'
 
 export default class BlockFetcher {
   constructor (stateManager) {
@@ -19,7 +19,7 @@ export default class BlockFetcher {
     return new Promise((resolve, reject) => {
       blockNumber = parseInt(blockNumber, 10)
       this.stateManager.getBlock(blockNumber, (err, block) => {
-        err ? reject(err) : resolve(block)
+        err ? reject(err) : resolve(serializeBlock(block))
       })
     }).catch((err) => {
       console.log(err)
@@ -47,15 +47,6 @@ export default class BlockFetcher {
 
     const currentBlockNumber = await this.getCurrentBlockNumber()
     let blocks = await this.getRecentBlocks(stateManager)
-
-    // The block objects will lose prototype functions when serialized up to the Renderer
-    blocks = blocks.map((block) => {
-      let newBlock = Object.assign({}, block)
-      newBlock.hash = block.hash()
-      newBlock.header.number = EtherUtil.bufferToInt(block.header.number)
-      newBlock.transactions = newBlock.transactions.map(transactionMarshaller)
-      return newBlock
-    })
 
     const payload = {
       blocks,

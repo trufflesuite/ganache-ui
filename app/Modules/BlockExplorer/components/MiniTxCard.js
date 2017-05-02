@@ -10,8 +10,6 @@ export default class MiniTxCard extends Component {
 
   render () {
     const { tx } = this.props
-    console.log(tx)
-
     return (
       <tr
         className={Styles.MiniTxCard}
