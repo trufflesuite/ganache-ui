@@ -17,16 +17,16 @@ export default class MiniTxCard extends Component {
           <div className={Styles.Truncate}>{EtherUtil.bufferToHex(tx.hash)}</div>
         </td>
         <td>
-          {EtherUtil.bufferToHex(tx.from)}
-        </td>
-        <td>
-          {EtherUtil.bufferToHex(tx.to)}
-        </td>
-        <td>
           {EtherUtil.bufferToHex(tx.nonce)}
         </td>
         <td>
           {EtherUtil.bufferToHex(tx.value)}
+        </td>
+        <td>
+          {EtherUtil.bufferToHex(tx.from)}
+        </td>
+        <td>
+          {EtherUtil.bufferToHex(tx.to)}
         </td>
       </tr>
     )

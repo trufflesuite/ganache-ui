@@ -1,0 +1,92 @@
+@import 'colors.css';
+
+.TxCard {
+  font-family: "Fira Code", sans-serif;
+  background: white;
+
+  dl,
+  dt,
+  dd {
+    margin: 0;
+    padding: 0;
+  }
+
+  dt {
+    font-size: .8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  dd {
+    font-size: .7rem;
+    text-transform: uppercase;
+  }
+}
+
+.TxData {
+  margin: 0;
+  padding: 0;
+  border-collapse: collapse;
+  overflow: hidden;
+
+  thead {
+    td {
+      padding: 0;
+      padding: .5rem;
+    }
+  }
+
+  tbody {
+    td {
+      padding: 0;
+      padding: .5rem;
+
+      pre {
+        padding: 0;
+        margin: 0;
+      }
+    }
+
+    tr:first-of-type {
+      td {
+        padding-top: 0;
+      }
+    }
+  }
+}
+
+.Container {
+  padding: 0 !important;
+  padding-top: .5rem !important;
+}
+
+.VAlignTop {
+  vertical-align: top;
+}
+
+.SmallGroup {
+  tbody {
+    tr {
+      td {
+        padding: 0;
+      }
+    }
+  }
+}
+
+.TxHeader {
+  background-color: var(--app-sidebar-background-color);
+  color: var(--app-highlight-color);
+}
+
+.TxDataHex {
+  display: block;
+
+  max-width: 50%;
+  padding-right: 2rem;
+
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+

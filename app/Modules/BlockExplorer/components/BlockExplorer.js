@@ -4,7 +4,9 @@ import EtherUtil from 'ethereumjs-util'
 import EmptyTransactions from './EmptyTransactions'
 import BlockList from './BlockList'
 import BlockCard from './BlockCard'
-import MiniTxCard from './MiniTxCard'
+
+import TxList from './TxList'
+import TxCard from './TxCard'
 
 import WithEmptyState from 'Elements/WithEmptyState'
 import InputText from 'Elements/InputText'
@@ -113,25 +115,15 @@ export default class BlockExplorer extends Component {
               test={this.props.testRpcState.transactions.length === 0}
               emptyStateComponent={EmptyTransactions}
             >
-              <table className={Styles.TransactionList}>
-                <thead>
-                  <tr>
-                    <td>TX HASH</td>
-                    <td>FROM</td>
-                    <td>TO</td>
-                    <td>NONCE</td>
-                    <td>VALUE</td>
-                  </tr>
-                </thead>
-                <tbody>
-                  { !this.state.isSearchingForTx && !this.state.txSearchMatch
-                    ? this._renderTransactions()
-                    : this.state.currentTxSearchMatch === null
-                    ? this._renderSearchingTx()
-                    : this._renderTxSearchMatch()
-                  }
-                </tbody>
-              </table>
+              { !this.state.isSearchingForTx && !this.state.txSearchMatch
+                ? <TxList
+                    transactions={this.props.testRpcState.transactions}
+                    handleTxSearch={this._handleTxSearch}
+                  />
+                : this.state.currentTxSearchMatch === null
+                ? this._renderSearchingTx()
+                : this._renderTxSearchMatch()
+              }
             </WithEmptyState>
           </main>
           <footer>
@@ -157,7 +149,7 @@ export default class BlockExplorer extends Component {
 
   _renderTransactionCard = (tx) => {
     return (
-      <MiniTxCard
+      <TxCard
         className={Styles.Transaction}
         key={tx.hash}
         tx={tx}

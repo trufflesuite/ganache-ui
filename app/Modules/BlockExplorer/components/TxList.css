@@ -1,0 +1,30 @@
+@import 'colors.css';
+
+.TxList {
+  width: 100%;
+  background: white;
+  text-transform: uppercase;
+  padding: .5rem;
+  border-collapse: collapse;
+
+  thead {
+    font-size: .8rem;
+    font-family: "Fira Code", monospaced;
+    font-weight: 900;
+    background-color: var(--app-sidebar-background-color);
+    color: var(--app-highlight-color);
+
+    td {
+      padding: .5rem;
+      border-top: 1px solid black;
+      border-bottom: 1px solid black;
+    }
+  }
+
+  tbody {
+    td {
+      padding: .5rem;
+      font-size: .8rem;
+    }
+  }
+}
