@@ -161,6 +161,7 @@ export default class BlockExplorer extends Component {
         className={Styles.Transaction}
         key={tx.hash}
         tx={tx}
+        handleTxSearch={this._handleTxSearch}
       />
     )
   }
@@ -169,6 +170,7 @@ export default class BlockExplorer extends Component {
     return (
       <BlockCard
         block={block}
+        handleTxSearch={this._handleTxSearch}
       />
     )
   }
@@ -200,6 +202,7 @@ export default class BlockExplorer extends Component {
   }
 
   _handleTxSearch = (value) => {
+    console.log(`SEARCHING FOR ${value}`)
     this.setState({isSearchingForTx: true})
     this.props.appSearchTx(value)
   }
