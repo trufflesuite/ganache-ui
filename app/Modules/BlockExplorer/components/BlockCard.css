@@ -1,14 +1,14 @@
+@import 'colors.css';
 
 .BlockCard {
+  font-family: "Fira Code", sans-serif;
+  background: white;
+
   dl,
   dt,
   dd {
     margin: 0;
     padding: 0;
-  }
-
-  dl {
-    margin-left: 1rem;
   }
 
   dt {
@@ -21,75 +21,72 @@
     font-size: .7rem;
     text-transform: uppercase;
   }
+}
 
-  .BlockNumber {
-    flex: 0;
-    font-size: .7rem;
-    text-transform: uppercase;
-    color: white;
-    padding: 4px;
-    background-color: black;
-  }
+.BlockData {
+  margin: 0;
+  padding: 0;
+  border-collapse: collapse;
+  overflow: hidden;
 
-  .BlockNumber div:first-of-type {
-    font-size: 16px;
-    font-weight: bold;
-  }
-
-  table {
+  thead {
     td {
+      padding: 0;
       padding: .5rem;
+    }
+  }
+
+  tbody {
+    td {
+      padding: 0;
+      padding: .5rem;
+
+      pre {
+        padding: 0;
+        margin: 0;
+      }
+    }
+
+    tr:first-of-type {
+      td {
+        padding-top: 0;
+      }
     }
   }
 }
 
-
-.BlockData,
-.TransactionData {
-  flex: 1;
-
-  width: 100%;
-  margin: 0;
-  padding: 0;
-
-  border-collapse: collapse;
-
-  font-size: .8rem;
+.Container {
+  padding: 0 !important;
+  padding-top: .5rem !important;
 }
 
-.BlockData tr td,
-.TransactionData tr td {
+.VAlignTop {
   vertical-align: top;
-  width: 50%;
 }
 
-.BlockData dl,
-.TransactionData dl {
-  width: 100%;
-  margin: 0 0 1rem 0;
-  padding: 0;
+.SmallGroup {
+  tbody {
+    tr {
+      td {
+        padding: 0;
+      }
+    }
+  }
 }
 
-.BlockData dt ,
-.TransactionData dt {
-  text-transform: uppercase;
-
-  font-weight: 900;
+.BlockHeader {
+  background-color: var(--app-sidebar-background-color);
+  color: var(--app-highlight-color);
 }
 
-.BlockData dd ,
-.TransactionData dd {
-  margin: 0;
-}
+.Bloom {
+  display: block;
 
-
-.Bloom,
-.TxData {
-  display: inline-block;
-
-  width: 100%;
+  max-width: 50%;
   padding-right: 2rem;
 
   word-wrap: break-word;
   word-break: break-word;
 }
+
+
