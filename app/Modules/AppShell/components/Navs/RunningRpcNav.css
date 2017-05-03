@@ -22,13 +22,13 @@ header {
 
   span {
     font-size: 12px;
-    color: var(--app-sidebar-header-color);
+    color: var(--app-sidebar-header-text-color);
     font-weight: 700;
   }
 }
   h4 {
     font-size: 12px;
-    color: var(--app-sidebar-header-color);
+    color: var(--app-sidebar-header-text-color);
     line-height: 14px;
     margin: 0 0 .5rem 0;
   }
@@ -38,7 +38,7 @@ header {
     font-weight: 700;
     font-size: 14px;
     margin-bottom: 1rem;
-    color: var(--app-sidebar-header-color);
+    color: var(--app-sidebar-header-text-color);
 
     transition: color .3s, background-color .3s;
 

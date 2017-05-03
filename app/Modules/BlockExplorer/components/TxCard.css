@@ -39,6 +39,12 @@
     td {
       padding: 0;
       padding: .5rem;
+
+      dl {
+        dd {
+          color: var(--app-blockexplorer-card-header-title-text-color);
+        }
+      }
     }
   }
 

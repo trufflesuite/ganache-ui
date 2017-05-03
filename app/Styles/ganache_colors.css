@@ -9,10 +9,10 @@
   --app-panel-background-color: var(--app-background-color);
   --app-panel-text-color: rgba(121, 113, 108, 1.000);
   --app-panel-divider-color: rgba(223, 226, 229, 1.000);
-  --app-panel-header-border-color: rgba(113, 156, 102, 1.000);
+  --app-panel-header-border-color: rgba(102, 143, 156, 1.000);
 
   --app-sidebar-background-color: rgba(42, 40, 37, 1.000);
-  --app-sidebar-header-color: rgba(113, 156, 102, 1.000);
+  --app-sidebar-header-text-color: rgba(102, 143, 156, 1.000);
   --app-sidebar-divider-color: rgba(76, 75, 74, 1.000);
 
   --app-button-primary-background-color: rgba(78, 60, 65, 1.000);
@@ -29,5 +29,7 @@
   --app-title-bar-btn-max: rgba(40, 201, 64, 1.000);
 
   --app-config-tab-active-text-color: rgba(148, 109, 81, 1.000);
+
+  --app-blockexplorer-card-header-title-text-color: rgba(102, 143, 156, 1.000);
 }
 
