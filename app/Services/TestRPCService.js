@@ -64,8 +64,8 @@ export default class TestRPCService extends EventEmitter {
       const blockChainState = await this._getBlockchainState()
       this.webView.send('APP/TESTRPCSTARTED', blockChainState)
 
-      this.log('TESTRPC STARTED')
       this.emit('testRpcServiceStarted', this)
+      this.log(`GANACHE STARTED: LISTENING ON http://${this.host}:${this.port}`)
       this.refreshTimer = setInterval(this.eventHandler._handleGetBlockchainState, 1000)
     })
   }

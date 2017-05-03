@@ -6,8 +6,8 @@ import { push } from 'react-router-redux'
 // dispatch any action you want
 export default async function (app, done, error) {
   ipcRenderer.on('APP/TESTRPCSTARTED', (event, message) => {
-    new Notification('TestRPC Started', {  // eslint-disable-line
-      body: 'TestRPC Started',
+    new Notification('Ganache Started', {  // eslint-disable-line
+      body: 'Ganache Started',
       silent: true
     })
 
