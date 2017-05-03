@@ -91,7 +91,7 @@ export default class BlockExplorer extends Component {
         <div className={Styles.Transactions}>
           <h4>
             { this.state.currentTxSearchMatch
-            ? `SHOWING TX ${this.state.currentTxSearchMatch.tx.hash}`
+            ? `SHOWING TX ${this.state.currentTxSearchMatch.hash}`
             : `LAST 5 TRANSACTIONS`
             }
           </h4>
@@ -144,7 +144,7 @@ export default class BlockExplorer extends Component {
   _renderTxSearchMatch = () => {
     const tx = this.state.currentTxSearchMatch
     console.log(tx)
-    return this.state.currentTxSearchMatch && this._renderTransactionCard(tx.tx)
+    return this.state.currentTxSearchMatch && this._renderTransactionCard(tx)
   }
 
   _renderTransactionCard = (tx) => {

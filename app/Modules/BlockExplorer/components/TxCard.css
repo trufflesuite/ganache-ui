@@ -3,6 +3,11 @@
 .TxCard {
   font-family: "Fira Code", sans-serif;
   background: white;
+  width: 100%;
+
+  table {
+    width: 100%;
+  }
 
   dl,
   dt,
@@ -28,6 +33,7 @@
   padding: 0;
   border-collapse: collapse;
   overflow: hidden;
+  width: 100%;
 
   thead {
     td {
@@ -39,7 +45,10 @@
   tbody {
     td {
       padding: 0;
-      padding: .5rem;
+      padding: .2rem;
+      vertical-align: top;
+      width: 50%;
+      background: white;
 
       pre {
         padding: 0;
@@ -49,7 +58,7 @@
 
     tr:first-of-type {
       td {
-        padding-top: 0;
+        padding-top: .2rem;
       }
     }
   }
@@ -82,7 +91,7 @@
 .TxDataHex {
   display: block;
 
-  max-width: 50%;
+
   padding-right: 2rem;
 
   word-wrap: break-word;

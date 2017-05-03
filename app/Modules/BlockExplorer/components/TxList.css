@@ -23,6 +23,7 @@
 
   tbody {
     td {
+      vertical-align: top;
       padding: .5rem;
       font-size: .8rem;
     }
