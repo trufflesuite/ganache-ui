@@ -26,8 +26,8 @@ export default class BlockFetcher {
     })
   }
 
-  async getRecentBlocks (stateManager) {
-    const tailLength = 5
+  async getRecentBlocks (stateManager, numberToFetch = 10) {
+    const tailLength = numberToFetch
     const currentBlockNumber = await this.getCurrentBlockNumber()
     const blockTailLength = currentBlockNumber < tailLength ? currentBlockNumber + 1 : tailLength
     const blockPlaceholders = new Array(blockTailLength).fill(null)

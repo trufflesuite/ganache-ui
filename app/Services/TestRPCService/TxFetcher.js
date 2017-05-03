@@ -5,11 +5,11 @@ export default class TransactionFetcher {
     this.stateManager = stateManager
   }
 
-  async getRecentTransactions (currentBlockNumber, blockFetcher) {
+  async getRecentTransactions (currentBlockNumber, blockFetcher, numberToFetch = 10) {
     let transactions = []
     let blockIndex = currentBlockNumber
 
-    while (transactions.length < 5 && blockIndex > 0) {
+    while (transactions.length < numberToFetch && blockIndex > 0) {
       const block = await blockFetcher.getBlockByNumber(blockIndex)
       if (block.transactions.length > 0) {
         transactions = transactions.concat(block.transactions)
