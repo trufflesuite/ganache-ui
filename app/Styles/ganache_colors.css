@@ -6,14 +6,14 @@
 
   --app-background-color: rgba(220, 216, 212, 1.000);
 
-  --app-panel-background-color: var(--app-background-color);
-  --app-panel-text-color: rgba(121, 113, 108, 1.000);
-  --app-panel-divider-color:rgba(158, 148, 132, 1.000);
-  --app-panel-header-border-color: rgba(102, 143, 156, 1.000);
-
   --app-sidebar-background-color: rgba(42, 40, 37, 1.000);
   --app-sidebar-header-text-color: rgba(102, 143, 156, 1.000);
   --app-sidebar-divider-color: rgba(76, 75, 74, 1.000);
+
+  --app-panel-background-color: var(--app-background-color);
+  --app-panel-text-color: var(--app-sidebar-background-color);
+  --app-panel-divider-color:rgba(158, 148, 132, 1.000);
+  --app-panel-header-border-color: rgba(102, 143, 156, 1.000);
 
   --app-button-primary-background-color: rgba(78, 60, 65, 1.000);
   --app-button-primary-color: rgba(242, 175, 103, 1.000);
