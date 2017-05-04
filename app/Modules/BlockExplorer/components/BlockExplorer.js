@@ -60,7 +60,7 @@ export default class BlockExplorer extends Component {
           <header>
           { this.state.currentBlockSearchMatch
             ? <section className={Styles.DismissSearchResult}>
-              &larr; <a href="#" onClick={this._handleClearBlockSearch}>Go back to All Blocks</a>
+               <a href="#" className={Styles.BackButton} onClick={this._handleClearBlockSearch}>&larr; All Blocks</a>
             </section>
           : <InputText
               className={Styles.BlockSearchInput}
@@ -98,8 +98,8 @@ export default class BlockExplorer extends Component {
           <header>
           { this.state.currentTxSearchMatch
             ? <section className={Styles.DismissSearchResult}>
-              &larr; <a href="#" onClick={this._handleClearTxSearch}>Go back to All TXs</a>
-            </section>
+                <a href="#" className={Styles.BackButton} onClick={this._handleClearTxSearch}>&larr; All TXs</a>
+              </section>
             : <InputText
               className={Styles.TxSearchInput}
               placeholder={'Search for TX Hash'}
