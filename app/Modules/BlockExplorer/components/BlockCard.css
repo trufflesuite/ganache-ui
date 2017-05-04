@@ -36,16 +36,26 @@
 
       dl {
         dd {
+          font-weight: bold;
           color: var(--app-blockexplorer-card-header-title-text-color);
+        }
+
+        dt {
+          font-family: "Fira Sans";
         }
       }
     }
   }
 
   tbody {
+
     td {
       padding: 0;
       padding: .5rem;
+
+      dt {
+        font-family: "Fira Sans";
+      }
 
       pre {
         padding: 0;
@@ -64,6 +74,16 @@
 .Container {
   padding: 0 !important;
   padding-top: .5rem !important;
+
+  > table {
+    > tbody {
+      > tr {
+        > td {
+          width: 50%;
+        }
+      }
+    }
+  }
 }
 
 .VAlignTop {
@@ -88,7 +108,6 @@
 .Bloom {
   display: block;
 
-  max-width: 50%;
   padding-right: 2rem;
 
   word-wrap: break-word;

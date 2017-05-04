@@ -112,7 +112,7 @@ export default class TxCard extends Component {
                           </tbody>
                         </table>
                       </td>
-                      <td rowSpan="6">
+                      <td rowSpan="6" className={Styles.TxDataHexContainer}>
                         <dl>
                           <dt>Data</dt>
                           <dd className={Styles.TxDataHex}>{EtherUtil.bufferToHex(tx.tx.data)}</dd>

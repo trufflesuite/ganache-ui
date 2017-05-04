@@ -25,6 +25,10 @@
     td {
       padding: .5rem;
       font-size: .8rem;
+
+      dt {
+        font-family: "Fira Sans";
+      }
     }
   }
 }

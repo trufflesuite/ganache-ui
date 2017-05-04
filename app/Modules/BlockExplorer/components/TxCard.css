@@ -42,7 +42,12 @@
 
       dl {
         dd {
+          font-weight: bold;
           color: var(--app-blockexplorer-card-header-title-text-color);
+        }
+
+        dt {
+          font-family: "Fira Sans";
         }
       }
     }
@@ -55,6 +60,11 @@
       vertical-align: top;
       width: 50%;
       background: white;
+      cursor: pointer;
+
+      dt {
+        font-family: 'Fira Sans'
+      }
 
       pre {
         padding: 0;
@@ -92,6 +102,10 @@
 .TxHeader {
   background-color: var(--app-sidebar-background-color);
   color: var(--app-highlight-color);
+}
+
+.TxDataHexContainer {
+  padding-top: .4rem !important;
 }
 
 .TxDataHex {

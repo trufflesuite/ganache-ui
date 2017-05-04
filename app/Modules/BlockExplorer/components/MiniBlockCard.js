@@ -47,7 +47,7 @@ export default class MiniBlockCard extends Component {
           {EtherUtil.bufferToHex(block.header.gasUsed)} / {EtherUtil.bufferToHex(block.header.gasLimit)}
         </td>
         <td>
-          <Moment unix format="YYYY-MM-DD HH:MM:SS">{EtherUtil.bufferToInt(block.header.timestamp)}</Moment>
+          <Moment unix format="YYYY-MM-DD HH:mm:ss">{EtherUtil.bufferToInt(block.header.timestamp)}</Moment>
         </td>
 
         <td>
