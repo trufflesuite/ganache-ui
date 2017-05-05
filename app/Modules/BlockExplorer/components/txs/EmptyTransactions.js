@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import Styles from './BlockExplorer.css'
+import Styles from '../BlockExplorer.css'
 
 export default class EmptyTransactions extends Component {
   render () {
