@@ -23,6 +23,7 @@ export default class BlockFetcher {
       })
     }).catch((err) => {
       console.log(err)
+      return Promise.resolve({ 'error': `block not found: ${blockNumber}`})
     })
   }
 

@@ -48,17 +48,21 @@ export default class BlockExplorer extends Component {
   }
 
   render () {
+
+    const validBlockSearchResult = this.state.currentBlockSearchMatch && !this.state.currentBlockSearchMatch.hasOwnProperty('error')
+    const validTxSearchResult = this.state.currentTxSearchMatch && !this.state.currentTxSearchMatch.hasOwnProperty('error')
+
     return (
       <div className={Styles.BlockExplorer}>
         <div className={Styles.Blocks}>
           <h4>
-            { this.state.currentBlockSearchMatch
+            { validBlockSearchResult
               ? `Showing Block #${EtherUtil.bufferToInt(this.state.currentBlockSearchMatch.header.number)}`
               : `LAST 5 BLOCKS`
             }
           </h4>
           <header>
-          { this.state.currentBlockSearchMatch
+          { validBlockSearchResult
             ? <section className={Styles.DismissSearchResult}>
                <a href="#" className={Styles.BackButton} onClick={this._handleClearBlockSearch}>&larr; All Blocks</a>
             </section>
@@ -82,7 +86,7 @@ export default class BlockExplorer extends Component {
                 />
               : this.state.currentBlockSearchMatch === null
               ? this._renderSearchingBlock()
-              : this._renderBlockSearchMatch()
+              : validBlockSearchResult ? this._renderBlockSearchMatch() : this.state.currentBlockSearchMatch.error
             }
           </main>
           <footer>
@@ -90,13 +94,13 @@ export default class BlockExplorer extends Component {
         </div>
         <div className={Styles.Transactions}>
           <h4>
-            { this.state.currentTxSearchMatch
+            { validTxSearchResult
             ? `SHOWING TX ${this.state.currentTxSearchMatch.hash}`
             : `LAST 5 TRANSACTIONS`
             }
           </h4>
           <header>
-          { this.state.currentTxSearchMatch
+          { validTxSearchResult
             ? <section className={Styles.DismissSearchResult}>
                 <a href="#" className={Styles.BackButton} onClick={this._handleClearTxSearch}>&larr; All TXs</a>
               </section>
@@ -122,7 +126,7 @@ export default class BlockExplorer extends Component {
                   />
                 : this.state.currentTxSearchMatch === null
                 ? this._renderSearchingTx()
-                : this._renderTxSearchMatch()
+                : validTxSearchResult ? this._renderTxSearchMatch() : this.state.currentTxSearchMatch.error
               }
             </WithEmptyState>
           </main>
