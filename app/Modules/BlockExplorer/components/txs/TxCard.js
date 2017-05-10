@@ -1,5 +1,6 @@
-
 import React, { Component } from 'react'
+
+import FormattedHex from 'Elements/FormattedHex'
 
 import EtherUtil from 'ethereumjs-util'
 
@@ -49,7 +50,7 @@ export default class TxCard extends Component {
                               <td>
                                 <dl>
                                   <dt>Value</dt>
-                                  <dd>{EtherUtil.bufferToHex(tx.tx.value)}</dd>
+                                  <dd><FormattedHex value={tx.tx.value} /></dd>
                                 </dl>
                               </td>
                             </tr>
@@ -57,7 +58,7 @@ export default class TxCard extends Component {
                               <td>
                                 <dl>
                                   <dt>Gas Price</dt>
-                                  <dd>{EtherUtil.bufferToHex(tx.tx.gasPrice)}</dd>
+                                  <dd><FormattedHex value={tx.tx.gasPrice} /></dd>
                                 </dl>
                               </td>
                             </tr>
@@ -65,15 +66,7 @@ export default class TxCard extends Component {
                               <td>
                                 <dl>
                                   <dt>Nonce</dt>
-                                  <dd>{EtherUtil.bufferToHex(tx.tx.nonce)}</dd>
-                                </dl>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <dl>
-                                  <dt>Gas Price</dt>
-                                  <dd>{EtherUtil.bufferToHex(tx.tx.gasPrice)}</dd>
+                                  <dd><FormattedHex value={tx.tx.nonce} /></dd>
                                 </dl>
                               </td>
                             </tr>
@@ -81,7 +74,7 @@ export default class TxCard extends Component {
                               <td>
                                 <dl>
                                   <dt>Gas Limit</dt>
-                                  <dd>{EtherUtil.bufferToHex(tx.tx.gasLimit)}</dd>
+                                  <dd><FormattedHex value={tx.tx.gasLimit} /></dd>
                                 </dl>
                               </td>
                             </tr>
@@ -89,7 +82,7 @@ export default class TxCard extends Component {
                               <td>
                                 <dl>
                                   <dt>V</dt>
-                                  <dd>{EtherUtil.bufferToHex(tx.tx.v)}</dd>
+                                  <dd><FormattedHex value={tx.tx.v} /></dd>
                                 </dl>
                               </td>
                             </tr>
@@ -97,7 +90,7 @@ export default class TxCard extends Component {
                               <td>
                                 <dl>
                                   <dt>R</dt>
-                                  <dd>{EtherUtil.bufferToHex(tx.tx.r)}</dd>
+                                  <dd><FormattedHex value={tx.tx.r} /></dd>
                                 </dl>
                               </td>
                             </tr>
@@ -105,7 +98,7 @@ export default class TxCard extends Component {
                               <td>
                                 <dl>
                                   <dt>S</dt>
-                                  <dd>{EtherUtil.bufferToHex(tx.tx.s)}</dd>
+                                  <dd><FormattedHex value={tx.tx.s} /></dd>
                                 </dl>
                               </td>
                             </tr>

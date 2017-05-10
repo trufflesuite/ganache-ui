@@ -3,6 +3,8 @@ import React, { Component } from 'react'
 import Moment from 'react-moment'
 import EtherUtil from 'ethereumjs-util'
 
+import FormattedHex from 'Elements/FormattedHex'
+
 import Styles from './BlockCard.css'
 
 export default class BlockCard extends Component {
@@ -78,7 +80,7 @@ export default class BlockCard extends Component {
                               <td>
                                 <dl>
                                   <dt>Gas Used / Gas Limit</dt>
-                                  <dd>{EtherUtil.bufferToHex(block.header.gasUsed)} / {EtherUtil.bufferToHex(block.header.gasLimit)}</dd>
+                                  <dd><FormattedHex value={block.header.gasUsed} /> / <FormattedHex value={block.header.gasLimit} /></dd>
                                 </dl>
                               </td>
                               <td>
@@ -92,7 +94,7 @@ export default class BlockCard extends Component {
                       <td>
                         <dl>
                           <dt>Nonce</dt>
-                          <dd>{EtherUtil.bufferToHex(block.header.nonce)}</dd>
+                          <dd><FormattedHex value={block.header.nonce} /></dd>
                         </dl>
                       </td>
                       <td>

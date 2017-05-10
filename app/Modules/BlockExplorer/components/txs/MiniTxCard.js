@@ -3,6 +3,8 @@ import React, { Component } from 'react'
 
 import EtherUtil from 'ethereumjs-util'
 
+import FormattedHex from 'Elements/FormattedHex'
+
 import Styles from './MiniTxCard.css'
 
 export default class MiniTxCard extends Component {
@@ -17,10 +19,10 @@ export default class MiniTxCard extends Component {
           <div className={Styles.Truncate}>{EtherUtil.bufferToHex(tx.hash)}</div>
         </td>
         <td>
-          {EtherUtil.bufferToHex(tx.nonce)}
+          <FormattedHex value={tx.nonce} />
         </td>
         <td>
-          {EtherUtil.bufferToHex(tx.value)}
+          <FormattedHex value={tx.value} />
         </td>
         <td>
           {EtherUtil.bufferToHex(tx.from)}

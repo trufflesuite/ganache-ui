@@ -3,6 +3,8 @@ import React, { Component } from 'react'
 import Moment from 'react-moment'
 import EtherUtil from 'ethereumjs-util'
 
+import FormattedHex from 'Elements/FormattedHex'
+
 import Styles from './MiniBlockCard.css'
 
 export default class MiniBlockCard extends Component {
@@ -41,10 +43,10 @@ export default class MiniBlockCard extends Component {
           {EtherUtil.bufferToHex(block.hash)}
         </td>
         <td>
-          {EtherUtil.bufferToHex(block.header.nonce)}
+          <FormattedHex value={block.header.nonce} />
         </td>
         <td>
-          {EtherUtil.bufferToHex(block.header.gasUsed)} / {EtherUtil.bufferToHex(block.header.gasLimit)}
+          <FormattedHex value={block.header.gasUsed} /> / <FormattedHex value={block.header.gasLimit} />
         </td>
         <td>
           <Moment unix format="YYYY-MM-DD HH:mm:ss">{EtherUtil.bufferToInt(block.header.timestamp)}</Moment>
