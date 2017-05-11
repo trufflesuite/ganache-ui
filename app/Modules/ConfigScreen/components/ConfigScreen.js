@@ -9,9 +9,6 @@ class ConfigTabItem extends Component {
     const className = `${Styles.ConfigTabItem} ${this.props.isActive ? Styles.ActiveTab : ''}`
     return (
       <div className={className} onClick={this.props.onClick}>
-        <div className={Styles.ConfigTabsItemImage}>
-          {this.props.children}
-        </div>
         <h3 className={Styles.ConfigTabItemName}>{this.props.itemLabel}</h3>
       </div>
     )
@@ -22,7 +19,7 @@ class ConfigScreen extends Component {
   state = {
     specificTime: false,
     opcodeDebug: false,
-    mnemonic: false,
+    mnemonic: true,
     accountsLocked: false,
     forkChain: false,
     verboseLogging: false,
@@ -30,7 +27,6 @@ class ConfigScreen extends Component {
   }
 
   _handleTabSelection = (opt, e) => {
-    console.log(e, opt)
     this.setState({activeTab: opt.toLowerCase()})
   }
 
@@ -38,8 +34,6 @@ class ConfigScreen extends Component {
     return (
       <div className={Styles.ConfigScreen}>
         <header className={Styles.ConfigScreenHeader}>
-          <button className="btn btn-primary" onClick={this._startTestRpc}>START GANACHE</button>
-
           <div className={Styles.ConfigTabs}>
             {
               ['Server', 'Accounts', 'Gas', 'Mnemonic', 'Logging', 'Forking'].map((opt, index) => {
@@ -59,13 +53,13 @@ class ConfigScreen extends Component {
         <form>
           <section className={Styles.ConfigCard}>
               <div className={ this.state.activeTab === 'server' ? Styles.Visible : Styles.Hidden}>
-                <h2>GANACHE SERVER OPTIONS</h2>
+                <h2>RPC SERVER OPTIONS</h2>
                 <section>
-                  <h4>GANACHE PORT NUMBER</h4>
+                  <h4>PORT NUMBER</h4>
                   <input ref="portNumber" type="text" name="portNumber" defaultValue="8545"/>
                 </section>
                 <section>
-                  <h4>BLOCK TIME (SECONDS)</h4>
+                  <h4>MINING BLOCK TIME (SECONDS)</h4>
                   <input ref="blockTime" type="text" defaultValue="1" />
                 </section>
               </div>
@@ -99,14 +93,14 @@ class ConfigScreen extends Component {
                 <section>
                   <h4>AUTOGENERATE HD MNEMONIC</h4>
                   <div className="Switch">
-                    <input type="checkbox" name="mnemonic" id="Mnemonic" onChange={this._handleInputChange} />
+                    <input type="checkbox" name="mnemonic" id="Mnemonic" onChange={this._handleInputChange} checked={this.state.mnemonic} />
                     <label htmlFor="Mnemonic">AUTOGENERATE HD MNEMONIC</label>
                   </div>
                 </section>
                 <section>
                   { this.state.mnemonic
-                    ? <span><input ref={(i) => { this.mnemonic = i }} name="mnemonicValue" defaultValue="" type="text" placeholder="Enter Mnemonic to use" /></span>
-                    : <span><input ref={(i) => { this.seedData = i }} name="seedDataValue" defaultValue="" type="text" placeholder="Enter Optional Seed Data" /></span>
+                    ? <span><input ref={(i) => { this.seedData = i }} name="seedDataValue" defaultValue="" type="text" placeholder="Enter Optional Seed Data" /></span>
+                    : <span><input ref={(i) => { this.mnemonic = i }} name="mnemonicValue" defaultValue="" type="text" placeholder="Enter Mnemonic to use" /></span>
                   }
                 </section>
               </div>
@@ -143,6 +137,9 @@ class ConfigScreen extends Component {
               </section>
               </div>
           </section>
+          <footer>
+            <button className="btn btn-primary" onClick={this._startTestRpc}>START GANACHE</button>
+          </footer>
         </form>
       </div>
     )
