@@ -19,7 +19,7 @@ class ConfigScreen extends Component {
   state = {
     specificTime: false,
     opcodeDebug: false,
-    mnemonic: true,
+    automnemonic: true,
     accountsLocked: false,
     forkChain: false,
     verboseLogging: false,
@@ -93,14 +93,14 @@ class ConfigScreen extends Component {
                 <section>
                   <h4>AUTOGENERATE HD MNEMONIC</h4>
                   <div className="Switch">
-                    <input type="checkbox" name="mnemonic" id="Mnemonic" onChange={this._handleInputChange} checked={this.state.mnemonic} />
+                    <input type="checkbox" name="mnemonic" id="Mnemonic" onChange={this._handleInputChange} checked={this.state.automnemonic} />
                     <label htmlFor="Mnemonic">AUTOGENERATE HD MNEMONIC</label>
                   </div>
                 </section>
                 <section>
-                  { this.state.mnemonic
+                  { this.state.automnemonic
                     ? <span><input ref={(i) => { this.seedData = i }} name="seedDataValue" defaultValue="" type="text" placeholder="Enter Optional Seed Data" /></span>
-                    : <span><input ref={(i) => { this.mnemonic = i }} name="mnemonicValue" defaultValue="" type="text" placeholder="Enter Mnemonic to use" /></span>
+                    : <span><input ref={(i) => { this.automnemonic = i }} name="mnemonicValue" defaultValue="" type="text" placeholder="Enter Mnemonic to use" /></span>
                   }
                 </section>
               </div>
@@ -154,7 +154,9 @@ class ConfigScreen extends Component {
     })
   }
 
-  _startTestRpc = () => {
+  _startTestRpc = (e) => {
+    e.preventDefault()
+
     const config = {
       port: this.refs.portNumber.value,
       time: this.refs.time ? this.refs.time.value : null,
@@ -164,13 +166,15 @@ class ConfigScreen extends Component {
       blocktime: this.refs.blockTime.value,
       debug: this.state.opcodeDebug,
       verbose: this.state.verboseLogging,
-      mnemonic: this.mnemonic ? this.mnemonic.value : null,
+      mnemonic: this.automnemonic ? true : null,
       seed: this.seedData ? this.seedData.value : null,
       total_accounts: this.refs.totalAccounts ? this.refs.totalAccounts.value : null,
       secure: this.state.accountsLocked
     }
 
     Object.keys(config).forEach((key) => { !config[key] ? delete config[key] : null })
+
+    console.log(JSON.stringify(config))
 
     this.props.appStartRpcService(config)
   }
