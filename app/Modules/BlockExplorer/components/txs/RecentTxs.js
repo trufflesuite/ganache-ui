@@ -86,6 +86,10 @@ export default class RecentTxs extends Component {
   }
 
   _renderPanelHeaderControls = () => {
+    if (this.props.testRpcState.transactions.length === 0) {
+      return
+    }
+
     if (this.state.validTxSearchResult) {
       return (
         <section className={Styles.DismissSearchResult}>
