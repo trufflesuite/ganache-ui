@@ -23,6 +23,7 @@ export default class TransactionFetcher {
           let tx = Object.assign({}, transactions[index])
           tx.hash = transactions[index].hash
           tx.gasUsed = receipt.gasUsed
+          tx.block = receipt.block
           receipt.contractAddress ? tx.contractAddress = receipt.contractAddress : null
           err ? reject(err) : resolve(tx)
         })
