@@ -5,6 +5,7 @@ import EtherUtil from 'ethereumjs-util'
 
 import FormattedHex from 'Elements/FormattedHex'
 
+import ContractIcon from 'babel!svg-react!../../../../../resources/Contract.svg?name=ContractIcon'
 import Styles from './MiniTxCard.css'
 
 export default class MiniTxCard extends Component {
@@ -28,7 +29,16 @@ export default class MiniTxCard extends Component {
           {EtherUtil.bufferToHex(tx.from)}
         </td>
         <td>
-          {EtherUtil.bufferToHex(tx.to)}
+          {
+            tx.hasOwnProperty('contractAddress') && tx.contractAddress !== null
+              ? <div className={Styles.ContractCreationAddress}>
+                <span>{EtherUtil.bufferToHex(tx.contractAddress)}</span>
+                <ContractIcon width={16} height={16} />
+                </div>
+              : <div>
+                {EtherUtil.bufferToHex(tx.to)}
+              </div>
+          }
         </td>
       </tr>
     )

@@ -10,7 +10,8 @@ export default class TxCard extends Component {
   render () {
     const { tx } = this.props
 
-    console.log(tx)
+    const isContractCreationTx = tx.hasOwnProperty('contractAddress') && tx.contractAddress !== null
+
     return (
       <section className={Styles.TxCard}>
         <table className={Styles.TxData}>
@@ -30,8 +31,8 @@ export default class TxCard extends Component {
               </td>
               <td>
                 <dl>
-                  <dt>To</dt>
-                  <dd>{EtherUtil.bufferToHex(tx.tx.to)}</dd>
+                  <dt>{isContractCreationTx ? 'CONTRACT CREATION ADDRESS' : 'To'}</dt>
+                  <dd>{isContractCreationTx ? EtherUtil.bufferToHex(tx.contractAddress) : EtherUtil.bufferToHex(tx.tx.to)}</dd>
                 </dl>
               </td>
             </tr>
@@ -51,6 +52,14 @@ export default class TxCard extends Component {
                                 <dl>
                                   <dt>Value</dt>
                                   <dd><FormattedHex value={tx.tx.value} /></dd>
+                                </dl>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <dl>
+                                  <dt>Gas Used</dt>
+                                  <dd><FormattedHex value={tx.gasUsed} /></dd>
                                 </dl>
                               </td>
                             </tr>

@@ -43,3 +43,11 @@
   text-overflow: ellipsis;
   cursor: pointer;
 }
+
+.ContractCreationAddress {
+  display: flex;
+  align-items: center;
+  span {
+    margin-right: 8px;
+  }
+}

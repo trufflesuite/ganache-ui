@@ -1,5 +1,3 @@
-import marshallTransaction from './serializers/tx'
-
 export default class TransactionFetcher {
   constructor (stateManager) {
     this.stateManager = stateManager
@@ -17,13 +15,28 @@ export default class TransactionFetcher {
       blockIndex--
     }
 
-    return transactions
+    const txPlaceholders = new Array(transactions.length).fill(null)
+
+    let txs = await Promise.all(txPlaceholders.map(async (_, index) => {
+      return new Promise((resolve, reject) => {
+        this.stateManager.getTransactionReceipt(transactions[index].hash, (err, receipt) => {
+          let tx = Object.assign({}, transactions[index])
+          tx.hash = transactions[index].hash
+          tx.gasUsed = receipt.gasUsed
+          receipt.contractAddress ? tx.contractAddress = receipt.contractAddress : null
+          err ? reject(err) : resolve(tx)
+        })
+      })
+    }))
+
+    return txs
   }
 
   async getTxByHash (txHash) {
     console.log(`searching for: ${txHash}`)
     return new Promise((resolve, reject) => {
       this.stateManager.getTransactionReceipt(txHash, (err, receipt) => {
+        console.log(receipt)
         let tx = Object.assign({}, receipt)
         tx.hash = txHash
         err ? reject(err) : resolve(tx)
