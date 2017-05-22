@@ -23,6 +23,12 @@ The goals of the project are:
 0. Run `./node_modules/.bin/electron-rebuild`
 0. Run `npm run dev`
 
+## Publishing Release to github
+
+A GitHub personal access token is required. You can generate by going to https://github.com/settings/tokens/new. The access token should have the repo scope/permission. Define GH_TOKEN environment variable.
+
+
+
 ### License
 
 GPL - See LICENSE file

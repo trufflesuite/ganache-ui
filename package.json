@@ -2,7 +2,7 @@
   "name": "ganache",
   "productName": "Ganache",
   "version": "0.0.1",
-  "description": "An Electron UI for TestRPC",
+  "description": "An Electron UI for Ganache",
   "main": "main.js",
   "private": true,
   "scripts": {
@@ -21,6 +21,7 @@
     "postinstall": "concurrently \"install-app-deps\" \"node node_modules/fbjs-scripts/node/check-dev-engines.js package.json\"",
     "dev": "npm run hot-server -- --start-hot",
     "package": "npm run build && build --publish never",
+    "package-prerelease": "npm run build && build --publish always --prerelease true",
     "package-win": "npm run build && build --win --x64",
     "package-linux": "npm run build && build --linux",
     "package-all": "npm run build && build -mwl",

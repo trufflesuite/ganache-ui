@@ -206,22 +206,22 @@ app.on('ready', async () => {
       submenu: [{
         label: 'Learn More',
         click () {
-          shell.openExternal('http://electron.atom.io')
+          shell.openExternal('http://truffleframework.com/suite/ganache')
         }
       }, {
         label: 'Documentation',
         click () {
-          shell.openExternal('https://github.com/atom/electron/tree/master/docs#readme')
+          shell.openExternal('https://github.com/trufflesuite/ganache/blob/master/README.md')
         }
       }, {
         label: 'Community Discussions',
         click () {
-          shell.openExternal('https://discuss.atom.io/c/electron')
+          shell.openExternal('https://github.com/trufflesuite/ganache/issues')
         }
       }, {
         label: 'Search Issues',
         click () {
-          shell.openExternal('https://github.com/atom/electron/issues')
+          shell.openExternal('https://github.com/trufflesuite/ganache/issues')
         }
       }]
     }]
@@ -273,22 +273,22 @@ app.on('ready', async () => {
       submenu: [{
         label: 'Learn More',
         click () {
-          shell.openExternal('http://electron.atom.io')
+          shell.openExternal('http://truffleframework.com/suite/ganache')
         }
       }, {
         label: 'Documentation',
         click () {
-          shell.openExternal('https://github.com/atom/electron/tree/master/docs#readme')
+          shell.openExternal('https://github.com/trufflesuite/ganache/blob/master/README.md')
         }
       }, {
         label: 'Community Discussions',
         click () {
-          shell.openExternal('https://discuss.atom.io/c/electron')
+          shell.openExternal('https://github.com/trufflesuite/ganache/issues')
         }
       }, {
         label: 'Search Issues',
         click () {
-          shell.openExternal('https://github.com/atom/electron/issues')
+          shell.openExternal('https://github.com/trufflesuite/ganache/issues')
         }
       }]
     }]

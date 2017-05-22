@@ -35,9 +35,12 @@ export default validate(merge(baseConfig, {
         test: /\.global\.css$/,
         loader: ExtractTextPlugin.extract(
           'style-loader',
-          'css-loader',
-          'sass',
-          'postcss'
+          [
+            [ 'css?modules&sourceMap&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
+              'sass'
+            ].join('&'),
+            'postcss'
+          ]
         )
       },
 
@@ -46,9 +49,12 @@ export default validate(merge(baseConfig, {
         test: /^((?!\.global).)*\.css$/,
         loader: ExtractTextPlugin.extract(
           'style-loader',
-          'css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
-          'sass',
-          'postcss'
+          [
+            [ 'css?modules&sourceMap&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
+              'sass'
+            ].join('&'),
+            'postcss'
+          ]
         )
       },
 
@@ -70,7 +76,9 @@ export default validate(merge(baseConfig, {
   // We use PostCSS for autoprefixing and PreCSS.
   postcss: function (webpack) {
     return [
-      postcssImport(),
+      postcssImport({
+        path: [path.resolve('./app/Styles')]
+      }),
       precss(),
       colorFunction()
     ]
