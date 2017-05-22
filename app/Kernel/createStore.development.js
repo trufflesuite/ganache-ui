@@ -20,7 +20,8 @@ const router = routerMiddleware(hashHistory)
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
   ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
     // Options: http://zalmoxisus.github.io/redux-devtools-extension/API/Arguments.html
-    actionCreators
+    actionCreators,
+    maxAge: 5
   })
   : compose
 
