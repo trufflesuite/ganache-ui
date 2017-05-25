@@ -59,6 +59,17 @@
       "main.js.map",
       "package.json"
     ],
+    "extraResources": [
+      {
+        "from": "app/Services/ReplService/ReplScripts",
+        "to": "ReplScripts",
+        "filter": ["**/*"]
+      }
+    ],
+    "directories": {
+      "buildResources": "resources",
+      "output": "release"
+    },
     "win": {
       "target": "nsis"
     },
@@ -68,10 +79,6 @@
         "AppImage"
       ]
     }
-  },
-  "directories": {
-    "buildResources": "resources",
-    "output": "release"
   },
   "bin": {
     "electron": "./node_modules/.bin/electron"
@@ -169,6 +176,7 @@
     "class-autobind": "^0.1.4",
     "core-js": "^2.4.1",
     "electron-debug": "^1.1.0",
+    "electron-log": "^2.2.6",
     "eslint-config-standard": "^6.2.1",
     "eslint-plugin-standard": "^2.0.1",
     "font-awesome": "^4.7.0",

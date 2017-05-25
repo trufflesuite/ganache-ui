@@ -1,5 +1,6 @@
 import { app, BrowserWindow, Menu, shell, ipcMain } from 'electron'
 import path from 'path'
+import SysLog from 'electron-log'
 
 import TestRPCService from './Services/TestRPCService'
 import ReplService from './Services/ReplService'
@@ -13,6 +14,9 @@ let replService = null
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support'); // eslint-disable-line
   sourceMapSupport.install()
+
+  SysLog.transports.file.level = 'silly'
+  SysLog.transports.console.level = 'silly'
 }
 
 if (process.env.NODE_ENV === 'development') {
@@ -20,19 +24,22 @@ if (process.env.NODE_ENV === 'development') {
   const path = require('path'); // eslint-disable-line
   const p = path.join(__dirname, '..', 'app', 'node_modules'); // eslint-disable-line
   require('module').globalPaths.push(p); // eslint-disable-line
+
+  SysLog.transports.file.level = 'silly'
+  SysLog.transports.console.level = 'silly'
 }
 
 process.on('uncaughtException', (err) => {
-  console.log(`ERROR!!!!!!: ${err}`)
+  SysLog.error(`FATAL ERROR: ${err.stack}`)
 })
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit()
 })
 
-if (process.platform === 'darwin') {
-  app.dock.setIcon(path.resolve(__dirname, '../resources/icons/png/512x512.png'))
-}
+// if (process.platform === 'darwin') {
+//   app.dock.setIcon(path.resolve(__dirname, '../icons/png/512x512.png'))
+// }
 
 const installExtensions = async () => {
   if (process.env.NODE_ENV === 'development') {
@@ -69,7 +76,7 @@ app.on('ready', async () => {
   mainWindow.loadURL(`file://${__dirname}/app.html`)
 
   testRpcService = new TestRPCService(ipcMain, mainWindow) // eslint-disable-line
-  replService = new ReplService(ipcMain, mainWindow, testRpcService)
+  replService = new ReplService(ipcMain, mainWindow, testRpcService) // eslint-disable-line
 
   mainWindow.webContents.on('did-finish-load', () => {
     mainWindow.show()

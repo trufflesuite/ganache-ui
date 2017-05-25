@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import SysLog from 'electron-log'
 
 export default class Web3InitScript {
   constructor (testRpcHost, testRpcPort) {
@@ -10,7 +11,14 @@ export default class Web3InitScript {
   }
 
   async compileScripts () {
-    const scriptPath = path.resolve(__dirname, './Scripts')
+    let scriptPath = ''
+    if (process.env.NODE_ENV === 'development') {
+      scriptPath = path.join(__dirname, './ReplScripts')
+    } else {
+      scriptPath = path.join(__dirname, '../ReplScripts')
+    }
+
+    SysLog.info(`Looking for ReplScripts in ${scriptPath}`)
 
     return new Promise((resolve, reject) => {
       fs.readdir(scriptPath, (err, files) => {
@@ -26,9 +34,10 @@ export default class Web3InitScript {
       return Promise.all(files.map((file) => {
         if (file.match(/.js$/)) {
           return new Promise((resolve, reject) => {
+            SysLog.info(`Reading ReplScript: ${path.join(scriptPath, file)}`)
             fs.readFile(path.join(scriptPath, file), 'utf8', (err, data) => {
               if (err) {
-                console.log(err)
+                SysLog.error(err)
               }
               resolve(data)
             })
@@ -47,9 +56,10 @@ export default class Web3InitScript {
   }
 
   async exportedScript () {
-    console.log('Compiling dem Web Init scripts...')
+    SysLog.info('Compiling dem Web Init scripts...')
     await this.compileScripts()
-    console.log('...it is done')
+    SysLog.info(this.scriptBlob)
+    SysLog.info('...it is done')
 
     return this.scriptBlob.replace(/\$host\$/g, this.testRpcHost)
                           .replace(/\$port\$/g, this.testRpcPort)
