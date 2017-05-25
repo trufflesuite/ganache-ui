@@ -9,7 +9,12 @@
     "email": "john@kantan.io",
     "url": "https://github.com/johnmcdowall"
   },
+  "scripts": {
+    "postinstall": "npm rebuild --runtime=electron --target=1.6.6 --disturl=https://atom.io/download/atom-shell --build-from-source"
+  },
   "license": "MIT",
   "dependencies": {
+    "bindings": "^1.2.1",
+    "ganache-core": "0.0.2"
   }
 }
