@@ -11,10 +11,9 @@ export default class Web3InitScript {
   }
 
   async compileScripts () {
-    let scriptPath = ''
-    if (process.env.NODE_ENV === 'development') {
-      scriptPath = path.join(__dirname, './ReplScripts')
-    } else {
+    let scriptPath = path.join(__dirname, 'ReplScripts')
+
+    if (process.env.NODE_ENV === 'production') {
       scriptPath = path.join(__dirname, '../ReplScripts')
     }
 
@@ -26,7 +25,7 @@ export default class Web3InitScript {
           reject('Hmm. An error happened trying to compile the Web3 Init scripts together: ' + err)
         }
 
-        files = files.sort((a,b) => { return a > b })
+        files = files.sort((a, b) => { return a > b })
 
         resolve(files)
       })
@@ -56,9 +55,8 @@ export default class Web3InitScript {
   }
 
   async exportedScript () {
-    SysLog.info('Compiling dem Web Init scripts...')
+    SysLog.info('Compiling Web3 Init scripts...')
     await this.compileScripts()
-    SysLog.info(this.scriptBlob)
     SysLog.info('...it is done')
 
     return this.scriptBlob.replace(/\$host\$/g, this.testRpcHost)

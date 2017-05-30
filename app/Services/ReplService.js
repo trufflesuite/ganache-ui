@@ -1,6 +1,8 @@
 import Repl from 'repl'
 import EventEmitter from 'events'
 
+import Web3 from 'web3'
+
 import Web3InitScript from './ReplService/Web3InitScript'
 
 class ReplStream extends EventEmitter {
@@ -62,6 +64,7 @@ export default class ReplService {
   }
 
   _handleStartTestRpc = (testRpcService) => {
+    this._repl.context['Web3'] = Web3
     new Web3InitScript(testRpcService.host, testRpcService.port).exportedScript().then((bootScript) => {
       this.replStream.emit('data', bootScript)
       this.replStream.openStream()

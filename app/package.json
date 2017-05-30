@@ -15,6 +15,7 @@
   "license": "MIT",
   "dependencies": {
     "bindings": "^1.2.1",
-    "ganache-core": "0.0.2"
+    "ganache-core": "0.0.2",
+    "web3": "^0.19.0"
   }
 }
