@@ -36,6 +36,16 @@
     "mac": {
       "icon": "resources/icons/mac/icon.icns"
     },
+    "win": {
+      "target": "nsis",
+      "icon": "resources/icons/win/icon.ico"
+    },
+    "linux": {
+      "target": [
+        "deb",
+        "AppImage"
+      ]
+    },
     "dmg": {
       "contents": [
         {
@@ -69,15 +79,6 @@
     "directories": {
       "buildResources": "resources",
       "output": "release"
-    },
-    "win": {
-      "target": "nsis"
-    },
-    "linux": {
-      "target": [
-        "deb",
-        "AppImage"
-      ]
     }
   },
   "bin": {
