@@ -1,7 +1,7 @@
 @import 'colors.css';
 
 .BlockCard {
-  font-family: "Fira Code", sans-serif;
+  font-family: "Fira Code Regular", sans-serif;
   background: white;
 
   dl,

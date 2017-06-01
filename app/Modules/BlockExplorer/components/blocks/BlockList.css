@@ -9,7 +9,7 @@
 
   thead {
     font-size: .8rem;
-    font-family: "Fira Code", monospaced;
+    font-family: "Fira Code Regular", monospaced;
     font-weight: 900;
     background-color: var(--app-sidebar-background-color);
     color: var(--app-highlight-color);
