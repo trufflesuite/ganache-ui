@@ -17,8 +17,6 @@
 
     border-bottom: 1px solid var(--app-sidebar-divider-color);
 
-    -webkit-app-region: drag;
-
     h1 {
       margin: 0;
 
