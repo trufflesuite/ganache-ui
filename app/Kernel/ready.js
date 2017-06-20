@@ -13,6 +13,10 @@ export default async function (app, done, error) {
 
     app.store.dispatch({type: 'APP/TESTRPCRUNNING', payload: message})
     app.store.dispatch(push('/dashboard'))
+
+    setInterval(function () {
+      ipcRenderer.send('APP/GETBLOCKCHAINSTATE')
+    }, 1000)
   })
 
   ipcRenderer.on('APP/TESTRPCLOG', (event, message) => {

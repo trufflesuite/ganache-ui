@@ -18,11 +18,12 @@ export default class TestRPCService extends EventEmitter {
     this.port = null
     this.stateManager = null
     this.blockFetcher = null
-
-    autobind(this)
+    this.txFetcher = null
+    this.accountFetcher = null
 
     this.eventHandler = new EventHandler(this)
 
+    autobind(this)
     console.log('Starting TestRPCService')
   }
 
@@ -57,25 +58,15 @@ export default class TestRPCService extends EventEmitter {
       this.port = opts.port
       this.host = 'localhost'
       this.stateManager = stateManager
-      this.blockFetcher = new BlockFetcher(this.stateManager)
-      this.accountFetcher = new AccountDetailFetcher(this.stateManager)
       this.txFetcher = new TxFetcher(this.stateManager)
+      this.blockFetcher = new BlockFetcher(this.stateManager, this)
+      this.accountFetcher = new AccountDetailFetcher(this.stateManager)
 
-      const blockChainState = await this._getBlockchainState()
+      const blockChainState = await this.blockFetcher.getBlockchainState()
       this.webView.send('APP/TESTRPCSTARTED', blockChainState)
 
       this.emit('testRpcServiceStarted', this)
       this.log(`GANACHE STARTED: LISTENING ON http://${this.host}:${this.port}`)
-      this.refreshTimer = setInterval(this.eventHandler._handleGetBlockchainState, 1000)
     })
-  }
-
-  async _getBlockchainState () {
-    const currentBlockNumber = await this.blockFetcher.getCurrentBlockNumber()
-    let blockChainState = await this.blockFetcher.buildBlockChainState(this.txFetcher._marshallTransaction)
-
-    blockChainState.transactions = await this.txFetcher.getRecentTransactions(currentBlockNumber, this.blockFetcher)
-    blockChainState.accounts = await this.accountFetcher.getAccountInfo()
-    return blockChainState
   }
 }

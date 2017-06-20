@@ -1,4 +1,5 @@
 import autobind from 'class-autobind'
+import SysLog from 'electron-log'
 
 export default class EventHandler {
   constructor (testRpcService) {
@@ -71,7 +72,7 @@ export default class EventHandler {
   }
 
   async _handleGetBlockchainState () {
-    let blockChainState = await this.testRpcService._getBlockchainState()
+    let blockChainState = await this.testRpcService.blockFetcher.getBlockchainState()
     this.testRpcService.webView && this.testRpcService.webView.send('APP/BLOCKCHAINSTATE', blockChainState)
   }
 

@@ -1,8 +1,20 @@
 import serializeBlock from './serializers/block'
 
+import autobind from 'class-autobind'
+import SysLog from 'electron-log'
+
+function bytesToSize (bytes) {
+  var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB']
+  if (bytes === 0) return '0 Byte'
+    var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)))
+  return (bytes / Math.pow(1024, i)).toFixed(4) + ' ' + sizes[i]
+}
+
 export default class BlockFetcher {
-  constructor (stateManager) {
+  constructor (stateManager, testRpcService) {
     this.stateManager = stateManager
+    this.testRpcService = testRpcService
+    autobind(this)
   }
 
   async getCurrentBlockNumber () {
@@ -41,6 +53,19 @@ export default class BlockFetcher {
     // console.log(`currentBlockNumber: ${currentBlockNumber} blocks: ${blocks}`)
 
     return blocks
+  }
+
+  async getBlockchainState (txFetcher) {
+    const currentBlockNumber = await this.getCurrentBlockNumber()
+    let blockChainState = await this.buildBlockChainState(this.testRpcService.txFetcher._marshallTransaction)
+
+    blockChainState.transactions = await this.testRpcService.txFetcher.getRecentTransactions(currentBlockNumber, this)
+    blockChainState.accounts = await this.testRpcService.accountFetcher.getAccountInfo()
+
+    var mem = process.memoryUsage()
+    SysLog.info(currentBlockNumber + ', ' + bytesToSize(mem.rss) + ', ' + bytesToSize(mem.heapTotal) + ', ' + bytesToSize(mem.heapUsed))
+
+    return blockChainState
   }
 
   async buildBlockChainState (transactionMarshaller) {
