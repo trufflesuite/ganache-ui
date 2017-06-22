@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 
 import Moment from 'react-moment'
 import EtherUtil from 'ethereumjs-util'
@@ -7,7 +7,7 @@ import FormattedHex from 'Elements/FormattedHex'
 
 import Styles from './MiniBlockCard.css'
 
-export default class MiniBlockCard extends Component {
+export default class MiniBlockCard extends PureComponent {
   _renderRecentTransaction = (transactions) => {
     if (transactions.length === 0) {
       return 'NO TRANSACTIONS'
@@ -31,7 +31,7 @@ export default class MiniBlockCard extends Component {
     return (
       <tr
         className={Styles.MiniBlockCard}
-        key={EtherUtil.bufferToHex(block.hash)}
+        key={`block_${EtherUtil.bufferToInt(block.header.number)}_detail`}
         onClick={this._showBlockDetail}
       >
         <td>

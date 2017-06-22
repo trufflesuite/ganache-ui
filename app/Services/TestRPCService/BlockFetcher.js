@@ -3,17 +3,29 @@ import serializeBlock from './serializers/block'
 import autobind from 'class-autobind'
 import SysLog from 'electron-log'
 
-function bytesToSize (bytes) {
+import fs from 'fs'
+import path from 'path'
+import usage from 'pidusage'
+
+function bytesToSize (bytes, withPrefix = true) {
   var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB']
   if (bytes === 0) return '0 Byte'
-    var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)))
-  return (bytes / Math.pow(1024, i)).toFixed(4) + ' ' + sizes[i]
-}
+  var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)))
+  let calculatedSize = (bytes / Math.pow(1024, i)).toFixed(4)
+  return withPrefix ? calculatedSize + ' ' + sizes[i] : calculatedSize
+};
 
 export default class BlockFetcher {
   constructor (stateManager, testRpcService) {
     this.stateManager = stateManager
     this.testRpcService = testRpcService
+
+    const profileLogPath = path.join(__dirname, '../../../profile.csv')
+
+    SysLog.log(`WRITING PROFILE DATA TO: ${profileLogPath}`)
+
+    this.logFile = fs.createWriteStream(profileLogPath, {flags: 'w'})
+
     autobind(this)
   }
 
@@ -50,8 +62,6 @@ export default class BlockFetcher {
       return await this.getBlockByNumber(requiredBlockNumber)
     }))
 
-    // console.log(`currentBlockNumber: ${currentBlockNumber} blocks: ${blocks}`)
-
     return blocks
   }
 
@@ -64,6 +74,10 @@ export default class BlockFetcher {
 
     var mem = process.memoryUsage()
     SysLog.info(currentBlockNumber + ', ' + bytesToSize(mem.rss) + ', ' + bytesToSize(mem.heapTotal) + ', ' + bytesToSize(mem.heapUsed))
+
+    usage.stat(process.pid, (err, result) => {
+      this.logFile.write(`${currentBlockNumber}, ${result.cpu}, ${bytesToSize(mem.rss, false)}, ${bytesToSize(mem.heapTotal, false)}, ${bytesToSize(mem.heapUsed, false)}\r\n`)
+    })
 
     return blockChainState
   }

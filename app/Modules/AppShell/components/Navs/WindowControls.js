@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import {remote as Remote} from 'electron'
 
 import Styles from './WindowControls.css'
 
-class WindowControls extends Component {
+class WindowControls extends PureComponent {
 
   _handleMinClick = (e) => {
     Remote.getCurrentWindow().minimize()

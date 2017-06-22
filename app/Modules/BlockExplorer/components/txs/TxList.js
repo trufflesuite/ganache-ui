@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 
 import MiniTxCard from './MiniTxCard'
 import Styles from './TxList.css'
 
-export default class TxList extends Component {
+export default class TxList extends PureComponent {
   render () {
     return (
       <table className={Styles.TxList}>

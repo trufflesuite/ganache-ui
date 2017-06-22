@@ -73,7 +73,9 @@
       {
         "from": "app/Services/ReplService/ReplScripts",
         "to": "ReplScripts",
-        "filter": ["**/*"]
+        "filter": [
+          "**/*"
+        ]
       }
     ],
     "directories": {
@@ -185,6 +187,7 @@
     "moment": "^2.17.1",
     "moment-timezone": "^0.5.11",
     "node-sass": "^4.3.0",
+    "pidusage": "^1.1.5",
     "postcss": "^5.2.11",
     "postcss-color-function": "^2.0.1",
     "postcss-import": "^9.1.0",

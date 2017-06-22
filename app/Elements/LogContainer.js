@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 
 import Styles from './LogContainer.css'
 
-export default class LogContainer extends Component {
+export default class LogContainer extends PureComponent {
   shouldComponentUpdate (nextProps, nextState) {
     return nextProps.logs.length !== this.props.logs.length
   }

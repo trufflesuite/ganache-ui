@@ -1,9 +1,10 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
+import EtherUtil from 'ethereumjs-util'
 
 import MiniBlockCard from './MiniBlockCard'
 import Styles from './BlockList.css'
 
-export default class BlockList extends Component {
+export default class BlockList extends PureComponent {
   render () {
     return (
       <table className={Styles.BlockList}>
@@ -32,7 +33,7 @@ export default class BlockList extends Component {
     return (
       <MiniBlockCard
         block={block}
-        key={block.hash}
+        key={EtherUtil.bufferToInt(block.header.number)}
         showBlockDetail={this._handleBlockNumberSearch}
       />
     )

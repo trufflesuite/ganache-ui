@@ -9,7 +9,7 @@ import Spinner from 'Elements/Spinner'
 
 import Styles from './RunningRpcNav.css'
 
-class RunningRpcNav extends React.Component {
+class RunningRpcNav extends React.PureComponent {
 
   componentDidMount () {
     this.props.appGetBlockChainState()

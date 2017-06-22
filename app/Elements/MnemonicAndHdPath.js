@@ -1,8 +1,12 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 
 import Styles from './MnemonicAndHdPath.css'
 
-export default class MnemonicAndHdPath extends Component {
+export default class MnemonicAndHdPath extends PureComponent {
+  shouldComponentUpdate (nextProps, nextState) {
+    return nextProps.mnemonic !== this.props.mnemonic || nextProps.hdPath !== this.props.hdPath
+  }
+
   render () {
     return (
       <section className={Styles.MnemonicAndHdPath}>

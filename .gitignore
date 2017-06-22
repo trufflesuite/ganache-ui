@@ -1,6 +1,8 @@
 # Logs
 logs
 *.log
+profiling/
+profile.csv
 
 # Runtime data
 pids
