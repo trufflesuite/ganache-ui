@@ -98,7 +98,7 @@ export default class BlockFetcher {
       coinbase: stateManager.coinbase,
       isMiningOnInterval: stateManager.is_mining_on_interval,
       isMining: stateManager.is_mining,
-      blocktime: stateManager.blocktime,
+      blocktime: stateManager.blocktime ? stateManager.blocktime : 'Automining',
       blockNumber: currentBlockNumber,
       networkId: stateManager.net_version,
       snapshots: stateManager.snapshots,

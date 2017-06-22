@@ -20,6 +20,7 @@ class ConfigScreen extends Component {
     specificTime: false,
     opcodeDebug: false,
     automnemonic: true,
+    automine: true,
     accountsLocked: false,
     forkChain: false,
     verboseLogging: false,
@@ -59,9 +60,19 @@ class ConfigScreen extends Component {
                   <input ref="portNumber" type="text" name="portNumber" defaultValue="8545"/>
                 </section>
                 <section>
-                  <h4>MINING BLOCK TIME (SECONDS)</h4>
-                  <input ref="blockTime" type="text" defaultValue="1" />
+                  <h4>AUTOMINE</h4>
+                  <div className="Switch">
+                    <input type="checkbox" name="automine" id="Automine" onChange={this._handleInputChange} checked={this.state.automine} />
+                    <label htmlFor="Automine">AUTOMINE</label>
+                  </div>
                 </section>
+                  { !this.state.automine
+                    ? <section>
+                      <h4>MINING BLOCK TIME (SECONDS)</h4>
+                      <input ref="blockTime" type="text" defaultValue="1" />
+                    </section>
+                    : null
+                  }
               </div>
               <div className={ this.state.activeTab === 'accounts' ? Styles.Visible : Styles.Hidden}>
                 <h2>ACCOUNT OPTIONS</h2>
@@ -163,7 +174,7 @@ class ConfigScreen extends Component {
       fork: this.refs.fork ? this.refs.fork.value : null,
       gasPrice: parseInt(this.refs.gasPrice.value, 10),
       gasLimit: parseInt(this.refs.gasLimit.value, 10),
-      blocktime: this.refs.blockTime.value,
+      blocktime: this.state.automine ? null : this.refs.blockTime.value,
       debug: this.state.opcodeDebug,
       verbose: this.state.verboseLogging,
       mnemonic: this.automnemonic ? true : null,
@@ -174,7 +185,7 @@ class ConfigScreen extends Component {
 
     Object.keys(config).forEach((key) => { !config[key] ? delete config[key] : null })
 
-    console.log(JSON.stringify(config))
+    this.state.automine ? delete config['time'] : null
 
     this.props.appStartRpcService(config)
   }

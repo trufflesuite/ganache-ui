@@ -53,6 +53,22 @@ class RunningRpcNav extends React.PureComponent {
     )
   }
 
+  _renderMiningTime = () => {
+    if (this.props.testRpcState.blocktime !== 'Automining') {
+      return `${this.props.testRpcState.blocktime} (SEC)`
+    } else {
+      return 'Automining'
+    }
+  }
+
+  _renderMiningButtonText = () => {
+    if (this.props.testRpcState.blocktime !== 'Automining') {
+      return `MINING`
+    } else {
+      return 'AUTOMINING'
+    }
+  }
+
   render () {
     const { isMining, blockNumber, blocktime, gasPrice, snapshots } = this.props.testRpcState
     const miningPaused = !isMining
@@ -78,7 +94,7 @@ class RunningRpcNav extends React.PureComponent {
           </div>
           <div>
             <h4>BLOCK INTERVAL TIME</h4>
-            <span>{blocktime} (SEC)</span>
+            <span>{this._renderMiningTime()}</span>
           </div>
           <div>
             <h4>GAS PRICE / LIMIT</h4>
@@ -89,9 +105,9 @@ class RunningRpcNav extends React.PureComponent {
             {
               this.props.testRpcState.isMining
               ?
-                <button className={Styles.MiningBtn} disabled={!this.props.testRpcState.isMining} onClick={this._handleStopMining}>Stop Mining</button>
+                <button className={Styles.MiningBtn} disabled={!this.props.testRpcState.isMining} onClick={this._handleStopMining}>Stop {this._renderMiningButtonText()}</button>
               :
-                <button className={Styles.MiningBtn} disabled={this.props.testRpcState.isMining} onClick={this._handleStartMining}>Start Mining</button>
+                <button className={Styles.MiningBtn} disabled={this.props.testRpcState.isMining} onClick={this._handleStartMining}>Start {this._renderMiningButtonText()}</button>
             }
             { miningPaused ? <button className={Styles.MiningBtn} onClick={this._handleForceMine}>Force Mine</button> : null }
             { miningPaused ? <button className={Styles.MiningBtn} onClick={this._handleMakeSnapshot}>TAKE SNAPSHOT #{currentSnapshotId + 1}</button> : null }
