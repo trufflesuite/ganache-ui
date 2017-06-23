@@ -46,11 +46,17 @@ export default class RecentBlocks extends Component {
     this.setState({blockSearchMatch: false, currentBlockNumberSearch: '', currentBlockSearchMatch: null, validBlockSearchResult: false})
   }
 
+  _handleTxSearch = (value) => {
+    console.log(`SEARCHING FOR ${value}`)
+    this.setState({isSearchingForTx: true})
+    this.props.appSearchTx(value)
+  }
+
   _renderBlockCard = (block) => {
     return (
       <BlockCard
         block={block}
-        handleTxSearch={this.props.handleTxSearch}
+        handleTxSearch={this._handleTxSearch}
       />
     )
   }

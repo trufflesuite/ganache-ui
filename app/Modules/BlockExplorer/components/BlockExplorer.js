@@ -11,6 +11,7 @@ export default class BlockExplorer extends Component {
         <RecentBlocks
           blocks={this.props.testRpcState.blocks}
           appSearchBlock={this.props.appSearchBlock}
+          appSearchTx={this.props.appSearchTx}
           testRpcState={this.props.testRpcState}
         />
         <RecentTxs
