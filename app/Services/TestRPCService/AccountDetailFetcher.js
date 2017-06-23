@@ -1,6 +1,6 @@
 
 import BN from 'bn.js'
-import ConversionUtils from 'ganache-core/lib/utils/to'
+import EtherUtils from 'ethereumjs-util'
 
 export default class AccountDetailFetcher {
   constructor (stateManager) {
@@ -13,9 +13,9 @@ export default class AccountDetailFetcher {
 
       return {
         index,
-        address,
+        address: EtherUtils.toChecksumAddress(address),
         balance: new BN(latestAccountInfo.balance).toString(),
-        nonce: ConversionUtils.number(latestAccountInfo.nonce),
+        nonce: EtherUtils.bufferToInt(latestAccountInfo.nonce),
         privateKey: this.stateManager.accounts[address].secretKey.toString('hex'),
         isUnlocked: this.stateManager.isUnlocked(address)
       }

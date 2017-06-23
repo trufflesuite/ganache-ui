@@ -20,19 +20,19 @@ export default class TxCard extends Component {
               <td>
                 <dl>
                   <dt>Transaction Hash</dt>
-                  <dd>{EtherUtil.bufferToHex(tx.hash)}</dd>
+                  <dd>{tx.hash}</dd>
                 </dl>
               </td>
               <td>
                 <dl>
                   <dt>From</dt>
-                  <dd>{EtherUtil.bufferToHex(tx.tx.from)}</dd>
+                  <dd>{tx.from}</dd>
                 </dl>
               </td>
               <td>
                 <dl>
                   <dt>{isContractCreationTx ? 'CONTRACT CREATION ADDRESS' : 'To'}</dt>
-                  <dd>{isContractCreationTx ? EtherUtil.bufferToHex(tx.contractAddress) : EtherUtil.bufferToHex(tx.tx.to)}</dd>
+                  <dd>{isContractCreationTx ? tx.contractAddress : tx.to}</dd>
                 </dl>
               </td>
             </tr>

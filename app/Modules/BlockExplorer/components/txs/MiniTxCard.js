@@ -26,17 +26,17 @@ export default class MiniTxCard extends Component {
           <FormattedHex value={tx.value} />
         </td>
         <td>
-          {EtherUtil.bufferToHex(tx.from)}
+          {tx.from}
         </td>
         <td>
           {
             tx.hasOwnProperty('contractAddress') && tx.contractAddress !== null
               ? <div className={Styles.ContractCreationAddress}>
-                <span>{EtherUtil.bufferToHex(tx.contractAddress)}</span>
+                <span>{tx.contractAddress}</span>
                 <ContractIcon width={16} height={16} />
                 </div>
               : <div>
-                {EtherUtil.bufferToHex(tx.to)}
+                {tx.to}
               </div>
           }
         </td>

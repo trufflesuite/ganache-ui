@@ -19,7 +19,6 @@
 
   dd {
     font-size: .7rem;
-    text-transform: uppercase;
   }
 }
 
@@ -113,5 +112,3 @@
   word-wrap: break-word;
   word-break: break-word;
 }
-
-
