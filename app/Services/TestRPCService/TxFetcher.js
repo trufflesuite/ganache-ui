@@ -22,7 +22,6 @@ export default class TransactionFetcher {
     let txs = await Promise.all(txPlaceholders.map(async (_, index) => {
       return new Promise((resolve, reject) => {
         this.stateManager.getTransactionReceipt(transactions[index].hash, (err, receipt) => {
-          console.log(EtherUtils.bufferToHex(transactions[index].to), EtherUtils.bufferToHex(transactions[index].from))
           let tx = {}
           tx.hash = EtherUtils.bufferToHex(transactions[index].hash)
           tx.nonce = EtherUtils.bufferToHex(transactions[index].nonce)
