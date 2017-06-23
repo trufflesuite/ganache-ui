@@ -2,6 +2,7 @@
 @import "colors.css";
 
 .nav {
+  -webkit-app-region: drag;
   display: flex;
   flex-direction: column;
 
@@ -44,6 +45,7 @@
 
   a {
     margin-bottom: 1rem;
+    -webkit-app-region: no-drag;
 
     transition: color .3s, background-color .3s;
     text-decoration: none;
@@ -138,6 +140,7 @@
 
 .MiningBtn {
   margin-bottom: .5rem;
+  -webkit-app-region: no-drag;
 
   &[disabled] {
     border-color: var(--app-button-primary-disabled-border-color);
