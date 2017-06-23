@@ -1,10 +1,6 @@
-import React, {Component} from 'react'
+import React, { PureComponent } from 'react'
 
-export default class WithEmptyState extends Component {
-  shouldComponentUpdate (nextProps, nextState) {
-    return nextProps.test !== this.props.test
-  }
-
+export default class WithEmptyState extends PureComponent {
   render () {
     const EmptyStateComponent = this.props.emptyStateComponent
 
