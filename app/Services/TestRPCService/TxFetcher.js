@@ -34,10 +34,8 @@ export default class TransactionFetcher {
   }
 
   async getTxByHash (txHash) {
-    console.log(`searching for: ${txHash}`)
     return new Promise((resolve, reject) => {
       this.stateManager.getTransactionReceipt(txHash, (err, receipt) => {
-        console.log(receipt)
         let tx = Object.assign({}, receipt)
         tx.hash = txHash
         err ? reject(err) : resolve(tx)
