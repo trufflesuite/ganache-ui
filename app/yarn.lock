@@ -598,7 +598,12 @@ big.js@^3.1.3:
   version "3.1.3"
   resolved "https://registry.yarnpkg.com/big.js/-/big.js-3.1.3.tgz#4cada2193652eb3ca9ec8e55c9015669c9806978"
 
-"bignumber.js@git+https://github.com/debris/bignumber.js.git#94d7146671b9719e00a09c29b01a691bc85048c2", "bignumber.js@git+https://github.com/debris/bignumber.js.git#master":
+"bignumber.js@git+https://github.com/debris/bignumber.js#master":
+  version "2.0.7"
+  uid "94d7146671b9719e00a09c29b01a691bc85048c2"
+  resolved "git+https://github.com/debris/bignumber.js#94d7146671b9719e00a09c29b01a691bc85048c2"
+
+"bignumber.js@git+https://github.com/debris/bignumber.js.git#94d7146671b9719e00a09c29b01a691bc85048c2":
   version "2.0.7"
   resolved "git+https://github.com/debris/bignumber.js.git#94d7146671b9719e00a09c29b01a691bc85048c2"
 
