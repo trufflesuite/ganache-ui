@@ -1,15 +1,11 @@
 import React from 'react'
 import { Link } from 'react-router'
-
 import TestRPCProvider from 'Data/Providers/TestRPCProvider'
-
-import WindowControls from './WindowControls'
-
 import Spinner from 'Elements/Spinner'
 
-import Styles from './RunningRpcNav.css'
+import Styles from './TopNavbar.css'
 
-class RunningRpcNav extends React.PureComponent {
+class TopNavbar extends React.PureComponent {
 
   componentDidMount () {
     this.props.appGetBlockChainState()
@@ -76,11 +72,6 @@ class RunningRpcNav extends React.PureComponent {
 
     return (
       <nav className={Styles.nav}>
-        <header>
-          <WindowControls className={Styles.RunningRpcWindowButtons} />
-          <h1>GANACHE</h1>
-          <span>v0.1</span>
-        </header>
         <main className={Styles.main}>
           <h4>MENU</h4>
           <Link to="/dashboard" activeClassName={Styles.Active}>Dashboard</Link>
@@ -124,4 +115,4 @@ class RunningRpcNav extends React.PureComponent {
 
 }
 
-export default TestRPCProvider(RunningRpcNav)
+export default TestRPCProvider(TopNavbar)
