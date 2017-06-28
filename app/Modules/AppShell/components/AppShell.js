@@ -17,17 +17,17 @@ class AppShell extends Component {
 
     return (
       <div className={Styles.AppShell}>
+        <WindowControls />
+        <TopNavbar {...this.props} />
         <div className={Styles.ShellContainer}>
-          <WindowControls />
-          <TopNavbar {...this.props} />
           {
             this.renderClonedChildrenWithPropsAndPathKey(this.props.children,
-            {...this.props}, segment)
-          }
+              {...this.props}, segment)
+            }
+          </div>
         </div>
-      </div>
-    )
+      )
+    }
   }
-}
 
-export default TestRPCProvider(AppShell)
+  export default TestRPCProvider(AppShell)

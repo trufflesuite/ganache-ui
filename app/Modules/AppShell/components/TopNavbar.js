@@ -70,15 +70,20 @@ class TopNavbar extends React.PureComponent {
     const miningPaused = !isMining
     const currentSnapshotId = snapshots.length
 
+    if (!this.props.testRpcState.testRpcServerRunning) {
+      return <div></div>
+    }
+
     return (
-      <nav className={Styles.nav}>
-        <main className={Styles.main}>
-          <h4>MENU</h4>
-          <Link to="/dashboard" activeClassName={Styles.Active}>Dashboard</Link>
-          <Link to="/block_explorer" activeClassName={Styles.Active}>Block Explorer</Link>
-          <Link to="/repl" activeClassName={Styles.Active}>REPL</Link>
+      <nav className={Styles.Nav}>
+        <main className={Styles.Main}>
+          <Link to="/dashboard" activeClassName={Styles.Active}>Accounts</Link>
+          <Link to="/block_explorer" activeClassName={Styles.Active}>Blocks</Link>
+          <Link to="/block_explorer" activeClassName={Styles.Active}>Transactions</Link>
+          <Link to="/repl" activeClassName={Styles.Active}>Console</Link>
+          <Link to="/config" activeClassName={Styles.Active}>Settings</Link>
         </main>
-        <footer className={Styles.footer}>
+        <footer className={Styles.Footer}>
           <div>
             <h4>CURRENT BLOCK NUMBER</h4>
             <span>{blockNumber}</span>

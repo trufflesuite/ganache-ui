@@ -2,9 +2,31 @@
   --primary-color: rgba(242, 175, 103, 1.000);
   --text-color: rgba(54, 65, 83, 1.000);
 
+  --app-background-color: rgba(255, 255, 255, 1.000);
+
+  --app-window-control-background: rgba(29, 28, 27, 1.000);
+  --app-navbar-background: rgba(64, 61, 58, 1.000);
+  --app-navbar-text: rgba(151, 151, 151, 1.000);
+
+  --app-statusbar-text: rgba(204, 204, 204, 1.000);
+  --app-statusbar-background: rgba(51, 48, 46, 1.000);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   --app-highlight-color: rgba(208, 195, 188, 1.000);
 
-  --app-background-color: rgba(220, 216, 212, 1.000);
+
 
   --app-sidebar-background-color: rgba(42, 40, 37, 1.000);
   --app-sidebar-header-text-color: rgba(96, 172, 197, 1.000);

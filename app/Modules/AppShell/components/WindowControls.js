@@ -23,19 +23,19 @@ class WindowControls extends PureComponent {
   }
 
   render () {
-    const className = `${Styles.titleBarBtns} ${this.props.className ? this.props.className : ''}`
+    const className = `${Styles.WindowControls} ${this.props.className ? this.props.className : ''}`
     return (
       <div className={className}>
         <span
-          className={Styles.titleBarBtnClose}
+          className={Styles.Close}
           onClick={this._handleCloseClick}
         >x</span>
         <span
-          className={Styles.titleBarBtnMin}
+          className={Styles.Minimize}
           onClick={this._handleMinClick}
         >-</span>
         <span
-          className={Styles.titleBarBtnMax}
+          className={Styles.Maximize}
           onClick={this._handleMaxClick}
         >+</span>
       </div>

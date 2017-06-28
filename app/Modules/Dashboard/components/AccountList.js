@@ -32,6 +32,9 @@ export default class AccountList extends Component {
       </thead>
       <tbody>
         { this.accountListRows(this.props.accounts) }
+        { this.accountListRows(this.props.accounts) }
+        { this.accountListRows(this.props.accounts) }
+        { this.accountListRows(this.props.accounts) }
       </tbody>
     </table>
   }

@@ -4,6 +4,14 @@
 @import "./Styles/forms.css";
 
 @font-face {
+  font-family: "RobotoCondensed-Bold";
+  font-weight: 700;
+  font-style: bold;
+
+  src: url("../resources/fonts/RobotoCondensed-Bold.ttf") format("truetype");
+}
+
+@font-face {
   font-family: "Fira Sans";
   font-weight: 300;
   font-style: normal;
@@ -67,15 +75,18 @@ a {
 html,
 body {
   padding: 0;
-  /* Disable text selection */
-  /* -webkit-user-select: none; */
 
   background-color: var(--app-background-color);
 
   font-family: "Fira Sans", sans-serif;
   font-weight: 200;
+}
 
-  /* -webkit-app-region: drag; */
+html,
+body,
+#root {
+  height: 100vh;
+  width: 100vw;
 }
 
 a {

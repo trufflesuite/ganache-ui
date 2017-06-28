@@ -1,10 +1,15 @@
 @import 'colors.css';
 
-.titleBarBtns {
-  margin-left: -1rem;
+.WindowControls {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  padding: 0 1rem;
+  background-color: var(--app-window-control-background);
+  height: 48px;
 }
 
-.titleBarBtn {
+.WindowControlBtn {
   text-indent: -9999px;
   border-radius: 50%;
   display: inline-block;
@@ -20,17 +25,17 @@
   }
 }
 
-.titleBarBtnClose {
-  composes: titleBarBtn;
+.Close {
+  composes: WindowControlBtn;
   background-color: var(--app-title-bar-btn-close);
 }
 
-.titleBarBtnMin {
-  composes: titleBarBtn;
+.Minimize {
+  composes: WindowControlBtn;
   background-color: var(--app-title-bar-btn-min);
 }
 
-.titleBarBtnMax {
-  composes: titleBarBtn;
+.Maximize {
+  composes: WindowControlBtn;
   background-color: var(--app-title-bar-btn-max);
 }

@@ -46,53 +46,28 @@ class Dashboard extends Component {
     this.props.appAddAccount({index: this.nextAccountIndex()})
   }
 
-  _handleSaveLog = () => {
-
-  }
-
-  _handleCopyLogs = () => {
-
-  }
-
   _handleClearLogs = () => {
     this.props.appClearLogs()
   }
 
   render () {
     return (
-      <div className={Styles.Dashboard}>
-        <div className={Styles.Accounts}>
-          <h4>ACCOUNTS ({this.props.testRpcState.accounts.length})</h4>
-          <header>
-            <MnemonicAndHdPath
-              mnemonic={this.props.testRpcState.mnemonic}
-              hdPath={this.props.testRpcState.hdPath}
-            />
-          </header>
-          <main>
-            <WithEmptyState
-              test={this.props.testRpcState.accounts.length === 0}
-              emptyStateComponent={LoadingAccounts}
-              >
-              <AccountList
-                accounts={this.props.testRpcState.accounts}
-              />
-            </WithEmptyState>
-          </main>
-          <footer>
-          </footer>
-        </div>
-        <div className={Styles.Logs}>
-          <h4>LOG OUTPUT</h4>
-          <main>
-            <LogContainer
-              logs={this.props.testRpcState.logs}
-            />
-          </main>
-          <footer>
-            <button className={Styles.MiningBtn} onClick={this._handleClearLogs}>Clear Log</button>
-          </footer>
-        </div>
+      <div className={Styles.Accounts}>
+        <h4>ACCOUNTS ({this.props.testRpcState.accounts.length})</h4>
+        <header>
+          <MnemonicAndHdPath
+            mnemonic={this.props.testRpcState.mnemonic}
+            hdPath={this.props.testRpcState.hdPath}
+          />
+        </header>
+        <main>
+          <WithEmptyState
+            test={this.props.testRpcState.accounts.length === 0}
+            emptyStateComponent={LoadingAccounts}
+            >
+            <AccountList accounts={this.props.testRpcState.accounts} />
+          </WithEmptyState>
+        </main>
       </div>
     )
   }

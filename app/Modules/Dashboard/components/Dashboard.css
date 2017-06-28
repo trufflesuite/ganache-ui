@@ -1,30 +1,5 @@
 @import 'colors.css';
 
-.Dashboard {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-
-  header {
-    padding: 0
-  }
-
-  textarea {
-    width: 100%;
-    height: 500px;
-  }
-
-  ol {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-
-    li {
-      margin-bottom: 1em;
-    }
-  }
-}
-
 .MainContainer {
   display: flex;
   flex-direction: column;
@@ -39,6 +14,12 @@
   flex: 1;
   flex-direction: column;
   position: relative;
+
+  h4 {
+    position: -webkit-sticky;
+    position: sticky;
+    top: -1px;
+  }
 
   footer {
     padding: 1rem 0 0 0;
@@ -66,4 +47,3 @@
     }
   }
 }
-

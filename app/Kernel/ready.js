@@ -5,6 +5,8 @@ import { push } from 'react-router-redux'
 // you want here. The Redux Store is available at this point, so you can
 // dispatch any action you want
 export default async function (app, done, error) {
+  app.store.dispatch(push('/config'))
+
   ipcRenderer.on('APP/TESTRPCSTARTED', (event, message) => {
     new Notification('Ganache Started', {  // eslint-disable-line
       body: 'Ganache Started',

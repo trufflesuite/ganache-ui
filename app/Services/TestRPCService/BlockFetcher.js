@@ -72,12 +72,12 @@ export default class BlockFetcher {
     blockChainState.transactions = await this.testRpcService.txFetcher.getRecentTransactions(currentBlockNumber, this)
     blockChainState.accounts = await this.testRpcService.accountFetcher.getAccountInfo()
 
-    var mem = process.memoryUsage()
-    SysLog.info(currentBlockNumber + ', ' + bytesToSize(mem.rss) + ', ' + bytesToSize(mem.heapTotal) + ', ' + bytesToSize(mem.heapUsed))
-
-    usage.stat(process.pid, (err, result) => {
-      this.logFile.write(`${currentBlockNumber}, ${result.cpu}, ${bytesToSize(mem.rss, false)}, ${bytesToSize(mem.heapTotal, false)}, ${bytesToSize(mem.heapUsed, false)}\r\n`)
-    })
+    // var mem = process.memoryUsage()
+    // SysLog.info(currentBlockNumber + ', ' + bytesToSize(mem.rss) + ', ' + bytesToSize(mem.heapTotal) + ', ' + bytesToSize(mem.heapUsed))
+    //
+    // usage.stat(process.pid, (err, result) => {
+    //   this.logFile.write(`${currentBlockNumber}, ${result.cpu}, ${bytesToSize(mem.rss, false)}, ${bytesToSize(mem.heapTotal, false)}, ${bytesToSize(mem.heapUsed, false)}\r\n`)
+    // })
 
     return blockChainState
   }

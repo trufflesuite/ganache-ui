@@ -1,10 +1,10 @@
 import React from 'react'
-import { IndexRoute } from 'react-router'
+import { Route } from 'react-router'
 
 import ConfigScreen from './components/ConfigScreen'
 
 export default function routes (store, children = null) {
   return (
-    <IndexRoute component={ConfigScreen} />
+    <Route path='/config' component={props => <ConfigScreen {...props} />} />
   )
 }
