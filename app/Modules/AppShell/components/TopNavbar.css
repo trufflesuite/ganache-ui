@@ -9,20 +9,79 @@
   font-family: 'RobotoCondensed-Bold';
 }
 
-a {
-  text-decoration: none;
-  margin-right: 2rem;
-  text-transform: uppercase;
-}
-
 .Main {
   width: 100vw;
-  padding: 1rem;
+  padding: .8rem;
+  display: flex;
+  flex-direction: row;
   background-color: var(--app-navbar-background);
 }
 
-.Main a {
-  color: var(--app-navbar-text);
+.Menu {
+  display: flex;
+  flex-direction: row;
+
+  a {
+    color: var(--app-navbar-text);
+    cursor: pointer;
+    text-decoration: none;
+    position: relative;
+    margin-right: 2rem;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+
+    svg {
+      width: 44px;
+      height: 44px;
+      margin-right: .5rem;
+      stroke: var(--app-navbar-icon-color);
+      transition: all .3s;
+    }
+
+    &.Active {
+      color: var(--primary-color);
+
+      svg {
+        stroke: var(--primary-color);
+      }
+    }
+
+    transition: all .3s;
+
+    &:hover {
+      color: white;
+
+      transform: scale(1.01);
+
+      svg {
+        stroke: white;
+        transform: scale(1.01);
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.SearchBar {
+  display: flex;
+  justify-content: flex-end;
+  flex-grow: 1;
+  align-items: center;
+
+  input {
+    justify-content: flex-end;
+    outline: none;
+    border: 2px solid var(--app-navbar-icon-color);
+    border-radius: 24px;
+    padding: .25rem .5rem;
+    color: var(--app-navbar-icon-color);
+  }
+
+  svg {
+    position: absolute;
+    right: 19px;
+  }
 }
 
 .Footer {

@@ -1,5 +1,5 @@
 :root {
-  --primary-color: rgba(242, 175, 103, 1.000);
+  --primary-color: rgba(235, 182, 126, 1.000);
   --text-color: rgba(54, 65, 83, 1.000);
 
   --app-background-color: rgba(255, 255, 255, 1.000);
@@ -7,6 +7,7 @@
   --app-window-control-background: rgba(29, 28, 27, 1.000);
   --app-navbar-background: rgba(64, 61, 58, 1.000);
   --app-navbar-text: rgba(151, 151, 151, 1.000);
+  --app-navbar-icon-color: rgba(128, 128, 128, 1.000);
 
   --app-statusbar-text: rgba(204, 204, 204, 1.000);
   --app-statusbar-background: rgba(51, 48, 46, 1.000);
