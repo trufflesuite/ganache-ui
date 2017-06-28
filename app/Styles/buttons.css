@@ -9,7 +9,7 @@ button {
   border: 0;
   outline: 0;
 
-  background-color: var(--app-button-primary-background-color);
+  background-color: var(--app-button-primary-color);
 
   height: 32px;
   padding: 0 20px;
@@ -18,9 +18,9 @@ button {
   white-space: nowrap;
   text-transform: uppercase;
 
-  color: var(--app-button-primary-color);
+  color: var(--app-button-primary-background-color);
   border-radius: 3px;
-  box-shadow: 0 0 16px rgba(0,0,0,.1);
+  box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.2), inset 0 1px 0 0 rgba(255,255,255,0.2);
 
   font-size: 12px;
   font-weight: 600;
@@ -36,9 +36,8 @@ button {
   }
 
   &:hover {
-    background-color: color(var(--app-button-primary-background-color) shade(10%));
-    color: color(var(--app-button-primary-color) shade(20%));
+    background-color: color(var(--app-button-primary-color) tint(10%));
+    color: color(var(--app-button-primary-background-color) shade(20%));
     box-shadow: 0;
   }
 }
-
