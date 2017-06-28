@@ -23,7 +23,7 @@ export default validate({
       },
       {
         test: /\.svg$/,
-        loader: 'babel?presets[]=es2015,presets[]=react!svg-react'
+        loader: 'svg-inline-loader'
       }
     ]
   },
@@ -43,7 +43,8 @@ export default validate({
     packageMains: ['webpack', 'browser', 'web', 'browserify', ['jam', 'main'], 'main'],
     modulesDirectories: [ path.resolve('./app'), 'node_modules' ],
     alias: {
-      CoreStyles: path.resolve('./app/Styles')
+      CoreStyles: path.resolve('./app/Styles'),
+      Elements: path.resolve('./app/Elements')
     }
   },
 
