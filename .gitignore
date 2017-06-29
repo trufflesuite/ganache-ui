@@ -3,6 +3,8 @@ logs
 *.log
 profiling/
 profile.csv
+package-lock.json
+app/package-lock.json
 
 # Runtime data
 pids

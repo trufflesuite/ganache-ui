@@ -10,6 +10,7 @@
   flex-grow: 1;
   justify-content: center;
   overflow: scroll;
+  height: 100%;
 }
 
 .ShellContainer > div {
