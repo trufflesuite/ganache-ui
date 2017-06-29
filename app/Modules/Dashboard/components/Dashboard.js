@@ -55,12 +55,6 @@ class Dashboard extends Component {
     return (
       <div className={Styles.Accounts}>
         <h4><Icon name="account" size={24} /> ACCOUNTS</h4>
-        <header>
-          <MnemonicAndHdPath
-            mnemonic={this.props.testRpcState.mnemonic}
-            hdPath={this.props.testRpcState.hdPath}
-          />
-        </header>
         <main>
           <WithEmptyState
             test={this.props.testRpcState.accounts.length === 0}
@@ -68,6 +62,12 @@ class Dashboard extends Component {
             >
             <AccountList accounts={this.props.testRpcState.accounts} />
           </WithEmptyState>
+          <div className={Styles.Mnemonic}>
+            <MnemonicAndHdPath
+              mnemonic={this.props.testRpcState.mnemonic}
+              hdPath={this.props.testRpcState.hdPath}
+            />
+          </div>
         </main>
       </div>
     )

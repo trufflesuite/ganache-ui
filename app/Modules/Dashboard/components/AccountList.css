@@ -1,24 +1,90 @@
 @import 'colors.css';
 
+.CardItem {
+  margin-bottom: .5rem;
+}
+
+.Label {
+  font-size: .875rem;
+  font-family: "RobotoCondensed-Regular";
+  font-weight: 300;
+  color: var(--app-card-label);
+}
+
+.Value {
+  font-size: 1.125rem;
+  font-family: "Fira Code";
+  color: var(--app-card-value);
+}
+
 .AccountList {
   background-color: var(--app-account-list-background);
   width: 100%;
   padding: 1rem;
 
-  thead {
-    td {
-      font-size: 12px;
-      font-weight: bold;
-      border-bottom: 1px solid var(--app-account-list-header-divider-color);
-    }
-  }
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
 
-  tbody {
-    font-size: 12px;
-    font-family: "Fira Code Regular", monospace;
+.AccountCard {
+  padding: 1rem;
+  background-color: var(--app-card-default-background);
+  border: 2px solid var(--app-card-default-border);
+  border-radius: 4px;
+  margin-bottom: 2.8rem;
+  position: relative;
+}
 
-    td {
-      padding: .5rem 0;
-    }
+.AccountAddressAndIndex,
+.AccountNonceAndBalance,
+.AccountState,
+.AccountPrivateKey {
+  composes: CardItem;
+}
+
+.AccountAddress {
+  font-weight: bold;
+  flex-grow: 2;
+
+  .Value {
+    font-size: 1.222222222rem;
   }
+}
+
+.AccountIndex {
+  flex-shrink: 1;
+  font-weight: bold;
+}
+
+.AccountNonceAndBalance,
+.AccountAddressAndIndex, {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  .RowItem {
+    margin-right: 1rem;
+  }
+}
+
+.AccountNonceAndBalance {
+  justify-content: flex-start;
+}
+
+.AccountState {
+  position: absolute;
+  padding-top: 13px;
+    top: -26px;
+    right: -24px;
+    font-size: 2rem;
+    background: #ffffff;
+    border-radius: 50%;
+    width: 3rem;
+    height: 3rem;
+    padding: 10px;
+    border: 4px solid gray;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

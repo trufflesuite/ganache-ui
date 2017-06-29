@@ -2,6 +2,7 @@
 
 .MnemonicAndHdPath {
   display: flex;
+  flex-direction: column;
   width: 100%;
   background-color: var(--app-mnemonic-background-color);
 
@@ -21,8 +22,4 @@
       color: var(--text-color);
     }
   }
-}
-
-.Mnemonic {
-  flex-grow: 1;
 }

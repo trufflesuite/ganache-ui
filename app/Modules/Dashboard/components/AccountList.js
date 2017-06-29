@@ -3,39 +3,71 @@ import React, {Component} from 'react'
 import Styles from './AccountList.css'
 
 export default class AccountList extends Component {
-  accountListRows = (accounts) => {
+  _renderAccounts = (accounts) => {
     return accounts.sort((a, b) => { return parseInt(a.index, 10) - parseInt(b.index, 10) }).map((account) => {
       return (
-        <tr key={account.address}>
-          <td>{account.index}</td>
-          <td>{account.address}</td>
-          <td>0x{account.privateKey}</td>
-          <td>{account.balance} WEI</td>
-          <td>{account.nonce}</td>
-          <td>{ account.isUnlocked ? '🔓' : '🔐' }</td>
-        </tr>
+        <div className={Styles.AccountCard} key={`account-card-${account.index}`}>
+          <div className={Styles.AccountAddressAndIndex}>
+            <div className={Styles.RowItem}>
+              <div className={Styles.AccountAddress}>
+                <div className={Styles.Label}>
+                  ADDRESS
+                </div>
+                <div className={Styles.Value}>
+                  {account.address}
+                </div>
+              </div>
+            </div>
+            <div className={Styles.RowItem}>
+              <div className={Styles.AccountIndex}>
+                <div className={Styles.Label}>
+                  INDEX
+                </div>
+                <div className={Styles.Value}>
+                  {account.index}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className={Styles.AccountPrivateKey}>
+            <div className={Styles.Label}>
+              PRIVATE KEY
+            </div>
+            <div className={Styles.Value}>
+              0x{account.privateKey}
+            </div>
+          </div>
+          <div className={Styles.AccountNonceAndBalance}>
+            <div className={Styles.RowItem}>
+              <div className={Styles.Label}>
+                BALANCE
+              </div>
+              <div className={Styles.Value}>
+                {account.balance} WEI
+              </div>
+            </div>
+            <div className={Styles.RowItem}>
+              <div className={Styles.Label}>
+                NONCE
+              </div>
+              <div className={Styles.Value}>
+                {account.nonce}
+              </div>
+            </div>
+          </div>
+          <div className={Styles.AccountState}>
+            { account.isUnlocked ? '🔓' : '🔐' }
+          </div>
+        </div>
       )
     })
   }
 
   render () {
-    return <table className={Styles.AccountList}>
-      <thead>
-        <tr>
-          <td>INDEX</td>
-          <td>ADDRESS</td>
-          <td>PRIVATE KEY</td>
-          <td>BALANCE (WEI)</td>
-          <td>NONCE</td>
-          <td>STATE</td>
-        </tr>
-      </thead>
-      <tbody>
-        { this.accountListRows(this.props.accounts) }
-        { this.accountListRows(this.props.accounts) }
-        { this.accountListRows(this.props.accounts) }
-        { this.accountListRows(this.props.accounts) }
-      </tbody>
-    </table>
+    return (
+      <div className={Styles.AccountList}>
+        {this._renderAccounts(this.props.accounts)}
+      </div>
+    )
   }
 }

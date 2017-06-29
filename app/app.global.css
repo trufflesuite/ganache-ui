@@ -4,6 +4,14 @@
 @import "./Styles/forms.css";
 
 @font-face {
+  font-family: "RobotoCondensed-Regular";
+  font-weight: 300;
+  font-style: bold;
+
+  src: url("../resources/fonts/RobotoCondensed-Regular.ttf") format("truetype");
+}
+
+@font-face {
   font-family: "RobotoCondensed-Bold";
   font-weight: 700;
   font-style: bold;

@@ -23,31 +23,11 @@
     font-family: "RobotoCondensed-Bold";
     margin: 2rem .8rem;
     border-bottom: 2px solid rgba(155, 152, 150, 1.000);
+    z-index: 2;
   }
 
-  footer {
-    padding: 1rem 0 0 0;
+  main {
     display: flex;
-    justify-content: flex-end;
-  }
-}
-
-.Logs {
-  width: 100%;
-  display: flex;
-  flex: 1;
-  overflow: hidden;
-  flex-direction: column;
-  composes: Panel from 'CoreStyles/panels.css';
-  position: relative;
-
-  footer {
-    padding: 1rem 0 0 0;
-    display: flex;
-    justify-content: flex-end;
-
-    button {
-      margin-left: 1rem;
-    }
+    flex-direction: row;
   }
 }
