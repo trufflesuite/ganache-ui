@@ -2,12 +2,12 @@ import React, { Component } from 'react'
 import RecentBlocks from './blocks/RecentBlocks'
 import RecentTxs from './txs/RecentTxs'
 
-import Styles from './BlockExplorer.css'
+import Styles from './Blocks.css'
 
-export default class BlockExplorer extends Component {
+export default class Blocks extends Component {
   render () {
     return (
-      <div className={Styles.BlockExplorer}>
+      <div className={Styles.Blocks}>
         <RecentBlocks
           blocks={this.props.testRpcState.blocks}
           appSearchBlock={this.props.appSearchBlock}

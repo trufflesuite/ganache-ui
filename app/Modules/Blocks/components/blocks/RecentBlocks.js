@@ -6,7 +6,7 @@ import BlockList from './BlockList'
 import InputText from 'Elements/InputText'
 import EtherUtil from 'ethereumjs-util'
 import Styles from './RecentBlocks.css'
-import BlockExplorerStyles from '../BlockExplorer.css'
+import BlocksStyles from '../Blocks.css'
 
 export default class RecentBlocks extends Component {
   constructor (props) {
@@ -86,7 +86,7 @@ export default class RecentBlocks extends Component {
     if (this.state.validBlockSearchResult) {
       return (
         <section className={Styles.DismissSearchResult}>
-          <a href="#" className={BlockExplorerStyles.BackButton} onClick={this._handleClearBlockSearch}>&larr; All Blocks</a>
+          <a href="#" className={BlocksStyles.BackButton} onClick={this._handleClearBlockSearch}>&larr; All Blocks</a>
         </section>
       )
     }

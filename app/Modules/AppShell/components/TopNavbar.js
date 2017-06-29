@@ -103,11 +103,11 @@ class TopNavbar extends React.PureComponent {
               <Icon name="account" size={44} />
               Accounts
             </Link>
-            <Link to="/block_explorer" activeClassName={Styles.Active}>
+            <Link to="/blocks" activeClassName={Styles.Active}>
               <Icon name="blocks" size={44}/>
               Blocks
             </Link>
-            <Link to="/block_explorer" activeClassName={Styles.Active}>
+            <Link to="/transactions" activeClassName={Styles.Active}>
               <Icon name="transactions" size={44}/>
               Transactions
             </Link>

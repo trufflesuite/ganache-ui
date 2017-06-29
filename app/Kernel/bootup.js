@@ -1,7 +1,8 @@
 import AppShell from 'Modules/AppShell'
 import ConfigScreen from 'Modules/ConfigScreen'
 import Dashboard from 'Modules/Dashboard'
-import BlockExplorer from 'Modules/BlockExplorer'
+import Blocks from 'Modules/Blocks'
+import Transactions from 'Modules/Transactions'
 import Snapshots from 'Modules/Snapshots'
 import Repl from 'Modules/Repl'
 
@@ -17,7 +18,8 @@ export default async function (app, done, error) {
   app.register(AppShell)
   app.register(ConfigScreen)
   app.register(Dashboard)
-  app.register(BlockExplorer)
+  app.register(Blocks)
+  app.register(Transactions)
   app.register(Snapshots)
   app.register(Repl)
 

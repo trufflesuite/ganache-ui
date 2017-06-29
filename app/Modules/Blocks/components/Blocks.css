@@ -1,6 +1,6 @@
 @import "colors.css";
 
-.BlockExplorer {
+.Blocks {
   display: flex;
   flex-direction: column;
 

@@ -7,7 +7,7 @@ import WithEmptyState from 'Elements/WithEmptyState'
 import EmptyTransactions from './EmptyTransactions'
 
 import Styles from './RecentTxs.css'
-import BlockExplorerStyles from '../BlockExplorer.css'
+import BlocksStyles from '../Blocks.css'
 
 export default class RecentTxs extends Component {
   constructor (props) {
@@ -93,7 +93,7 @@ export default class RecentTxs extends Component {
     if (this.state.validTxSearchResult) {
       return (
         <section className={Styles.DismissSearchResult}>
-          <a href="#" className={BlockExplorerStyles.BackButton} onClick={this._handleClearTxSearch}>&larr; All TXs</a>
+          <a href="#" className={BlocksStyles.BackButton} onClick={this._handleClearTxSearch}>&larr; All TXs</a>
         </section>
       )
     }
