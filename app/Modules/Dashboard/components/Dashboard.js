@@ -7,6 +7,7 @@ import AccountList from './AccountList'
 import WithEmptyState from 'Elements/WithEmptyState'
 import Spinner from 'Elements/Spinner'
 import SpinnerButton from 'Elements/SpinnerButton'
+import Icon from 'Elements/Icon'
 
 import Styles from './Dashboard.css'
 
@@ -53,7 +54,7 @@ class Dashboard extends Component {
   render () {
     return (
       <div className={Styles.Accounts}>
-        <h4>ACCOUNTS ({this.props.testRpcState.accounts.length})</h4>
+        <h4><Icon name="account" size={24} /> ACCOUNTS</h4>
         <header>
           <MnemonicAndHdPath
             mnemonic={this.props.testRpcState.mnemonic}
