@@ -135,8 +135,6 @@ export default class RecentBlocks extends Component {
         <main>
           { this._renderPanelBody() }
         </main>
-        <footer>
-        </footer>
       </div>
     )
   }

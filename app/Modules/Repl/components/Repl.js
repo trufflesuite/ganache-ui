@@ -129,7 +129,7 @@ class Repl extends Component {
   render () {
     return (
       <div className={Styles.Repl}>
-        <h4>REPL</h4>
+        <h4>CONSOLE</h4>
         <main>
           <LogContainer logs={this.props.repl.replBuffer} />
         </main>

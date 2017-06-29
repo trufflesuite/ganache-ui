@@ -4,16 +4,13 @@
   display: flex;
   flex-direction: column;
 
+  height: 100%;
   width: 100%;
 
-  header {
-    margin: 0 0 1rem 0;
-    padding: 0;
-    border-bottom: 0;
-  }
-
-  section {
+  main {
     display: flex;
+    align-items: center;
+    min-height: calc(100% - 4rem);
   }
 }
 

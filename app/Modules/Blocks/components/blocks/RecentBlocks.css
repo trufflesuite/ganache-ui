@@ -9,7 +9,18 @@
 
   width: 100%;
 
-  composes: Panel from "CoreStyles/panels.css";
+  > h4 {
+    position: -webkit-sticky;
+    position: sticky;
+    top: -5px;
+    background: white;
+    font-size: 32px;
+    font-family: "RobotoCondensed-Bold";
+    margin: 2rem .8rem;
+    border-bottom: 2px solid rgba(155, 152, 150, 1.000);
+    z-index: 2;
+  }
+
 }
 
 .Blocks footer {
@@ -61,4 +72,3 @@
     }
   }
 }
-
