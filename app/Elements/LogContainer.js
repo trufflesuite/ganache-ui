@@ -26,7 +26,7 @@ export default class LogContainer extends PureComponent {
             this.props.logs.map((log, index) => {
               return (
                 <li key={index} className={Styles[log.type || 'plain']}>
-                  {log.time ? `[${log.time}]` : ''} {log.message}
+                  {log.time ? `[${new Date(log.time).toLocaleTimeString()}]` : ''} {log.message}
                 </li>
               )
             })

@@ -12,7 +12,7 @@ const mutators = {
 
     let newState = {
       ...state,
-      replBuffer: state.replBuffer.concat({ message: payload, type: messageType })
+      replBuffer: state.replBuffer.concat({ message: payload, type: messageType, time: new Date().toISOString()})
     }
 
     return newState
@@ -22,7 +22,7 @@ const mutators = {
     replBuffer: state.replBuffer.concat({
       message: payload,
       type: 'command',
-      time: new Date().toLocaleTimeString()
+      time: new Date().toISOString()
     })
   }),
 

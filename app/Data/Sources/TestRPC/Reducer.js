@@ -17,7 +17,7 @@ const mutators = {
 
   'APP/TESTRPCLOG': (state, { type, payload }) => ({
     ...state,
-    logs: state.logs.concat({ time: new Date().toLocaleTimeString(), message: payload.message })
+    logs: state.logs.concat({ time: new Date().toISOString(), message: payload.message })
   }),
 
   'APP/CLEARLOGS': (state, { type, payload }) => ({

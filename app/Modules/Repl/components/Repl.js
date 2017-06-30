@@ -126,12 +126,17 @@ class Repl extends Component {
     }
   }
 
+  _logBuffer = () => {
+    let logs = this.props.repl.replBuffer.concat(this.props.testRpcState.logs).sort((a,b) => { return new Date(a.time) - new Date(b.time)})
+    return logs
+  }
+
   render () {
     return (
       <div className={Styles.Repl}>
         <h4>CONSOLE</h4>
         <main>
-          <LogContainer logs={this.props.repl.replBuffer} />
+          <LogContainer logs={this._logBuffer()} />
         </main>
         <footer>
           <InputText
