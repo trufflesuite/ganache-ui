@@ -4,17 +4,13 @@
   display: flex;
   flex-direction: column;
 
-  width: 100%;
   height: 100%;
+  width: 100%;
 
   main {
     display: flex;
-    align-items: center;
     min-height: calc(100% - 4rem);
-  }
-
-  section {
-    display: flex;
+    padding: 0 1rem;
   }
 }
 

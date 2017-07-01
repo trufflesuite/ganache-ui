@@ -82,32 +82,7 @@ export default class RecentTxs extends Component {
       return `SHOWING TX ${this.state.currentTxSearchMatch.hash}`
     }
 
-    return `LAST 5 TRANSACTIONS`
-  }
-
-  _renderPanelHeaderControls = () => {
-    if (this.props.testRpcState.transactions.length === 0) {
-      return
-    }
-
-    if (this.state.validTxSearchResult) {
-      return (
-        <section className={Styles.DismissSearchResult}>
-          <a href="#" className={BlocksStyles.BackButton} onClick={this._handleClearTxSearch}>&larr; All TXs</a>
-        </section>
-      )
-    }
-
-    return (
-      <InputText
-        className={Styles.TxSearchInput}
-        placeholder={'Search for TX Hash'}
-        delay={0}
-        value={this.state.currentTxSearch}
-        onEnter={this._handleTxSearch}
-        onChange={this._handleTxSearchChange}
-      />
-    )
+    return `LAST ${this.props.testRpcState.transactions.length} TRANSACTIONS`
   }
 
   _renderPanelBody = () => {
@@ -137,9 +112,6 @@ export default class RecentTxs extends Component {
         <h4>
           { this._renderPanelHeaderText() }
         </h4>
-        <header>
-          { this._renderPanelHeaderControls() }
-        </header>
         <main>
           <WithEmptyState
             test={this.props.testRpcState.transactions.length === 0}

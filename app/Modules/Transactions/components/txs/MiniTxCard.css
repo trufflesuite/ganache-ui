@@ -1,53 +1,42 @@
 @import 'colors.css';
 
-@keyframe sizeIn {
-  0% {
-    height: 0;
-  }
-
-  100% {
-    height: 100%;
-  }
-}
-
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-
-  100% {
-    opacity: 100%;
-  }
-}
-
 .MiniTxCard {
   font-family: "Fira Code Regular", monospaced;
-  font-size: .9rem;
+  cursor: pointer;
+  width: 100vw;
+  border: 2px solid var(--app-card-default-border);
+  padding: .8rem;
+  border-radius: 4px;
+  word-wrap: break-word;
+  margin: 1rem 0;
   cursor: pointer;
 
-  animation: sizeIn .3s, fadeIn .8s;
-
-  &:hover {
-    background-color: var(--app-highlight-color);
-  }
-
-  td {
+  > * {
     cursor: pointer;
   }
 }
 
-.Truncate {
-  white-space: nowrap;
-  width: 300px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  cursor: pointer;
+.RowItem {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  &:last-of-type {
+    margin-bottom: 0;
+  }
 }
 
-.ContractCreationAddress {
-  display: flex;
-  align-items: center;
-  span {
-    margin-right: 8px;
-  }
+.Label {
+  font-size: .875rem;
+  font-family: "RobotoCondensed-Regular";
+  font-weight: 300;
+  color: var(--app-card-label);
+}
+
+.Value {
+  font-size: 1.125rem;
+  font-family: "Fira Code";
+  color: var(--app-card-value);
+  word-break: break-all;
 }
