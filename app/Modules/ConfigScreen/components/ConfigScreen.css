@@ -2,6 +2,7 @@
 
 .ConfigScreen {
   composes: Panel from 'CoreStyles/panels.css';
+  box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.15);
   border: 0;
 
   color: var(--text-color);
@@ -42,8 +43,7 @@
   .ActiveTab {
     color: var(--app-config-tab-active-text-color);
     background: white;
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
+    border-bottom: 2px solid lighten(var(--app-config-tab-active-text-color), 15%);
   }
 
   .Hidden {
@@ -66,6 +66,10 @@
 
     &:last-of-type {
       border-right: none;
+    }
+
+    &.active {
+      border-bottom: 2px solid lighten(var(--app-config-tab-active-text-color), 15%);
     }
 
     &.active,
@@ -112,4 +116,3 @@
   }
 
 }
-
