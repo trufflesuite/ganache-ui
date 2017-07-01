@@ -5,6 +5,8 @@ import BlockCard from './BlockCard'
 import BlockList from './BlockList'
 import InputText from 'Elements/InputText'
 import EtherUtil from 'ethereumjs-util'
+import Icon from 'Elements/Icon'
+
 import Styles from './RecentBlocks.css'
 import BlocksStyles from '../Blocks.css'
 
@@ -116,7 +118,7 @@ export default class RecentBlocks extends Component {
     return (
       <div className={Styles.Blocks}>
         <h4>
-          { this._renderPanelHeaderText() }
+          <Icon name="blocks" size={24} /> { this._renderPanelHeaderText() }
         </h4>
         <header>
           { this._renderPanelHeaderControls() }

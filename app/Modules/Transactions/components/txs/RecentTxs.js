@@ -2,12 +2,11 @@
 import React, { Component } from 'react'
 import TxCard from './TxCard'
 import TxList from './TxList'
-import InputText from 'Elements/InputText'
 import WithEmptyState from 'Elements/WithEmptyState'
 import EmptyTransactions from './EmptyTransactions'
+import Icon from 'Elements/Icon'
 
 import Styles from './RecentTxs.css'
-import BlocksStyles from '../Transactions.css'
 
 export default class RecentTxs extends Component {
   constructor (props) {
@@ -110,7 +109,7 @@ export default class RecentTxs extends Component {
     return (
       <div className={Styles.Transactions}>
         <h4>
-          { this._renderPanelHeaderText() }
+          <Icon name="transactions" size={24} /> { this._renderPanelHeaderText() }
         </h4>
         <main>
           <WithEmptyState

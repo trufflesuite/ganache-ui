@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import InputText from 'Elements/InputText'
 import LogContainer from 'Elements/LogContainer'
 import Styles from './Repl.css'
+import Icon from 'Elements/Icon'
 
 import ReplProvider from 'Data/Providers/ReplProvider'
 
@@ -134,7 +135,9 @@ class Repl extends Component {
   render () {
     return (
       <div className={Styles.Repl}>
-        <h4>CONSOLE</h4>
+        <h4>
+          <Icon name="console" size={24} /> CONSOLE
+        </h4>
         <main>
           <LogContainer logs={this._logBuffer()} />
         </main>
