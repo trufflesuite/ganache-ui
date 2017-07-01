@@ -1,37 +1,94 @@
 @import 'colors.css';
 
-@keyframe sizeIn {
-  0% {
-    height: 0;
-  }
-
-  100% {
-    height: 100%;
-  }
-}
-
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-
-  100% {
-    opacity: 100%;
-  }
-}
 
 .MiniBlockCard {
-  font-family: "Fira Code Regular", monospaced;
-  font-size: .9rem;
+  width: calc( 100vw / 3 - 1.35rem);
+  border: 2px solid var(--app-card-default-border);
+  padding: .8rem;
+  border-radius: 4px;
+  word-wrap: break-word;
+  margin: 0 1rem 1rem 1rem;
   cursor: pointer;
 
-  animation: sizeIn .3s, fadeIn .8s;
-
-  &:hover {
-    background-color: var(--app-highlight-color);
-  }
-
-  td {
+  > * {
     cursor: pointer;
   }
+
+  &:nth-child(1n) {
+    margin-left: 0;
+  }
+
+  &:nth-child(3n) {
+    margin-right: 0;
+  }
+}
+
+.RowItem {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  &:last-of-type {
+    margin-bottom: 0;
+  }
+}
+
+.Label {
+  font-size: .875rem;
+  font-family: "RobotoCondensed-Regular";
+  font-weight: 300;
+  color: var(--app-card-label);
+}
+
+.Value {
+  font-size: 1.125rem;
+  font-family: "Fira Code";
+  color: var(--app-card-value);
+  word-break: break-all;
+}
+
+.BlockNumber,
+.BlockHash {
+  display: flex;
+  flex-direction: column;
+}
+
+.BlockNumber {
+  .Value {
+    font-weight: bold;
+  }
+}
+
+.BlockHash {
+  .Value {
+    font-size: 1.45vw;
+  }
+}
+
+.Nonce,
+.GasUsed,
+.GasLimit,
+.MinedOn {
+  .Label {
+    font-size: .625rem;
+    letter-spacing: 1.2px;
+  }
+
+  .Value {
+    font-size: .825rem;
+  }
+}
+
+.HasTxs {
+  border-color: var(--primary-color);
+}
+
+.TransactionBadge {
+  background-color: var(--primary-color);
+  color: white;
+  font-size: .75rem;
+  padding: 8px;
+  height: 28px;
+  border-radius: 25px;
 }

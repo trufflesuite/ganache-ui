@@ -34,118 +34,62 @@ export default class BlockCard extends Component {
 
     return (
       <section className={Styles.BlockCard}>
-        <table className={Styles.BlockData}>
-          <thead className={Styles.BlockHeader}>
-            <tr>
-              <td>
-                <dl>
-                  <dt>BLOCK #</dt>
-                  <dd>{EtherUtil.bufferToInt(block.header.number)}</dd>
-                </dl>
-              </td>
-              <td>
-                <dl>
-                  <dt>Block Hash</dt>
-                  <dd>{EtherUtil.bufferToHex(block.hash)}</dd>
-                </dl>
-              </td>
-              <td>
-                <dl>
-                  <dt>MINED ON</dt>
-                  <dd>
-                    <Moment unix format="YYYY-MM-DD HH:MM:SS">
-                      {EtherUtil.bufferToInt(block.header.timestamp)}
-                    </Moment>
-                  </dd>
-                </dl>
-              </td>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td colSpan="3" className={Styles.Container}>
-                <table>
-                  <tbody>
-                    <tr>
-                      <td>
-                        <dl>
-                          <dt>Parent Hash</dt>
-                          <dd>{EtherUtil.bufferToHex(block.header.parentHash)}</dd>
-                        </dl>
-                      </td>
-                      <td>
-                        <table className={Styles.SmallGroup}>
-                          <tbody>
-                            <tr>
-                              <td>
-                                <dl>
-                                  <dt>Gas Used / Gas Limit</dt>
-                                  <dd><FormattedHex value={block.header.gasUsed} /> / <FormattedHex value={block.header.gasLimit} /></dd>
-                                </dl>
-                              </td>
-                              <td>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <dl>
-                          <dt>Nonce</dt>
-                          <dd><FormattedHex value={block.header.nonce} /></dd>
-                        </dl>
-                      </td>
-                      <td>
-                        <dl>
-                          <dt>Extra Data</dt>
-                          <dd>
-                            <pre>
-                              {EtherUtil.bufferToHex(block.header.extraData)}
-                            </pre>
-                          </dd>
-                        </dl>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <dl>
-                          <dt>Mix Hash</dt>
-                          <dd>{EtherUtil.bufferToHex(block.header.mixHash)}</dd>
-                        </dl>
-                      </td>
-                      <td>
-                        <dl>
-                          <dt>Receipts Root</dt>
-                          <dd>{EtherUtil.bufferToHex(block.header.receiptTrie)}</dd>
-                        </dl>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <dl>
-                          <dt>Bloom</dt>
-                          <dd className={Styles.Bloom}>
-                            {EtherUtil.bufferToHex(block.header.bloom)}
-                          </dd>
-                        </dl>
-                      </td>
-                      <td className={Styles.VAlignTop}>
-                        <dl>
-                          <dt>Transactions ({block.transactions.length})</dt>
-                          <dd>{
-                            this._renderRecentTransaction(block.transactions)
-                          }</dd>
-                      </dl>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+        <dl>
+          <dt>BLOCK #</dt>
+          <dd>{EtherUtil.bufferToInt(block.header.number)}</dd>
+        </dl>
+        <dl>
+          <dt>Block Hash</dt>
+          <dd>{EtherUtil.bufferToHex(block.hash)}</dd>
+        </dl>
+        <dl>
+          <dt>MINED ON</dt>
+          <dd>
+            <Moment unix format="YYYY-MM-DD HH:MM:SS">
+              {EtherUtil.bufferToInt(block.header.timestamp)}
+            </Moment>
+          </dd>
+        </dl>
+        <dl>
+          <dt>Parent Hash</dt>
+          <dd>{EtherUtil.bufferToHex(block.header.parentHash)}</dd>
+        </dl>
+        <dl>
+          <dt>Gas Used / Gas Limit</dt>
+          <dd><FormattedHex value={block.header.gasUsed} /> / <FormattedHex value={block.header.gasLimit} /></dd>
+        </dl>
+        <dl>
+          <dt>Nonce</dt>
+          <dd><FormattedHex value={block.header.nonce} /></dd>
+        </dl>
+        <dl>
+          <dt>Extra Data</dt>
+          <dd>
+            <pre>
+              {EtherUtil.bufferToHex(block.header.extraData)}
+            </pre>
+          </dd>
+        </dl>
+        <dl>
+          <dt>Mix Hash</dt>
+          <dd>{EtherUtil.bufferToHex(block.header.mixHash)}</dd>
+        </dl>
+        <dl>
+          <dt>Receipts Root</dt>
+          <dd>{EtherUtil.bufferToHex(block.header.receiptTrie)}</dd>
+        </dl>
+        <dl>
+          <dt>Bloom</dt>
+          <dd className={Styles.Bloom}>
+            {EtherUtil.bufferToHex(block.header.bloom)}
+          </dd>
+        </dl>
+        <dl>
+          <dt>Transactions ({block.transactions.length})</dt>
+          <dd>{
+            this._renderRecentTransaction(block.transactions)
+          }</dd>
+      </dl>
     </section>
     )
   }

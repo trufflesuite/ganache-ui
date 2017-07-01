@@ -7,26 +7,10 @@ import Styles from './BlockList.css'
 export default class BlockList extends PureComponent {
   render () {
     return (
-      <table className={Styles.BlockList}>
-        <thead>
-          <tr>
-            <td>BLOCK #</td>
-            <td>BLOCK HASH</td>
-            <td>NONCE </td>
-            <td>GAS USED / GAS LIMIT</td>
-            <td>Mined On</td>
-            <td>TX COUNT</td>
-          </tr>
-        </thead>
-        <tbody>
-          {this.props.blocks.map(this._renderMiniBlockCard)}
-        </tbody>
-      </table>
+      <div>
+        {this.props.blocks.map(this._renderMiniBlockCard)}
+      </div>
     )
-  }
-
-  _handleBlockNumberSearch = (bkNumber) => {
-    this.props.handleBlockNumberSearch(bkNumber)
   }
 
   _renderMiniBlockCard = (block) => {
@@ -34,7 +18,7 @@ export default class BlockList extends PureComponent {
       <MiniBlockCard
         block={block}
         key={EtherUtil.bufferToInt(block.header.number)}
-        showBlockDetail={this._handleBlockNumberSearch}
+        showBlockDetail={this.handleBlockNumberSearch}
       />
     )
   }

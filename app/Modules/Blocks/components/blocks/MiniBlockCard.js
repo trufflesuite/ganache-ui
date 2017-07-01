@@ -1,9 +1,8 @@
 import React, { PureComponent } from 'react'
-
 import Moment from 'react-moment'
 import EtherUtil from 'ethereumjs-util'
-
 import FormattedHex from 'Elements/FormattedHex'
+import Pluralize from 'pluralize'
 
 import Styles from './MiniBlockCard.css'
 
@@ -27,35 +26,76 @@ export default class MiniBlockCard extends PureComponent {
 
   render () {
     const { block } = this.props
+    const hasTxs = block.transactions.length > 0
+
+    const cardStyles = `${Styles.MiniBlockCard} ${hasTxs ? Styles.HasTxs : ''}`
 
     return (
-      <tr
-        className={Styles.MiniBlockCard}
+      <section
+        className={cardStyles}
         key={`block_${EtherUtil.bufferToInt(block.header.number)}_detail`}
         onClick={this._showBlockDetail}
       >
-        <td>
+        <div className={Styles.RowItem}>
           <div className={Styles.BlockNumber}>
-            {EtherUtil.bufferToInt(block.header.number)}
+            <div className={Styles.Label}>
+              BLOCK NUMBER
+            </div>
+            <div className={Styles.Value}>
+              {EtherUtil.bufferToInt(block.header.number)}
+            </div>
           </div>
-        </td>
-        <td>
-          {EtherUtil.bufferToHex(block.hash)}
-        </td>
-        <td>
-          <FormattedHex value={block.header.nonce} />
-        </td>
-        <td>
-          <FormattedHex value={block.header.gasUsed} /> / <FormattedHex value={block.header.gasLimit} />
-        </td>
-        <td>
-          <Moment unix format="YYYY-MM-DD HH:mm:ss">{EtherUtil.bufferToInt(block.header.timestamp)}</Moment>
-        </td>
-
-        <td>
-          {block.transactions.length}
-        </td>
-      </tr>
+          {
+            block.transactions.length > 0
+            ? <div className={Styles.TransactionBadge}>{block.transactions.length} {Pluralize('TRANSACTION', block.transactions.length)}</div>
+            : null
+          }
+        </div>
+        <div className={Styles.RowItem}>
+          <div className={Styles.BlockHash}>
+            <div className={Styles.Label}>
+              BLOCK HASH
+            </div>
+            <div className={Styles.Value}>
+              {EtherUtil.bufferToHex(block.hash)}
+            </div>
+          </div>
+        </div>
+        <div className={Styles.RowItem}>
+          <div className={Styles.Nonce}>
+            <div className={Styles.Label}>
+              NONCE
+            </div>
+            <div className={Styles.Value}>
+              <FormattedHex value={block.header.nonce} />
+            </div>
+          </div>
+          <div className={Styles.GasUsed}>
+            <div className={Styles.Label}>
+              GAS USED
+            </div>
+            <div className={Styles.Value}>
+              <FormattedHex value={block.header.gasUsed} />
+            </div>
+          </div>
+          <div className={Styles.GasLimit}>
+            <div className={Styles.Label}>
+              GAS LIMIT
+            </div>
+            <div className={Styles.Value}>
+              <FormattedHex value={block.header.gasLimit} />
+            </div>
+          </div>
+          <div className={Styles.MinedOn}>
+            <div className={Styles.Label}>
+              MINED ON
+            </div>
+            <div className={Styles.Value}>
+              <Moment unix format="YYYY-MM-DD HH:mm:ss">{EtherUtil.bufferToInt(block.header.timestamp)}</Moment>
+            </div>
+          </div>
+        </div>
+      </section>
     )
   }
 }

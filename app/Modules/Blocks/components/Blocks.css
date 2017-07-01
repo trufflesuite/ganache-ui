@@ -9,8 +9,8 @@
 
   main {
     display: flex;
-    align-items: center;
     min-height: calc(100% - 4rem);
+    padding: 0 1rem;
   }
 }
 

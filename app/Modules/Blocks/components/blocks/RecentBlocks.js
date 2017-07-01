@@ -79,7 +79,7 @@ export default class RecentBlocks extends Component {
       return `Showing Block #${EtherUtil.bufferToInt(this.state.currentBlockSearchMatch.header.number)}`
     }
 
-    return `LAST 5 BLOCKS`
+    return `LAST ${this.props.blocks.length} BLOCKS`
   }
 
   _renderPanelHeaderControls = () => {
@@ -90,17 +90,6 @@ export default class RecentBlocks extends Component {
         </section>
       )
     }
-
-    return (
-      <InputText
-        className={Styles.BlockSearchInput}
-        placeholder={'Search for Block Number'}
-        delay={0}
-        value={this.state.currentBlockNumberSearch}
-        onEnter={this._handleBlockNumberSearch}
-        onChange={this._handleBlockNumberSearchChange}
-      />
-    )
   }
 
   _renderPanelBody = () => {

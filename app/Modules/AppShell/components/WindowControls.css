@@ -6,7 +6,7 @@
   align-items: center;
   padding: 0 1rem;
   background-color: var(--app-window-control-background);
-  height: 48px;
+  height: 32px;
 }
 
 .WindowControlBtn {

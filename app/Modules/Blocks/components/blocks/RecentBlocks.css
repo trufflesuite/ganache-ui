@@ -16,9 +16,17 @@
     background: white;
     font-size: 32px;
     font-family: "RobotoCondensed-Bold";
-    margin: 2rem .8rem;
+    margin: 2rem 1rem;
     border-bottom: 2px solid rgba(155, 152, 150, 1.000);
     z-index: 2;
+  }
+
+  main {
+    align-items: flex-start;
+    > div {
+      display: flex;
+      flex-flow: row wrap;
+    }
   }
 
 }
@@ -50,25 +58,4 @@
   text-transform: uppercase;
   padding: .5rem;
   border-collapse: collapse;
-
-  thead {
-    font-size: .8rem;
-    font-family: "Fira Code Regular", monospaced;
-    font-weight: 900;
-    background-color: var(--app-sidebar-background-color);
-    color: var(--app-highlight-color);
-
-    td {
-      padding: .5rem;
-      border-top: 1px solid black;
-      border-bottom: 1px solid black;
-    }
-  }
-
-  tbody {
-    td {
-      padding: .5rem;
-      font-size: .8rem;
-    }
-  }
 }

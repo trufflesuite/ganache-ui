@@ -188,6 +188,7 @@
     "moment-timezone": "^0.5.11",
     "node-sass": "^4.5.3",
     "pidusage": "^1.1.5",
+    "pluralize": "^5.0.0",
     "postcss": "^5.2.11",
     "postcss-color-function": "^2.0.1",
     "postcss-import": "^9.1.0",
