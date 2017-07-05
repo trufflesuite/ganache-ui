@@ -1,10 +1,6 @@
 @import 'colors.css';
 
 .ConfigScreen {
-  composes: Panel from 'CoreStyles/panels.css';
-  box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.15);
-  border: 0;
-
   color: var(--text-color);
 
   width: 60%;
@@ -36,13 +32,16 @@
     }
   }
 
+  form {
+    box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.15);
+  }
+
   .Visible {
     display: block;
   }
 
   .ActiveTab {
     color: var(--app-config-tab-active-text-color);
-    background: white;
     border-bottom: 2px solid lighten(var(--app-config-tab-active-text-color), 15%);
   }
 
@@ -52,14 +51,12 @@
 
   .ConfigTabs {
     display: flex;
-    margin: 0 auto;
-    justify-content: center;
   }
 
   .ConfigTabItem {
     cursor: pointer;
     text-align: center;
-    padding: 0 2rem;
+    margin-right: 2rem;
     font-size: .8rem;
 
     transition: color .3s;
