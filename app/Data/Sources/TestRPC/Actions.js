@@ -1,6 +1,13 @@
 import Api from './Api'
 import { createRequestThunk } from 'Data/Sources/ActionUtils'
 
+export const appRestartRpcServiceType = 'APP/RESTARTRPC'
+export const appRestartRpcService = createRequestThunk({
+  request: Api.restartRpcService,
+  key: appRestartRpcServiceType,
+  success: []
+})
+
 export const appStartRpcServiceType = 'APP/STARTRPC'
 export const appStartRpcService = createRequestThunk({
   request: Api.startRpcService,

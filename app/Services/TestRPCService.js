@@ -47,8 +47,23 @@ export default class TestRPCService extends EventEmitter {
     this.webView.send('APP/TESTRPCLOG', {message, level: 'error'})
   }
 
-  initializeTestRpc (opts) {
-    this.testRpc = TestRPC.server(opts)
+  initializeTestRpc = (opts) => {
+    if (this.testRpc) {
+      this.testRpc.close((err) => {
+        if (err) {
+          console.log(err)
+        }
+
+        this.testRpc = TestRPC.server(opts)
+        this.startServer(opts)
+      })
+    } else {
+      this.testRpc = TestRPC.server(opts)
+      this.startServer(opts)
+    }
+  }
+
+  startServer = (opts) => {
     this.testRpc.listen(opts.port, async (err, stateManager) => {
       if (err) {
         this.testRpcService.webView.send('APP/FAILEDTOSTART', err)

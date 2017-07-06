@@ -8,6 +8,7 @@ export default class EventHandler {
     autobind(this)
 
     this.testRpcService.ipcMain.on('APP/STARTRPC', this._handleStartTestRpc)
+    this.testRpcService.ipcMain.on('APP/RESTARTRPC', this._handleRestartTestRpc)
     this.testRpcService.ipcMain.on('APP/GETBLOCKCHAINSTATE', this._handleGetBlockchainState)
     this.testRpcService.ipcMain.on('APP/STARTMINING', this._handleStartMining)
     this.testRpcService.ipcMain.on('APP/STOPMINING', this._handleStopMining)
@@ -84,6 +85,12 @@ export default class EventHandler {
       return
     }
 
+    this.testRpcService.initializeTestRpc(arg)
+  }
+
+  _handleRestartTestRpc (event, arg) {
+    console.log('RESTARTING TESTRPC ON PORT ' + arg.port)
+    arg.logger = this.testRpcService
     this.testRpcService.initializeTestRpc(arg)
   }
 }

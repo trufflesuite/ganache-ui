@@ -1,6 +1,10 @@
 import * as ApiHelpers from 'Data/Sources/ApiHelpers'
 
 export default {
+  restartRpcService: (config) => {
+    return ApiHelpers.sendIpcMessage('APP/RESTARTRPC', config)
+  },
+
   startRpcService: (config) => {
     return ApiHelpers.sendIpcMessage('APP/STARTRPC', config)
   },

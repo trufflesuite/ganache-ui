@@ -2,27 +2,29 @@
 
 .ConfigScreen {
   color: var(--text-color);
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 
-  width: 60%;
+  width: 80%;
 
   header {
     flex-direction: column;
   }
 
-  h2 {
-    padding-top: 0;
-    margin-top: 0;
+  h3 {
+    padding: 0;
+    margin: 0;
   }
 
   h4 {
     font-family: "Fira Code Regular";
     font-size: .8rem;
     letter-spacing: 1px;
+    font-weight: normal;
   }
 
   footer {
-    border-top: 1px solid var(--app-config-tab-active-text-color);
-    background: var(--app-sidebar-background-color);
     padding: 2rem;
     display: flex;
     justify-content: center;
@@ -34,6 +36,7 @@
 
   form {
     box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.15);
+    width: 80%;
   }
 
   .Visible {
@@ -49,14 +52,29 @@
     display: none;
   }
 
+  .ConfigHeader {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 80%;
+    margin-top: 4rem;
+
+    > button {
+      margin-bottom: 1rem;
+    }
+  }
+
   .ConfigTabs {
     display: flex;
+    align-items: center;
+    flex: 1;
+    width: 100%;
   }
 
   .ConfigTabItem {
     cursor: pointer;
     text-align: center;
-    margin-right: 2rem;
+    margin: 0 2rem 1rem 0;
     font-size: .8rem;
 
     transition: color .3s;
@@ -88,7 +106,6 @@
     }
 
     .ConfigTabItemName {
-      margin-top: 16px;
       font-weight: 500;
       cursor: pointer;
       text-transform: uppercase;
@@ -98,17 +115,52 @@
   .ConfigCard {
     background: white;
     padding: 2rem;
+    width: 100%;
 
-    h4 {
-      margin-bottom: 0;
+    h4,
+    p {
+      margin: 0;
     }
 
-    section + section {
-      margin-top: 2rem;
+    p {
+      color: var(--app-navbar-text);
+      font-family: "Fira Code";
+      font-size: .875rem;
+    }
+
+    h2 {
+      color: var(--app-window-control-background);
+      font-family: "RobotoCondensed-Bold";
+      font-weight: bold;
+      margin-top: 0;
+    }
+
+    section {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .Row {
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+      margin-bottom: 2rem;
+    }
+
+    .RowItem {
+      width: 50%;
+      align-items: center;
+      margin-right: 1rem;
+    }
+
+    .RowItem + .RowItem {
+      margin-right: 0;
+      margin-left: 1rem;
     }
 
     input[type='text'] {
-      width: 50%;
+      border-color: var(--app-navbar-text);
+      width: 100%;
     }
   }
 
