@@ -15,8 +15,8 @@ class StatusIndicator extends React.PureComponent {
           <span>{this.props.value}</span>
         </div>
         {
-          this.props.children ?
-          <div className={Styles.Indicator}>
+          this.props.children
+          ? <div className={Styles.Indicator}>
             {this.props.children}
           </div>
           : null
@@ -26,7 +26,7 @@ class StatusIndicator extends React.PureComponent {
   }
 }
 
-class TopNavbar extends React.PureComponent {
+class TopNavbar extends React.Component {
 
   componentDidMount () {
     this.props.appGetBlockChainState()
@@ -86,6 +86,12 @@ class TopNavbar extends React.PureComponent {
     }
   }
 
+  _renderMiningControls = () => {
+    return this.props.testRpcState.isMining
+    ? <button className={Styles.MiningBtn} disabled={!this.props.testRpcState.isMining} onClick={this._handleStopMining}><Icon name="stop" size={18} /> Stop {this._renderMiningButtonText()}</button>
+    : <button className={Styles.MiningBtn} disabled={this.props.testRpcState.isMining} onClick={this._handleStartMining}><Icon name="start" size={18} /> Start {this._renderMiningButtonText()}</button>
+  }
+
   render () {
     const { isMining, blockNumber, blocktime, gasPrice, snapshots } = this.props.testRpcState
     const miningPaused = !isMining
@@ -140,15 +146,12 @@ class TopNavbar extends React.PureComponent {
 
           </div>
           <div className={Styles.Actions}>
-            { miningPaused ? <button className={Styles.MiningBtn} onClick={this._handleForceMine}><Icon name="force_mine" size={22} /> Force Mine</button> : null }
-            { miningPaused ? <button className={Styles.MiningBtn} onClick={this._handleMakeSnapshot}><Icon name="snapshot" size={22} /> TAKE SNAPSHOT #{currentSnapshotId + 1}</button> : null }
-            { miningPaused ? this._renderSnapshotControls() : null }
+            { (miningPaused || this.props.testRpcState.blocktime === 'Automining') ? <button className={Styles.MiningBtn} onClick={this._handleForceMine}><Icon name="force_mine" size={22} /> Force Mine</button> : null }
+            { (miningPaused || this.props.testRpcState.blocktime === 'Automining') ? <button className={Styles.MiningBtn} onClick={this._handleMakeSnapshot}><Icon name="snapshot" size={22} /> TAKE SNAPSHOT #{currentSnapshotId + 1}</button> : null }
+            { (miningPaused || this.props.testRpcState.blocktime === 'Automining') ? this._renderSnapshotControls() : null }
             {
-              this.props.testRpcState.isMining
-              ?
-              <button className={Styles.MiningBtn} disabled={!this.props.testRpcState.isMining} onClick={this._handleStopMining}><Icon name="stop" size={18} /> Stop {this._renderMiningButtonText()}</button>
-              :
-              <button className={Styles.MiningBtn} disabled={this.props.testRpcState.isMining} onClick={this._handleStartMining}><Icon name="start" size={18} /> Start {this._renderMiningButtonText()}</button>
+              this.props.testRpcState.blocktime === 'Automining' ? null
+              : this._renderMiningControls()
             }
           </div>
         </footer>
