@@ -21,7 +21,7 @@ export default function Icon (props) {
   }
 
   // Remove any stroke/fill colors that may have been specified in the SVG
-  let html = icons[name].replace(/stroke="\S+"/g, '')
+  let html = icons[name]
 
   return (
     <div style={divStyle}>

@@ -36,7 +36,7 @@ class ConfigScreen extends Component {
   render () {
     return (
       <div className={Styles.ConfigScreen}>
-        <Icon name="ganache_logo" size={128} />
+        <Icon name="ganache_logo" size={128} color="inherit" />
         <div className={Styles.ConfigHeader}>
           <div className={Styles.ConfigTabs}>
             {

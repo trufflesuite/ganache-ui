@@ -2,29 +2,11 @@ import React from 'react'
 import { Link } from 'react-router'
 import TestRPCProvider from 'Data/Providers/TestRPCProvider'
 import Spinner from 'Elements/Spinner'
+import OnlyIf from 'Elements/OnlyIf'
+import StatusIndicator from 'Elements/StatusIndicator'
 import Icon from 'Elements/Icon'
 
 import Styles from './TopNavbar.css'
-
-class StatusIndicator extends React.PureComponent {
-  render () {
-    return (
-      <div className={Styles.StatusIndicator}>
-        <div className={Styles.Metric}>
-          <h4>{this.props.title}</h4>
-          <span>{this.props.value}</span>
-        </div>
-        {
-          this.props.children
-          ? <div className={Styles.Indicator}>
-            {this.props.children}
-          </div>
-          : null
-        }
-      </div>
-    )
-  }
-}
 
 class TopNavbar extends React.Component {
 
@@ -96,6 +78,7 @@ class TopNavbar extends React.Component {
     const { isMining, blockNumber, blocktime, gasPrice, snapshots } = this.props.testRpcState
     const miningPaused = !isMining
     const currentSnapshotId = snapshots.length
+    const showControls = miningPaused || this.props.testRpcState.blocktime === 'Automining'
 
     if (!this.props.testRpcState.testRpcServerRunning) {
       return <div></div>
@@ -141,18 +124,25 @@ class TopNavbar extends React.Component {
               title="MINING STATUS"
               value={miningPaused ? 'STOPPED' : 'MINING'}
             >
-            {miningPaused ? null : <Spinner width={'30px'} height={'30px'} />}
+            <OnlyIf test={isMining}>
+              <Spinner width={'30px'} height={'30px'} />
+            </OnlyIf>
           </StatusIndicator>
 
           </div>
           <div className={Styles.Actions}>
-            { (miningPaused || this.props.testRpcState.blocktime === 'Automining') ? <button className={Styles.MiningBtn} onClick={this._handleForceMine}><Icon name="force_mine" size={22} /> Force Mine</button> : null }
-            { (miningPaused || this.props.testRpcState.blocktime === 'Automining') ? <button className={Styles.MiningBtn} onClick={this._handleMakeSnapshot}><Icon name="snapshot" size={22} /> TAKE SNAPSHOT #{currentSnapshotId + 1}</button> : null }
-            { (miningPaused || this.props.testRpcState.blocktime === 'Automining') ? this._renderSnapshotControls() : null }
-            {
-              this.props.testRpcState.blocktime === 'Automining' ? null
-              : this._renderMiningControls()
-            }
+            <OnlyIf test={showControls}>
+              <button className={Styles.MiningBtn} onClick={this._handleForceMine}><Icon name="force_mine" size={22} /> Force Mine</button>
+            </OnlyIf>
+            <OnlyIf test={showControls}>
+              <button className={Styles.MiningBtn} onClick={this._handleMakeSnapshot}><Icon name="snapshot" size={22} /> TAKE SNAPSHOT #{currentSnapshotId + 1}</button>
+            </OnlyIf>
+            <OnlyIf test={showControls}>
+              {this._renderSnapshotControls() }
+            </OnlyIf>
+            <OnlyIf test={this.props.testRpcState.blocktime !== 'Automining'}>
+              {this._renderMiningControls() }
+            </OnlyIf>
           </div>
         </footer>
       </nav>
