@@ -5,6 +5,7 @@ import Spinner from 'Elements/Spinner'
 import OnlyIf from 'Elements/OnlyIf'
 import StatusIndicator from 'Elements/StatusIndicator'
 import Icon from 'Elements/Icon'
+import { hashHistory } from 'react-router'
 
 import Styles from './TopNavbar.css'
 
@@ -40,23 +41,24 @@ class TopNavbar extends Component {
   }
 
   classifyInput = () => {
-    const searchTerm = this.input.value
+    const searchTerm = this.searchInput.value
 
     switch (searchTerm) {
       case (searchTerm.match(/^(\d+)$/) || {}).input:
-        this.searchForBlock(searchTerm)
+        hashHistory.push(`/blocks/${searchTerm}`)
         break
       case (searchTerm.match(/^[0(x|X)]*[a-zA-Z0-9]{40,42}$/) || {}).input:
         this.searchForAccount(searchTerm)
+        hashHistory.push(`/accounts/${searchTerm}`)
         break
       case (searchTerm.match(/^[0(x|X)]*[a-zA-Z0-9]{64,66}$/) || {}).input:
-        this.searchForTx(searchTerm)
+        hashHistory.push(`/transactions/${searchTerm}`)
         break
       default: break
     }
   }
 
-  handleKeyPress = (e) =>  {
+  handleSearchKeyPress = (e) =>  {
     if (e.key === 'Enter') {
       this.classifyInput()
     }
