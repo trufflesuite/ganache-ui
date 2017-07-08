@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 
 import BlockCard from './BlockCard'
 import BlockList from './BlockList'
-import InputText from 'Elements/InputText'
+
 import EtherUtil from 'ethereumjs-util'
 import Icon from 'Elements/Icon'
 
@@ -24,15 +24,22 @@ export default class RecentBlocks extends Component {
   }
 
   componentDidMount () {
-    console.log('osearchin', this.props.params)
-    if (this.props.params.block_number) {
+    if (!this.state.isSearchingForBlock && this.props.params.block_number) {
       this._handleBlockNumberSearch(this.props.params.block_number)
+    } else {
+      this.setState({
+        isSearchingForBlock: false,
+        blockSearchMatch: false,
+        validBlockSearchResult: false
+      })
     }
   }
 
   componentWillReceiveProps (nextProps, nextState) {
-    if (nextProps.params.block_number && !this.state.isSearchingForBlock) {
-      this._handleBlockNumberSearch(nextProps.params.block_number)
+    if (!this.state.isSearchingForBlock && nextProps.params.block_number) {
+      this.setState({isSearchingForBlock: true}, () => {
+        this._handleBlockNumberSearch(nextProps.params.block_number)
+      })
     }
 
     if (nextProps.testRpcState.currentBlockSearchMatch !== null && nextProps.testRpcState.currentBlockSearchMatch !== this.props.testRpcState.currentBlockSearchMatch) {
@@ -42,12 +49,19 @@ export default class RecentBlocks extends Component {
         blockSearchMatch: true,
         validBlockSearchResult: nextProps.testRpcState.currentBlockSearchMatch && !nextProps.testRpcState.currentBlockSearchMatch.hasOwnProperty('error')
       })
+    } else {
+      this.setState({
+        isSearchingForBlock: false,
+        blockSearchMatch: false,
+        validBlockSearchResult: false
+      })
     }
   }
 
   _handleBlockNumberSearch = (value) => {
-    this.setState({isSearchingForBlock: true})
-    this.props.appSearchBlock(value)
+    this.setState({isSearchingForBlock: true}, () => {
+      this.props.appSearchBlock(value)
+    })
   }
 
   _handleBlockNumberSearchChange = (value) => {
