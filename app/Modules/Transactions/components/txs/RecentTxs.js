@@ -22,6 +22,12 @@ export default class RecentTxs extends Component {
     }
   }
 
+  componentDidMount () {
+    if (this.props.params.txhash) {
+      this._handleTxSearch(this.props.params.txhash)
+    }
+  }
+
   componentWillReceiveProps (nextProps, nextState) {
     if (nextProps.testRpcState.currentTxSearchMatch !== null && nextProps.testRpcState.currentTxSearchMatch !== this.props.testRpcState.currentTxSearchMatch) {
       this.setState({
@@ -84,6 +90,14 @@ export default class RecentTxs extends Component {
     return `LAST ${this.props.testRpcState.transactions.length} TRANSACTIONS`
   }
 
+  _renderPanelHeaderControls = () => {
+    if (this.state.validTxSearchResult) {
+      return (
+        <a href="#" className={Styles.BackButton} onClick={this._handleClearTxSearch}>&larr; All TXs</a>
+      )
+    }
+  }
+
   _renderPanelBody = () => {
     if (!this.state.isSearchingForTx && !this.state.txSearchMatch) {
       return (
@@ -109,7 +123,8 @@ export default class RecentTxs extends Component {
     return (
       <div className={Styles.Transactions}>
         <h4>
-          <Icon name="transactions" size={24} /> { this._renderPanelHeaderText() }
+          <span><Icon name="transactions" size={24} /> { this._renderPanelHeaderText() }</span>
+          { this._renderPanelHeaderControls() }
         </h4>
         <main>
           <WithEmptyState

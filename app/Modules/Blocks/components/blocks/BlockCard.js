@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
 
+import FormattedHex from 'Elements/FormattedHex'
+import TestRpcProvider from 'Data/Providers/TestRPCProvider'
+
 import Moment from 'react-moment'
 import EtherUtil from 'ethereumjs-util'
-
-import FormattedHex from 'Elements/FormattedHex'
+import { hashHistory } from 'react-router'
 
 import Styles from './BlockCard.css'
 
-export default class BlockCard extends Component {
+class BlockCard extends Component {
   _renderRecentTransaction = (transactions) => {
     if (transactions.length === 0) {
       return 'NO TRANSACTIONS'
@@ -17,80 +19,75 @@ export default class BlockCard extends Component {
       const txHash = EtherUtil.bufferToHex(tx.hash)
       return (
         <a
-        href="#"
-        key={txHash}
-        onClick={this._handleTxShow.bind(this, txHash)}>{txHash}</a>
+          href="#"
+          key={txHash}
+          onClick={this._handleTxShow.bind(this, txHash)}>{txHash}</a>
       )
     })
   }
 
   _handleTxShow = (txHash, e) => {
     e.preventDefault()
-    this.props.handleTxSearch(txHash)
+    hashHistory.push(`/transactions/${txHash}`)
   }
 
   render () {
     const { block } = this.props
+
+    if (!this.props.testRpcState.currentBlockSearchMatch) {
+      return <h1>LOADING...</h1>
+    }
 
     return (
       <section className={Styles.BlockCard}>
         <dl>
           <dt>BLOCK #</dt>
           <dd>{EtherUtil.bufferToInt(block.header.number)}</dd>
-        </dl>
-        <dl>
+
           <dt>Block Hash</dt>
           <dd>{EtherUtil.bufferToHex(block.hash)}</dd>
-        </dl>
-        <dl>
+
           <dt>MINED ON</dt>
           <dd>
             <Moment unix format="YYYY-MM-DD HH:MM:SS">
               {EtherUtil.bufferToInt(block.header.timestamp)}
             </Moment>
           </dd>
-        </dl>
-        <dl>
+
           <dt>Parent Hash</dt>
           <dd>{EtherUtil.bufferToHex(block.header.parentHash)}</dd>
-        </dl>
-        <dl>
+
           <dt>Gas Used / Gas Limit</dt>
           <dd><FormattedHex value={block.header.gasUsed} /> / <FormattedHex value={block.header.gasLimit} /></dd>
-        </dl>
-        <dl>
+
           <dt>Nonce</dt>
           <dd><FormattedHex value={block.header.nonce} /></dd>
-        </dl>
-        <dl>
+
           <dt>Extra Data</dt>
           <dd>
-            <pre>
-              {EtherUtil.bufferToHex(block.header.extraData)}
-            </pre>
+            {EtherUtil.bufferToHex(block.header.extraData)}
           </dd>
-        </dl>
-        <dl>
+
           <dt>Mix Hash</dt>
           <dd>{EtherUtil.bufferToHex(block.header.mixHash)}</dd>
-        </dl>
-        <dl>
+
           <dt>Receipts Root</dt>
           <dd>{EtherUtil.bufferToHex(block.header.receiptTrie)}</dd>
-        </dl>
-        <dl>
+
           <dt>Bloom</dt>
           <dd className={Styles.Bloom}>
             {EtherUtil.bufferToHex(block.header.bloom)}
           </dd>
         </dl>
         <dl>
+          <dt></dt>
+          <dd>Back to Blocks</dd>
           <dt>Transactions ({block.transactions.length})</dt>
-          <dd>{
-            this._renderRecentTransaction(block.transactions)
-          }</dd>
-      </dl>
-    </section>
+          <dd>{ this._renderRecentTransaction(block.transactions) }</dd>
+        </dl>
+      </section>
     )
   }
 }
+
+export default TestRpcProvider(BlockCard)

@@ -1,6 +1,7 @@
 @import 'colors.css';
 
 .WindowControls {
+  -webkit-app-region: drag;
   display: flex;
   flex-shrink: 0;
   align-items: center;

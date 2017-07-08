@@ -1,13 +1,13 @@
 @import 'colors.css';
 
 .TxCard {
-  font-family: "Fira Code Regular", sans-serif;
-  background: white;
-  width: 100%;
+  display: flex;
+  flex-direction: row;
 
-  table {
-    width: 100%;
-  }
+  border: 2px solid var(--app-card-default-border);
+  padding: .8rem;
+  border-radius: 4px;
+  word-wrap: break-word;
 
   dl,
   dt,
@@ -16,103 +16,31 @@
     padding: 0;
   }
 
+  dl {
+    width: 50%;
+
+    &:first-of-type {
+      padding-right: 1rem;
+    }
+
+    &:last-of-type {
+      padding-left: 1rem;
+    }
+  }
+
   dt {
-    font-size: .8rem;
-    font-weight: bold;
+    font-size: 1vw;
+    font-family: "RobotoCondensed-Regular";
     text-transform: uppercase;
+    font-weight: 300;
+    color: var(--app-card-label);
   }
 
   dd {
-    font-size: .7rem;
+    margin-bottom: .8vw;
+    font-size: 1.1vw;
+    font-weight: bold;
+    font-family: "Fira Code";
+    color: var(--app-card-value);
   }
-}
-
-.TxData {
-  margin: 0;
-  padding: 0;
-  border-collapse: collapse;
-  overflow: hidden;
-  width: 100%;
-
-  thead {
-    td {
-      padding: 0;
-      padding: .5rem;
-
-      dl {
-        dd {
-          font-weight: bold;
-          color: var(--app-Blocks-card-header-title-text-color);
-        }
-
-        dt {
-          font-family: "Fira Sans";
-        }
-      }
-    }
-  }
-
-  tbody {
-    td {
-      padding: 0;
-      padding: .2rem;
-      vertical-align: top;
-      width: 50%;
-      background: white;
-      cursor: pointer;
-
-      dt {
-        font-family: 'Fira Sans'
-      }
-
-      pre {
-        padding: 0;
-        margin: 0;
-      }
-    }
-
-    tr:first-of-type {
-      td {
-        padding-top: .2rem;
-      }
-    }
-  }
-}
-
-.Container {
-  padding: 0 !important;
-  padding-top: .5rem !important;
-}
-
-.VAlignTop {
-  vertical-align: top;
-}
-
-.SmallGroup {
-  tbody {
-    tr {
-      td {
-        padding: 0;
-      }
-    }
-  }
-}
-
-.TxHeader {
-  background-color: var(--app-sidebar-background-color);
-  color: var(--app-highlight-color);
-}
-
-.TxDataHexContainer {
-  padding-top: .4rem !important;
-}
-
-.TxDataHex {
-  display: block;
-
-
-  padding-right: 2rem;
-
-  word-wrap: break-word;
-  word-break: break-word;
 }

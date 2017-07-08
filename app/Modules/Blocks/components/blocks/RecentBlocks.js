@@ -23,7 +23,18 @@ export default class RecentBlocks extends Component {
     }
   }
 
+  componentDidMount () {
+    console.log('osearchin', this.props.params)
+    if (this.props.params.block_number) {
+      this._handleBlockNumberSearch(this.props.params.block_number)
+    }
+  }
+
   componentWillReceiveProps (nextProps, nextState) {
+    if (nextProps.params.block_number && !this.state.isSearchingForBlock) {
+      this._handleBlockNumberSearch(nextProps.params.block_number)
+    }
+
     if (nextProps.testRpcState.currentBlockSearchMatch !== null && nextProps.testRpcState.currentBlockSearchMatch !== this.props.testRpcState.currentBlockSearchMatch) {
       this.setState({
         currentBlockSearchMatch: nextProps.testRpcState.currentBlockSearchMatch,
@@ -87,9 +98,7 @@ export default class RecentBlocks extends Component {
   _renderPanelHeaderControls = () => {
     if (this.state.validBlockSearchResult) {
       return (
-        <section className={Styles.DismissSearchResult}>
-          <a href="#" className={BlocksStyles.BackButton} onClick={this._handleClearBlockSearch}>&larr; All Blocks</a>
-        </section>
+        <a href="#" className={BlocksStyles.BackButton} onClick={this._handleClearBlockSearch}>&larr; All Blocks</a>
       )
     }
   }
@@ -118,11 +127,9 @@ export default class RecentBlocks extends Component {
     return (
       <div className={Styles.Blocks}>
         <h4>
-          <Icon name="blocks" size={24} /> { this._renderPanelHeaderText() }
-        </h4>
-        <header>
+          <span><Icon name="blocks" size={24} /> { this._renderPanelHeaderText() }</span>
           { this._renderPanelHeaderControls() }
-        </header>
+        </h4>
         <main>
           { this._renderPanelBody() }
         </main>

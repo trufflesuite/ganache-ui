@@ -1,8 +1,6 @@
 import React, { PureComponent } from 'react'
 import EtherUtil from 'ethereumjs-util'
-
 import MiniBlockCard from './MiniBlockCard'
-import Styles from './BlockList.css'
 
 export default class BlockList extends PureComponent {
   render () {

@@ -10,6 +10,7 @@ export default class Transactions extends Component {
         <RecentTxs
           appSearchTx={this.props.appSearchTx}
           testRpcState={this.props.testRpcState}
+          params={this.props.params}
         />
       </div>
     )

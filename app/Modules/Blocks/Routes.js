@@ -5,6 +5,6 @@ import Blocks from './components/Blocks'
 
 export default function routes (store, children = null) {
   return (
-    <Route path="/blocks" component={Blocks} />
+    <Route path="/blocks(/:block_number)" component={Blocks} />
   )
 }

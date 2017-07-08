@@ -4,6 +4,14 @@
   font-family: "Fira Code Regular", sans-serif;
   background: white;
 
+  display: flex;
+  flex-direction: row;
+
+  border: 2px solid var(--app-card-default-border);
+  padding: .8rem;
+  border-radius: 4px;
+  word-wrap: break-word;
+
   dl,
   dt,
   dd {
@@ -11,97 +19,33 @@
     padding: 0;
   }
 
+  dl {
+    width: 50%;
+
+    &:first-of-type {
+      padding-right: 1rem;
+    }
+
+    &:last-of-type {
+      padding-left: 1rem;
+    }
+  }
+
   dt {
-    font-size: .8rem;
-    font-weight: bold;
+    font-size: 1vw;
+    font-family: "RobotoCondensed-Regular";
     text-transform: uppercase;
+    font-weight: 300;
+    color: var(--app-card-label);
   }
 
   dd {
-    font-size: .7rem;
+    margin-bottom: .8vw;
+    font-size: 1.1vw;
+    font-weight: bold;
+    font-family: "Fira Code";
+    color: var(--app-card-value);
   }
-}
-
-.BlockData {
-  margin: 0;
-  padding: 0;
-  border-collapse: collapse;
-  overflow: hidden;
-
-  thead {
-    td {
-      padding: 0;
-      padding: .5rem;
-
-      dl {
-        dd {
-          font-weight: bold;
-          color: var(--app-Blocks-card-header-title-text-color);
-        }
-
-        dt {
-          font-family: "Fira Sans";
-        }
-      }
-    }
-  }
-
-  tbody {
-
-    td {
-      padding: 0;
-      padding: .5rem;
-
-      dt {
-        font-family: "Fira Sans";
-      }
-
-      pre {
-        padding: 0;
-        margin: 0;
-      }
-    }
-
-    tr:first-of-type {
-      td {
-        padding-top: 0;
-      }
-    }
-  }
-}
-
-.Container {
-  padding: 0 !important;
-  padding-top: .5rem !important;
-
-  > table {
-    > tbody {
-      > tr {
-        > td {
-          width: 50%;
-        }
-      }
-    }
-  }
-}
-
-.VAlignTop {
-  vertical-align: top;
-}
-
-.SmallGroup {
-  tbody {
-    tr {
-      td {
-        padding: 0;
-      }
-    }
-  }
-}
-
-.BlockHeader {
-  background-color: var(--app-sidebar-background-color);
-  color: var(--app-highlight-color);
 }
 
 .Bloom {

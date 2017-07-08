@@ -5,6 +5,6 @@ import Transactions from './components/Transactions'
 
 export default function routes (store, children = null) {
   return (
-    <Route path="/transactions" component={Transactions} />
+    <Route path="/transactions(/:txhash)" component={Transactions} />
   )
 }

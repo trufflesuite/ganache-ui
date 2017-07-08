@@ -3,6 +3,7 @@ import Moment from 'react-moment'
 import EtherUtil from 'ethereumjs-util'
 import FormattedHex from 'Elements/FormattedHex'
 import Pluralize from 'pluralize'
+import { hashHistory } from 'react-router'
 
 import Styles from './MiniBlockCard.css'
 
@@ -21,7 +22,7 @@ export default class MiniBlockCard extends PureComponent {
   }
 
   _showBlockDetail = () => {
-    this.props.showBlockDetail(EtherUtil.bufferToInt(this.props.block.header.number))
+    hashHistory.push(`/blocks/${EtherUtil.bufferToInt(this.props.block.header.number)}`)
   }
 
   render () {

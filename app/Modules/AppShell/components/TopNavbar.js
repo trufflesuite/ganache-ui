@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { Link } from 'react-router'
 import TestRPCProvider from 'Data/Providers/TestRPCProvider'
 import Spinner from 'Elements/Spinner'
@@ -8,7 +8,12 @@ import Icon from 'Elements/Icon'
 
 import Styles from './TopNavbar.css'
 
-class TopNavbar extends React.Component {
+class TopNavbar extends Component {
+  constructor (props) {
+    super(props)
+
+    this.searchInput = null
+  }
 
   componentDidMount () {
     this.props.appGetBlockChainState()
@@ -32,6 +37,29 @@ class TopNavbar extends React.Component {
 
   _handleRevertSnapshot = (e) => {
     this.props.appRevertSnapshot(this.props.testRpcState.snapshots.length)
+  }
+
+  classifyInput = () => {
+    const searchTerm = this.input.value
+
+    switch (searchTerm) {
+      case (searchTerm.match(/^(\d+)$/) || {}).input:
+        this.searchForBlock(searchTerm)
+        break
+      case (searchTerm.match(/^[0(x|X)]*[a-zA-Z0-9]{40,42}$/) || {}).input:
+        this.searchForAccount(searchTerm)
+        break
+      case (searchTerm.match(/^[0(x|X)]*[a-zA-Z0-9]{64,66}$/) || {}).input:
+        this.searchForTx(searchTerm)
+        break
+      default: break
+    }
+  }
+
+  handleKeyPress = (e) =>  {
+    if (e.key === 'Enter') {
+      this.classifyInput()
+    }
   }
 
   _renderSnapshotControls = () => {
@@ -110,7 +138,12 @@ class TopNavbar extends React.Component {
             </Link>
           </div>
           <div className={Styles.SearchBar}>
-            <input type="text" placeholder="" />
+            <input
+              type="text"
+              placeholder=""
+              ref={(input) => { this.searchInput = input }}
+              onKeyPress={this.handleSearchKeyPress}
+            />
             <Icon name="search" size={16} />
           </div>
         </main>

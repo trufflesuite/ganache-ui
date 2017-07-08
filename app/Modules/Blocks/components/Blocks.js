@@ -12,6 +12,7 @@ export default class Blocks extends Component {
           appSearchBlock={this.props.appSearchBlock}
           appSearchTx={this.props.appSearchTx}
           testRpcState={this.props.testRpcState}
+          params={this.props.params}
         />
       </div>
     )
