@@ -198,21 +198,51 @@ app.on('ready', async () => {
       }]
     }, {
       label: 'Window',
-      submenu: [{
+      submenu: [
+      {
+        label: 'Accounts',
+        accelerator: 'Command+1',
+        selector: 'performAccounts:'
+      },
+      {
+        label: 'Blocks',
+        accelerator: 'Command+2',
+        selector: 'performBlocks:'
+      },
+      {
+        label: 'Transactions',
+        accelerator: 'Command+3',
+        selector: 'performTransactions:'
+      },
+      {
+        label: 'Console',
+        accelerator: 'Command+4',
+        selector: 'performConsole:'
+      },
+      {
+        label: 'Settings',
+        accelerator: 'Command+5',
+        selector: 'performSettings:'
+      },
+      {
         label: 'Minimize',
         accelerator: 'Command+M',
         selector: 'performMiniaturize:'
-      }, {
+      },
+      {
         label: 'Close',
         accelerator: 'Command+W',
         selector: 'performClose:'
-      }, {
+      },
+      {
         type: 'separator'
-      }, {
+      },
+      {
         label: 'Bring All to Front',
         selector: 'arrangeInFront:'
       }]
-    }, {
+    },
+    {
       label: 'Help',
       submenu: [{
         label: 'Learn More',

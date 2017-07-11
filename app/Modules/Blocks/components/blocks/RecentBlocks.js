@@ -7,6 +7,8 @@ import BlockList from './BlockList'
 import EtherUtil from 'ethereumjs-util'
 import Icon from 'Elements/Icon'
 
+import { hashHistory } from 'react-router'
+
 import Styles from './RecentBlocks.css'
 import BlocksStyles from '../Blocks.css'
 
@@ -15,7 +17,7 @@ export default class RecentBlocks extends Component {
     super(props)
 
     this.state = {
-      currentBlockNumberSearch: '',
+      currentBlockNumberSearch: null,
       currentBlockSearchMatch: null,
       isSearchingForBlock: false,
       blockSearchMatch: false,
@@ -24,53 +26,57 @@ export default class RecentBlocks extends Component {
   }
 
   componentDidMount () {
-    if (!this.state.isSearchingForBlock && this.props.params.block_number) {
-      this._handleBlockNumberSearch(this.props.params.block_number)
-    } else {
-      this.setState({
-        isSearchingForBlock: false,
-        blockSearchMatch: false,
-        validBlockSearchResult: false
-      })
-    }
+    console.log('MOUNTED')
+
   }
 
-  componentWillReceiveProps (nextProps, nextState) {
-    if (!this.state.isSearchingForBlock && nextProps.params.block_number) {
-      this.setState({isSearchingForBlock: true}, () => {
-        this._handleBlockNumberSearch(nextProps.params.block_number)
-      })
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.params.block_number === this.props.params.block_number && this.props.params.block_number === this.state.currentBlockNumberSearch && !this.state.isSearchingForBlock) {
+      return
     }
 
-    if (nextProps.testRpcState.currentBlockSearchMatch !== null && nextProps.testRpcState.currentBlockSearchMatch !== this.props.testRpcState.currentBlockSearchMatch) {
+    if (nextProps.testRpcState.currentBlockSearchMatch !== this.state.currentBlockSearchMatch && nextProps.params.block_number !== undefined)  {
       this.setState({
-        currentBlockSearchMatch: nextProps.testRpcState.currentBlockSearchMatch,
         isSearchingForBlock: false,
         blockSearchMatch: true,
+        currentBlockNumberSearch: nextProps.params.block_number,
+        currentBlockSearchMatch: nextProps.testRpcState.currentBlockSearchMatch,
         validBlockSearchResult: nextProps.testRpcState.currentBlockSearchMatch && !nextProps.testRpcState.currentBlockSearchMatch.hasOwnProperty('error')
       })
     } else {
       this.setState({
         isSearchingForBlock: false,
         blockSearchMatch: false,
-        validBlockSearchResult: false
+        validBlockSearchResult: false,
+        currentBlockNumberSearch: null,
+        currentBlockSearchMatch: null
+      })
+    }
+
+    if (nextProps.params.block_number !== undefined && nextProps.params.block_number !== this.state.currentBlockNumberSearch && !this.state.isSearchingForBlock && !this.state.validBlockSearchResult) {
+      this.setState((prevState) => {
+        return {
+          ...prevState,
+          isSearchingForBlock: true,
+          currentBlockNumberSearch: nextProps.params.block_number,
+          blockSearchMatch: false
+        }
       })
     }
   }
 
-  _handleBlockNumberSearch = (value) => {
-    this.setState({isSearchingForBlock: true}, () => {
-      this.props.appSearchBlock(value)
-    })
-  }
-
-  _handleBlockNumberSearchChange = (value) => {
-    this.setState({currentBlockNumberSearch: value})
+  componentDidUpdate (prevProps, prevState) {
+    if (this.state.isSearchingForBlock && !prevState.isSearchingForBlock) {
+      this.props.appSearchBlock(this.props.params.block_number)
+    }
   }
 
   _handleClearBlockSearch = (e) => {
     e.preventDefault()
-    this.setState({blockSearchMatch: false, currentBlockNumberSearch: '', currentBlockSearchMatch: null, validBlockSearchResult: false})
+    this.setState(() => {
+      hashHistory.push(`/blocks`)
+      return {blockSearchMatch: false, currentBlockNumberSearch: null, currentBlockSearchMatch: null, validBlockSearchResult: false, isSearchingForBlock: false}
+    })
   }
 
   _handleTxSearch = (value) => {
@@ -98,7 +104,7 @@ export default class RecentBlocks extends Component {
 
   _renderBlockSearchMatch = () => {
     const block = this.state.currentBlockSearchMatch
-    return this.state.currentBlockSearchMatch && this._renderBlockCard(block)
+    return this.state.currentBlockSearchMatch && this.state.validBlockSearchResult && this._renderBlockCard(block)
   }
 
   _renderPanelHeaderText = () => {
