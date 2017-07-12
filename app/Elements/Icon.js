@@ -13,6 +13,8 @@ export default function Icon (props) {
     width: size
   }
 
+  color = color || 'currentColor'
+
   let svgStyle = {}
   if (name.includes('filled')) {
     svgStyle.fill = color
@@ -21,7 +23,7 @@ export default function Icon (props) {
   }
 
   // Remove any stroke/fill colors that may have been specified in the SVG
-  let html = icons[name].replace(/stroke="(.*?)"/g, 'stroke="currentColor"')
+  let html = icons[name].replace(/stroke="(.*?)"/g, `stroke="currentColor"`)
 
   return (
     <div style={divStyle}>

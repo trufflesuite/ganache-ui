@@ -3,6 +3,7 @@ import React, {Component} from 'react'
 import TestRPCProvider from 'Data/Providers/TestRPCProvider'
 
 import Icon from 'Elements/Icon'
+import OnlyIf from 'Elements/OnlyIf'
 import HeaderBar from 'Elements/HeaderBar'
 
 import Styles from './ConfigScreen.css'
@@ -37,11 +38,16 @@ class ConfigScreen extends Component {
   render () {
     return (
       <main>
-        <HeaderBar>
-          <Icon name="settings" size={32} />
-          <h4>SETTINGS</h4>
-        </HeaderBar>
+        <OnlyIf test={this.props.testRpcState.testRpcServerRunning}>
+          <HeaderBar>
+            <Icon name="settings" size={32} />
+            <h4>SETTINGS</h4>
+          </HeaderBar>
+        </OnlyIf>
         <div className={Styles.ConfigScreen}>
+          <OnlyIf test={!this.props.testRpcState.testRpcServerRunning}>
+            <Icon name='ganache_logo' size={128} honorStroke />
+          </OnlyIf>
           <div className={Styles.ConfigHeader}>
             <div className={Styles.ConfigTabs}>
               {

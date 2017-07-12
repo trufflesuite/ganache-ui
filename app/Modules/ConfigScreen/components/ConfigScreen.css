@@ -22,6 +22,10 @@ main {
     flex-direction: column;
   }
 
+  svg {
+    margin: 2rem auto;
+  }
+
   h3 {
     padding: 0;
     margin: 0;
