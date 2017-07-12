@@ -1,5 +1,6 @@
 
 import React, { Component } from 'react'
+import Pluralize from 'pluralize'
 
 import BlockCard from './BlockCard'
 import BlockList from './BlockList'
@@ -107,7 +108,7 @@ export default class RecentBlocks extends Component {
       return `Showing Block #${EtherUtil.bufferToInt(this.state.currentBlockSearchMatch.header.number)}`
     }
 
-    return `LAST ${this.props.blocks.length} BLOCKS`
+    return `LAST ${this.props.blocks.length} ${Pluralize('BLOCKS', this.props.blocks.length)}`
   }
 
   _renderPanelHeaderControls = () => {

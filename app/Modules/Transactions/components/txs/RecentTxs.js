@@ -1,5 +1,6 @@
 
 import React, { Component } from 'react'
+import Pluralize from 'pluralize'
 import TxCard from './TxCard'
 import TxList from './TxList'
 import WithEmptyState from 'Elements/WithEmptyState'
@@ -60,7 +61,7 @@ export default class RecentTxs extends Component {
         key={tx.hash}
         tx={tx}
         handleTxSearch={this._handleTxSearch}
-      />
+        />
     )
   }
 
@@ -88,7 +89,7 @@ export default class RecentTxs extends Component {
       return `SHOWING TX ${this.state.currentTxSearchMatch.hash}`
     }
 
-    return `LAST ${this.props.testRpcState.transactions.length} TRANSACTIONS`
+    return this.props.testRpcState.transactions.length === 0 ? `TRANSACTIONS` : `LAST ${this.props.testRpcState.transactions.length} ${Pluralize('TRANSACTIONS', this.props.testRpcState.transactions.length)}`
   }
 
   _renderPanelHeaderControls = () => {
@@ -105,7 +106,7 @@ export default class RecentTxs extends Component {
         <TxList
           transactions={this.props.testRpcState.transactions}
           handleTxSearch={this._handleTxSearch}
-        />
+          />
       )
     }
 
@@ -128,16 +129,17 @@ export default class RecentTxs extends Component {
           <h4>{ this._renderPanelHeaderText() }</h4>
           <span>{ this._renderPanelHeaderControls() }</span>
         </HeaderBar>
-        <main>
-          <WithEmptyState
-            test={this.props.testRpcState.transactions.length === 0}
-            emptyStateComponent={EmptyTransactions}
+        <WithEmptyState
+          test={this.props.testRpcState.transactions.length === 0}
+          emptyStateComponent={EmptyTransactions}
           >
-            { this._renderPanelBody() }
-          </WithEmptyState>
-        </main>
-        <footer>
-        </footer>
+          <span>
+            <main>
+              { this._renderPanelBody() }
+            </main>
+          </span>
+        </WithEmptyState>
+
       </div>
     )
   }

@@ -3,6 +3,7 @@
 .TxCard {
   display: flex;
   flex-direction: row;
+  width: 100%;
 
   border: 2px solid var(--app-card-default-border);
   padding: .8rem;

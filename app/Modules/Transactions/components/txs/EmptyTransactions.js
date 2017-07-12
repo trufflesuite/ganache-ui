@@ -1,14 +1,16 @@
 import React, { Component } from 'react'
 
-import Styles from './RecentTxs.css'
+import Icon from 'Elements/Icon'
+
+import Styles from './EmptyTransactions.css'
 
 export default class EmptyTransactions extends Component {
   render () {
     return (
       <div className={Styles.EmptyTransactions}>
-        <p>No transactions have occured.</p>
+        <Icon name="no_transactions" size={128} />
+        <p>There are no Transactions to view</p>
       </div>
     )
   }
 }
-
