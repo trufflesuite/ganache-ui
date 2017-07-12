@@ -44,7 +44,6 @@
       width: 44px;
       height: 44px;
       stroke: var(--app-navbar-icon-color);
-      transition: all .3s;
     }
 
     &.Active {
@@ -114,7 +113,6 @@
 .Status {
   display: flex;
   flex: 1;
-  border-top: 1px solid var(--app-statusbar-item-border-color);
 }
 
 .Actions {
@@ -126,8 +124,13 @@
   button {
     margin-right: 1rem;
     display: flex;
-    -ms-align-items: center;
     align-items: center;
+    -webkit-app-region: no-drag;
+
+
+    &:active {
+      transform: scale(.98);
+    }
 
     > div {
       margin-right: .5rem;

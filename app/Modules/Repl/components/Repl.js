@@ -138,7 +138,7 @@ class Repl extends Component {
       <div className={Styles.Repl}>
         <HeaderBar>
           <Icon name="console" size={32} />
-          <h4>Console</h4>
+          <h4>CONSOLE</h4>
         </HeaderBar>
         <main>
           <LogContainer logs={this._logBuffer()} />
