@@ -18,6 +18,10 @@ export default class LogContainer extends PureComponent {
     }
   }
 
+  componentDidMount () {
+    this.refs.LogItems.scrollTop = this.refs.LogItems.scrollHeight
+  }
+
   render () {
     return (
       <div className={Styles.LogContainer} ref="LogContainer">
