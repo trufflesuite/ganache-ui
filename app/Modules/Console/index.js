@@ -2,7 +2,7 @@ import Module from 'Core/Module'
 import Routes from './Routes'
 
 const module = new Module({
-  name: 'Snapshots',
+  name: 'Console',
   routes: Routes
 })
 

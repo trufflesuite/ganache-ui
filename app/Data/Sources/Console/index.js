@@ -3,7 +3,7 @@ import Module from 'Core/Module'
 import Reducer from './Reducer'
 
 const datasource = new Module({
-  name: 'Repl',
+  name: 'Console',
   reducer: Reducer
 })
 

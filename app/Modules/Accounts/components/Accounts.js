@@ -8,7 +8,7 @@ import Spinner from 'Elements/Spinner'
 import Icon from 'Elements/Icon'
 import HeaderBar from 'Elements/HeaderBar'
 
-import Styles from './Dashboard.css'
+import Styles from './Accounts.css'
 
 class LoadingAccounts extends Component {
   render () {
@@ -18,7 +18,7 @@ class LoadingAccounts extends Component {
   }
 }
 
-class Dashboard extends Component {
+class Accounts extends Component {
   constructor (props) {
     super(props)
 
@@ -76,4 +76,4 @@ class Dashboard extends Component {
   }
 }
 
-export default Dashboard
+export default Accounts

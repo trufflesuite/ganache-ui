@@ -11,13 +11,13 @@ export default class Web3InitScript {
   }
 
   async compileScripts () {
-    let scriptPath = path.join(__dirname, 'ReplScripts')
+    let scriptPath = path.join(__dirname, 'ConsoleScripts')
 
     if (process.env.NODE_ENV === 'production') {
-      scriptPath = path.join(__dirname, '../ReplScripts')
+      scriptPath = path.join(__dirname, '../ConsoleScripts')
     }
 
-    SysLog.info(`Looking for ReplScripts in ${scriptPath}`)
+    SysLog.info(`Looking for ConsoleScripts in ${scriptPath}`)
 
     return new Promise((resolve, reject) => {
       fs.readdir(scriptPath, (err, files) => {
@@ -33,7 +33,7 @@ export default class Web3InitScript {
       return Promise.all(files.map((file) => {
         if (file.match(/.js$/)) {
           return new Promise((resolve, reject) => {
-            SysLog.info(`Reading ReplScript: ${path.join(scriptPath, file)}`)
+            SysLog.info(`Reading ConsoleScript: ${path.join(scriptPath, file)}`)
             fs.readFile(path.join(scriptPath, file), 'utf8', (err, data) => {
               if (err) {
                 SysLog.error(err)

@@ -1,4 +1,4 @@
-.Repl {
+.Console {
   position: relative;
 
   display: flex;
@@ -40,7 +40,7 @@
   }
 }
 
-.Repl footer input {
+.Console footer input {
   width: 100%;
   font-family: "Fira Code Regular", monospaced;
   outline: none;

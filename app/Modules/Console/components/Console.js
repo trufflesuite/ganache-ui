@@ -2,16 +2,16 @@ import React, { Component } from 'react'
 import InputText from 'Elements/InputText'
 import LogContainer from 'Elements/LogContainer'
 import HeaderBar from 'Elements/HeaderBar'
-import Styles from './Repl.css'
+import Styles from './Console.css'
 import Icon from 'Elements/Icon'
 
-import ReplProvider from 'Data/Providers/ReplProvider'
+import ConsoleProvider from 'Data/Providers/ConsoleProvider'
 
 const UP_ARROW_KEY = 38
 const DOWN_ARROW_KEY = 40
 const TAB_KEY = 9
 
-class Repl extends Component {
+class Console extends Component {
   constructor () {
     super()
 
@@ -24,14 +24,14 @@ class Repl extends Component {
     }
   }
 
-  _handleReplInput = (value) => {
-    this.props.appSendReplCommand(value)
+  _handleConsoleInput = (value) => {
+    this.props.appSendConsoleCommand(value)
     this.setState({currentLine: '', commandHistory: this.state.commandHistory.concat(value)})
   }
 
   _handleChange = (value) => {
     this.setState({currentLine: value})
-    this.props.appSendReplCommandCompletion(value)
+    this.props.appSendConsoleCommandCompletion(value)
   }
 
   _handleKeyDown = (e) => {
@@ -46,7 +46,7 @@ class Repl extends Component {
     } else if (keyCode === TAB_KEY) {
       e.preventDefault()
 
-      const completions = this.props.repl.commandCompletions
+      const completions = this.props.console.commandCompletions
       const currentLine = this.state.currentLine
 
       if (completions.length === 1) {
@@ -129,13 +129,13 @@ class Repl extends Component {
   }
 
   _logBuffer = () => {
-    let logs = this.props.repl.replBuffer.concat(this.props.testRpcState.logs).sort((a,b) => { return new Date(a.time) - new Date(b.time)})
+    let logs = this.props.console.consoleBuffer.concat(this.props.testRpcState.logs).sort((a, b) => { return new Date(a.time) - new Date(b.time) })
     return logs
   }
 
   render () {
     return (
-      <div className={Styles.Repl}>
+      <div className={Styles.Console}>
         <HeaderBar>
           <Icon name="console" size={32} />
           <h4>CONSOLE</h4>
@@ -147,7 +147,7 @@ class Repl extends Component {
           <InputText
             delay={0}
             value={this.state.currentLine}
-            onEnter={this._handleReplInput}
+            onEnter={this._handleConsoleInput}
             onChange={this._handleChange}
             onKeyDown={this._handleKeyDown}
             placeholder={'$'}
@@ -158,4 +158,4 @@ class Repl extends Component {
   }
 }
 
-export default ReplProvider(Repl)
+export default ConsoleProvider(Console)

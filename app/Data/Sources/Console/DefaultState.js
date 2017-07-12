@@ -1,5 +1,5 @@
 const DefaultState = {
-  replBuffer: [],
+  consoleBuffer: [],
   commandCompletions: []
 }
 

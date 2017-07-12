@@ -12,14 +12,14 @@ const mutators = {
 
     let newState = {
       ...state,
-      replBuffer: state.replBuffer.concat({ message: payload, type: messageType, time: new Date().toISOString()})
+      consoleBuffer: state.consoleBuffer.concat({ message: payload, type: messageType, time: new Date().toISOString()})
     }
 
     return newState
   },
 
   'APP/SENDREPLCOMMAND': (state, {type, payload}) => ({
-    replBuffer: state.replBuffer.concat({
+    consoleBuffer: state.consoleBuffer.concat({
       message: payload,
       type: 'command',
       time: new Date().toISOString()

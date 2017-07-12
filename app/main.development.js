@@ -3,13 +3,13 @@ import path from 'path'
 import SysLog from 'electron-log'
 
 import TestRPCService from './Services/TestRPCService'
-import ReplService from './Services/ReplService'
+import ConsoleService from './Services/ConsoleService'
 
 let menu
 let template
 let mainWindow = null
 let testRpcService = null
-let replService = null
+let consoleService = null
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support'); // eslint-disable-line
@@ -80,7 +80,7 @@ app.on('ready', async () => {
   mainWindow.loadURL(`file://${__dirname}/app.html`)
 
   testRpcService = new TestRPCService(ipcMain, mainWindow) // eslint-disable-line
-  replService = new ReplService(ipcMain, mainWindow, testRpcService) // eslint-disable-line
+  consoleService = new ConsoleService(ipcMain, mainWindow, testRpcService) // eslint-disable-line
 
   mainWindow.webContents.on('did-finish-load', () => {
     mainWindow.show()
@@ -90,7 +90,7 @@ app.on('ready', async () => {
   mainWindow.on('closed', () => {
     mainWindow = null
     testRpcService = null
-    replService = null
+    consoleService = null
   })
 
   if (process.env.NODE_ENV === 'development') {

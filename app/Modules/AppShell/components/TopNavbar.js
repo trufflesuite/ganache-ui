@@ -119,7 +119,7 @@ class TopNavbar extends Component {
       <nav className={Styles.Nav}>
         <main className={Styles.Main}>
           <div className={Styles.Menu}>
-            <Link to="dashboard" activeClassName={Styles.Active}>
+            <Link to="accounts" activeClassName={Styles.Active}>
               <Icon name="account" size={44} />
               Accounts
             </Link>
@@ -131,7 +131,7 @@ class TopNavbar extends Component {
               <Icon name="transactions" size={44}/>
               Transactions
             </Link>
-            <Link to="repl" activeClassName={Styles.Active}>
+            <Link to="console" activeClassName={Styles.Active}>
               <Icon name="console" size={44}/>
               Console
             </Link>

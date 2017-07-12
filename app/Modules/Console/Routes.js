@@ -1,10 +1,10 @@
 import React from 'react'
 import { Route } from 'react-router'
 
-import Dashboard from './components/Dashboard'
+import Console from './components/Console'
 
 export default function routes (store, children = null, appServices) {
   return (
-    <Route path='/dashboard' component={props => <Dashboard {...props} appServices={appServices} />} />
+    <Route path="/console" component={props => <Console {...props} appServices={appServices} />} />
   )
 }

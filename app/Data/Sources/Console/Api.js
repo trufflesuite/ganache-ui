@@ -1,11 +1,11 @@
 import * as ApiHelpers from 'Data/Sources/ApiHelpers'
 
 export default {
-  sendReplCommand: (command) => {
+  sendConsoleCommand: (command) => {
     return ApiHelpers.sendIpcMessage('APP/SENDREPLCOMMAND', command, command)
   },
 
-  sendReplCommandCompletion: (command) => {
+  sendConsoleCommandCompletion: (command) => {
     return ApiHelpers.sendIpcMessage('APP/SENDREPLCOMMANDCOMPLETION', command, command)
   }
 }
