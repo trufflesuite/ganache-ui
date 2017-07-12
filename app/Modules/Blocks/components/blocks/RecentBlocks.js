@@ -26,11 +26,6 @@ export default class RecentBlocks extends Component {
     }
   }
 
-  componentDidMount () {
-    console.log('MOUNTED')
-
-  }
-
   componentWillReceiveProps (nextProps) {
     if (nextProps.params.block_number === this.props.params.block_number && this.props.params.block_number === this.state.currentBlockNumberSearch && !this.state.isSearchingForBlock) {
       return
@@ -81,7 +76,6 @@ export default class RecentBlocks extends Component {
   }
 
   _handleTxSearch = (value) => {
-    console.log(`SEARCHING FOR ${value}`)
     this.setState({isSearchingForTx: true})
     this.props.appSearchTx(value)
   }
