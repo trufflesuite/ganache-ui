@@ -48,7 +48,6 @@ class TopNavbar extends Component {
         hashHistory.push(`/blocks/${searchTerm}`)
         break
       case (searchTerm.match(/^[0(x|X)]*[a-zA-Z0-9]{40,42}$/) || {}).input:
-        this.searchForAccount(searchTerm)
         hashHistory.push(`/accounts/${searchTerm}`)
         break
       case (searchTerm.match(/^[0(x|X)]*[a-zA-Z0-9]{64,66}$/) || {}).input:
@@ -56,6 +55,8 @@ class TopNavbar extends Component {
         break
       default: break
     }
+
+    this.searchInput.value = ''
   }
 
   handleSearchKeyPress = (e) =>  {

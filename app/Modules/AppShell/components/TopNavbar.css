@@ -84,11 +84,17 @@
     border-radius: 24px;
     padding: .25rem .5rem;
     color: var(--app-navbar-icon-color);
+    font-size: .8rem;
+    padding-right: 1.8rem;
+    font-family: 'Fira Code';
+    width: 370px;
   }
 
   > div {
     position: absolute;
     right: 22px;
+
+    color: var(--app-navbar-icon-color);
   }
 }
 
