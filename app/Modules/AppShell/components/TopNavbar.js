@@ -143,7 +143,7 @@ class TopNavbar extends Component {
           <div className={Styles.SearchBar}>
             <input
               type="text"
-              placeholder=""
+              placeholder="SEARCH FOR BLOCK NUMBERS OR TX HASHES"
               ref={(input) => { this.searchInput = input }}
               onKeyPress={this.handleSearchKeyPress}
             />

@@ -40,3 +40,10 @@
   color: var(--app-card-value);
   word-break: break-all;
 }
+
+
+.TxHash {
+  .Value {
+    font-weight: bold;
+  }
+}

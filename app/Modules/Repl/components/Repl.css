@@ -15,9 +15,17 @@
     background: white;
     font-size: 32px;
     font-family: "RobotoCondensed-Bold";
-    margin: 2rem .8rem;
-    border-bottom: 2px solid rgba(155, 152, 150, 1.000);
+    margin: 1rem .8rem;
+    border-bottom: 2px solid #9b9896;
     z-index: 2;
+    display: flex;
+    align-items: center;
+    line-height: 52px;
+
+    > div {
+      margin-right: .5rem;
+      margin-bottom: 10px;
+    }
   }
 
   main {

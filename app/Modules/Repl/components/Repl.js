@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import InputText from 'Elements/InputText'
 import LogContainer from 'Elements/LogContainer'
+import HeaderBar from 'Elements/HeaderBar'
 import Styles from './Repl.css'
 import Icon from 'Elements/Icon'
 
@@ -135,9 +136,10 @@ class Repl extends Component {
   render () {
     return (
       <div className={Styles.Repl}>
-        <h4>
-          <Icon name="console" size={24} /> CONSOLE
-        </h4>
+        <HeaderBar>
+          <Icon name="console" size={32} />
+          <h4>Console</h4>
+        </HeaderBar>
         <main>
           <LogContainer logs={this._logBuffer()} />
         </main>

@@ -1,12 +1,22 @@
 @import 'colors.css';
 
+
+
+main {
+  width: 100%;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  position: relative;
+}
+
 .ConfigScreen {
   color: var(--text-color);
   display: flex;
   align-items: center;
   flex-direction: column;
 
-  width: 80%;
+  width: 100%;
 
   header {
     flex-direction: column;

@@ -3,6 +3,7 @@ import React, {Component} from 'react'
 import TestRPCProvider from 'Data/Providers/TestRPCProvider'
 
 import Icon from 'Elements/Icon'
+import HeaderBar from 'Elements/HeaderBar'
 
 import Styles from './ConfigScreen.css'
 
@@ -35,161 +36,165 @@ class ConfigScreen extends Component {
 
   render () {
     return (
-      <div className={Styles.ConfigScreen}>
-        <Icon name="ganache_logo" size={128} color="inherit" />
-        <div className={Styles.ConfigHeader}>
-          <div className={Styles.ConfigTabs}>
-            {
-              ['Server', 'Accounts', 'Gas', 'Mnemonic', 'Logging', 'Forking'].map((opt, index) => {
-                return (
-                  <ConfigTabItem
-                    key={opt}
-                    itemLabel={`${opt}`}
-                    isActive={this.state.activeTab === opt.toLowerCase()}
-                    onClick={this._handleTabSelection.bind(this, opt)}
-                    >
-                  </ConfigTabItem>
-                )
-              })
-            }
+      <main>
+        <HeaderBar>
+          <Icon name="settings" size={32} />
+          <h4>SETTINGS</h4>
+        </HeaderBar>
+        <div className={Styles.ConfigScreen}>
+          <div className={Styles.ConfigHeader}>
+            <div className={Styles.ConfigTabs}>
+              {
+                ['Server', 'Accounts', 'Gas', 'Mnemonic', 'Logging', 'Forking'].map((opt, index) => {
+                  return (
+                    <ConfigTabItem
+                      key={opt}
+                      itemLabel={`${opt}`}
+                      isActive={this.state.activeTab === opt.toLowerCase()}
+                      onClick={this._handleTabSelection.bind(this, opt)}
+                      >
+                    </ConfigTabItem>
+                  )
+                })
+              }
+            </div>
+            <button className="btn btn-primary" onClick={this._startTestRpc}>
+              {this.props.testRpcState.testRpcServerRunning
+                ? 'RESTART GANACHE'
+                : 'START GANACHE'
+              }
+            </button>
           </div>
-          <button className="btn btn-primary" onClick={this._startTestRpc}>
-            {this.props.testRpcState.testRpcServerRunning
-              ? 'RESTART GANACHE'
-            : 'START GANACHE'
-            }
-          </button>
-        </div>
-        <form>
-          <section className={Styles.ConfigCard}>
-            <div className={ this.state.activeTab === 'server' ? Styles.Visible : Styles.Hidden}>
-              <h2>RPC SERVER OPTIONS</h2>
+          <form>
+            <section className={Styles.ConfigCard}>
+              <div className={ this.state.activeTab === 'server' ? Styles.Visible : Styles.Hidden}>
+                <h2>RPC SERVER OPTIONS</h2>
+                <section>
+                  <h4>PORT NUMBER</h4>
+                  <div className={Styles.Row}>
+                    <div className={Styles.RowItem}>
+                      <input ref="portNumber" type="text" name="portNumber" defaultValue="8545"/>
+                    </div>
+                    <div className={Styles.RowItem}>
+                      <p>The port number is which port the RPC server will listen on. Default is 8545.</p>
+                    </div>
+                  </div>
+                </section>
+                <section>
+                  <h4>AUTOMINE</h4>
+                  <div className={Styles.Row}>
+                    <div className={Styles.RowItem}>
+                      <div className="Switch">
+                        <input type="checkbox" name="automine" id="Automine" onChange={this._handleInputChange} checked={this.state.automine} />
+                        <label htmlFor="Automine">AUTOMINE ENABLED</label>
+                      </div>
+                    </div>
+                    <div className={Styles.RowItem}>
+                      <p>Automining mines new blocks and transactions instantaneously.</p>
+                    </div>
+                  </div>
+                </section>
+                { !this.state.automine
+                  ? <section>
+                  <h4>MINING BLOCK TIME (SECONDS)</h4>
+                  <div className={Styles.Row}>
+                    <div className={Styles.RowItem}>
+                      <input ref="blockTime" type="text" defaultValue="1" />
+                    </div>
+                    <div className={Styles.RowItem}>
+                      <p>The number of seconds to wait between mining new blocks and transactions.</p>
+                    </div>
+                  </div>
+                </section>
+                : null
+              }
+            </div>
+            <div className={ this.state.activeTab === 'accounts' ? Styles.Visible : Styles.Hidden}>
+              <h2>ACCOUNT OPTIONS</h2>
               <section>
-                <h4>PORT NUMBER</h4>
+                <h4>TOTAL ACCOUNTS TO GENERATE</h4>
                 <div className={Styles.Row}>
                   <div className={Styles.RowItem}>
-                    <input ref="portNumber" type="text" name="portNumber" defaultValue="8545"/>
+                    <input ref="totalAccounts" type="text" defaultValue="6" />
                   </div>
                   <div className={Styles.RowItem}>
-                    <p>The port number is which port the RPC server will listen on. Default is 8545.</p>
+                    <p>Total number of Accounts to create and pre-fund.</p>
                   </div>
                 </div>
               </section>
               <section>
-                <h4>AUTOMINE</h4>
+                <h4>CREATE LOCKED ACCOUNTS</h4>
                 <div className={Styles.Row}>
                   <div className={Styles.RowItem}>
                     <div className="Switch">
-                      <input type="checkbox" name="automine" id="Automine" onChange={this._handleInputChange} checked={this.state.automine} />
-                      <label htmlFor="Automine">AUTOMINE ENABLED</label>
+                      <input type="checkbox" name="accountsLocked" id="AccountsLocked" onChange={this._handleInputChange} />
+                      <label htmlFor="AccountsLocked">ACCOUNTS LOCKED</label>
                     </div>
                   </div>
                   <div className={Styles.RowItem}>
-                    <p>Automining mines new blocks and transactions instantaneously.</p>
+                    <p>Create accounts that are locked by default.</p>
                   </div>
                 </div>
               </section>
-              { !this.state.automine
-                ? <section>
-                <h4>MINING BLOCK TIME (SECONDS)</h4>
+            </div>
+            <div className={ this.state.activeTab === 'gas' ? Styles.Visible : Styles.Hidden}>
+              <h2>GAS OPTIONS</h2>
+              <section>
+                <h4>GAS PRICE</h4>
                 <div className={Styles.Row}>
                   <div className={Styles.RowItem}>
-                    <input ref="blockTime" type="text" defaultValue="1" />
+                    <input ref="gasPrice" type="text" defaultValue="1" />
                   </div>
                   <div className={Styles.RowItem}>
-                    <p>The number of seconds to wait between mining new blocks and transactions.</p>
+                    <p>The Gas Price to use.</p>
                   </div>
                 </div>
               </section>
-              : null
-            }
-          </div>
-          <div className={ this.state.activeTab === 'accounts' ? Styles.Visible : Styles.Hidden}>
-            <h2>ACCOUNT OPTIONS</h2>
-            <section>
-              <h4>TOTAL ACCOUNTS TO GENERATE</h4>
-              <div className={Styles.Row}>
-                <div className={Styles.RowItem}>
-                  <input ref="totalAccounts" type="text" defaultValue="6" />
-                </div>
-                <div className={Styles.RowItem}>
-                  <p>Total number of Accounts to create and pre-fund.</p>
-                </div>
-              </div>
-            </section>
-            <section>
-              <h4>CREATE LOCKED ACCOUNTS</h4>
-              <div className={Styles.Row}>
-                <div className={Styles.RowItem}>
-                  <div className="Switch">
-                    <input type="checkbox" name="accountsLocked" id="AccountsLocked" onChange={this._handleInputChange} />
-                    <label htmlFor="AccountsLocked">ACCOUNTS LOCKED</label>
+              <section>
+                <h4>GAS LIMIT</h4>
+                <div className={Styles.Row}>
+                  <div className={Styles.RowItem}>
+                    <input ref="gasLimit" type="text" defaultValue="4712388" />
+                  </div>
+                  <div className={Styles.RowItem}>
+                    <p>The Gas Limit to use.</p>
                   </div>
                 </div>
-                <div className={Styles.RowItem}>
-                  <p>Create accounts that are locked by default.</p>
-                </div>
-              </div>
-            </section>
-          </div>
-          <div className={ this.state.activeTab === 'gas' ? Styles.Visible : Styles.Hidden}>
-            <h2>GAS OPTIONS</h2>
-            <section>
-              <h4>GAS PRICE</h4>
-              <div className={Styles.Row}>
-                <div className={Styles.RowItem}>
-                  <input ref="gasPrice" type="text" defaultValue="1" />
-                </div>
-                <div className={Styles.RowItem}>
-                  <p>The Gas Price to use.</p>
-                </div>
-              </div>
-            </section>
-            <section>
-              <h4>GAS LIMIT</h4>
-              <div className={Styles.Row}>
-                <div className={Styles.RowItem}>
-                  <input ref="gasLimit" type="text" defaultValue="4712388" />
-                </div>
-                <div className={Styles.RowItem}>
-                  <p>The Gas Limit to use.</p>
-                </div>
-              </div>
-            </section>
-          </div>
-          <div className={ this.state.activeTab === 'mnemonic' ? Styles.Visible : Styles.Hidden}>
-            <h2>MNEMONIC OPTIONS</h2>
-            <section>
-              <h4>AUTOGENERATE HD MNEMONIC</h4>
-              <div className={Styles.Row}>
-                <div className={Styles.RowItem}>
-                  <div className="Switch">
-                    <input type="checkbox" name="automnemonic" id="Mnemonic" onChange={this._handleInputChange} checked={this.state.automnemonic} />
-                    <label htmlFor="Mnemonic">AUTOGENERATE HD MNEMONIC</label>
-                  </div>
-                </div>
-                <div className={Styles.RowItem}>
-                  <p>Auto generate a Mnemonic on startup.</p>
-                </div>
-              </div>
-            </section>
-            <section>
-              <div className={Styles.Row}>
-                <div className={Styles.RowItem}>
-                  { this.state.automnemonic
-                    ? <span><input ref={(i) => { this.seedData = i }} name="seedDataValue" defaultValue="" type="text" placeholder="Enter Optional Seed Data" /></span>
-                    : <span><input ref={(i) => { this.mnemonicValue = i }} name="mnemonicValue" defaultValue="" type="text" placeholder="Enter Mnemonic to use" /></span>
-                }
-              </div>
-              <div className={Styles.RowItem}>
-                { this.state.automnemonic ?
-                <p>Optional seed data for auto generated mnemonic</p>
-                :
-                <p>Enter the Mnemonic you wish to use.</p>
-                }
-              </div>
+              </section>
             </div>
-          </section>
+            <div className={ this.state.activeTab === 'mnemonic' ? Styles.Visible : Styles.Hidden}>
+              <h2>MNEMONIC OPTIONS</h2>
+              <section>
+                <h4>AUTOGENERATE HD MNEMONIC</h4>
+                <div className={Styles.Row}>
+                  <div className={Styles.RowItem}>
+                    <div className="Switch">
+                      <input type="checkbox" name="automnemonic" id="Mnemonic" onChange={this._handleInputChange} checked={this.state.automnemonic} />
+                      <label htmlFor="Mnemonic">AUTOGENERATE HD MNEMONIC</label>
+                    </div>
+                  </div>
+                  <div className={Styles.RowItem}>
+                    <p>Auto generate a Mnemonic on startup.</p>
+                  </div>
+                </div>
+              </section>
+              <section>
+                <div className={Styles.Row}>
+                  <div className={Styles.RowItem}>
+                    { this.state.automnemonic
+                      ? <span><input ref={(i) => { this.seedData = i }} name="seedDataValue" defaultValue="" type="text" placeholder="Enter Optional Seed Data" /></span>
+                      : <span><input ref={(i) => { this.mnemonicValue = i }} name="mnemonicValue" defaultValue="" type="text" placeholder="Enter Mnemonic to use" /></span>
+                  }
+                </div>
+                <div className={Styles.RowItem}>
+                  { this.state.automnemonic ?
+                    <p>Optional seed data for auto generated mnemonic</p>
+                    :
+                    <p>Enter the Mnemonic you wish to use.</p>
+                  }
+                </div>
+              </div>
+            </section>
           </div>
           <div className={ this.state.activeTab === 'logging' ? Styles.Visible : Styles.Hidden}>
             <h2>LOGGING OPTIONS</h2>
@@ -254,47 +259,48 @@ class ConfigScreen extends Component {
         </section>
       </form>
     </div>
-    )
+  </main>
+)
+}
+
+_handleInputChange = (event) => {
+  const target = event.target
+  const value = target.type === 'checkbox' ? target.checked : target.value
+  const name = target.name
+  console.log(name, value)
+  this.setState({
+    [name]: value
+  })
+}
+
+_startTestRpc = (e) => {
+  e.preventDefault()
+
+  const config = {
+    port: this.refs.portNumber.value,
+    time: this.refs.time ? this.refs.time.value : null,
+    fork: this.refs.fork ? this.refs.fork.value : null,
+    gasPrice: parseInt(this.refs.gasPrice.value, 10),
+    gasLimit: parseInt(this.refs.gasLimit.value, 10),
+    blocktime: this.state.automine ? null : this.refs.blockTime.value,
+    debug: this.state.opcodeDebug,
+    verbose: this.state.verboseLogging,
+    mnemonic: this.state.automnemonic ? null : this.mnemonicValue,
+    seed: this.seedData ? this.seedData.value : null,
+    total_accounts: this.refs.totalAccounts ? this.refs.totalAccounts.value : null,
+    secure: this.state.accountsLocked
   }
 
-  _handleInputChange = (event) => {
-    const target = event.target
-    const value = target.type === 'checkbox' ? target.checked : target.value
-    const name = target.name
-    console.log(name, value)
-    this.setState({
-      [name]: value
-    })
+  Object.keys(config).forEach((key) => { !config[key] ? delete config[key] : null })
+
+  this.state.automine ? delete config['time'] : null
+
+  if (this.props.testRpcState.testRpcServerRunning) {
+    this.props.appRestartRpcService(config)
+  } else {
+    this.props.appStartRpcService(config)
   }
-
-  _startTestRpc = (e) => {
-    e.preventDefault()
-
-    const config = {
-      port: this.refs.portNumber.value,
-      time: this.refs.time ? this.refs.time.value : null,
-      fork: this.refs.fork ? this.refs.fork.value : null,
-      gasPrice: parseInt(this.refs.gasPrice.value, 10),
-      gasLimit: parseInt(this.refs.gasLimit.value, 10),
-      blocktime: this.state.automine ? null : this.refs.blockTime.value,
-      debug: this.state.opcodeDebug,
-      verbose: this.state.verboseLogging,
-      mnemonic: this.state.automnemonic ? null : this.mnemonicValue,
-      seed: this.seedData ? this.seedData.value : null,
-      total_accounts: this.refs.totalAccounts ? this.refs.totalAccounts.value : null,
-      secure: this.state.accountsLocked
-    }
-
-    Object.keys(config).forEach((key) => { !config[key] ? delete config[key] : null })
-
-    this.state.automine ? delete config['time'] : null
-
-    if (this.props.testRpcState.testRpcServerRunning) {
-      this.props.appRestartRpcService(config)
-    } else {
-      this.props.appStartRpcService(config)
-    }
-  }
+}
 }
 
 export default TestRPCProvider(ConfigScreen)

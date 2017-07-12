@@ -1,13 +1,12 @@
 import React, {Component} from 'react'
 
 import MnemonicAndHdPath from 'Elements/MnemonicAndHdPath'
-import LogContainer from 'Elements/LogContainer'
 import AccountList from './AccountList'
 
 import WithEmptyState from 'Elements/WithEmptyState'
 import Spinner from 'Elements/Spinner'
-import SpinnerButton from 'Elements/SpinnerButton'
 import Icon from 'Elements/Icon'
+import HeaderBar from 'Elements/HeaderBar'
 
 import Styles from './Dashboard.css'
 
@@ -54,7 +53,10 @@ class Dashboard extends Component {
   render () {
     return (
       <div className={Styles.Accounts}>
-        <h4><Icon name="account" size={24} /> ACCOUNTS</h4>
+        <HeaderBar>
+          <Icon name="account" size={32} />
+          <h4>ACCOUNTS</h4>
+        </HeaderBar>
         <main>
           <WithEmptyState
             test={this.props.testRpcState.accounts.length === 0}

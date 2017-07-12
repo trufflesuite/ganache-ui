@@ -6,6 +6,7 @@ import BlockList from './BlockList'
 
 import EtherUtil from 'ethereumjs-util'
 import Icon from 'Elements/Icon'
+import HeaderBar from 'Elements/HeaderBar'
 
 import { hashHistory } from 'react-router'
 
@@ -146,10 +147,11 @@ export default class RecentBlocks extends Component {
   render () {
     return (
       <div className={Styles.Blocks}>
-        <h4>
-          <span><Icon name="blocks" size={24} /> { this._renderPanelHeaderText() }</span>
-          { this._renderPanelHeaderControls() }
-        </h4>
+        <HeaderBar>
+          <Icon name="blocks" size={32} />
+          <h4>{ this._renderPanelHeaderText() }</h4>
+          <span>{ this._renderPanelHeaderControls() }</span>
+        </HeaderBar>
         <main>
           { this._renderPanelBody() }
         </main>

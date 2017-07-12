@@ -80,8 +80,6 @@ class BlockCard extends Component {
           </dd>
         </dl>
         <dl>
-          <dt></dt>
-          <dd>Back to Blocks</dd>
           <dt>Transactions ({block.transactions.length})</dt>
           <dd>{ this._renderRecentTransaction(block.transactions) }</dd>
         </dl>

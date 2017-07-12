@@ -4,6 +4,7 @@ import TxCard from './TxCard'
 import TxList from './TxList'
 import WithEmptyState from 'Elements/WithEmptyState'
 import EmptyTransactions from './EmptyTransactions'
+import HeaderBar from 'Elements/HeaderBar'
 import Icon from 'Elements/Icon'
 
 import Styles from './RecentTxs.css'
@@ -122,10 +123,11 @@ export default class RecentTxs extends Component {
   render () {
     return (
       <div className={Styles.Transactions}>
-        <h4>
-          <span><Icon name="transactions" size={24} /> { this._renderPanelHeaderText() }</span>
-          { this._renderPanelHeaderControls() }
-        </h4>
+        <HeaderBar>
+          <Icon name="transactions" size={32} />
+          <h4>{ this._renderPanelHeaderText() }</h4>
+          <span>{ this._renderPanelHeaderControls() }</span>
+        </HeaderBar>
         <main>
           <WithEmptyState
             test={this.props.testRpcState.transactions.length === 0}
