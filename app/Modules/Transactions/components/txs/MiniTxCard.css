@@ -2,24 +2,28 @@
 
 .MiniTxCard {
   font-family: "Fira Code Regular", monospaced;
-  cursor: pointer;
   width: 100vw;
+  cursor: pointer;
+  margin: .5rem 0;
   border: 2px solid var(--app-card-default-border);
+  background: var(--app-card-default-background);
   padding: .8rem;
   border-radius: 4px;
   word-wrap: break-word;
-  margin: 1rem 0;
   cursor: pointer;
-
-  > * {
-    cursor: pointer;
-  }
+  display: flex;
+  flex-direction: column;
 }
 
-.RowItem {
-  margin-bottom: 1rem;
+.CreatedContract {
+  border-color: var(--primary-color);
+}
+
+.Row {
   display: flex;
+  align-items: center;
   flex-direction: row;
+  margin-bottom: 1rem;
   justify-content: space-between;
 
   &:last-of-type {
@@ -27,11 +31,19 @@
   }
 }
 
+.RowItem {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
 .Label {
   font-size: .875rem;
   font-family: "RobotoCondensed-Regular";
   font-weight: 300;
   color: var(--app-card-label);
+  cursor: pointer;
 }
 
 .Value {
@@ -39,6 +51,7 @@
   font-family: "Fira Code";
   color: var(--app-card-value);
   word-break: break-all;
+  cursor: pointer;
 }
 
 

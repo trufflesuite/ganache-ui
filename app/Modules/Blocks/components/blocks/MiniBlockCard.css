@@ -4,6 +4,7 @@
 .MiniBlockCard {
   width: calc( 100vw / 3 - 1.35rem);
   border: 2px solid var(--app-card-default-border);
+  background: var(--app-card-default-background);
   padding: .8rem;
   border-radius: 4px;
   word-wrap: break-word;
