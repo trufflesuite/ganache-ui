@@ -1,5 +1,6 @@
 
 import React, { Component } from 'react'
+import Moment from 'react-moment'
 import EtherUtil from 'ethereumjs-util'
 import FormattedHex from 'Elements/FormattedHex'
 
@@ -72,6 +73,17 @@ export default class MiniTxCard extends Component {
         <div className={Styles.Row}>
 
           <div className={Styles.RowItem}>
+            <div className={Styles.Value}>
+              <div className={Styles.Label}>
+                VALUE
+              </div>
+              <div className={Styles.Value}>
+                <FormattedHex value={tx.value} />
+              </div>
+            </div>
+          </div>
+
+          <div className={Styles.RowItem}>
             <div className={Styles.Nonce}>
               <div className={Styles.Label}>
                 NONCE
@@ -83,12 +95,23 @@ export default class MiniTxCard extends Component {
           </div>
 
           <div className={Styles.RowItem}>
-            <div className={Styles.Value}>
+            <div className={Styles.GasUsed}>
               <div className={Styles.Label}>
-                VALUE
+                GAS USED
               </div>
               <div className={Styles.Value}>
-                <FormattedHex value={tx.value} />
+                <FormattedHex value={tx.gasUsed} />
+              </div>
+            </div>
+          </div>
+
+          <div className={Styles.RowItem}>
+            <div className={Styles.MinedOn}>
+              <div className={Styles.Label}>
+                MINED ON
+              </div>
+              <div className={Styles.Value}>
+                <Moment unix format="YYYY-MM-DD HH:mm:ss">{EtherUtil.bufferToInt(tx.block.header.timestamp)}</Moment>
               </div>
             </div>
           </div>

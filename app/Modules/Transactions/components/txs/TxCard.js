@@ -19,7 +19,7 @@ class TxCard extends Component {
           <dd>{tx.hash}</dd>
           <dt>From</dt>
           <dd>{tx.from}</dd>
-          <dt>{isContractCreationTx ? 'CONTRACT CREATION ADDRESS' : 'To'}</dt>
+          <dt>{isContractCreationTx ? 'TO CONTRACT ADDRESS' : 'TO'}</dt>
           <dd>{isContractCreationTx ? tx.contractAddress : tx.to}</dd>
           <dt>Value</dt>
           <dd><FormattedHex value={tx.tx.value} /></dd>

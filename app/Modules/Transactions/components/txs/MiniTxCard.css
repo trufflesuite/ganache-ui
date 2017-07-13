@@ -54,6 +54,19 @@
   cursor: pointer;
 }
 
+.Nonce,
+.GasUsed,
+.Value,
+.MinedOn {
+  .Label {
+    font-size: .625rem;
+    letter-spacing: 1.2px;
+  }
+
+  .Value {
+    font-size: .825rem;
+  }
+}
 
 .TxHash {
   .Value {
