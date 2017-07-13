@@ -105,7 +105,7 @@ export default class RecentBlocks extends Component {
 
   _renderPanelHeaderText = () => {
     if (this.state.validBlockSearchResult) {
-      return `Showing Block #${EtherUtil.bufferToInt(this.state.currentBlockSearchMatch.header.number)}`
+      return `BLOCK #${EtherUtil.bufferToInt(this.state.currentBlockSearchMatch.header.number)}`
     }
 
     return `LAST ${this.props.blocks.length} ${Pluralize('BLOCKS', this.props.blocks.length)}`
