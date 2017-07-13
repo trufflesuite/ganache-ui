@@ -4,7 +4,7 @@
   display: flex;
   flex-direction: row;
   width: 100%;
-
+  background: var(--app-card-default-background);
   border: 2px solid var(--app-card-default-border);
   padding: .8rem;
   border-radius: 4px;
@@ -44,4 +44,18 @@
     font-family: "Fira Code";
     color: var(--app-card-value);
   }
+}
+
+.CreatedContract {
+  border-color: var(--primary-color);
+}
+
+.ContractCallBadge {
+  background-color: var(--primary-color);
+  color: white;
+  font-size: .75rem;
+  padding: 8px;
+  height: 28px;
+  border-radius: 25px;
+  margin-bottom: 1rem;
 }

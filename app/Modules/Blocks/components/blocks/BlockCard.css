@@ -2,7 +2,7 @@
 
 .BlockCard {
   font-family: "Fira Code Regular", sans-serif;
-  background: white;
+  background: var(--app-card-default-background);
 
   display: flex;
   flex-direction: row;
@@ -55,4 +55,8 @@
 
   word-wrap: break-word;
   word-break: break-word;
+}
+
+.HasTxs {
+  border-color: var(--primary-color);
 }

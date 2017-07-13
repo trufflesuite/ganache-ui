@@ -38,8 +38,12 @@ class BlockCard extends Component {
       return <h1>LOADING...</h1>
     }
 
+    const hasTxs = block.transactions.length > 0
+
+    const cardStyles = `${Styles.BlockCard} ${hasTxs ? Styles.HasTxs : ''}`
+
     return (
-      <section className={Styles.BlockCard}>
+      <section className={cardStyles}>
         <dl>
           <dt>BLOCK #</dt>
           <dd>{EtherUtil.bufferToInt(block.header.number)}</dd>

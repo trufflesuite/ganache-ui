@@ -86,7 +86,7 @@ export default class RecentTxs extends Component {
 
   _renderPanelHeaderText = () => {
     if (this.state.validTxSearchResult) {
-      return `SHOWING TX ${this.state.currentTxSearchMatch.hash}`
+      return `TX ${this.state.currentTxSearchMatch.hash}`
     }
 
     return this.props.testRpcState.transactions.length === 0 ? `TRANSACTIONS` : `LAST ${this.props.testRpcState.transactions.length} ${Pluralize('TRANSACTIONS', this.props.testRpcState.transactions.length)}`

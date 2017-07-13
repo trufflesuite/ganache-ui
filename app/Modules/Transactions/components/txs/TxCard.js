@@ -12,15 +12,15 @@ class TxCard extends Component {
 
     const isContractCreationTx = tx.hasOwnProperty('contractAddress') && tx.contractAddress !== null
 
+    const cardStyles = `${Styles.TxCard} ${isContractCreationTx ? Styles.CreatedContract : ''}`
+
     return (
-      <section className={Styles.TxCard}>
+      <section className={cardStyles}>
         <dl>
           <dt>Transaction Hash</dt>
           <dd>{tx.hash}</dd>
           <dt>From</dt>
           <dd>{tx.from}</dd>
-          <dt>{isContractCreationTx ? 'TO CONTRACT ADDRESS' : 'TO'}</dt>
-          <dd>{isContractCreationTx ? tx.contractAddress : tx.to}</dd>
           <dt>Value</dt>
           <dd><FormattedHex value={tx.tx.value} /></dd>
           <dt>Gas Used</dt>
@@ -33,6 +33,14 @@ class TxCard extends Component {
           <dd><FormattedHex value={tx.tx.gasLimit} /></dd>
         </dl>
         <dl>
+          { isContractCreationTx
+          ? <div className={Styles.RowItem}>
+              <div className={Styles.ContractCallBadge}>CONTRACT CALL</div>
+            </div>
+          : null
+          }
+          <dt>{isContractCreationTx ? 'TO CONTRACT ADDRESS' : 'TO'}</dt>
+          <dd>{isContractCreationTx ? tx.contractAddress : tx.to}</dd>
           <dt>V</dt>
           <dd><FormattedHex value={tx.tx.v} /></dd>
           <dt>R</dt>
