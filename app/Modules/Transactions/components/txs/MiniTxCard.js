@@ -20,6 +20,28 @@ export default class MiniTxCard extends Component {
         >
 
         <div className={Styles.Row}>
+
+          <div className={Styles.RowItem}>
+            <div className={Styles.TxHash}>
+              <div className={Styles.Label}>
+                TX HASH
+              </div>
+              <div className={Styles.Value}>
+                {EtherUtil.bufferToHex(tx.hash)}
+              </div>
+            </div>
+          </div>
+
+          { isContractCreationTx
+          ? <div className={Styles.RowItem}>
+              <div className={Styles.ContractCallBadge}>CONTRACT CALL</div>
+            </div>
+          : null
+          }
+
+        </div>
+
+        <div className={Styles.Row}>
           <div className={Styles.RowItem}>
             <div className={Styles.From}>
               <div className={Styles.Label}>
@@ -42,20 +64,6 @@ export default class MiniTxCard extends Component {
                   <span>{tx.contractAddress}</span>
                 </div>
                 : <div>{tx.to}</div> }
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className={Styles.Row}>
-
-          <div className={Styles.RowItem}>
-            <div className={Styles.TxHash}>
-              <div className={Styles.Label}>
-                TX HASH
-              </div>
-              <div className={Styles.Value}>
-                {EtherUtil.bufferToHex(tx.hash)}
               </div>
             </div>
           </div>

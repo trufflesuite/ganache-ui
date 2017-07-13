@@ -60,3 +60,12 @@
     font-weight: bold;
   }
 }
+
+.ContractCallBadge {
+  background-color: var(--primary-color);
+  color: white;
+  font-size: .75rem;
+  padding: 8px;
+  height: 28px;
+  border-radius: 25px;
+}
