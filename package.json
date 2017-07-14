@@ -71,8 +71,8 @@
     ],
     "extraResources": [
       {
-        "from": "app/Services/ReplService/ReplScripts",
-        "to": "ReplScripts",
+        "from": "app/Services/ConsoleService/ConsoleScripts",
+        "to": "ConsoleScripts",
         "filter": [
           "**/*"
         ]

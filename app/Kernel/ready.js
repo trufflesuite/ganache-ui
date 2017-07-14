@@ -14,7 +14,7 @@ export default async function (app, done, error) {
     })
 
     app.store.dispatch({type: 'APP/TESTRPCRUNNING', payload: message})
-    app.store.dispatch(push('/dashboard'))
+    app.store.dispatch(push('/accounts'))
   })
 
   ipcRenderer.on('APP/TESTRPCLOG', (event, message) => {
