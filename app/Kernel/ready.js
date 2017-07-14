@@ -46,6 +46,7 @@ export default async function (app, done, error) {
   })
 
   setInterval(function () {
+    console.log(JSON.stringify(app.store))
     ipcRenderer.send('APP/GETBLOCKCHAINSTATE')
   }, 1000)
 

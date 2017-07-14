@@ -46,7 +46,7 @@ class ConfigScreen extends Component {
         </OnlyIf>
         <div className={Styles.ConfigScreen}>
           <OnlyIf test={!this.props.testRpcState.testRpcServerRunning}>
-            <Icon name='ganache_logo' size={128} honorStroke />
+            <Icon name='ganache_logo' size={128} />
           </OnlyIf>
           <div className={Styles.ConfigHeader}>
             <div className={Styles.ConfigTabs}>
