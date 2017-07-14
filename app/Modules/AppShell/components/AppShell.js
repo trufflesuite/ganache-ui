@@ -1,4 +1,6 @@
 import React, {Component} from 'react'
+import Mousetrap from 'mousetrap'
+import { hashHistory } from 'react-router'
 import TestRPCProvider from 'Data/Providers/TestRPCProvider'
 
 import WindowControls from './WindowControls'
@@ -7,6 +9,28 @@ import TopNavbar from './TopNavbar'
 import Styles from './AppShell.css'
 
 class AppShell extends Component {
+  componentDidMount () {
+    Mousetrap.bind('command+1', () => {
+      this.props.testRpcState.testRpcServerRunning ? hashHistory.push('/accounts') : null
+    })
+
+    Mousetrap.bind('command+2', () => {
+      this.props.testRpcState.testRpcServerRunning ? hashHistory.push('/blocks') : null
+    })
+
+    Mousetrap.bind('command+3', () => {
+      this.props.testRpcState.testRpcServerRunning ? hashHistory.push('/transactions') : null
+    })
+
+    Mousetrap.bind('command+4', () => {
+      this.props.testRpcState.testRpcServerRunning ? hashHistory.push('/console') : null
+    })
+
+    Mousetrap.bind('command+5', () => {
+      this.props.testRpcState.testRpcServerRunning ? hashHistory.push('/config') : null
+    })
+  }
+
   renderClonedChildrenWithPropsAndPathKey = (children, props, pathNameKey) => {
     return React.Children.map(children, child => React.cloneElement(child, {...props, key: pathNameKey}))
   }
