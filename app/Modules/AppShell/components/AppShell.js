@@ -29,6 +29,8 @@ class AppShell extends Component {
     Mousetrap.bind('command+5', () => {
       this.props.testRpcState.testRpcServerRunning ? hashHistory.push('/config') : null
     })
+
+    setInterval(this.props.appGetBlockChainState, 1000)
   }
 
   renderClonedChildrenWithPropsAndPathKey = (children, props, pathNameKey) => {

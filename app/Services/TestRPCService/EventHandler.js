@@ -15,7 +15,6 @@ export default class EventHandler {
     this.testRpcService.ipcMain.on('APP/FORCEMINE', this._handleForceMine)
     this.testRpcService.ipcMain.on('APP/MAKESNAPSHOT', this._handleMakeSnapshot)
     this.testRpcService.ipcMain.on('APP/REVERTSNAPSHOT', this._handleRevertSnapshot)
-    this.testRpcService.ipcMain.on('APP/ADDACCOUNT', this._handleAddAccount)
 
     this.testRpcService.ipcMain.on('APP/SEARCHBLOCK', this._handleBlockSearch)
     this.testRpcService.ipcMain.on('APP/SEARCHTX', this._handleTxSearch)
@@ -61,18 +60,11 @@ export default class EventHandler {
     })
   }
 
-  _handleAddAccount = (event, arg) => {
-    this.testRpcService.log('Adding account...')
-    const newAccount = this.testRpcService.stateManager.createAccount(arg)
-    console.log(`NEW ACCOUNT: ${newAccount.account.balance}`)
-    this.testRpcService.stateManager.accounts[newAccount.address] = newAccount
-    if (!this.testRpcService.stateManager.secure) {
-      this.testRpcService.stateManager.unlocked_accounts[newAccount.address] = newAccount
-    }
-    this.testRpcService.log('...account added: ' + newAccount.address)
-  }
-
   async _handleGetBlockchainState () {
+    if (!this.testRpcService.blockFetcher) {
+      return
+    }
+
     let blockChainState = await this.testRpcService.blockFetcher.getBlockchainState()
     this.testRpcService.webView && this.testRpcService.webView.send('APP/BLOCKCHAINSTATE', blockChainState)
   }
