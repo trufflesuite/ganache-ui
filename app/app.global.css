@@ -80,6 +80,23 @@ a {
   cursor: pointer;
 }
 
+svg:not([class]) {
+  g,
+  path,
+  circle {
+    stroke: currentColor !important;
+  }
+}
+
+svg[class='fillCurrentColor'] {
+  g,
+  path,
+  circle {
+    fill: currentColor !important;
+  }
+}
+
+
 html,
 body {
   padding: 0;
