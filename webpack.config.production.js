@@ -33,15 +33,7 @@ export default validate(merge(baseConfig, {
       // Extract all .global.css to style.css as is
       {
         test: /\.global\.css$/,
-        loader: ExtractTextPlugin.extract(
-          'style-loader',
-          [
-            [ 'css?modules&sourceMap&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
-              'sass'
-            ].join('&'),
-            'postcss'
-          ]
-        )
+        loader: ExtractTextPlugin.extract('style', 'css!sass!postcss')
       },
 
       // Pipe other styles through css modules and append to style.css

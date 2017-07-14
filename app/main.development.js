@@ -9,7 +9,7 @@ let menu
 let template
 let mainWindow = null
 let testRpcService = null
-let consoleService = null
+let consoleService = null // eslint-disable-line
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support'); // eslint-disable-line
@@ -93,19 +93,18 @@ app.on('ready', async () => {
     consoleService = null
   })
 
-  if (process.env.NODE_ENV === 'development') {
-    mainWindow.openDevTools()
-    mainWindow.webContents.on('context-menu', (e, props) => {
-      const { x, y } = props
+  // if (process.env.NODE_ENV === 'development') {
+  mainWindow.webContents.on('context-menu', (e, props) => {
+    const { x, y } = props
 
-      Menu.buildFromTemplate([{
-        label: 'Inspect element',
-        click () {
-          mainWindow.inspectElement(x, y)
-        }
-      }]).popup(mainWindow)
-    })
-  }
+    Menu.buildFromTemplate([{
+      label: 'Inspect element',
+      click () {
+        mainWindow.inspectElement(x, y)
+      }
+    }]).popup(mainWindow)
+  })
+  // }
 
   if (process.platform === 'darwin') {
     template = [{
