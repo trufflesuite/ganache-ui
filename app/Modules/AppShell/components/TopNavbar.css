@@ -52,6 +52,10 @@
       svg {
         stroke: var(--primary-color) !important;
       }
+
+      use > symbol > * {
+        stroke: var(--primary-color) !important;
+      }
     }
 
     transition: all .3s;

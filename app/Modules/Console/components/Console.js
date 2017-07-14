@@ -5,6 +5,8 @@ import HeaderBar from 'Elements/HeaderBar'
 import Styles from './Console.css'
 import Icon from 'Elements/Icon'
 
+import ConsoleIcon from 'Icons/console.svg'
+
 import ConsoleProvider from 'Data/Providers/ConsoleProvider'
 
 const UP_ARROW_KEY = 38
@@ -137,7 +139,7 @@ class Console extends Component {
     return (
       <div className={Styles.Console}>
         <HeaderBar>
-          <Icon name="console" size={32} />
+          <Icon glyph={ConsoleIcon} size={32} />
           <h4>CONSOLE</h4>
         </HeaderBar>
         <main>

@@ -23,7 +23,20 @@ export default validate({
       },
       {
         test: /\.svg$/,
-        loader: 'svg-inline-loader'
+        include: path.resolve('./app/Elements/icons'),
+        loaders: [
+          'svg-sprite-loader?' + JSON.stringify({
+            name: '[name].[hash]',
+            prefixize: true
+          }),
+          'svgo-loader?' + JSON.stringify({
+            plugins: [
+             { removeTitle: true },
+             { convertPathData: false },
+             { removeUselessStrokeAndFill: true }
+            ]
+          })
+        ]
       }
     ]
   },
@@ -44,7 +57,8 @@ export default validate({
     modulesDirectories: [ path.resolve('./app'), 'node_modules' ],
     alias: {
       CoreStyles: path.resolve('./app/Styles'),
-      Elements: path.resolve('./app/Elements')
+      Elements: path.resolve('./app/Elements'),
+      Icons: path.resolve('./app/Elements/icons')
     }
   },
 

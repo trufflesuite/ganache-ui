@@ -6,6 +6,9 @@ import Icon from 'Elements/Icon'
 import OnlyIf from 'Elements/OnlyIf'
 import HeaderBar from 'Elements/HeaderBar'
 
+import GanacheLogo from 'Icons/ganache_logo.svg'
+import SettingsIcon from 'Icons/settings.svg'
+
 import Styles from './ConfigScreen.css'
 
 class ConfigTabItem extends Component {
@@ -40,13 +43,13 @@ class ConfigScreen extends Component {
       <main>
         <OnlyIf test={this.props.testRpcState.testRpcServerRunning}>
           <HeaderBar>
-            <Icon name="settings" size={32} />
+            <Icon glyph={SettingsIcon} size={32}/>
             <h4>SETTINGS</h4>
           </HeaderBar>
         </OnlyIf>
         <div className={Styles.ConfigScreen}>
           <OnlyIf test={!this.props.testRpcState.testRpcServerRunning}>
-            <Icon name='ganache_logo' size={128} />
+            <Icon glyph={GanacheLogo} size={128}/>
           </OnlyIf>
           <div className={Styles.ConfigHeader}>
             <div className={Styles.ConfigTabs}>

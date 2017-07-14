@@ -8,6 +8,7 @@ import EmptyTransactions from './EmptyTransactions'
 import HeaderBar from 'Elements/HeaderBar'
 import Icon from 'Elements/Icon'
 
+import TxIcon from 'Icons/transactions.svg'
 import Styles from './RecentTxs.css'
 
 export default class RecentTxs extends Component {
@@ -125,7 +126,7 @@ export default class RecentTxs extends Component {
     return (
       <div className={Styles.Transactions}>
         <HeaderBar>
-          <Icon name="transactions" size={32} />
+          <Icon glyph={TxIcon} size={32} />
           <h4>{ this._renderPanelHeaderText() }</h4>
           <span>{ this._renderPanelHeaderControls() }</span>
         </HeaderBar>

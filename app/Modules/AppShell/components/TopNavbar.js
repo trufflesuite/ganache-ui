@@ -7,6 +7,15 @@ import StatusIndicator from 'Elements/StatusIndicator'
 import Icon from 'Elements/Icon'
 import { hashHistory } from 'react-router'
 
+import AccountIcon from 'Icons/account.svg'
+import BlockIcon from 'Icons/blocks.svg'
+import TxIcon from 'Icons/transactions.svg'
+import ConsoleIcon from 'Icons/console.svg'
+import SettingsIcon from 'Icons/settings.svg'
+import SearchIcon from 'Icons/search.svg'
+import ForceMineIcon from 'Icons/force_mine.svg'
+import SnapshotIcon from 'Icons/snapshot.svg'
+
 import Styles from './TopNavbar.css'
 
 class TopNavbar extends Component {
@@ -120,23 +129,23 @@ class TopNavbar extends Component {
         <main className={Styles.Main}>
           <div className={Styles.Menu}>
             <Link to="accounts" activeClassName={Styles.Active}>
-              <Icon name="account" size={44} />
+              <Icon glyph={AccountIcon} size={44} />
               Accounts
             </Link>
             <Link to="blocks" activeClassName={Styles.Active}>
-              <Icon name="blocks" size={44}/>
+              <Icon glyph={BlockIcon} size={44}/>
               Blocks
             </Link>
             <Link to="transactions" activeClassName={Styles.Active}>
-              <Icon name="transactions" size={44}/>
+              <Icon glyph={TxIcon} size={44}/>
               Transactions
             </Link>
             <Link to="console" activeClassName={Styles.Active}>
-              <Icon name="console" size={44}/>
+              <Icon glyph={ConsoleIcon} size={44}/>
               Console
             </Link>
             <Link to="config" activeClassName={Styles.Active}>
-              <Icon name="settings" size={44}/>
+              <Icon glyph={SettingsIcon} size={44}/>
               Settings
             </Link>
           </div>
@@ -147,7 +156,7 @@ class TopNavbar extends Component {
               ref={(input) => { this.searchInput = input }}
               onKeyPress={this.handleSearchKeyPress}
             />
-            <Icon name="search" size={16} />
+          <Icon glyph={SearchIcon} size={16} />
           </div>
         </main>
         <footer className={Styles.Footer}>
@@ -168,10 +177,10 @@ class TopNavbar extends Component {
           </div>
           <div className={Styles.Actions}>
             <OnlyIf test={showControls}>
-              <button className={Styles.MiningBtn} onClick={this._handleForceMine}><Icon name="force_mine" size={22} /> Force Mine</button>
+              <button className={Styles.MiningBtn} onClick={this._handleForceMine}><Icon glyph={ForceMineIcon} size={22} /> Force Mine</button>
             </OnlyIf>
             <OnlyIf test={showControls}>
-              <button className={Styles.MiningBtn} onClick={this._handleMakeSnapshot}><Icon name="snapshot" size={22} /> TAKE SNAPSHOT #{currentSnapshotId + 1}</button>
+              <button className={Styles.MiningBtn} onClick={this._handleMakeSnapshot}><Icon glyph={SnapshotIcon} size={22} /> TAKE SNAPSHOT #{currentSnapshotId + 1}</button>
             </OnlyIf>
             <OnlyIf test={showControls}>
               {this._renderSnapshotControls() }

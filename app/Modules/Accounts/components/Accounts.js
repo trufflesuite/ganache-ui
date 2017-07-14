@@ -8,6 +8,8 @@ import Spinner from 'Elements/Spinner'
 import Icon from 'Elements/Icon'
 import HeaderBar from 'Elements/HeaderBar'
 
+import AccountIcon from 'Icons/account.svg'
+
 import Styles from './Accounts.css'
 
 class LoadingAccounts extends Component {
@@ -54,7 +56,7 @@ class Accounts extends Component {
     return (
       <div className={Styles.Accounts}>
         <HeaderBar>
-          <Icon name="account" size={32} />
+          <Icon glyph={AccountIcon} size={32} />
           <h4>ACCOUNTS</h4>
         </HeaderBar>
         <main>
