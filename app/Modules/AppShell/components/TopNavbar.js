@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router'
+import { Link, hashHistory } from 'react-router'
 import TestRPCProvider from 'Data/Providers/TestRPCProvider'
 import Spinner from 'Elements/Spinner'
 import OnlyIf from 'Elements/OnlyIf'
 import StatusIndicator from 'Elements/StatusIndicator'
 import Icon from 'Elements/Icon'
-import { hashHistory } from 'react-router'
 
 import AccountIcon from 'Icons/account.svg'
 import BlockIcon from 'Icons/blocks.svg'
@@ -71,7 +70,7 @@ class TopNavbar extends Component {
     this.searchInput.value = ''
   }
 
-  handleSearchKeyPress = (e) =>  {
+  handleSearchKeyPress = (e) => {
     if (e.key === 'Enter') {
       this.classifyInput()
     }
@@ -169,14 +168,15 @@ class TopNavbar extends Component {
             <StatusIndicator title="BLOCK INTERVAL TIME" value={this._renderMiningTime()} />
             <StatusIndicator title="GAS PRICE" value={gasPrice} />
             <StatusIndicator title="GAS LIMIT" value={this.props.testRpcState.gasLimit} />
+            <StatusIndicator title="LISTENING ON" value={`http://${this.props.testRpcState.host}:${this.props.testRpcState.port}`} />
             <StatusIndicator
               title="MINING STATUS"
               value={miningPaused ? 'STOPPED' : 'MINING'}
             >
-            <OnlyIf test={isMining}>
-              <Spinner width={'30px'} height={'30px'} />
-            </OnlyIf>
-          </StatusIndicator>
+              <OnlyIf test={isMining}>
+                <Spinner width={'30px'} height={'30px'} />
+              </OnlyIf>
+            </StatusIndicator>
 
           </div>
           <div className={Styles.Actions}>
