@@ -15,6 +15,9 @@ import SettingsIcon from 'Icons/settings.svg'
 import SearchIcon from 'Icons/search.svg'
 import ForceMineIcon from 'Icons/force_mine.svg'
 import SnapshotIcon from 'Icons/snapshot.svg'
+import StartMiningIcon from 'Icons/start.svg'
+import StopMiningIcon from 'Icons/stop.svg'
+import RevertIcon from 'Icons/revert.svg'
 
 import Styles from './TopNavbar.css'
 
@@ -86,6 +89,7 @@ class TopNavbar extends Component {
           onClick={this._handleRevertSnapshot}
           disabled={snapshots.length === 0}
         >
+          <Icon glyph={RevertIcon} size={22} />
           { firstSnapshot ? `REVERT TO BASE` : `REVERT TO SNAPSHOT #${currentSnapshotId - 1}` }
         </button>
       : null
@@ -110,8 +114,8 @@ class TopNavbar extends Component {
 
   _renderMiningControls = () => {
     return this.props.testRpcState.isMining
-    ? <button className={Styles.MiningBtn} disabled={!this.props.testRpcState.isMining} onClick={this._handleStopMining}><Icon name="stop" size={18} /> Stop {this._renderMiningButtonText()}</button>
-    : <button className={Styles.MiningBtn} disabled={this.props.testRpcState.isMining} onClick={this._handleStartMining}><Icon name="start" size={18} /> Start {this._renderMiningButtonText()}</button>
+    ? <button className={Styles.MiningBtn} disabled={!this.props.testRpcState.isMining} onClick={this._handleStopMining}><Icon glyph={StopMiningIcon} size={18} /> Stop {this._renderMiningButtonText()}</button>
+    : <button className={Styles.MiningBtn} disabled={this.props.testRpcState.isMining} onClick={this._handleStartMining}><Icon glyph={StartMiningIcon} size={18} /> Start {this._renderMiningButtonText()}</button>
   }
 
   render () {
@@ -176,7 +180,7 @@ class TopNavbar extends Component {
 
           </div>
           <div className={Styles.Actions}>
-            <OnlyIf test={showControls}>
+            <OnlyIf test={showControls && this.props.testRpcState.blocktime !== 'Automining'}>
               <button className={Styles.MiningBtn} onClick={this._handleForceMine}><Icon glyph={ForceMineIcon} size={22} /> Force Mine</button>
             </OnlyIf>
             <OnlyIf test={showControls}>

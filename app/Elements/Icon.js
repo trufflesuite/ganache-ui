@@ -6,6 +6,7 @@ const Icon = styled.svg`
   fill: currentColor;
   stroke: currentColor;
   margin-right: .5rem;
+  stroke-width: 4;
 `
 
 export default ({ glyph, size }) => (

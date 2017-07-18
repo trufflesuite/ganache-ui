@@ -22,9 +22,26 @@ main {
     flex-direction: column;
   }
 
-  svg {
-    margin: 2rem auto;
+  button {
+    display: flex;
+    align-items: center;
+    -webkit-app-region: no-drag;
+
+
+    &:active {
+      transform: scale(.98);
+    }
+
+    > div {
+      margin-right: .5rem;
+    }
+
+    svg > * {
+      stroke: currentColor !important;
+      fill: currentColor !important;
+    }
   }
+
 
   h3 {
     padding: 0;

@@ -85,7 +85,7 @@
     outline: none;
     border: 2px solid var(--app-navbar-icon-color);
     border-radius: 24px;
-    padding: .5rem .5rem;
+    padding: .5rem .8rem;
     color: var(--app-navbar-icon-color);
     font-size: .8rem;
     padding-right: 1.8rem;
@@ -97,9 +97,9 @@
     }
   }
 
-  > div {
+  > svg {
     position: absolute;
-    right: 22px;
+    right: 16px;
 
     color: var(--app-navbar-icon-color);
   }

@@ -8,6 +8,7 @@ import HeaderBar from 'Elements/HeaderBar'
 
 import GanacheLogo from 'Icons/ganache_logo.svg'
 import SettingsIcon from 'Icons/settings.svg'
+import RestartIcon from 'Icons/eject.svg'
 
 import Styles from './ConfigScreen.css'
 
@@ -68,6 +69,7 @@ class ConfigScreen extends Component {
               }
             </div>
             <button className="btn btn-primary" onClick={this._startTestRpc}>
+              <Icon glyph={RestartIcon} size={22} />
               {this.props.testRpcState.testRpcServerRunning
                 ? 'RESTART GANACHE'
                 : 'START GANACHE'

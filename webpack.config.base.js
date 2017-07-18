@@ -32,8 +32,8 @@ export default validate({
           'svgo-loader?' + JSON.stringify({
             plugins: [
              { removeTitle: true },
-             { convertPathData: false },
-             { removeUselessStrokeAndFill: true }
+             { removeUselessStrokeAndFill: false },
+             { convertPathData: false }
             ]
           })
         ]

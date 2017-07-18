@@ -1,3 +1,5 @@
+@import "colors.css";
+
 .Header {
   position: -webkit-sticky;
   position: sticky;
