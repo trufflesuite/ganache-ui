@@ -102,7 +102,7 @@ export default class BlockFetcher {
       blockNumber: currentBlockNumber,
       networkId: stateManager.net_version,
       snapshots: stateManager.snapshots,
-      host: 'localhost',
+      host: this.testRpcService.host,
       port: this.testRpcService.port
     }
 

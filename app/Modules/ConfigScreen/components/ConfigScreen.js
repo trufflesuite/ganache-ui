@@ -81,6 +81,17 @@ class ConfigScreen extends Component {
               <div className={ this.state.activeTab === 'server' ? Styles.Visible : Styles.Hidden}>
                 <h2>RPC SERVER OPTIONS</h2>
                 <section>
+                  <h4>HOSTNAME</h4>
+                  <div className={Styles.Row}>
+                    <div className={Styles.RowItem}>
+                      <input ref="hostName" type="text" name="hostName" defaultValue="0.0.0.0"/>
+                    </div>
+                    <div className={Styles.RowItem}>
+                      <p>The server will accept connections on the unspecified IPv6 address (::) when IPv6 is available, or the unspecified IPv4 address (0.0.0.0) as default.</p>
+                    </div>
+                  </div>
+                </section>
+                <section>
                   <h4>PORT NUMBER</h4>
                   <div className={Styles.Row}>
                     <div className={Styles.RowItem}>
@@ -298,7 +309,8 @@ _startTestRpc = (e) => {
     mnemonic: this.state.automnemonic ? null : this.mnemonicValue,
     seed: this.seedData ? this.seedData.value : null,
     total_accounts: this.refs.totalAccounts ? this.refs.totalAccounts.value : null,
-    secure: this.state.accountsLocked
+    secure: this.state.accountsLocked,
+    hostname: this.refs.hostName.value
   }
 
   Object.keys(config).forEach((key) => { !config[key] ? delete config[key] : null })

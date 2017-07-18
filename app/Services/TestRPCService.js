@@ -64,14 +64,14 @@ export default class TestRPCService extends EventEmitter {
   }
 
   startServer = (opts) => {
-    this.testRpc.listen(opts.port, async (err, stateManager) => {
+    this.testRpc.listen(opts.port, opts.hostname, async (err, stateManager) => {
       if (err) {
         this.testRpcService.webView.send('APP/FAILEDTOSTART', err)
         console.log('ERR: ', err)
       }
 
       this.port = opts.port
-      this.host = 'localhost'
+      this.host = opts.hostname
       this.stateManager = stateManager
       this.txFetcher = new TxFetcher(this.stateManager)
       this.blockFetcher = new BlockFetcher(this.stateManager, this)
