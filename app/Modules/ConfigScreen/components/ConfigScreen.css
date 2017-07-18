@@ -22,6 +22,10 @@ main {
     flex-direction: column;
   }
 
+  > svg {
+    margin: 2rem auto;
+  }
+
   button {
     display: flex;
     align-items: center;
