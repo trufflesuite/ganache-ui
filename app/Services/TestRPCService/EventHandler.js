@@ -90,8 +90,6 @@ export default class EventHandler {
   }
 
   async _handleCheckPort (event, port) {
-    console.log('CHECKING PORT' + port)
-
     let result = await FindProcess('port', port).then((list) => {
       if (!list.length) {
         return {
@@ -104,8 +102,6 @@ export default class EventHandler {
         }
       }
     })
-
-    console.log('CHECKING PORT' + result)
 
     this.testRpcService.webView && this.testRpcService.webView.send('APP/CHECKPORTRESULT', result)
   }

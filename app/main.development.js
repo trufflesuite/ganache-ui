@@ -65,18 +65,18 @@ const installExtensions = async () => {
   }
 }
 
+app.setName('GANACHE')
+
 app.on('ready', async () => {
   await installExtensions()
 
   mainWindow = new BrowserWindow({
     show: false,
-    width: 1024,
+    width: 1200,
     height: 930,
-    title: 'Ganache',
     frame: false
   })
 
-  mainWindow.maximize()
   mainWindow.loadURL(`file://${__dirname}/app.html`)
 
   testRpcService = new TestRPCService(ipcMain, mainWindow) // eslint-disable-line
@@ -85,6 +85,7 @@ app.on('ready', async () => {
   mainWindow.webContents.on('did-finish-load', () => {
     mainWindow.show()
     mainWindow.focus()
+    mainWindow.setTitle('GANACHE')
   })
 
   mainWindow.on('closed', () => {
