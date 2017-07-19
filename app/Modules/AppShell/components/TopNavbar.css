@@ -127,6 +127,7 @@
 
   button {
     margin-right: 1rem;
+    padding: 0 .8rem;
     display: flex;
     align-items: center;
     -webkit-app-region: no-drag;

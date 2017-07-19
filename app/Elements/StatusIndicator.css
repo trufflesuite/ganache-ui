@@ -15,16 +15,16 @@
   justify-content: center;
   flex-shrink: 0;
 
-  padding-right: 2rem;
+  padding-right: 1rem;
 
   h4 {
-    font-size: 12px;
+    font-size: 10px;
     margin: 0;
     padding: 0;
   }
 
   span {
-    font-size: 16px;
+    font-size: 13px;
     color: var(--primary-color);
     text-transform: uppercase;
   }

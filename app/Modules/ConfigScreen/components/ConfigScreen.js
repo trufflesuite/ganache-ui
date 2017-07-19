@@ -69,7 +69,7 @@ class ConfigScreen extends Component {
               }
             </div>
             <button className="btn btn-primary" onClick={this._startTestRpc}>
-              <Icon glyph={RestartIcon} size={22} />
+              <Icon glyph={RestartIcon} size={18} />
               {this.props.testRpcState.testRpcServerRunning
                 ? 'RESTART GANACHE'
                 : 'START GANACHE'
@@ -99,6 +99,17 @@ class ConfigScreen extends Component {
                     </div>
                     <div className={Styles.RowItem}>
                       <p>The port number is which port the RPC server will listen on. Default is 8545.</p>
+                    </div>
+                  </div>
+                </section>
+                <section>
+                  <h4>NETWORK ID</h4>
+                  <div className={Styles.Row}>
+                    <div className={Styles.RowItem}>
+                      <input ref="networkId" type="text" name="networkId" defaultValue={Date.now()}/>
+                    </div>
+                    <div className={Styles.RowItem}>
+                      <p>Specify the network id the Ganache will use to identify itself (defaults to the current time or the network id of the forked blockchain if configured)</p>
                     </div>
                   </div>
                 </section>
@@ -165,10 +176,10 @@ class ConfigScreen extends Component {
                 <h4>GAS PRICE</h4>
                 <div className={Styles.Row}>
                   <div className={Styles.RowItem}>
-                    <input ref="gasPrice" type="text" defaultValue="1" />
+                    <input ref="gasPrice" type="text" defaultValue="20000000000" />
                   </div>
                   <div className={Styles.RowItem}>
-                    <p>The Gas Price to use.</p>
+                    <p>The Gas Price in WEI to use. Default is 20000000000.</p>
                   </div>
                 </div>
               </section>
@@ -310,7 +321,8 @@ _startTestRpc = (e) => {
     seed: this.seedData ? this.seedData.value : null,
     total_accounts: this.refs.totalAccounts ? this.refs.totalAccounts.value : null,
     secure: this.state.accountsLocked,
-    hostname: this.refs.hostName.value
+    hostname: this.refs.hostName.value,
+    network_id: this.refs.networkId.value
   }
 
   Object.keys(config).forEach((key) => { !config[key] ? delete config[key] : null })

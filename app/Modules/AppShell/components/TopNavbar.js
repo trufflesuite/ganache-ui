@@ -88,7 +88,7 @@ class TopNavbar extends Component {
           onClick={this._handleRevertSnapshot}
           disabled={snapshots.length === 0}
         >
-          <Icon glyph={RevertIcon} size={22} />
+          <Icon glyph={RevertIcon} size={18} />
           { firstSnapshot ? `REVERT TO BASE` : `REVERT TO SNAPSHOT #${currentSnapshotId - 1}` }
         </button>
       : null
@@ -168,6 +168,7 @@ class TopNavbar extends Component {
             <StatusIndicator title="BLOCK INTERVAL TIME" value={this._renderMiningTime()} />
             <StatusIndicator title="GAS PRICE" value={gasPrice} />
             <StatusIndicator title="GAS LIMIT" value={this.props.testRpcState.gasLimit} />
+            <StatusIndicator title="NETWORK ID" value={this.props.testRpcState.networkId} />
             <StatusIndicator title="LISTENING ON" value={`http://${this.props.testRpcState.host}:${this.props.testRpcState.port}`} />
             <StatusIndicator
               title="MINING STATUS"
@@ -181,10 +182,10 @@ class TopNavbar extends Component {
           </div>
           <div className={Styles.Actions}>
             <OnlyIf test={showControls && this.props.testRpcState.blocktime !== 'Automining'}>
-              <button className={Styles.MiningBtn} onClick={this._handleForceMine}><Icon glyph={ForceMineIcon} size={22} /> Force Mine</button>
+              <button className={Styles.MiningBtn} onClick={this._handleForceMine}><Icon glyph={ForceMineIcon} size={18} /> Force Mine</button>
             </OnlyIf>
             <OnlyIf test={showControls}>
-              <button className={Styles.MiningBtn} onClick={this._handleMakeSnapshot}><Icon glyph={SnapshotIcon} size={22} /> TAKE SNAPSHOT #{currentSnapshotId + 1}</button>
+              <button className={Styles.MiningBtn} onClick={this._handleMakeSnapshot}><Icon glyph={SnapshotIcon} size={18} /> TAKE SNAPSHOT #{currentSnapshotId + 1}</button>
             </OnlyIf>
             <OnlyIf test={showControls}>
               {this._renderSnapshotControls() }

@@ -9,6 +9,7 @@
   font-family: "RobotoCondensed-Regular";
   font-weight: 300;
   color: var(--app-card-label);
+  min-width: 42px;
 }
 
 .Value {
@@ -68,8 +69,21 @@
   }
 }
 
+.AccountPrivateKey {
+  .Label,
+  .Value {
+    font-size: 14px;
+  }
+}
+
 .AccountNonceAndBalance {
-  justify-content: flex-start;
+  justify-content: space-between;
+  margin-bottom: 0;
+
+  .Label,
+  .Value {
+    font-size: 14px;
+  }
 }
 
 .AccountState {
