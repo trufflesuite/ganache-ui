@@ -3,11 +3,12 @@
 .MnemonicAndHdPath {
   display: flex;
   flex-direction: column;
-  width: 100%;
   background-color: var(--app-mnemonic-background-color);
 
   font-size: 0.8em;
-  margin-bottom: 1em;
+  margin: 1em;
+
+  box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.15);
 
   div {
     margin: 1rem;
