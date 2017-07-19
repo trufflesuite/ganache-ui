@@ -33,6 +33,11 @@ const mutators = {
   'APP/TXSEARCHRESULT': (state, { type, payload }) => ({
     ...state,
     currentTxSearchMatch: payload
+  }),
+
+  'APP/CHECKPORTRESULT': (state, { type, payload }) => ({
+    ...state,
+    portIsClear: payload
   })
 }
 

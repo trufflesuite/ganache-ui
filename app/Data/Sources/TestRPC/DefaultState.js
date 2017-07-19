@@ -6,7 +6,8 @@ const DefaultState = {
   transactions: [],
   snapshots: [],
   currentBlockSearchMatch: null,
-  currentTxSearchMatch: null
+  currentTxSearchMatch: null,
+  portIsClear: { status: 'clear', pid: [{name: ''}] }
 }
 
 export default DefaultState

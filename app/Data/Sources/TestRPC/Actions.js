@@ -76,3 +76,9 @@ export const appSearchTx = createRequestThunk({
   request: Api.searchForTx,
   key: appSearchTxType
 })
+
+export const appCheckPortType = 'APP/CHECKPORT'
+export const appCheckPort = createRequestThunk({
+  request: Api.checkPort,
+  key: appCheckPortType
+})

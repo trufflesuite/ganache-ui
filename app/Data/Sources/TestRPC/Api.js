@@ -43,5 +43,9 @@ export default {
 
   searchForTx: (txHash) => {
     return ApiHelpers.sendIpcMessage('APP/SEARCHTX', txHash)
+  },
+
+  checkPort: (port) => {
+    return ApiHelpers.sendIpcMessage('APP/CHECKPORT', port)
   }
 }

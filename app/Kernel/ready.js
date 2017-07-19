@@ -45,5 +45,9 @@ export default async function (app, done, error) {
     app.store.dispatch({type: 'APP/TXSEARCHRESULT', payload: message})
   })
 
+  ipcRenderer.on('APP/CHECKPORTRESULT', (event, message) => {
+    app.store.dispatch({type: 'APP/CHECKPORTRESULT', payload: message})
+  })
+
   done()
 }

@@ -200,3 +200,10 @@ main {
   }
 
 }
+
+.PortAlert {
+  background-color: #ffd5d5;
+  display: block;
+  padding: .5rem;
+  font-size: 14px;
+}

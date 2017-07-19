@@ -35,11 +35,20 @@ class ConfigScreen extends Component {
     activeTab: 'server'
   }
 
+  componentDidMount () {
+    this.props.appCheckPort(8545)
+  }
+
   _handleTabSelection = (opt, e) => {
     this.setState({activeTab: opt.toLowerCase()})
   }
 
   render () {
+    const { portIsClear } = this.props.testRpcState
+    const portIsBlocked = portIsClear.status === 'blocked' && portIsClear.pid !== undefined
+
+    console.log(portIsBlocked,JSON.stringify(portIsClear))
+
     return (
       <main>
         <OnlyIf test={this.props.testRpcState.testRpcServerRunning}>
@@ -68,13 +77,15 @@ class ConfigScreen extends Component {
                 })
               }
             </div>
-            <button className="btn btn-primary" onClick={this._startTestRpc}>
-              <Icon glyph={RestartIcon} size={18} />
-              {this.props.testRpcState.testRpcServerRunning
-                ? 'RESTART GANACHE'
-                : 'START GANACHE'
-              }
-            </button>
+            <OnlyIf test={!portIsBlocked}>
+              <button className="btn btn-primary" onClick={this._startTestRpc}>
+                <Icon glyph={RestartIcon} size={18} />
+                {this.props.testRpcState.testRpcServerRunning
+                  ? 'RESTART GANACHE'
+                  : 'START GANACHE'
+                }
+              </button>
+            </OnlyIf>
           </div>
           <form>
             <section className={Styles.ConfigCard}>
@@ -95,7 +106,10 @@ class ConfigScreen extends Component {
                   <h4>PORT NUMBER</h4>
                   <div className={Styles.Row}>
                     <div className={Styles.RowItem}>
-                      <input ref="portNumber" type="text" name="portNumber" defaultValue="8545"/>
+                      <input ref="portNumber" type="text" name="portNumber" defaultValue="8545" onChange={() => { this.props.appCheckPort(this.refs.portNumber.value) }} />
+                      <OnlyIf test={portIsBlocked} >
+                        <strong className={Styles.PortAlert}><b>WARNING!</b> Ganache cannot start on this port because there is already a process "<b>{portIsBlocked && portIsClear.pid[0].name}</b>" with PID <b>{portIsBlocked && portIsClear.pid[0].pid}</b> running on this port.</strong>
+                      </OnlyIf>
                     </div>
                     <div className={Styles.RowItem}>
                       <p>The port number is which port the RPC server will listen on. Default is 8545.</p>

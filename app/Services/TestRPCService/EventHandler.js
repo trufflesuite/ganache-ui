@@ -1,5 +1,6 @@
 import autobind from 'class-autobind'
 import SysLog from 'electron-log'
+import FindProcess from 'find-process'
 
 export default class EventHandler {
   constructor (testRpcService) {
@@ -18,6 +19,8 @@ export default class EventHandler {
 
     this.testRpcService.ipcMain.on('APP/SEARCHBLOCK', this._handleBlockSearch)
     this.testRpcService.ipcMain.on('APP/SEARCHTX', this._handleTxSearch)
+
+    this.testRpcService.ipcMain.on('APP/CHECKPORT', this._handleCheckPort)
   }
 
   _handleBlockSearch = async (event, arg) => {
@@ -84,5 +87,26 @@ export default class EventHandler {
     console.log('RESTARTING TESTRPC ON PORT ' + arg.port)
     arg.logger = this.testRpcService
     this.testRpcService.initializeTestRpc(arg)
+  }
+
+  async _handleCheckPort (event, port) {
+    console.log('CHECKING PORT' + port)
+
+    let result = await FindProcess('port', port).then((list) => {
+      if (!list.length) {
+        return {
+          status: 'clear'
+        }
+      } else {
+        return {
+          status: 'blocked',
+          pid: list
+        }
+      }
+    })
+
+    console.log('CHECKING PORT' + result)
+
+    this.testRpcService.webView && this.testRpcService.webView.send('APP/CHECKPORTRESULT', result)
   }
 }
