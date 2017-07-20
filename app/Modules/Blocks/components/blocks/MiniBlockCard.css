@@ -44,7 +44,7 @@
 
 .Value {
   font-size: 1.125rem;
-  font-family: "Fira Code";
+  font-family: "Fira Code Regular";
   color: var(--app-card-value);
   word-break: break-all;
 }

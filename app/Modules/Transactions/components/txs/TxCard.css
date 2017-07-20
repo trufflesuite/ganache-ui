@@ -41,7 +41,7 @@
     margin-bottom: .8vw;
     font-size: 1.1vw;
     font-weight: bold;
-    font-family: "Fira Code";
+    font-family: "Fira Code Regular";
     color: var(--app-card-value);
   }
 }

@@ -159,7 +159,7 @@ main {
 
     p {
       color: var(--app-navbar-text);
-      font-family: "Fira Code";
+      font-family: "Fira Code Regular";
       font-size: .875rem;
     }
 
