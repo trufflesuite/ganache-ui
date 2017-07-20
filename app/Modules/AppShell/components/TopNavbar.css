@@ -89,7 +89,7 @@
     color: var(--app-navbar-icon-color);
     font-size: .8rem;
     padding-right: 1.8rem;
-    font-family: 'Fira Code';
+    font-family: "Fira Code Regular";
     width: 370px;
 
     &::-webkit-input-placeholder {
