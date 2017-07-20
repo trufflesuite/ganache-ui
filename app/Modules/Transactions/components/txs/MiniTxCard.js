@@ -35,7 +35,7 @@ export default class MiniTxCard extends Component {
 
           { isContractCreationTx
           ? <div className={Styles.RowItem}>
-              <div className={Styles.ContractCallBadge}>CONTRACT CALL</div>
+              <div className={Styles.ContractCallBadge}>CONTRACT CREATION</div>
             </div>
           : null
           }
