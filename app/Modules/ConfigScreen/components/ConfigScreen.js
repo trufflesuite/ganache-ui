@@ -45,9 +45,7 @@ class ConfigScreen extends Component {
 
   render () {
     const { portIsClear } = this.props.testRpcState
-    const portIsBlocked = portIsClear.status === 'blocked' && portIsClear.pid !== undefined
-
-    console.log(portIsBlocked,JSON.stringify(portIsClear))
+    const portIsBlocked = portIsClear.status === 'blocked' && portIsClear.pid !== undefined && portIsClear.pid[0].name !== 'Ganache' && portIsClear.pid[0].name !== 'Electron'
 
     return (
       <main>
