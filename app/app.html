@@ -60,7 +60,7 @@
 
   @keyframes slideUp {
     0% {
-      transform: translateY(4px);
+      transform: translateY(8px);
     }
     100% {
       transform: translateY(0);
@@ -84,7 +84,7 @@
     font-size: 20px;
     letter-spacing:4px;
     will-change: opacity, transform;
-    animation: .7s 3s forwards cubic-bezier(0.4, 0, 1, 1) bgToTransparent;
+    animation: .7s 3.5s forwards cubic-bezier(0.4, 0, 1, 1) bgToTransparent;
   }
 
   #LoadingScreen .Logo {
@@ -101,19 +101,27 @@
 
   #LoadingScreen .Logo {
     opacity: 0;
-    animation: fadeIn 1s .8s forwards, .7s 3s forwards cubic-bezier(0.4, 0, 1, 1) fadeOut;
+    animation: fadeIn 1s .8s forwards, 1s 3s forwards cubic-bezier(0.4, 0, 1, 1) fadeOut;
   }
 
   #LoadingScreen h4 {
     opacity: 0;
+    margin: 2rem 0 0 0;
+    height: 42px;
+    animation: fadeIn 1s 1.6s forwards, slideUp 1s 1.6s forwards, 1s 3s forwards cubic-bezier(0.4, 0, 1, 1) fadeOut;
+  }
+
+  #LoadingScreen .GanacheVersion {
     margin: 0;
-    animation: fadeIn 1s 1.6s forwards, slideUp 1s 1.6s forwards, .7s 3s forwards cubic-bezier(0.4, 0, 1, 1) fadeOut;
+    font-size: 14px;
+    letter-spacing: initial;
+    color: #525456;
   }
 
   #LoadingScreen h4 strong {
     color: #efefef;
     font-weight: 700;
-    line-height: 3.2;
+    line-height: 1.2;
   }
 
   #LoadingScreen h4 strong sup {
@@ -199,7 +207,17 @@
           </g>
         </svg>
       </div>
-      <h4><strong>GANACHE<sup>β</sup></strong></h4>
+      <h4>
+        <strong>GANACHE<sup>β</sup></strong>
+        <div class="GanacheVersion">v0.0.1</div>
+      </h4>
+
+      <script>
+        const {app} = require('electron').remote
+        var version = app.getVersion()
+        var el = document.getElementsByClassName('GanacheVersion')[0]
+        el.innerText = 'v'+version
+      </script>
     </div>
   </div>
   <div id="root"></div>

@@ -1,7 +1,7 @@
 {
   "name": "ganache",
   "productName": "Ganache",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "An Electron UI for Ganache",
   "main": "main.js",
   "private": true,
