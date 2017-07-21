@@ -160,7 +160,7 @@ class ConfigScreen extends Component {
                 <h4>TOTAL ACCOUNTS TO GENERATE</h4>
                 <div className={Styles.Row}>
                   <div className={Styles.RowItem}>
-                    <input ref="totalAccounts" type="text" defaultValue="6" />
+                    <input ref="totalAccounts" type="text" defaultValue="10" />
                   </div>
                   <div className={Styles.RowItem}>
                     <p>Total number of Accounts to create and pre-fund.</p>
