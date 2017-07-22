@@ -4,9 +4,11 @@ import Accounts from 'Modules/Accounts'
 import Blocks from 'Modules/Blocks'
 import Transactions from 'Modules/Transactions'
 import Console from 'Modules/Console'
+import AppUpdateScreen from 'Modules/AppUpdate'
 
 import TestRPCSource from 'Data/Sources/TestRPC'
 import ConsoleSource from 'Data/Sources/Console'
+import AppUpdaterSource from 'Data/Sources/AppUpdater'
 
 // Use this function to register your modules and/or your datasources, or your
 // event listeners. The Redux Store is not yet available at this point
@@ -20,10 +22,12 @@ export default async function (app, done, error) {
   app.register(Blocks)
   app.register(Transactions)
   app.register(Console)
+  app.register(AppUpdateScreen)
 
   // Data Sources
   app.register(TestRPCSource)
   app.register(ConsoleSource)
+  app.register(AppUpdaterSource)
 
   app.on('applicationDidStart', async function (app) {
 

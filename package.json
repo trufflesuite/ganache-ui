@@ -32,9 +32,15 @@
   "build": {
     "productName": "Ganache",
     "appId": "org.trufflesuite.Ganache",
-    "category": "public.app-category.tools",
+    "publish": [
+      {
+        "provider": "generic",
+        "url": "http://127.0.0.1:8080/"
+      }
+    ],
     "mac": {
-      "icon": "resources/icons/mac/icon.icns"
+      "icon": "resources/icons/mac/icon.icns",
+      "category": "public.app-category.tools"
     },
     "win": {
       "target": "nsis",
@@ -134,8 +140,8 @@
     "cross-env": "^3.1.4",
     "css-loader": "^0.26.1",
     "devtron": "^1.4.0",
-    "electron": "^1.4.14",
-    "electron-builder": "^11.2.5",
+    "electron": "^1.6.11",
+    "electron-builder": "^19.16.2",
     "electron-devtools-installer": "^2.0.1",
     "electron-rebuild": "^1.5.7",
     "enzyme": "^2.7.0",
@@ -184,6 +190,7 @@
     "core-js": "^2.4.1",
     "electron-debug": "^1.1.0",
     "electron-log": "^2.2.6",
+    "electron-updater": "^2.7.1",
     "eslint-config-standard": "^6.2.1",
     "eslint-plugin-standard": "^2.0.1",
     "find-process": "^1.1.0",

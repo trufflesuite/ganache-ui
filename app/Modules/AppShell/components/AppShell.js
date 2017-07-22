@@ -52,8 +52,8 @@ class AppShell extends Component {
             }
           </div>
         </div>
-      )
-    }
+    )
+  }
   }
 
-  export default TestRPCProvider(AppShell)
+export default TestRPCProvider(AppShell)

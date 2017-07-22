@@ -49,5 +49,29 @@ export default async function (app, done, error) {
     app.store.dispatch({type: 'APP/CHECKPORTRESULT', payload: message})
   })
 
+  ipcRenderer.on('APP/UPDATECHECK', (event, message) => {
+    app.store.dispatch({type: 'APP/UPDATECHECK', payload: message})
+  })
+
+  ipcRenderer.on('APP/UPDATEAVAILABLE', (event, info) => {
+    app.store.dispatch({type: 'APP/UPDATEAVAILABLE', payload: info})
+  })
+
+  ipcRenderer.on('APP/UPDATENOTAVAILABLE', (event, info) => {
+    app.store.dispatch({type: 'APP/UPDATENOTAVAILABLE', payload: info})
+  })
+
+  ipcRenderer.on('APP/UPDATEERROR', (event, err) => {
+    app.store.dispatch({type: 'APP/UPDATEERROR', payload: err})
+  })
+
+  ipcRenderer.on('APP/UPDATEDOWNLOADPROGRESS', (event, progressObj) => {
+    app.store.dispatch({type: 'APP/UPDATEDOWNLOADPROGRESS', payload: progressObj})
+  })
+
+  ipcRenderer.on('APP/UPDATEDOWNLOADED', (event, info) => {
+    app.store.dispatch({type: 'APP/UPDATEDOWNLOADED', payload: info})
+  })
+
   done()
 }

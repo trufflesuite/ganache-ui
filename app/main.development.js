@@ -1,4 +1,5 @@
 import { app, BrowserWindow, Menu, shell, ipcMain } from 'electron'
+import { autoUpdater } from 'electron-updater'
 import path from 'path'
 import SysLog from 'electron-log'
 
@@ -88,6 +89,7 @@ app.on('ready', async () => {
     mainWindow.show()
     mainWindow.focus()
     mainWindow.setTitle('GANACHE')
+    autoUpdater.checkForUpdates()
   })
 
   mainWindow.on('closed', () => {
@@ -108,6 +110,40 @@ app.on('ready', async () => {
     }]).popup(mainWindow)
   })
   // }
+
+  autoUpdater.logger = SysLog
+  autoUpdater.logger.transports.file.level = 'info'
+
+  if (process.env.NODE_ENV === 'development') {
+    autoUpdater.updateConfigPath = path.resolve('./app/dev-app-update.yml')
+  }
+
+  autoUpdater.on('checking-for-update', () => {
+    console.log('checking for updated!!!!!!!!!!!!!!!!')
+    mainWindow.send('APP/UPDATECHECK', {message: 'Checking for update...'})
+  })
+
+  autoUpdater.on('update-available', (ev, info) => {
+    mainWindow.send('APP/UPDATEAVAILABLE', info)
+  })
+
+  autoUpdater.on('update-not-available', (ev, info) => {
+    mainWindow.send('APP/UPDATENOTAVAILABLE', info)
+  })
+
+  autoUpdater.on('error', (ev, err) => {
+    mainWindow.send('APP/UPDATEERROR', err)
+  })
+
+  autoUpdater.on('download-progress', (ev, progressObj) => {
+    mainWindow.send('APP/UPDATEDOWNLOADPROGRESS', progressObj)
+  })
+
+  autoUpdater.on('update-downloaded', (ev, info) => {
+    mainWindow.send('APP/UPDATEDOWNLOADED', info)
+
+    setTimeout(() => { autoUpdater.quitAndInstall() }, 5000)
+  })
 
   if (process.platform === 'darwin') {
     template = [{
