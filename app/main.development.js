@@ -68,6 +68,14 @@ const installExtensions = async () => {
 
 app.setName('GANACHE')
 
+const getIconPath = () => {
+  return process.platform === 'win32' ? path.resolve('./resources/icons/win/icon.ico') : path.resolve('./resources/icons/png/256x256.png')
+}
+
+if (process.platform === 'darwin') {
+  app.dock.setIcon(getIconPath())
+}
+
 app.on('ready', async () => {
   await installExtensions()
 
@@ -77,7 +85,8 @@ app.on('ready', async () => {
     minHeight: 800,
     width: 1200,
     height: 930,
-    frame: false
+    frame: false,
+    icon: getIconPath()
   })
 
   mainWindow.loadURL(`file://${__dirname}/app.html`)
@@ -149,7 +158,7 @@ app.on('ready', async () => {
     template = [{
       label: 'Ganache',
       submenu: [{
-        label: 'About Ganache',
+        label: 'About Ganache ' + app.getVersion(),
         selector: 'orderFrontStandardAboutPanel:'
       }, {
         type: 'separator'
