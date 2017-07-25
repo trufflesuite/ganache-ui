@@ -21,7 +21,7 @@ class AppUpdateScreen extends Component {
   }
 
   componentDidMount () {
-    this.setSTateversion = app.getVersion()
+    this.setState({version: app.getVersion()})
   }
 
   componentWillReceiveProps (nextProps) {
@@ -31,7 +31,7 @@ class AppUpdateScreen extends Component {
       this.setState({loadingScreenFinished: true})
       setTimeout(() => {
         hashHistory.push('/config')
-      }, 3000)
+      }, 4000)
     }
   }
 

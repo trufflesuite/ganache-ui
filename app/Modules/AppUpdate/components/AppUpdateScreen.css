@@ -69,13 +69,13 @@
 
 .FadeOutLoadingScreen {
   :global {
-    animation: 1s 2s forwards cubic-bezier(0.4, 0, 1, 1) bgToTransparent;
+    animation: 1s 3s forwards cubic-bezier(0.4, 0, 1, 1) bgToTransparent;
   }
 }
 
 .FadeOutElement {
   :global {
-    animation: 1s .5s forwards cubic-bezier(0.4, 0, 1, 1) fadeOut;
+    animation: 2s 2s forwards cubic-bezier(0.4, 0, 1, 1) fadeOut;
   }
 }
 
