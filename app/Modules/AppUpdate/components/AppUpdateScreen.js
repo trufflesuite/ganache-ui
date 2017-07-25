@@ -64,8 +64,8 @@ class AppUpdateScreen extends Component {
           <OnlyIf test={this.props.appUpdater.haveLatestVersion}>
             <p className={elementStyles(Styles.UpdateNotice)}>You have the most up-to-date version of Ganache.</p>
           </OnlyIf>
-          <OnlyIf test={this.props.appUpdater.downloadingUpdate}>
-            <p className={elementStyles(Styles.UpdateNotice)}>Downloading Ganahce update {this.props.appUpdater.downloadingUpdate && this.props.appUpdater.downloadingUpdate.percent}%</p>
+          <OnlyIf test={this.props.appUpdater.downloadingUpdate !== false}>
+            <p className={elementStyles(Styles.UpdateNotice)}>Downloading Ganahce update...</p>
           </OnlyIf>
           <OnlyIf test={this.props.appUpdater.updateError}>
             <p className={elementStyles(Styles.UpdateNotice)}>Can't contact the Update server. Please try again later.</p>
