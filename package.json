@@ -1,7 +1,7 @@
 {
   "name": "ganache",
   "productName": "Ganache",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "An Electron UI for Ganache",
   "main": "main.js",
   "private": true,
@@ -34,13 +34,13 @@
     "appId": "org.trufflesuite.Ganache",
     "publish": [
       {
-        "provider": "generic",
-        "url": "http://127.0.0.1:8080/"
+        "provider": "github"
       }
     ],
     "mac": {
       "icon": "resources/icons/mac/icon.icns",
-      "category": "public.app-category.tools"
+      "category": "public.app-category.tools",
+      "identity": "58RKXWC272"
     },
     "win": {
       "target": "nsis",
@@ -71,6 +71,7 @@
       "dist/",
       "node_modules/",
       "app.html",
+      "main.entry.js",
       "main.js",
       "main.js.map",
       "package.json"
@@ -79,6 +80,13 @@
       {
         "from": "app/Services/ConsoleService/ConsoleScripts",
         "to": "ConsoleScripts",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "resources",
+        "to": "resources",
         "filter": [
           "**/*"
         ]
@@ -169,6 +177,7 @@
     "rcedit": "^0.9.0",
     "react-addons-test-utils": "^15.4.2",
     "redux-logger": "^2.7.4",
+    "serve-static-throttle": "^1.0.2",
     "sinon": "^1.17.7",
     "spectron": "^3.4.1",
     "style-loader": "^0.13.1",

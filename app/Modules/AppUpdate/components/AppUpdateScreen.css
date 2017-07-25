@@ -1,210 +1,157 @@
 @import 'colors.css';
 
-
-
-main {
+.AppUpdateScreen {
   width: 100%;
   display: flex;
   flex: 1;
   flex-direction: column;
   position: relative;
+  align-items: center;
+  justify-content: center;
 }
 
-.ConfigScreen {
-  color: var(--text-color);
+@keyframes :global(bgToTransparent) {
+  0% {
+    background-color: #33302e;
+  }
+  100% {
+    background-color: transparent;
+    display: none;
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+
+@keyframes :global(fadeIn) {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes :global(fadeOut) {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes :global(slideUp) {
+  0% {
+    transform: translateY(8px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.LoadingScreen {
+  position: fixed;
   display: flex;
   align-items: center;
+  justify-content: center;
   flex-direction: column;
-
-  width: 100%;
-
-  header {
-    flex-direction: column;
-  }
-
-  > svg {
-    margin: 2rem auto;
-  }
-
-  button {
-    display: flex;
-    align-items: center;
-    -webkit-app-region: no-drag;
-
-
-    &:active {
-      transform: scale(.98);
-    }
-
-    > div {
-      margin-right: .5rem;
-    }
-
-    svg > * {
-      stroke: currentColor !important;
-      fill: currentColor !important;
-    }
-  }
-
-
-  h3 {
-    padding: 0;
-    margin: 0;
-  }
-
-  h4 {
-    font-family: "Fira Code Regular";
-    font-size: .8rem;
-    letter-spacing: 1px;
-    font-weight: normal;
-  }
-
-  footer {
-    padding: 2rem;
-    display: flex;
-    justify-content: center;
-
-    button {
-      box-shadow: 0 2px 4px 0 rgba(0,0,0,0.20);
-    }
-  }
-
-  form {
-    box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.15);
-    width: 80%;
-    margin-bottom: 2rem;
-  }
-
-  .Visible {
-    display: block;
-  }
-
-  .ActiveTab {
-    color: var(--app-config-tab-active-text-color);
-    border-bottom: 2px solid lighten(var(--app-config-tab-active-text-color), 15%);
-  }
-
-  .Hidden {
-    display: none;
-  }
-
-  .ConfigHeader {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    width: 80%;
-    margin-top: 4rem;
-
-    > button {
-      margin-bottom: 1rem;
-    }
-  }
-
-  .ConfigTabs {
-    display: flex;
-    align-items: center;
-    flex: 1;
-    width: 100%;
-  }
-
-  .ConfigTabItem {
-    cursor: pointer;
-    text-align: center;
-    margin: 0 2rem 1rem 0;
-    font-size: .8rem;
-
-    transition: color .3s;
-
-    &:last-of-type {
-      border-right: none;
-    }
-
-    &.active {
-      border-bottom: 2px solid lighten(var(--app-config-tab-active-text-color), 15%);
-    }
-
-    &.active,
-    &:hover {
-      color: lighten(var(--app-config-tab-active-text-color), 15%);
-      font-weight: bold;
-    }
-
-    .ConfigTabItemImage {
-      height: 64px;
-      width: 64px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: center;
-    }
-
-    .ConfigTabItemImage img {
-      display: block;
-    }
-
-    .ConfigTabItemName {
-      font-weight: 500;
-      cursor: pointer;
-      text-transform: uppercase;
-    }
-  }
-
-  .ConfigCard {
-    background: white;
-    padding: 2rem;
-    width: 100%;
-
-    h4,
-    p {
-      margin: 0;
-    }
-
-    p {
-      color: var(--app-navbar-text);
-      font-family: "Fira Code Regular";
-      font-size: .875rem;
-    }
-
-    h2 {
-      color: var(--app-window-control-background);
-      font-family: "RobotoCondensed-Bold";
-      font-weight: bold;
-      margin-top: 0;
-    }
-
-    section {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .Row {
-      display: flex;
-      align-items: center;
-      flex-direction: row;
-      margin-bottom: 2rem;
-    }
-
-    .RowItem {
-      width: 50%;
-      align-items: center;
-      margin-right: 1rem;
-    }
-
-    .RowItem + .RowItem {
-      margin-right: 0;
-      margin-left: 1rem;
-    }
-
-    input[type='text'] {
-      border-color: var(--app-navbar-text);
-      width: 100%;
-    }
-  }
-
+  text-align: center;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #33302e;
+  font-family: "RobotoCondensed-Bold", Helvetica, Arial, sans-serif;
+  font-size: 20px;
+  letter-spacing:4px;
+  will-change: opacity, transform;
 }
 
-.PortAlert {
-  background-color: #ffd5d5;
-  display: block;
-  padding: .5rem;
+.FadeOutLoadingScreen {
+  :global {
+    animation: 1s 2s forwards cubic-bezier(0.4, 0, 1, 1) bgToTransparent;
+  }
+}
+
+.FadeOutElement {
+  :global {
+    animation: 1s .5s forwards cubic-bezier(0.4, 0, 1, 1) fadeOut;
+  }
+}
+
+.Logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  font-size: 20px;
+
+  font-weight: 700;
+  line-height: 3.2;
+  will-change: opacity;
+}
+
+.LoadingScreen .Logo {
+  opacity: 0;
+
+  :global {
+    animation: fadeIn 1s .8s forwards;
+  }
+}
+
+.LoadingScreen h4 {
+  opacity: 0;
+  margin: 2rem 0 0 0;
+  height: 42px;
+
+  :global {
+    animation: fadeIn 1s 1.6s forwards, slideUp 1s 1.6s forwards;
+  }
+}
+
+.LoadingScreen .GanacheVersion {
+  margin: 0;
   font-size: 14px;
+  letter-spacing: initial;
+  color: #525456;
+}
+
+.LoadingScreen h4 strong {
+  color: #efefef;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.LoadingScreen h4 strong sup {
+  font-family: Arial;
+  color: rgba(157, 174, 189, 0.47);
+  margin-left: 4px;
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+  top: -0.5em;
+}
+
+.Wrapper {
+  position: relative;
+}
+
+.UpdateNotice {
+  margin: 1rem 0 0 0;
+  font-size: 14px;
+  letter-spacing: initial;
+  color: #525456;
+}
+
+.InitialUpdateNotice {
+  opacity: 0;
+  margin: 1rem 0 0 0;
+  font-size: 14px;
+  letter-spacing: initial;
+  color: #525456;
+
+  :global {
+    animation: fadeIn 1s 1.8s forwards, slideUp 1s 1.8s forwards;
+  }
 }

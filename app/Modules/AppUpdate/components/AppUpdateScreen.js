@@ -1,15 +1,72 @@
 import React, {Component} from 'react'
+const {app} = require('electron').remote
 
+import { hashHistory } from 'react-router'
 import TestRPCProvider from 'Data/Providers/TestRPCProvider'
+import AppUpdaterProvider from 'Data/Providers/AppUpdaterProvider'
+
+import OnlyIf from 'Elements/OnlyIf'
+import Icon from 'Elements/Icon'
+import GanacheLogo from 'Icons/ganache_logo.svg'
 
 import Styles from './AppUpdateScreen.css'
 
 class AppUpdateScreen extends Component {
+  constructor () {
+    super()
+    this.state = {
+      version: '0.0.1',
+      loadingScreenFinished: false
+    }
+  }
+
+  componentDidMount () {
+    this.setSTateversion = app.getVersion()
+  }
+
+  componentWillReceiveProps (nextProps) {
+    const { appUpdater } = nextProps
+
+    if (appUpdater.haveLatestVersion && !this.props.appUpdater.haveLatestVersion) {
+      this.setState({loadingScreenFinished: true})
+      setTimeout(() => {
+        hashHistory.push('/config')
+      }, 3000)
+    }
+  }
+
   render () {
+    console.log(this.props.appUpdater)
+
+    const styles = `${Styles.LoadingScreen} ${this.state.loadingScreenFinished ? Styles.FadeOutLoadingScreen : ''}`
+    const elementStyles = (className) => (`${className} ${this.state.loadingScreenFinished ? Styles.FadeOutElement : ''}`)
+
     return (
-      <h1>APP UPDATE SCREEN</h1>
+      <div className={styles}>
+        <div className={Styles.Wrapper}>
+          <div className={elementStyles(Styles.Logo)}>
+            <Icon glyph={GanacheLogo} size={128} stroke={0} className={elementStyles('isolate')} />
+          </div>
+          <h4 className={elementStyles('')}>
+            <strong>GANACHE<sup>β</sup></strong>
+            <div className={elementStyles(Styles.GanacheVersion)}>v{this.state.version}</div>
+          </h4>
+          <OnlyIf test={this.props.appUpdater.checkingForUpdate}>
+            <p className={elementStyles(Styles.InitialUpdateNotice)}>Checking for Ganache Updates...</p>
+          </OnlyIf>
+          <OnlyIf test={this.props.appUpdater.haveLatestVersion}>
+            <p className={elementStyles(Styles.UpdateNotice)}>You have the most up-to-date version of Ganache.</p>
+          </OnlyIf>
+          <OnlyIf test={this.props.appUpdater.downloadingUpdate}>
+            <p className={elementStyles(Styles.UpdateNotice)}>Downloading Ganahce update {JSON.stringify(this.props.appUpdater.downloadingUpdate)}</p>
+          </OnlyIf>
+          <OnlyIf test={this.props.appUpdater.updateDownloaded}>
+            <p className={elementStyles(Styles.UpdateNotice)}>Ganache update downloaded. Restarting in 5s...</p>
+          </OnlyIf>
+        </div>
+      </div>
     )
   }
 }
 
-export default TestRPCProvider(AppUpdateScreen)
+export default AppUpdaterProvider(TestRPCProvider(AppUpdateScreen))

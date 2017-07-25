@@ -69,7 +69,7 @@ const installExtensions = async () => {
 app.setName('GANACHE')
 
 const getIconPath = () => {
-  return process.platform === 'win32' ? path.resolve('./resources/icons/win/icon.ico') : path.resolve('./resources/icons/png/256x256.png')
+  return process.platform === 'win32' ? path.resolve(`${__dirname}/../resources/icons/win/icon.ico`) : path.resolve(`${__dirname}/../resources/icons/png/256x256.png`)
 }
 
 if (process.platform === 'darwin') {
@@ -128,7 +128,6 @@ app.on('ready', async () => {
   }
 
   autoUpdater.on('checking-for-update', () => {
-    console.log('checking for updated!!!!!!!!!!!!!!!!')
     mainWindow.send('APP/UPDATECHECK', {message: 'Checking for update...'})
   })
 

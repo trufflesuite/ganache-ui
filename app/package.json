@@ -1,9 +1,9 @@
 {
   "name": "Ganache",
   "productName": "Ganache",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "An Electron UI for TestRPC",
-  "main": "./main.development.js",
+  "main": "./main.entry.js",
   "author": {
     "name": "John McDowall",
     "email": "john@kantan.io",

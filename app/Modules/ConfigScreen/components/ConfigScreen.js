@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 
 import TestRPCProvider from 'Data/Providers/TestRPCProvider'
-import AppUpdaterProvider from 'Data/Providers/AppUpdaterProvider'
 
 import Icon from 'Elements/Icon'
 import OnlyIf from 'Elements/OnlyIf'
@@ -47,7 +46,7 @@ class ConfigScreen extends Component {
   render () {
     const { portIsClear } = this.props.testRpcState
     const portIsBlocked = portIsClear.status === 'blocked' && portIsClear.pid !== undefined && portIsClear.pid[0].name !== 'Ganache' && portIsClear.pid[0].name !== 'Electron'
-    console.log(this.props)
+
     return (
       <main>
         <OnlyIf test={this.props.testRpcState.testRpcServerRunning}>
@@ -59,15 +58,6 @@ class ConfigScreen extends Component {
         <div className={Styles.ConfigScreen}>
           <OnlyIf test={!this.props.testRpcState.testRpcServerRunning}>
             <Icon glyph={GanacheLogo} size={128} className="isolate" strokeWidth={1}/>
-          </OnlyIf>
-          <OnlyIf test={this.props.appUpdater.checkingForUpdate}>
-            <p className={Styles.UpdateNotice}>Checking for Ganache Updates...</p>
-          </OnlyIf>
-          <OnlyIf test={this.props.appUpdater.haveLatestVersion}>
-            <p className={Styles.UpdateNotice}>You have the most up-to-date version of Ganache.</p>
-          </OnlyIf>
-          <OnlyIf test={this.props.appUpdater.haveLatestVersion}>
-            <p className={Styles.UpdateNotice}>You have the most up-to-date version of Ganache.</p>
           </OnlyIf>
           <div className={Styles.ConfigHeader}>
             <div className={Styles.ConfigTabs}>
@@ -359,4 +349,4 @@ _startTestRpc = (e) => {
 }
 }
 
-export default AppUpdaterProvider(TestRPCProvider(ConfigScreen))
+export default TestRPCProvider(ConfigScreen)
