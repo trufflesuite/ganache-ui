@@ -19,7 +19,7 @@ function bytesToSize (bytes, withPrefix = true) {
   var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)))
   let calculatedSize = (bytes / Math.pow(1024, i)).toFixed(4)
   return withPrefix ? calculatedSize + ' ' + sizes[i] : calculatedSize
-};
+}
 
 export default class BlockFetcher {
   constructor (stateManager, testRpcService) {

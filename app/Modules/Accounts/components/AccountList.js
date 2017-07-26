@@ -1,5 +1,9 @@
 import React, {Component} from 'react'
 
+import Icon from 'Elements/Icon'
+import LockedIcon from 'Elements/icons/locked.svg'
+import UnlockedIcon from 'Elements/icons/unlocked.svg'
+
 import Styles from './AccountList.css'
 
 export default class AccountList extends Component {
@@ -56,7 +60,10 @@ export default class AccountList extends Component {
             </div>
           </div>
           <div className={Styles.AccountState}>
-            { account.isUnlocked ? '🔓' : '🔐' }
+            { account.isUnlocked ?
+              <Icon glyph={UnlockedIcon} size={24} className='isolate' /> :
+              <Icon glyph={LockedIcon} size={24} className='isolate' />
+            }
           </div>
         </div>
       )

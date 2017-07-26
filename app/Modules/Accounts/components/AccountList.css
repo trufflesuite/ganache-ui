@@ -87,17 +87,16 @@
 
 .AccountState {
   position: absolute;
-  padding-top: 13px;
-    top: -26px;
-    right: -24px;
-    font-size: 2rem;
-    background: #ffffff;
-    border-radius: 50%;
-    width: 3rem;
-    height: 3rem;
-    padding: 10px;
-    border: 4px solid gray;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  padding-left: 8px;
+  top: -26px;
+  right: -24px;
+  font-size: 2rem;
+  background: #ffffff;
+  border-radius: 50%;
+  width: 3rem;
+  height: 3rem;
+  border: 2px solid gray;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
