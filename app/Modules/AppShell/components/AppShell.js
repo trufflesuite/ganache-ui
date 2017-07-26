@@ -18,39 +18,47 @@ ElectronCookies.enable({
   origin: 'http://truffleframework.com/ganache'
 })
 
+const Settings = new SettingsService()
+
 class AppShell extends Component {
   constructor () {
     super()
 
-    const Settings = new SettingsService()
+    if (Settings.get('analyticsTracking')) {
+      console.log('tracking')
+      this.user = ua('UA-83874933-5', Settings.get('uuid')) // eslint-disable-line
+      this.user.set('location', 'http://truffleframework.com/ganache')
+      this.user.set('checkProtocolTask', null)
+      this.user.set('an', 'Ganache')
+      this.user.set('av', app.getVersion())
+      this.user.set('ua', navigator.userAgent)
+      this.user.set('sr', screen.width + 'x' + screen.height)
+      this.user.set('vp', window.screen.availWidth + 'x' + window.screen.availHeight)
 
-    this.user = ua('UA-83874933-5', Settings.get('uuid')) // eslint-disable-line
-    this.user.set('location', 'http://truffleframework.com/ganache')
-    this.user.set('checkProtocolTask', null)
-    this.user.set('an', 'Ganache')
-    this.user.set('av', app.getVersion())
-    this.user.set('ua', navigator.userAgent)
-    this.user.set('sr', screen.width + 'x' + screen.height)
-    this.user.set('vp', window.screen.availWidth + 'x' + window.screen.availHeight)
+      window.onerror = function (msg, url, lineNo, columnNo, error) {
+        var message = [
+          'Message: ' + msg,
+          'Line: ' + lineNo,
+          'Column: ' + columnNo,
+          'Error object: ' + JSON.stringify(error)
+        ].join(' - ')
 
-    window.onerror = function (msg, url, lineNo, columnNo, error) {
-      var message = [
-        'Message: ' + msg,
-        'Line: ' + lineNo,
-        'Column: ' + columnNo,
-        'Error object: ' + JSON.stringify(error)
-      ].join(' - ')
+        setTimeout(function () {
+          this.user.exception(message.toString())
+        }, 0)
 
-      setTimeout(function () {
-        this.user.exception(message.toString())
-      }, 0)
-
-      return false
+        return false
+      }
+    } else {
+      console.log('not tracking')
     }
   }
 
   componentDidMount () {
-    this.user.pageview('/').send()
+    if (Settings.get('analyticsTracking')) {
+      this.user.pageview('/').send()
+    }
+
     Mousetrap.bind('command+1', () => {
       this.props.testRpcState.testRpcServerRunning ? hashHistory.push('/accounts') : null
     })
@@ -79,7 +87,7 @@ class AppShell extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.location.pathname !== this.props.location.pathname) {
+    if (Settings.get('analyticsTracking') && nextProps.location.pathname !== this.props.location.pathname) {
       const segment = nextProps.location.pathname.split('/')[1] || 'dashboard'
 
       this.user.pageview(nextProps.location.pathname).send()

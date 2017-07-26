@@ -2,6 +2,8 @@ import React, {Component} from 'react'
 
 import TestRPCProvider from 'Data/Providers/TestRPCProvider'
 
+import SettingsService from 'Services/SettingsService'
+
 import Icon from 'Elements/Icon'
 import OnlyIf from 'Elements/OnlyIf'
 import HeaderBar from 'Elements/HeaderBar'
@@ -11,6 +13,8 @@ import SettingsIcon from 'Icons/settings.svg'
 import RestartIcon from 'Icons/eject.svg'
 
 import Styles from './ConfigScreen.css'
+
+const Settings = new SettingsService()
 
 class ConfigTabItem extends Component {
   render () {
@@ -32,7 +36,9 @@ class ConfigScreen extends Component {
     accountsLocked: false,
     forkChain: false,
     verboseLogging: false,
-    activeTab: 'server'
+    activeTab: 'server',
+    googleAnalyticsTracking: Settings.get('analyticsTracking'),
+    cpuAndMemoryProfiling: Settings.get('cpuAndMemoryProfiling')
   }
 
   componentDidMount () {
@@ -62,7 +68,7 @@ class ConfigScreen extends Component {
           <div className={Styles.ConfigHeader}>
             <div className={Styles.ConfigTabs}>
               {
-                ['Server', 'Accounts', 'Gas', 'Mnemonic', 'Logging', 'Forking'].map((opt, index) => {
+                ['Server', 'Accounts', 'Gas', 'Mnemonic', 'Logging', 'Forking', 'Ganache'].map((opt, index) => {
                   return (
                     <ConfigTabItem
                       key={opt}
@@ -301,6 +307,38 @@ class ConfigScreen extends Component {
               : null }
             </section>
           </div>
+
+          <div className={ this.state.activeTab === 'ganache' ? Styles.Visible : Styles.Hidden}>
+            <h2>GANACHE SETTINGS</h2>
+              <section>
+                <h4>GOOGLE ANALYTICS</h4>
+                <div className={Styles.Row}>
+                  <div className={Styles.RowItem}>
+                    <div className="Switch">
+                      <input type="checkbox" ref="googleAnalyticsTracking" name="googleAnalyticsTracking" id="GoogleAnalyticsTracking" onChange={this._handleInputChange} checked={this.state.googleAnalyticsTracking} />
+                      <label htmlFor="GoogleAnalyticsTracking">GOOGLE ANALYTICS</label>
+                    </div>
+                  </div>
+                  <div className={Styles.RowItem}>
+                    <p>We use Google Analytics to track rough Ganache usage. It is completely anonymous, and we respect your privacy so no detailed or otherwise sensitive information is collected. We use this because it helps guide us to where we should most focus our development efforts. <b>We appreciate you helping us understand how people use Ganache!</b></p>
+                  </div>
+                </div>
+              </section>
+              <section>
+                <h4>CPU &amp; MEMORY PROFILING</h4>
+                <div className={Styles.Row}>
+                  <div className={Styles.RowItem}>
+                    <div className="Switch">
+                      <input type="checkbox" ref="cpuAndMemoryProfiling" name="cpuAndMemoryProfiling" id="CpuAndMemoryProfiling" onChange={this._handleInputChange} checked={this.state.cpuAndMemoryProfiling} />
+                      <label htmlFor="CpuAndMemoryProfiling">CPU &amp; MEMORY PROFILING</label>
+                    </div>
+                  </div>
+                  <div className={Styles.RowItem}>
+                    <p>Strictly for debugging Ganache. Dumps detailed metrics to a log file. Only enable if you are asked to by Truffle support.</p>
+                  </div>
+                </div>
+              </section>
+          </div>
         </section>
       </form>
     </div>
@@ -319,6 +357,9 @@ _handleInputChange = (event) => {
 
 _startTestRpc = (e) => {
   e.preventDefault()
+
+  Settings.set('analyticsTracking', this.refs.googleAnalyticsTracking.checked)
+  Settings.set('cpuAndMemoryProfiling', this.refs.cpuAndMemoryProfiling.checked)
 
   const config = {
     port: this.refs.portNumber.value,

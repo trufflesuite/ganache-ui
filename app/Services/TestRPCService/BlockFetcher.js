@@ -4,8 +4,14 @@ import autobind from 'class-autobind'
 import SysLog from 'electron-log'
 
 import fs from 'fs'
+import mkdirp from 'mkdirp'
 import path from 'path'
 import usage from 'pidusage'
+import { app, remote } from 'electron'
+
+import SettingsService from '../SettingsService'
+
+const Settings = new SettingsService()
 
 function bytesToSize (bytes, withPrefix = true) {
   var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB']
@@ -20,11 +26,16 @@ export default class BlockFetcher {
     this.stateManager = stateManager
     this.testRpcService = testRpcService
 
-    const profileLogPath = path.join(__dirname, '../../../profile.csv')
+    if (Settings.get('cpuAndMemoryProfiling')) {
+      const profileLogPath = path.resolve(`${(app ? app.getPath('userData') : remote.require('electron').app.getPath('userData'))}/profiling_data`); // eslint-disable-line
 
-    SysLog.log(`WRITING PROFILE DATA TO: ${profileLogPath}`)
+      if (!fs.existsSync(profileLogPath)) {
+        mkdirp.sync(profileLogPath)
+      }
 
-    this.logFile = fs.createWriteStream(profileLogPath, {flags: 'w'})
+      SysLog.log(`WRITING PROFILE DATA TO: ${profileLogPath}`)
+      this.logFile = fs.createWriteStream(path.join(profileLogPath, 'profile.csv'), {flags: 'w'})
+    }
 
     autobind(this)
   }
@@ -72,12 +83,14 @@ export default class BlockFetcher {
     blockChainState.transactions = await this.testRpcService.txFetcher.getRecentTransactions(currentBlockNumber, this)
     blockChainState.accounts = await this.testRpcService.accountFetcher.getAccountInfo()
 
-    // var mem = process.memoryUsage()
-    // SysLog.info(currentBlockNumber + ', ' + bytesToSize(mem.rss) + ', ' + bytesToSize(mem.heapTotal) + ', ' + bytesToSize(mem.heapUsed))
-    //
-    // usage.stat(process.pid, (err, result) => {
-    //   this.logFile.write(`${currentBlockNumber}, ${result.cpu}, ${bytesToSize(mem.rss, false)}, ${bytesToSize(mem.heapTotal, false)}, ${bytesToSize(mem.heapUsed, false)}\r\n`)
-    // })
+    if (Settings.get('cpuAndMemoryProfiling') && this.logFile) {
+      var mem = process.memoryUsage()
+      SysLog.info(currentBlockNumber + ', ' + bytesToSize(mem.rss) + ', ' + bytesToSize(mem.heapTotal) + ', ' + bytesToSize(mem.heapUsed))
+
+      usage.stat(process.pid, (err, result) => {
+        this.logFile.write(`${currentBlockNumber}, ${result.cpu}, ${bytesToSize(mem.rss, false)}, ${bytesToSize(mem.heapTotal, false)}, ${bytesToSize(mem.heapUsed, false)}\r\n`)
+      })
+    }
 
     return blockChainState
   }

@@ -153,9 +153,12 @@ main {
     padding: 2rem;
     width: 100%;
 
-    h4,
     p {
       margin: 0;
+    }
+
+    h4 {
+      margin: 0 0 .25rem 0;
     }
 
     p {
@@ -178,7 +181,7 @@ main {
 
     .Row {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       flex-direction: row;
       margin-bottom: 2rem;
     }
