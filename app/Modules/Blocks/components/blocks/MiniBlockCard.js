@@ -63,28 +63,12 @@ export default class MiniBlockCard extends PureComponent {
           </div>
         </div>
         <div className={Styles.RowItem}>
-          <div className={Styles.Nonce}>
-            <div className={Styles.Label}>
-              NONCE
-            </div>
-            <div className={Styles.Value}>
-              <FormattedHex value={block.header.nonce} />
-            </div>
-          </div>
           <div className={Styles.GasUsed}>
             <div className={Styles.Label}>
               GAS USED
             </div>
             <div className={Styles.Value}>
               <FormattedHex value={block.header.gasUsed} />
-            </div>
-          </div>
-          <div className={Styles.GasLimit}>
-            <div className={Styles.Label}>
-              GAS LIMIT
-            </div>
-            <div className={Styles.Value}>
-              <FormattedHex value={block.header.gasLimit} />
             </div>
           </div>
           <div className={Styles.MinedOn}>
