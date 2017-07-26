@@ -171,6 +171,7 @@
     "html-webpack-plugin": "^2.26.0",
     "jsdom": "^9.9.1",
     "json-loader": "^0.5.4",
+    "lodash": "^3.10.1",
     "minimist": "^1.2.0",
     "mocha": "^3.2.0",
     "node-gyp": "^3.5.0",
@@ -195,6 +196,7 @@
     "webpack-validator": "^2.3.0"
   },
   "dependencies": {
+    "@exponent/electron-cookies": "^2.0.0",
     "bn.js": "^4.11.6",
     "class-autobind": "^0.1.4",
     "core-js": "^2.4.1",
@@ -205,7 +207,6 @@
     "eslint-plugin-standard": "^2.0.1",
     "find-process": "^1.1.0",
     "font-awesome": "^4.7.0",
-    "lodash": "^3.10.1",
     "moment": "^2.17.1",
     "moment-timezone": "^0.5.11",
     "mousetrap": "^1.6.1",
@@ -229,6 +230,8 @@
     "sass-loader": "^4.1.1",
     "source-map-support": "^0.4.8",
     "svg-inline-loader": "^0.7.1",
+    "universal-analytics": "^0.4.13",
+    "uuid": "^3.1.0",
     "web3": "^0.18.2"
   },
   "devEngines": {

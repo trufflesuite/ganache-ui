@@ -2,9 +2,11 @@ import { app, BrowserWindow, Menu, shell, ipcMain } from 'electron'
 import { autoUpdater } from 'electron-updater'
 import path from 'path'
 import SysLog from 'electron-log'
+import uuid from 'uuid'
 
 import TestRPCService from './Services/TestRPCService'
 import ConsoleService from './Services/ConsoleService'
+import SettingsService from './Services/SettingsService'
 
 let menu
 let template
@@ -12,8 +14,13 @@ let mainWindow = null
 let testRpcService = null
 let consoleService = null // eslint-disable-line
 
+global.Settings = new SettingsService()
+
+// Analytics Tracking Setup
+Settings.set('uuid', Settings.get('uuid', uuid.v4())) // eslint-disable-line
+
 if (process.env.NODE_ENV === 'production') {
-  const sourceMapSupport = require('source-map-support'); // eslint-disable-line
+  const sourceMapSupport = require('source-map-support') // eslint-disable-line
   sourceMapSupport.install()
 
   SysLog.transports.file.level = 'silly'

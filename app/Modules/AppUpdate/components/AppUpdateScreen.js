@@ -43,8 +43,6 @@ class AppUpdateScreen extends Component {
   }
 
   render () {
-    console.log(this.props.appUpdater)
-
     const styles = `${Styles.LoadingScreen} ${this.state.loadingScreenFinished ? Styles.FadeOutLoadingScreen : ''}`
     const elementStyles = (className) => (`${className} ${this.state.loadingScreenFinished ? Styles.FadeOutElement : ''}`)
 
