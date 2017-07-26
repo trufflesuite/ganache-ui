@@ -32,6 +32,21 @@ class AppShell extends Component {
     this.user.set('ua', navigator.userAgent)
     this.user.set('sr', screen.width + 'x' + screen.height)
     this.user.set('vp', window.screen.availWidth + 'x' + window.screen.availHeight)
+
+    window.onerror = function (msg, url, lineNo, columnNo, error) {
+      var message = [
+        'Message: ' + msg,
+        'Line: ' + lineNo,
+        'Column: ' + columnNo,
+        'Error object: ' + JSON.stringify(error)
+      ].join(' - ')
+
+      setTimeout(function () {
+        this.user.exception(message.toString())
+      }, 0)
+
+      return false
+    }
   }
 
   componentDidMount () {
@@ -68,7 +83,7 @@ class AppShell extends Component {
       const segment = nextProps.location.pathname.split('/')[1] || 'dashboard'
 
       this.user.pageview(nextProps.location.pathname).send()
-      this.user.screenview(segment, 'Ganache').send()
+      this.user.screenview(segment, 'Ganache', app.getVersion()).send()
     }
   }
 
