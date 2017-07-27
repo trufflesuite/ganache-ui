@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 
+import FormattedEtherValue from 'Elements/FormattedEtherValue'
 import Icon from 'Elements/Icon'
 import LockedIcon from 'Elements/icons/locked.svg'
 import UnlockedIcon from 'Elements/icons/unlocked.svg'
@@ -47,7 +48,7 @@ export default class AccountList extends Component {
                 BALANCE
               </div>
               <div className={Styles.Value}>
-                {account.balance} WEI
+                <FormattedEtherValue value={account.balance} />
               </div>
             </div>
             <div className={Styles.RowItem}>
