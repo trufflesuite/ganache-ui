@@ -68,7 +68,7 @@ export default class MiniBlockCard extends PureComponent {
               GAS USED
             </div>
             <div className={Styles.Value}>
-              <FormattedHex value={block.header.gasUsed} />
+              {parseInt(EtherUtil.bufferToInt(block.header.gasUsed), 16)}
             </div>
           </div>
           <div className={Styles.MinedOn}>

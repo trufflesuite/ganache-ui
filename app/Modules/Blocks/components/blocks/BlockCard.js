@@ -5,6 +5,7 @@ import TestRpcProvider from 'Data/Providers/TestRPCProvider'
 
 import Moment from 'react-moment'
 import EtherUtil from 'ethereumjs-util'
+
 import { hashHistory } from 'react-router'
 
 import Styles from './BlockCard.css'
@@ -62,10 +63,10 @@ class BlockCard extends Component {
           <dd>{EtherUtil.bufferToHex(block.header.parentHash)}</dd>
 
           <dt>Gas Used / Gas Limit</dt>
-          <dd><FormattedHex value={block.header.gasUsed} /> / <FormattedHex value={block.header.gasLimit} /></dd>
+          <dd>{parseInt(EtherUtil.bufferToInt(block.header.gasUsed), 16)} / {parseInt(EtherUtil.bufferToInt(block.header.gasLimit), 16)}</dd>
 
           <dt>Nonce</dt>
-          <dd><FormattedHex value={block.header.nonce} /></dd>
+          <dd>{parseInt(EtherUtil.bufferToInt(block.header.nonce, 16))}</dd>
 
           <dt>Extra Data</dt>
           <dd>

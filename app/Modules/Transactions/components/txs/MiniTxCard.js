@@ -78,7 +78,7 @@ export default class MiniTxCard extends Component {
                 VALUE
               </div>
               <div className={Styles.Value}>
-                <FormattedHex value={tx.value} />
+                {parseInt(EtherUtil.bufferToInt(tx.value), 16)}
               </div>
             </div>
           </div>
@@ -89,7 +89,7 @@ export default class MiniTxCard extends Component {
                 NONCE
               </div>
               <div className={Styles.Value}>
-                <FormattedHex value={tx.nonce} />
+                {parseInt(EtherUtil.bufferToInt(tx.nonce), 16)}
               </div>
             </div>
           </div>
@@ -100,7 +100,7 @@ export default class MiniTxCard extends Component {
                 GAS USED
               </div>
               <div className={Styles.Value}>
-                <FormattedHex value={tx.gasUsed} />
+                {parseInt(EtherUtil.bufferToInt(tx.gasUsed), 16)}
               </div>
             </div>
           </div>

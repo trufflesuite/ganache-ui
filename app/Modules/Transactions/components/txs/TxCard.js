@@ -22,15 +22,15 @@ class TxCard extends Component {
           <dt>From</dt>
           <dd>{tx.from}</dd>
           <dt>Value</dt>
-          <dd><FormattedHex value={tx.tx.value} /></dd>
+          <dd>{parseInt(EtherUtil.bufferToInt(tx.tx.value, 16))}</dd>
           <dt>Gas Used</dt>
-          <dd><FormattedHex value={tx.gasUsed} /></dd>
+          <dd>{parseInt(EtherUtil.bufferToInt(tx.gasUsed, 16))}</dd>
           <dt>Gas Price</dt>
-          <dd><FormattedHex value={tx.tx.gasPrice} /></dd>
+          <dd>{parseInt(EtherUtil.bufferToInt(tx.tx.gasPrice, 16))}</dd>
           <dt>Nonce</dt>
-          <dd><FormattedHex value={tx.tx.nonce} /></dd>
+          <dd>{parseInt(EtherUtil.bufferToInt(tx.tx.nonce, 16))}</dd>
           <dt>Gas Limit</dt>
-          <dd><FormattedHex value={tx.tx.gasLimit} /></dd>
+          <dd>{parseInt(EtherUtil.bufferToInt(tx.tx.gasLimit, 16))}</dd>
         </dl>
         <dl>
           { isContractCreationTx
