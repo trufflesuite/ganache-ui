@@ -29,17 +29,15 @@ class AppUpdateScreen extends Component {
 
     if (appUpdater.haveLatestVersion && !this.props.appUpdater.haveLatestVersion) {
       this.setState({loadingScreenFinished: true})
-      setTimeout(() => {
-        hashHistory.push('/config')
-      }, 4000)
     }
 
     if (appUpdater.updateError !== false && this.props.appUpdater.updateError === false) {
       this.setState({loadingScreenFinished: true})
-      setTimeout(() => {
-        hashHistory.push('/config')
-      }, 4000)
     }
+
+    setTimeout(() => {
+      hashHistory.push('/config')
+    }, 4000)
   }
 
   render () {
