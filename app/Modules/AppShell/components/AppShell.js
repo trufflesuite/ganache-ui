@@ -25,7 +25,6 @@ class AppShell extends Component {
     super()
 
     if (Settings.get('analyticsTracking')) {
-      console.log('tracking')
       this.user = ua('UA-83874933-5', Settings.get('uuid')) // eslint-disable-line
       this.user.set('location', 'http://truffleframework.com/ganache')
       this.user.set('checkProtocolTask', null)
@@ -49,8 +48,6 @@ class AppShell extends Component {
 
         return false
       }
-    } else {
-      console.log('not tracking')
     }
   }
 

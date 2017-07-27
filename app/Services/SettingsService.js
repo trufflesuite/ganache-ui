@@ -32,7 +32,6 @@ class Settings {
   }
 
   set (key, value) {
-    console.log(`setting: ${key}=${value}`)
     const valChanged = this.data[key] !== value
     this.data[key] = value
     if (this._hooks[key] && valChanged) {
@@ -64,7 +63,6 @@ class Settings {
     if ((now - this.lastSync > 250 || force)) {
       if (this.data) {
         try {
-          console.log('saving settings: ', JSON.stringify(this.data))
           fs.writeFileSync(this.PATH, JSON.stringify(this.data, null, 4))
         } catch (e) {
           if (this.saving) clearTimeout(this.saving)

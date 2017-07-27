@@ -36,7 +36,6 @@ export const makeApiRequest = (url, options = {}) => {
 
 export const sendIpcMessage = (type, args, returnValue=null) => {
   return new Promise((resolve, reject) => {
-    console.log(`IPC SEND: ${type} - ${args}`)
     ipcRenderer.send(type, args)
     resolve(returnValue)
   })
