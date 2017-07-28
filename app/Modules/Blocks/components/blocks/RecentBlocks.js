@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react'
 import Pluralize from 'pluralize'
 
@@ -6,9 +5,6 @@ import BlockCard from './BlockCard'
 import BlockList from './BlockList'
 
 import EtherUtil from 'ethereumjs-util'
-import Icon from 'Elements/Icon'
-import BlocksIcon from 'Icons/blocks.svg'
-import HeaderBar from 'Elements/HeaderBar'
 
 import { hashHistory } from 'react-router'
 
@@ -29,17 +25,29 @@ export default class RecentBlocks extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.params.block_number === this.props.params.block_number && this.props.params.block_number === this.state.currentBlockNumberSearch && !this.state.isSearchingForBlock) {
+    if (
+      nextProps.params.block_number === this.props.params.block_number &&
+      this.props.params.block_number === this.state.currentBlockNumberSearch &&
+      !this.state.isSearchingForBlock
+    ) {
       return
     }
 
-    if (nextProps.testRpcState.currentBlockSearchMatch !== this.state.currentBlockSearchMatch && nextProps.params.block_number !== undefined)  {
+    if (
+      nextProps.testRpcState.currentBlockSearchMatch !==
+        this.state.currentBlockSearchMatch &&
+      nextProps.params.block_number !== undefined
+    ) {
       this.setState({
         isSearchingForBlock: false,
         blockSearchMatch: true,
         currentBlockNumberSearch: nextProps.params.block_number,
         currentBlockSearchMatch: nextProps.testRpcState.currentBlockSearchMatch,
-        validBlockSearchResult: nextProps.testRpcState.currentBlockSearchMatch && !nextProps.testRpcState.currentBlockSearchMatch.hasOwnProperty('error')
+        validBlockSearchResult:
+          nextProps.testRpcState.currentBlockSearchMatch &&
+          !nextProps.testRpcState.currentBlockSearchMatch.hasOwnProperty(
+            'error'
+          )
       })
     } else {
       this.setState({
@@ -51,8 +59,13 @@ export default class RecentBlocks extends Component {
       })
     }
 
-    if (nextProps.params.block_number !== undefined && nextProps.params.block_number !== this.state.currentBlockNumberSearch && !this.state.isSearchingForBlock && !this.state.validBlockSearchResult) {
-      this.setState((prevState) => {
+    if (
+      nextProps.params.block_number !== undefined &&
+      nextProps.params.block_number !== this.state.currentBlockNumberSearch &&
+      !this.state.isSearchingForBlock &&
+      !this.state.validBlockSearchResult
+    ) {
+      this.setState(prevState => {
         return {
           ...prevState,
           isSearchingForBlock: true,
@@ -69,26 +82,27 @@ export default class RecentBlocks extends Component {
     }
   }
 
-  _handleClearBlockSearch = (e) => {
+  _handleClearBlockSearch = e => {
     e.preventDefault()
     this.setState(() => {
       hashHistory.push(`/blocks`)
-      return {blockSearchMatch: false, currentBlockNumberSearch: null, currentBlockSearchMatch: null, validBlockSearchResult: false, isSearchingForBlock: false}
+      return {
+        blockSearchMatch: false,
+        currentBlockNumberSearch: null,
+        currentBlockSearchMatch: null,
+        validBlockSearchResult: false,
+        isSearchingForBlock: false
+      }
     })
   }
 
-  _handleTxSearch = (value) => {
-    this.setState({isSearchingForTx: true})
+  _handleTxSearch = value => {
+    this.setState({ isSearchingForTx: true })
     this.props.appSearchTx(value)
   }
 
-  _renderBlockCard = (block) => {
-    return (
-      <BlockCard
-        block={block}
-        handleTxSearch={this._handleTxSearch}
-      />
-    )
+  _renderBlockCard = block => {
+    return <BlockCard block={block} handleTxSearch={this._handleTxSearch} />
   }
 
   _renderSearchingBlock = () => {
@@ -101,27 +115,37 @@ export default class RecentBlocks extends Component {
 
   _renderBlockSearchMatch = () => {
     const block = this.state.currentBlockSearchMatch
-    return this.state.currentBlockSearchMatch && this.state.validBlockSearchResult && this._renderBlockCard(block)
+    return (
+      this.state.currentBlockSearchMatch &&
+      this.state.validBlockSearchResult &&
+      this._renderBlockCard(block)
+    )
   }
 
   _renderPanelHeaderText = () => {
     if (this.state.validBlockSearchResult) {
-      return `BLOCK #${EtherUtil.bufferToInt(this.state.currentBlockSearchMatch.header.number)}`
+      return `BLOCK #${EtherUtil.bufferToInt(
+        this.state.currentBlockSearchMatch.header.number
+      )}`
     }
 
-    return `LAST ${this.props.blocks.length} ${Pluralize('BLOCKS', this.props.blocks.length)}`
+    return `LAST ${this.props.blocks.length} ${Pluralize(
+      'BLOCKS',
+      this.props.blocks.length
+    )}`
   }
 
-  _renderPanelHeaderControls = () => {
-  }
+  _renderPanelHeaderControls = () => {}
 
   _renderPanelBody = () => {
     if (!this.state.isSearchingForBlock && !this.state.blockSearchMatch) {
-      return <BlockList
-              blocks={this.props.blocks}
-              handleBlockNumberSearch={this._handleBlockNumberSearch}
-              handleTxSearch={this.props.handleTxSearch}
-            />
+      return (
+        <BlockList
+          blocks={this.props.blocks}
+          handleBlockNumberSearch={this._handleBlockNumberSearch}
+          handleTxSearch={this.props.handleTxSearch}
+        />
+      )
     }
 
     if (this.state.isSearchingForBlock) {
@@ -138,13 +162,17 @@ export default class RecentBlocks extends Component {
   render () {
     return (
       <div className={Styles.Blocks}>
-      {
-        this.state.validBlockSearchResult ?
-          <a href="#" className={BlocksStyles.BackButton} onClick={this._handleClearBlockSearch}>&larr; All Blocks</a>
-          : null
-      }
+        {this.state.validBlockSearchResult
+          ? <a
+              href="#"
+              className={BlocksStyles.BackButton}
+              onClick={this._handleClearBlockSearch}
+            >
+              &larr; All Blocks
+            </a>
+          : null}
         <main>
-          { this._renderPanelBody() }
+          {this._renderPanelBody()}
         </main>
       </div>
     )

@@ -1,38 +1,36 @@
 @import 'colors.css';
-
+@import 'cards.css';
 
 .MiniBlockCard {
-  width: calc( 100vw / 3 - 1.35rem);
-  border: 2px solid var(--app-card-default-border);
+  width: 100%;
   background: var(--app-card-default-background);
-  padding: .8rem;
   border-radius: 4px;
   word-wrap: break-word;
-  margin: 0 1rem 1rem 1rem;
+  margin: 0 0 1rem 0;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+
+  composes: CardShadow;
 
   > * {
     cursor: pointer;
   }
-
-  &:nth-child(1n) {
-    margin-left: 0;
-  }
-
-  &:nth-child(3n) {
-    margin-right: 0;
-  }
 }
 
 .RowItem {
-  margin-bottom: 1rem;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
+}
 
-  &:last-of-type {
-    margin-bottom: 0;
-  }
+.PrimaryItems {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  width: 100%;
 }
 
 .Label {
@@ -56,6 +54,11 @@
 }
 
 .BlockNumber {
+  align-items: center;
+  padding: .8rem;
+  background-color: var(--primary-color);
+  min-width: 8vw;
+
   .Value {
     font-weight: bold;
   }
@@ -67,9 +70,7 @@
   }
 }
 
-.Nonce,
 .GasUsed,
-.GasLimit,
 .MinedOn {
   .Label {
     font-size: .625rem;
@@ -81,15 +82,27 @@
   }
 }
 
-.HasTxs {
-  border-color: var(--primary-color);
+.GasUsed {
+  min-width: 7vw;
 }
 
-.TransactionBadge {
+.HasTxs {
+  composes: CardShadowHighlight;
+}
+
+.TransactionBadge,
+.NoTransactionBadge {
   background-color: var(--primary-color);
   color: white;
   font-size: .75rem;
   padding: 8px;
   height: 28px;
   border-radius: 25px;
+  width: 120px;
+  text-align: center;
+}
+
+.NoTransactionBadge {
+  background-color: var(--app-card-default-background);
+  color: var(--app-navbar-text);
 }
