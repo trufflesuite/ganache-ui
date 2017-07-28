@@ -24,7 +24,7 @@ export default class TestRPCService extends EventEmitter {
     this.eventHandler = new EventHandler(this)
 
     autobind(this)
-    console.log('🍪 Starting Ganache Core')
+    console.log('🍪  Starting Ganache Core')
   }
 
   log = (message) => {

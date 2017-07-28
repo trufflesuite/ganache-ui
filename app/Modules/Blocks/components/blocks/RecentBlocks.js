@@ -113,11 +113,6 @@ export default class RecentBlocks extends Component {
   }
 
   _renderPanelHeaderControls = () => {
-    if (this.state.validBlockSearchResult) {
-      return (
-        <a href="#" className={BlocksStyles.BackButton} onClick={this._handleClearBlockSearch}>&larr; All Blocks</a>
-      )
-    }
   }
 
   _renderPanelBody = () => {
@@ -143,11 +138,11 @@ export default class RecentBlocks extends Component {
   render () {
     return (
       <div className={Styles.Blocks}>
-        <HeaderBar>
-          <Icon glyph={BlocksIcon} size={32} />
-          <h4>{ this._renderPanelHeaderText() }</h4>
-          <span>{ this._renderPanelHeaderControls() }</span>
-        </HeaderBar>
+      {
+        this.state.validBlockSearchResult ?
+          <a href="#" className={BlocksStyles.BackButton} onClick={this._handleClearBlockSearch}>&larr; All Blocks</a>
+          : null
+      }
         <main>
           { this._renderPanelBody() }
         </main>

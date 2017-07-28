@@ -43,7 +43,7 @@ class AppShell extends Component {
         ].join(' - ')
 
         setTimeout(function () {
-          this.user.exception(message.toString())
+          //this.user.exception(message.toString())
         }, 0)
 
         return false

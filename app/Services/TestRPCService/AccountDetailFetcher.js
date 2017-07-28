@@ -16,6 +16,7 @@ export default class AccountDetailFetcher {
         address: EtherUtils.toChecksumAddress(address),
         balance: new BN(latestAccountInfo.balance).toString(),
         nonce: EtherUtils.bufferToInt(latestAccountInfo.nonce),
+        publicKey: this.stateManager.accounts[address].publicKey.toString('hex'),
         privateKey: this.stateManager.accounts[address].secretKey.toString('hex'),
         isUnlocked: this.stateManager.isUnlocked(address)
       }

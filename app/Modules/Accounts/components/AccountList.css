@@ -1,9 +1,5 @@
 @import 'colors.css';
 
-.CardItem {
-  margin-bottom: .5rem;
-}
-
 .Label {
   font-size: .875rem;
   font-family: "RobotoCondensed-Regular";
@@ -20,7 +16,7 @@
 
 .AccountList {
   width: 100%;
-  padding: 1rem 2rem 1rem 1rem;
+  padding: 1rem;
 
   display: flex;
   flex-direction: column;
@@ -28,57 +24,41 @@
 }
 
 .AccountCard {
-  padding: 1rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: .8rem;
   background-color: var(--app-card-default-background);
-  border: 2px solid var(--app-card-default-border);
   border-radius: 4px;
-  margin-bottom: 2.8rem;
+  margin-bottom: 1rem;
   position: relative;
-}
-
-.AccountAddressAndIndex,
-.AccountNonceAndBalance,
-.AccountState,
-.AccountPrivateKey {
-  composes: CardItem;
+  box-shadow: 0 0 0 0.5px rgba(49,49,93,.14), 0 2px 5px 0 rgba(49,49,93,.1), 0 1px 2px 0 rgba(0,0,0,.08);
 }
 
 .AccountAddress {
   font-weight: bold;
-  flex-grow: 2;
+  margin-right: 2rem;
 
   .Value {
     font-size: 1.222222222rem;
   }
 }
 
-.AccountIndex {
-  flex-shrink: 1;
-  font-weight: bold;
+.AccountBalance {
+  .Value {
+    font-weight: bold;
+    font-size: 1.222222222rem;
+  }
 }
 
-.AccountNonceAndBalance,
-.AccountAddressAndIndex, {
+.AddressAndBalance {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-
-  .RowItem {
-    margin-right: 1rem;
-  }
+  width: 60%;
 }
 
 .AccountPrivateKey {
-  .Label,
-  .Value {
-    font-size: 14px;
-  }
-}
-
-.AccountNonceAndBalance {
-  justify-content: space-between;
-  margin-bottom: 0;
-
   .Label,
   .Value {
     font-size: 14px;
@@ -86,10 +66,6 @@
 }
 
 .AccountState {
-  position: absolute;
-  padding-left: 8px;
-  top: -26px;
-  right: -24px;
   font-size: 2rem;
   background: #ffffff;
   border-radius: 50%;
@@ -99,4 +75,65 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-left: 1rem;
+}
+
+.SecondaryInfo {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 40%;
+
+  > div:not([class]) {
+    width: 20%;
+  }
+}
+
+span {
+  position: relative;
+
+.popover {
+    background-color: rgba(0,0,0,0.85);
+    border-radius: 5px;
+    bottom: 42px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.4);
+    color: #fff;
+    display: none;
+    font-size: 12px;
+    font-family: 'Helvetica',sans-serif;
+    transform: translateX(-35%);
+    padding: 7px 10px;
+    position: absolute;
+    z-index: 4;
+
+    &:before {
+      border-top: 7px solid rgba(0,0,0,0.85);
+      border-right: 7px solid transparent;
+      border-left: 7px solid transparent;
+      bottom: -7px;
+      content: '';
+      display: block;
+      left: 50%;
+      margin-left: -7px;
+      position: absolute;
+    }
+  }
+
+  &:hover,
+  &:focus {
+      .popover {
+        display: block;
+        animation: fade-in .3s linear 1, move-up .3s linear 1;
+      }
+    }
+  }
+
+@keyframes fade-in {
+	from   { opacity: 0; }
+	to { opacity: 1; }
+}
+
+@keyframes move-up {
+	from   { bottom: 30px; }
+	to { bottom: 42px; }
 }

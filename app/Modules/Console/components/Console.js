@@ -138,10 +138,6 @@ class Console extends Component {
   render () {
     return (
       <div className={Styles.Console}>
-        <HeaderBar>
-          <Icon glyph={ConsoleIcon} size={32} />
-          <h4>CONSOLE</h4>
-        </HeaderBar>
         <main>
           <LogContainer logs={this._logBuffer()} />
         </main>

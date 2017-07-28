@@ -162,7 +162,7 @@ class TopNavbar extends Component {
           <Icon glyph={SearchIcon} size={16} />
           </div>
         </main>
-        <footer className={Styles.Footer}>
+        <section className={Styles.StatusAndControls}>
           <div className={Styles.Status}>
             <StatusIndicator title="CURRENT BLOCK" value={blockNumber} />
             <StatusIndicator title="BLOCK INTERVAL TIME" value={this._renderMiningTime()} />
@@ -194,7 +194,7 @@ class TopNavbar extends Component {
               {this._renderMiningControls() }
             </OnlyIf>
           </div>
-        </footer>
+        </section>
       </nav>
     )
   }

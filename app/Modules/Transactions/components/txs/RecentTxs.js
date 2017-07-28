@@ -125,11 +125,11 @@ export default class RecentTxs extends Component {
   render () {
     return (
       <div className={Styles.Transactions}>
-        <HeaderBar>
-          <Icon glyph={TxIcon} size={32} />
-          <h4>{ this._renderPanelHeaderText() }</h4>
-          <span>{ this._renderPanelHeaderControls() }</span>
-        </HeaderBar>
+        {
+          this.state.validTxSearchResult ?
+            <a href="#" className={Styles.BackButton} onClick={this._handleClearTxSearch}>&larr; All TXs</a>
+          : null
+        }
         <WithEmptyState
           test={this.props.testRpcState.transactions.length === 0}
           emptyStateComponent={EmptyTransactions}

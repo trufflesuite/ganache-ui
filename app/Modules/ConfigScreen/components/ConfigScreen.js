@@ -55,12 +55,6 @@ class ConfigScreen extends Component {
 
     return (
       <main>
-        <OnlyIf test={this.props.testRpcState.testRpcServerRunning}>
-          <HeaderBar>
-            <Icon glyph={SettingsIcon} size={32}/>
-            <h4>SETTINGS</h4>
-          </HeaderBar>
-        </OnlyIf>
         <div className={Styles.ConfigScreen}>
           <OnlyIf test={!this.props.testRpcState.testRpcServerRunning}>
             <Icon glyph={GanacheLogo} size={128} className="isolate" strokeWidth={1}/>

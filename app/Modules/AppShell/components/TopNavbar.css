@@ -11,7 +11,6 @@
 
 .Main {
   width: 100vw;
-  padding: .8rem;
   display: flex;
   flex-direction: row;
   background-color: var(--app-navbar-background);
@@ -27,11 +26,12 @@
   flex-direction: row;
 
   a {
+    padding: .8rem;
     color: var(--app-navbar-text);
     cursor: pointer;
     text-decoration: none;
     position: relative;
-    margin-right: 2rem;
+    margin-right: .5rem;
     text-transform: uppercase;
     display: flex;
     align-items: center;
@@ -48,6 +48,7 @@
 
     &.Active {
       color: var(--primary-color);
+      background-color: var(--app-statusbar-background);
 
       svg {
         stroke: var(--primary-color) !important;
@@ -105,7 +106,7 @@
   }
 }
 
-.Footer {
+.StatusAndControls{
   width: 100vw;
   height: 56px;
   color: var(--app-statusbar-text);

@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 
-import MnemonicAndHdPath from 'Elements/MnemonicAndHdPath'
+import MnemonicAndHdPath from './MnemonicAndHdPath'
 import AccountList from './AccountList'
 
 import WithEmptyState from 'Elements/WithEmptyState'
@@ -55,23 +55,19 @@ class Accounts extends Component {
   render () {
     return (
       <div className={Styles.Accounts}>
-        <HeaderBar>
-          <Icon glyph={AccountIcon} size={32} />
-          <h4>ACCOUNTS</h4>
-        </HeaderBar>
         <main>
-          <WithEmptyState
-            test={this.props.testRpcState.accounts.length === 0}
-            emptyStateComponent={LoadingAccounts}
-            >
-            <AccountList accounts={this.props.testRpcState.accounts} />
-          </WithEmptyState>
           <div className={Styles.Mnemonic}>
             <MnemonicAndHdPath
               mnemonic={this.props.testRpcState.mnemonic}
               hdPath={this.props.testRpcState.hdPath}
             />
           </div>
+          <WithEmptyState
+            test={this.props.testRpcState.accounts.length === 0}
+            emptyStateComponent={LoadingAccounts}
+            >
+              <AccountList accounts={this.props.testRpcState.accounts} />
+          </WithEmptyState>}
         </main>
       </div>
     )
