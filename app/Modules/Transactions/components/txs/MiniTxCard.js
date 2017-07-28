@@ -3,6 +3,7 @@ import Moment from 'react-moment'
 import EtherUtil from 'ethereumjs-util'
 
 import TransactionTypeBadge from './TransactionTypeBadge'
+import DestinationAddress from './DestinationAddress'
 
 import Styles from './MiniTxCard.css'
 
@@ -26,13 +27,6 @@ export default class MiniTxCard extends Component {
 
   render () {
     const { tx } = this.props
-
-    const isContractCall =
-      (tx.hasOwnProperty('contractAddress') && tx.contractAddress !== null) ||
-      (tx.to && tx.data)
-
-    const isContractCreationCall =
-      tx.hasOwnProperty('contractAddress') && tx.contractAddress !== null
 
     const cardStyles = `${Styles.MiniTxCard} ${this.borderStyleSelector()}`
 
@@ -71,22 +65,7 @@ export default class MiniTxCard extends Component {
             </div>
 
             <div className={Styles.RowItem}>
-              <div className={Styles.To}>
-                <div className={Styles.Label}>
-                  {isContractCreationCall ? 'CREATED CONTRACT ADDRESS' : isContractCall ? `TO CONTRACT ADDRESS` : `TO ADDRESS`}
-                </div>
-                <div className={Styles.Value}>
-                  {isContractCreationCall
-                    ? <div className={Styles.ContractCreationAddress}>
-                        <span>
-                          {tx.contractAddress}
-                        </span>
-                      </div>
-                    : <div>
-                        {tx.to}
-                      </div>}
-                </div>
-              </div>
+              <DestinationAddress tx={tx} />
             </div>
 
             <div className={Styles.RowItem}>
@@ -117,7 +96,6 @@ export default class MiniTxCard extends Component {
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       </div>
