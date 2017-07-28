@@ -1,22 +1,16 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 
 import MnemonicAndHdPath from './MnemonicAndHdPath'
 import AccountList from './AccountList'
 
 import WithEmptyState from 'Elements/WithEmptyState'
 import Spinner from 'Elements/Spinner'
-import Icon from 'Elements/Icon'
-import HeaderBar from 'Elements/HeaderBar'
-
-import AccountIcon from 'Icons/account.svg'
 
 import Styles from './Accounts.css'
 
 class LoadingAccounts extends Component {
   render () {
-    return (
-      <Spinner width={40} height={40}/>
-    )
+    return <Spinner width={40} height={40} />
   }
 }
 
@@ -34,8 +28,12 @@ class Accounts extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.testRpcState.accounts.length === this.props.testRpcState.accounts.length + 1 && this.state.addAccountBtnDisabled) {
-      this.setState({addAccountBtnDisabled: false})
+    if (
+      nextProps.testRpcState.accounts.length ===
+        this.props.testRpcState.accounts.length + 1 &&
+      this.state.addAccountBtnDisabled
+    ) {
+      this.setState({ addAccountBtnDisabled: false })
     }
   }
 
@@ -44,8 +42,8 @@ class Accounts extends Component {
   }
 
   _handleAddAccount = () => {
-    this.setState({addAccountBtnDisabled: true})
-    this.props.appAddAccount({index: this.nextAccountIndex()})
+    this.setState({ addAccountBtnDisabled: true })
+    this.props.appAddAccount({ index: this.nextAccountIndex() })
   }
 
   _handleClearLogs = () => {
@@ -65,8 +63,8 @@ class Accounts extends Component {
           <WithEmptyState
             test={this.props.testRpcState.accounts.length === 0}
             emptyStateComponent={LoadingAccounts}
-            >
-              <AccountList accounts={this.props.testRpcState.accounts} />
+          >
+            <AccountList accounts={this.props.testRpcState.accounts} />
           </WithEmptyState>}
         </main>
       </div>

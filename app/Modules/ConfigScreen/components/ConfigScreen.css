@@ -1,7 +1,5 @@
 @import 'colors.css';
 
-
-
 main {
   width: 100%;
   display: flex;
@@ -31,7 +29,6 @@ main {
     align-items: center;
     -webkit-app-region: no-drag;
 
-
     &:active {
       transform: scale(.98);
     }
@@ -45,7 +42,6 @@ main {
       fill: currentColor !important;
     }
   }
-
 
   h3 {
     padding: 0;
@@ -65,7 +61,7 @@ main {
     justify-content: center;
 
     button {
-      box-shadow: 0 2px 4px 0 rgba(0,0,0,0.20);
+      box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.20);
     }
   }
 
@@ -81,7 +77,8 @@ main {
 
   .ActiveTab {
     color: var(--app-config-tab-active-text-color);
-    border-bottom: 2px solid lighten(var(--app-config-tab-active-text-color), 15%);
+    border-bottom: 2px solid
+      lighten(var(--app-config-tab-active-text-color), 15%);
   }
 
   .Hidden {
@@ -120,7 +117,8 @@ main {
     }
 
     &.active {
-      border-bottom: 2px solid lighten(var(--app-config-tab-active-text-color), 15%);
+      border-bottom: 2px solid
+        lighten(var(--app-config-tab-active-text-color), 15%);
     }
 
     &.active,
@@ -202,7 +200,6 @@ main {
       width: 100%;
     }
   }
-
 }
 
 .PortAlert {

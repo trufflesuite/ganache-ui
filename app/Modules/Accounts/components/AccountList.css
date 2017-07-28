@@ -33,7 +33,8 @@
   border-radius: 4px;
   margin-bottom: 1rem;
   position: relative;
-  box-shadow: 0 0 0 0.5px rgba(49,49,93,.14), 0 2px 5px 0 rgba(49,49,93,.1), 0 1px 2px 0 rgba(0,0,0,.08);
+  box-shadow: 0 0 0 0.5px rgba(49, 49, 93, .14),
+    0 2px 5px 0 rgba(49, 49, 93, .1), 0 1px 2px 0 rgba(0, 0, 0, .08);
 }
 
 .AccountAddress {
@@ -92,22 +93,22 @@
 span {
   position: relative;
 
-.popover {
-    background-color: rgba(0,0,0,0.85);
+  .popover {
+    background-color: rgba(0, 0, 0, 0.85);
     border-radius: 5px;
     bottom: 42px;
-    box-shadow: 0 0 5px rgba(0,0,0,0.4);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
     color: #fff;
     display: none;
     font-size: 12px;
-    font-family: 'Helvetica',sans-serif;
+    font-family: 'Helvetica', sans-serif;
     transform: translateX(-35%);
     padding: 7px 10px;
     position: absolute;
     z-index: 4;
 
     &:before {
-      border-top: 7px solid rgba(0,0,0,0.85);
+      border-top: 7px solid rgba(0, 0, 0, 0.85);
       border-right: 7px solid transparent;
       border-left: 7px solid transparent;
       bottom: -7px;
@@ -121,19 +122,27 @@ span {
 
   &:hover,
   &:focus {
-      .popover {
-        display: block;
-        animation: fade-in .3s linear 1, move-up .3s linear 1;
-      }
+    .popover {
+      display: block;
+      animation: fade-in .3s linear 1, move-up .3s linear 1;
     }
   }
+}
 
 @keyframes fade-in {
-	from   { opacity: 0; }
-	to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes move-up {
-	from   { bottom: 30px; }
-	to { bottom: 42px; }
+  from {
+    bottom: 30px;
+  }
+  to {
+    bottom: 42px;
+  }
 }

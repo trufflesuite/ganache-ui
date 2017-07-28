@@ -2,8 +2,11 @@
   position: fixed;
   opacity: 0;
   animation: fadeIn .2s forwards;
-  transform: translate3d(0,0,0);
-  top: 0; left: 0; bottom: 0; right: 0;
+  transform: translate3d(0, 0, 0);
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
   height: 100%;
   width: 100%;
   z-index: 2;
@@ -31,7 +34,7 @@
     }
 
     dl {
-      margin:0;
+      margin: 0;
 
       dt,
       dd {
@@ -69,6 +72,10 @@
 }
 
 @keyframes fadeIn {
-  0% { opacity: 0 }
-  100% { opacity: 100 }
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 100;
+  }
 }

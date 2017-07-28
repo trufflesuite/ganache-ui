@@ -11,12 +11,18 @@ export default class Keys extends PureComponent {
       <div className={Styles.Modal}>
         <section>
           <Icon glyph={AccountIcon} size={128} />
-          <h4>{this.props.accountAddress}</h4>
+          <h4>
+            {this.props.accountAddress}
+          </h4>
           <dl>
             <dt>PUBLIC KEY</dt>
-            <dd>{this.props.publicKey}</dd>
+            <dd>
+              {this.props.publicKey}
+            </dd>
             <dt>PRIVATE KEY</dt>
-            <dd>{this.props.privateKey}</dd>
+            <dd>
+              {this.props.privateKey}
+            </dd>
           </dl>
           <footer>
             <button onClick={this.props.onCloseModal}>DONE</button>
