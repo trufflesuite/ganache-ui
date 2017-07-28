@@ -29,15 +29,13 @@ class AppUpdateScreen extends Component {
 
     if (appUpdater.haveLatestVersion && !this.props.appUpdater.haveLatestVersion) {
       this.setState({loadingScreenFinished: true})
+      setTimeout(() => { hashHistory.push('/config') }, 4000)
     }
 
     if (appUpdater.updateError !== false && this.props.appUpdater.updateError === false) {
       this.setState({loadingScreenFinished: true})
+      setTimeout(() => { hashHistory.push('/config') }, 4000)
     }
-
-    setTimeout(() => {
-      hashHistory.push('/config')
-    }, 4000)
   }
 
   render () {
@@ -64,7 +62,7 @@ class AppUpdateScreen extends Component {
             <p className={elementStyles(Styles.UpdateNotice)}>Downloading Ganahce update...</p>
           </OnlyIf>
           <OnlyIf test={this.props.appUpdater.updateError}>
-            <p className={elementStyles(Styles.UpdateNotice)}>Can't contact the Update server. Please try again later.</p>
+            <p className={elementStyles(Styles.UpdateNotice)}>Updates not available right now.</p>
           </OnlyIf>
           <OnlyIf test={this.props.appUpdater.updateDownloaded}>
             <p className={elementStyles(Styles.UpdateNotice)}>Ganache update downloaded. Restarting in 5s...</p>
