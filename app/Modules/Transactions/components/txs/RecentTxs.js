@@ -1,14 +1,10 @@
-
 import React, { Component } from 'react'
 import Pluralize from 'pluralize'
 import TxCard from './TxCard'
 import TxList from './TxList'
 import WithEmptyState from 'Elements/WithEmptyState'
 import EmptyTransactions from './EmptyTransactions'
-import HeaderBar from 'Elements/HeaderBar'
-import Icon from 'Elements/Icon'
 
-import TxIcon from 'Icons/transactions.svg'
 import Styles from './RecentTxs.css'
 
 export default class RecentTxs extends Component {
@@ -32,12 +28,18 @@ export default class RecentTxs extends Component {
   }
 
   componentWillReceiveProps (nextProps, nextState) {
-    if (nextProps.testRpcState.currentTxSearchMatch !== null && nextProps.testRpcState.currentTxSearchMatch !== this.props.testRpcState.currentTxSearchMatch) {
+    if (
+      nextProps.testRpcState.currentTxSearchMatch !== null &&
+      nextProps.testRpcState.currentTxSearchMatch !==
+        this.props.testRpcState.currentTxSearchMatch
+    ) {
       this.setState({
         currentTxSearchMatch: nextProps.testRpcState.currentTxSearchMatch,
         isSearchingForTx: false,
         txSearchMatch: true,
-        validTxSearchResult: nextProps.testRpcState.currentTxSearchMatch && !nextProps.testRpcState.currentTxSearchMatch.hasOwnProperty('error')
+        validTxSearchResult:
+          nextProps.testRpcState.currentTxSearchMatch &&
+          !nextProps.testRpcState.currentTxSearchMatch.hasOwnProperty('error')
       })
     }
   }
@@ -55,14 +57,14 @@ export default class RecentTxs extends Component {
     return this.state.currentTxSearchMatch && this._renderTransactionCard(tx)
   }
 
-  _renderTransactionCard = (tx) => {
+  _renderTransactionCard = tx => {
     return (
       <TxCard
         className={Styles.Transaction}
         key={tx.hash}
         tx={tx}
         handleTxSearch={this._handleTxSearch}
-        />
+      />
     )
   }
 
@@ -70,19 +72,24 @@ export default class RecentTxs extends Component {
     return this.props.testRpcState.transactions.map(this._renderTransactionCard)
   }
 
-  _handleTxSearch = (value) => {
+  _handleTxSearch = value => {
     console.log(`SEARCHING FOR ${value}`)
-    this.setState({isSearchingForTx: true})
+    this.setState({ isSearchingForTx: true })
     this.props.appSearchTx(value)
   }
 
-  _handleTxSearchChange = (value) => {
-    this.setState({currentTxSearch: value})
+  _handleTxSearchChange = value => {
+    this.setState({ currentTxSearch: value })
   }
 
-  _handleClearTxSearch = (e) => {
+  _handleClearTxSearch = e => {
     e.preventDefault()
-    this.setState({txSearchMatch: false, currentTxNumberSearch: '', currentTxSearchMatch: null, validTxSearchResult: false})
+    this.setState({
+      txSearchMatch: false,
+      currentTxNumberSearch: '',
+      currentTxSearchMatch: null,
+      validTxSearchResult: false
+    })
   }
 
   _renderPanelHeaderText = () => {
@@ -90,13 +97,24 @@ export default class RecentTxs extends Component {
       return `TX ${this.state.currentTxSearchMatch.hash}`
     }
 
-    return this.props.testRpcState.transactions.length === 0 ? `TRANSACTIONS` : `LAST ${this.props.testRpcState.transactions.length} ${Pluralize('TRANSACTIONS', this.props.testRpcState.transactions.length)}`
+    return this.props.testRpcState.transactions.length === 0
+      ? `TRANSACTIONS`
+      : `LAST ${this.props.testRpcState.transactions.length} ${Pluralize(
+          'TRANSACTIONS',
+          this.props.testRpcState.transactions.length
+        )}`
   }
 
   _renderPanelHeaderControls = () => {
     if (this.state.validTxSearchResult) {
       return (
-        <a href="#" className={Styles.BackButton} onClick={this._handleClearTxSearch}>&larr; All TXs</a>
+        <a
+          href="#"
+          className={Styles.BackButton}
+          onClick={this._handleClearTxSearch}
+        >
+          &larr; All TXs
+        </a>
       )
     }
   }
@@ -107,7 +125,7 @@ export default class RecentTxs extends Component {
         <TxList
           transactions={this.props.testRpcState.transactions}
           handleTxSearch={this._handleTxSearch}
-          />
+        />
       )
     }
 
@@ -125,22 +143,25 @@ export default class RecentTxs extends Component {
   render () {
     return (
       <div className={Styles.Transactions}>
-        {
-          this.state.validTxSearchResult ?
-            <a href="#" className={Styles.BackButton} onClick={this._handleClearTxSearch}>&larr; All TXs</a>
-          : null
-        }
+        {this.state.validTxSearchResult
+          ? <a
+              href="#"
+              className={Styles.BackButton}
+              onClick={this._handleClearTxSearch}
+            >
+              &larr; All TXs
+            </a>
+          : null}
         <WithEmptyState
           test={this.props.testRpcState.transactions.length === 0}
           emptyStateComponent={EmptyTransactions}
-          >
+        >
           <span>
             <main>
-              { this._renderPanelBody() }
+              {this._renderPanelBody()}
             </main>
           </span>
         </WithEmptyState>
-
       </div>
     )
   }

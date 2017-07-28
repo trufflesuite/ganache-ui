@@ -1,11 +1,11 @@
 @import 'colors.css';
+@import 'cards.css';
 
 .MiniTxCard {
   font-family: "Fira Code Regular", monospaced;
   width: 100vw;
   cursor: pointer;
   margin: .5rem 0;
-  border: 2px solid var(--app-card-default-border);
   background: var(--app-card-default-background);
   padding: .8rem;
   border-radius: 4px;
@@ -13,10 +13,26 @@
   cursor: pointer;
   display: flex;
   flex-direction: column;
+  composes: CardShadow;
 }
 
 .CreatedContract {
-  border-color: var(--primary-color);
+  composes: CardShadowHighlight;
+}
+
+.ContractCall {
+  box-shadow: 0 0 0 0.5px rgba(109, 163, 184, 0.65),
+    0 2px 5px 0 rgba(109, 163, 184, 0.3), 0 1px 2px 0 rgba(109, 163, 184, 0.08);
+}
+
+.ContractCreation {
+  box-shadow: 0 0 0 0.5px rgba(214, 143, 38, 0.65),
+    0 2px 5px 0 rgba(204, 165, 96, 0.3), 0 1px 2px 0 rgba(230, 199, 129, 0.08);
+}
+
+.ValueTransfer {
+  box-shadow: 0 0 0 0.5px rgba(63, 224, 197, 0.65),
+    0 2px 5px 0 rgba(63, 224, 197, 0.3), 0 1px 2px 0 rgba(63, 224, 197, 0.08);
 }
 
 .Row {
@@ -39,7 +55,7 @@
 }
 
 .Label {
-  font-size: .875rem;
+  font-size: .75rem;
   font-family: "RobotoCondensed-Regular";
   font-weight: 300;
   color: var(--app-card-label);
@@ -74,11 +90,8 @@
   }
 }
 
-.ContractCallBadge {
-  background-color: var(--primary-color);
-  color: white;
-  font-size: .75rem;
-  padding: 8px;
-  height: 28px;
-  border-radius: 25px;
+.SecondaryItems {
+  .Value {
+    font-size: .825rem;
+  }
 }

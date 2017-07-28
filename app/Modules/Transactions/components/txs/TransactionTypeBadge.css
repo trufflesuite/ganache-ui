@@ -1,0 +1,26 @@
+@import 'colors.css';
+
+.Badge {
+  font-size: .75rem;
+  padding: 8px;
+  height: 28px;
+  border-radius: 25px;
+}
+
+.ContractCallBadge {
+  composes: Badge;
+  background-color: var(--complimentary1);
+  color: white;
+}
+
+.ContractCreationBadge {
+  composes: Badge;
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.ValueTransferBadge {
+  composes: Badge;
+  background-color: var(--truffle-green);
+  color: white;
+}

@@ -8,6 +8,8 @@
   flex-direction: column;
   flex: 1;
 
+  margin-top: .5rem;
+
   width: 100%;
 
   > h4 {
