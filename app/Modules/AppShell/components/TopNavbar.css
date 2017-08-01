@@ -30,18 +30,18 @@
     cursor: pointer;
     text-decoration: none;
     position: relative;
-    margin-right: .5rem;
     text-transform: uppercase;
     display: flex;
     align-items: center;
+    font-size: 1.2vw;
 
     > div {
       margin-right: .5rem;
     }
 
     svg {
-      width: 44px;
-      height: 44px;
+      width: 36px;
+      height: 36px;
       stroke: var(--app-navbar-icon-color);
     }
 
@@ -84,11 +84,12 @@
   input {
     justify-content: flex-end;
     outline: none;
-    border: 2px solid var(--app-navbar-icon-color);
+    border: 1px solid var(--app-navbar-icon-color);
     border-radius: 24px;
-    padding: .5rem .8rem;
-    color: var(--app-navbar-icon-color);
-    font-size: .8rem;
+    padding: .25rem .5rem;
+    color: lighten(var(--app-navbar-icon-color), 20%);
+    font-size: .7rem;
+    line-height: 1;
     padding-right: 1.8rem;
     font-family: "Fira Code Regular";
     width: 370px;
