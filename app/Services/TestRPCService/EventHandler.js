@@ -30,7 +30,6 @@ export default class EventHandler {
 
   _handleTxSearch = async (event, arg) => {
     const tx = await this.testRpcService.txFetcher.getTxByHash(arg)
-    console.log(`tx: ${tx}`)
     this.testRpcService.webView.send('APP/TXSEARCHRESULT', tx)
   }
 

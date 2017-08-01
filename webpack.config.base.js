@@ -11,6 +11,7 @@ import {
 
 export default validate({
   module: {
+    noParse: [/ajv.bundle.js$/],
     loaders: [
       {
         test: /\.jsx?$/,

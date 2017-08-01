@@ -6,7 +6,7 @@ const rcedit = require('rcedit')
 const packageJSON = require('../package.json')
 
 if (process.platform === 'darwin') {
-  console.log('Monkey patching your local Electron Info.plist to make it look like Ganache')
+  console.log('🚧  Monkey patching your local Electron Info.plist to make it look like Ganache')
   // Patch Info.plist values
   const plistPath = path.resolve(
     __dirname,

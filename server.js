@@ -39,7 +39,7 @@ const server = app.listen(PORT, 'localhost', serverError => {
       .on('error', spawnError => console.error(spawnError))
   }
 
-  console.log(`Listening at http://localhost:${PORT}`)
+  console.log(`👩🏾‍💻  Webpack Dev Server Listening at http://localhost:${PORT}`)
 })
 
 process.on('SIGTERM', () => {
