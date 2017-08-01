@@ -1,0 +1,81 @@
+.Header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 1rem;
+
+  h1 {
+    margin: 0;
+  }
+}
+
+.Title,
+.Type {
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.Title {
+  flex-grow: 1;
+  align-items: center;
+}
+
+.Parties,
+.Gas {
+  display: flex;
+  flex-direction: row;
+  padding: 1rem;
+  justify-content: space-between;
+}
+
+.ContractCall {
+  box-shadow: 0 0 0 0.5px rgba(109, 163, 184, 0.65),
+    0 2px 5px 0 rgba(109, 163, 184, 0.3), 0 1px 2px 0 rgba(109, 163, 184, 0.08);
+
+  .Header {
+    background-color: rgba(109, 163, 184, 0.65);
+  }
+
+  .Parties {
+    background-color: lighten(rgba(109, 163, 184, 0.65), 20%);
+  }
+
+  .Gas {
+    background-color: lighten(rgba(109, 163, 184, 0.65), 35%);
+  }
+}
+
+.ContractCreation {
+  box-shadow: 0 0 0 0.5px rgba(214, 143, 38, 0.65),
+    0 2px 5px 0 rgba(204, 165, 96, 0.3), 0 1px 2px 0 rgba(230, 199, 129, 0.08);
+
+  .Header {
+    background-color: rgba(214, 143, 38, 0.65);
+  }
+
+  .Parties {
+    background-color: lighten(rgba(214, 143, 38, 0.65), 20%);
+  }
+
+  .Gas {
+    background-color: lighten(rgba(214, 143, 38, 0.65), 35%);
+  }
+}
+
+.ValueTransfer {
+  box-shadow: 0 0 0 0.5px rgba(63, 224, 197, 0.65),
+    0 2px 5px 0 rgba(63, 224, 197, 0.3), 0 1px 2px 0 rgba(63, 224, 197, 0.08);
+
+  .Header {
+    background-color: rgba(63, 224, 197, 0.65);
+  }
+
+  .Parties {
+    background-color: lighten(rgba(63, 224, 197, 0.65), 20%);
+  }
+
+  .Gas {
+    background-color: lighten(rgba(63, 224, 197, 0.65), 35%);
+  }
+}

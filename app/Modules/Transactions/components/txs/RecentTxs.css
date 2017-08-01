@@ -12,22 +12,6 @@
 
   width: 100%;
 
-  > h4 {
-    position: -webkit-sticky;
-    position: sticky;
-    top: -5px;
-    background: white;
-    font-size: 32px;
-    font-family: "RobotoCondensed-Bold";
-    margin: 2rem 1rem;
-    border-bottom: 2px solid rgba(155, 152, 150, 1.000);
-    z-index: 2;
-
-    a {
-      float: right;
-    }
-  }
-
   main {
     align-items: flex-start;
     > div {

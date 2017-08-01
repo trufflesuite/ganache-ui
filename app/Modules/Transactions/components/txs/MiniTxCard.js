@@ -2,103 +2,102 @@ import React, { Component } from 'react'
 import Moment from 'react-moment'
 import EtherUtil from 'ethereumjs-util'
 
+import { Link } from 'react-router'
+
 import TransactionTypeBadge from './TransactionTypeBadge'
 import DestinationAddress from './DestinationAddress'
 
 import Styles from './MiniTxCard.css'
+import BorderStyles from './BorderStyles.css'
 
 export default class MiniTxCard extends Component {
   borderStyleSelector = tx => {
-    if (
-      this.props.tx.hasOwnProperty('contractAddress') &&
-      this.props.tx.contractAddress !== null
-    ) {
-      return Styles.ContractCreation
+    if (tx.hasOwnProperty('contractAddress') && tx.contractAddress !== null) {
+      return BorderStyles.ContractCreation
     }
 
-    if (this.props.tx.to && this.props.tx.value > 0) {
-      return Styles.ValueTransfer
+    if (tx.to && tx.value > 0) {
+      return BorderStyles.ValueTransfer
     }
 
-    if (this.props.tx.to && this.props.tx.data) {
-      return Styles.ContractCall
+    if (tx.to && tx.data) {
+      return BorderStyles.ContractCall
     }
   }
 
   render () {
     const { tx } = this.props
 
-    const cardStyles = `${Styles.MiniTxCard} ${this.borderStyleSelector()}`
+    const cardStyles = `${Styles.MiniTxCard} ${this.borderStyleSelector(tx)}`
 
     return (
-      <div
-        className={cardStyles}
-        onClick={this.props.handleTxSearch.bind(
-          this,
-          EtherUtil.bufferToHex(tx.hash)
-        )}
+      <Link
+        to={`/transactions/${EtherUtil.bufferToHex(tx.hash)}`}
+        className={Styles.Link}
       >
-        <div className={Styles.Row}>
-          <div className={Styles.RowItem}>
-            <div className={Styles.TxHash}>
-              <div className={Styles.Label}>TX HASH</div>
-              <div className={Styles.Value}>
-                {EtherUtil.bufferToHex(tx.hash)}
-              </div>
-            </div>
-          </div>
-
-          <div className={Styles.RowItem}>
-            <TransactionTypeBadge tx={tx} />
-          </div>
-        </div>
-
-        <div className={Styles.SecondaryItems}>
+        <div className={cardStyles}>
           <div className={Styles.Row}>
             <div className={Styles.RowItem}>
-              <div className={Styles.From}>
-                <div className={Styles.Label}>FROM ADDRESS</div>
+              <div className={Styles.TxHash}>
+                <div className={Styles.Label}>TX HASH</div>
                 <div className={Styles.Value}>
-                  {tx.from}
+                  {EtherUtil.bufferToHex(tx.hash)}
                 </div>
               </div>
             </div>
 
             <div className={Styles.RowItem}>
-              <DestinationAddress tx={tx} />
+              <TransactionTypeBadge tx={tx} />
             </div>
+          </div>
 
-            <div className={Styles.RowItem}>
-              <div className={Styles.GasUsed}>
-                <div className={Styles.Label}>GAS USED</div>
-                <div className={Styles.Value}>
-                  {parseInt(EtherUtil.bufferToInt(tx.gasUsed), 16)}
+          <div className={Styles.SecondaryItems}>
+            <div className={Styles.Row}>
+              <div className={Styles.RowItem}>
+                <div className={Styles.From}>
+                  <div className={Styles.Label}>FROM ADDRESS</div>
+                  <div className={Styles.Value}>
+                    {tx.from}
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className={Styles.RowItem}>
-              <div className={Styles.Value}>
-                <div className={Styles.Label}>VALUE</div>
-                <div className={Styles.Value}>
-                  {parseInt(EtherUtil.bufferToInt(tx.value), 16)}
+              <div className={Styles.RowItem}>
+                <DestinationAddress tx={tx} />
+              </div>
+
+              <div className={Styles.RowItem}>
+                <div className={Styles.GasUsed}>
+                  <div className={Styles.Label}>GAS USED</div>
+                  <div className={Styles.Value}>
+                    {parseInt(EtherUtil.bufferToInt(tx.gasUsed), 16)}
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className={Styles.RowItem}>
-              <div className={Styles.MinedOn}>
-                <div className={Styles.Label}>MINED ON</div>
+              <div className={Styles.RowItem}>
                 <div className={Styles.Value}>
-                  <Moment unix format="YYYY-MM-DD HH:mm:ss">
-                    {EtherUtil.bufferToInt(tx.block.header.timestamp)}
-                  </Moment>
+                  <div className={Styles.Label}>VALUE</div>
+                  <div className={Styles.Value}>
+                    {parseInt(EtherUtil.bufferToInt(tx.value), 16)}
+                  </div>
+                </div>
+              </div>
+
+              <div className={Styles.RowItem}>
+                <div className={Styles.MinedOn}>
+                  <div className={Styles.Label}>MINED ON</div>
+                  <div className={Styles.Value}>
+                    <Moment unix format="YYYY-MM-DD HH:mm:ss">
+                      {EtherUtil.bufferToInt(tx.block.header.timestamp)}
+                    </Moment>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </Link>
     )
   }
 }

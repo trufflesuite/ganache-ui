@@ -6,13 +6,13 @@ import Styles from './TxList.css'
 export default class TxList extends PureComponent {
   render () {
     return (
-    <div className={Styles.TxList}>
-      {this.props.transactions.map(this._renderMiniTxCard)}
-    </div>
+      <div className={Styles.TxList}>
+        {this.props.transactions.map(this._renderMiniTxCard)}
+      </div>
     )
   }
 
-  _renderMiniTxCard = (tx) => {
+  _renderMiniTxCard = tx => {
     return (
       <MiniTxCard
         tx={tx}

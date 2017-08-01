@@ -1,6 +1,7 @@
 @import "./colors";
 
-button {
+button,
+.Button {
   margin: 0;
   padding: 0;
 

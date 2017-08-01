@@ -1,9 +1,13 @@
 @import 'colors.css';
 @import 'cards.css';
 
+.Link {
+  text-decoration: none;
+}
+
 .MiniTxCard {
   font-family: "Fira Code Regular", monospaced;
-  width: 100vw;
+  width: 100%;
   cursor: pointer;
   margin: .5rem 0;
   background: var(--app-card-default-background);
@@ -13,26 +17,12 @@
   cursor: pointer;
   display: flex;
   flex-direction: column;
+  margin-bottom: 1rem;
   composes: CardShadow;
 }
 
 .CreatedContract {
   composes: CardShadowHighlight;
-}
-
-.ContractCall {
-  box-shadow: 0 0 0 0.5px rgba(109, 163, 184, 0.65),
-    0 2px 5px 0 rgba(109, 163, 184, 0.3), 0 1px 2px 0 rgba(109, 163, 184, 0.08);
-}
-
-.ContractCreation {
-  box-shadow: 0 0 0 0.5px rgba(214, 143, 38, 0.65),
-    0 2px 5px 0 rgba(204, 165, 96, 0.3), 0 1px 2px 0 rgba(230, 199, 129, 0.08);
-}
-
-.ValueTransfer {
-  box-shadow: 0 0 0 0.5px rgba(63, 224, 197, 0.65),
-    0 2px 5px 0 rgba(63, 224, 197, 0.3), 0 1px 2px 0 rgba(63, 224, 197, 0.08);
 }
 
 .Row {
@@ -59,7 +49,6 @@
   font-family: "RobotoCondensed-Regular";
   font-weight: 300;
   color: var(--app-card-label);
-  cursor: pointer;
 }
 
 .Value {
@@ -67,7 +56,6 @@
   font-family: "Fira Code Regular";
   color: var(--app-card-value);
   word-break: break-all;
-  cursor: pointer;
 }
 
 .Nonce,

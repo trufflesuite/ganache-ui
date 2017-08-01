@@ -64,6 +64,7 @@ export default class TransactionFetcher {
       this.stateManager.getTransactionReceipt(txHash, (err, receipt) => {
         let tx = Object.assign({}, receipt)
         tx.hash = txHash
+        tx.data = EtherUtils.bufferToHex(receipt.tx.data)
         tx.from = EtherUtils.toChecksumAddress(
           EtherUtils.bufferToHex(receipt.tx.from)
         )

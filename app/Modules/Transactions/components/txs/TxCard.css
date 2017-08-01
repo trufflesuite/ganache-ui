@@ -1,48 +1,62 @@
 @import 'colors.css';
+@import 'cards.css';
+@import 'buttons.css';
+
+.Button {
+  text-decoration: none;
+  text-align: center;
+}
 
 .TxCard {
-  display: flex;
-  flex-direction: row;
+  font-family: "Fira Code Regular", monospaced;
   width: 100%;
+  margin: .5rem 0;
   background: var(--app-card-default-background);
-  border: 2px solid var(--app-card-default-border);
-  padding: .8rem;
   border-radius: 4px;
   word-wrap: break-word;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+  word-wrap: break-word;
 
-  dl,
-  dt,
-  dd {
-    margin: 0;
-    padding: 0;
-  }
-
-  dl {
-    width: 50%;
-
-    &:first-of-type {
-      padding-right: 1rem;
-    }
-
-    &:last-of-type {
-      padding-left: 1rem;
+  header {
+    h1 {
+      font-size: 2vw;
     }
   }
 
-  dt {
-    font-size: 1vw;
+  main,
+  footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 1rem;
+
+    .Value {
+      font-size: .875rem;
+    }
+  }
+
+  footer {
+    justify-content: flex-start;
+
+    div {
+      margin-right: 1rem;
+    }
+  }
+
+  .Label {
+    font-size: .75rem;
     font-family: "RobotoCondensed-Regular";
-    text-transform: uppercase;
     font-weight: 300;
     color: var(--app-card-label);
   }
 
-  dd {
-    margin-bottom: .8vw;
-    font-size: 1.1vw;
-    font-weight: bold;
+  .Value {
+    font-size: 1.125rem;
     font-family: "Fira Code Regular";
     color: var(--app-card-value);
+    word-break: break-all;
   }
 }
 
