@@ -1,6 +1,11 @@
 @import 'colors.css';
 @import 'cards.css';
 
+.Link {
+  text-decoration: none;
+  width: 100%;
+}
+
 .MiniBlockCard {
   width: 100%;
   background: var(--app-card-default-background);

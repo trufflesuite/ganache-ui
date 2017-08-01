@@ -10,6 +10,6 @@
   main {
     display: flex;
     min-height: calc(100% - 4rem);
-    padding: 0 1rem;
+    padding: 1rem 1rem;
   }
 }

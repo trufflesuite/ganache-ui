@@ -1,16 +1,70 @@
 @import 'colors.css';
+@import 'buttons.css';
+
+.Button {
+  text-decoration: none;
+  text-align: center;
+}
 
 .BlockCard {
   font-family: "Fira Code Regular", sans-serif;
   background: var(--app-card-default-background);
 
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  margin: 1rem 0 0 0;
 
   border: 2px solid var(--app-card-default-border);
-  padding: .8rem;
   border-radius: 4px;
   word-wrap: break-word;
+
+  header {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    background-color: #ebb67e;
+  }
+
+  main {
+    display: flex;
+    flex-direction: row;
+  }
+
+  h1 {
+    margin: 0;
+  }
+
+  .BlockNumber {
+    align-items: center;
+    padding: .8rem;
+    background-color: #ebb67e;
+
+    > div {
+      font-weight: bold;
+    }
+  }
+
+  .BlockHash {
+    align-items: center;
+    padding: .8rem;
+
+    > div {
+      font-weight: bold;
+    }
+  }
+
+  .HeaderSecondaryInfo {
+    display: flex;
+    align-items: center;
+    flex: 2;
+    justify-content: space-between;
+    padding-right: .8rem;
+
+    > div {
+      margin-left: 3rem;
+    }
+  }
 
   dl,
   dt,
@@ -21,14 +75,6 @@
 
   dl {
     width: 50%;
-
-    &:first-of-type {
-      padding-right: 1rem;
-    }
-
-    &:last-of-type {
-      padding-left: 1rem;
-    }
   }
 
   dt {
