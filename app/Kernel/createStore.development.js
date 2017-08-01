@@ -10,7 +10,8 @@ const actionCreators = {
 
 const logger = createLogger({
   level: 'info',
-  collapsed: true
+  collapsed: true,
+  predicate: (getState, action) => action.type !== 'APP/BLOCKCHAINSTATE' && action.type !== 'app/markRequestPending' && action.type !== 'app/markRequestSuccess'
 })
 
 const router = routerMiddleware(hashHistory)

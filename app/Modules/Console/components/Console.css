@@ -32,7 +32,7 @@
     height: 100%;
     display: flex;
     flex: 1;
-    padding: 0 1rem;
+    padding: .3rem 1rem;
   }
 
   footer {

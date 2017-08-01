@@ -90,8 +90,9 @@
   }
 }
 
-span {
+.ShowKeys {
   position: relative;
+  cursor: pointer;
 
   .popover {
     background-color: rgba(0, 0, 0, 0.85);

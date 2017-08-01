@@ -51,6 +51,8 @@ class Application extends EventEmitter {
 
     this.modules.push(module)
 
+    console.log(`${module.reducer ? 'Reducer' : 'Module'} registered: ${module.name}`)
+
     this.emit('moduleDidRegister', this, module)
   }
 

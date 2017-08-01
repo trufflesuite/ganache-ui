@@ -13,6 +13,46 @@
   height: 100%;
 }
 
+.ShellContainer > span {
+  position: relative;
+  width: 100%;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
 .ShellContainer > div {
   margin: auto;
+}
+
+:global {
+  .fade-enter {
+    opacity: 0.01;
+  }
+
+  .fade-enter.fade-enter-active {
+    opacity: 1;
+    transition: opacity 150ms ease-in;
+  }
+
+  .fade-leave {
+    opacity: 1;
+  }
+
+  .fade-leave.fade-leave-active {
+    position: absolute;
+    top: 0;
+    opacity: 0.01;
+    transition: opacity 150ms ease-in;
+  }
+
+  .fade-appear {
+    opacity: 0.01;
+  }
+
+  .fade-appear.fade-appear-active {
+    opacity: 1;
+    transition: opacity 150ms ease-in;
+  }
 }

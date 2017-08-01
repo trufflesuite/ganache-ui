@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import Mousetrap from 'mousetrap'
 import { hashHistory } from 'react-router'
 import TestRPCProvider from 'Data/Providers/TestRPCProvider'
@@ -10,7 +10,12 @@ import TopNavbar from './TopNavbar'
 
 import ua from 'universal-analytics'
 import ElectronCookies from '@exponent/electron-cookies'
-const {app} = require('electron').remote
+
+import CSSTransitionGroup from 'react-addons-css-transition-group'
+
+const { app } = require('electron').remote
+
+import { dissoc } from 'ramda'
 
 import Styles from './AppShell.css'
 
@@ -32,7 +37,10 @@ class AppShell extends Component {
       this.user.set('av', app.getVersion())
       this.user.set('ua', navigator.userAgent)
       this.user.set('sr', screen.width + 'x' + screen.height)
-      this.user.set('vp', window.screen.availWidth + 'x' + window.screen.availHeight)
+      this.user.set(
+        'vp',
+        window.screen.availWidth + 'x' + window.screen.availHeight
+      )
 
       window.onerror = function (msg, url, lineNo, columnNo, error) {
         var message = [
@@ -43,7 +51,7 @@ class AppShell extends Component {
         ].join(' - ')
 
         setTimeout(function () {
-          //this.user.exception(message.toString())
+          // this.user.exception(message.toString())
         }, 0)
 
         return false
@@ -57,34 +65,47 @@ class AppShell extends Component {
     }
 
     Mousetrap.bind('command+1', () => {
-      this.props.testRpcState.testRpcServerRunning ? hashHistory.push('/accounts') : null
+      this.props.testRpcState.testRpcServerRunning
+        ? hashHistory.push('/accounts')
+        : null
     })
 
     Mousetrap.bind('command+2', () => {
-      this.props.testRpcState.testRpcServerRunning ? hashHistory.push('/blocks') : null
+      this.props.testRpcState.testRpcServerRunning
+        ? hashHistory.push('/blocks')
+        : null
     })
 
     Mousetrap.bind('command+3', () => {
-      this.props.testRpcState.testRpcServerRunning ? hashHistory.push('/transactions') : null
+      this.props.testRpcState.testRpcServerRunning
+        ? hashHistory.push('/transactions')
+        : null
     })
 
     Mousetrap.bind('command+4', () => {
-      this.props.testRpcState.testRpcServerRunning ? hashHistory.push('/console') : null
+      this.props.testRpcState.testRpcServerRunning
+        ? hashHistory.push('/console')
+        : null
     })
 
     Mousetrap.bind('command+5', () => {
-      this.props.testRpcState.testRpcServerRunning ? hashHistory.push('/config') : null
+      this.props.testRpcState.testRpcServerRunning
+        ? hashHistory.push('/config')
+        : null
     })
 
     setInterval(this.props.appGetBlockChainState, 1000)
   }
 
   renderClonedChildrenWithPropsAndPathKey = (children, props, pathNameKey) => {
-    return React.Children.map(children, child => React.cloneElement(child, {...props, key: pathNameKey}))
+    return React.cloneElement(children, { ...props, key: pathNameKey })
   }
 
   componentWillReceiveProps (nextProps) {
-    if (Settings.get('analyticsTracking') && nextProps.location.pathname !== this.props.location.pathname) {
+    if (
+      Settings.get('analyticsTracking') &&
+      nextProps.location.pathname !== this.props.location.pathname
+    ) {
       const segment = nextProps.location.pathname.split('/')[1] || 'dashboard'
 
       this.user.pageview(nextProps.location.pathname).send()
@@ -94,21 +115,30 @@ class AppShell extends Component {
 
   render () {
     const path = this.props.location.pathname
-    const segment = path.split('/')[1] || 'dashboard'
+    const segment = path.replace(/^\//g, '').replace(/\//g, '-') || 'root'
+    console.log(segment)
 
     return (
       <div className={Styles.AppShell}>
         <WindowControls />
         <TopNavbar {...this.props} />
+
         <div className={Styles.ShellContainer}>
-          {
-            this.renderClonedChildrenWithPropsAndPathKey(this.props.children,
-              {...this.props}, segment)
-            }
-          </div>
+          <CSSTransitionGroup
+            transitionName="fade"
+            transitionEnterTimeout={150}
+            transitionLeaveTimeout={150}
+          >
+            {this.renderClonedChildrenWithPropsAndPathKey(
+              this.props.children,
+              { ...dissoc('children', this.props) },
+              segment
+            )}
+          </CSSTransitionGroup>
         </div>
+      </div>
     )
   }
-  }
+}
 
 export default TestRPCProvider(AppShell)

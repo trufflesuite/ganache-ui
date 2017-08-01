@@ -77,6 +77,7 @@ export default class AccountList extends Component {
                 </div>
               </div>
               <span
+                className={Styles.ShowKeys}
                 onClick={() => {
                   this.showKeys(
                     account.address,
