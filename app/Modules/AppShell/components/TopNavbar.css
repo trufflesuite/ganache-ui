@@ -25,7 +25,8 @@
   flex-direction: row;
 
   a {
-    padding: .8rem;
+    padding: .5rem;
+    margin: .3rem;
     color: var(--app-navbar-text);
     cursor: pointer;
     text-decoration: none;
@@ -48,6 +49,7 @@
     &.Active {
       color: var(--primary-color);
       background-color: var(--app-statusbar-background);
+      border-radius: 4px;
 
       svg {
         stroke: var(--primary-color) !important;
@@ -86,7 +88,7 @@
     outline: none;
     border: 1px solid var(--app-navbar-icon-color);
     border-radius: 24px;
-    padding: .25rem .5rem;
+    padding: .35rem .5rem;
     color: lighten(var(--app-navbar-icon-color), 20%);
     font-size: .7rem;
     line-height: 1;

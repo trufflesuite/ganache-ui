@@ -65,7 +65,7 @@ class Accounts extends Component {
             emptyStateComponent={LoadingAccounts}
           >
             <AccountList accounts={this.props.testRpcState.accounts} />
-          </WithEmptyState>}
+          </WithEmptyState>
         </main>
       </div>
     )
