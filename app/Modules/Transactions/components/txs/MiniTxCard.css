@@ -19,6 +19,11 @@
   flex-direction: column;
   margin-bottom: 1rem;
   composes: CardShadow;
+  transition: all .3s;
+
+  &:hover {
+    transform: scale(1.01)
+  }
 }
 
 .CreatedContract {
