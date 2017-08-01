@@ -4,6 +4,7 @@
 .Button {
   text-decoration: none;
   text-align: center;
+  margin: .5rem 0;
 }
 
 .BlockCard {
@@ -105,4 +106,12 @@
 
 .HasTxs {
   border-color: var(--primary-color);
+}
+
+.BlockSearchError {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
 }
