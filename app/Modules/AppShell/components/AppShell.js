@@ -116,7 +116,6 @@ class AppShell extends Component {
   render () {
     const path = this.props.location.pathname
     const segment = path.replace(/^\//g, '').replace(/\//g, '-') || 'root'
-    console.log(segment)
 
     return (
       <div className={Styles.AppShell}>
