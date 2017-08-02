@@ -105,7 +105,8 @@ app.on('ready', async () => {
     mainWindow.show()
     mainWindow.focus()
     mainWindow.setTitle('GANACHE')
-    autoUpdater.checkForUpdates()
+    // autoUpdater.checkForUpdates()
+    mainWindow.send('APP/UPDATENOTAVAILABLE', {})
   })
 
   mainWindow.on('closed', () => {
