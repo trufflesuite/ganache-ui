@@ -55,31 +55,31 @@ class AppShell extends Component {
   componentDidMount () {
     this.props.appGetSettings()
 
-    Mousetrap.bind('command+1', () => {
+    Mousetrap.bind(['command+1', 'ctrl+1'], () => {
       this.props.testRpcState.testRpcServerRunning
         ? hashHistory.push('/accounts')
         : null
     })
 
-    Mousetrap.bind('command+2', () => {
+    Mousetrap.bind(['command+2', 'ctrl+2'], () => {
       this.props.testRpcState.testRpcServerRunning
         ? hashHistory.push('/blocks')
         : null
     })
 
-    Mousetrap.bind('command+3', () => {
+    Mousetrap.bind(['command+3', 'ctrl+3'], () => {
       this.props.testRpcState.testRpcServerRunning
         ? hashHistory.push('/transactions')
         : null
     })
 
-    Mousetrap.bind('command+4', () => {
+    Mousetrap.bind(['command+4', 'ctrl+4'], () => {
       this.props.testRpcState.testRpcServerRunning
         ? hashHistory.push('/console')
         : null
     })
 
-    Mousetrap.bind('command+5', () => {
+    Mousetrap.bind(['command+5', 'ctrl+5'], () => {
       this.props.testRpcState.testRpcServerRunning
         ? hashHistory.push('/config')
         : null
