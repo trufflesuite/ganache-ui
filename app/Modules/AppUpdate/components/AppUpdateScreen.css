@@ -71,6 +71,12 @@
   :global {
     animation: 1s 3s forwards cubic-bezier(0.4, 0, 1, 1) bgToTransparent;
   }
+
+  * {
+    :global {
+      animation: 500ms 3s forwards cubic-bezier(0.4, 0, 1, 1) fadeOut;
+    }
+  }
 }
 
 .FadeOutElement {
@@ -95,7 +101,7 @@
   opacity: 0;
 
   :global {
-    animation: fadeIn 1s .8s forwards;
+    animation: fadeIn 500ms .8s forwards;
   }
 }
 
@@ -105,7 +111,15 @@
   height: 42px;
 
   :global {
-    animation: fadeIn 1s 1.6s forwards, slideUp 1s 1.6s forwards;
+    animation: fadeIn 500ms 1.6s forwards, slideUp 1s 1.6s forwards;
+  }
+}
+
+.LoadingScreen p {
+  opacity: 0;
+
+  :global {
+    animation: fadeIn 500ms 2s forwards, slideUp 1s 2s forwards;
   }
 }
 
@@ -152,6 +166,6 @@
   color: #525456;
 
   :global {
-    animation: fadeIn 1s 1.8s forwards, slideUp 1s 1.8s forwards;
+    animation: fadeIn 500ms 1.8s forwards, slideUp 1s 1.8s forwards;
   }
 }
