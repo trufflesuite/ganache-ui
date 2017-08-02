@@ -1,6 +1,7 @@
 import autobind from 'class-autobind'
-import SysLog from 'electron-log'
 import FindProcess from 'find-process'
+
+import SettingsService from '../SettingsService'
 
 export default class EventHandler {
   constructor (testRpcService) {
@@ -10,17 +11,40 @@ export default class EventHandler {
 
     this.testRpcService.ipcMain.on('APP/STARTRPC', this._handleStartTestRpc)
     this.testRpcService.ipcMain.on('APP/RESTARTRPC', this._handleRestartTestRpc)
-    this.testRpcService.ipcMain.on('APP/GETBLOCKCHAINSTATE', this._handleGetBlockchainState)
+    this.testRpcService.ipcMain.on(
+      'APP/GETBLOCKCHAINSTATE',
+      this._handleGetBlockchainState
+    )
     this.testRpcService.ipcMain.on('APP/STARTMINING', this._handleStartMining)
     this.testRpcService.ipcMain.on('APP/STOPMINING', this._handleStopMining)
     this.testRpcService.ipcMain.on('APP/FORCEMINE', this._handleForceMine)
     this.testRpcService.ipcMain.on('APP/MAKESNAPSHOT', this._handleMakeSnapshot)
-    this.testRpcService.ipcMain.on('APP/REVERTSNAPSHOT', this._handleRevertSnapshot)
+    this.testRpcService.ipcMain.on(
+      'APP/REVERTSNAPSHOT',
+      this._handleRevertSnapshot
+    )
 
     this.testRpcService.ipcMain.on('APP/SEARCHBLOCK', this._handleBlockSearch)
     this.testRpcService.ipcMain.on('APP/SEARCHTX', this._handleTxSearch)
 
     this.testRpcService.ipcMain.on('APP/CHECKPORT', this._handleCheckPort)
+
+    this.testRpcService.ipcMain.on('APP/GETSETTINGS', this._getSettings)
+    this.testRpcService.ipcMain.on('APP/SETSETTINGS', this._setSettings)
+  }
+
+  _getSettings = async (event, arg) => {
+    const settings = new SettingsService().getAll()
+    this.testRpcService.webView.send('APP/SETTINGS', settings)
+  }
+
+  _setSettings = async (event, arg) => {
+    const settings = new SettingsService()
+    Object.keys(arg).map(key => {
+      settings.set(key, arg[key])
+    })
+
+    this.testRpcService.webView.send('APP/SETTINGS', settings.getAll())
   }
 
   _handleBlockSearch = async (event, arg) => {
@@ -45,7 +69,10 @@ export default class EventHandler {
 
   _handleForceMine = (event, arg) => {
     this.testRpcService.log('Forcing Mine....')
-    this.testRpcService.stateManager.processBlocks(1, this._handleGetBlockchainState)
+    this.testRpcService.stateManager.processBlocks(
+      1,
+      this._handleGetBlockchainState
+    )
   }
 
   _handleMakeSnapshot = (event, arg) => {
@@ -68,7 +95,8 @@ export default class EventHandler {
     }
 
     let blockChainState = await this.testRpcService.blockFetcher.getBlockchainState()
-    this.testRpcService.webView && this.testRpcService.webView.send('APP/BLOCKCHAINSTATE', blockChainState)
+    this.testRpcService.webView &&
+      this.testRpcService.webView.send('APP/BLOCKCHAINSTATE', blockChainState)
   }
 
   _handleStartTestRpc (event, arg) {
@@ -89,7 +117,7 @@ export default class EventHandler {
   }
 
   async _handleCheckPort (event, port) {
-    let result = await FindProcess('port', port).then((list) => {
+    let result = await FindProcess('port', port).then(list => {
       if (!list.length) {
         return {
           status: 'clear'
@@ -102,6 +130,7 @@ export default class EventHandler {
       }
     })
 
-    this.testRpcService.webView && this.testRpcService.webView.send('APP/CHECKPORTRESULT', result)
+    this.testRpcService.webView &&
+      this.testRpcService.webView.send('APP/CHECKPORTRESULT', result)
   }
 }

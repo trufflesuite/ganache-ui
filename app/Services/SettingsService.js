@@ -9,6 +9,7 @@ class Settings {
     this.PATH = createJSON(`${jsonPrefix || ''}.settings`)
     this.data = Object.assign({}, initalSettings)
     this.lastSync = 0
+    this.saving = null
 
     if (fs.existsSync(this.PATH) && !wipeOldData) {
       this._load()
@@ -26,6 +27,11 @@ class Settings {
     return typeof this.data[key] === 'undefined' ? defaultValue : this.data[key]
   }
 
+  getAll () {
+    this._load()
+    return this.data
+  }
+
   onChange (key, fn) {
     this._hooks[key] = this._hooks[key] || []
     this._hooks[key].push(fn)
@@ -41,6 +47,10 @@ class Settings {
   }
 
   _load (retryCount = 5) {
+    if (this.saving) {
+      return this.data
+    }
+
     let userSettings
     try {
       userSettings = JSON.parse(fs.readFileSync(this.PATH, 'utf8'))
@@ -69,7 +79,10 @@ class Settings {
           this.saving = setTimeout(this._save.bind(this), 275)
         }
       }
-      if (this.saving) clearTimeout(this.saving)
+      if (this.saving) {
+        clearTimeout(this.saving)
+        this.saving = null
+      }
     } else {
       if (this.saving) clearTimeout(this.saving)
       this.saving = setTimeout(this._save.bind(this), 275)

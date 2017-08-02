@@ -1,8 +1,7 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 
 import TestRPCProvider from 'Data/Providers/TestRPCProvider'
-
-import SettingsService from 'Services/SettingsService'
+import SettingsProvider from 'Data/Providers/SettingsProvider'
 
 import Icon from 'Elements/Icon'
 import OnlyIf from 'Elements/OnlyIf'
@@ -12,9 +11,7 @@ import RestartIcon from 'Icons/eject.svg'
 
 import Styles from './ConfigScreen.css'
 
-const Settings = new SettingsService()
-
-class ConfigTabItem extends Component {
+class ConfigTabItem extends PureComponent {
   render () {
     const className = `${Styles.ConfigTabItem} ${this.props.isActive
       ? Styles.ActiveTab
@@ -29,7 +26,7 @@ class ConfigTabItem extends Component {
   }
 }
 
-class ConfigScreen extends Component {
+class ConfigScreen extends PureComponent {
   state = {
     specificTime: false,
     opcodeDebug: false,
@@ -39,12 +36,28 @@ class ConfigScreen extends Component {
     forkChain: false,
     verboseLogging: false,
     activeTab: 'server',
-    googleAnalyticsTracking: Settings.get('analyticsTracking'),
-    cpuAndMemoryProfiling: Settings.get('cpuAndMemoryProfiling')
+    googleAnalyticsTracking: false,
+    cpuAndMemoryProfiling: false,
+    settingsDirty: false
   }
 
   componentDidMount () {
+    this.props.appGetSettings()
     this.props.appCheckPort(8545)
+  }
+
+  componentWillReceiveProps (nextProps) {
+    console.log(nextProps)
+    let newSettings = {}
+    Object.keys(nextProps.settings).map((key) => {
+      if (!this.state.settingsDirty && nextProps.settings[key] !== this.state[key]) {
+        newSettings[key] = nextProps.settings[key]
+      }
+    })
+
+    if (Object.keys(newSettings).length > 0) {
+      this.setState(nextProps.settings)
+    }
   }
 
   _handleTabSelection = (opt, e) => {
@@ -559,18 +572,22 @@ class ConfigScreen extends Component {
     const value = target.type === 'checkbox' ? target.checked : target.value
     const name = target.name
     this.setState({
-      [name]: value
+      [name]: value,
+      settingsDirty: true
     })
   }
 
   _startTestRpc = e => {
     e.preventDefault()
 
-    Settings.set('analyticsTracking', this.refs.googleAnalyticsTracking.checked)
-    Settings.set(
-      'cpuAndMemoryProfiling',
+    console.log(
+      this.refs.googleAnalyticsTracking.checked,
       this.refs.cpuAndMemoryProfiling.checked
     )
+    this.props.appSetSettings({
+      googleAnalyticsTracking: this.refs.googleAnalyticsTracking.checked,
+      cpuAndMemoryProfiling: this.refs.cpuAndMemoryProfiling.checked
+    })
 
     const config = {
       port: this.refs.portNumber.value,
@@ -598,11 +615,11 @@ class ConfigScreen extends Component {
     this.state.automine ? delete config['time'] : null
 
     if (this.props.testRpcState.testRpcServerRunning) {
-      this.props.appRestartRpcService(config)
+      this.props.appRestartRpcService(config).then(this.props.appGetSettings())
     } else {
       this.props.appStartRpcService(config)
     }
   }
 }
 
-export default TestRPCProvider(ConfigScreen)
+export default SettingsProvider(TestRPCProvider(ConfigScreen))

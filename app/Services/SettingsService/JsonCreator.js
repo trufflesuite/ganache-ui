@@ -8,6 +8,8 @@ export default function (fileName) {
   const DIR = path.resolve(`${(app ? app.getPath('userData') : remote.require('electron').app.getPath('userData'))}/json_store`); // eslint-disable-line
   const PATH = `${DIR}/${targetFileName}.json`
 
+  console.log(`Loading settings from ${PATH}`)
+
   if (!fs.existsSync(DIR)) {
     mkdirp.sync(DIR)
   }

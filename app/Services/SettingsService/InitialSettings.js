@@ -1,4 +1,4 @@
 export default {
-  analyticsTracking: true,
+  googleAnalyticsTracking: true,
   cpuAndMemoryProfiling: false
 }

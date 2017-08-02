@@ -2,8 +2,7 @@ import React, { Component } from 'react'
 import Mousetrap from 'mousetrap'
 import { hashHistory } from 'react-router'
 import TestRPCProvider from 'Data/Providers/TestRPCProvider'
-
-import SettingsService from 'Services/SettingsService'
+import SettingsProvider from 'Data/Providers/SettingsProvider'
 
 import WindowControls from './WindowControls'
 import TopNavbar from './TopNavbar'
@@ -23,46 +22,40 @@ ElectronCookies.enable({
   origin: 'http://truffleframework.com/ganache'
 })
 
-const Settings = new SettingsService()
-
 class AppShell extends Component {
-  constructor () {
-    super()
+  _setupGoogleAnalytics = () => {
+    this.user = ua('UA-83874933-5', this.props.settings.uuid)
+    this.user.set('location', 'http://truffleframework.com/ganache')
+    this.user.set('checkProtocolTask', null)
+    this.user.set('an', 'Ganache')
+    this.user.set('av', app.getVersion())
+    this.user.set('ua', navigator.userAgent)
+    this.user.set('sr', screen.width + 'x' + screen.height)
+    this.user.set(
+      'vp',
+      window.screen.availWidth + 'x' + window.screen.availHeight
+    )
 
-    if (Settings.get('analyticsTracking')) {
-      this.user = ua('UA-83874933-5', Settings.get('uuid')) // eslint-disable-line
-      this.user.set('location', 'http://truffleframework.com/ganache')
-      this.user.set('checkProtocolTask', null)
-      this.user.set('an', 'Ganache')
-      this.user.set('av', app.getVersion())
-      this.user.set('ua', navigator.userAgent)
-      this.user.set('sr', screen.width + 'x' + screen.height)
-      this.user.set(
-        'vp',
-        window.screen.availWidth + 'x' + window.screen.availHeight
-      )
+    window.onerror = function (msg, url, lineNo, columnNo, error) {
+      var message = [
+        'Message: ' + msg,
+        'Line: ' + lineNo,
+        'Column: ' + columnNo,
+        'Error object: ' + JSON.stringify(error)
+      ].join(' - ')
 
-      window.onerror = function (msg, url, lineNo, columnNo, error) {
-        var message = [
-          'Message: ' + msg,
-          'Line: ' + lineNo,
-          'Column: ' + columnNo,
-          'Error object: ' + JSON.stringify(error)
-        ].join(' - ')
+      setTimeout(function () {
+        // this.user.exception(message.toString())
+      }, 0)
 
-        setTimeout(function () {
-          // this.user.exception(message.toString())
-        }, 0)
-
-        return false
-      }
+      return false
     }
+
+    this.user.pageview('/').send()
   }
 
   componentDidMount () {
-    if (Settings.get('analyticsTracking')) {
-      this.user.pageview('/').send()
-    }
+    this.props.appGetSettings()
 
     Mousetrap.bind('command+1', () => {
       this.props.testRpcState.testRpcServerRunning
@@ -103,13 +96,17 @@ class AppShell extends Component {
 
   componentWillReceiveProps (nextProps) {
     if (
-      Settings.get('analyticsTracking') &&
+      nextProps.settings.googleAnalyticsTracking &&
       nextProps.location.pathname !== this.props.location.pathname
     ) {
       const segment = nextProps.location.pathname.split('/')[1] || 'dashboard'
 
-      this.user.pageview(nextProps.location.pathname).send()
-      this.user.screenview(segment, 'Ganache', app.getVersion()).send()
+      if (!this.user) {
+        this._setupGoogleAnalytics()
+      }
+
+      this.user && this.user.pageview(nextProps.location.pathname).send()
+      this.user && this.user.screenview(segment, 'Ganache', app.getVersion()).send()
     }
   }
 
@@ -140,4 +137,4 @@ class AppShell extends Component {
   }
 }
 
-export default TestRPCProvider(AppShell)
+export default SettingsProvider(TestRPCProvider(AppShell))

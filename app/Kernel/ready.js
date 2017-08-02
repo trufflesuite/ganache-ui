@@ -73,5 +73,9 @@ export default async function (app, done, error) {
     app.store.dispatch({type: 'APP/UPDATEDOWNLOADED', payload: info})
   })
 
+  ipcRenderer.on('APP/SETTINGS', (event, settings) => {
+    app.store.dispatch({type: 'APP/SETTINGS', payload: settings})
+  })
+
   done()
 }
