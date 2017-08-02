@@ -7,7 +7,7 @@ import AppUpdaterProvider from 'Data/Providers/AppUpdaterProvider'
 
 import OnlyIf from 'Elements/OnlyIf'
 import Icon from 'Elements/Icon'
-import GanacheLogo from 'Icons/ganache_logo.svg'
+import GanacheLogo from '../../../../resources/logo.png'
 
 import Styles from './AppUpdateScreen.css'
 
@@ -46,7 +46,7 @@ class AppUpdateScreen extends Component {
       <div className={styles}>
         <div className={Styles.Wrapper}>
           <div className={elementStyles(Styles.Logo)}>
-            <Icon glyph={GanacheLogo} size={128} stroke={0} className={elementStyles('isolate')} />
+            <img src={GanacheLogo} width={'128px'} height={'128px'} />
           </div>
           <h4 className={elementStyles('')}>
             <strong>GANACHE<sup>β</sup></strong>

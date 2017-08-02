@@ -16,6 +16,10 @@ main {
 
   width: 100%;
 
+  img {
+    margin-top: 2rem;
+  }
+
   header {
     flex-direction: column;
   }

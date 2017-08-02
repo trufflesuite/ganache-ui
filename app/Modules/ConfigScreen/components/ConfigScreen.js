@@ -6,7 +6,7 @@ import SettingsProvider from 'Data/Providers/SettingsProvider'
 import Icon from 'Elements/Icon'
 import OnlyIf from 'Elements/OnlyIf'
 
-import GanacheLogo from 'Icons/ganache_logo.svg'
+import GanacheLogo from '../../../../resources/logo.png'
 import RestartIcon from 'Icons/eject.svg'
 
 import Styles from './ConfigScreen.css'
@@ -38,12 +38,14 @@ class ConfigScreen extends PureComponent {
     activeTab: 'server',
     googleAnalyticsTracking: false,
     cpuAndMemoryProfiling: false,
-    settingsDirty: false
+    settingsDirty: false,
+    isStartDisabled: false
   }
 
   componentDidMount () {
     this.props.appGetSettings()
     this.props.appCheckPort(8545)
+    this.setState({isStartDisabled: false})
   }
 
   componentWillReceiveProps (nextProps) {
@@ -97,19 +99,14 @@ class ConfigScreen extends PureComponent {
       <main>
         <div className={Styles.ConfigScreen}>
           <OnlyIf test={!this.props.testRpcState.testRpcServerRunning}>
-            <Icon
-              glyph={GanacheLogo}
-              size={128}
-              className="isolate"
-              strokeWidth={1}
-            />
+            <img src={GanacheLogo} width={'100px'} height={'100px'}/>
           </OnlyIf>
           <div className={Styles.ConfigHeader}>
             <div className={Styles.ConfigTabs}>
               {this._renderConfigTabs()}
             </div>
             <OnlyIf test={!portIsBlocked}>
-              <button className="btn btn-primary" onClick={this._startTestRpc}>
+              <button className="btn btn-primary" onClick={this._startTestRpc} disabled={this.state.isStartDisabled}>
                 <Icon glyph={RestartIcon} size={18} />
                 {this.props.testRpcState.testRpcServerRunning
                   ? 'RESTART GANACHE'
@@ -579,6 +576,7 @@ class ConfigScreen extends PureComponent {
 
   _startTestRpc = e => {
     e.preventDefault()
+    this.setState({isStartDisabled: true})
 
     console.log(
       this.refs.googleAnalyticsTracking.checked,

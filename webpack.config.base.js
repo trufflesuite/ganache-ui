@@ -5,9 +5,7 @@
 import path from 'path'
 import validate from 'webpack-validator'
 
-import {
-  dependencies as externals
-} from './app/package.json'
+import { dependencies as externals } from './app/package.json'
 
 export default validate({
   module: {
@@ -23,20 +21,26 @@ export default validate({
         loader: 'json-loader'
       },
       {
+        test: /\.(png|jpg|gif)$/,
+        loader: 'url-loader'
+      },
+      {
         test: /\.svg$/,
         include: path.resolve('./app/Elements/icons'),
         loaders: [
-          'svg-sprite-loader?' + JSON.stringify({
-            name: '[name].[hash]',
-            prefixize: true
-          }),
-          'svgo-loader?' + JSON.stringify({
-            plugins: [
-             { removeTitle: true },
-             { removeUselessStrokeAndFill: false },
-             { convertPathData: false }
-            ]
-          })
+          'svg-sprite-loader?' +
+            JSON.stringify({
+              name: '[name].[hash]',
+              prefixize: true
+            }),
+          'svgo-loader?' +
+            JSON.stringify({
+              plugins: [
+                { removeTitle: true },
+                { removeUselessStrokeAndFill: false },
+                { convertPathData: false }
+              ]
+            })
         ]
       }
     ]
@@ -54,8 +58,15 @@ export default validate({
   resolve: {
     root: path.resolve('./app'),
     extensions: ['', '.js', '.jsx', '.json'],
-    packageMains: ['webpack', 'browser', 'web', 'browserify', ['jam', 'main'], 'main'],
-    modulesDirectories: [ path.resolve('./app'), 'node_modules' ],
+    packageMains: [
+      'webpack',
+      'browser',
+      'web',
+      'browserify',
+      ['jam', 'main'],
+      'main'
+    ],
+    modulesDirectories: [path.resolve('./app'), 'node_modules'],
     alias: {
       CoreStyles: path.resolve('./app/Styles'),
       Elements: path.resolve('./app/Elements'),
