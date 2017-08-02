@@ -105,14 +105,12 @@ class ConfigScreen extends PureComponent {
             <div className={Styles.ConfigTabs}>
               {this._renderConfigTabs()}
             </div>
-            <OnlyIf test={!portIsBlocked}>
-              <button className="btn btn-primary" onClick={this._startTestRpc} disabled={this.state.isStartDisabled}>
-                <Icon glyph={RestartIcon} size={18} />
-                {this.props.testRpcState.testRpcServerRunning
-                  ? 'RESTART GANACHE'
-                  : 'START GANACHE'}
-              </button>
-            </OnlyIf>
+            <button className="btn btn-primary" onClick={this._startTestRpc} disabled={this.state.isStartDisabled || portIsBlocked}>
+              <Icon glyph={RestartIcon} size={18} />
+              {this.props.testRpcState.testRpcServerRunning
+                ? 'RESTART GANACHE'
+                : 'START GANACHE'}
+            </button>
           </div>
 
           <form>
