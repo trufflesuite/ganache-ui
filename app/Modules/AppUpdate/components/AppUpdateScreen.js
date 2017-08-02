@@ -1,12 +1,11 @@
-import React, {Component} from 'react'
-const {app} = require('electron').remote
+import React, { Component } from 'react'
+const { app } = require('electron').remote
 
 import { hashHistory } from 'react-router'
 import TestRPCProvider from 'Data/Providers/TestRPCProvider'
 import AppUpdaterProvider from 'Data/Providers/AppUpdaterProvider'
 
 import OnlyIf from 'Elements/OnlyIf'
-import Icon from 'Elements/Icon'
 import GanacheLogo from '../../../../resources/logo.png'
 
 import Styles from './AppUpdateScreen.css'
@@ -21,26 +20,41 @@ class AppUpdateScreen extends Component {
   }
 
   componentDidMount () {
-    this.setState({version: app.getVersion()})
+    this.setState({ version: app.getVersion() })
   }
 
   componentWillReceiveProps (nextProps) {
     const { appUpdater } = nextProps
 
-    if (appUpdater.haveLatestVersion && !this.props.appUpdater.haveLatestVersion) {
-      this.setState({loadingScreenFinished: true})
-      setTimeout(() => { hashHistory.push('/config') }, 4000)
+    if (
+      appUpdater.haveLatestVersion &&
+      !this.props.appUpdater.haveLatestVersion
+    ) {
+      this.setState({ loadingScreenFinished: true })
+      setTimeout(() => {
+        hashHistory.push('/config')
+      }, 4000)
     }
 
-    if (appUpdater.updateError !== false && this.props.appUpdater.updateError === false) {
-      this.setState({loadingScreenFinished: true})
-      setTimeout(() => { hashHistory.push('/config') }, 4000)
+    if (
+      appUpdater.updateError !== false &&
+      this.props.appUpdater.updateError === false
+    ) {
+      this.setState({ loadingScreenFinished: true })
+      setTimeout(() => {
+        hashHistory.push('/config')
+      }, 4000)
     }
   }
 
   render () {
-    const styles = `${Styles.LoadingScreen} ${this.state.loadingScreenFinished ? Styles.FadeOutLoadingScreen : ''}`
-    const elementStyles = (className) => (`${className} ${this.state.loadingScreenFinished ? Styles.FadeOutElement : ''}`)
+    const styles = `${Styles.LoadingScreen} ${this.state.loadingScreenFinished
+      ? Styles.FadeOutLoadingScreen
+      : ''}`
+    const elementStyles = className =>
+      `${className} ${this.state.loadingScreenFinished
+        ? Styles.FadeOutElement
+        : ''}`
 
     return (
       <div className={styles}>
@@ -49,23 +63,37 @@ class AppUpdateScreen extends Component {
             <img src={GanacheLogo} width={'128px'} height={'128px'} />
           </div>
           <h4 className={elementStyles('')}>
-            <strong>GANACHE<sup>β</sup></strong>
-            <div className={elementStyles(Styles.GanacheVersion)}>v{this.state.version}</div>
+            <strong>
+              GANACHE<sup>β</sup>
+            </strong>
+            <div className={elementStyles(Styles.GanacheVersion)}>
+              v{this.state.version}
+            </div>
           </h4>
           <OnlyIf test={this.props.appUpdater.checkingForUpdate}>
-            <p className={elementStyles(Styles.InitialUpdateNotice)}>Checking for Ganache Updates...</p>
+            <p className={elementStyles(Styles.InitialUpdateNotice)}>
+              Checking for Ganache Updates...
+            </p>
           </OnlyIf>
           <OnlyIf test={this.props.appUpdater.haveLatestVersion}>
-            <p className={elementStyles(Styles.UpdateNotice)}>You have the most up-to-date version of Ganache.</p>
+            <p className={elementStyles(Styles.UpdateNotice)}>
+              You have the most up-to-date version of Ganache.
+            </p>
           </OnlyIf>
           <OnlyIf test={this.props.appUpdater.downloadingUpdate !== false}>
-            <p className={elementStyles(Styles.UpdateNotice)}>Downloading Ganahce update...</p>
+            <p className={elementStyles(Styles.UpdateNotice)}>
+              Downloading Ganahce update...
+            </p>
           </OnlyIf>
           <OnlyIf test={this.props.appUpdater.updateError}>
-            <p className={elementStyles(Styles.UpdateNotice)}>Updates not available right now.</p>
+            <p className={elementStyles(Styles.UpdateNotice)}>
+              Updates not available right now.
+            </p>
           </OnlyIf>
           <OnlyIf test={this.props.appUpdater.updateDownloaded}>
-            <p className={elementStyles(Styles.UpdateNotice)}>Ganache update downloaded. Restarting in 5s...</p>
+            <p className={elementStyles(Styles.UpdateNotice)}>
+              Ganache update downloaded. Restarting in 5s...
+            </p>
           </OnlyIf>
         </div>
       </div>
