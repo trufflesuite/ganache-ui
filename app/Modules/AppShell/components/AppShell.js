@@ -14,8 +14,6 @@ import CSSTransitionGroup from 'react-addons-css-transition-group'
 
 const { app } = require('electron').remote
 
-import { dissoc } from 'ramda'
-
 import Styles from './AppShell.css'
 
 ElectronCookies.enable({
@@ -127,7 +125,7 @@ class AppShell extends Component {
           >
             {this.renderClonedChildrenWithPropsAndPathKey(
               this.props.children,
-              { ...dissoc('children', this.props) },
+              { ...this.props },
               segment
             )}
           </CSSTransitionGroup>
