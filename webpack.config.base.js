@@ -70,7 +70,8 @@ export default validate({
     alias: {
       CoreStyles: path.resolve('./app/Styles'),
       Elements: path.resolve('./app/Elements'),
-      Icons: path.resolve('./app/Elements/icons')
+      Icons: path.resolve('./app/Elements/icons'),
+      Resources: path.resolve('./resources')
     }
   },
 

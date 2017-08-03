@@ -6,7 +6,7 @@ import TestRPCProvider from 'Data/Providers/TestRPCProvider'
 import AppUpdaterProvider from 'Data/Providers/AppUpdaterProvider'
 
 import OnlyIf from 'Elements/OnlyIf'
-import GanacheLogo from '../../../../resources/logo.png'
+import GanacheLogo from 'Resources/logo.png'
 
 import Styles from './AppUpdateScreen.css'
 

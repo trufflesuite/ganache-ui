@@ -6,7 +6,7 @@ import SettingsProvider from 'Data/Providers/SettingsProvider'
 import Icon from 'Elements/Icon'
 import OnlyIf from 'Elements/OnlyIf'
 
-import GanacheLogo from '../../../../resources/logo.png'
+import GanacheLogo from 'Resources/logo.png'
 import RestartIcon from 'Icons/eject.svg'
 
 import Styles from './ConfigScreen.css'
@@ -49,7 +49,6 @@ class ConfigScreen extends PureComponent {
   }
 
   componentWillReceiveProps (nextProps) {
-    console.log(nextProps)
     let newSettings = {}
     Object.keys(nextProps.settings).map((key) => {
       if (!this.state.settingsDirty && nextProps.settings[key] !== this.state[key]) {
