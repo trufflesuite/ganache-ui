@@ -1,5 +1,6 @@
 @import 'colors.css';
 @import 'buttons.css';
+@import 'cards.css';
 
 .Button {
   text-decoration: none;
@@ -15,9 +16,9 @@
   flex-direction: column;
   margin: 1rem 0 0 0;
 
-  border: 2px solid var(--app-card-default-border);
   border-radius: 4px;
   word-wrap: break-word;
+  composes: CardShadow;
 
   header {
     width: 100%;
