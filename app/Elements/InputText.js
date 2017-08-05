@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import omit from 'lodash/object/omit.js'
 
 class InputSelect extends React.Component {
@@ -37,23 +38,34 @@ class InputSelect extends React.Component {
 
   handleChange (e) {
     const value = e.target.value
-    this.setState({value})
+    this.setState({ value })
     if (this.timeout) {
       clearTimeout(this.timeout)
     }
-    this.timeout = setTimeout(function () {
-      this.props.onChange(value)
-    }.bind(this), this.props.delay)
+    this.timeout = setTimeout(
+      function () {
+        this.props.onChange(value)
+      }.bind(this),
+      this.props.delay
+    )
   }
 
   render () {
-    const extendProps = omit(this.props, ['value', 'onKeyPress', 'onChange', 'delay', 'onEnter'])
+    const extendProps = omit(this.props, [
+      'value',
+      'onKeyPress',
+      'onChange',
+      'delay',
+      'onEnter'
+    ])
     return (
-      <input {...extendProps}
+      <input
+        {...extendProps}
         value={this.state.value}
         onKeyPress={this.handlePress.bind(this)}
         onKeyDown={this.props.onKeyDown}
-        onChange={this.handleChange.bind(this)}/>
+        onChange={this.handleChange.bind(this)}
+      />
     )
   }
 }

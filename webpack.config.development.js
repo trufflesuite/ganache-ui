@@ -16,92 +16,107 @@ import precss from 'precss'
 import postcssImport from 'postcss-import'
 
 const port = process.env.PORT || 3000
+const outputPath = path.resolve('./app')
 
-export default validate(merge(baseConfig, {
-  debug: true,
+export default validate(
+  merge(baseConfig, {
+    cache: true,
 
-  devtool: 'inline-source-map',
+    debug: true,
 
-  entry: [
-    `webpack-hot-middleware/client?path=http://localhost:${port}/__webpack_hmr`,
-    'babel-polyfill',
-    './app/index'
-  ],
+    devtool: 'inline-source-map',
 
-  output: {
-    publicPath: `http://localhost:${port}/dist/`
-  },
+    entry: [
+      `webpack-hot-middleware/client?path=http://localhost:${port}/__webpack_hmr`,
+      path.join(process.cwd(), './app/index')
+    ],
 
-  module: {
-    // preLoaders: [
-    //   {
-    //     test: /\.js$/,
-    //     loader: 'eslint-loader',
-    //     exclude: /node_modules/
-    //   }
-    // ],
-    loaders: [
-      {
-        test: /\.global\.css$/,
-        loaders: [
-          'style-loader',
-          'css-loader?sourceMap',
-          'sass',
-          'postcss'
-        ]
-      },
+    output: {
+      publicPath: `http://localhost:${port}/dist/`
+    },
 
-      {
-        test: /^((?!\.global).)*.css$/,
-        loaders: [
-          'style-loader',
-          'css-loader?modules&sourceMap&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
-          'sass',
-          'postcss'
-        ]
-      },
+    module: {
+      // preLoaders: [
+      //   {
+      //     test: /\.js$/,
+      //     loader: 'eslint-loader',
+      //     exclude: /node_modules/
+      //   }
+      // ],
+      loaders: [
+        {
+          test: /\.global\.css$/,
+          loaders: ['style-loader', 'css-loader?sourceMap', 'sass', 'postcss']
+        },
 
-      { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: 'url-loader?limit=10000&mimetype=application/font-woff' },
-      { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/, loader: 'url-loader?limit=10000&mimetype=application/font-woff' },
-      { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: 'url-loader?limit=10000&mimetype=application/octet-stream' },
-      { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: 'file' }
-    ]
-  },
+        {
+          test: /^((?!\.global).)*.css$/,
+          loaders: [
+            'style-loader',
+            'css-loader?modules&sourceMap&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
+            'sass',
+            'postcss'
+          ]
+        },
 
-  // We use PostCSS for autoprefixing and PreCSS.
-  postcss: function (webpack) {
-    return [
-      postcssImport({
-        path: [path.resolve('./app/Styles')]
-      }),
-      precss(),
-      colorFunction()
-    ]
-  },
+        {
+          test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
+          loader: 'url-loader?limit=10000&mimetype=application/font-woff'
+        },
+        {
+          test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
+          loader: 'url-loader?limit=10000&mimetype=application/font-woff'
+        },
+        {
+          test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
+          loader: 'url-loader?limit=10000&mimetype=application/octet-stream'
+        },
+        { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: 'file' }
+      ]
+    },
 
-  eslint: {
-    formatter,
-    'import/resolver': {
-      'webpack': {
-        'config': path.resolve(__dirname, 'webpack.config.eslint.js')
+    // We use PostCSS for autoprefixing and PreCSS.
+    postcss: function (webpack) {
+      return [
+        postcssImport({
+          path: [path.resolve('./app/Styles')]
+        }),
+        precss(),
+        colorFunction()
+      ]
+    },
+
+    eslint: {
+      formatter,
+      'import/resolver': {
+        webpack: {
+          config: path.resolve(__dirname, 'webpack.config.eslint.js')
+        }
       }
-    }
-  },
+    },
 
-  plugins: [
-    // https://webpack.github.io/docs/hot-module-replacement-with-webpack.html
-    new webpack.HotModuleReplacementPlugin(),
+    plugins: [
+      new webpack.optimize.OccurenceOrderPlugin(),
 
-    // “If you are using the CLI, the webpack process will not exit with an error code by enabling this plugin.”
-    // https://github.com/webpack/docs/wiki/list-of-plugins#noerrorsplugin
-    new webpack.NoErrorsPlugin(),
+      new webpack.DllReferencePlugin({
+        context: process.cwd(),
+        manifest: require(path.join(outputPath, 'vendor.dll.json'))
+      }),
 
-    // NODE_ENV should be production so that modules do not perform certain development checks
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify('development')
-    })
-  ],
+      // https://webpack.github.io/docs/hot-module-replacement-with-webpack.html
+      new webpack.HotModuleReplacementPlugin(),
 
-  // https://github.com/chentsulin/webpack-target-electron-renderer#how-this-module-works
-  target: 'electron-renderer'
-}))
+      // “If you are using the CLI, the webpack process will not exit with an error code by enabling this plugin.”
+      // https://github.com/webpack/docs/wiki/list-of-plugins#noerrorsplugin
+      new webpack.NoErrorsPlugin(),
+
+      // NODE_ENV should be production so that modules do not perform certain development checks
+      new webpack.DefinePlugin({
+        'process.env.NODE_ENV': JSON.stringify('development')
+      })
+    ],
+
+    // https://github.com/chentsulin/webpack-target-electron-renderer#how-this-module-works
+    target: 'electron-renderer'
+  })
+)

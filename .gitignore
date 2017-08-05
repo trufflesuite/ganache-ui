@@ -38,7 +38,7 @@ app/node_modules
 # App packaged
 release
 app/vendor.dll.js
-app/vendor/dll.json
+app/vendor.dll.json
 app/main.js
 app/main.js.map
 app/bundle.js

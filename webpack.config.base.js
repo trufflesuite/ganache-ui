@@ -13,7 +13,7 @@ export default validate({
     loaders: [
       {
         test: /\.jsx?$/,
-        loaders: ['babel-loader'],
+        loaders: ['babel-loader?cacheDirectory=true'],
         exclude: /node_modules/
       },
       {
@@ -49,6 +49,7 @@ export default validate({
   output: {
     path: path.resolve('./app'),
     filename: 'bundle.js',
+    chunkFilename: '[name].chunk.js',
 
     // https://github.com/webpack/webpack/issues/1114
     libraryTarget: 'commonjs2'
@@ -77,5 +78,7 @@ export default validate({
 
   plugins: [],
 
-  externals: Object.keys(externals || {})
+  externals: Object.keys(externals || {}),
+  stats: false,
+  progress: true
 })

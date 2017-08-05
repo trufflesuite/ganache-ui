@@ -1,5 +1,3 @@
-import 'babel-polyfill'
-
 import Application from 'Core/Application'
 
 import bootup from 'Kernel/bootup'
@@ -13,7 +11,4 @@ import '../resources/fonts/FiraSans-SemiBold.ttf'
 
 const Ganache = new Application('GANACHE')
 
-Ganache
-  .init(bootup)
-  .ready(ready)
-  .start('root')
+Ganache.init(bootup).ready(ready).start('root')

@@ -4,16 +4,16 @@
   <meta charset="utf-8">
   <title>GANACHE</title>
   <script>
-  (function() {
-    if (!process.env.HOT) {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = './dist/style.css';
-      // HACK: Writing the script path should be done with webpack
-      document.getElementsByTagName('head')[0].appendChild(link);
-    }
-  }());
-  </script>
+  ;(function () {
+  if (!process.env.HOT) {
+    const link = document.createElement('link')
+    link.rel = 'stylesheet'
+    link.href = './dist/style.css'
+    // HACK: Writing the script path should be done with webpack
+    document.getElementsByTagName('head')[0].appendChild(link)
+  }
+})()
+</script>
   <style>
     html {
       box-sizing: border-box;
@@ -42,14 +42,21 @@
   <div id="root"></div>
   <script>
   {
-    const script = document.createElement('script');
-    const port = process.env.PORT || 3000;
-    script.src = (process.env.HOT)
-    ? 'http://localhost:' + port + '/dist/bundle.js'
-    : './dist/bundle.js';
-    // HACK: Writing the script path should be done with webpack
-    document.body.appendChild(script);
+  if (process.env.NODE_ENV === 'development') {
+    const script = document.createElement('script')
+    const port = process.env.PORT || 3000
+    script.src = 'http://localhost:' + port + '/vendor.dll.js'
+    document.body.appendChild(script)
   }
-  </script>
+
+  const script = document.createElement('script')
+  const port = process.env.PORT || 3000
+  script.src = process.env.HOT
+    ? 'http://localhost:' + port + '/dist/bundle.js'
+    : './dist/bundle.js'
+  // HACK: Writing the script path should be done with webpack
+  document.body.appendChild(script)
+}
+</script>
 </body>
 </html>
