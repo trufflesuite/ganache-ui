@@ -35,6 +35,10 @@ class ConsoleStream extends EventEmitter {
       }
     }
 
+    if (data.message.trim() === 'undefined' || data.message.trim() === '') {
+      return
+    }
+
     if (data.message.match(/.*Error:/)) {
       data.level = 'error'
     }
