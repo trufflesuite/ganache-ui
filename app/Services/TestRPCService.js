@@ -7,10 +7,11 @@ import TxFetcher from './TestRPCService/TxFetcher'
 import autobind from 'class-autobind'
 
 export default class TestRPCService extends EventEmitter {
-  constructor (ipcMain, webView) {
+  constructor (ipcMain, webView, consoleService) {
     super()
     this.ipcMain = ipcMain
     this.webView = webView
+    this.consoleService = consoleService
 
     this.testRpc = null
     this.web3 = null
@@ -27,29 +28,25 @@ export default class TestRPCService extends EventEmitter {
     console.log('🍪  Starting Ganache Core')
   }
 
-  log = (message) => {
-    console.log(message)
-    this.webView.send('APP/TESTRPCLOG', {message, level: 'log'})
+  log = message => {
+    this.consoleService.log(message)
   }
 
-  info = (message) => {
-    console.info(message)
-    this.webView.send('APP/TESTRPCLOG', {message, level: 'info'})
+  info = message => {
+    this.consoleService.info(message)
   }
 
-  warning = (message) => {
-    console.warning(message)
-    this.webView.send('APP/TESTRPCLOG', {message, level: 'warning'})
+  warning = message => {
+    this.consoleService.warning(message)
   }
 
-  error = (message) => {
-    console.error(message)
-    this.webView.send('APP/TESTRPCLOG', {message, level: 'error'})
+  error = message => {
+    this.consoleService.error(message)
   }
 
-  initializeTestRpc = (opts) => {
+  initializeTestRpc = opts => {
     if (this.testRpc) {
-      this.testRpc.close((err) => {
+      this.testRpc.close(err => {
         if (err) {
           console.log(err)
         }
@@ -63,12 +60,14 @@ export default class TestRPCService extends EventEmitter {
     }
   }
 
-  startServer = (opts) => {
+  startServer = opts => {
     this.testRpc.listen(opts.port, opts.hostname, async (err, stateManager) => {
       if (err) {
         this.testRpcService.webView.send('APP/FAILEDTOSTART', err)
         console.log('ERR: ', err)
       }
+
+      this.consoleService.initializeWeb3Scripts(opts.hostname, opts.port)
 
       this.port = opts.port
       this.host = opts.hostname

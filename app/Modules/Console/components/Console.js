@@ -1,11 +1,7 @@
 import React, { Component } from 'react'
 import InputText from 'Elements/InputText'
 import LogContainer from 'Elements/LogContainer'
-import HeaderBar from 'Elements/HeaderBar'
 import Styles from './Console.css'
-import Icon from 'Elements/Icon'
-
-import ConsoleIcon from 'Icons/console.svg'
 
 import ConsoleProvider from 'Data/Providers/ConsoleProvider'
 
@@ -26,17 +22,20 @@ class Console extends Component {
     }
   }
 
-  _handleConsoleInput = (value) => {
+  _handleConsoleInput = value => {
     this.props.appSendConsoleCommand(value)
-    this.setState({currentLine: '', commandHistory: this.state.commandHistory.concat(value)})
+    this.setState({
+      currentLine: '',
+      commandHistory: this.state.commandHistory.concat(value)
+    })
   }
 
-  _handleChange = (value) => {
-    this.setState({currentLine: value})
+  _handleChange = value => {
+    this.setState({ currentLine: value })
     this.props.appSendConsoleCommandCompletion(value)
   }
 
-  _handleKeyDown = (e) => {
+  _handleKeyDown = e => {
     const keyCode = e.keyCode
 
     if (keyCode === UP_ARROW_KEY) {
@@ -52,7 +51,10 @@ class Console extends Component {
       const currentLine = this.state.currentLine
 
       if (completions.length === 1) {
-        this.setState({currentLine: currentLine + this._lettersToAppend(currentLine, completions[0])})
+        this.setState({
+          currentLine:
+            currentLine + this._lettersToAppend(currentLine, completions[0])
+        })
       } else {
         var possibles = []
         for (var j = 0; j < completions.length; j++) {
@@ -63,13 +65,16 @@ class Console extends Component {
 
         var expansion = this._getCommonPrefix(possibles)
         if (expansion.length > 0) {
-          this.setState({ currentLine: currentLine + this._lettersToAppend(currentLine, expansion) })
+          this.setState({
+            currentLine:
+              currentLine + this._lettersToAppend(currentLine, expansion)
+          })
         }
       }
     }
   }
 
-  _getCommonPrefix = (words) => {
+  _getCommonPrefix = words => {
     if (words.length === 0) return ''
     if (words.length === 1) return words[0]
     var prefix = words[0]
@@ -89,7 +94,7 @@ class Console extends Component {
     for (var i = 0; i < word1.length + word2.length; i++) {
       if (word1[i] === word2[word1Matched]) {
         word1Matched++
-        if ((i + 1) === word1.length) {
+        if (i + 1 === word1.length) {
           return word2.substring(word1Matched)
         }
       } else {
@@ -124,22 +129,19 @@ class Console extends Component {
   _goBackwardsInCommandHistory = () => {
     if (this.state.commandHistoryIndex > 0) {
       this.setState({
-        currentLine: this.state.commandHistory[this.state.commandHistoryIndex - 1],
+        currentLine: this.state.commandHistory[
+          this.state.commandHistoryIndex - 1
+        ],
         commandHistoryIndex: this.state.commandHistoryIndex - 1
       })
     }
-  }
-
-  _logBuffer = () => {
-    let logs = this.props.console.consoleBuffer.concat(this.props.testRpcState.logs).sort((a, b) => { return new Date(a.time) - new Date(b.time) })
-    return logs
   }
 
   render () {
     return (
       <div className={Styles.Console}>
         <main>
-          <LogContainer logs={this._logBuffer()} />
+          <LogContainer logs={this.props.console.consoleBuffer} />
         </main>
         <footer>
           <InputText

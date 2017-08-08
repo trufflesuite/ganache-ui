@@ -27,8 +27,8 @@ class ConsoleStream extends EventEmitter {
 
   write (data) {
     console.log(data)
-    if (data !== '' && this.streamOpen) {
-      this.webView.send('APP/REPLSTATE', data.trim())
+    if (data.message !== '' && this.streamOpen) {
+      this.webView.send('APP/REPLSTATE', data)
     }
   }
   end () {}
@@ -40,12 +40,10 @@ class ConsoleStream extends EventEmitter {
     this.webView = null
   }
   destroySoon () {}
-
 }
 
 export default class ConsoleService {
-  constructor (ipcMain, webView, testRpcService) {
-    this.testRpcService = testRpcService
+  constructor (ipcMain, webView) {
     this.ipcMain = ipcMain
     this.webView = webView
     this.consoleStream = new ConsoleStream(webView)
@@ -59,13 +57,47 @@ export default class ConsoleService {
 
     ipcMain.on('APP/SENDREPLCOMMAND', this.sendConsoleInput)
     ipcMain.on('APP/SENDREPLCOMMANDCOMPLETION', this._handleCommandCompletion)
-
-    this.testRpcService.on('testRpcServiceStarted', this._handleStartTestRpc)
   }
 
-  _handleStartTestRpc = (testRpcService) => {
+  log = message => {
+    console.log(message)
+    this.consoleStream.write({
+      message,
+      level: 'log',
+      time: new Date().toISOString()
+    })
+  }
+
+  info = message => {
+    console.info(message)
+    this.consoleStream.write({
+      message,
+      level: 'info',
+      time: new Date().toISOString()
+    })
+  }
+
+  warning = message => {
+    console.warning(message)
+    this.consoleStream.write({
+      message,
+      level: 'warning',
+      time: new Date().toISOString()
+    })
+  }
+
+  error = message => {
+    console.error(message)
+    this.consoleStream.write({
+      message,
+      level: 'error',
+      time: new Date().toISOString()
+    })
+  }
+
+  initializeWeb3Scripts = (host, port) => {
     this._console.context['Web3'] = Web3
-    new Web3InitScript(testRpcService.host, testRpcService.port).exportedScript().then((bootScript) => {
+    new Web3InitScript(host, port).exportedScript().then(bootScript => {
       this.consoleStream.emit('data', bootScript)
       this.consoleStream.openStream()
     })
@@ -77,7 +109,7 @@ export default class ConsoleService {
         console.log(err)
       }
 
-      const payload = { 'completions': completions }
+      const payload = { completions: completions }
       this.webView.send('APP/REPLCOMMANDCOMPLETIONRESULT', payload)
     })
   }

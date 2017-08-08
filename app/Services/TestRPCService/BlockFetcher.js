@@ -27,14 +27,21 @@ export default class BlockFetcher {
     this.testRpcService = testRpcService
 
     if (Settings.get('cpuAndMemoryProfiling')) {
-      const profileLogPath = path.resolve(`${(app ? app.getPath('userData') : remote.require('electron').app.getPath('userData'))}/profiling_data`); // eslint-disable-line
+      const profileLogPath = path.resolve(
+        `${app
+          ? app.getPath('userData')
+          : remote.require('electron').app.getPath('userData')}/profiling_data`
+      ) // eslint-disable-line
 
       if (!fs.existsSync(profileLogPath)) {
         mkdirp.sync(profileLogPath)
       }
 
       SysLog.log(`WRITING PROFILE DATA TO: ${profileLogPath}`)
-      this.logFile = fs.createWriteStream(path.join(profileLogPath, 'profile.csv'), {flags: 'w'})
+      this.logFile = fs.createWriteStream(
+        path.join(profileLogPath, 'profile.csv'),
+        { flags: 'w' }
+      )
     }
 
     autobind(this)
@@ -45,7 +52,7 @@ export default class BlockFetcher {
       this.stateManager.blockNumber((err, blockNumber) => {
         err ? reject(err) : resolve(blockNumber)
       })
-    }).catch((err) => {
+    }).catch(err => {
       console.log(err)
     })
   }
@@ -56,39 +63,63 @@ export default class BlockFetcher {
       this.stateManager.getBlock(blockNumber, (err, block) => {
         err ? reject(err) : resolve(serializeBlock(block))
       })
-    }).catch((err) => {
+    }).catch(err => {
       console.log(err)
-      return Promise.resolve({ 'error': `block not found: ${blockNumber}`})
+      return Promise.resolve({ error: `block not found: ${blockNumber}` })
     })
   }
 
   async getRecentBlocks (stateManager, numberToFetch = 10) {
     const tailLength = numberToFetch
     const currentBlockNumber = await this.getCurrentBlockNumber()
-    const blockTailLength = currentBlockNumber < tailLength ? currentBlockNumber + 1 : tailLength
+    const blockTailLength =
+      currentBlockNumber < tailLength ? currentBlockNumber + 1 : tailLength
     const blockPlaceholders = new Array(blockTailLength).fill(null)
 
-    let blocks = await Promise.all(blockPlaceholders.map(async (_, index) => {
-      const requiredBlockNumber = currentBlockNumber - index
-      return await this.getBlockByNumber(requiredBlockNumber)
-    }))
+    let blocks = await Promise.all(
+      blockPlaceholders.map(async (_, index) => {
+        const requiredBlockNumber = currentBlockNumber - index
+        return await this.getBlockByNumber(requiredBlockNumber)
+      })
+    )
 
     return blocks
   }
 
   async getBlockchainState (txFetcher) {
     const currentBlockNumber = await this.getCurrentBlockNumber()
-    let blockChainState = await this.buildBlockChainState(this.testRpcService.txFetcher._marshallTransaction)
+    let blockChainState = await this.buildBlockChainState(
+      this.testRpcService.txFetcher._marshallTransaction
+    )
 
-    blockChainState.transactions = await this.testRpcService.txFetcher.getRecentTransactions(currentBlockNumber, this)
+    blockChainState.transactions = await this.testRpcService.txFetcher.getRecentTransactions(
+      currentBlockNumber,
+      this
+    )
     blockChainState.accounts = await this.testRpcService.accountFetcher.getAccountInfo()
 
     if (Settings.get('cpuAndMemoryProfiling') && this.logFile) {
       var mem = process.memoryUsage()
-      SysLog.info(currentBlockNumber + ', ' + bytesToSize(mem.rss) + ', ' + bytesToSize(mem.heapTotal) + ', ' + bytesToSize(mem.heapUsed))
+      SysLog.info(
+        currentBlockNumber +
+          ', ' +
+          bytesToSize(mem.rss) +
+          ', ' +
+          bytesToSize(mem.heapTotal) +
+          ', ' +
+          bytesToSize(mem.heapUsed)
+      )
 
       usage.stat(process.pid, (err, result) => {
-        this.logFile.write(`${currentBlockNumber}, ${result.cpu}, ${bytesToSize(mem.rss, false)}, ${bytesToSize(mem.heapTotal, false)}, ${bytesToSize(mem.heapUsed, false)}\r\n`)
+        this.logFile.write(
+          `${currentBlockNumber}, ${result.cpu}, ${bytesToSize(
+            mem.rss,
+            false
+          )}, ${bytesToSize(mem.heapTotal, false)}, ${bytesToSize(
+            mem.heapUsed,
+            false
+          )}\r\n`
+        )
       })
     }
 
