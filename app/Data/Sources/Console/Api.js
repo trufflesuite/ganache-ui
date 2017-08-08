@@ -14,7 +14,6 @@ export default {
   },
 
   getConsoleMessages: () => {
-    console.log('getting console messages')
     return ApiHelpers.sendIpcMessage('APP/GETCONSOLEMESSAGES')
   }
 }

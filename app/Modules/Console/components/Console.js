@@ -23,7 +23,10 @@ class Console extends Component {
   }
 
   _handleConsoleInput = value => {
-    this.props.appSendConsoleCommand(value)
+    this.props
+      .appSendConsoleCommand(value)
+      .then(this.props.appGetConsoleMessages)
+
     this.setState({
       currentLine: '',
       commandHistory: this.state.commandHistory.concat(value)
