@@ -29,7 +29,7 @@ export default class LogContainer extends Component {
         <ul ref="LogItems">
           {this.props.logs.map((log, index) => {
             return (
-              <li key={index} className={Styles[log.type || 'plain']}>
+              <li key={index} className={Styles[log.level || 'plain']}>
                 {`[${new Date(log.time).toLocaleTimeString()}]`} {log.message}
               </li>
             )

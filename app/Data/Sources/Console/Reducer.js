@@ -4,26 +4,6 @@ import ReduceWith from 'Data/Sources/ReduceWith'
 
 const mutators = {
   'APP/REPLSTATE': (state, { type, payload }) => {
-    payload = payload.map(messageItem => {
-      if (
-        messageItem.hasOwnProperty('message') &&
-        messageItem.message.match(/.*Error:/)
-      ) {
-        messageItem.messageType = 'error'
-      }
-
-      if (!messageItem.hasOwnProperty('message')) {
-        messageItem = {
-          message: messageItem,
-          messageType: 'response'
-        }
-      }
-
-      return messageItem
-    })
-
-    console.log(payload)
-
     return {
       ...state,
       consoleBuffer: state.consoleBuffer.concat(payload)

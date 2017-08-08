@@ -28,7 +28,19 @@ class ConsoleStream extends EventEmitter {
   }
 
   write (data) {
-    console.log(data)
+    if (typeof data !== 'object') {
+      data = {
+        message: data,
+        messageType: 'response'
+      }
+    }
+
+    if (data.message.match(/.*Error:/)) {
+      data.level = 'error'
+    }
+
+    data.time = new Date().toISOString()
+
     if (data.message !== '' && this.streamOpen) {
       this.pendingMessageBuffer = this.pendingMessageBuffer.concat(data)
     }
@@ -71,8 +83,7 @@ export default class ConsoleService {
     console.log(message)
     this.consoleStream.write({
       message,
-      level: 'log',
-      time: new Date().toISOString()
+      level: 'log'
     })
   }
 
@@ -80,8 +91,7 @@ export default class ConsoleService {
     console.info(message)
     this.consoleStream.write({
       message,
-      level: 'info',
-      time: new Date().toISOString()
+      level: 'info'
     })
   }
 
@@ -89,8 +99,7 @@ export default class ConsoleService {
     console.warning(message)
     this.consoleStream.write({
       message,
-      level: 'warning',
-      time: new Date().toISOString()
+      level: 'warning'
     })
   }
 
@@ -98,8 +107,7 @@ export default class ConsoleService {
     console.error(message)
     this.consoleStream.write({
       message,
-      level: 'error',
-      time: new Date().toISOString()
+      level: 'error'
     })
   }
 
