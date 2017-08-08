@@ -31,6 +31,18 @@ export default class EventHandler {
 
     this.testRpcService.ipcMain.on('APP/GETSETTINGS', this._getSettings)
     this.testRpcService.ipcMain.on('APP/SETSETTINGS', this._setSettings)
+
+    this.testRpcService.ipcMain.on(
+      'APP/GETCONSOLEMESSAGES',
+      this._getConsoleMessages
+    )
+  }
+
+  _getConsoleMessages = (event, arg) => {
+    this.testRpcService.webView.send(
+      'APP/REPLSTATE',
+      this.testRpcService.consoleService.getPendingMessageBuffer()
+    )
   }
 
   _getSettings = async (event, arg) => {

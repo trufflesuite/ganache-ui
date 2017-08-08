@@ -15,6 +15,8 @@ class ConsoleStream extends EventEmitter {
     this.webView = webView
 
     this.streamOpen = true
+
+    this.pendingMessageBuffer = []
   }
 
   closeStream () {
@@ -28,7 +30,7 @@ class ConsoleStream extends EventEmitter {
   write (data) {
     console.log(data)
     if (data.message !== '' && this.streamOpen) {
-      this.webView.send('APP/REPLSTATE', data)
+      this.pendingMessageBuffer = this.pendingMessageBuffer.concat(data)
     }
   }
   end () {}
@@ -40,6 +42,12 @@ class ConsoleStream extends EventEmitter {
     this.webView = null
   }
   destroySoon () {}
+
+  getPendingMessageBuffer () {
+    const pendingMessages = this.pendingMessageBuffer
+    this.pendingMessageBuffer = []
+    return pendingMessages
+  }
 }
 
 export default class ConsoleService {
@@ -103,6 +111,10 @@ export default class ConsoleService {
     })
   }
 
+  getPendingMessageBuffer = () => {
+    return this.consoleStream.getPendingMessageBuffer()
+  }
+
   _handleCommandCompletion = (e, cmd) => {
     this._console.complete(cmd, (err, completions) => {
       if (err) {
@@ -122,10 +134,6 @@ export default class ConsoleService {
   sendConsoleInput = (e, input) => {
     if (!input.match(/^\..+/)) {
       this.consoleStream.emit('data', input + '\n')
-
-      if (input === 'clear()') {
-        this.webView.send('APP/REPLCLEAR')
-      }
     }
   }
 }

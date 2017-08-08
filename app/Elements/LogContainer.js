@@ -1,15 +1,16 @@
-import React, { PureComponent } from 'react'
+import React, { Component } from 'react'
 
 import Styles from './LogContainer.css'
 
-export default class LogContainer extends PureComponent {
+export default class LogContainer extends Component {
   shouldComponentUpdate (nextProps, nextState) {
     return nextProps.logs.length !== this.props.logs.length
   }
 
   componentWillUpdate () {
     var node = this.refs.LogItems
-    this.shouldScrollBottom = node.scrollTop + node.offsetHeight === node.scrollHeight
+    this.shouldScrollBottom =
+      node.scrollTop + node.offsetHeight === node.scrollHeight
   }
 
   componentDidUpdate () {
@@ -26,15 +27,13 @@ export default class LogContainer extends PureComponent {
     return (
       <div className={Styles.LogContainer} ref="LogContainer">
         <ul ref="LogItems">
-          {
-            this.props.logs.map((log, index) => {
-              return (
-                <li key={index} className={Styles[log.type || 'plain']}>
-                  {log.time ? `[${new Date(log.time).toLocaleTimeString()}]` : ''} {log.message}
-                </li>
-              )
-            })
-          }
+          {this.props.logs.map((log, index) => {
+            return (
+              <li key={index} className={Styles[log.type || 'plain']}>
+                {`[${new Date(log.time).toLocaleTimeString()}]`} {log.message}
+              </li>
+            )
+          })}
         </ul>
       </div>
     )

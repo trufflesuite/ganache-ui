@@ -4,34 +4,30 @@ import ReduceWith from 'Data/Sources/ReduceWith'
 
 const mutators = {
   'APP/REPLSTATE': (state, { type, payload }) => {
-    let messageType = 'response'
-
-    if (
-      payload.hasOwnProperty('message') &&
-      payload.message.match(/.*Error:/)
-    ) {
-      messageType = 'error'
-    }
-
-    if (!payload.hasOwnProperty('message')) {
-      payload = {
-        message: payload
+    payload = payload.map(messageItem => {
+      if (
+        messageItem.hasOwnProperty('message') &&
+        messageItem.message.match(/.*Error:/)
+      ) {
+        messageItem.messageType = 'error'
       }
-    }
 
-    let newState = {
+      if (!messageItem.hasOwnProperty('message')) {
+        messageItem = {
+          message: messageItem,
+          messageType: 'response'
+        }
+      }
+
+      return messageItem
+    })
+
+    console.log(payload)
+
+    return {
       ...state,
-      consoleBuffer: state.consoleBuffer
-        .concat({
-          ...payload,
-          type: messageType
-        })
-        .sort((a, b) => {
-          return new Date(a.time) - new Date(b.time)
-        })
+      consoleBuffer: state.consoleBuffer.concat(payload)
     }
-
-    return newState
   },
 
   'APP/SENDREPLCOMMAND': (state, { type, payload }) => ({

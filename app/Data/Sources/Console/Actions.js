@@ -6,7 +6,7 @@ export const appSendConsoleCommand = createRequestThunk({
   request: Api.sendConsoleCommand,
   key: appSendConsoleCommandType,
   success: [
-    (command) => {
+    command => {
       return {
         type: 'APP/SENDREPLCOMMAND',
         payload: command
@@ -15,8 +15,15 @@ export const appSendConsoleCommand = createRequestThunk({
   ]
 })
 
-export const appSendConsoleCommandCompletionType = 'APP/SENDREPLCOMMANDCOMPLETION'
+export const appSendConsoleCommandCompletionType =
+  'APP/SENDREPLCOMMANDCOMPLETION'
 export const appSendConsoleCommandCompletion = createRequestThunk({
   request: Api.sendConsoleCommandCompletion,
   key: appSendConsoleCommandCompletionType
+})
+
+export const appGetConsoleMessagesType = 'APP/GETCONSOLEMESSAGES'
+export const appGetConsoleMessages = createRequestThunk({
+  request: Api.getConsoleMessages,
+  key: appGetConsoleMessagesType
 })

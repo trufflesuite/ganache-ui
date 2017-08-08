@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import Mousetrap from 'mousetrap'
 import { hashHistory } from 'react-router'
+
 import TestRPCProvider from 'Data/Providers/TestRPCProvider'
 import SettingsProvider from 'Data/Providers/SettingsProvider'
+import ConsoleProvider from 'Data/Providers/ConsoleProvider'
 
 import WindowControls from './WindowControls'
 import TopNavbar from './TopNavbar'
@@ -86,6 +88,7 @@ class AppShell extends Component {
     })
 
     setInterval(this.props.appGetBlockChainState, 1000)
+    setInterval(this.props.appGetConsoleMessages, 1500)
   }
 
   renderClonedChildrenWithPropsAndPathKey = (children, props, pathNameKey) => {
@@ -104,7 +107,8 @@ class AppShell extends Component {
       }
 
       this.user && this.user.pageview(nextProps.location.pathname).send()
-      this.user && this.user.screenview(segment, 'Ganache', app.getVersion()).send()
+      this.user &&
+        this.user.screenview(segment, 'Ganache', app.getVersion()).send()
     }
   }
 
@@ -135,4 +139,4 @@ class AppShell extends Component {
   }
 }
 
-export default SettingsProvider(TestRPCProvider(AppShell))
+export default ConsoleProvider(SettingsProvider(TestRPCProvider(AppShell)))
