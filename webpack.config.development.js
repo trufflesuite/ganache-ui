@@ -112,7 +112,8 @@ export default validate(
 
       // NODE_ENV should be production so that modules do not perform certain development checks
       new webpack.DefinePlugin({
-        'process.env.NODE_ENV': JSON.stringify('development')
+        'process.env.NODE_ENV': JSON.stringify('development'),
+        PLATFORM: process.platform
       })
     ],
 

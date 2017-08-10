@@ -15,80 +15,86 @@ import colorFunction from 'postcss-color-function'
 import precss from 'precss'
 import postcssImport from 'postcss-import'
 
-export default validate(merge(baseConfig, {
-  devtool: 'cheap-module-source-map',
+export default validate(
+  merge(baseConfig, {
+    devtool: 'cheap-module-source-map',
 
-  entry: [
-    'babel-polyfill',
-    './app/index'
-  ],
+    entry: ['babel-polyfill', './app/index'],
 
-  output: {
-    path: path.join(__dirname, 'app/dist'),
-    publicPath: '../dist/'
-  },
+    output: {
+      path: path.join(__dirname, 'app/dist'),
+      publicPath: '../dist/'
+    },
 
-  module: {
-    loaders: [
-      // Extract all .global.css to style.css as is
-      {
-        test: /\.global\.css$/,
-        loader: ExtractTextPlugin.extract('style', 'css!sass!postcss')
-      },
+    module: {
+      loaders: [
+        // Extract all .global.css to style.css as is
+        {
+          test: /\.global\.css$/,
+          loader: ExtractTextPlugin.extract('style', 'css!sass!postcss')
+        },
 
-      // Pipe other styles through css modules and append to style.css
-      {
-        test: /^((?!\.global).)*\.css$/,
-        loader: ExtractTextPlugin.extract(
-          'style-loader',
-          [
+        // Pipe other styles through css modules and append to style.css
+        {
+          test: /^((?!\.global).)*\.css$/,
+          loader: ExtractTextPlugin.extract('style-loader', [
             'css?modules&sourceMap&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
             'sass',
             'postcss'
-          ]
-        )
-      },
+          ])
+        },
 
-      // Fonts
-      { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: 'url-loader?limit=10000&mimetype=application/font-woff' },
-      { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/, loader: 'url-loader?limit=10000&mimetype=application/font-woff' },
-      { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: 'url-loader?limit=10000&mimetype=application/octet-stream' },
-      { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: 'file' }
-    ]
-  },
+        // Fonts
+        {
+          test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
+          loader: 'url-loader?limit=10000&mimetype=application/font-woff'
+        },
+        {
+          test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
+          loader: 'url-loader?limit=10000&mimetype=application/font-woff'
+        },
+        {
+          test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
+          loader: 'url-loader?limit=10000&mimetype=application/octet-stream'
+        },
+        { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: 'file' }
+      ]
+    },
 
-  // We use PostCSS for autoprefixing and PreCSS.
-  postcss: function (webpack) {
-    return [
-      postcssImport({
-        path: [path.resolve('./app/Styles')]
+    // We use PostCSS for autoprefixing and PreCSS.
+    postcss: function (webpack) {
+      return [
+        postcssImport({
+          path: [path.resolve('./app/Styles')]
+        }),
+        precss(),
+        colorFunction()
+      ]
+    },
+
+    plugins: [
+      // https://webpack.github.io/docs/list-of-plugins.html#occurrenceorderplugin
+      // https://github.com/webpack/webpack/issues/864
+      new webpack.optimize.OccurrenceOrderPlugin(),
+
+      // NODE_ENV should be production so that modules do not perform certain development checks
+      new webpack.DefinePlugin({
+        'process.env.NODE_ENV': JSON.stringify('production'),
+        PLATFORM: process.platform
       }),
-      precss(),
-      colorFunction()
-    ]
-  },
 
-  plugins: [
-    // https://webpack.github.io/docs/list-of-plugins.html#occurrenceorderplugin
-    // https://github.com/webpack/webpack/issues/864
-    new webpack.optimize.OccurrenceOrderPlugin(),
+      new BabiliPlugin(),
 
-    // NODE_ENV should be production so that modules do not perform certain development checks
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify('production')
-    }),
+      new ExtractTextPlugin('style.css', { allChunks: true }),
 
-    new BabiliPlugin(),
+      new HtmlWebpackPlugin({
+        filename: '../app.html',
+        template: 'app/app.html',
+        inject: false
+      })
+    ],
 
-    new ExtractTextPlugin('style.css', { allChunks: true }),
-
-    new HtmlWebpackPlugin({
-      filename: '../app.html',
-      template: 'app/app.html',
-      inject: false
-    })
-  ],
-
-  // https://github.com/chentsulin/webpack-target-electron-renderer#how-this-module-works
-  target: 'electron-renderer'
-}))
+    // https://github.com/chentsulin/webpack-target-electron-renderer#how-this-module-works
+    target: 'electron-renderer'
+  })
+)

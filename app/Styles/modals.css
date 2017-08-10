@@ -1,0 +1,92 @@
+.Modal {
+  position: fixed;
+  opacity: 0;
+  animation: fadeIn .2s forwards;
+  transform: translate3d(0, 0, 0);
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 2;
+  background-color: rgba(117, 127, 134, 0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    text-align: left;
+
+    padding: 4rem;
+    background: white;
+    width: 600px;
+
+    animation: shrinkIn .3s forwards ease-in-out;
+
+    h4 {
+      text-transform: uppercase;
+    }
+
+    p {
+      text-align: center;
+    }
+
+    dl {
+      margin: 0;
+
+      dt,
+      dd {
+        margin: 0;
+      }
+
+      dt {
+        font-family: "RobotoCondensed-Regular";
+        font-weight: 300;
+        color: #605c59;
+      }
+
+      dd {
+        word-wrap: break-word;
+        word-break: break-all;
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+        font-family: "Fira Code Regular";
+      }
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 300px;
+      margin-bottom: 1rem;
+    }
+
+    header {
+      margin-bottom: 2rem;
+    }
+
+    footer {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      button + button {
+        margin-left: 1rem;
+      }
+    }
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 100;
+  }
+}

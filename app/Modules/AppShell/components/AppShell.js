@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Mousetrap from 'mousetrap'
 import { hashHistory } from 'react-router'
+import { shell } from 'electron'
 
 import TestRPCProvider from 'Data/Providers/TestRPCProvider'
 import SettingsProvider from 'Data/Providers/SettingsProvider'
@@ -8,6 +9,10 @@ import ConsoleProvider from 'Data/Providers/ConsoleProvider'
 
 import WindowControls from './WindowControls'
 import TopNavbar from './TopNavbar'
+import OnlyIf from 'Elements/OnlyIf'
+
+import Icon from 'Elements/Icon'
+import BugIcon from 'Elements/icons/bug.svg'
 
 import ua from 'universal-analytics'
 import ElectronCookies from '@exponent/electron-cookies'
@@ -17,6 +22,7 @@ import CSSTransitionGroup from 'react-addons-css-transition-group'
 const { app } = require('electron').remote
 
 import Styles from './AppShell.css'
+import ModalStyles from 'CoreStyles/modals.css'
 
 ElectronCookies.enable({
   origin: 'http://truffleframework.com/ganache'
@@ -36,7 +42,7 @@ class AppShell extends Component {
       window.screen.availWidth + 'x' + window.screen.availHeight
     )
 
-    window.onerror = function (msg, url, lineNo, columnNo, error) {
+    window.onerror = (msg, url, lineNo, columnNo, error) => {
       var message = [
         'Message: ' + msg,
         'Line: ' + lineNo,
@@ -45,7 +51,7 @@ class AppShell extends Component {
       ].join(' - ')
 
       setTimeout(function () {
-        // this.user.exception(message.toString())
+        this.user.exception(message.toString())
       }, 0)
 
       return false
@@ -112,6 +118,8 @@ class AppShell extends Component {
     }
   }
 
+  onCloseFatalErrorModal = () => {}
+
   render () {
     const path = this.props.location.pathname
     const segment = path.replace(/^\//g, '').replace(/\//g, '-') || 'root'
@@ -134,6 +142,57 @@ class AppShell extends Component {
             )}
           </CSSTransitionGroup>
         </div>
+
+        <OnlyIf test={this.props.testRpcState.systemError !== null}>
+          <div className={ModalStyles.Modal}>
+            <section>
+              <Icon glyph={BugIcon} size={128} />
+              <h4>A SYSTEM ERROR HAS OCCURED</h4>
+              <p>
+                Well, this is embarassing. Something's happened and an error has
+                been thrown which means Ganache will need to be restarted.
+              </p>
+              <p>
+                It'd be great if you could raise a Github issue with the above
+                contents and a brief description of what you were doing at the
+                time, so we can debug it and make sure it never happens again.
+              </p>
+              <footer>
+                <button
+                  onClick={() => {
+                    const title = encodeURIComponent(
+                      `System Error when running Ganache ${app.getVersion()} on ${process.platform}`
+                    )
+
+                    const body = encodeURIComponent(
+                      `<!-- Please give us as much detail as you can about what you were doing at the time of the error, and any other relevant information -->
+
+PLATFORM: ${process.platform}
+GANACHE VERSION: ${app.getVersion()}
+
+EXCEPTION:
+${this.props.testRpcState.systemError}`
+                    ).replace(/%09/g, '')
+
+                    shell.openExternal(
+                      `https://github.com/trufflesuite/ganache/issues/new?title=${title}&body=${body}`
+                    )
+                  }}
+                >
+                  Raise Github Issue
+                </button>
+                <button
+                  onClick={() => {
+                    app.relaunch()
+                    app.quit()
+                  }}
+                >
+                  RELAUNCH
+                </button>
+              </footer>
+            </section>
+          </div>
+        </OnlyIf>
       </div>
     )
   }

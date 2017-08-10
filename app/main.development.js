@@ -38,6 +38,10 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 process.on('uncaughtException', err => {
+  if (testRpcService && testRpcService.webView) {
+    testRpcService.webView.send('APP/FATALERROR', err.stack)
+  }
+
   SysLog.error(`FATAL ERROR: ${err.stack}`)
 })
 

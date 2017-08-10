@@ -6,7 +6,8 @@ const DefaultState = {
   snapshots: [],
   currentBlockSearchMatch: null,
   currentTxSearchMatch: null,
-  portIsClear: { status: 'clear', pid: [{ name: '' }] }
+  portIsClear: { status: 'clear', pid: [{ name: '' }] },
+  systemError: null
 }
 
 export default DefaultState
