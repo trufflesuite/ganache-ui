@@ -102,6 +102,8 @@ class ConfigScreen extends PureComponent {
       portIsClear.pid[0].name !== 'Ganache' &&
       portIsClear.pid[0].name !== 'Electron'
 
+    const defaultHost = process.platform === 'darwin' ? '0.0.0.0' : 'localhost'
+
     return (
       <main>
         <div className={Styles.ConfigScreen}>
@@ -142,14 +144,14 @@ class ConfigScreen extends PureComponent {
                         ref="hostName"
                         type="text"
                         name="hostName"
-                        defaultValue="0.0.0.0"
+                        defaultValue={defaultHost}
                       />
                     </div>
                     <div className={Styles.RowItem}>
                       <p>
                         The server will accept connections on the unspecified
                         IPv6 address (::) when IPv6 is available, or the
-                        unspecified IPv4 address (0.0.0.0) as default.
+                        unspecified IPv4 address ({defaultHost}) as default.
                       </p>
                     </div>
                   </div>
