@@ -28,8 +28,7 @@ class Settings {
   }
 
   getAll () {
-    this._load()
-    return this.data
+    return this._load()
   }
 
   onChange (key, fn) {
@@ -37,13 +36,20 @@ class Settings {
     this._hooks[key].push(fn)
   }
 
-  set (key, value) {
-    const valChanged = this.data[key] !== value
-    this.data[key] = value
-    if (this._hooks[key] && valChanged) {
-      this._hooks[key].forEach((hookFn) => hookFn(value))
-    }
+  setAll (obj) {
+    Object.keys(obj).map(key => {
+      const valChanged = this.data[key] !== obj[key]
+      this.data[key] = obj[key]
+      if (this._hooks[key] && valChanged) {
+        this._hooks[key].forEach(hookFn => hookFn(key))
+      }
+    })
+
     this._save()
+  }
+
+  set (key, value) {
+    this.setAll({ [key]: value })
   }
 
   _load (retryCount = 5) {
@@ -57,20 +63,23 @@ class Settings {
     } catch (e) {
       if (retryCount > 0) {
         setTimeout(this._load.bind(this, retryCount - 1), 10)
-        SysLog.error('Failed to load settings JSON file, retyring in 10 milliseconds')
+        SysLog.error(
+          'Failed to load settings JSON file, retyring in 10 milliseconds'
+        )
         return
       }
       userSettings = {}
       SysLog.error('Failed to load settings JSON file, giving up and resetting')
     }
     this.data = _.extend({}, initalSettings, userSettings)
+    return this.data
   }
 
   _save (force) {
-    const now = (new Date()).getTime()
+    const now = new Date().getTime()
     // During some save events (like resize) we need to queue the disk writes
     // so that we don't blast the disk every millisecond
-    if ((now - this.lastSync > 250 || force)) {
+    if (now - this.lastSync > 250 || force) {
       if (this.data) {
         try {
           fs.writeFileSync(this.PATH, JSON.stringify(this.data, null, 4))

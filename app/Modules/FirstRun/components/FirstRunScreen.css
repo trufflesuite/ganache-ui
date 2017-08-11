@@ -1,0 +1,73 @@
+@import 'colors.css';
+@import 'cards.css';
+
+.FirstRunScreen {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+}
+
+.Card {
+  composes: CardShadow;
+  width: 80%;
+  position: relative;
+  padding: 2rem;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.MainContent {
+  display: flex;
+  flex-direction: row;
+}
+
+.LeftColumn {
+  width: 130%;
+  padding-right: 4rem;
+
+  p {
+    line-height: 1.4;
+  }
+}
+
+.RightColumn {
+}
+
+.MetricList {
+  margin: 0;
+  padding: 0;
+
+  li {
+    margin-bottom: 1rem;
+    font-size: .875rem;
+  }
+}
+
+.Covenant {
+  font-size: .875rem;
+  font-weight: 900;
+}
+
+.Rule {
+  width: 100%;
+  border: 0;
+  border: 1px solid var(--app-card-default-border);
+  margin: 2rem 0;
+}
+
+.Footer {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  h4 {
+    margin: 1rem 0 .5rem 0;
+  }
+}

@@ -4,6 +4,7 @@ const { app } = require('electron').remote
 import { hashHistory } from 'react-router'
 import TestRPCProvider from 'Data/Providers/TestRPCProvider'
 import AppUpdaterProvider from 'Data/Providers/AppUpdaterProvider'
+import SettingsProvider from 'Data/Providers/SettingsProvider'
 
 import OnlyIf from 'Elements/OnlyIf'
 import GanacheLogo from 'Resources/logo.png'
@@ -26,13 +27,17 @@ class AppUpdateScreen extends Component {
   componentWillReceiveProps (nextProps) {
     const { appUpdater } = nextProps
 
+    const firstRunScreen = this.props.settings.firstRun
+
     if (
       appUpdater.haveLatestVersion &&
       !this.props.appUpdater.haveLatestVersion
     ) {
       this.setState({ loadingScreenFinished: true })
       setTimeout(() => {
-        hashHistory.push('/config')
+        firstRunScreen
+          ? hashHistory.push('/first_run')
+          : hashHistory.push('/config')
       }, 4000)
     }
 
@@ -42,7 +47,9 @@ class AppUpdateScreen extends Component {
     ) {
       this.setState({ loadingScreenFinished: true })
       setTimeout(() => {
-        hashHistory.push('/config')
+        firstRunScreen
+          ? hashHistory.push('/first_run')
+          : hashHistory.push('/config')
       }, 4000)
     }
   }
@@ -102,4 +109,6 @@ class AppUpdateScreen extends Component {
   }
 }
 
-export default AppUpdaterProvider(TestRPCProvider(AppUpdateScreen))
+export default SettingsProvider(
+  AppUpdaterProvider(TestRPCProvider(AppUpdateScreen))
+)

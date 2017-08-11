@@ -27,37 +27,45 @@ class ConfigTabItem extends PureComponent {
 }
 
 class ConfigScreen extends PureComponent {
-  state = {
-    specificTime: false,
-    opcodeDebug: false,
-    automnemonic: true,
-    automine: true,
-    accountsLocked: false,
-    forkChain: false,
-    verboseLogging: false,
-    activeTab: 'server',
-    googleAnalyticsTracking: false,
-    cpuAndMemoryProfiling: false,
-    settingsDirty: false,
-    isStartDisabled: false
+  constructor (props) {
+    super(props)
+
+    this.state = {
+      specificTime: false,
+      opcodeDebug: false,
+      automnemonic: true,
+      automine: true,
+      accountsLocked: false,
+      forkChain: false,
+      verboseLogging: false,
+      activeTab: 'server',
+      googleAnalyticsTracking: false,
+      cpuAndMemoryProfiling: false,
+      settingsDirty: false,
+      isStartDisabled: false
+    }
   }
 
   componentDidMount () {
-    this.props.appGetSettings()
     this.props.appCheckPort(8545)
-    this.setState({isStartDisabled: false})
+    setTimeout(this.props.appGetSettings, 500)
   }
 
   componentWillReceiveProps (nextProps) {
     let newSettings = {}
-    Object.keys(nextProps.settings).map((key) => {
-      if (!this.state.settingsDirty && nextProps.settings[key] !== this.state[key]) {
+
+    Object.keys(nextProps.settings).map(key => {
+      if (
+        !this.state.settingsDirty &&
+        nextProps.settings[key] !== this.state[key]
+      ) {
+        console.log(`${key} = ${nextProps.settings[key]}`)
         newSettings[key] = nextProps.settings[key]
       }
     })
 
     if (Object.keys(newSettings).length > 0) {
-      this.setState(nextProps.settings)
+      this.setState(newSettings)
     }
   }
 
@@ -98,13 +106,17 @@ class ConfigScreen extends PureComponent {
       <main>
         <div className={Styles.ConfigScreen}>
           <OnlyIf test={!this.props.testRpcState.testRpcServerRunning}>
-            <img src={GanacheLogo} width={'100px'} height={'100px'}/>
+            <img src={GanacheLogo} width={'100px'} height={'100px'} />
           </OnlyIf>
           <div className={Styles.ConfigHeader}>
             <div className={Styles.ConfigTabs}>
               {this._renderConfigTabs()}
             </div>
-            <button className="btn btn-primary" onClick={this._startTestRpc} disabled={this.state.isStartDisabled || portIsBlocked}>
+            <button
+              className="btn btn-primary"
+              onClick={this._startTestRpc}
+              disabled={this.state.isStartDisabled || portIsBlocked}
+            >
               <Icon glyph={RestartIcon} size={18} />
               {this.props.testRpcState.testRpcServerRunning
                 ? 'RESTART GANACHE'
@@ -573,12 +585,8 @@ class ConfigScreen extends PureComponent {
 
   _startTestRpc = e => {
     e.preventDefault()
-    this.setState({isStartDisabled: true})
+    this.setState({ isStartDisabled: true })
 
-    console.log(
-      this.refs.googleAnalyticsTracking.checked,
-      this.refs.cpuAndMemoryProfiling.checked
-    )
     this.props.appSetSettings({
       googleAnalyticsTracking: this.refs.googleAnalyticsTracking.checked,
       cpuAndMemoryProfiling: this.refs.cpuAndMemoryProfiling.checked

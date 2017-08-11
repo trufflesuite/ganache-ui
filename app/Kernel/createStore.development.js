@@ -11,7 +11,11 @@ const actionCreators = {
 const logger = createLogger({
   level: 'info',
   collapsed: true,
-  predicate: (getState, action) => action.type !== 'APP/BLOCKCHAINSTATE' && action.type !== 'app/markRequestPending' && action.type !== 'app/markRequestSuccess'
+  predicate: (getState, action) =>
+    action.type !== 'APP/BLOCKCHAINSTATE' &&
+    action.type !== 'app/markRequestPending' &&
+    action.type !== 'app/markRequestSuccess' &&
+    action.type !== 'APP/REPLSTATE'
 })
 
 const router = routerMiddleware(hashHistory)
@@ -20,16 +24,14 @@ const router = routerMiddleware(hashHistory)
 /* eslint-disable no-underscore-dangle */
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
   ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
-    // Options: http://zalmoxisus.github.io/redux-devtools-extension/API/Arguments.html
+      // Options: http://zalmoxisus.github.io/redux-devtools-extension/API/Arguments.html
     actionCreators,
     maxAge: 5
   })
   : compose
 
 /* eslint-enable no-underscore-dangle */
-const enhancer = composeEnhancers(
-  applyMiddleware(thunk, router, logger)
-)
+const enhancer = composeEnhancers(applyMiddleware(thunk, router, logger))
 
 export default function configureStore (reducers, initialState) {
   const store = createStore(reducers, initialState, enhancer)

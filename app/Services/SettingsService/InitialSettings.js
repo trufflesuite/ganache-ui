@@ -1,4 +1,5 @@
 export default {
   googleAnalyticsTracking: true,
-  cpuAndMemoryProfiling: false
+  cpuAndMemoryProfiling: false,
+  firstRun: true
 }

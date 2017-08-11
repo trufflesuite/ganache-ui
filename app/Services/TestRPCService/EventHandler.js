@@ -52,11 +52,7 @@ export default class EventHandler {
 
   _setSettings = async (event, arg) => {
     const settings = new SettingsService()
-    Object.keys(arg).map(key => {
-      settings.set(key, arg[key])
-    })
-
-    this.testRpcService.webView.send('APP/SETTINGS', settings.getAll())
+    settings.setAll(arg)
   }
 
   _handleBlockSearch = async (event, arg) => {

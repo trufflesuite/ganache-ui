@@ -12,8 +12,13 @@ $switch-height: 30px;
 
 .Switch {
   display: flex;
+  align-items: center;
 
-  input[type=checkbox]{
+  i {
+    margin-left: 1rem;
+  }
+
+  input[type=checkbox] {
     height: 0;
     width: 0;
     visibility: hidden;
@@ -54,5 +59,4 @@ $switch-height: 30px;
   label:active:after {
     width: $switch-width - 30px;
   }
-
 }

@@ -50,9 +50,9 @@ class AppShell extends Component {
         'Error object: ' + JSON.stringify(error)
       ].join(' - ')
 
-      setTimeout(function () {
-        this.user.exception(message.toString())
-      }, 0)
+      // setTimeout(() => {
+      //   this.user.exception(message.toString())
+      // }, 0)
 
       return false
     }

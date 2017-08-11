@@ -5,6 +5,7 @@ import Blocks from 'Modules/Blocks'
 import Transactions from 'Modules/Transactions'
 import Console from 'Modules/Console'
 import AppUpdateScreen from 'Modules/AppUpdate'
+import FirstRunScreen from 'Modules/FirstRun'
 
 import TestRPCSource from 'Data/Sources/TestRPC'
 import ConsoleSource from 'Data/Sources/Console'
@@ -24,6 +25,7 @@ export default async function (app, done, error) {
   app.register(Transactions)
   app.register(Console)
   app.register(AppUpdateScreen)
+  app.register(FirstRunScreen)
 
   // Data Sources
   app.register(TestRPCSource)
@@ -31,9 +33,7 @@ export default async function (app, done, error) {
   app.register(AppUpdaterSource)
   app.register(SettingsSource)
 
-  app.on('applicationDidStart', async function (app) {
-
-  })
+  app.on('applicationDidStart', async function (app) {})
 
   done()
 }
