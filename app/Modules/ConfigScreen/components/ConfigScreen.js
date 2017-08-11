@@ -99,8 +99,8 @@ class ConfigScreen extends PureComponent {
     const portIsBlocked =
       ganachePortStatus.status === 'blocked' &&
       ganachePortStatus.pid !== undefined &&
-      !ganachePortStatus.pid[0].name.includes('Ganache') &&
-      !ganachePortStatus.pid[0].name.includes('Electron')
+      !ganachePortStatus.pid[0].name.toLowerCase().includes('ganache') &&
+      !ganachePortStatus.pid[0].name.toLowerCase().includes('electron')
 
     const defaultHost = process.platform === 'darwin' ? '0.0.0.0' : 'localhost'
 
