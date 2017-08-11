@@ -1,7 +1,7 @@
 @import "colors.css";
 
 .Nav {
-  -webkit-app-region: drag;
+  -webkit-app-region: no-drag;
   display: flex;
   flex-shrink: 0;
   flex-direction: column;
