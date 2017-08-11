@@ -3,6 +3,7 @@
   --text-color: rgba(54, 65, 83, 1.000);
 
   --truffle-green: #3fe0c5;
+  --subtle-green: #bcecd4;
   --complimentary1: rgba(109, 163, 184, 1.000);
 
   --app-background-color: rgba(255, 255, 255, 1.000);
@@ -21,19 +22,7 @@
   --app-card-label: rgba(96, 92, 89, 1.000);
   --app-card-value: rgba(57, 52, 48, 1.000);
 
-
-
-
-
-
-
-
-
-
-
   --app-highlight-color: rgba(208, 195, 188, 1.000);
-
-
 
   --app-sidebar-background-color: rgba(42, 40, 37, 1.000);
   --app-sidebar-header-text-color: rgba(96, 172, 197, 1.000);
@@ -41,7 +30,7 @@
 
   --app-panel-background-color: var(--app-background-color);
   --app-panel-text-color: var(--app-sidebar-background-color);
-  --app-panel-divider-color:rgba(158, 148, 132, 1.000);
+  --app-panel-divider-color: rgba(158, 148, 132, 1.000);
   --app-panel-header-border-color: var(--app-panel-divider-color);
 
   --app-button-primary-background-color: rgba(78, 60, 65, 1.000);

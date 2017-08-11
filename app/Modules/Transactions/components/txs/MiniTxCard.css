@@ -22,12 +22,8 @@
   transition: all .3s;
 
   &:hover {
-    transform: scale(1.01)
+    transform: scale(1.01);
   }
-}
-
-.CreatedContract {
-  composes: CardShadowHighlight;
 }
 
 .Row {

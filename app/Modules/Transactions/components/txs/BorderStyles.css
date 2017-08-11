@@ -1,3 +1,5 @@
+@import 'cards.css';
+
 .Header {
   display: flex;
   flex-direction: row;
@@ -30,8 +32,7 @@
 }
 
 .ContractCall {
-  box-shadow: 0 0 0 0.5px rgba(109, 163, 184, 0.65),
-    0 2px 5px 0 rgba(109, 163, 184, 0.3), 0 1px 2px 0 rgba(109, 163, 184, 0.08);
+  composes: CardShadow;
 
   .Header {
     background-color: rgba(109, 163, 184, 0.65);
@@ -47,25 +48,23 @@
 }
 
 .ContractCreation {
-  box-shadow: 0 0 0 0.5px rgba(214, 143, 38, 0.65),
-    0 2px 5px 0 rgba(204, 165, 96, 0.3), 0 1px 2px 0 rgba(230, 199, 129, 0.08);
+  composes: CardShadow;
 
   .Header {
-    background-color: rgba(214, 143, 38, 0.65);
+    background-color: rgba(222, 142, 149, 1.000);
   }
 
   .Parties {
-    background-color: lighten(rgba(214, 143, 38, 0.65), 20%);
+    background-color: lighten(rgba(222, 142, 149, 1.000), 10%);
   }
 
   .Gas {
-    background-color: lighten(rgba(214, 143, 38, 0.65), 35%);
+    background-color: lighten(rgba(222, 142, 149, 1.000), 20%);
   }
 }
 
 .ValueTransfer {
-  box-shadow: 0 0 0 0.5px rgba(63, 224, 197, 0.65),
-    0 2px 5px 0 rgba(63, 224, 197, 0.3), 0 1px 2px 0 rgba(63, 224, 197, 0.08);
+  composes: CardShadow;
 
   .Header {
     background-color: rgba(63, 224, 197, 0.65);

@@ -15,7 +15,7 @@
 
 .ContractCreationBadge {
   composes: Badge;
-  background-color: var(--primary-color);
+  background-color: darken(rgba(222, 142, 149, 1.000), 10%);
   color: white;
 }
 

@@ -21,7 +21,7 @@
   transition: all .3s;
 
   &:hover {
-    transform: scale(1.01)
+    transform: scale(1.01);
   }
 }
 
@@ -63,7 +63,7 @@
 .BlockNumber {
   align-items: center;
   padding: .8rem;
-  background-color: var(--primary-color);
+  background-color: var(--subtle-green);
   min-width: 8vw;
 
   .Value {
@@ -91,10 +91,6 @@
 
 .GasUsed {
   min-width: 7vw;
-}
-
-.HasTxs {
-  composes: CardShadowHighlight;
 }
 
 .TransactionBadge,
