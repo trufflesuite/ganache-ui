@@ -26,7 +26,8 @@ module.exports = {
         dependency !== 'universal-analytics' &&
         dependency !== 'find-process' &&
         dependency !== 'pidusage' &&
-        dependency !== '@exponent/electron-cookies'
+        dependency !== '@exponent/electron-cookies' &&
+        dependency !== 'scrypt'
     )
   },
 
