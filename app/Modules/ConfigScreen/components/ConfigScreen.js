@@ -95,12 +95,12 @@ class ConfigScreen extends PureComponent {
   }
 
   render () {
-    const { portIsClear } = this.props.testRpcState
+    const { ganachePortStatus } = this.props.testRpcState
     const portIsBlocked =
-      portIsClear.status === 'blocked' &&
-      portIsClear.pid !== undefined &&
-      portIsClear.pid[0].name !== 'Ganache' &&
-      portIsClear.pid[0].name !== 'Electron'
+      ganachePortStatus.status === 'blocked' &&
+      ganachePortStatus.pid !== undefined &&
+      !ganachePortStatus.pid[0].name.includes('Ganache') &&
+      !ganachePortStatus.pid[0].name.includes('Electron')
 
     const defaultHost = process.platform === 'darwin' ? '0.0.0.0' : 'localhost'
 
@@ -172,9 +172,11 @@ class ConfigScreen extends PureComponent {
                       <OnlyIf test={portIsBlocked}>
                         <strong className={Styles.PortAlert}>
                           <b>WARNING!</b> Ganache cannot start on this port
-                          because there is already a process "<b>{portIsBlocked && portIsClear.pid[0].name}</b>"
+                          because there is already a process "<b>{portIsBlocked && ganachePortStatus.pid[0].name}</b>"
                           with PID{' '}
-                          <b>{portIsBlocked && portIsClear.pid[0].pid}</b>{' '}
+                          <b>
+                            {portIsBlocked && ganachePortStatus.pid[0].pid}
+                          </b>{' '}
                           running on this port.
                         </strong>
                       </OnlyIf>

@@ -27,7 +27,7 @@ const mutators = {
 
   'APP/CHECKPORTRESULT': (state, { type, payload }) => ({
     ...state,
-    portIsClear: payload
+    ganachePortStatus: payload
   }),
 
   'APP/FATALERROR': (state, { type, payload }) => ({

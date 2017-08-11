@@ -6,7 +6,7 @@ const DefaultState = {
   snapshots: [],
   currentBlockSearchMatch: null,
   currentTxSearchMatch: null,
-  portIsClear: { status: 'clear', pid: [{ name: '' }] },
+  ganachePortStatus: { status: 'clear', pid: [{ name: '' }] },
   systemError: null
 }
 
