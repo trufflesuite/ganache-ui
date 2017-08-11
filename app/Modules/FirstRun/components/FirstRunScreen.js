@@ -30,7 +30,10 @@ class FirstRunScreen extends Component {
         googleAnalyticsTracking: this.refs.enableAnalytics.checked,
         firstRun: false
       })
-      .then(hashHistory.push('/config'))
+      .then(this.props.appGetSettings)
+      .then(() => {
+        hashHistory.push('/config')
+      })
   }
 
   render () {

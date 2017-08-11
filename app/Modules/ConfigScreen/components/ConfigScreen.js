@@ -48,7 +48,7 @@ class ConfigScreen extends PureComponent {
 
   componentDidMount () {
     this.props.appCheckPort(8545)
-    setTimeout(this.props.appGetSettings, 500)
+    this.props.appGetSettings()
   }
 
   componentWillReceiveProps (nextProps) {
