@@ -1,4 +1,4 @@
-![](https://github.com/trufflesuite/ganache/blob/master/.github/images/ganache_banner.jpg?raw=true)
+![](https://github.com/trufflesuite/ganache/blob/new_ui/.github/images/ganache_banner.jpg?raw=true)
 
 ## Ganache
 
@@ -6,7 +6,7 @@ Ganache is an Ethereum blockchain on your desktop. It's the best way to get an E
 
 This is what it looks like:
 
-![Ganache](https://github.com/trufflesuite/ganache/blob/master/.github/images/ganache_screenshot.jpg?raw=true)
+![Ganache](https://github.com/trufflesuite/ganache/blob/new_ui/.github/images/ganache_screenshot.jpg?raw=true)
 
 The goals of the project are:
 
