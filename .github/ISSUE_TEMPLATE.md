@@ -10,15 +10,19 @@ https://github.com/trufflesuite/zircon/issues?q=is%3Aissue+is%3Aclosed
 - [ ] Bug (https://github.com/trufflesuite/zircon/blob/master/.github/CONTRIBUTING.md#bug-reports)
 - [ ] Feature (https://github.com/trufflesuite/zircon/blob/master/.github/CONTRIBUTING.md#feature-requests)
 
+If your issue is related to building Ganache on your platform, please make sure you have a correctly setup build environment
+on your platform, and that you have carefully read any error output for instructions that may fix your situation.
+
 ## Description
 
 (Add images if possible - but absolutely no images of terminal output please.)
 
 ## Steps to reproduce
 
-(Add link to a demo on https://jsfiddle.net or similar if possible)
+(Please be thorough)
 
 # Versions
 
-- Node/NPM:
-- Browser:
+- Platform: (macOS / Windows / Linux)
+- Node:
+- Npm:
