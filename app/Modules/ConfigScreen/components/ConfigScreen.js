@@ -605,7 +605,9 @@ class ConfigScreen extends PureComponent {
       blocktime: this.state.automine ? null : this.refs.blockTime.value,
       debug: this.state.opcodeDebug,
       verbose: this.state.verboseLogging,
-      mnemonic: this.state.automnemonic ? null : this.mnemonicValue,
+      mnemonic: this.state.automnemonic
+        ? null
+        : this.mnemonicValue.value.toLowerCase(),
       seed: this.seedData ? this.seedData.value : null,
       total_accounts: this.refs.totalAccounts
         ? this.refs.totalAccounts.value
