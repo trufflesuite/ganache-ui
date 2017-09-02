@@ -40,6 +40,8 @@ Brief command list:
 
 If you wish to submit a PR, please open an issue first to discuss its suitability. When opening issues and PRs, please read the template text carefully and follow the instructions.
 
+All code must be formatted with [Prettier](https://github.com/prettier/prettier).
+
 Requirements for development:
 
 - `npm v5.3.0`

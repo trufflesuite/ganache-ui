@@ -1,0 +1,54 @@
+@import 'colors.css';
+
+.ConfigTabs {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  width: 100%;
+}
+
+.ConfigHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 80%;
+  margin-top: 4rem;
+  margin-bottom: 1rem;
+
+  > button {
+    margin-bottom: 1rem;
+  }
+}
+
+.ConfigTabItem {
+  cursor: pointer;
+  text-align: center;
+  margin: 0 2rem 0 0;
+  font-size: .8rem;
+  text-transform: uppercase;
+
+  transition: color .3s;
+
+  &:last-of-type {
+    border-right: none;
+  }
+
+  &.active {
+    border-bottom: 2px solid
+      lighten(var(--app-config-tab-active-text-color), 15%);
+  }
+
+  &.active,
+  &:hover {
+    color: lighten(var(--app-config-tab-active-text-color), 15%);
+    font-weight: bold;
+  }
+}
+
+.ActiveTab {
+  color: var(--app-config-tab-active-text-color);
+  border-bottom: 2px solid lighten(
+      var(--app-config-tab-active-text-color),
+      15%
+    );
+}
