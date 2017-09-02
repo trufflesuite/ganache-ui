@@ -35,7 +35,13 @@ class ConsoleStream extends EventEmitter {
       }
     }
 
-    if (data.message.trim() === 'undefined' || data.message.trim() === '') {
+    if (
+      data.message.trim() === 'undefined' ||
+      data.message.trim() === '' ||
+      data.message.match(/\.+/) ||
+      data.message === [] ||
+      data.message === '[Function]'
+    ) {
       return
     }
 

@@ -21,36 +21,38 @@ import RestartIcon from 'Icons/eject.svg'
 
 import Styles from './ConfigScreen.css'
 
+const DEFAULT_STATE = {
+  specificTime: false,
+  opcodeDebug: false,
+  automnemonic: true,
+  automine: true,
+  accountsLocked: false,
+  forkChain: false,
+  verboseLogging: false,
+  googleAnalyticsTracking: false,
+  cpuAndMemoryProfiling: false,
+  settingsDirty: false,
+  isStartDisabled: false,
+  portNumber: 8545,
+  blockTime: 1,
+  time: null,
+  fork: '',
+  seedDataValue: '',
+  mnemonicValue: '',
+  seed: null,
+  totalAccounts: 10,
+  secure: false,
+  hostName: process.platform === 'darwin' ? '0.0.0.0' : 'localhost',
+  networkId: '',
+  gasPrice: 20000000000,
+  gasLimit: 4712388
+}
+
 class ConfigScreen extends PureComponent {
   constructor (props) {
     super(props)
 
-    this.state = {
-      specificTime: false,
-      opcodeDebug: false,
-      automnemonic: true,
-      automine: true,
-      accountsLocked: false,
-      forkChain: false,
-      verboseLogging: false,
-      googleAnalyticsTracking: false,
-      cpuAndMemoryProfiling: false,
-      settingsDirty: false,
-      isStartDisabled: false,
-      portNumber: 8545,
-      blockTime: 1,
-      time: null,
-      fork: '',
-      seedDataValue: '',
-      mnemonicValue: '',
-      seed: null,
-      totalAccounts: 10,
-      secure: false,
-      hostName: process.platform === 'darwin' ? '0.0.0.0' : 'localhost',
-      networkId: '',
-      gasPrice: 20000000000,
-      gasLimit: 4712388
-    }
+    this.state = DEFAULT_STATE
   }
 
   componentDidMount () {
@@ -241,8 +243,6 @@ class ConfigScreen extends PureComponent {
     })
 
     this.state.automine && delete config['time']
-
-    console.log(config)
 
     if (this.props.testRpcState.testRpcServerRunning) {
       this.props.appRestartRpcService(config).then(this.props.appGetSettings())
