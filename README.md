@@ -17,6 +17,10 @@ The goals of the project are:
 - Allows for more complex use cases for `ethereum-testrpc` in a more convienient environment.
 
 ### Development
+#### Pre-reqs:
+##### Windows: 
+- `npm install -g windows-build-tools`
+- `refreshenv`
 
 0. Clone this repo
 0. Run `yarn install`
