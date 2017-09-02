@@ -23,6 +23,10 @@ class Console extends Component {
   }
 
   _handleConsoleInput = value => {
+    if (value === '') {
+      return
+    }
+
     this.props
       .appSendConsoleCommand(value)
       .then(this.props.appGetConsoleMessages)
