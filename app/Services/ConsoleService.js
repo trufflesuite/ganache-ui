@@ -38,9 +38,7 @@ class ConsoleStream extends EventEmitter {
     if (
       data.message.trim() === 'undefined' ||
       data.message.trim() === '' ||
-      data.message.match(/\.+/) ||
-      data.message === [] ||
-      data.message === '[Function]'
+      data.message.trim().match(/\.+/)
     ) {
       return
     }
@@ -82,7 +80,8 @@ export default class ConsoleService {
     this._console = Repl.start({
       prompt: '',
       input: this.consoleStream,
-      output: this.consoleStream
+      output: this.consoleStream,
+      ignoreUndefined: true
     })
 
     ipcMain.on('APP/SENDREPLCOMMAND', this.sendConsoleInput)
@@ -123,6 +122,7 @@ export default class ConsoleService {
 
   initializeWeb3Scripts = (host, port) => {
     this._console.context['Web3'] = Web3
+    this.consoleStream.closeStream()
     new Web3InitScript(host, port).exportedScript().then(bootScript => {
       this.consoleStream.emit('data', bootScript)
       this.consoleStream.openStream()
