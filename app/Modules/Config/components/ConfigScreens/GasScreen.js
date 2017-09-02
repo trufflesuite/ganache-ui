@@ -14,10 +14,9 @@ class AccountsScreen extends Component {
           <div className={Styles.Row}>
             <div className={Styles.RowItem}>
               <input
-                ref="gasPrice"
                 name="gasPrice"
                 type="text"
-                defaultValue={this.props.formState.gasPrice}
+                value={this.props.formState.gasPrice}
                 onChange={this.props.handleInputChange}
               />
             </div>
@@ -31,10 +30,9 @@ class AccountsScreen extends Component {
           <div className={Styles.Row}>
             <div className={Styles.RowItem}>
               <input
-                ref="gasLimit"
                 name="gasLimit"
                 type="text"
-                defaultValue={this.props.formState.gasLimit}
+                value={this.props.formState.gasLimit}
                 onChange={this.props.handleInputChange}
               />
             </div>

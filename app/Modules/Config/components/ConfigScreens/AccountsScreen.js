@@ -17,7 +17,7 @@ class AccountsScreen extends Component {
                 ref="totalAccounts"
                 name="totalAccounts"
                 type="text"
-                defaultValue={this.props.formState.totalAccounts}
+                value={this.props.formState.totalAccounts}
                 onChange={this.props.handleInputChange}
               />
             </div>
@@ -35,6 +35,7 @@ class AccountsScreen extends Component {
                   type="checkbox"
                   name="accountsLocked"
                   id="AccountsLocked"
+                  checked={this.props.formState.accountsLocked}
                   onChange={this.props.handleInputChange}
                 />
                 <label htmlFor="AccountsLocked">ACCOUNTS LOCKED</label>

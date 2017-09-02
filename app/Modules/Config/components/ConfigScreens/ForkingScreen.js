@@ -37,9 +37,9 @@ class AccountsScreen extends Component {
               <div className={Styles.RowItem}>
                 <input
                   type="text"
-                  ref="fork"
                   name="fork"
                   placeholder="URL to target Chain"
+                  value={this.props.formState.fork}
                   onChange={this.props.handleInputChange}
                 />
               </div>

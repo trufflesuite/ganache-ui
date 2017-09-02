@@ -35,25 +35,19 @@ class AccountsScreen extends Component {
               {this.props.formState.automnemonic
                 ? <span>
                     <input
-                      ref={i => {
-                        this.seedData = i
-                      }}
-                      name="seedDataValue"
-                      defaultValue={this.props.formState.seedDataValue}
                       type="text"
                       placeholder="Enter Optional Seed Data"
+                      name="seedDataValue"
+                      value={this.props.formState.seedDataValue}
                       onChange={this.props.handleInputChange}
                     />
                   </span>
                 : <span>
                     <input
-                      ref={i => {
-                        this.mnemonicValue = i
-                      }}
-                      name="mnemonicValue"
-                      defaultValue={this.props.formState.mnemonicValue}
                       type="text"
                       placeholder="Enter Mnemonic to use"
+                      name="mnemonicValue"
+                      value={this.props.formState.mnemonicValue}
                       onChange={this.props.handleInputChange}
                     />
                   </span>}

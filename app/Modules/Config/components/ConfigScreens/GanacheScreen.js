@@ -16,7 +16,6 @@ class AccountsScreen extends Component {
               <div className="Switch">
                 <input
                   type="checkbox"
-                  ref="googleAnalyticsTracking"
                   name="googleAnalyticsTracking"
                   id="GoogleAnalyticsTracking"
                   onChange={this.props.handleInputChange}
@@ -49,7 +48,6 @@ class AccountsScreen extends Component {
               <div className="Switch">
                 <input
                   type="checkbox"
-                  ref="cpuAndMemoryProfiling"
                   name="cpuAndMemoryProfiling"
                   id="CpuAndMemoryProfiling"
                   onChange={this.props.handleInputChange}

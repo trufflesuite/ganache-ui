@@ -25,9 +25,9 @@ class ServerScreen extends Component {
             <div className={Styles.RowItem}>
               <input
                 type="text"
-                ref="hostName"
                 name="hostName"
-                defaultValue={this.props.formState.hostName}
+                value={this.props.formState.hostName}
+                onChange={this.props.handleInputChange}
               />
             </div>
             <div className={Styles.RowItem}>
@@ -48,14 +48,11 @@ class ServerScreen extends Component {
             <div className={Styles.RowItem}>
               <input
                 type="text"
-                ref="portNumber"
                 name="portNumber"
-                defaultValue={this.props.formState.portNumber}
+                value={this.props.formState.portNumber}
                 onChange={e => {
-                  e.persist()
-                  this.props
-                    .appCheckPort(this.refs.portNumber.value)
-                    .then(this.props.handleInputChange.bind(null, e))
+                  this.props.appCheckPort(e.target.value)
+                  this.props.handleInputChange(e)
                 }}
               />
               <OnlyIf test={portIsBlocked}>
@@ -84,9 +81,8 @@ class ServerScreen extends Component {
             <div className={Styles.RowItem}>
               <input
                 type="text"
-                ref="networkId"
                 name="networkId"
-                defaultValue={this.props.formState.networkId}
+                value={this.props.formState.networkId}
                 onChange={this.props.handleInputChange}
               />
             </div>
@@ -129,10 +125,9 @@ class ServerScreen extends Component {
             <div className={Styles.Row}>
               <div className={Styles.RowItem}>
                 <input
-                  ref="blockTime"
                   name="blockTime"
                   type="text"
-                  defaultValue={this.props.formState.blockTime}
+                  value={this.props.formState.blockTime}
                   onChange={this.props.handleInputChange}
                 />
               </div>

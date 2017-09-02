@@ -40,21 +40,21 @@ class ConfigScreen extends PureComponent {
       portNumber: 8545,
       blockTime: 1,
       time: null,
-      fork: null,
-      seedDataValue: null,
-      mnemonicValue: null,
+      fork: '',
+      seedDataValue: '',
+      mnemonicValue: '',
       seed: null,
       totalAccounts: 10,
       secure: false,
       hostName: process.platform === 'darwin' ? '0.0.0.0' : 'localhost',
-      networkId: null,
+      networkId: '',
       gasPrice: 20000000000,
       gasLimit: 4712388
     }
   }
 
   componentDidMount () {
-    this.props.appCheckPort(8545)
+    this.props.appCheckPort(this.state.portNumber)
     this.props.appGetSettings()
 
     if (this.props.testRpcState.testRpcServerRunning) {
@@ -65,10 +65,11 @@ class ConfigScreen extends PureComponent {
         automine: !this.props.testRpcState.isMiningOnInterval,
         gasLimit: this.props.testRpcState.gasLimit,
         gasPrice: this.props.testRpcState.gasPrice,
+        totalAccounts: this.props.testRpcState.totalAccounts,
         blockTime:
-          this.props.testRpcState.blockTime !== 'Automining'
-            ? this.props.testRpcState.blockTime
-            : null
+          this.props.testRpcState.blocktime !== 'Automining'
+            ? this.props.testRpcState.blocktime
+            : 1
       })
     }
   }
@@ -197,10 +198,10 @@ class ConfigScreen extends PureComponent {
   }
 
   _handleInputChange = event => {
+    console.log(event.target.name, event.target.value)
     const target = event.target
     const value = target.type === 'checkbox' ? target.checked : target.value
     const name = target.name
-    console.log(name, value)
     this.setState({
       [name]: value,
       settingsDirty: true
@@ -219,7 +220,7 @@ class ConfigScreen extends PureComponent {
     const config = {
       port: this.state.portNumber,
       time: this.state.time,
-      fork: this.state.fork,
+      fork: this.state.fork !== '' ? this.state.fork : null,
       gasPrice: parseInt(this.state.gasPrice, 10),
       gasLimit: parseInt(this.state.gasLimit, 10),
       blocktime: this.state.automine ? null : this.state.blockTime,
@@ -228,11 +229,11 @@ class ConfigScreen extends PureComponent {
       mnemonic: this.state.automnemonic
         ? null
         : this.state.mnemonicValue.toLowerCase(),
-      seed: this.state.seedDataValue,
+      seed: this.state.seedDataValue !== '' ? this.state.seedDataValue : null,
       total_accounts: this.state.totalAccounts,
       secure: this.state.accountsLocked,
       hostname: this.state.hostName,
-      network_id: this.state.networkId
+      network_id: this.state.networkId === '' ? null : this.state.networkId
     }
 
     Object.keys(config).forEach(key => {
