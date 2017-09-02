@@ -18,7 +18,7 @@ class AccountsScreen extends Component {
                   type="checkbox"
                   name="automnemonic"
                   id="Mnemonic"
-                  onChange={this.handleInputChange}
+                  onChange={this.props.handleInputChange}
                   checked={this.props.formState.automnemonic}
                 />
                 <label htmlFor="Mnemonic">AUTOGENERATE HD MNEMONIC</label>
@@ -39,9 +39,10 @@ class AccountsScreen extends Component {
                         this.seedData = i
                       }}
                       name="seedDataValue"
-                      defaultValue=""
+                      defaultValue={this.props.formState.seedDataValue}
                       type="text"
                       placeholder="Enter Optional Seed Data"
+                      onChange={this.props.handleInputChange}
                     />
                   </span>
                 : <span>
@@ -50,9 +51,10 @@ class AccountsScreen extends Component {
                         this.mnemonicValue = i
                       }}
                       name="mnemonicValue"
-                      defaultValue=""
+                      defaultValue={this.props.formState.mnemonicValue}
                       type="text"
                       placeholder="Enter Mnemonic to use"
+                      onChange={this.props.handleInputChange}
                     />
                   </span>}
             </div>

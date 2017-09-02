@@ -1,5 +1,5 @@
 import AppShell from 'Modules/AppShell'
-import ConfigScreen from 'Modules/ConfigScreen'
+import Config from 'Modules/Config'
 import Accounts from 'Modules/Accounts'
 import Blocks from 'Modules/Blocks'
 import Transactions from 'Modules/Transactions'
@@ -19,7 +19,7 @@ export default async function (app, done, error) {
 
   // Modules
   app.register(AppShell)
-  app.register(ConfigScreen)
+  app.register(Config)
   app.register(Accounts)
   app.register(Blocks)
   app.register(Transactions)

@@ -19,7 +19,7 @@ class AccountsScreen extends Component {
                   ref="googleAnalyticsTracking"
                   name="googleAnalyticsTracking"
                   id="GoogleAnalyticsTracking"
-                  onChange={this.handleInputChange}
+                  onChange={this.props.handleInputChange}
                   checked={this.props.formState.googleAnalyticsTracking}
                 />
                 <label htmlFor="GoogleAnalyticsTracking">
@@ -52,7 +52,7 @@ class AccountsScreen extends Component {
                   ref="cpuAndMemoryProfiling"
                   name="cpuAndMemoryProfiling"
                   id="CpuAndMemoryProfiling"
-                  onChange={this.handleInputChange}
+                  onChange={this.props.handleInputChange}
                   checked={this.props.formState.cpuAndMemoryProfiling}
                 />
                 <label htmlFor="CpuAndMemoryProfiling">

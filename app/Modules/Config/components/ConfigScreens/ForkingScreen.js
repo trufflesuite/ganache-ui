@@ -20,7 +20,8 @@ class AccountsScreen extends Component {
                   type="checkbox"
                   name="forkChain"
                   id="ForkChain"
-                  onChange={this.handleInputChange}
+                  onChange={this.props.handleInputChange}
+                  checked={this.props.formState.forkChain}
                 />
                 <label htmlFor="ForkChain">FORK CHAIN</label>
               </div>
@@ -37,7 +38,9 @@ class AccountsScreen extends Component {
                 <input
                   type="text"
                   ref="fork"
+                  name="fork"
                   placeholder="URL to target Chain"
+                  onChange={this.props.handleInputChange}
                 />
               </div>
               <div className={Styles.RowItem}>

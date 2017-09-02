@@ -8,8 +8,6 @@ import Styles from '../ConfigScreen.css'
 
 class ServerScreen extends Component {
   render () {
-    const defaultHost = process.platform === 'darwin' ? '0.0.0.0' : 'localhost'
-
     const { ganachePortStatus } = this.props.testRpcState
     const portIsBlocked =
       ganachePortStatus.status === 'blocked' &&
@@ -20,37 +18,44 @@ class ServerScreen extends Component {
     return (
       <div>
         <h2>RPC SERVER OPTIONS</h2>
+
         <section>
           <h4>HOSTNAME</h4>
           <div className={Styles.Row}>
             <div className={Styles.RowItem}>
               <input
-                ref="hostName"
                 type="text"
+                ref="hostName"
                 name="hostName"
-                defaultValue={defaultHost}
+                defaultValue={this.props.formState.hostName}
               />
             </div>
             <div className={Styles.RowItem}>
               <p>
                 The server will accept connections on the unspecified IPv6
                 address (::) when IPv6 is available, or the unspecified IPv4
-                address ({defaultHost}) as default.
+                address ({process.platform === 'darwin'
+                  ? '0.0.0.0'
+                  : 'localhost'}) as default.
               </p>
             </div>
           </div>
         </section>
+
         <section>
           <h4>PORT NUMBER</h4>
           <div className={Styles.Row}>
             <div className={Styles.RowItem}>
               <input
-                ref="portNumber"
                 type="text"
+                ref="portNumber"
                 name="portNumber"
-                defaultValue="8545"
-                onChange={() => {
-                  this.props.appCheckPort(this.refs.portNumber.value)
+                defaultValue={this.props.formState.portNumber}
+                onChange={e => {
+                  e.persist()
+                  this.props
+                    .appCheckPort(this.refs.portNumber.value)
+                    .then(this.props.handleInputChange.bind(null, e))
                 }}
               />
               <OnlyIf test={portIsBlocked}>
@@ -72,15 +77,17 @@ class ServerScreen extends Component {
             </div>
           </div>
         </section>
+
         <section>
           <h4>NETWORK ID</h4>
           <div className={Styles.Row}>
             <div className={Styles.RowItem}>
               <input
-                ref="networkId"
                 type="text"
+                ref="networkId"
                 name="networkId"
-                defaultValue={Date.now()}
+                defaultValue={this.props.formState.networkId}
+                onChange={this.props.handleInputChange}
               />
             </div>
             <div className={Styles.RowItem}>
@@ -92,6 +99,7 @@ class ServerScreen extends Component {
             </div>
           </div>
         </section>
+
         <section>
           <h4>AUTOMINE</h4>
           <div className={Styles.Row}>
@@ -114,6 +122,29 @@ class ServerScreen extends Component {
             </div>
           </div>
         </section>
+
+        <OnlyIf test={!this.props.formState.automine}>
+          <section>
+            <h4>MINING BLOCK TIME (SECONDS)</h4>
+            <div className={Styles.Row}>
+              <div className={Styles.RowItem}>
+                <input
+                  ref="blockTime"
+                  name="blockTime"
+                  type="text"
+                  defaultValue={this.props.formState.blockTime}
+                  onChange={this.props.handleInputChange}
+                />
+              </div>
+              <div className={Styles.RowItem}>
+                <p>
+                  The number of seconds to wait between mining new blocks and
+                  transactions.
+                </p>
+              </div>
+            </div>
+          </section>
+        </OnlyIf>
       </div>
     )
   }

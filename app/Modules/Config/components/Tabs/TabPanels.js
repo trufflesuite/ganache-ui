@@ -5,7 +5,7 @@ import Styles from './Tabs.css'
 const Component = ({ children, activeIndex, ...rest }) =>
   <form>
     <div {...rest}>
-      {children[activeIndex]}
+      {React.cloneElement(children[activeIndex], { ...rest })}
     </div>
   </form>
 

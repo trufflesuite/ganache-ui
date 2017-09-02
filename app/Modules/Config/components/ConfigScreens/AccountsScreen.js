@@ -8,46 +8,40 @@ class AccountsScreen extends Component {
   render () {
     return (
       <div>
-        <h2>LOGGING OPTIONS</h2>
+        <h2>ACCOUNT OPTIONS</h2>
         <section>
-          <h4>ENABLE VM OPCODE DEBUG LOGGING</h4>
+          <h4>TOTAL ACCOUNTS TO GENERATE</h4>
           <div className={Styles.Row}>
             <div className={Styles.RowItem}>
-              <div className="Switch">
-                <input
-                  type="checkbox"
-                  name="opcodeDebug"
-                  id="OpcodeDebug"
-                  onChange={this._handleInputChange}
-                />
-                <label htmlFor="OpcodeDebug">
-                  ENABLE VM OPCODE DEBUG LOGGING
-                </label>
-              </div>
+              <input
+                ref="totalAccounts"
+                name="totalAccounts"
+                type="text"
+                defaultValue={this.props.formState.totalAccounts}
+                onChange={this.props.handleInputChange}
+              />
             </div>
             <div className={Styles.RowItem}>
-              <p>Log VM Opcodes to the Console.</p>
+              <p>Total number of Accounts to create and pre-fund.</p>
             </div>
           </div>
         </section>
         <section>
-          <h4>VERBOSE LOGGING</h4>
+          <h4>CREATE LOCKED ACCOUNTS</h4>
           <div className={Styles.Row}>
             <div className={Styles.RowItem}>
               <div className="Switch">
                 <input
                   type="checkbox"
-                  name="verboseLogging"
-                  id="VerboseLogging"
-                  onChange={this._handleInputChange}
+                  name="accountsLocked"
+                  id="AccountsLocked"
+                  onChange={this.props.handleInputChange}
                 />
-                <label htmlFor="VerboseLogging">
-                  ENABLE VM OPCODE DEBUG LOGGING
-                </label>
+                <label htmlFor="AccountsLocked">ACCOUNTS LOCKED</label>
               </div>
             </div>
             <div className={Styles.RowItem}>
-              <p>Enable verbose logging to the Console.</p>
+              <p>Create accounts that are locked by default.</p>
             </div>
           </div>
         </section>

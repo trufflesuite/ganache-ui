@@ -38,21 +38,57 @@ class ConfigScreen extends PureComponent {
       settingsDirty: false,
       isStartDisabled: false,
       portNumber: 8545,
+      blockTime: 1,
       time: null,
       fork: null,
-      seedData: null,
+      seedDataValue: null,
       mnemonicValue: null,
       seed: null,
-      total_accounts: 10,
+      totalAccounts: 10,
       secure: false,
-      hostName: '0.0.0.0',
-      network_id: 1234
+      hostName: process.platform === 'darwin' ? '0.0.0.0' : 'localhost',
+      networkId: null,
+      gasPrice: 20000000000,
+      gasLimit: 4712388
     }
   }
 
   componentDidMount () {
     this.props.appCheckPort(8545)
     this.props.appGetSettings()
+
+    if (this.props.testRpcState.testRpcServerRunning) {
+      this.setState({
+        hostName: this.props.testRpcState.host,
+        portNumber: this.props.testRpcState.port,
+        networkId: this.props.testRpcState.networkId,
+        automine: !this.props.testRpcState.isMiningOnInterval,
+        gasLimit: this.props.testRpcState.gasLimit,
+        gasPrice: this.props.testRpcState.gasPrice,
+        blockTime:
+          this.props.testRpcState.blockTime !== 'Automining'
+            ? this.props.testRpcState.blockTime
+            : null
+      })
+    }
+  }
+
+  componentWillReceiveProps (nextProps) {
+    let newSettings = {}
+
+    Object.keys(nextProps.settings).map(key => {
+      if (
+        !this.state.settingsDirty &&
+        nextProps.settings[key] !== this.state[key]
+      ) {
+        console.log(`${key} = ${nextProps.settings[key]}`)
+        newSettings[key] = nextProps.settings[key]
+      }
+    })
+
+    if (Object.keys(newSettings).length > 0) {
+      this.setState(newSettings)
+    }
   }
 
   _renderConfigTabs = () => {
@@ -164,6 +200,7 @@ class ConfigScreen extends PureComponent {
     const target = event.target
     const value = target.type === 'checkbox' ? target.checked : target.value
     const name = target.name
+    console.log(name, value)
     this.setState({
       [name]: value,
       settingsDirty: true
@@ -191,7 +228,7 @@ class ConfigScreen extends PureComponent {
       mnemonic: this.state.automnemonic
         ? null
         : this.state.mnemonicValue.toLowerCase(),
-      seed: this.seedData ? this.state.seedData : null,
+      seed: this.state.seedDataValue,
       total_accounts: this.state.totalAccounts,
       secure: this.state.accountsLocked,
       hostname: this.state.hostName,
@@ -202,7 +239,9 @@ class ConfigScreen extends PureComponent {
       !config[key] ? delete config[key] : null
     })
 
-    this.state.automine ? delete config['time'] : null
+    this.state.automine && delete config['time']
+
+    console.log(config)
 
     if (this.props.testRpcState.testRpcServerRunning) {
       this.props.appRestartRpcService(config).then(this.props.appGetSettings())

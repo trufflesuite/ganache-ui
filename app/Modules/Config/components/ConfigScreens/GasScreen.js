@@ -13,7 +13,13 @@ class AccountsScreen extends Component {
           <h4>GAS PRICE</h4>
           <div className={Styles.Row}>
             <div className={Styles.RowItem}>
-              <input ref="gasPrice" type="text" defaultValue="20000000000" />
+              <input
+                ref="gasPrice"
+                name="gasPrice"
+                type="text"
+                defaultValue={this.props.formState.gasPrice}
+                onChange={this.props.handleInputChange}
+              />
             </div>
             <div className={Styles.RowItem}>
               <p>The Gas Price in WEI to use. Default is 20000000000.</p>
@@ -24,7 +30,13 @@ class AccountsScreen extends Component {
           <h4>GAS LIMIT</h4>
           <div className={Styles.Row}>
             <div className={Styles.RowItem}>
-              <input ref="gasLimit" type="text" defaultValue="4712388" />
+              <input
+                ref="gasLimit"
+                name="gasLimit"
+                type="text"
+                defaultValue={this.props.formState.gasLimit}
+                onChange={this.props.handleInputChange}
+              />
             </div>
             <div className={Styles.RowItem}>
               <p>The Gas Limit to use.</p>
