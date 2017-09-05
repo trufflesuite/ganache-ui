@@ -4,6 +4,16 @@
   <meta charset="utf-8">
   <title>GANACHE</title>
   <script>
+  document.addEventListener('dragover', event => {
+  event.preventDefault()
+  return false
+})
+document.addEventListener('drop', event => {
+  event.preventDefault()
+  return false
+})
+</script>
+  <script>
   ;(function () {
   if (!process.env.HOT) {
     const link = document.createElement('link')
