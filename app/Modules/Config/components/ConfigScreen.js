@@ -45,7 +45,8 @@ const DEFAULT_STATE = {
   hostName: process.platform === 'darwin' ? '0.0.0.0' : 'localhost',
   networkId: '',
   gasPrice: 20000000000,
-  gasLimit: 4712388
+  gasLimit: 4712388,
+  validationErrors: {}
 }
 
 class ConfigScreen extends PureComponent {
@@ -112,6 +113,35 @@ class ConfigScreen extends PureComponent {
     })
   }
 
+  onNotifyValidationError = name => {
+    this.setState((oldState, props) => {
+      return {
+        validationErrors: {
+          [`${name}`]: true
+        }
+      }
+    })
+  }
+
+  onNotifyValidationsPassed = () => {
+    this.setState((oldState, props) => {
+      return {
+        validationErrors: {
+          [`${name}`]: false
+        }
+      }
+    })
+  }
+
+  invalidConfig = () => {
+    let hasValidationErrors = false
+    for (let key of Object.keys(this.state.validationErrors)) {
+      hasValidationErrors =
+        hasValidationErrors || this.state.validationErrors[key]
+    }
+    return hasValidationErrors
+  }
+
   render () {
     const { ganachePortStatus } = this.props.testRpcState
     const portIsBlocked =
@@ -134,9 +164,14 @@ class ConfigScreen extends PureComponent {
               <button
                 className="btn btn-primary"
                 onClick={this._startTestRpc}
-                disabled={this.state.isStartDisabled || portIsBlocked}
+                disabled={
+                  this.state.isStartDisabled ||
+                  portIsBlocked ||
+                  this.invalidConfig()
+                }
               >
                 <Icon glyph={RestartIcon} size={18} />
+
                 {this.props.testRpcState.testRpcServerRunning
                   ? 'RESTART GANACHE'
                   : 'START GANACHE'}
@@ -149,6 +184,8 @@ class ConfigScreen extends PureComponent {
               <ServerScreen
                 formState={this.state}
                 handleInputChange={this._handleInputChange}
+                onNotifyValidationError={this.onNotifyValidationError}
+                onNotifyValidationsPassed={this.onNotifyValidationsPassed}
               />
             </Tabs.TabPanel>
 
@@ -156,6 +193,8 @@ class ConfigScreen extends PureComponent {
               <AccountsScreen
                 formState={this.state}
                 handleInputChange={this._handleInputChange}
+                onNotifyValidationError={this.onNotifyValidationError}
+                onNotifyValidationsPassed={this.onNotifyValidationsPassed}
               />
             </Tabs.TabPanel>
 
@@ -163,6 +202,8 @@ class ConfigScreen extends PureComponent {
               <GasScreen
                 formState={this.state}
                 handleInputChange={this._handleInputChange}
+                onNotifyValidationError={this.onNotifyValidationError}
+                onNotifyValidationsPassed={this.onNotifyValidationsPassed}
               />
             </Tabs.TabPanel>
 
@@ -170,6 +211,8 @@ class ConfigScreen extends PureComponent {
               <MnemonicScreen
                 formState={this.state}
                 handleInputChange={this._handleInputChange}
+                onNotifyValidationError={this.onNotifyValidationError}
+                onNotifyValidationsPassed={this.onNotifyValidationsPassed}
               />
             </Tabs.TabPanel>
 
@@ -177,6 +220,8 @@ class ConfigScreen extends PureComponent {
               <LoggingScreen
                 formState={this.state}
                 handleInputChange={this._handleInputChange}
+                onNotifyValidationError={this.onNotifyValidationError}
+                onNotifyValidationsPassed={this.onNotifyValidationsPassed}
               />
             </Tabs.TabPanel>
 
@@ -184,6 +229,8 @@ class ConfigScreen extends PureComponent {
               <ForkingScreen
                 formState={this.state}
                 handleInputChange={this._handleInputChange}
+                onNotifyValidationError={this.onNotifyValidationError}
+                onNotifyValidationsPassed={this.onNotifyValidationsPassed}
               />
             </Tabs.TabPanel>
 
@@ -191,6 +238,8 @@ class ConfigScreen extends PureComponent {
               <GanacheScreen
                 formState={this.state}
                 handleInputChange={this._handleInputChange}
+                onNotifyValidationError={this.onNotifyValidationError}
+                onNotifyValidationsPassed={this.onNotifyValidationsPassed}
               />
             </Tabs.TabPanel>
           </Tabs.TabPanels>

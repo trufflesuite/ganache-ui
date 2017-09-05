@@ -21,7 +21,8 @@ const VALIDATIONS = {
   networkId: {
     allowedChars: /^\d*$/,
     min: 1,
-    max: Number.MAX_SAFE_INTEGER
+    max: Number.MAX_SAFE_INTEGER,
+    canBeBlank: true
   },
   blockTime: {
     allowedChars: /^\d*$/,
@@ -43,6 +44,8 @@ class ServerScreen extends Component {
 
   validateChange = e => {
     executeValidations(VALIDATIONS, this, e)
+      ? this.props.onNotifyValidationsPassed(e.target.name)
+      : this.props.onNotifyValidationError(e.target.name)
   }
 
   render () {

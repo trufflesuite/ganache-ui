@@ -48,8 +48,6 @@
 
     &.Active {
       color: var(--primary-color);
-      background-color: var(--app-statusbar-background);
-      border-radius: 4px;
 
       svg {
         stroke: var(--primary-color) !important;

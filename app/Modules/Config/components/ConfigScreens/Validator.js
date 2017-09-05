@@ -6,7 +6,12 @@ export default function validateChange (VALIDATIONS, component, e) {
 
   const validation = VALIDATIONS[name]
 
-  let validationError = false
+  let hasValidationError = false
+
+  if (validation.canBeBlank && value === '') {
+    component.props.handleInputChange(e)
+    return true
+  }
 
   if (validation.allowedChars) {
     component.setState({
@@ -14,28 +19,33 @@ export default function validateChange (VALIDATIONS, component, e) {
     })
 
     if (!value.match(validation.allowedChars)) {
-      return
+      // We return true as the validation is true since we prevented the invalid
+      // character from being added.
+      return true
     }
   }
 
   if (validation.format) {
-    validationError = validationError || !value.match(validation.format)
+    hasValidationError = hasValidationError || !value.match(validation.format)
   }
 
   if (validation.min) {
-    validationError =
-      validationError ||
+    hasValidationError =
+      hasValidationError ||
       parseInt(value, 10) < validation.min ||
       isNaN(parseInt(value, 10))
   }
 
   if (validation.max) {
-    validationError = validationError || parseInt(value, 10) > validation.max
+    hasValidationError =
+      hasValidationError || parseInt(value, 10) > validation.max
   }
 
   component.setState({
-    [`${name}ValidationError`]: validationError
+    [`${name}ValidationError`]: hasValidationError
   })
 
   component.props.handleInputChange(e)
+
+  return !hasValidationError
 }

@@ -23,6 +23,8 @@ class AccountsScreen extends Component {
 
   validateChange = e => {
     executeValidations(VALIDATIONS, this, e)
+      ? this.props.onNotifyValidationsPassed(e.target.name)
+      : this.props.onNotifyValidationError(e.target.name)
   }
 
   render () {
