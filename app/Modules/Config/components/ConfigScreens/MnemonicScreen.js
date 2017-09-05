@@ -4,7 +4,27 @@ import SettingsProvider from 'Data/Providers/SettingsProvider'
 
 import Styles from '../ConfigScreen.css'
 
+import executeValidations from './Validator'
+
+const VALIDATIONS = {
+  mnemonicValue: {
+    allowedChars: /^[a-zA-Z ]*$/
+  }
+}
+
 class AccountsScreen extends Component {
+  constructor (props) {
+    super(props)
+
+    this.state = {
+      mnemonicValueValidationError: false
+    }
+  }
+
+  validateChange = e => {
+    executeValidations(VALIDATIONS, this, e)
+  }
+
   render () {
     return (
       <div>
@@ -47,9 +67,15 @@ class AccountsScreen extends Component {
                       type="text"
                       placeholder="Enter Mnemonic to use"
                       name="mnemonicValue"
+                      className={
+                        this.state.mnemonicValueValidationError &&
+                        Styles.ValidationError
+                      }
                       value={this.props.formState.mnemonicValue}
-                      onChange={this.props.handleInputChange}
+                      onChange={this.validateChange}
                     />
+                    {this.state.mnemonicValueValidationError &&
+                      <p>The Mnemonic can only contain alpha characters</p>}
                   </span>}
             </div>
             <div className={Styles.RowItem}>

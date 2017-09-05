@@ -6,7 +6,45 @@ import OnlyIf from 'Elements/OnlyIf'
 
 import Styles from '../ConfigScreen.css'
 
+import executeValidations from './Validator'
+
+const VALIDATIONS = {
+  hostName: {
+    format: /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/,
+    allowedChars: /^[\d*\.*]*$/
+  },
+  portNumber: {
+    allowedChars: /^\d*$/,
+    min: 1000,
+    max: 65535
+  },
+  networkId: {
+    allowedChars: /^\d*$/,
+    min: 1,
+    max: Number.MAX_SAFE_INTEGER
+  },
+  blockTime: {
+    allowedChars: /^\d*$/,
+    min: 1,
+    max: 200
+  }
+}
+
 class ServerScreen extends Component {
+  constructor (props) {
+    super(props)
+
+    this.state = {
+      hostNameValidationError: false,
+      portNumberValidationError: false,
+      networkIdValidationError: false
+    }
+  }
+
+  validateChange = e => {
+    executeValidations(VALIDATIONS, this, e)
+  }
+
   render () {
     const { ganachePortStatus } = this.props.testRpcState
     const portIsBlocked =
@@ -26,9 +64,14 @@ class ServerScreen extends Component {
               <input
                 type="text"
                 name="hostName"
+                className={
+                  this.state.hostNameValidationError && Styles.ValidationError
+                }
                 value={this.props.formState.hostName}
-                onChange={this.props.handleInputChange}
+                onChange={this.validateChange}
               />
+              {this.state.hostNameValidationError &&
+                <p>The host must be a valid IP address.</p>}
             </div>
             <div className={Styles.RowItem}>
               <p>
@@ -49,12 +92,19 @@ class ServerScreen extends Component {
               <input
                 type="text"
                 name="portNumber"
+                className={
+                  this.state.portNumberValidationError && Styles.ValidationError
+                }
                 value={this.props.formState.portNumber}
                 onChange={e => {
                   this.props.appCheckPort(e.target.value)
-                  this.props.handleInputChange(e)
+                  this.validateChange(e)
                 }}
               />
+
+              {this.state.portNumberValidationError &&
+                <p>The port number must be &gt; 1000 and &lt; 65535.</p>}
+
               <OnlyIf test={portIsBlocked}>
                 <strong className={Styles.PortAlert}>
                   <b>WARNING!</b> Ganache cannot start on this port because
@@ -82,9 +132,17 @@ class ServerScreen extends Component {
               <input
                 type="text"
                 name="networkId"
+                className={
+                  this.state.networkIdValidationError && Styles.ValidationError
+                }
                 value={this.props.formState.networkId}
-                onChange={this.props.handleInputChange}
+                onChange={this.validateChange}
               />
+              {this.state.networkIdValidationError &&
+                <p>
+                  The Network ID can be blank, or must be &gt; 1 and &lt;{' '}
+                  {Number.MAX_SAFE_INTEGER}.
+                </p>}
             </div>
             <div className={Styles.RowItem}>
               <p>
@@ -128,8 +186,10 @@ class ServerScreen extends Component {
                   name="blockTime"
                   type="text"
                   value={this.props.formState.blockTime}
-                  onChange={this.props.handleInputChange}
+                  onChange={this.validateChange}
                 />
+                {this.state.blockTimeValidationError &&
+                  <p>The Mining Time must be &gt; 1 and &lt; 200.</p>}
               </div>
               <div className={Styles.RowItem}>
                 <p>

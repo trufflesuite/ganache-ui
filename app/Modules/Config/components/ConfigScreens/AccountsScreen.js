@@ -4,7 +4,29 @@ import SettingsProvider from 'Data/Providers/SettingsProvider'
 
 import Styles from '../ConfigScreen.css'
 
+import executeValidations from './Validator'
+
+const VALIDATIONS = {
+  totalAccounts: {
+    allowedChars: /^\d*$/,
+    min: 1,
+    max: 100
+  }
+}
+
 class AccountsScreen extends Component {
+  constructor (props) {
+    super(props)
+
+    this.state = {
+      totalAccountsValidationError: false
+    }
+  }
+
+  validateChange = e => {
+    executeValidations(VALIDATIONS, this, e)
+  }
+
   render () {
     return (
       <div>
@@ -14,12 +36,17 @@ class AccountsScreen extends Component {
           <div className={Styles.Row}>
             <div className={Styles.RowItem}>
               <input
-                ref="totalAccounts"
                 name="totalAccounts"
                 type="text"
+                className={
+                  this.state.totalAccountsValidationError &&
+                  Styles.ValidationError
+                }
                 value={this.props.formState.totalAccounts}
-                onChange={this.props.handleInputChange}
+                onChange={this.validateChange}
               />
+              {this.state.totalAccountsValidationError &&
+                <p>The number of accounts must be &gt; 1 and &lt; 100</p>}
             </div>
             <div className={Styles.RowItem}>
               <p>Total number of Accounts to create and pre-fund.</p>

@@ -4,7 +4,35 @@ import SettingsProvider from 'Data/Providers/SettingsProvider'
 
 import Styles from '../ConfigScreen.css'
 
+import executeValidations from './Validator'
+
+const VALIDATIONS = {
+  gasPrice: {
+    allowedChars: /^\d*$/,
+    min: 1,
+    max: Number.MAX_SAFE_INTEGER
+  },
+  gasLimit: {
+    allowedChars: /^\d*$/,
+    min: 1,
+    max: Number.MAX_SAFE_INTEGER
+  }
+}
+
 class AccountsScreen extends Component {
+  constructor (props) {
+    super(props)
+
+    this.state = {
+      gasPriceValidationError: false,
+      gasLimitValidationError: false
+    }
+  }
+
+  validateChange = e => {
+    executeValidations(VALIDATIONS, this, e)
+  }
+
   render () {
     return (
       <div>
@@ -16,9 +44,17 @@ class AccountsScreen extends Component {
               <input
                 name="gasPrice"
                 type="text"
+                className={
+                  this.state.gasPriceValidationError && Styles.ValidationError
+                }
                 value={this.props.formState.gasPrice}
-                onChange={this.props.handleInputChange}
+                onChange={this.validateChange}
               />
+              {this.state.gasPriceValidationError &&
+                <p>
+                  The Gas Price must be &ge; 1 and &lt;{' '}
+                  {Number.MAX_SAFE_INTEGER}.
+                </p>}
             </div>
             <div className={Styles.RowItem}>
               <p>The Gas Price in WEI to use. Default is 20000000000.</p>
@@ -32,9 +68,17 @@ class AccountsScreen extends Component {
               <input
                 name="gasLimit"
                 type="text"
+                className={
+                  this.state.gasLimitValidationError && Styles.ValidationError
+                }
                 value={this.props.formState.gasLimit}
-                onChange={this.props.handleInputChange}
+                onChange={this.validateChange}
               />
+              {this.state.gasLimitValidationError &&
+                <p>
+                  The Gas Limit must be &ge; 1 and &lt;{' '}
+                  {Number.MAX_SAFE_INTEGER}.
+                </p>}
             </div>
             <div className={Styles.RowItem}>
               <p>The Gas Limit to use.</p>
