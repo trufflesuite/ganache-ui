@@ -113,6 +113,28 @@ class ConfigScreen extends PureComponent {
     })
   }
 
+  _handleInputChange = event => {
+    const target = event.target
+    const value = target.type === 'checkbox' ? target.checked : target.value
+    const name = target.name
+
+    this.setState({
+      [name]: value,
+      settingsDirty: true
+    })
+
+    // Handle settings that the user might reasonably expect to persist regardless
+    // of starting / restarting the app
+
+    const realtimeToggles = ['googleAnalyticsTracking', 'cpuAndMemoryProfiling']
+
+    if (realtimeToggles.indexOf(name) > -1) {
+      this.props.appSetSettings({
+        [name]: value
+      })
+    }
+  }
+
   onNotifyValidationError = name => {
     this.setState((oldState, props) => {
       return {
@@ -246,16 +268,6 @@ class ConfigScreen extends PureComponent {
         </Tabs>
       </main>
     )
-  }
-
-  _handleInputChange = event => {
-    const target = event.target
-    const value = target.type === 'checkbox' ? target.checked : target.value
-    const name = target.name
-    this.setState({
-      [name]: value,
-      settingsDirty: true
-    })
   }
 
   _startTestRpc = e => {
