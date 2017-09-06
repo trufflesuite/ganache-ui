@@ -36,7 +36,9 @@ class TxCard extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    this.props.appSearchTx(nextProps.params.txhash)
+    if (nextProps.params.txhash !== this.props.params.txhash) {
+      this.props.appSearchTx(this.props.params.txhash)
+    }
   }
 
   componentDidMount () {
