@@ -14,6 +14,7 @@ import FormattedHex from 'Elements/FormattedHex'
 
 import Styles from './TxCard.css'
 import BorderStyles from './BorderStyles.css'
+import EmptyTransactionStyles from './EmptyTransactions.css'
 
 class TxCard extends Component {
   borderStyleSelector = tx => {
@@ -49,7 +50,12 @@ class TxCard extends Component {
     const cardStyles = `${this.borderStyleSelector(tx)} ${Styles.TxCard}`
 
     if (!tx) {
-      return <div></div>
+      return (
+        <div className={EmptyTransactionStyles.EmptyTransactions}>
+          <h3>{this.props.params.txhash}</h3>
+          No Transaction found.
+        </div>
+      )
     }
 
     return (

@@ -1,4 +1,4 @@
-import EtherUtils from 'ethereumjs-util'
+import { bufferToHex, toChecksumAddress } from 'ethereumjs-util'
 
 export default class TransactionFetcher {
   constructor (stateManager) {
@@ -30,22 +30,18 @@ export default class TransactionFetcher {
             transactions[index].hash,
             (err, receipt) => {
               let tx = {}
-              tx.hash = EtherUtils.bufferToHex(transactions[index].hash)
-              tx.nonce = EtherUtils.bufferToHex(transactions[index].nonce)
-              tx.gasUsed = EtherUtils.bufferToHex(receipt.gasUsed)
+              tx.hash = bufferToHex(transactions[index].hash)
+              tx.nonce = bufferToHex(transactions[index].nonce)
+              tx.gasUsed = bufferToHex(receipt.gasUsed)
               tx.block = receipt.block
-              tx.data = EtherUtils.bufferToHex(transactions[index].data)
-              tx.from = EtherUtils.toChecksumAddress(
-                EtherUtils.bufferToHex(transactions[index].from)
-              )
+              tx.data = bufferToHex(transactions[index].data)
+              tx.from = toChecksumAddress(bufferToHex(transactions[index].from))
               tx.to =
-                EtherUtils.bufferToHex(receipt.tx.to) !== 0
-                  ? EtherUtils.toChecksumAddress(
-                      EtherUtils.bufferToHex(receipt.tx.to)
-                    )
+                bufferToHex(receipt.tx.to) !== 0
+                  ? toChecksumAddress(bufferToHex(receipt.tx.to))
                   : 0
               receipt.contractAddress
-                ? (tx.contractAddress = EtherUtils.toChecksumAddress(
+                ? (tx.contractAddress = toChecksumAddress(
                     receipt.contractAddress
                   ))
                 : null
@@ -62,20 +58,28 @@ export default class TransactionFetcher {
   async getTxByHash (txHash) {
     return new Promise((resolve, reject) => {
       this.stateManager.getTransactionReceipt(txHash, (err, receipt) => {
+        if (err) {
+          reject(err)
+        }
+
+        console.log(receipt)
+
+        if (!receipt) {
+          reject('Transaction not found')
+          return
+        }
+
         let tx = Object.assign({}, receipt)
         tx.hash = txHash
-        tx.data = EtherUtils.bufferToHex(receipt.tx.data)
-        tx.from = EtherUtils.toChecksumAddress(
-          EtherUtils.bufferToHex(receipt.tx.from)
-        )
+        tx.data = bufferToHex(receipt.tx.data)
+        tx.from = toChecksumAddress(bufferToHex(receipt.tx.from))
 
         tx.to =
-          EtherUtils.bufferToHex(receipt.tx.to) !== 0
-            ? EtherUtils.toChecksumAddress(
-                EtherUtils.bufferToHex(receipt.tx.to)
-              )
+          bufferToHex(receipt.tx.to) !== 0
+            ? toChecksumAddress(bufferToHex(receipt.tx.to))
             : 0
-        err ? reject(err) : resolve(tx)
+
+        resolve(tx)
       })
     })
   }
