@@ -1,3 +1,4 @@
+import URL from 'url'
 import React, { PureComponent } from 'react'
 
 import TestRPCProvider from 'Data/Providers/TestRPCProvider'
@@ -279,10 +280,9 @@ class ConfigScreen extends PureComponent {
       cpuAndMemoryProfiling: this.state.cpuAndMemoryProfiling
     })
 
-    const config = {
+    let config = {
       port: this.state.portNumber,
       time: this.state.time,
-      fork: this.state.fork !== '' ? this.state.fork : null,
       gasPrice: parseInt(this.state.gasPrice, 10),
       gasLimit: parseInt(this.state.gasLimit, 10),
       blocktime: this.state.automine ? null : this.state.blockTime,
@@ -303,6 +303,25 @@ class ConfigScreen extends PureComponent {
     })
 
     this.state.automine && delete config['time']
+
+    if (this.state.fork !== '') {
+      var forkAddress, block
+      var split = this.state.fork.split('@')
+
+      forkAddress = split[0]
+
+      if (split.length > 1) {
+        block = split[1]
+      }
+
+      config = {
+        fork: forkAddress + (block != null ? '@' + block : ''),
+        port:
+          URL.parse(forkAddress).port === this.state.portNumber
+            ? parseInt(this.state.portNumber) + 1
+            : this.state.portNumber
+      }
+    }
 
     if (this.props.testRpcState.testRpcServerRunning) {
       this.props.appRestartRpcService(config).then(this.props.appGetSettings())
