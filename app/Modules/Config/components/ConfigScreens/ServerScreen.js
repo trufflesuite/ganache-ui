@@ -15,7 +15,7 @@ const VALIDATIONS = {
   },
   portNumber: {
     allowedChars: /^\d*$/,
-    min: 1000,
+    min: 1025,
     max: 65535
   },
   networkId: {
