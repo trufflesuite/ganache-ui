@@ -1,4 +1,13 @@
 
+0.0.9 / 2017-09-06
+==================
+
+  * Bump version
+  * Missing infinite loop guard
+  * Closes #70
+  * Handle fork URL ports
+  * Make lowest port 1025
+
 0.0.6 / 2017-08-02
 ==================
 
