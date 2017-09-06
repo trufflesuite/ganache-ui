@@ -61,8 +61,13 @@ export default class EventHandler {
   }
 
   _handleTxSearch = async (event, arg) => {
-    const tx = await this.testRpcService.txFetcher.getTxByHash(arg)
-    this.testRpcService.webView.send('APP/TXSEARCHRESULT', tx)
+    try {
+      const tx = await this.testRpcService.txFetcher.getTxByHash(arg)
+      this.testRpcService.webView.send('APP/TXSEARCHRESULT', tx)
+    } catch (e) {
+      console.log(e)
+      this.testRpcService.webView.send('APP/TXSEARCHRESULT', null)
+    }
   }
 
   _handleStartMining = (event, arg) => {

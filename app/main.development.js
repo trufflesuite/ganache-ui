@@ -46,7 +46,7 @@ process.on('uncaughtException', err => {
 })
 
 process.on('unhandledRejection', error => {
-  SysLog.error('unhandledRejection', error.stack)
+  SysLog.error('unhandledRejection', error)
 })
 
 app.on('window-all-closed', () => {

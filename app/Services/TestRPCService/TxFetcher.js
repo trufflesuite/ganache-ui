@@ -63,7 +63,7 @@ export default class TransactionFetcher {
         }
 
         if (!receipt) {
-          reject('Transaction not found')
+          resolve(null)
           return
         }
 
