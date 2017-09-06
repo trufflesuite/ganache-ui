@@ -62,8 +62,6 @@ export default class TransactionFetcher {
           reject(err)
         }
 
-        console.log(receipt)
-
         if (!receipt) {
           reject('Transaction not found')
           return

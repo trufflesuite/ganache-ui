@@ -43,7 +43,10 @@
       "icon": "resources/icons/win/icon.ico"
     },
     "linux": {
-      "target": ["deb", "AppImage"]
+      "target": [
+        "deb",
+        "AppImage"
+      ]
     },
     "dmg": {
       "contents": [
@@ -73,12 +76,16 @@
       {
         "from": "app/Services/ConsoleService/ConsoleScripts",
         "to": "ConsoleScripts",
-        "filter": ["**/*"]
+        "filter": [
+          "**/*"
+        ]
       },
       {
         "from": "resources",
         "to": "resources",
-        "filter": ["**/*"]
+        "filter": [
+          "**/*"
+        ]
       }
     ],
     "directories": {
