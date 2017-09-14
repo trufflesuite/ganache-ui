@@ -5,7 +5,7 @@ import EtherUtil from 'ethereumjs-util'
 
 import FormattedHex from 'Elements/FormattedHex'
 
-import ContractIcon from 'babel!svg-react!../../../../../resources/Contract.svg?name=ContractIcon'
+import ContractIcon from 'babel!svg-react!../../../../../resources/contract.svg?name=ContractIcon'
 import Styles from './MiniTxCard.css'
 
 export default class MiniTxCard extends Component {
