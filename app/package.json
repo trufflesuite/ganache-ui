@@ -1,7 +1,7 @@
 {
   "name": "Ganache",
   "productName": "Ganache",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "An Electron UI for TestRPC",
   "main": "./main.entry.js",
   "author": {
