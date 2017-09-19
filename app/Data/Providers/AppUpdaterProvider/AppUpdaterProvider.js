@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import * as Actions from 'Data/Sources/Console/Actions'
+import * as Actions from 'Data/Sources/AppUpdater/Actions'
 
 import { createStructuredSelector } from 'reselect'
 

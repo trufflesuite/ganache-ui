@@ -13,7 +13,8 @@ const mutators = {
   'APP/UPDATEAVAILABLE': (state, {type, payload}) => {
     return {
       ...DefaultState,
-      updateAvailable: true
+      updateAvailable: true,
+      updateAvailableVersion: payload
     }
   },
 

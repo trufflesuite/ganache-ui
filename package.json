@@ -43,7 +43,10 @@
       "icon": "resources/icons/win/icon.ico"
     },
     "linux": {
-      "target": ["deb", "AppImage"]
+      "target": [
+        "deb",
+        "AppImage"
+      ]
     },
     "dmg": {
       "contents": [
@@ -73,12 +76,16 @@
       {
         "from": "app/Services/ConsoleService/ConsoleScripts",
         "to": "ConsoleScripts",
-        "filter": ["**/*"]
+        "filter": [
+          "**/*"
+        ]
       },
       {
         "from": "resources",
         "to": "resources",
-        "filter": ["**/*"]
+        "filter": [
+          "**/*"
+        ]
       }
     ],
     "directories": {
@@ -138,12 +145,12 @@
     "css-loader": "^0.26.1",
     "devtron": "^1.4.0",
     "electron": "1.6.11",
-    "electron-builder": "^19.18.1",
+    "electron-builder": "^19.28.4",
     "electron-debug": "^1.1.0",
     "electron-devtools-installer": "^2.0.1",
-    "electron-log": "^2.2.6",
+    "electron-log": "^2.2.9",
     "electron-rebuild": "^1.6.0",
-    "electron-updater": "^2.8.1",
+    "electron-updater": "^2.9.3",
     "enzyme": "^2.7.0",
     "eslint": "^3.13.1",
     "eslint-config-standard": "^6.2.1",

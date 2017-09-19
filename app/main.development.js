@@ -108,8 +108,8 @@ app.on('ready', async () => {
     mainWindow.show()
     mainWindow.focus()
     mainWindow.setTitle('GANACHE')
-    // autoUpdater.checkForUpdates()
-    mainWindow.send('APP/UPDATENOTAVAILABLE', {})
+    autoUpdater.checkForUpdates()
+    // mainWindow.send('APP/UPDATENOTAVAILABLE', {})
   })
 
   mainWindow.on('closed', () => {
@@ -135,9 +135,10 @@ app.on('ready', async () => {
 
   autoUpdater.logger = SysLog
   autoUpdater.logger.transports.file.level = 'info'
+  autoUpdater.autoDownload = false
 
   if (process.env.NODE_ENV === 'development') {
-    autoUpdater.updateConfigPath = path.resolve('./app/dev-app-update.yml')
+    //autoUpdater.updateConfigPath = path.resolve('./app/dev-app-update.yml')
   }
 
   autoUpdater.on('checking-for-update', () => {
@@ -145,6 +146,7 @@ app.on('ready', async () => {
   })
 
   autoUpdater.on('update-available', (ev, info) => {
+    console.log(info)
     mainWindow.send('APP/UPDATEAVAILABLE', info)
   })
 

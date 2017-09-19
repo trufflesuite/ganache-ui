@@ -169,3 +169,50 @@
     animation: fadeIn 500ms 1.8s forwards, slideUp 1s 1.8s forwards;
   }
 }
+
+.UpdateAvailable {
+  opacity: 0;
+  letter-spacing: 0;
+  color: white;
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: #433f3d;
+  border-radius: 4px;
+  font-weight: normal;
+  font-size: 1rem;
+
+  display: flex;
+  flex-direction: column;
+
+  :global {
+    animation: fadeIn 500ms 2s forwards;
+  }
+
+  button {
+    margin: 1rem;
+
+    &:last-of-type {
+      margin-top: 0;
+
+      background-color: transparent;
+      color: #f2af67;
+      border-color: #f2af67;
+      border: 1px solid;
+      box-shadow: none;
+    }
+  }
+}
+
+.DownloadingUpdate {
+  letter-spacing: 0;
+  color: white;
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: #433f3d;
+  border-radius: 4px;
+  font-weight: normal;
+  font-size: 1rem;
+
+  display: flex;
+  flex-direction: column;
+}

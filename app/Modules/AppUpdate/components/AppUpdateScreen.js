@@ -16,7 +16,8 @@ class AppUpdateScreen extends Component {
     super()
     this.state = {
       version: '0.0.1',
-      loadingScreenFinished: false
+      loadingScreenFinished: false,
+      downloadingUpdate: false
     }
   }
 
@@ -54,6 +55,21 @@ class AppUpdateScreen extends Component {
     }
   }
 
+  _updateNow = () => {
+    this.props.appDownloadAndApplyUpdate()
+    this.setState({
+      downloadingUpdate: true
+    })
+  }
+
+  _updateLater = () => {
+    const firstRunScreen = this.props.settings.firstRun
+    this.setState({ loadingScreenFinished: true })
+    firstRunScreen
+    ? hashHistory.push('/first_run')
+    : hashHistory.push('/config')
+  }
+
   render () {
     const styles = `${Styles.LoadingScreen} ${this.state.loadingScreenFinished
       ? Styles.FadeOutLoadingScreen
@@ -83,6 +99,19 @@ class AppUpdateScreen extends Component {
               Checking for Ganache Updates...
             </p>
           </OnlyIf>
+          <OnlyIf test={this.props.appUpdater.updateAvailable && !this.state.downloadingUpdate}>
+            <div className={elementStyles(Styles.UpdateAvailable)}>
+              A Ganache update is available!
+
+              <button onClick={this._updateNow}>Update Now</button>
+              <button onClick={this._updateLater}>Update Later</button>
+            </div>
+          </OnlyIf>
+          <OnlyIf test={this.state.downloadingUpdate}>
+            <div className={elementStyles(Styles.DownloadingUpdate)}>
+             The update is downloading. Ganache will automatically restart.
+            </div>
+          </OnlyIf>
           <OnlyIf test={this.props.appUpdater.haveLatestVersion}>
             <p className={elementStyles(Styles.UpdateNotice)}>
               You have the most up-to-date version of Ganache.
@@ -90,7 +119,7 @@ class AppUpdateScreen extends Component {
           </OnlyIf>
           <OnlyIf test={this.props.appUpdater.downloadingUpdate !== false}>
             <p className={elementStyles(Styles.UpdateNotice)}>
-              Downloading Ganahce update...
+              Downloading Ganache update...
             </p>
           </OnlyIf>
           <OnlyIf test={this.props.appUpdater.updateError}>

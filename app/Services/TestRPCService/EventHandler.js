@@ -1,6 +1,8 @@
 import autobind from 'class-autobind'
 import FindProcess from 'find-process'
 
+import { autoUpdater } from 'electron-updater'
+
 import SettingsService from '../SettingsService'
 
 export default class EventHandler {
@@ -36,6 +38,12 @@ export default class EventHandler {
       'APP/GETCONSOLEMESSAGES',
       this._getConsoleMessages
     )
+
+    this.testRpcService.ipcMain.on('APP/DOWNLOADANDUPDATE', this._downloadAndUpdate)
+  }
+
+  _downloadAndUpdate = (event, arg) => {
+    autoUpdater.downloadUpdate()
   }
 
   _getConsoleMessages = (event, arg) => {
