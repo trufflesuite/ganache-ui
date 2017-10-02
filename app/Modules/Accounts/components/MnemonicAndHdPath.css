@@ -18,13 +18,13 @@
     margin: 1rem;
 
     h4 {
-      margin: 0;
+      margin: 0 0 .3rem 0;
     }
 
     span {
-      text-transform: uppercase;
       font-family: "Fira Code Regular", monospace;
       color: var(--text-color);
+      font-size: 0.9rem;
     }
   }
 }

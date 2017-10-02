@@ -148,6 +148,7 @@
     "electron-builder": "^19.28.4",
     "electron-debug": "^1.1.0",
     "electron-devtools-installer": "^2.0.1",
+    "electron-icon-maker": "0.0.3",
     "electron-log": "^2.2.9",
     "electron-rebuild": "^1.6.0",
     "electron-updater": "^2.9.3",

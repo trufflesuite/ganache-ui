@@ -9,6 +9,6 @@ import '../resources/fonts/FiraSans-Regular.ttf'
 import '../resources/fonts/FiraSans-Bold.ttf'
 import '../resources/fonts/FiraSans-SemiBold.ttf'
 
-const Ganache = new Application('GANACHE')
+const Ganache = new Application('Ganache')
 
 Ganache.init(bootup).ready(ready).start('root')

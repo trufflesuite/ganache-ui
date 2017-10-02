@@ -95,7 +95,7 @@ app.on('ready', async () => {
     minHeight: 800,
     width: 1200,
     height: 930,
-    frame: false,
+    frame: true,
     icon: getIconPath()
   })
 
@@ -107,9 +107,12 @@ app.on('ready', async () => {
   mainWindow.webContents.on('did-finish-load', () => {
     mainWindow.show()
     mainWindow.focus()
-    mainWindow.setTitle('GANACHE')
-    autoUpdater.checkForUpdates()
-    // mainWindow.send('APP/UPDATENOTAVAILABLE', {})
+    mainWindow.setTitle('Ganache')
+    //autoUpdater.checkForUpdates()
+    mainWindow.send('APP/UPDATENOTAVAILABLE', {})
+    
+    // Remove the menu bar
+    mainWindow.setMenu(null);
   })
 
   mainWindow.on('closed', () => {
@@ -133,42 +136,42 @@ app.on('ready', async () => {
   })
   // }
 
-  autoUpdater.logger = SysLog
-  autoUpdater.logger.transports.file.level = 'info'
-  autoUpdater.autoDownload = false
+  // autoUpdater.logger = SysLog
+  // autoUpdater.logger.transports.file.level = 'info'
+  // autoUpdater.autoDownload = false
 
-  if (process.env.NODE_ENV === 'development') {
-    //autoUpdater.updateConfigPath = path.resolve('./app/dev-app-update.yml')
-  }
+  // if (process.env.NODE_ENV === 'development') {
+  //   //autoUpdater.updateConfigPath = path.resolve('./app/dev-app-update.yml')
+  // }
 
-  autoUpdater.on('checking-for-update', () => {
-    mainWindow.send('APP/UPDATECHECK', { message: 'Checking for update...' })
-  })
+  // autoUpdater.on('checking-for-update', () => {
+  //   mainWindow.send('APP/UPDATECHECK', { message: 'Checking for update...' })
+  // })
 
-  autoUpdater.on('update-available', (ev, info) => {
-    console.log(info)
-    mainWindow.send('APP/UPDATEAVAILABLE', info)
-  })
+  // autoUpdater.on('update-available', (ev, info) => {
+  //   console.log(info)
+  //   mainWindow.send('APP/UPDATEAVAILABLE', info)
+  // })
 
-  autoUpdater.on('update-not-available', (ev, info) => {
-    mainWindow.send('APP/UPDATENOTAVAILABLE', info)
-  })
+  // autoUpdater.on('update-not-available', (ev, info) => {
+  //   mainWindow.send('APP/UPDATENOTAVAILABLE', info)
+  // })
 
-  autoUpdater.on('error', (ev, err) => {
-    mainWindow.send('APP/UPDATEERROR', err)
-  })
+  // autoUpdater.on('error', (ev, err) => {
+  //   mainWindow.send('APP/UPDATEERROR', err)
+  // })
 
-  autoUpdater.on('download-progress', (ev, progressObj) => {
-    mainWindow.send('APP/UPDATEDOWNLOADPROGRESS', progressObj)
-  })
+  // autoUpdater.on('download-progress', (ev, progressObj) => {
+  //   mainWindow.send('APP/UPDATEDOWNLOADPROGRESS', progressObj)
+  // })
 
-  autoUpdater.on('update-downloaded', (ev, info) => {
-    mainWindow.send('APP/UPDATEDOWNLOADED', info)
+  // autoUpdater.on('update-downloaded', (ev, info) => {
+  //   mainWindow.send('APP/UPDATEDOWNLOADED', info)
 
-    setTimeout(() => {
-      autoUpdater.quitAndInstall()
-    }, 5000)
-  })
+  //   setTimeout(() => {
+  //     autoUpdater.quitAndInstall()
+  //   }, 5000)
+  // })
 
   if (process.platform === 'darwin') {
     template = [

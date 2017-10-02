@@ -176,9 +176,6 @@ class ConfigScreen extends PureComponent {
     return (
       <main>
         <Tabs className={Styles.ConfigScreen}>
-          <OnlyIf test={!this.props.testRpcState.testRpcServerRunning}>
-            <img src={GanacheLogo} width={'100px'} height={'100px'} />
-          </OnlyIf>
           <Tabs.TabHeader>
             <Tabs.TabList className={Styles.ConfigTabs}>
               {this._renderConfigTabs()}

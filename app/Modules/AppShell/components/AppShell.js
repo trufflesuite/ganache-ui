@@ -7,7 +7,6 @@ import TestRPCProvider from 'Data/Providers/TestRPCProvider'
 import SettingsProvider from 'Data/Providers/SettingsProvider'
 import ConsoleProvider from 'Data/Providers/ConsoleProvider'
 
-import WindowControls from './WindowControls'
 import TopNavbar from './TopNavbar'
 import OnlyIf from 'Elements/OnlyIf'
 
@@ -126,7 +125,6 @@ class AppShell extends Component {
 
     return (
       <div className={Styles.AppShell}>
-        <WindowControls />
         <TopNavbar {...this.props} />
 
         <div className={Styles.ShellContainer}>
