@@ -16,8 +16,6 @@ import GanacheScreen from './ConfigScreens/GanacheScreen'
 import GasScreen from './ConfigScreens/GasScreen'
 import LoggingScreen from './ConfigScreens/LoggingScreen'
 import ForkingScreen from './ConfigScreens/ForkingScreen'
-
-import GanacheLogo from 'Resources/logo.png'
 import RestartIcon from 'Icons/eject.svg'
 
 import Styles from './ConfigScreen.css'

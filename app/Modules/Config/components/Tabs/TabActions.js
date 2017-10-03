@@ -4,7 +4,7 @@ import Styles from './Tabs.css'
 
 const Component = ({ children }) => {
   return (
-    <div>
+    <div className={Styles.ConfigTabAction}>
       {children}
     </div>
   )
