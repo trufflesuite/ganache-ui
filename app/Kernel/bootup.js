@@ -20,7 +20,7 @@ export default async function (app, done, error) {
   // Modules
   app.register(AppShell)
   app.register(Config)
-  app.register(Accounts)
+  app.register(Accounts) 
   app.register(Blocks)
   app.register(Transactions)
   app.register(Console)

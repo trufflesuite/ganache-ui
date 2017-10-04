@@ -92,8 +92,8 @@ class AppShell extends Component {
         : null
     })
 
-    setInterval(this.props.appGetBlockChainState, 1000)
-    setInterval(this.props.appGetConsoleMessages, 1500)
+    // setInterval(this.props.appGetBlockChainState, 1000)
+    // setInterval(this.props.appGetConsoleMessages, 1500)
   }
 
   renderClonedChildrenWithPropsAndPathKey = (children, props, pathNameKey) => {

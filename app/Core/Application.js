@@ -4,12 +4,29 @@ import EventEmitter from 'events'
 
 import { combineReducers } from 'redux'
 import { Provider } from 'react-redux'
-import { Router } from 'react-router'
+import { Router, Route, IndexRoute } from 'react-router'
 
 import { routerReducer } from 'react-router-redux'
 
 import createStore from 'Kernel/createStore'
 import syncStore from 'Kernel/syncStore'
+
+import AppShell from 'Modules/AppShell/components/AppShell'
+import ConfigScreen from 'Modules/Config/components/ConfigScreen'
+import Accounts from 'Modules/Accounts/components/Accounts'
+
+import Blocks from 'Modules/Blocks/components/Blocks'
+import BlocksContainer from 'Modules/Blocks/components/BlocksContainer'
+import RecentBlocks from 'Modules/Blocks/components/blocks/RecentBlocks'
+import BlockCard from 'Modules/Blocks/components/blocks/BlockCard'
+
+import TransactionsContainer from 'Modules/Transactions/components/TransactionsContainer'
+import RecentTxs from 'Modules/Transactions/components/txs/RecentTxs'
+import TransactionCard from 'Modules/Transactions/components/txs/TxCard'
+
+import Console from 'Modules/Console/components/Console'
+import AppUpdateScreen from 'Modules/AppUpdate/components/AppUpdateScreen'
+import FirstRunScreen from 'Modules/FirstRun/components/FirstRunScreen'
 
 class Application extends EventEmitter {
   constructor (name) {
@@ -111,7 +128,21 @@ class Application extends EventEmitter {
     ReactDOM.render(
       <Provider store={this.store}>
         <Router history={this.history}>
-          {this.resolveRoutes()}
+          <Route path='/app_update' component={props => <AppUpdateScreen {...props} />} />
+          <Route path="/" component={AppShell}>
+            <Route path="/first_run" component={props => <FirstRunScreen {...props} />}/>
+            <Route path='/accounts' component={props => <Accounts {...props} appServices={this.appServices} />} />
+            <Route path="blocks" component={BlocksContainer}>
+              <IndexRoute component={RecentBlocks} />
+              <Route path=":block_number" component={BlockCard} />
+            </Route>
+            <Route path="transactions" component={TransactionsContainer} >
+              <IndexRoute component={RecentTxs} />
+              <Route path=":txhash" component={TransactionCard} />
+            </Route>
+            <Route path="/console" component={props => <Console {...props} appServices={this.appServices} />} />
+            <Route path='/config' component={props => <ConfigScreen {...props} />} />
+          </Route>
         </Router>
       </Provider>,
       root
