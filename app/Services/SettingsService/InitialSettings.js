@@ -7,6 +7,7 @@ export default {
     hostname: "localhost",
     port: 7545,
     network_id: 5777,
-    total_accounts: 10
+    total_accounts: 10,
+    unlocked_accounts: []
   }
 }

@@ -9,7 +9,7 @@ export default function validateChange (VALIDATIONS, component, e) {
   let hasValidationError = false
 
   if (validation.canBeBlank && value === '') {
-    component.props.handleInputChange(e)
+    component.handleInputChange(e)
     return true
   }
 
@@ -41,11 +41,15 @@ export default function validateChange (VALIDATIONS, component, e) {
       hasValidationError || parseInt(value, 10) > validation.max
   }
 
+  var validationErrors = component.state.validationErrors
+
+  validationErrors[name] = hasValidationError
+
   component.setState({
-    [`${name}ValidationError`]: hasValidationError
+    validationErrors: validationErrors
   })
 
-  component.props.handleInputChange(e)
+  component.handleInputChange(e)
 
   return !hasValidationError
 }

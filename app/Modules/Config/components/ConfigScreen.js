@@ -21,6 +21,8 @@ import ForkingScreen from './ConfigScreens/ForkingScreen'
 import RestartIcon from 'Icons/restart.svg'
 import EjectIcon from 'Icons/eject.svg';
 
+import executeValidations from './Validator'
+
 import Styles from './ConfigScreen.css'
 
 class ConfigScreen extends PureComponent {
@@ -82,7 +84,7 @@ class ConfigScreen extends PureComponent {
     })
   }
 
-  _handleInputChange = event => {
+  handleInputChange = event => {
     const target = event.target
     const value = target.type === 'checkbox' ? target.checked : target.value
     const name = target.name
@@ -112,27 +114,35 @@ class ConfigScreen extends PureComponent {
     })
   }
 
-  onNotifyValidationError = name => {
-    this.setState((oldState, props) => {
-      return {
-        validationErrors: {
-          [`${name}`]: true
-        }
-      }
+  onNotifyValidationError = (name) => {
+    var validationErrors = this.state.validationErrors;
+
+    validationErrors[name] = true
+
+    this.setState({
+      validationErrors: validationErrors
     })
   }
 
-  onNotifyValidationsPassed = () => {
-    this.setState((oldState, props) => {
-      return {
-        validationErrors: {
-          [`${name}`]: false
-        }
-      }
+  onNotifyValidationsPassed = (name) => {
+    var validationErrors = this.state.validationErrors;
+    
+    validationErrors[name] = false
+
+    this.setState({
+      validationErrors: validationErrors
     })
+  }
+
+  validateChange = (e, validations) => {
+    executeValidations(validations, this, e)
+      ? this.onNotifyValidationsPassed(e.target.name)
+      : this.onNotifyValidationError(e.target.name)
   }
 
   invalidConfig = () => {
+    console.log(this.state.validationErrors)
+
     let hasValidationErrors = false
     for (let key of Object.keys(this.state.validationErrors)) {
       hasValidationErrors =
@@ -182,17 +192,16 @@ class ConfigScreen extends PureComponent {
             <Tabs.TabPanel>
               <ServerScreen
                 settings={this.state.settings}
-                handleInputChange={this._handleInputChange}
-                onNotifyValidationError={this.onNotifyValidationError}
-                onNotifyValidationsPassed={this.onNotifyValidationsPassed}
-                reloadState={this.reloadState}
+                handleInputChange={this.handleInputChange}
+                validateChange={this.validateChange}
+                validationErrors={this.state.validationErrors}
               />
             </Tabs.TabPanel>
 
             <Tabs.TabPanel>
               <AccountsScreen
                 settings={this.state.settings}
-                handleInputChange={this._handleInputChange}
+                handleInputChange={this.handleInputChange}
                 onNotifyValidationError={this.onNotifyValidationError}
                 onNotifyValidationsPassed={this.onNotifyValidationsPassed}
               />
@@ -201,7 +210,7 @@ class ConfigScreen extends PureComponent {
             <Tabs.TabPanel>
               <GasScreen
                 settings={this.state.settings}
-                handleInputChange={this._handleInputChange}
+                handleInputChange={this.handleInputChange}
                 onNotifyValidationError={this.onNotifyValidationError}
                 onNotifyValidationsPassed={this.onNotifyValidationsPassed}
               />
@@ -210,7 +219,7 @@ class ConfigScreen extends PureComponent {
             <Tabs.TabPanel>
               <MnemonicScreen
                 settings={this.state.settings}
-                handleInputChange={this._handleInputChange}
+                handleInputChange={this.handleInputChange}
                 onNotifyValidationError={this.onNotifyValidationError}
                 onNotifyValidationsPassed={this.onNotifyValidationsPassed}
               />
@@ -219,7 +228,7 @@ class ConfigScreen extends PureComponent {
             <Tabs.TabPanel>
               <LoggingScreen
                 settings={this.state.settings}
-                handleInputChange={this._handleInputChange}
+                handleInputChange={this.handleInputChange}
                 onNotifyValidationError={this.onNotifyValidationError}
                 onNotifyValidationsPassed={this.onNotifyValidationsPassed}
               />
@@ -228,7 +237,7 @@ class ConfigScreen extends PureComponent {
             <Tabs.TabPanel>
               <ForkingScreen
                 settings={this.state.settings}
-                handleInputChange={this._handleInputChange}
+                handleInputChange={this.handleInputChange}
                 onNotifyValidationError={this.onNotifyValidationError}
                 onNotifyValidationsPassed={this.onNotifyValidationsPassed}
               />
@@ -237,7 +246,7 @@ class ConfigScreen extends PureComponent {
             <Tabs.TabPanel>
               <GanacheScreen
                 settings={this.state.settings}
-                handleInputChange={this._handleInputChange}
+                handleInputChange={this.handleInputChange}
                 onNotifyValidationError={this.onNotifyValidationError}
                 onNotifyValidationsPassed={this.onNotifyValidationsPassed}
               />

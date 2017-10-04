@@ -22,10 +22,11 @@ class AppUpdateScreen extends Component {
 
   componentWillReceiveProps (nextProps) {
     if (this.state.timeoutStarted == false) {
-      setTimeout(() => {
-        hashHistory.push('/first_run')
-      }, 3000)
-      this.setState({timeoutStarted: true})
+      this.setState({timeoutStarted: true}, function() {
+        setTimeout(() => {
+          hashHistory.push('/first_run')
+        }, 3000)
+      })
     }
   }
 

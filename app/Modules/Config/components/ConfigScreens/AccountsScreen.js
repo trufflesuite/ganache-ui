@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 
 import Styles from '../ConfigScreen.css'
 
-import executeValidations from './Validator'
-
 const VALIDATIONS = {
   "server.total_accounts": {
     allowedChars: /^\d*$/,
@@ -17,7 +15,8 @@ class AccountsScreen extends Component {
     super(props)
 
     this.state = {
-      totalAccountsValidationError: false
+      accountsLocked: props.settings.server.unlocked_accounts.length > 0,
+      validationErrors: {}
     }
   }
 
@@ -28,8 +27,22 @@ class AccountsScreen extends Component {
   }
 
   toggleAccountsLocked = () => {
+    var toggleState = !this.state.accountsLocked
+    var unlocked_accounts = this.props.settings.server.unlocked_accounts
+    var total_accounts = this.props.settings.server.total_accounts
+
+    if (toggleState == true) {
+      this.props.settings.server.unlocked_accounts = new Array(total_accounts)
+
+      for (var i = 0; i < total_accounts; i++) {
+        this.props.settings.server.unlocked_accounts[i] = i
+      }
+    } else {
+      this.props.settings.server.unlocked_accounts = []
+    }
+
     this.setState({
-      accountsLocked: !this.state.accountsLocked
+      accountsLocked: toggleState
     })
   }
 
@@ -44,15 +57,11 @@ class AccountsScreen extends Component {
               <input
                 name="server.total_accounts"
                 type="text"
-                className={
-                  this.state.totalAccountsValidationError &&
-                  Styles.ValidationError
-                }
                 value={this.props.settings.server.total_accounts}
                 onChange={this.validateChange}
               />
-              {this.state.totalAccountsValidationError &&
-                <p>The number of accounts must be &gt; 1 and &lt; 100</p>}
+              {this.state.validationErrors["server.total_accounts"] &&
+                <p className={Styles.ValidationError}>Must be &gt; {VALIDATIONS["server.total_accounts"].min} and &lt; {VALIDATIONS["server.total_accounts"].max}</p>}
             </div>
             <div className={Styles.RowItem}>
               <p>Total number of Accounts to create and pre-fund.</p>

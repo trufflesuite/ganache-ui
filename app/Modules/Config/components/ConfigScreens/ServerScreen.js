@@ -5,7 +5,6 @@ import OnlyIf from 'Elements/OnlyIf'
 
 import Styles from '../ConfigScreen.css'
 
-import executeValidations from './Validator'
 
 const VALIDATIONS = {
   "server.hostname": {
@@ -19,8 +18,7 @@ const VALIDATIONS = {
   "server.network_id": {
     allowedChars: /^\d*$/,
     min: 1,
-    max: Number.MAX_SAFE_INTEGER,
-    canBeBlank: true
+    max: Number.MAX_SAFE_INTEGER
   },
   "server.blocktime": {
     allowedChars: /^\d*$/,
@@ -35,17 +33,8 @@ class ServerScreen extends Component {
     super(props)
 
     this.state = {
-      hostNameValidationError: false,
-      portNumberValidationError: false,
-      networkIdValidationError: false,
       automine: typeof props.settings.server.blocktime == "undefined" 
     }
-  }
-
-  validateChange = e => {
-    executeValidations(VALIDATIONS, this, e)
-      ? this.props.onNotifyValidationsPassed(e.target.name)
-      : this.props.onNotifyValidationError(e.target.name)
   }
 
   toggleAutomine = () => {
@@ -69,6 +58,10 @@ class ServerScreen extends Component {
     })
   }
 
+  validateChange = (e) => {
+    this.props.validateChange(e, VALIDATIONS)
+  }
+
   render () {
     const { ganachePortStatus } = this.props.testRpcState
     const portIsBlocked =
@@ -88,14 +81,11 @@ class ServerScreen extends Component {
               <input
                 type="text"
                 name="server.hostname"
-                className={
-                  this.state.hostNameValidationError && Styles.ValidationError
-                }
                 value={this.props.settings.server.hostname}
                 onChange={this.validateChange}
               />
-              {this.state.hostNameValidationError &&
-                <p>The host must be a valid IP address.</p>}
+              {this.props.validationErrors["server.hostname"] &&
+                <p className={Styles.ValidationError}>Must be a valid IP address or "localhost"</p>}
             </div>
             <div className={Styles.RowItem}>
               <p>
@@ -112,9 +102,6 @@ class ServerScreen extends Component {
               <input
                 type="text"
                 name="server.port"
-                className={
-                  this.state.portNumberValidationError && Styles.ValidationError
-                }
                 value={this.props.settings.server.port}
                 onChange={e => {
                   this.props.appCheckPort(e.target.value)
@@ -122,13 +109,12 @@ class ServerScreen extends Component {
                 }}
               />
 
-              {this.state.portNumberValidationError &&
-                <p>The port number must be &gt; 1000 and &lt; 65535.</p>}
+              {this.props.validationErrors["server.port"] &&
+                <p className={Styles.ValidationError}>Must be &gt; 1000 and &lt; 65535.</p>}
 
               <OnlyIf test={portIsBlocked}>
-                <strong className={Styles.PortAlert}>
-                  <b>WARNING!</b> Ganache cannot start on this port because
-                  there is already a process "<b>
+                <strong className={Styles.ValidationError}>
+                  <b>WARNING!</b> Port is already in use by "<b>
                     {portIsBlocked && ganachePortStatus.pid[0].name}
                   </b>" with PID{' '}
                   <b>{portIsBlocked && ganachePortStatus.pid[0].pid}</b> running
@@ -151,16 +137,12 @@ class ServerScreen extends Component {
               <input
                 type="text"
                 name="server.network_id"
-                className={
-                  this.state.networkIdValidationError && Styles.ValidationError
-                }
                 value={this.props.settings.server.network_id}
                 onChange={this.validateChange}
               />
-              {this.state.networkIdValidationError &&
-                <p>
-                  The Network ID can be blank, or must be &gt; 1 and &lt;{' '}
-                  {Number.MAX_SAFE_INTEGER}.
+              {this.props.validationErrors["server.network_id"] &&
+                <p className={Styles.ValidationError}>
+                  Must be &gt; 1
                 </p>}
             </div>
             <div className={Styles.RowItem}>
@@ -205,8 +187,8 @@ class ServerScreen extends Component {
                   value={this.props.settings.server.blockTime}
                   onChange={this.validateChange}
                 />
-                {this.state.blockTimeValidationError &&
-                  <p>The Mining Time must be &gt; 1 and &lt; 200.</p>}
+                {this.props.validationErrors["server.blocktime"] &&
+                  <p className={Styles.ValidationError}>Must be &gt; 1 and &lt; 200</p>}
               </div>
               <div className={Styles.RowItem}>
                 <p>

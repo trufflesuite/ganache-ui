@@ -1,5 +1,6 @@
-import initalSettings from './SettingsService/InitialSettings'
+import initialSettings from './SettingsService/InitialSettings'
 import uuid from 'uuid'
+import _ from 'lodash'
 
 const settings = require('electron-settings');
 
@@ -34,11 +35,19 @@ class Settings {
   bootstrap () {
     if (settings.get("uuid") == null) {
       // Remember: setAll replaces what's there.
-      settings.setAll(initalSettings);
+      settings.setAll(initialSettings);
 
-      // Set a specific uuid if unset.
-      this.set('uuid', this.get('uuid', uuid.v4())) 
+      // Set a specific uuid.
+      this.set('uuid', uuid.v4()) 
     }
+
+    // Ensure new settings variables get added by merging
+    // all the settings, where the current values take precedence. 
+    var currentSettings = settings.getAll();
+    var allSettings = _.merge({}, initialSettings, currentSettings)
+
+    // Apply the merged settings
+    this.setAll(allSettings);
   }
 }
 

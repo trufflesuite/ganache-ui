@@ -4,8 +4,6 @@ import SettingsProvider from 'Data/Providers/SettingsProvider'
 
 import Styles from '../ConfigScreen.css'
 
-import executeValidations from './Validator'
-
 const VALIDATIONS = {
   gasPrice: {
     allowedChars: /^\d*$/,

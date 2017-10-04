@@ -81,18 +81,6 @@ main {
     margin-bottom: 2rem;
   }
 
-  .ConfigHeader {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    width: 80%;
-    margin-top: 4rem;
-
-    > button {
-      margin-bottom: 1rem;
-    }
-  }
-
   .ConfigTabs {
     display: flex;
     align-items: center;
@@ -153,14 +141,17 @@ main {
       border-color: var(--app-navbar-text);
       width: 100%;
     }
-  }
-}
 
-.PortAlert {
-  background-color: #ffd5d5;
-  display: block;
-  padding: .5rem;
-  font-size: 14px;
+    .ValidationError {
+      background-color: var(--primary-color);
+      color: white;
+      display: block;
+      padding: .5rem;
+      font-size: 14px;
+      border-bottom-left-radius: 5px;
+      border-bottom-right-radius: 5px;
+    }
+  }
 }
 
 .UpdateNotice {
