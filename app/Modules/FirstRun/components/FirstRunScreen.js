@@ -2,6 +2,9 @@ import React, { Component } from 'react'
 
 import { hashHistory } from 'react-router'
 import TestRPCProvider from 'Data/Providers/TestRPCProvider'
+import SettingsProvider from 'Data/Providers/SettingsProvider'
+
+import GanacheLogo from 'Resources/logo.png'
 
 import Styles from './FirstRunScreen.css'
 
@@ -11,6 +14,13 @@ class FirstRunScreen extends Component {
 
     this.state = {
       enableAnalytics: true
+    }
+  }
+
+  componentWillReceiveProps (nextProps) {
+    if (this.props.settings.firstRun === false) {
+      //hashHistory.push("/accounts")
+      hashHistory.push("/config")
     }
   }
 
@@ -32,7 +42,7 @@ class FirstRunScreen extends Component {
       })
       .then(this.props.appGetSettings)
       .then(() => {
-        hashHistory.push('/config')
+        hashHistory.push('/accounts')
       })
   }
 
@@ -42,47 +52,51 @@ class FirstRunScreen extends Component {
         <div className={Styles.Card}>
           <div className={Styles.MainContent}>
             <div className={Styles.LeftColumn}>
-              <h1>SUPPORT THE DEVELOPMENT OF GANACHE</h1>
-              <i>This is the only time you will see this screen.</i>
+            <div   className={Styles.Logo}>
+                <img src={GanacheLogo} width={'64px'} height={'64px'} />
+              </div>
+              <h1>
+                SUPPORT GANACHE
+              </h1>
               <p>
-                Like many Open Source projects, we use Google Analytics to track
-                a handful of gross aggregate user activities. This helps us
-                prioritize where to work, and gives metrics to support the
-                further application of developer resources to move this project
-                forward.
+                Ganache includes Google Analytics tracking to help us better understand 
+                how you use Ganache during your normal development practices. You can
+                opt-out of this tracking by selecting the option below.
               </p>
               <p>
-                By enabling this feature, you give back to the development team
-                by providing us with valuable metrics that guide our time and
-                priorities, and allow us to analyze usage patterns.
+                By enabling this feature, you provide the Truffle team
+                with valuable metrics, allowing us to better analyze usage
+                patterns and add new features and bug fixes faster.
               </p>
-              <p>If you choose to participate, we thank you greatly.</p>
-
-              <i>The Truffle Team</i>
+              <p>
+                Thanks for your help, and happy coding! 
+              </p>
+              <p>
+                <i>-- The Truffle Team</i>
+              </p>
             </div>
             <div className={Styles.RightColumn}>
+              <h1>&nbsp;</h1>
               <h4>WHAT WE TRACK</h4>
               <ul className={Styles.MetricList}>
                 <li>
-                  A unique UUID generated the first time Ganache is started
+                  <span>A unique UUID generated upon first use</span>
                 </li>
-                <li>Screen and window width and height</li>
-                <li>The version of Ganache being used</li>
-                <li>Exception messages (without paths)</li>
-                <li>The current screen/tab navigated to</li>
+                <li><span>Window width and height</span></li>
+                <li><span>Ganache version</span></li>
+                <li><span>Exception messages (without paths)</span></li>
+                <li><span>Screens viewed during use</span></li>
               </ul>
 
               <strong className={Styles.Covenant}>
-                At no time do we collect anything more, or anything that would
-                be identifiable or sensitive in nature.
+                We do not collect addresses or private keys.
               </strong>
             </div>
           </div>
-          <hr className={Styles.Rule} />
+          <div className={Styles.Rule} />
           <div className={Styles.Footer}>
             <div className={Styles.Control}>
-              <h4>PARTICIPATE IN ANALYTICS</h4>
-
+              
               <div className="Switch">
                 <input
                   type="checkbox"
@@ -92,10 +106,10 @@ class FirstRunScreen extends Component {
                   onChange={this._handleInputChange}
                   checked={this.state.enableAnalytics}
                 />
-                <label htmlFor="EnableAnalytics">ENABLE ANALYTICS</label>
+                <label htmlFor="EnableAnalytics" className={Styles.SwitchLabel}>ENABLE ANALYTICS</label>
                 {this.state.enableAnalytics
-                  ? <i>Thank You :)</i>
-                  : <i>You can always opt-in later via the Settings tab.</i>}
+                  ? <span>Analytics enabled. Thanks!</span>
+                  : <span>You've opted out. You can always opt-in later via the Settings tab. </span>}
               </div>
             </div>
             <button className="btn btn-primary" onClick={this._recordChoice}>
@@ -108,4 +122,4 @@ class FirstRunScreen extends Component {
   }
 }
 
-export default TestRPCProvider(FirstRunScreen)
+export default SettingsProvider(TestRPCProvider(FirstRunScreen))

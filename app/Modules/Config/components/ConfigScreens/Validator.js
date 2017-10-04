@@ -2,7 +2,7 @@ export default function validateChange (VALIDATIONS, component, e) {
   const name = e.target.name
   const value = e.target.value
 
-  console.log(name, value)
+  console.log("Validate:", name, value)
 
   const validation = VALIDATIONS[name]
 

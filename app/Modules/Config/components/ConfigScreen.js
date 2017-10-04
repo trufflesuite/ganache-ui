@@ -1,5 +1,7 @@
 import URL from 'url'
 import React, { PureComponent } from 'react'
+import { hashHistory } from 'react-router'
+import _ from 'lodash'
 
 import TestRPCProvider from 'Data/Providers/TestRPCProvider'
 import SettingsProvider from 'Data/Providers/SettingsProvider'
@@ -16,64 +18,24 @@ import GanacheScreen from './ConfigScreens/GanacheScreen'
 import GasScreen from './ConfigScreens/GasScreen'
 import LoggingScreen from './ConfigScreens/LoggingScreen'
 import ForkingScreen from './ConfigScreens/ForkingScreen'
-import RestartIcon from 'Icons/eject.svg'
+import RestartIcon from 'Icons/restart.svg'
+import EjectIcon from 'Icons/eject.svg';
 
 import Styles from './ConfigScreen.css'
-
-const DEFAULT_STATE = {
-  specificTime: false,
-  opcodeDebug: false,
-  automnemonic: true,
-  automine: true,
-  accountsLocked: false,
-  forkChain: false,
-  verboseLogging: false,
-  googleAnalyticsTracking: false,
-  cpuAndMemoryProfiling: false,
-  settingsDirty: false,
-  isStartDisabled: false,
-  portNumber: 8545,
-  blockTime: 1,
-  time: null,
-  fork: '',
-  seedDataValue: '',
-  mnemonicValue: '',
-  seed: null,
-  totalAccounts: 10,
-  secure: false,
-  hostName: process.platform === 'darwin' ? '0.0.0.0' : 'localhost',
-  networkId: '',
-  gasPrice: 20000000000,
-  gasLimit: 4712388,
-  validationErrors: {}
-}
 
 class ConfigScreen extends PureComponent {
   constructor (props) {
     super(props)
 
-    this.state = DEFAULT_STATE
+    this.state = {
+      settings: _.cloneDeep(props.settings),
+      validationErrors: {}
+    }
   }
 
   componentDidMount () {
     this.props.appCheckPort(this.state.portNumber)
-    this.props.appGetSettings()
-
-    if (this.props.testRpcState.testRpcServerRunning) {
-      this.setState({
-        hostName: this.props.testRpcState.host,
-        portNumber: this.props.testRpcState.port,
-        networkId: this.props.testRpcState.networkId,
-        automine: !this.props.testRpcState.isMiningOnInterval,
-        gasLimit: this.props.testRpcState.gasLimit,
-        gasPrice: this.props.testRpcState.gasPrice,
-        totalAccounts: this.props.testRpcState.totalAccounts,
-        blockTime:
-          this.props.testRpcState.blocktime !== 'Automining'
-            ? this.props.testRpcState.blocktime
-            : 1
-      })
-    }
+    //this.props.appGetSettings()
   }
 
   componentWillReceiveProps (nextProps) {
@@ -81,7 +43,7 @@ class ConfigScreen extends PureComponent {
 
     Object.keys(nextProps.settings).map(key => {
       if (
-        !this.state.settingsDirty &&
+        !this.isDirty() &&
         nextProps.settings[key] !== this.state[key]
       ) {
         console.log(`${key} = ${nextProps.settings[key]}`)
@@ -92,6 +54,14 @@ class ConfigScreen extends PureComponent {
     if (Object.keys(newSettings).length > 0) {
       this.setState(newSettings)
     }
+  }
+
+  isDirty () {
+    return _.isEqual(this.state.settings, this.props.settings)
+  }
+
+  handleCancelPressed () {
+    hashHistory.pop();
   }
 
   _renderConfigTabs = () => {
@@ -117,21 +87,29 @@ class ConfigScreen extends PureComponent {
     const value = target.type === 'checkbox' ? target.checked : target.value
     const name = target.name
 
-    this.setState({
-      [name]: value,
-      settingsDirty: true
-    })
+    var settings = this.state.settings
+    var keys = name.split(".")
+    var parent = this.state.settings
 
-    // Handle settings that the user might reasonably expect to persist regardless
-    // of starting / restarting the app
-
-    const realtimeToggles = ['googleAnalyticsTracking', 'cpuAndMemoryProfiling']
-
-    if (realtimeToggles.indexOf(name) > -1) {
-      this.props.appSetSettings({
-        [name]: value
-      })
+    while (keys.length > 1) {
+      var key = keys.shift()
+      parent = parent[key];
     }
+
+    if (keys.length != 1) {
+      throw new Error("Unknown input name or key state; " + name)
+    }
+
+    // There should be one key remaining
+    parent[keys[0]] = value
+
+    this.reloadState()
+  }
+
+  reloadState() {
+    this.setState({
+      settings: this.state.settings
+    })
   }
 
   onNotifyValidationError = name => {
@@ -179,6 +157,11 @@ class ConfigScreen extends PureComponent {
               {this._renderConfigTabs()}
             </Tabs.TabList>
             <Tabs.TabActions>
+              <button className="btn btn-primary" onClick={hashHistory.goBack}>
+                <Icon glyph={EjectIcon} size={18} />
+
+                CANCEL
+              </button>
               <button
                 className="btn btn-primary"
                 onClick={this._startTestRpc}
@@ -190,9 +173,7 @@ class ConfigScreen extends PureComponent {
               >
                 <Icon glyph={RestartIcon} size={18} />
 
-                {this.props.testRpcState.testRpcServerRunning
-                  ? 'RESTART GANACHE'
-                  : 'START GANACHE'}
+                { 'RESTART '}
               </button>
             </Tabs.TabActions>
           </Tabs.TabHeader>
@@ -200,16 +181,17 @@ class ConfigScreen extends PureComponent {
           <Tabs.TabPanels className={Styles.ConfigCard}>
             <Tabs.TabPanel>
               <ServerScreen
-                formState={this.state}
+                settings={this.state.settings}
                 handleInputChange={this._handleInputChange}
                 onNotifyValidationError={this.onNotifyValidationError}
                 onNotifyValidationsPassed={this.onNotifyValidationsPassed}
+                reloadState={this.reloadState}
               />
             </Tabs.TabPanel>
 
             <Tabs.TabPanel>
               <AccountsScreen
-                formState={this.state}
+                settings={this.state.settings}
                 handleInputChange={this._handleInputChange}
                 onNotifyValidationError={this.onNotifyValidationError}
                 onNotifyValidationsPassed={this.onNotifyValidationsPassed}
@@ -218,7 +200,7 @@ class ConfigScreen extends PureComponent {
 
             <Tabs.TabPanel>
               <GasScreen
-                formState={this.state}
+                settings={this.state.settings}
                 handleInputChange={this._handleInputChange}
                 onNotifyValidationError={this.onNotifyValidationError}
                 onNotifyValidationsPassed={this.onNotifyValidationsPassed}
@@ -227,7 +209,7 @@ class ConfigScreen extends PureComponent {
 
             <Tabs.TabPanel>
               <MnemonicScreen
-                formState={this.state}
+                settings={this.state.settings}
                 handleInputChange={this._handleInputChange}
                 onNotifyValidationError={this.onNotifyValidationError}
                 onNotifyValidationsPassed={this.onNotifyValidationsPassed}
@@ -236,7 +218,7 @@ class ConfigScreen extends PureComponent {
 
             <Tabs.TabPanel>
               <LoggingScreen
-                formState={this.state}
+                settings={this.state.settings}
                 handleInputChange={this._handleInputChange}
                 onNotifyValidationError={this.onNotifyValidationError}
                 onNotifyValidationsPassed={this.onNotifyValidationsPassed}
@@ -245,7 +227,7 @@ class ConfigScreen extends PureComponent {
 
             <Tabs.TabPanel>
               <ForkingScreen
-                formState={this.state}
+                settings={this.state.settings}
                 handleInputChange={this._handleInputChange}
                 onNotifyValidationError={this.onNotifyValidationError}
                 onNotifyValidationsPassed={this.onNotifyValidationsPassed}
@@ -254,7 +236,7 @@ class ConfigScreen extends PureComponent {
 
             <Tabs.TabPanel>
               <GanacheScreen
-                formState={this.state}
+                settings={this.state.settings}
                 handleInputChange={this._handleInputChange}
                 onNotifyValidationError={this.onNotifyValidationError}
                 onNotifyValidationsPassed={this.onNotifyValidationsPassed}
@@ -264,65 +246,6 @@ class ConfigScreen extends PureComponent {
         </Tabs>
       </main>
     )
-  }
-
-  _startTestRpc = e => {
-    e.preventDefault()
-    this.setState({ isStartDisabled: true })
-
-    this.props.appSetSettings({
-      googleAnalyticsTracking: this.state.googleAnalyticsTracking,
-      cpuAndMemoryProfiling: this.state.cpuAndMemoryProfiling
-    })
-
-    let config = {
-      port: this.state.portNumber,
-      time: this.state.time,
-      gasPrice: parseInt(this.state.gasPrice, 10),
-      gasLimit: parseInt(this.state.gasLimit, 10),
-      blocktime: this.state.automine ? null : this.state.blockTime,
-      debug: this.state.opcodeDebug,
-      verbose: this.state.verboseLogging,
-      mnemonic: this.state.automnemonic
-        ? null
-        : this.state.mnemonicValue.toLowerCase(),
-      seed: this.state.seedDataValue !== '' ? this.state.seedDataValue : null,
-      total_accounts: this.state.totalAccounts,
-      secure: this.state.accountsLocked,
-      hostname: this.state.hostName,
-      network_id: this.state.networkId === '' ? null : this.state.networkId
-    }
-
-    Object.keys(config).forEach(key => {
-      !config[key] ? delete config[key] : null
-    })
-
-    this.state.automine && delete config['time']
-
-    if (this.state.fork !== '') {
-      var forkAddress, block
-      var split = this.state.fork.split('@')
-
-      forkAddress = split[0]
-
-      if (split.length > 1) {
-        block = split[1]
-      }
-
-      config = {
-        fork: forkAddress + (block != null ? '@' + block : ''),
-        port:
-          URL.parse(forkAddress).port === this.state.portNumber
-            ? parseInt(this.state.portNumber) + 1
-            : this.state.portNumber
-      }
-    }
-
-    if (this.props.testRpcState.testRpcServerRunning) {
-      this.props.appRestartRpcService(config).then(this.props.appGetSettings())
-    } else {
-      this.props.appStartRpcService(config)
-    }
   }
 }
 

@@ -35,6 +35,7 @@
     display: flex;
     align-items: center;
     font-size: 1.2vw;
+    line-height: 1.2vw;
 
     > div {
       margin-right: .5rem;
@@ -79,7 +80,7 @@
   justify-content: flex-end;
   flex-grow: 1;
   align-items: center;
-  padding-right: 1rem;
+  position: relative;
 
   input {
     justify-content: flex-end;
@@ -101,8 +102,7 @@
 
   > svg {
     position: absolute;
-    right: 16px;
-
+    right: 0px;
     color: var(--app-navbar-icon-color);
   }
 }

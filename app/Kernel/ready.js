@@ -8,13 +8,7 @@ export default async function (app, done, error) {
   app.store.dispatch(push('/app_update'))
 
   ipcRenderer.on('APP/TESTRPCSTARTED', (event, message) => {
-    new Notification('Ganache Started', {
-      body: 'Ganache Started',
-      silent: true
-    })
-
     app.store.dispatch({ type: 'APP/TESTRPCRUNNING', payload: message })
-    app.store.dispatch(push('/accounts'))
   })
 
   ipcRenderer.on('APP/FATALERROR', (event, message) => {

@@ -50,7 +50,13 @@
 }
 
 .ConfigTabAction {
-  margin-right: 4rem; 
+  margin-right: 3.5rem; 
+  display: flex;
+  justify-content: space-between;
+
+  > button {
+    margin-right: 0.5rem;
+  }
 }
 
 .ActiveTab {

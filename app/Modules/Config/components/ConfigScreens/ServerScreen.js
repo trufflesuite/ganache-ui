@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import TestRPCProvider from 'Data/Providers/TestRPCProvider'
-import SettingsProvider from 'Data/Providers/SettingsProvider'
 
 import OnlyIf from 'Elements/OnlyIf'
 
@@ -9,25 +8,25 @@ import Styles from '../ConfigScreen.css'
 import executeValidations from './Validator'
 
 const VALIDATIONS = {
-  hostName: {
-    format: /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/,
-    allowedChars: /^[\d*\.*]*$/
+  "server.hostname": {
+    format: /(localhost)|(\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b)/,
   },
-  portNumber: {
+  "server.port": {
     allowedChars: /^\d*$/,
     min: 1025,
     max: 65535
   },
-  networkId: {
+  "server.network_id": {
     allowedChars: /^\d*$/,
     min: 1,
     max: Number.MAX_SAFE_INTEGER,
     canBeBlank: true
   },
-  blockTime: {
+  "server.blocktime": {
     allowedChars: /^\d*$/,
     min: 1,
-    max: 200
+    max: 200,
+    canBeBlank: true
   }
 }
 
@@ -38,7 +37,8 @@ class ServerScreen extends Component {
     this.state = {
       hostNameValidationError: false,
       portNumberValidationError: false,
-      networkIdValidationError: false
+      networkIdValidationError: false,
+      automine: typeof props.settings.server.blocktime == "undefined" 
     }
   }
 
@@ -46,6 +46,27 @@ class ServerScreen extends Component {
     executeValidations(VALIDATIONS, this, e)
       ? this.props.onNotifyValidationsPassed(e.target.name)
       : this.props.onNotifyValidationError(e.target.name)
+  }
+
+  toggleAutomine = () => {
+    var newValue = !this.state.automine
+
+    // Remove blocktime value if we turn automine on
+    if (newValue == true) {
+      delete this.props.settings.server.blocktime
+
+      // Rerun validations now that value has been deleted
+      this.validateChange({
+        target: {
+          name: "server.blocktime",
+          value: ""
+        }
+      })
+    }
+
+    this.setState({
+      automine: !this.state.automine
+    })
   }
 
   render () {
@@ -66,11 +87,11 @@ class ServerScreen extends Component {
             <div className={Styles.RowItem}>
               <input
                 type="text"
-                name="hostName"
+                name="server.hostname"
                 className={
                   this.state.hostNameValidationError && Styles.ValidationError
                 }
-                value={this.props.formState.hostName}
+                value={this.props.settings.server.hostname}
                 onChange={this.validateChange}
               />
               {this.state.hostNameValidationError &&
@@ -78,11 +99,7 @@ class ServerScreen extends Component {
             </div>
             <div className={Styles.RowItem}>
               <p>
-                The server will accept connections on the unspecified IPv6
-                address (::) when IPv6 is available, or the unspecified IPv4
-                address ({process.platform === 'darwin'
-                  ? '0.0.0.0'
-                  : 'localhost'}) as default.
+                The server will accept RPC connections on the following host and port.
               </p>
             </div>
           </div>
@@ -94,11 +111,11 @@ class ServerScreen extends Component {
             <div className={Styles.RowItem}>
               <input
                 type="text"
-                name="portNumber"
+                name="server.port"
                 className={
                   this.state.portNumberValidationError && Styles.ValidationError
                 }
-                value={this.props.formState.portNumber}
+                value={this.props.settings.server.port}
                 onChange={e => {
                   this.props.appCheckPort(e.target.value)
                   this.validateChange(e)
@@ -121,8 +138,7 @@ class ServerScreen extends Component {
             </div>
             <div className={Styles.RowItem}>
               <p>
-                The port number is which port the RPC server will listen on.
-                Default is 8545.
+                &nbsp;
               </p>
             </div>
           </div>
@@ -134,11 +150,11 @@ class ServerScreen extends Component {
             <div className={Styles.RowItem}>
               <input
                 type="text"
-                name="networkId"
+                name="server.network_id"
                 className={
                   this.state.networkIdValidationError && Styles.ValidationError
                 }
-                value={this.props.formState.networkId}
+                value={this.props.settings.server.network_id}
                 onChange={this.validateChange}
               />
               {this.state.networkIdValidationError &&
@@ -149,9 +165,7 @@ class ServerScreen extends Component {
             </div>
             <div className={Styles.RowItem}>
               <p>
-                Specify the network id the Ganache will use to identify itself
-                (defaults to the current time or the network id of the forked
-                blockchain if configured)
+                Internal blockchain identifier of Ganache server.
               </p>
             </div>
           </div>
@@ -166,29 +180,29 @@ class ServerScreen extends Component {
                   type="checkbox"
                   name="automine"
                   id="Automine"
-                  onChange={this.props.handleInputChange}
-                  checked={this.props.formState.automine}
+                  onChange={this.toggleAutomine}
+                  checked={this.state.automine}
                 />
                 <label htmlFor="Automine">AUTOMINE ENABLED</label>
               </div>
             </div>
             <div className={Styles.RowItem}>
               <p>
-                Automining mines new blocks and transactions instantaneously.
+                Process transactions instantaneously.
               </p>
             </div>
           </div>
         </section>
 
-        <OnlyIf test={!this.props.formState.automine}>
+        <OnlyIf test={!this.state.automine}>
           <section>
             <h4>MINING BLOCK TIME (SECONDS)</h4>
             <div className={Styles.Row}>
               <div className={Styles.RowItem}>
                 <input
-                  name="blockTime"
+                  name="server.blocktime"
                   type="text"
-                  value={this.props.formState.blockTime}
+                  value={this.props.settings.server.blockTime}
                   onChange={this.validateChange}
                 />
                 {this.state.blockTimeValidationError &&
@@ -208,4 +222,4 @@ class ServerScreen extends Component {
   }
 }
 
-export default SettingsProvider(TestRPCProvider(ServerScreen))
+export default TestRPCProvider(ServerScreen)

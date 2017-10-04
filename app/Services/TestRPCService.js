@@ -13,7 +13,7 @@ export default class TestRPCService extends EventEmitter {
     this.webView = webView
     this.consoleService = consoleService
 
-    this.testRpc = null
+    this.server = null
     this.web3 = null
     this.host = null
     this.port = null
@@ -45,23 +45,23 @@ export default class TestRPCService extends EventEmitter {
   }
 
   initializeTestRpc = opts => {
-    if (this.testRpc) {
-      this.testRpc.close(err => {
+    if (this.server) {
+      this.server.close(err => {
         if (err) {
           console.log(err)
         }
 
-        this.testRpc = TestRPC.server(opts)
+        this.server = TestRPC.server(opts)
         this.startServer(opts)
       })
     } else {
-      this.testRpc = TestRPC.server(opts)
+      this.server = TestRPC.server(opts)
       this.startServer(opts)
     }
   }
 
   startServer = opts => {
-    this.testRpc.listen(opts.port, opts.hostname, async (err, stateManager) => {
+    this.server.listen(opts.port, opts.hostname, async (err, stateManager) => {
       if (err) {
         this.testRpcService.webView.send('APP/FAILEDTOSTART', err)
         console.log('ERR: ', err)
@@ -82,5 +82,9 @@ export default class TestRPCService extends EventEmitter {
       this.emit('testRpcServiceStarted', this)
       this.log(`GANACHE STARTED: LISTENING ON http://${this.host}:${this.port}`)
     })
+  }
+
+  isRunning = () => {
+    return !!this.server
   }
 }

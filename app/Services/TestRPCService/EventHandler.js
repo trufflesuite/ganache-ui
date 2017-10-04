@@ -11,7 +11,7 @@ export default class EventHandler {
 
     autobind(this)
 
-    this.testRpcService.ipcMain.on('APP/STARTRPC', this._handleStartTestRpc)
+    this.testRpcService.ipcMain.on('APP/STARTRPC', this._handleRestartTestRpc)
     this.testRpcService.ipcMain.on('APP/RESTARTRPC', this._handleRestartTestRpc)
     this.testRpcService.ipcMain.on(
       'APP/GETBLOCKCHAINSTATE',
@@ -123,7 +123,7 @@ export default class EventHandler {
   _handleStartTestRpc (event, arg) {
     arg.logger = this.testRpcService
 
-    if (this.testRpcService.testRpc) {
+    if (this.testRpcService.isRunning()) {
       console.log('TESTRPC ALREADY RUNNING ON PORT ' + arg.port)
       return
     }

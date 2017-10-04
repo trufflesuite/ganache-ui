@@ -132,6 +132,7 @@ export default class BlockFetcher {
     const currentBlockNumber = await this.getCurrentBlockNumber()
     let blocks = await this.getRecentBlocks(stateManager)
 
+    // This smells. Reaching deep into ganache-core code.
     const payload = {
       blocks,
       mnemonic: stateManager.mnemonic,
@@ -148,7 +149,7 @@ export default class BlockFetcher {
       snapshots: stateManager.snapshots,
       host: this.testRpcService.host,
       port: this.testRpcService.port,
-      dbPath: this.testRpcService.testRpc.db_path
+      dbPath: this.testRpcService.server.db_path
     }
 
     return payload

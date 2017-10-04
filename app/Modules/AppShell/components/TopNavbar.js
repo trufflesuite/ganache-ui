@@ -99,7 +99,7 @@ class TopNavbar extends Component {
 
   _renderMiningTime = () => {
     if (this.props.testRpcState.blocktime !== 'Automining') {
-      return `${this.props.testRpcState.blocktime} (SEC)`
+      return `${this.props.testRpcState.blocktime} SEC block time`
     } else {
       return 'Automining'
     }
@@ -174,10 +174,6 @@ class TopNavbar extends Component {
               <Icon glyph={ConsoleIcon} size={44} />
               Console
             </Link>
-            <Link to="config" activeClassName={Styles.Active}>
-              <Icon glyph={SettingsIcon} size={44} />
-              Settings
-            </Link>
           </div>
           <div className={Styles.SearchBar}>
             <input
@@ -190,14 +186,15 @@ class TopNavbar extends Component {
             />
             <Icon glyph={SearchIcon} size={16} />
           </div>
+          <div className={Styles.Menu}>
+            <Link to="config" activeClassName={Styles.Active}>
+              <Icon glyph={SettingsIcon} size={44} />
+            </Link>
+          </div>
         </main>
         <section className={Styles.StatusAndControls}>
           <div className={Styles.Status}>
             <StatusIndicator title="CURRENT BLOCK" value={blockNumber} />
-            <StatusIndicator
-              title="BLOCK INTERVAL TIME"
-              value={this._renderMiningTime()}
-            />
             <StatusIndicator title="GAS PRICE" value={gasPrice} />
             <StatusIndicator
               title="GAS LIMIT"
@@ -208,13 +205,13 @@ class TopNavbar extends Component {
               value={this.props.testRpcState.networkId}
             />
             <StatusIndicator
-              title="LISTENING ON"
+              title="RPC SERVER"
               value={`http://${this.props.testRpcState.host}:${this.props
                 .testRpcState.port}`}
             />
             <StatusIndicator
               title="MINING STATUS"
-              value={miningPaused ? 'STOPPED' : 'MINING'}
+              value={miningPaused ? 'STOPPED' : this._renderMiningTime()}
             >
               <OnlyIf test={isMining}>
                 <Spinner width={'30px'} height={'30px'} />

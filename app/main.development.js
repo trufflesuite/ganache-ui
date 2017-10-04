@@ -2,7 +2,6 @@ import { app, BrowserWindow, Menu, shell, ipcMain } from 'electron'
 import { autoUpdater } from 'electron-updater'
 import path from 'path'
 import SysLog from 'electron-log'
-import uuid from 'uuid'
 
 import TestRPCService from './Services/TestRPCService'
 import ConsoleService from './Services/ConsoleService'
@@ -13,11 +12,6 @@ let template
 let mainWindow = null
 let testRpcService = null
 let consoleService = null // eslint-disable-line
-
-global.Settings = new SettingsService()
-
-// Analytics Tracking Setup
-Settings.set('uuid', Settings.get('uuid', uuid.v4())) // eslint-disable-line
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support') // eslint-disable-line
@@ -74,7 +68,7 @@ const installExtensions = async () => {
   }
 }
 
-app.setName('GANACHE')
+app.setName('Ganache')
 
 const getIconPath = () => {
   return process.platform === 'win32'
@@ -89,6 +83,10 @@ if (process.platform === 'darwin') {
 app.on('ready', async () => {
   await installExtensions()
 
+  const Settings = new SettingsService() 
+  
+  Settings.bootstrap();
+  
   mainWindow = new BrowserWindow({
     show: false,
     minWidth: 1200,
@@ -108,11 +106,12 @@ app.on('ready', async () => {
     mainWindow.show()
     mainWindow.focus()
     mainWindow.setTitle('Ganache')
-    //autoUpdater.checkForUpdates()
-    mainWindow.send('APP/UPDATENOTAVAILABLE', {})
     
     // Remove the menu bar
     mainWindow.setMenu(null);
+
+    // Start the server immediately.
+    testRpcService.initializeTestRpc(Settings.get("server"))
   })
 
   mainWindow.on('closed', () => {

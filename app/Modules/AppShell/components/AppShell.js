@@ -128,17 +128,11 @@ class AppShell extends Component {
         <TopNavbar {...this.props} />
 
         <div className={Styles.ShellContainer}>
-          <CSSTransitionGroup
-            transitionName="fade"
-            transitionEnterTimeout={150}
-            transitionLeaveTimeout={150}
-          >
-            {this.renderClonedChildrenWithPropsAndPathKey(
-              this.props.children,
-              { ...this.props },
-              segment
-            )}
-          </CSSTransitionGroup>
+          {this.renderClonedChildrenWithPropsAndPathKey(
+            this.props.children,
+            { ...this.props },
+            segment
+          )}
         </div>
 
         <OnlyIf test={this.props.testRpcState.systemError !== null}>
