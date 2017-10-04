@@ -6,6 +6,10 @@ export default function validateChange (VALIDATIONS, component, e) {
 
   const validation = VALIDATIONS[name]
 
+  if (!validation) {
+    return true
+  }
+
   let hasValidationError = false
 
   if (validation.canBeBlank && value === '') {

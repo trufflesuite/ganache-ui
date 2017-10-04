@@ -10,19 +10,25 @@ const VALIDATIONS = {
   }
 }
 
-class AccountsScreen extends Component {
+class MnemonicScreen extends Component {
   constructor (props) {
     super(props)
 
     this.state = {
-      mnemonicValueValidationError: false
+      automnemonic: props.settings.mnemonic == null
     }
   }
 
   validateChange = e => {
-    executeValidations(VALIDATIONS, this, e)
-      ? this.props.onNotifyValidationsPassed(e.target.name)
-      : this.props.onNotifyValidationError(e.target.name)
+    this.props.validateChange(e, VALIDATIONS)
+  }
+
+  toggleAutoMnemonic () {
+    var toggleValue = !this.state.automnemonic
+
+    setState({
+      automnemonic: toggleValue
+    })
   }
 
   render () {
@@ -38,48 +44,44 @@ class AccountsScreen extends Component {
                   type="checkbox"
                   name="automnemonic"
                   id="Mnemonic"
-                  onChange={this.props.handleInputChange}
-                  checked={this.props.formState.automnemonic}
+                  onChange={this.toggleAutoMnemonic}
+                  checked={this.state.automnemonic}
                 />
                 <label htmlFor="Mnemonic">AUTOGENERATE HD MNEMONIC</label>
               </div>
             </div>
             <div className={Styles.RowItem}>
-              <p>Auto generate a Mnemonic on startup.</p>
+              <p>Automatically generate mnemonic used to create available addresses.</p>
             </div>
           </div>
         </section>
         <section>
           <div className={Styles.Row}>
             <div className={Styles.RowItem}>
-              {this.props.formState.automnemonic
+              {this.state.automnemonic
                 ? <span>
                     <input
                       type="text"
                       placeholder="Enter Optional Seed Data"
-                      name="seedDataValue"
-                      value={this.props.formState.seedDataValue}
-                      onChange={this.props.handleInputChange}
+                      name="server.seed"
+                      value={this.props.settings.server.seed}
+                      onChange={this.validateChange}
                     />
                   </span>
                 : <span>
                     <input
                       type="text"
                       placeholder="Enter Mnemonic to use"
-                      name="mnemonicValue"
-                      className={
-                        this.state.mnemonicValueValidationError &&
-                        Styles.ValidationError
-                      }
-                      value={this.props.formState.mnemonicValue}
+                      name="server.mnemonic"
+                      value={this.props.settings.server.mnemonic}
                       onChange={this.validateChange}
                     />
-                    {this.state.mnemonicValueValidationError &&
-                      <p>The Mnemonic can only contain alpha characters</p>}
+                    {this.props.validationErrors["server.mnemonic"] &&
+                      <p>Can only contain letters</p>}
                   </span>}
             </div>
             <div className={Styles.RowItem}>
-              {this.props.formState.automnemonic
+              {this.state.automnemonic
                 ? <p>Optional seed data for auto generated mnemonic</p>
                 : <p>Enter the Mnemonic you wish to use.</p>}
             </div>
@@ -90,4 +92,4 @@ class AccountsScreen extends Component {
   }
 }
 
-export default SettingsProvider(TestRPCProvider(AccountsScreen))
+export default MnemonicScreen

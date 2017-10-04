@@ -19,8 +19,8 @@ class FirstRunScreen extends Component {
 
   componentWillReceiveProps (nextProps) {
     if (this.props.settings.firstRun === false) {
-      hashHistory.push("/accounts")
-      //hashHistory.push("/config")
+      //hashHistory.push("/accounts")
+      hashHistory.push("/config")
     }
   }
 

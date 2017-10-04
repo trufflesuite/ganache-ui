@@ -46,7 +46,7 @@ class ConfigScreen extends PureComponent {
     Object.keys(nextProps.settings).map(key => {
       if (
         !this.isDirty() &&
-        nextProps.settings[key] !== this.state[key]
+        nextProps.settings[key] !== this.state.settings[key]
       ) {
         console.log(`${key} = ${nextProps.settings[key]}`)
         newSettings[key] = nextProps.settings[key]
@@ -57,6 +57,7 @@ class ConfigScreen extends PureComponent {
       this.setState(newSettings)
     }
   }
+
 
   isDirty () {
     return _.isEqual(this.state.settings, this.props.settings)
@@ -202,8 +203,8 @@ class ConfigScreen extends PureComponent {
               <AccountsScreen
                 settings={this.state.settings}
                 handleInputChange={this.handleInputChange}
-                onNotifyValidationError={this.onNotifyValidationError}
-                onNotifyValidationsPassed={this.onNotifyValidationsPassed}
+                validateChange={this.validateChange}
+                validationErrors={this.state.validationErrors}
               />
             </Tabs.TabPanel>
 
@@ -211,8 +212,8 @@ class ConfigScreen extends PureComponent {
               <GasScreen
                 settings={this.state.settings}
                 handleInputChange={this.handleInputChange}
-                onNotifyValidationError={this.onNotifyValidationError}
-                onNotifyValidationsPassed={this.onNotifyValidationsPassed}
+                validateChange={this.validateChange}
+                validationErrors={this.state.validationErrors}
               />
             </Tabs.TabPanel>
 
@@ -220,8 +221,8 @@ class ConfigScreen extends PureComponent {
               <MnemonicScreen
                 settings={this.state.settings}
                 handleInputChange={this.handleInputChange}
-                onNotifyValidationError={this.onNotifyValidationError}
-                onNotifyValidationsPassed={this.onNotifyValidationsPassed}
+                validateChange={this.validateChange}
+                validationErrors={this.state.validationErrors}
               />
             </Tabs.TabPanel>
 
@@ -229,8 +230,8 @@ class ConfigScreen extends PureComponent {
               <LoggingScreen
                 settings={this.state.settings}
                 handleInputChange={this.handleInputChange}
-                onNotifyValidationError={this.onNotifyValidationError}
-                onNotifyValidationsPassed={this.onNotifyValidationsPassed}
+                validateChange={this.validateChange}
+                validationErrors={this.state.validationErrors}
               />
             </Tabs.TabPanel>
 
@@ -238,8 +239,8 @@ class ConfigScreen extends PureComponent {
               <ForkingScreen
                 settings={this.state.settings}
                 handleInputChange={this.handleInputChange}
-                onNotifyValidationError={this.onNotifyValidationError}
-                onNotifyValidationsPassed={this.onNotifyValidationsPassed}
+                validateChange={this.validateChange}
+                validationErrors={this.state.validationErrors}sed={this.onNotifyValidationsPassed}
               />
             </Tabs.TabPanel>
 
@@ -247,8 +248,8 @@ class ConfigScreen extends PureComponent {
               <GanacheScreen
                 settings={this.state.settings}
                 handleInputChange={this.handleInputChange}
-                onNotifyValidationError={this.onNotifyValidationError}
-                onNotifyValidationsPassed={this.onNotifyValidationsPassed}
+                validateChange={this.validateChange}
+                validationErrors={this.state.validationErrors}
               />
             </Tabs.TabPanel>
           </Tabs.TabPanels>
