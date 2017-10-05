@@ -45,31 +45,13 @@ class Application extends EventEmitter {
       enumerable: false,
       get: () => _reducers
     })
-
-    const _appServices = {
-    }
-    Object.defineProperty(this, 'appServices', {
-      enumerable: false,
-      get: () => _appServices
-    })
-
-    const _modules = []
-    Object.defineProperty(this, 'modules', {
-      enumerable: true,
-      get: () => _modules
-    })
   }
 
   registerReducer (module) {
     let reducer = module.reducer
     let reducerName = module.name.replace(/DATASOURCE/, '').toLowerCase()
     this.reducers[reducerName] = reducer
-
-    this.modules.push(module)
-
-    console.log(`${module.reducer ? 'Reducer' : 'Module'} registered: ${module.name}`)
-
-    this.emit('moduleDidRegister', this, module)
+    console.log(`Reducer registered: ${module.name}`)
   }
 
   init (callback) {
@@ -100,7 +82,7 @@ class Application extends EventEmitter {
           <Route path='/app_update' component={props => <AppUpdateScreen {...props} />} />
           <Route path="/" component={AppShell}>
             <Route path="/first_run" component={props => <FirstRunScreen {...props} />}/>
-            <Route path='/accounts' component={props => <Accounts {...props} appServices={this.appServices} />} />
+            <Route path='/accounts' component={Accounts} />
             <Route path="blocks" component={BlocksContainer}>
               <IndexRoute component={RecentBlocks} />
               <Route path=":block_number" component={BlockCard} />
@@ -109,7 +91,7 @@ class Application extends EventEmitter {
               <IndexRoute component={RecentTxs} />
               <Route path=":txhash" component={TransactionCard} />
             </Route>
-            <Route path="/console" component={props => <Console {...props} appServices={this.appServices} />} />
+            <Route path="/console" component={Console} />
             <Route path='/config' component={props => <ConfigScreen {...props} />} />
           </Route>
         </Router>

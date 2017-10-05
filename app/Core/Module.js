@@ -15,16 +15,6 @@ class Module {
       enumerable: true,
       get: () => _reducer
     })
-
-    const _routes = routes
-    Object.defineProperty(this, 'routes', {
-      enumerable: true,
-      get: () => _routes
-    })
-  }
-
-  submoduleOf (parentModuleName) {
-    this.parent = parentModuleName.toUpperCase()
   }
 }
 
