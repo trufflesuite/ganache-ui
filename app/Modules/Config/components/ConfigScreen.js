@@ -21,8 +21,6 @@ import ForkingScreen from './ConfigScreens/ForkingScreen'
 import RestartIcon from 'Icons/restart.svg'
 import EjectIcon from 'Icons/eject.svg';
 
-import executeValidations from './Validator'
-
 import Styles from './ConfigScreen.css'
 
 class ConfigScreen extends PureComponent {
@@ -41,21 +39,21 @@ class ConfigScreen extends PureComponent {
   }
 
   componentWillReceiveProps (nextProps) {
-    let newSettings = {}
+    // let newSettings = {}
 
-    Object.keys(nextProps.settings).map(key => {
-      if (
-        !this.isDirty() &&
-        nextProps.settings[key] !== this.state.settings[key]
-      ) {
-        console.log(`${key} = ${nextProps.settings[key]}`)
-        newSettings[key] = nextProps.settings[key]
-      }
-    })
+    // Object.keys(nextProps.settings).map(key => {
+    //   if (
+    //     !this.isDirty() &&
+    //     nextProps.settings[key] !== this.state.settings[key]
+    //   ) {
+    //     console.log(`${key} = ${nextProps.settings[key]}`)
+    //     newSettings[key] = nextProps.settings[key]
+    //   }
+    // })
 
-    if (Object.keys(newSettings).length > 0) {
-      this.setState(newSettings)
-    }
+    // if (Object.keys(newSettings).length > 0) {
+    //   this.setState(newSettings)
+    // }
   }
 
 
@@ -106,13 +104,7 @@ class ConfigScreen extends PureComponent {
     // There should be one key remaining
     parent[keys[0]] = value
 
-    this.reloadState()
-  }
-
-  reloadState() {
-    this.setState({
-      settings: this.state.settings
-    })
+    this.forceUpdate()
   }
 
   onNotifyValidationError = (name) => {
@@ -136,14 +128,50 @@ class ConfigScreen extends PureComponent {
   }
 
   validateChange = (e, validations) => {
-    executeValidations(validations, this, e)
-      ? this.onNotifyValidationsPassed(e.target.name)
-      : this.onNotifyValidationError(e.target.name)
+    var name = e.target.name
+    var value = e.target.value
+  
+    const validation = validations[name]
+  
+    if (validation) {
+      let isValid = true
+    
+      if (!validation.canBeBlank && value == '') {
+        isValid = false
+      }
+    
+      if (validation.allowedChars && !value.match(validation.allowedChars)) {
+        isValid = false
+      }
+    
+      if (validation.format && !value.match(validation.format)) {
+        isValid = false
+      }
+
+      // If we at least have a value, check to see if it has a min/max
+      if (value != "") {
+        value = parseInt(value, 10)
+
+        if (validation.min && (value < validation.min || isNaN(value))) {
+          isValid = false     
+        }
+
+        if (validation.max && value > validation.max) {
+          isValid = false
+        }
+      }
+
+      if (isValid) {
+        this.onNotifyValidationsPassed(e.target.name)
+      } else {
+        this.onNotifyValidationError(e.target.name)
+      }
+    }
+
+    this.handleInputChange(e)
   }
 
   invalidConfig = () => {
-    console.log(this.state.validationErrors)
-
     let hasValidationErrors = false
     for (let key of Object.keys(this.state.validationErrors)) {
       hasValidationErrors =

@@ -63,12 +63,14 @@ class ServerScreen extends Component {
   }
 
   render () {
-    const { ganachePortStatus } = this.props.testRpcState
-    const portIsBlocked =
-      ganachePortStatus.status === 'blocked' &&
-      ganachePortStatus.pid !== undefined &&
-      !ganachePortStatus.pid[0].name.toLowerCase().includes('ganache') &&
-      !ganachePortStatus.pid[0].name.toLowerCase().includes('electron')
+    const ganachePortStatus = {status: "clear"}
+    const portIsBlocked = false
+    // const { ganachePortStatus } = this.props.testRpcState
+    // const portIsBlocked =
+    //   ganachePortStatus.status === 'blocked' &&
+    //   ganachePortStatus.pid !== undefined &&
+    //   !ganachePortStatus.pid[0].name.toLowerCase().includes('ganache') &&
+    //   !ganachePortStatus.pid[0].name.toLowerCase().includes('electron')
 
     return (
       <div>
@@ -104,7 +106,7 @@ class ServerScreen extends Component {
                 name="server.port"
                 value={this.props.settings.server.port}
                 onChange={e => {
-                  this.props.appCheckPort(e.target.value)
+                 // this.props.appCheckPort(e.target.value)
                   this.validateChange(e)
                 }}
               />
@@ -204,4 +206,4 @@ class ServerScreen extends Component {
   }
 }
 
-export default TestRPCProvider(ServerScreen)
+export default ServerScreen
