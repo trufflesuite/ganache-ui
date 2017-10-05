@@ -17,21 +17,11 @@ import SettingsSource from 'Data/Sources/Settings'
 export default async function (app, done, error) {
   console.log(`Application '${app.name}' is starting...`)
 
-  // Modules
-  app.register(AppShell)
-  app.register(Config)
-  app.register(Accounts) 
-  app.register(Blocks)
-  app.register(Transactions)
-  app.register(Console)
-  app.register(AppUpdateScreen)
-  app.register(FirstRunScreen)
-
   // Data Sources
-  app.register(TestRPCSource)
-  app.register(ConsoleSource)
-  app.register(AppUpdaterSource)
-  app.register(SettingsSource)
+  app.registerReducer(TestRPCSource)
+  app.registerReducer(ConsoleSource)
+  app.registerReducer(AppUpdaterSource)
+  app.registerReducer(SettingsSource)
 
   app.on('applicationDidStart', async function (app) {})
 

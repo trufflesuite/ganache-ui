@@ -60,21 +60,16 @@ class Application extends EventEmitter {
     })
   }
 
-  register (module) {
-    if (module.reducer) {
-      let reducerName = module.name.replace(/DATASOURCE/, '').toLowerCase()
-      this.registerReducer(reducerName, module.reducer)
-    }
+  registerReducer (module) {
+    let reducer = module.reducer
+    let reducerName = module.name.replace(/DATASOURCE/, '').toLowerCase()
+    this.reducers[reducerName] = reducer
 
     this.modules.push(module)
 
     console.log(`${module.reducer ? 'Reducer' : 'Module'} registered: ${module.name}`)
 
     this.emit('moduleDidRegister', this, module)
-  }
-
-  registerReducer (name, reducer) {
-    this.reducers[name] = reducer
   }
 
   init (callback) {
