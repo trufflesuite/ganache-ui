@@ -17,13 +17,6 @@ class FirstRunScreen extends Component {
     }
   }
 
-  componentWillReceiveProps (nextProps) {
-    if (this.props.settings.firstRun === false) {
-      //hashHistory.push("/accounts")
-      hashHistory.push("/config")
-    }
-  }
-
   _handleInputChange = event => {
     const target = event.target
     const value = target.type === 'checkbox' ? target.checked : target.value

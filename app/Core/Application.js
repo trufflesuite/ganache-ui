@@ -10,6 +10,7 @@ import { routerReducer } from 'react-router-redux'
 
 import createStore from 'Kernel/createStore'
 import syncStore from 'Kernel/syncStore'
+import ready from 'Kernel/ready'
 
 import AppShell from 'Modules/AppShell/components/AppShell'
 import ConfigScreen from 'Modules/Config/components/ConfigScreen'
@@ -79,9 +80,9 @@ class Application extends EventEmitter {
     ReactDOM.render(
       <Provider store={this.store}>
         <Router history={this.history}>
-          <Route path='/app_update' component={props => <AppUpdateScreen {...props} />} />
+          <Route path='/app_update' component={AppUpdateScreen} />
           <Route path="/" component={AppShell}>
-            <Route path="/first_run" component={props => <FirstRunScreen {...props} />}/>
+            <Route path="/first_run" component={FirstRunScreen}/>
             <Route path='/accounts' component={Accounts} />
             <Route path="blocks" component={BlocksContainer}>
               <IndexRoute component={RecentBlocks} />
@@ -119,9 +120,7 @@ class Application extends EventEmitter {
       get: () => _history
     })
 
-    if (this._ready) {
-      await this._ready()
-    }
+    await ready(this)
 
     this.render(id)
 

@@ -2,7 +2,6 @@ import Application from 'Core/Application'
 
 import TestRPCSource from 'Data/Sources/TestRPC'
 import ConsoleSource from 'Data/Sources/Console'
-import AppUpdaterSource from 'Data/Sources/AppUpdater'
 import SettingsSource from 'Data/Sources/Settings'
 
 import ready from 'Kernel/ready'
@@ -21,10 +20,9 @@ Ganache.init(async function (app, done, error) {
   // Data Sources
   app.registerReducer(TestRPCSource)
   app.registerReducer(ConsoleSource)
-  app.registerReducer(AppUpdaterSource)
   app.registerReducer(SettingsSource)
 
   app.on('applicationDidStart', async function (app) {})
 
   done()
-}).ready(ready).start('root')
+}).start('root')

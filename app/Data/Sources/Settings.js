@@ -1,5 +1,4 @@
-import DefaultState from './DefaultState'
-
+import Module from 'Core/Module'
 import ReduceWith from 'Data/Sources/ReduceWith'
 
 const mutators = {
@@ -9,4 +8,7 @@ const mutators = {
   })
 }
 
-export default ReduceWith(mutators, DefaultState)
+export default new Module({
+  name: 'Settings',
+  reducer: ReduceWith(mutators, {})
+})

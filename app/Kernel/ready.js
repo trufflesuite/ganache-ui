@@ -1,10 +1,18 @@
 import { ipcRenderer } from 'electron'
 import { push } from 'react-router-redux'
 
+// Use the electron-settings app from the main process
+const settings = require('electron').remote.require('electron-settings');
+
 // This will be called before the very first render, so you can do whatever
 // you want here. The Redux Store is available at this point, so you can
 // dispatch any action you want
-export default async function (app, done, error) {
+export default async function (app) {
+
+  // Ensure the store has these initial settings
+  
+  app.store.dispatch({type: 'APP/SETTINGS', payload: settings.getAll()})
+
   app.store.dispatch(push('/app_update'))
 
   ipcRenderer.on('APP/TESTRPCSTARTED', (event, message) => {
@@ -49,6 +57,4 @@ export default async function (app, done, error) {
   ipcRenderer.on('APP/SETTINGS', (event, settings) => {
     app.store.dispatch({ type: 'APP/SETTINGS', payload: settings })
   })
-
-  done()
 }

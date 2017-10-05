@@ -21,10 +21,17 @@ class AppUpdateScreen extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (this.state.timeoutStarted == false) {
+    console.log(nextProps, this.props)
+
+    // Ensure we have full props
+    if (typeof nextProps.settings.firstRun != "undefined" && this.state.timeoutStarted == false) {
       this.setState({timeoutStarted: true}, function() {
         setTimeout(() => {
-          hashHistory.push('/first_run')
+          if (nextProps.settings.firstRun) {
+            hashHistory.push('/first_run')
+          } else {
+            hashHistory.push('/accounts')
+          }
         }, 3000)
       })
     }

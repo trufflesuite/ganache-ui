@@ -133,44 +133,6 @@ app.on('ready', async () => {
       }
     ]).popup(mainWindow)
   })
-  // }
-
-  // autoUpdater.logger = SysLog
-  // autoUpdater.logger.transports.file.level = 'info'
-  // autoUpdater.autoDownload = false
-
-  // if (process.env.NODE_ENV === 'development') {
-  //   //autoUpdater.updateConfigPath = path.resolve('./app/dev-app-update.yml')
-  // }
-
-  // autoUpdater.on('checking-for-update', () => {
-  //   mainWindow.send('APP/UPDATECHECK', { message: 'Checking for update...' })
-  // })
-
-  // autoUpdater.on('update-available', (ev, info) => {
-  //   console.log(info)
-  //   mainWindow.send('APP/UPDATEAVAILABLE', info)
-  // })
-
-  // autoUpdater.on('update-not-available', (ev, info) => {
-  //   mainWindow.send('APP/UPDATENOTAVAILABLE', info)
-  // })
-
-  // autoUpdater.on('error', (ev, err) => {
-  //   mainWindow.send('APP/UPDATEERROR', err)
-  // })
-
-  // autoUpdater.on('download-progress', (ev, progressObj) => {
-  //   mainWindow.send('APP/UPDATEDOWNLOADPROGRESS', progressObj)
-  // })
-
-  // autoUpdater.on('update-downloaded', (ev, info) => {
-  //   mainWindow.send('APP/UPDATEDOWNLOADED', info)
-
-  //   setTimeout(() => {
-  //     autoUpdater.quitAndInstall()
-  //   }, 5000)
-  // })
 
   if (process.platform === 'darwin') {
     template = [

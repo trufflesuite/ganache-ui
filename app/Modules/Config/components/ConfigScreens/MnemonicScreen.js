@@ -4,9 +4,12 @@ import SettingsProvider from 'Data/Providers/SettingsProvider'
 
 import Styles from '../ConfigScreen.css'
 
+import OnlyIf from 'Elements/OnlyIf'
+
 const VALIDATIONS = {
   mnemonicValue: {
-    allowedChars: /^[a-zA-Z ]*$/
+    allowedChars: /^[a-zA-Z ]*$/,
+    canBeBlank: true
   }
 }
 
@@ -23,10 +26,23 @@ class MnemonicScreen extends Component {
     this.props.validateChange(e, VALIDATIONS)
   }
 
-  toggleAutoMnemonic () {
+  toggleAutoMnemonic = () => {
     var toggleValue = !this.state.automnemonic
 
-    setState({
+     // Remove mnemonic if we turn automnemonic on
+     if (toggleValue == true) {
+      delete this.props.settings.server.blocktime
+
+      // Rerun validations now that value has been deleted
+      this.validateChange({
+        target: {
+          name: "server.mnemonic",
+          value: ""
+        }
+      })
+    }
+
+    this.setState({
       automnemonic: toggleValue
     })
   }
@@ -55,38 +71,27 @@ class MnemonicScreen extends Component {
             </div>
           </div>
         </section>
-        <section>
-          <div className={Styles.Row}>
-            <div className={Styles.RowItem}>
-              {this.state.automnemonic
-                ? <span>
-                    <input
-                      type="text"
-                      placeholder="Enter Optional Seed Data"
-                      name="server.seed"
-                      value={this.props.settings.server.seed}
-                      onChange={this.validateChange}
-                    />
-                  </span>
-                : <span>
-                    <input
-                      type="text"
-                      placeholder="Enter Mnemonic to use"
-                      name="server.mnemonic"
-                      value={this.props.settings.server.mnemonic}
-                      onChange={this.validateChange}
-                    />
-                    {this.props.validationErrors["server.mnemonic"] &&
-                      <p>Can only contain letters</p>}
-                  </span>}
+
+        <OnlyIf test={!this.state.automnemonic}>
+          <section>
+            <div className={Styles.Row}>
+              <div className={Styles.RowItem}>
+                <input
+                  type="text"
+                  placeholder="Enter Mnemonic to use"
+                  name="server.mnemonic"
+                  value={this.props.settings.server.mnemonic || ""}
+                  onChange={this.validateChange}
+                />
+                {this.props.validationErrors["server.mnemonic"] &&
+                  <p>Must be at least 12 words long and only contain letters</p>}
+              </div>
+              <div className={Styles.RowItem}>
+                <p>Enter the Mnemonic you wish to use.</p>
+              </div>
             </div>
-            <div className={Styles.RowItem}>
-              {this.state.automnemonic
-                ? <p>Optional seed data for auto generated mnemonic</p>
-                : <p>Enter the Mnemonic you wish to use.</p>}
-            </div>
-          </div>
-        </section>
+          </section>
+        </OnlyIf>
       </div>
     )
   }
