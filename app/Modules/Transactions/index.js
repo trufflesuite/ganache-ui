@@ -1,9 +1,7 @@
 import Module from 'Core/Module'
-import Routes from './Routes'
 
 const module = new Module({
-  name: 'Transactions',
-  routes: Routes
+  name: 'Transactions'
 })
 
 module.submoduleOf('AppShell')

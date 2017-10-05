@@ -77,32 +77,6 @@ class Application extends EventEmitter {
     this.reducers[name] = reducer
   }
 
-  resolveRoutes () {
-    let routes = this.modules
-      .filter(m => !m.parent)
-      .filter(m => !!m.routes)
-      .map(m => this.resolveRoutesForModule(m))
-
-    if (routes.length === 0) {
-      throw new Error('No routes were setup. Check the kernel/bootup.js file.')
-    }
-
-    return routes
-  }
-
-  resolveRoutesForModule (m) {
-    let children = this
-      .getSubmodulesOf(m)
-      .filter(m => !!m.routes)
-      .map((c, i) => this.resolveRoutesForModule(c))
-
-    return React.cloneElement(m.routes(this.store, children, this.appServices), {key: m.name})
-  }
-
-  getSubmodulesOf (module) {
-    return this.modules.filter(m => m.parent === module.name)
-  }
-
   init (callback) {
     this._init = () => new Promise((resolve, reject) => {
       callback(this, resolve, reject)
@@ -119,7 +93,7 @@ class Application extends EventEmitter {
     return this
   }
 
-  renderRoutes (id) {
+  render (id) {
     const root = document.getElementById(id)
     if (!root) {
       throw new Error(`DOM Node #${id} does not exist!`)
@@ -172,7 +146,7 @@ class Application extends EventEmitter {
       await this._ready()
     }
 
-    this.renderRoutes(id)
+    this.render(id)
 
     this.emit('applicationDidStart', this)
   }
