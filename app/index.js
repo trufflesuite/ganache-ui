@@ -14,7 +14,7 @@ import syncStore from 'Kernel/syncStore'
 import ready from 'Kernel/ready'
 
 import AppShell from 'Components/AppShell/components/AppShell'
-import ConfigScreen from 'Modules/Config/components/ConfigScreen'
+import ConfigScreen from 'Components/Config/components/ConfigScreen'
 import Accounts from 'Components/Accounts/components/Accounts'
 
 import Blocks from 'Components/Blocks/components/Blocks'
