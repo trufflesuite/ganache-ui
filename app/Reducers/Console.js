@@ -1,5 +1,4 @@
-import ReduceWith from 'Data/Sources/ReduceWith'
-
+import ReduceWith from './ReduceWith'
 
 const DefaultState = {
   consoleBuffer: [],

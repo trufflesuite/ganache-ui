@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import TestRpcProvider from 'Data/Providers/TestRPCProvider'
+import TestRpcProvider from 'Providers/TestRPCProvider'
 
 import EtherUtil from 'ethereumjs-util'
 import Moment from 'react-moment'

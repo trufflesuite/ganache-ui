@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link, hashHistory } from 'react-router'
-import TestRPCProvider from 'Data/Providers/TestRPCProvider'
+import TestRPCProvider from 'Providers/TestRPCProvider'
 import Spinner from 'Elements/Spinner'
 import OnlyIf from 'Elements/OnlyIf'
 import StatusIndicator from 'Elements/StatusIndicator'

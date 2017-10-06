@@ -3,8 +3,8 @@ import React, { PureComponent } from 'react'
 import { hashHistory } from 'react-router'
 import _ from 'lodash'
 
-import TestRPCProvider from 'Data/Providers/TestRPCProvider'
-import SettingsProvider from 'Data/Providers/SettingsProvider'
+import TestRPCProvider from 'Providers/TestRPCProvider'
+import SettingsProvider from 'Providers/SettingsProvider'
 
 import Icon from 'Elements/Icon'
 import OnlyIf from 'Elements/OnlyIf'

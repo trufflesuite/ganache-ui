@@ -3,7 +3,7 @@ import InputText from 'Elements/InputText'
 import LogContainer from 'Elements/LogContainer'
 import Styles from './Console.css'
 
-import ConsoleProvider from 'Data/Providers/ConsoleProvider'
+import ConsoleProvider from 'Providers/ConsoleProvider'
 
 const UP_ARROW_KEY = 38
 const DOWN_ARROW_KEY = 40

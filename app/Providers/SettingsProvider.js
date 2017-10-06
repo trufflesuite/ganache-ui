@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 
-import * as ApiHelpers from 'Data/Sources/ApiHelpers'
-import { createRequestThunk } from 'Data/Sources/ActionUtils'
+import * as ApiHelpers from 'Actions/ApiHelpers'
+import { createRequestThunk } from 'Actions/ActionUtils'
 
 const GETSETTINGS = 'APP/GETSETTINGS'
 const SETSETTINGS = 'APP/SETSETTINGS'

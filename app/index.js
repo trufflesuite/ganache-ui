@@ -1,6 +1,5 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import EventEmitter from 'events'
 
 import { combineReducers } from 'redux'
 import { Provider } from 'react-redux'
@@ -14,22 +13,22 @@ import createStore from 'Kernel/createStore'
 import syncStore from 'Kernel/syncStore'
 import ready from 'Kernel/ready'
 
-import AppShell from 'Modules/AppShell/components/AppShell'
+import AppShell from 'Components/AppShell/components/AppShell'
 import ConfigScreen from 'Modules/Config/components/ConfigScreen'
-import Accounts from 'Modules/Accounts/components/Accounts'
+import Accounts from 'Components/Accounts/components/Accounts'
 
-import Blocks from 'Modules/Blocks/components/Blocks'
-import BlocksContainer from 'Modules/Blocks/components/BlocksContainer'
-import RecentBlocks from 'Modules/Blocks/components/blocks/RecentBlocks'
-import BlockCard from 'Modules/Blocks/components/blocks/BlockCard'
+import Blocks from 'Components/Blocks/components/Blocks'
+import BlocksContainer from 'Components/Blocks/components/BlocksContainer'
+import RecentBlocks from 'Components/Blocks/components/blocks/RecentBlocks'
+import BlockCard from 'Components/Blocks/components/blocks/BlockCard'
 
-import TransactionsContainer from 'Modules/Transactions/components/TransactionsContainer'
-import RecentTxs from 'Modules/Transactions/components/txs/RecentTxs'
-import TransactionCard from 'Modules/Transactions/components/txs/TxCard'
+import TransactionsContainer from 'Components/Transactions/components/TransactionsContainer'
+import RecentTxs from 'Components/Transactions/components/txs/RecentTxs'
+import TransactionCard from 'Components/Transactions/components/txs/TxCard'
 
-import Console from 'Modules/Console/components/Console'
-import AppUpdateScreen from 'Modules/AppUpdate/components/AppUpdateScreen'
-import FirstRunScreen from 'Modules/FirstRun/components/FirstRunScreen'
+import Console from 'Components/Console/components/Console'
+import AppUpdateScreen from 'Components/AppUpdate/components/AppUpdateScreen'
+import FirstRunScreen from 'Components/FirstRun/components/FirstRunScreen'
 
 import './app.global.css'
 

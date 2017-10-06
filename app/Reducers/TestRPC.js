@@ -1,3 +1,5 @@
+import ReduceWith from './ReduceWith'
+
 const DefaultState = {
   testRpcServerRunning: false,
   accounts: [],
@@ -9,8 +11,6 @@ const DefaultState = {
   ganachePortStatus: { status: 'clear', pid: [{ name: '' }] },
   systemError: null
 }
-
-import ReduceWith from 'Data/Sources/ReduceWith'
 
 const mutators = {
   'APP/TESTRPCRUNNING': (state, { type, payload }) => ({

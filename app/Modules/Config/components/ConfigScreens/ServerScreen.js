@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import TestRPCProvider from 'Data/Providers/TestRPCProvider'
+import TestRPCProvider from 'Providers/TestRPCProvider'
 
 import OnlyIf from 'Elements/OnlyIf'
 

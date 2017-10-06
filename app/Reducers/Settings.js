@@ -1,4 +1,4 @@
-import ReduceWith from 'Data/Sources/ReduceWith'
+import ReduceWith from './ReduceWith'
 
 export default ReduceWith({
   'APP/SETTINGS': (state, { type, payload }) => ({

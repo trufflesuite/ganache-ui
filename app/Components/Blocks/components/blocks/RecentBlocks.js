@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import BlockList from './BlockList'
 
-import TestRpcProvider from 'Data/Providers/TestRPCProvider'
+import TestRpcProvider from 'Providers/TestRPCProvider'
 
 class RecentBlocks extends Component {
   render () {

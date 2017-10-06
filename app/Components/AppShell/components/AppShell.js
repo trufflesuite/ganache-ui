@@ -3,9 +3,9 @@ import Mousetrap from 'mousetrap'
 import { hashHistory } from 'react-router'
 import { shell } from 'electron'
 
-import TestRPCProvider from 'Data/Providers/TestRPCProvider'
-import SettingsProvider from 'Data/Providers/SettingsProvider'
-import ConsoleProvider from 'Data/Providers/ConsoleProvider'
+import TestRPCProvider from 'Providers/TestRPCProvider'
+import SettingsProvider from 'Providers/SettingsProvider'
+import ConsoleProvider from 'Providers/ConsoleProvider'
 
 import TopNavbar from './TopNavbar'
 import OnlyIf from 'Elements/OnlyIf'

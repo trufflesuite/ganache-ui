@@ -1,9 +1,9 @@
 import { connect } from 'react-redux'
-import * as ApiHelpers from 'Data/Sources/ApiHelpers'
+
+import { createRequestThunk } from 'Actions/ActionUtils'
+import * as ApiHelpers from 'Actions/ApiHelpers'
 
 import { createStructuredSelector } from 'reselect'
-
-import { createRequestThunk } from 'Data/Sources/ActionUtils'
 
 const appRestartRpcServiceType = 'APP/RESTARTRPC'
 const appStartRpcServiceType = 'APP/STARTRPC'

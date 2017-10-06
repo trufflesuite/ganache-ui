@@ -1,4 +1,4 @@
-import { createRequestThunk } from 'Data/Sources/ActionUtils'
+import { createRequestThunk } from './ActionUtils'
 
 const Api = {
   sendConsoleCommand: command => {

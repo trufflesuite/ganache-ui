@@ -3,7 +3,7 @@ import TxList from './TxList'
 import WithEmptyState from 'Elements/WithEmptyState'
 import EmptyTransactions from './EmptyTransactions'
 
-import TestRpcProvider from 'Data/Providers/TestRPCProvider'
+import TestRpcProvider from 'Providers/TestRPCProvider'
 
 class RecentTxs extends Component {
   render () {
