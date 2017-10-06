@@ -1,5 +1,4 @@
-import DefaultState from './DefaultState'
-import * as SystemRequestActions from './Actions'
+import * as SystemRequestActions from 'Actions/SystemRequests'
 
 import { merge } from 'ramda'
 import ReduceWith from 'Data/Sources/ReduceWith'
@@ -18,4 +17,4 @@ const mutators = {
   }
 }
 
-export default ReduceWith(mutators, DefaultState)
+export default ReduceWith(mutators, {})

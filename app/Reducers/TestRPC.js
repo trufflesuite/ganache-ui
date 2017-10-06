@@ -1,4 +1,14 @@
-import DefaultState from './DefaultState'
+const DefaultState = {
+  testRpcServerRunning: false,
+  accounts: [],
+  blocks: [],
+  transactions: [],
+  snapshots: [],
+  currentBlockSearchMatch: null,
+  currentTxSearchMatch: null,
+  ganachePortStatus: { status: 'clear', pid: [{ name: '' }] },
+  systemError: null
+}
 
 import ReduceWith from 'Data/Sources/ReduceWith'
 

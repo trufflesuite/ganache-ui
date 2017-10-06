@@ -1,34 +1,27 @@
 import { connect } from 'react-redux'
-import { createStructuredSelector } from 'reselect'
 
 import * as ApiHelpers from 'Data/Sources/ApiHelpers'
 import { createRequestThunk } from 'Data/Sources/ActionUtils'
 
-const Types = {
-  appGetSettings: 'APP/GETSETTINGS',
-  appSetSettings: 'APP/SETSETTINGS',
-}
+const GETSETTINGS = 'APP/GETSETTINGS'
+const SETSETTINGS = 'APP/SETSETTINGS'
 
-const Api = {
-  getSettings: () => {
-    return ApiHelpers.sendIpcMessage(Types.appGetSettings)
-  },
+export default connect((state) => {
+  return {
+    settings: state.settings,
 
-  setSettings: settings => {
-    return ApiHelpers.sendIpcMessage(Types.appSetSettings, settings)
+    appGetSettings: createRequestThunk({
+      request:() => {
+        return ApiHelpers.sendIpcMessage(GETSETTINGS)
+      },
+      key: GETSETTINGS
+    }),
+    
+    appSetSettings: createRequestThunk({
+      request: (settings) => {
+        return ApiHelpers.sendIpcMessage(SETSETTINGS, settings)
+      },
+      key: SETSETTINGS
+    })
   }
-}
-
-const Actions = {
-  appGetSettings: createRequestThunk({
-    request: Api.getSettings,
-    key: Types.appGetSettings
-  }),
-  
-  appSetSettings: createRequestThunk({
-    request: Api.setSettings,
-    key: Types.appSetSettings
-  })
-}
-
-export default connect(createStructuredSelector({ settings: (state) => state.settings }), Actions)
+})

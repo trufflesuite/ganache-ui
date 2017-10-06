@@ -1,8 +1,9 @@
 import { connect } from 'react-redux'
-import * as Actions from 'Data/Sources/Console/Actions'
+import * as Actions from 'Actions/Console'
+import _ from 'lodash'
 
-import { createStructuredSelector } from 'reselect'
-
-const consoleSelector = state => state.console
-
-export default connect(createStructuredSelector({ console: consoleSelector }), Actions)
+export default connect((state) => {
+  return _.merge({}, Actions, {
+    console: state.console, 
+  })
+}, Actions)

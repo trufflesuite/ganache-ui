@@ -1,4 +1,4 @@
-import * as SystemRequestActions from './SystemRequests/Actions'
+import * as SystemRequestActions from 'Actions/SystemRequests'
 
 export const createRequestThunk = ({ request, key, start = [], success = [], failure = [] }) => {
   return (...args) => (dispatch, getState) => {

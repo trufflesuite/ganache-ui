@@ -1,5 +1,22 @@
-import Api from './Api'
 import { createRequestThunk } from 'Data/Sources/ActionUtils'
+
+const Api = {
+  sendConsoleCommand: command => {
+    return ApiHelpers.sendIpcMessage('APP/SENDREPLCOMMAND', command, command)
+  },
+
+  sendConsoleCommandCompletion: command => {
+    return ApiHelpers.sendIpcMessage(
+      'APP/SENDREPLCOMMANDCOMPLETION',
+      command,
+      command
+    )
+  },
+
+  getConsoleMessages: () => {
+    return ApiHelpers.sendIpcMessage('APP/GETCONSOLEMESSAGES')
+  }
+}
 
 export const appSendConsoleCommandType = 'APP/SENDREPLCOMMAND'
 export const appSendConsoleCommand = createRequestThunk({
