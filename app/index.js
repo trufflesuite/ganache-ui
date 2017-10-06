@@ -8,7 +8,7 @@ import { Router, Route, IndexRoute, hashHistory } from 'react-router'
 import SettingsReducer from 'Reducers/Settings'
 import TestRPCReducer from 'Reducers/TestRPC'
 import ConsoleReducer from 'Reducers/Console'
-import Web3Reducer from 'Reducers/Web3'
+import CoreReducer from 'Reducers/Core'
 
 import createStore from 'Kernel/createStore'
 import syncStore from 'Kernel/syncStore'
@@ -41,7 +41,7 @@ const store = createStore(combineReducers({
   "settings": SettingsReducer,
   "testrpcsource": TestRPCReducer,
   "console": ConsoleReducer, 
-  "web3": Web3Reducer 
+  "core": CoreReducer 
 }), {})
 
 ready(store)

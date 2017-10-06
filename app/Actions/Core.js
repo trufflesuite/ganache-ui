@@ -27,7 +27,7 @@ class ReduxWeb3Provider {
   }
 }
 
-const prefix = "WEB3"
+const prefix = "CORE"
 
 export const SET_RPC_PROVIDER = `${prefix}/SET_RPC_PROVIDER`
 export function setRPCProvider(provider) {
@@ -74,32 +74,56 @@ export function Web3RequestSucceeded(name, result) {
   return { type: WEB3_REQUEST_SUCCEEDED, name, result }
 }
 
-function createWeb3ActionCreator(name) {
-  // Little meta; this creates and action _creator_
-  return function() {
-    let args = Array.prototype.slice.call(arguments)  
+function web3ActionCreator(name, args, next) {
+  if (typeof args == "function") {
+    next = args
+    args = []
+  }
 
-    return function(dispatch, getState) {
-      let provider = getState().web3.provider
-      let web3 = new Web3(provider)
+  return function(dispatch, getState) {
+    let provider = getState().core.provider
+    let web3 = new Web3(provider)
+    
+    dispatch(Web3RequestStarted(name))
+
+    let fn = web3.eth[name]
+
+    args.push((err, result) => {
+      if (err) {
+        dispatch(Web3RequestFailed(name, err))
+      } else {
+        var action = Web3RequestSucceeded(name, result)
       
-      dispatch(Web3RequestStarted(name))
-
-      let fn = web3.eth[name]
-
-      args.push((err, result) => {
-        if (err) {
-          dispatch(Web3RequestFailed(name, err))
-        } else {
-          dispatch(Web3RequestSucceeded(name, result))
+        if (next) {
+          next(action, result, dispatch, getState)
         }
-      })
 
-      fn.apply(web3.eth, args)
-    }
+        dispatch(action)
+      }
+    })
+
+    fn.apply(web3.eth, args)
   }
 }
 
-export const eth = {
-  getAccounts: createWeb3ActionCreator("getAccounts")
+export const getAccounts = function() {
+  return web3ActionCreator("getAccounts", (action, accounts, dispatch, getState) => {
+    action.accounts = accounts
+    accounts.forEach((account) => {
+      dispatch(getAccountBalance(account))
+      dispatch(getAccountNonce(account))
+    })
+  })
+}
+export const getAccountBalance = function(account) {
+  return web3ActionCreator("getBalance", [account], (action, balance) => {
+    action.account = account
+    action.balance = balance
+  })
+}
+export const getAccountNonce = function(account) {
+  return web3ActionCreator("getTransactionCount", [account], (action, nonce) => {
+    action.account = account
+    action.nonce = nonce
+  })
 }

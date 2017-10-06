@@ -18,32 +18,11 @@ class Accounts extends Component {
   constructor (props) {
     super(props)
 
-    this.state = {
-      addAccountBtnDisabled: false
-    }
+    this.state = {}
   }
 
   componentDidMount () {
     this.props.appGetBlockChainState()
-  }
-
-  componentWillReceiveProps (nextProps) {
-    if (
-      nextProps.testRpcState.accounts.length ===
-        this.props.testRpcState.accounts.length + 1 &&
-      this.state.addAccountBtnDisabled
-    ) {
-      this.setState({ addAccountBtnDisabled: false })
-    }
-  }
-
-  nextAccountIndex = () => {
-    return this.props.testRpcState.accounts.length + 1
-  }
-
-  _handleAddAccount = () => {
-    this.setState({ addAccountBtnDisabled: true })
-    this.props.appAddAccount({ index: this.nextAccountIndex() })
   }
 
   _handleClearLogs = () => {
@@ -60,12 +39,7 @@ class Accounts extends Component {
               hdPath={this.props.testRpcState.hdPath}
             />
           </div>
-          <WithEmptyState
-            test={this.props.testRpcState.accounts.length === 0}
-            emptyStateComponent={LoadingAccounts}
-          >
-            <AccountList accounts={this.props.testRpcState.accounts} />
-          </WithEmptyState>
+          <AccountList accounts={this.props.core.accounts} balances={this.props.core.accountBalances} nonces={this.props.core.accountNonces} />
         </main>
       </div>
     )

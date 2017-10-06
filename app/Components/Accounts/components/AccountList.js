@@ -43,23 +43,23 @@ export default class AccountList extends Component {
       .sort((a, b) => {
         return parseInt(a.index, 10) - parseInt(b.index, 10)
       })
-      .map(account => {
+      .map((account, index) => {
         return (
           <div
             className={Styles.AccountCard}
-            key={`account-card-${account.index}`}
+            key={`account-card-${index}`}
           >
             <div className={Styles.AddressAndBalance}>
               <div className={Styles.AccountAddress}>
                 <div className={Styles.Label}>ADDRESS</div>
                 <div className={Styles.Value}>
-                  {account.address}
+                  {account}
                 </div>
               </div>
               <div className={Styles.AccountBalance}>
                 <div className={Styles.Label}>BALANCE</div>
                 <div className={Styles.Value}>
-                  <FormattedEtherValue value={account.balance} />
+                  <FormattedEtherValue value={this.props.balances[account]} />
                 </div>
               </div>
             </div>
@@ -67,22 +67,22 @@ export default class AccountList extends Component {
               <div className={Styles.TransactionCount}>
                 <div className={Styles.Label}>TX COUNT</div>
                 <div className={Styles.Value}>
-                  {account.nonce}
+                  {this.props.nonces[account]}
                 </div>
               </div>
               <div className={Styles.AccountIndex}>
                 <div className={Styles.Label}>INDEX</div>
                 <div className={Styles.Value}>
-                  {account.index}
+                  {index}
                 </div>
               </div>
               <span
                 className={Styles.ShowKeys}
                 onClick={() => {
                   this.showKeys(
-                    account.address,
-                    account.publicKey,
-                    account.privateKey
+                    account,
+                    "<remove me>",
+                    "<private key>"
                   )
                 }}
               >
@@ -91,11 +91,11 @@ export default class AccountList extends Component {
                   See Account Keys
                 </span>
               </span>
-              <div className={Styles.AccountState}>
+              {/* <div className={Styles.AccountState}>
                 {account.isUnlocked
                   ? <Icon glyph={UnlockedIcon} size={24} className="isolate" />
                   : <Icon glyph={LockedIcon} size={24} className="isolate" />}
-              </div>
+              </div> */}
             </div>
           </div>
         )

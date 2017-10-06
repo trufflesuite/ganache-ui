@@ -1,7 +1,7 @@
 import { ipcRenderer } from 'electron'
 import { push } from 'react-router-redux'
 
-import { setRPCProviderUrl, eth } from 'Actions/Web3'
+import * as core from 'Actions/Core'
 
 // Use the electron-settings app from the main process
 const settings = require('electron').remote.require('electron-settings');
@@ -19,9 +19,9 @@ export default function (store) {
   store.dispatch({type: 'APP/SETTINGS', payload: currentSettings})
 
   // Ensure web3 is set
-  store.dispatch(setRPCProviderUrl(`http://${currentSettings.server.hostname}:${currentSettings.server.port}`))
+  store.dispatch(core.setRPCProviderUrl(`http://${currentSettings.server.hostname}:${currentSettings.server.port}`))
 
-  store.dispatch(eth.getAccounts())
+  store.dispatch(core.getAccounts())
 
   store.dispatch(push('/app_update'))
 

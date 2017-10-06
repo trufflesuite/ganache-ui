@@ -6,6 +6,7 @@ import { shell } from 'electron'
 import TestRPCProvider from 'Providers/TestRPCProvider'
 import SettingsProvider from 'Providers/SettingsProvider'
 import ConsoleProvider from 'Providers/ConsoleProvider'
+import CoreProvider from 'Providers/Core'
 
 import TopNavbar from './TopNavbar'
 import OnlyIf from 'Elements/OnlyIf'
@@ -190,4 +191,4 @@ ${this.props.testRpcState.systemError}`
   }
 }
 
-export default ConsoleProvider(SettingsProvider(TestRPCProvider(AppShell)))
+export default CoreProvider(ConsoleProvider(SettingsProvider(TestRPCProvider(AppShell))))
