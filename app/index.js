@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import { combineReducers } from 'redux'
+import { combineReducers, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import { Router, Route, IndexRoute, hashHistory } from 'react-router'
 
@@ -18,9 +18,7 @@ import AppShell from 'Components/AppShell/components/AppShell'
 import ConfigScreen from 'Components/Config/components/ConfigScreen'
 import Accounts from 'Components/Accounts/components/Accounts'
 
-import Blocks from 'Components/Blocks/components/Blocks'
 import BlocksContainer from 'Components/Blocks/components/BlocksContainer'
-import RecentBlocks from 'Components/Blocks/components/blocks/RecentBlocks'
 import BlockCard from 'Components/Blocks/components/blocks/BlockCard'
 
 import TransactionsContainer from 'Components/Transactions/components/TransactionsContainer'
@@ -42,7 +40,7 @@ const store = createStore(combineReducers({
   "testrpcsource": TestRPCReducer,
   "console": ConsoleReducer, 
   "core": CoreReducer 
-}), {})
+}))
 
 ready(store)
 
@@ -58,10 +56,7 @@ ReactDOM.render(
       <Route path="/" component={AppShell}>
         <Route path="/first_run" component={FirstRunScreen}/>
         <Route path='/accounts' component={Accounts} />
-        <Route path="blocks" component={BlocksContainer}>
-          <IndexRoute component={RecentBlocks} />
-          <Route path=":block_number" component={BlockCard} />
-        </Route>
+        <Route path="/blocks" component={BlocksContainer} />
         <Route path="transactions" component={TransactionsContainer} >
           <IndexRoute component={RecentTxs} />
           <Route path=":txhash" component={TransactionCard} />

@@ -23,6 +23,12 @@ export default function (store) {
 
   store.dispatch(core.getAccounts())
 
+  setInterval(() => {
+    store.dispatch(core.getBlockNumber())
+    store.dispatch(core.processBlocks())
+  }, 500)
+
+
   store.dispatch(push('/app_update'))
 
   ipcRenderer.on('APP/TESTRPCSTARTED', (event, message) => {

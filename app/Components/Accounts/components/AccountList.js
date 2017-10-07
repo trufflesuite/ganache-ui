@@ -39,67 +39,63 @@ export default class AccountList extends Component {
   }
 
   _renderAccounts = accounts => {
-    return accounts
-      .sort((a, b) => {
-        return parseInt(a.index, 10) - parseInt(b.index, 10)
-      })
-      .map((account, index) => {
-        return (
-          <div
-            className={Styles.AccountCard}
-            key={`account-card-${index}`}
-          >
-            <div className={Styles.AddressAndBalance}>
-              <div className={Styles.AccountAddress}>
-                <div className={Styles.Label}>ADDRESS</div>
-                <div className={Styles.Value}>
-                  {account}
-                </div>
-              </div>
-              <div className={Styles.AccountBalance}>
-                <div className={Styles.Label}>BALANCE</div>
-                <div className={Styles.Value}>
-                  <FormattedEtherValue value={this.props.balances[account]} />
-                </div>
+    return accounts.map((account, index) => {
+      return (
+        <div
+          className={Styles.AccountCard}
+          key={`account-card-${index}`}
+        >
+          <div className={Styles.AddressAndBalance}>
+            <div className={Styles.AccountAddress}>
+              <div className={Styles.Label}>ADDRESS</div>
+              <div className={Styles.Value}>
+                {account}
               </div>
             </div>
-            <div className={Styles.SecondaryInfo}>
-              <div className={Styles.TransactionCount}>
-                <div className={Styles.Label}>TX COUNT</div>
-                <div className={Styles.Value}>
-                  {this.props.nonces[account]}
-                </div>
+            <div className={Styles.AccountBalance}>
+              <div className={Styles.Label}>BALANCE</div>
+              <div className={Styles.Value}>
+                <FormattedEtherValue value={this.props.balances[account]} />
               </div>
-              <div className={Styles.AccountIndex}>
-                <div className={Styles.Label}>INDEX</div>
-                <div className={Styles.Value}>
-                  {index}
-                </div>
-              </div>
-              <span
-                className={Styles.ShowKeys}
-                onClick={() => {
-                  this.showKeys(
-                    account,
-                    "<remove me>",
-                    "<private key>"
-                  )
-                }}
-              >
-                <Icon glyph={KeyIcon} size={24} className="isolate" />
-                <span className={`${Styles.popover} ${Styles.above}`}>
-                  See Account Keys
-                </span>
-              </span>
-              {/* <div className={Styles.AccountState}>
-                {account.isUnlocked
-                  ? <Icon glyph={UnlockedIcon} size={24} className="isolate" />
-                  : <Icon glyph={LockedIcon} size={24} className="isolate" />}
-              </div> */}
             </div>
           </div>
-        )
-      })
+          <div className={Styles.SecondaryInfo}>
+            <div className={Styles.TransactionCount}>
+              <div className={Styles.Label}>TX COUNT</div>
+              <div className={Styles.Value}>
+                {this.props.nonces[account]}
+              </div>
+            </div>
+            <div className={Styles.AccountIndex}>
+              <div className={Styles.Label}>INDEX</div>
+              <div className={Styles.Value}>
+                {index}
+              </div>
+            </div>
+            <span
+              className={Styles.ShowKeys}
+              onClick={() => {
+                this.showKeys(
+                  account,
+                  "<remove me>",
+                  "<private key>"
+                )
+              }}
+            >
+              <Icon glyph={KeyIcon} size={24} className="isolate" />
+              <span className={`${Styles.popover} ${Styles.above}`}>
+                See Account Keys
+              </span>
+            </span>
+            {/* <div className={Styles.AccountState}>
+              {account.isUnlocked
+                ? <Icon glyph={UnlockedIcon} size={24} className="isolate" />
+                : <Icon glyph={LockedIcon} size={24} className="isolate" />}
+            </div> */}
+          </div>
+        </div>
+      )
+    })
   }
 
   render () {

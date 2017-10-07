@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 
+import CoreProvider from 'Providers/Core'
+
 import MnemonicAndHdPath from './MnemonicAndHdPath'
 import AccountList from './AccountList'
 

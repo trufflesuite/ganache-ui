@@ -8,18 +8,14 @@ export default class BlockList extends PureComponent {
   render () {
     return (
       <div className={Styles.BlockList}>
-        {this.props.blocks.map(this._renderMiniBlockCard)}
+        {this.props.blocks.map((block) => {
+          return (
+            <MiniBlockCard
+              block={block}
+            />
+          )
+        })}
       </div>
-    )
-  }
-
-  _renderMiniBlockCard = (block) => {
-    return (
-      <MiniBlockCard
-        block={block}
-        key={EtherUtil.bufferToInt(block.header.number)}
-        showBlockDetail={this.handleBlockNumberSearch}
-      />
     )
   }
 }

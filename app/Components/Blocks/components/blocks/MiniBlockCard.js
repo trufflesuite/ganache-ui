@@ -28,19 +28,18 @@ export default class MiniBlockCard extends PureComponent {
     const { block } = this.props
     const hasTxs = block.transactions.length > 0
     const cardStyles = `${Styles.MiniBlockCard} ${hasTxs ? Styles.HasTxs : ''}`
-    const blockNumber = EtherUtil.bufferToInt(block.header.number)
 
     return (
       <Link
-        to={`/blocks/${EtherUtil.bufferToInt(this.props.block.header.number)}`}
+        to={`/blocks/${this.props.block.number}`}
         className={Styles.Link}
       >
-        <section className={cardStyles} key={`block_${blockNumber}_detail`}>
+        <section className={cardStyles} key={`block_${block.number}_detail`}>
           <div className={Styles.RowItem}>
             <div className={Styles.BlockNumber}>
               <div className={Styles.Label}>BLOCK</div>
               <div className={Styles.Value}>
-                {blockNumber}
+                {block.number}
               </div>
             </div>
           </div>
@@ -50,7 +49,7 @@ export default class MiniBlockCard extends PureComponent {
                 <div className={Styles.Label}>MINED ON</div>
                 <div className={Styles.Value}>
                   <Moment unix format="YYYY-MM-DD HH:mm:ss">
-                    {EtherUtil.bufferToInt(block.header.timestamp)}
+                    {block.timestamp}
                   </Moment>
                 </div>
               </div>
@@ -59,7 +58,7 @@ export default class MiniBlockCard extends PureComponent {
               <div className={Styles.GasUsed}>
                 <div className={Styles.Label}>GAS USED</div>
                 <div className={Styles.Value}>
-                  {parseInt(EtherUtil.bufferToInt(block.header.gasUsed), 16)}
+                  {block.gasUsed}
                 </div>
               </div>
             </div>

@@ -2,12 +2,22 @@ import React, { Component } from 'react'
 
 import Styles from './Blocks.css'
 
-export default class BlocksContainer extends Component {
+import CoreProvider from 'Providers/Core'
+
+import BlockList from 'Components/Blocks/components/blocks/BlockList'
+
+class BlocksContainer extends Component {
   render () {
     return (
       <div className={Styles.Blocks}>
-        {this.props.children}
+        <main>
+          <BlockList
+            blocks={this.props.core.blocks}
+          />
+        </main>
       </div>
     )
   }
 }
+
+export default CoreProvider(BlocksContainer)
