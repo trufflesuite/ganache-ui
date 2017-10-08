@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Link, hashHistory } from 'react-router'
-import TestRPCProvider from 'Providers/TestRPCProvider'
 import Spinner from 'Elements/Spinner'
 import OnlyIf from 'Elements/OnlyIf'
 import StatusIndicator from 'Elements/StatusIndicator'
@@ -27,10 +26,6 @@ class TopNavbar extends Component {
     this.searchInput = null
   }
 
-  componentDidMount () {
-    this.props.appGetBlockChainState()
-  }
-
   _handleStopMining = e => {
     this.props.appStopMining()
   }
@@ -48,7 +43,7 @@ class TopNavbar extends Component {
   }
 
   _handleRevertSnapshot = e => {
-    this.props.appRevertSnapshot(this.props.testRpcState.snapshots.length)
+    this.props.appRevertSnapshot(this.props.core.snapshots.length)
   }
 
   classifyInput = () => {
@@ -78,7 +73,7 @@ class TopNavbar extends Component {
   }
 
   _renderSnapshotControls = () => {
-    const { snapshots } = this.props.testRpcState
+    const { snapshots } = this.props.core
     const currentSnapshotId = snapshots.length
     const hasSnapshots = currentSnapshotId > 0
     const firstSnapshot = currentSnapshotId === 1
@@ -98,15 +93,15 @@ class TopNavbar extends Component {
   }
 
   _renderMiningTime = () => {
-    if (this.props.testRpcState.blocktime !== 'Automining') {
-      return `${this.props.testRpcState.blocktime} SEC block time`
+    if (this.props.settings.server.blocktime) {
+      return `${this.props.settings.server.blocktime} SEC block time`
     } else {
       return 'Automining'
     }
   }
 
   _renderMiningButtonText = () => {
-    if (this.props.testRpcState.blocktime !== 'Automining') {
+    if (this.props.settings.server.blocktime) {
       return `MINING`
     } else {
       return 'AUTOMINING'
@@ -114,10 +109,10 @@ class TopNavbar extends Component {
   }
 
   _renderMiningControls = () => {
-    return this.props.testRpcState.isMining
+    return this.props.core.isMining
       ? <button
           className={Styles.MiningBtn}
-          disabled={!this.props.testRpcState.isMining}
+          disabled={!this.props.core.isMining}
           onClick={this._handleStopMining}
         >
           <Icon
@@ -129,7 +124,7 @@ class TopNavbar extends Component {
         </button>
       : <button
           className={Styles.MiningBtn}
-          disabled={this.props.testRpcState.isMining}
+          disabled={this.props.core.isMining}
           onClick={this._handleStartMining}
         >
           <Icon glyph={StartMiningIcon} size={18} /> Start{' '}
@@ -138,21 +133,15 @@ class TopNavbar extends Component {
   }
 
   render () {
-    const {
-      isMining,
-      blockNumber,
-      blocktime,
-      gasPrice,
-      snapshots
-    } = this.props.testRpcState
+    const blockNumber = this.props.core.latestBlock
+    const gasPrice = this.props.core.gasPrice
+    const gasLimit = this.props.core.gasLimit
+    const snapshots = this.props.core.snapshots
+    const isMining = this.props.core.isMining
+
     const miningPaused = !isMining
     const currentSnapshotId = snapshots.length
-    const showControls =
-      miningPaused || this.props.testRpcState.blocktime === 'Automining'
-
-    if (!this.props.testRpcState.testRpcServerRunning) {
-      return <div />
-    }
+    const showControls = false
 
     return (
       <nav className={Styles.Nav}>
@@ -198,16 +187,16 @@ class TopNavbar extends Component {
             <StatusIndicator title="GAS PRICE" value={gasPrice} />
             <StatusIndicator
               title="GAS LIMIT"
-              value={this.props.testRpcState.gasLimit}
+              value={gasLimit}
             />
             <StatusIndicator
               title="NETWORK ID"
-              value={this.props.testRpcState.networkId}
+              value={this.props.settings.server.network_id}
             />
             <StatusIndicator
               title="RPC SERVER"
-              value={`http://${this.props.testRpcState.host}:${this.props
-                .testRpcState.port}`}
+              value={`http://${this.props.settings.server.hostname}:${this.props
+                .settings.server.port}`}
             />
             <StatusIndicator
               title="MINING STATUS"
@@ -221,8 +210,7 @@ class TopNavbar extends Component {
           <div className={Styles.Actions}>
             <OnlyIf
               test={
-                showControls &&
-                this.props.testRpcState.blocktime !== 'Automining'
+                showControls
               }
             >
               <button
@@ -243,9 +231,6 @@ class TopNavbar extends Component {
             <OnlyIf test={showControls}>
               {this._renderSnapshotControls()}
             </OnlyIf>
-            <OnlyIf test={this.props.testRpcState.blocktime !== 'Automining'}>
-              {this._renderMiningControls()}
-            </OnlyIf>
           </div>
         </section>
       </nav>
@@ -253,4 +238,4 @@ class TopNavbar extends Component {
   }
 }
 
-export default TestRPCProvider(TopNavbar)
+export default TopNavbar

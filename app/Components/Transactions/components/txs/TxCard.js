@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import TestRpcProvider from 'Providers/TestRPCProvider'
 
 import EtherUtil from 'ethereumjs-util'
 import Moment from 'react-moment'
@@ -161,4 +160,4 @@ class TxCard extends Component {
   }
 }
 
-export default TestRpcProvider(TxCard)
+export default TxCard

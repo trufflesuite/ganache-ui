@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
 
-import TestRpcProvider from 'Providers/TestRPCProvider'
-
 import Moment from 'react-moment'
 import EtherUtil from 'ethereumjs-util'
 
@@ -146,4 +144,4 @@ class BlockCard extends Component {
   }
 }
 
-export default TestRpcProvider(BlockCard)
+export default BlockCard

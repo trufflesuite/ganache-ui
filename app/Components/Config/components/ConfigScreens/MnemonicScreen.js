@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
-import TestRPCProvider from 'Providers/TestRPCProvider'
-import SettingsProvider from 'Providers/SettingsProvider'
-
+import connect from 'Components/Helpers/connect'
 import Styles from '../ConfigScreen.css'
 
 import OnlyIf from 'Elements/OnlyIf'
@@ -97,4 +95,4 @@ class MnemonicScreen extends Component {
   }
 }
 
-export default MnemonicScreen
+export default connect(MnemonicScreen, "settings")

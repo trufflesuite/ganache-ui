@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import CoreProvider from 'Providers/Core'
+import connect from 'Components/Helpers/connect'
 
 import MnemonicAndHdPath from './MnemonicAndHdPath'
 import AccountList from './AccountList'
@@ -23,10 +23,6 @@ class Accounts extends Component {
     this.state = {}
   }
 
-  componentDidMount () {
-    this.props.appGetBlockChainState()
-  }
-
   _handleClearLogs = () => {
     this.props.appClearLogs()
   }
@@ -37,15 +33,15 @@ class Accounts extends Component {
         <main>
           <div className={Styles.Mnemonic}>
             <MnemonicAndHdPath
-              mnemonic={this.props.testRpcState.mnemonic}
-              hdPath={this.props.testRpcState.hdPath}
+              mnemonic={this.props.core.mnemonic}
+              hdPath={this.props.core.hdPath}
             />
           </div>
-          <AccountList accounts={this.props.core.accounts} balances={this.props.core.accountBalances} nonces={this.props.core.accountNonces} />
+          <AccountList accounts={this.props.accounts.addresses} balances={this.props.accounts.balances} nonces={this.props.accounts.nonces} />
         </main>
       </div>
     )
   }
 }
 
-export default Accounts
+export default connect(Accounts, "core", "accounts")

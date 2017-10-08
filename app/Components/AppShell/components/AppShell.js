@@ -3,10 +3,7 @@ import Mousetrap from 'mousetrap'
 import { hashHistory } from 'react-router'
 import { shell } from 'electron'
 
-import TestRPCProvider from 'Providers/TestRPCProvider'
-import SettingsProvider from 'Providers/SettingsProvider'
-import ConsoleProvider from 'Providers/ConsoleProvider'
-import CoreProvider from 'Providers/Core'
+import connect from 'Components/Helpers/connect'
 
 import TopNavbar from './TopNavbar'
 import OnlyIf from 'Elements/OnlyIf'
@@ -61,40 +58,35 @@ class AppShell extends Component {
   }
 
   componentDidMount () {
-    this.props.appGetSettings()
+    // Mousetrap.bind(['command+1', 'ctrl+1'], () => {
+    //   this.props.testRpcState.testRpcServerRunning
+    //     ? hashHistory.push('/accounts')
+    //     : null
+    // })
 
-    Mousetrap.bind(['command+1', 'ctrl+1'], () => {
-      this.props.testRpcState.testRpcServerRunning
-        ? hashHistory.push('/accounts')
-        : null
-    })
+    // Mousetrap.bind(['command+2', 'ctrl+2'], () => {
+    //   this.props.testRpcState.testRpcServerRunning
+    //     ? hashHistory.push('/blocks')
+    //     : null
+    // })
 
-    Mousetrap.bind(['command+2', 'ctrl+2'], () => {
-      this.props.testRpcState.testRpcServerRunning
-        ? hashHistory.push('/blocks')
-        : null
-    })
+    // Mousetrap.bind(['command+3', 'ctrl+3'], () => {
+    //   this.props.testRpcState.testRpcServerRunning
+    //     ? hashHistory.push('/transactions')
+    //     : null
+    // })
 
-    Mousetrap.bind(['command+3', 'ctrl+3'], () => {
-      this.props.testRpcState.testRpcServerRunning
-        ? hashHistory.push('/transactions')
-        : null
-    })
+    // Mousetrap.bind(['command+4', 'ctrl+4'], () => {
+    //   this.props.testRpcState.testRpcServerRunning
+    //     ? hashHistory.push('/console')
+    //     : null
+    // })
 
-    Mousetrap.bind(['command+4', 'ctrl+4'], () => {
-      this.props.testRpcState.testRpcServerRunning
-        ? hashHistory.push('/console')
-        : null
-    })
-
-    Mousetrap.bind(['command+5', 'ctrl+5'], () => {
-      this.props.testRpcState.testRpcServerRunning
-        ? hashHistory.push('/config')
-        : null
-    })
-
-    // setInterval(this.props.appGetBlockChainState, 1000)
-    // setInterval(this.props.appGetConsoleMessages, 1500)
+    // Mousetrap.bind(['command+5', 'ctrl+5'], () => {
+    //   this.props.testRpcState.testRpcServerRunning
+    //     ? hashHistory.push('/config')
+    //     : null
+    // })
   }
 
   renderClonedChildrenWithPropsAndPathKey = (children, props, pathNameKey) => {
@@ -136,7 +128,7 @@ class AppShell extends Component {
           )}
         </div>
 
-        <OnlyIf test={this.props.testRpcState.systemError !== null}>
+        <OnlyIf test={this.props.core.systemError !== null}>
           <div className={ModalStyles.Modal}>
             <section>
               <Icon glyph={BugIcon} size={128} />
@@ -164,7 +156,7 @@ PLATFORM: ${process.platform}
 GANACHE VERSION: ${app.getVersion()}
 
 EXCEPTION:
-${this.props.testRpcState.systemError}`
+${this.props.core.systemError}`
                     ).replace(/%09/g, '')
 
                     shell.openExternal(
@@ -191,4 +183,4 @@ ${this.props.testRpcState.systemError}`
   }
 }
 
-export default CoreProvider(ConsoleProvider(SettingsProvider(TestRPCProvider(AppShell))))
+export default connect(AppShell, "core", "settings", "accounts")

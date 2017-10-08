@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 const { app } = require('electron').remote
 
 import { hashHistory } from 'react-router'
-import TestRPCProvider from 'Providers/TestRPCProvider'
-import SettingsProvider from 'Providers/SettingsProvider'
+
+import connect from 'Components/Helpers/connect'
 
 import OnlyIf from 'Elements/OnlyIf'
 import GanacheLogo from 'Resources/logo.png'
@@ -21,7 +21,9 @@ class AppUpdateScreen extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    console.log(nextProps, this.props)
+    if (nextProps.core.started !== true) {
+      return
+    }
 
     // Ensure we have full props
     if (typeof nextProps.settings.firstRun != "undefined" && this.state.timeoutStarted == false) {
@@ -32,7 +34,7 @@ class AppUpdateScreen extends Component {
           } else {
             hashHistory.push('/accounts')
           }
-        }, 3000)
+        }, 1000)
       })
     }
   }
@@ -67,6 +69,4 @@ class AppUpdateScreen extends Component {
   }
 }
 
-export default SettingsProvider(
-  TestRPCProvider(AppUpdateScreen)
-)
+export default connect(AppUpdateScreen, "settings", "core")

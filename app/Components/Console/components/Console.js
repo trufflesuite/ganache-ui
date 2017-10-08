@@ -3,7 +3,7 @@ import InputText from 'Elements/InputText'
 import LogContainer from 'Elements/LogContainer'
 import Styles from './Console.css'
 
-import ConsoleProvider from 'Providers/ConsoleProvider'
+import connect from 'Components/Helpers/connect'
 
 const UP_ARROW_KEY = 38
 const DOWN_ARROW_KEY = 40
@@ -165,4 +165,4 @@ class Console extends Component {
   }
 }
 
-export default ConsoleProvider(Console)
+export default Console

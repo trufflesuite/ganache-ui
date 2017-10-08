@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
 
 import { hashHistory } from 'react-router'
-import TestRPCProvider from 'Providers/TestRPCProvider'
-import SettingsProvider from 'Providers/SettingsProvider'
-
+import connect from 'Components/Helpers/connect'
 import GanacheLogo from 'Resources/logo.png'
 
 import Styles from './FirstRunScreen.css'
@@ -28,15 +26,7 @@ class FirstRunScreen extends Component {
   }
 
   _recordChoice = () => {
-    this.props
-      .appSetSettings({
-        googleAnalyticsTracking: this.refs.enableAnalytics.checked,
-        firstRun: false
-      })
-      .then(this.props.appGetSettings)
-      .then(() => {
-        hashHistory.push('/accounts')
-      })
+    
   }
 
   render () {
@@ -115,4 +105,4 @@ class FirstRunScreen extends Component {
   }
 }
 
-export default SettingsProvider(TestRPCProvider(FirstRunScreen))
+export default connect(FirstRunScreen, "settings")

@@ -6,9 +6,9 @@ import { Provider } from 'react-redux'
 import { Router, Route, IndexRoute, hashHistory } from 'react-router'
 
 import SettingsReducer from 'Reducers/Settings'
-import TestRPCReducer from 'Reducers/TestRPC'
-import ConsoleReducer from 'Reducers/Console'
 import CoreReducer from 'Reducers/Core'
+import Web3Reducer from 'Reducers/Web3'
+import AccountsReducer from 'Reducers/Accounts'
 
 import createStore from 'Kernel/createStore'
 import syncStore from 'Kernel/syncStore'
@@ -37,9 +37,9 @@ import '../resources/fonts/FiraSans-SemiBold.ttf'
 
 const store = createStore(combineReducers({
   "settings": SettingsReducer,
-  "testrpcsource": TestRPCReducer,
-  "console": ConsoleReducer, 
-  "core": CoreReducer 
+  "core": CoreReducer,
+  "web3": Web3Reducer,
+  "accounts": AccountsReducer
 }))
 
 ready(store)

@@ -1,76 +1,44 @@
 import { ipcRenderer } from 'electron'
-import { push } from 'react-router-redux'
+import { push } from 'react-router-redux' 
 
-import * as core from 'Actions/Core'
+import * as Web3 from 'Actions/Web3'
+import * as Core from 'Actions/Core'
+import * as Accounts from 'Actions/Accounts'
 
 // Use the electron-settings app from the main process
 const settings = require('electron').remote.require('electron-settings');
-
 
 
 // This will be called before the very first render, so you can do whatever
 // you want here. The Redux Store is available at this point, so you can
 // dispatch any action you want
 export default function (store) {
-
-  var currentSettings = settings.getAll()
-
   // Ensure the store has these initial settings
+  var currentSettings = settings.getAll()
   store.dispatch({type: 'APP/SETTINGS', payload: currentSettings})
 
-  // Ensure web3 is set
-  store.dispatch(core.setRPCProviderUrl(`http://${currentSettings.server.hostname}:${currentSettings.server.port}`))
-
-  store.dispatch(core.getAccounts())
-
-  setInterval(() => {
-    store.dispatch(core.getBlockNumber())
-    store.dispatch(core.processBlocks())
-  }, 500)
-
-
+  // Load the first screen
   store.dispatch(push('/app_update'))
 
-  ipcRenderer.on('APP/TESTRPCSTARTED', (event, message) => {
-    store.dispatch({ type: 'APP/TESTRPCRUNNING', payload: message })
+  // Wait for the server to start...
+  ipcRenderer.on(Core.SET_SERVER_STARTED, () => {
+    store.dispatch(Core.setServerStarted())
+
+    // Ensure web3 is set
+    store.dispatch(Web3.setRPCProviderUrl(`http://${currentSettings.server.hostname}:${currentSettings.server.port}`))
+  
+    store.dispatch(Accounts.getAccounts())
+    store.dispatch(Core.getGasPrice())
+    store.dispatch(Core.getGasLimit())
+  
+    setInterval(() => {
+      store.dispatch(Core.getBlockNumber())
+      //store.dispatch(core.processBlocks())
+    }, 500)
   })
 
-  ipcRenderer.on('APP/FATALERROR', (event, message) => {
-    store.dispatch({ type: 'APP/FATALERROR', payload: message })
-  })
-
-  ipcRenderer.on('APP/BLOCKCHAINSTATE', (event, message) => {
-    store.dispatch({ type: 'APP/BLOCKCHAINSTATE', payload: message })
-  })
-
-  ipcRenderer.on('APP/REPLSTATE', (event, message) => {
-    store.dispatch({ type: 'APP/REPLSTATE', payload: message })
-  })
-
-  ipcRenderer.on('APP/REPLCLEAR', (event, message) => {
-    store.dispatch({ type: 'APP/REPLCLEAR' })
-  })
-
-  ipcRenderer.on('APP/REPLCOMMANDCOMPLETIONRESULT', (event, message) => {
-    store.dispatch({
-      type: 'APP/REPLCOMMANDCOMPLETIONRESULT',
-      payload: message
-    })
-  })
-
-  ipcRenderer.on('APP/BLOCKSEARCHRESULT', (event, message) => {
-    store.dispatch({ type: 'APP/BLOCKSEARCHRESULT', payload: message })
-  })
-
-  ipcRenderer.on('APP/TXSEARCHRESULT', (event, message) => {
-    store.dispatch({ type: 'APP/TXSEARCHRESULT', payload: message })
-  })
-
-  ipcRenderer.on('APP/CHECKPORTRESULT', (event, message) => {
-    store.dispatch({ type: 'APP/CHECKPORTRESULT', payload: message })
-  })
-
-  ipcRenderer.on('APP/SETTINGS', (event, settings) => {
-    store.dispatch({ type: 'APP/SETTINGS', payload: settings })
+  // The server will send a second message that sets the mnemonic and hdpath
+  ipcRenderer.on(Core.SET_MNEMONIC_AND_HD_PATH, (event, data) => {
+    store.dispatch(Core.setMnemonicAndHDPath(data.mnemonic, data.hdPath))
   })
 }

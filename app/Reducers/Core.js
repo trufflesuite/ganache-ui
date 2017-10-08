@@ -4,20 +4,30 @@ const MAX_BLOCKS = 10
 const MAX_TRANSACTIONS = 10
 
 const initialState = {
-  accounts: [], 
-  accountBalances: {},
-  accountNonces: {},
+  started: false,
+  isMining: true,
+  mnemonic: "",
+  hdPath: "",
   latestBlock: 0, // Block the current chain is on
   lastRequestedBlock: -1, // Last block whose data was requested
+  gasPrice: "0",
+  gasLimit: "0",
+  snapshots: [],
+  systemError: null,
   blocks: [], 
-  transactions: []
+  transactions: [],
 }
 
 export default function (state = initialState, action) {
   switch (action.type) {
-    case Core.SET_RPC_PROVIDER:
+    case Core.SET_SERVER_STARTED:
       return Object.assign({}, state, {
-        provider: action.provider
+        started: true
+      })
+    case Core.SET_MNEMONIC_AND_HD_PATH:
+      return Object.assign({}, state, {
+        mnemonic: action.mnemonic,
+        hdPath: action.hdPath
       })
     case Core.SET_LAST_REQUESTED_BLOCK_NUMBER:
       return Object.assign({}, state, {
@@ -56,6 +66,16 @@ export default function (state = initialState, action) {
       return Object.assign({}, state, {
         accountNonces
       }) 
+
+    case Core.SET_GAS_PRICE: 
+      return Object.assign({}, state, {
+        gasPrice: action.gasPrice
+      })
+
+    case Core.SET_GAS_LIMIT:
+      return Object.assign({}, state, {
+        gasLimit: action.gasLimit
+      })
 
     case Core.GET_BLOCK_NUMBER:
       return Object.assign({}, state, {

@@ -1,8 +1,21 @@
-import initialSettings from './SettingsService/InitialSettings'
 import uuid from 'uuid'
 import _ from 'lodash'
 
 const settings = require('electron-settings');
+
+const initialSettings = {
+  googleAnalyticsTracking: true,
+  cpuAndMemoryProfiling: false,
+  verboseLogging: false,
+  firstRun: true,
+  server: {
+    hostname: "localhost",
+    port: 7545,
+    network_id: 5777,
+    total_accounts: 10,
+    unlocked_accounts: []
+  }
+}
 
 class Settings {
   get (key, defaultValue = null) {

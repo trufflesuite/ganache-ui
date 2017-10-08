@@ -2,9 +2,7 @@ import URL from 'url'
 import React, { PureComponent } from 'react'
 import { hashHistory } from 'react-router'
 import _ from 'lodash'
-
-import TestRPCProvider from 'Providers/TestRPCProvider'
-import SettingsProvider from 'Providers/SettingsProvider'
+import connect from 'Components/Helpers/connect'
 
 import Icon from 'Elements/Icon'
 import OnlyIf from 'Elements/OnlyIf'
@@ -35,7 +33,6 @@ class ConfigScreen extends PureComponent {
 
   componentDidMount () {
     this.props.appCheckPort(this.state.portNumber)
-    //this.props.appGetSettings()
   }
 
   componentWillReceiveProps (nextProps) {
@@ -287,4 +284,4 @@ class ConfigScreen extends PureComponent {
   }
 }
 
-export default SettingsProvider(TestRPCProvider(ConfigScreen))
+export default connect(ConfigScreen, "settings")

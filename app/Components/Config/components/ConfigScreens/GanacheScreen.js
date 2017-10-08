@@ -1,10 +1,8 @@
 import React, { Component } from 'react'
-import TestRPCProvider from 'Providers/TestRPCProvider'
-import SettingsProvider from 'Providers/SettingsProvider'
-
+import connect from 'Components/Helpers/connect'
 import Styles from '../ConfigScreen.css'
 
-class AccountsScreen extends Component {
+class GanacheScreen extends Component {
   render () {
     return (
       <div>
@@ -71,4 +69,4 @@ class AccountsScreen extends Component {
   }
 }
 
-export default SettingsProvider(TestRPCProvider(AccountsScreen))
+export default connect(GanacheScreen, "settings")

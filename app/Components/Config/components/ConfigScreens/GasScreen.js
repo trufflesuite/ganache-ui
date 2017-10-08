@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
-import TestRPCProvider from 'Providers/TestRPCProvider'
-import SettingsProvider from 'Providers/SettingsProvider'
-
+import connect from 'Components/Helpers/connect'
 import Styles from '../ConfigScreen.css'
 
 const VALIDATIONS = {
@@ -79,4 +77,4 @@ class AccountsScreen extends Component {
   }
 }
 
-export default AccountsScreen
+export default connect(AccountsScreen, "settings")

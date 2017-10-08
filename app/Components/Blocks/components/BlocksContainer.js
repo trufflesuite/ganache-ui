@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 import Styles from './Blocks.css'
 
-import CoreProvider from 'Providers/Core'
+import connect from 'Components/Helpers/connect'
 
 import BlockList from 'Components/Blocks/components/blocks/BlockList'
 
@@ -20,4 +20,4 @@ class BlocksContainer extends Component {
   }
 }
 
-export default CoreProvider(BlocksContainer)
+export default connect(BlocksContainer, "core")

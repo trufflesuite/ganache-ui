@@ -3,8 +3,6 @@ import TxList from './TxList'
 import WithEmptyState from 'Elements/WithEmptyState'
 import EmptyTransactions from './EmptyTransactions'
 
-import TestRpcProvider from 'Providers/TestRPCProvider'
-
 class RecentTxs extends Component {
   render () {
     return (
@@ -20,4 +18,4 @@ class RecentTxs extends Component {
   }
 }
 
-export default TestRpcProvider(RecentTxs)
+export default RecentTxs

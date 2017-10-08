@@ -3,9 +3,10 @@ import { autoUpdater } from 'electron-updater'
 import path from 'path'
 import SysLog from 'electron-log'
 
-import TestRPCService from './Services/TestRPCService'
-import ConsoleService from './Services/ConsoleService'
-import SettingsService from './Services/SettingsService'
+import { SET_SERVER_STARTED, SET_MNEMONIC_AND_HD_PATH } from './Actions/Core'
+
+import ChainService from './Services/Chain'
+import SettingsService from './Services/Settings'
 
 let menu
 let template
@@ -83,10 +84,11 @@ if (process.platform === 'darwin') {
 app.on('ready', async () => {
   await installExtensions()
 
+  const chain = new ChainService(app)
   const Settings = new SettingsService() 
   
   Settings.bootstrap();
-  
+
   mainWindow = new BrowserWindow({
     show: false,
     minWidth: 1200,
@@ -99,9 +101,6 @@ app.on('ready', async () => {
 
   mainWindow.loadURL(`file://${__dirname}/app.html`)
 
-  consoleService = new ConsoleService(ipcMain, mainWindow) // eslint-disable-line
-  testRpcService = new TestRPCService(ipcMain, mainWindow, consoleService) // eslint-disable-line
-
   mainWindow.webContents.on('did-finish-load', () => {
     mainWindow.show()
     mainWindow.focus()
@@ -110,14 +109,21 @@ app.on('ready', async () => {
     // Remove the menu bar
     mainWindow.setMenu(null);
 
-    // Start the server immediately.
-    testRpcService.initializeTestRpc(Settings.get("server"))
+    chain.on("start", () => {
+      chain.startServer(Settings.getAll().server)
+    })
+    chain.on("server-started", (data) => {
+      mainWindow.webContents.send(SET_MNEMONIC_AND_HD_PATH, data)
+      mainWindow.webContents.send(SET_SERVER_STARTED)
+    })
+    chain.start()
   })
+
+  
 
   mainWindow.on('closed', () => {
     mainWindow = null
-    testRpcService = null
-    consoleService = null
+
   })
 
   // if (process.env.NODE_ENV === 'development') {

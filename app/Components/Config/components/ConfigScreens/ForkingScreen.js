@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
-import TestRPCProvider from 'Providers/TestRPCProvider'
-import SettingsProvider from 'Providers/SettingsProvider'
+import connect from 'Components/Helpers/connect'
 
 import OnlyIf from 'Elements/OnlyIf'
 
@@ -54,4 +53,4 @@ class AccountsScreen extends Component {
   }
 }
 
-export default SettingsProvider(TestRPCProvider(AccountsScreen))
+export default connect(AccountsScreen, "settings")
