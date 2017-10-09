@@ -17,6 +17,10 @@ export default function(component, ...reducers) {
     })
 
     return props
+  }, (dispatch) => {
+    return {
+      dispatch
+    }
   })
   return connector(component)
 }

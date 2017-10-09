@@ -26,6 +26,14 @@ ElectronCookies.enable({
 })
 
 class AppShell extends Component {
+  constructor () {
+    super()
+    this.state = {
+      scrollPosition: "top"
+    }
+    this.scrollDedupeTimeout = null
+  }
+
   _setupGoogleAnalytics = () => {
     this.user = ua('UA-83874933-5', this.props.settings.uuid)
     this.user.set('location', 'http://truffleframework.com/ganache')
@@ -57,37 +65,73 @@ class AppShell extends Component {
     this.user.pageview('/').send()
   }
 
-  componentDidMount () {
-    // Mousetrap.bind(['command+1', 'ctrl+1'], () => {
-    //   this.props.testRpcState.testRpcServerRunning
-    //     ? hashHistory.push('/accounts')
-    //     : null
-    // })
+  _handleScroll = () => {
+    let container = this.refs.shellcontainer
+    let scrollPosition = "top";
+    const pixelBuffer = 100
 
-    // Mousetrap.bind(['command+2', 'ctrl+2'], () => {
-    //   this.props.testRpcState.testRpcServerRunning
-    //     ? hashHistory.push('/blocks')
-    //     : null
-    // })
+    if (container.scrollTop < pixelBuffer) {
+      scrollPosition = "top"
+    } else if (container.scrollTop + container.clientHeight >= container.scrollHeight - pixelBuffer) {
+      scrollPosition = "bottom"
+    } else {
+      scrollPosition = "middle"
+    }
 
-    // Mousetrap.bind(['command+3', 'ctrl+3'], () => {
-    //   this.props.testRpcState.testRpcServerRunning
-    //     ? hashHistory.push('/transactions')
-    //     : null
-    // })
-
-    // Mousetrap.bind(['command+4', 'ctrl+4'], () => {
-    //   this.props.testRpcState.testRpcServerRunning
-    //     ? hashHistory.push('/console')
-    //     : null
-    // })
-
-    // Mousetrap.bind(['command+5', 'ctrl+5'], () => {
-    //   this.props.testRpcState.testRpcServerRunning
-    //     ? hashHistory.push('/config')
-    //     : null
-    // })
+    this.setState({
+      scrollPosition
+    })
   }
+
+  getScrollData = () => {
+    var container = this.refs.shellcontainer
+
+    return {
+      clientHeight: container.clientHeight, 
+      scrollTop: container.scrollTop,
+      scrollHeight: container.scrollHeight
+    }
+  }
+
+  setScrollTop = (scrollTop) => {
+    this.refs.shellcontainer.scrollTop = scrollTop
+  }
+
+  componentDidMount() {
+    this.refs.shellcontainer.addEventListener('scroll', this._handleScroll);
+  }
+
+  // componentDidMount () {
+  //   Mousetrap.bind(['command+1', 'ctrl+1'], () => {
+  //     this.props.testRpcState.testRpcServerRunning
+  //       ? hashHistory.push('/accounts')
+  //       : null
+  //   })
+
+  //   Mousetrap.bind(['command+2', 'ctrl+2'], () => {
+  //     this.props.testRpcState.testRpcServerRunning
+  //       ? hashHistory.push('/blocks')
+  //       : null
+  //   })
+
+  //   Mousetrap.bind(['command+3', 'ctrl+3'], () => {
+  //     this.props.testRpcState.testRpcServerRunning
+  //       ? hashHistory.push('/transactions')
+  //       : null
+  //   })
+
+  //   Mousetrap.bind(['command+4', 'ctrl+4'], () => {
+  //     this.props.testRpcState.testRpcServerRunning
+  //       ? hashHistory.push('/console')
+  //       : null
+  //   })
+
+  //   Mousetrap.bind(['command+5', 'ctrl+5'], () => {
+  //     this.props.testRpcState.testRpcServerRunning
+  //       ? hashHistory.push('/config')
+  //       : null
+  //   })
+  // }
 
   renderClonedChildrenWithPropsAndPathKey = (children, props, pathNameKey) => {
     return React.cloneElement(children, { ...props, key: pathNameKey })
@@ -120,10 +164,14 @@ class AppShell extends Component {
       <div className={Styles.AppShell}>
         <TopNavbar {...this.props} />
 
-        <div className={Styles.ShellContainer}>
+        <div className={Styles.ShellContainer} ref="shellcontainer">
           {this.renderClonedChildrenWithPropsAndPathKey(
             this.props.children,
-            { ...this.props },
+            { 
+              ...this.props,
+              scrollPosition: this.state.scrollPosition,
+              getScrollData: this.getScrollData
+            },
             segment
           )}
         </div>

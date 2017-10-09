@@ -14,6 +14,26 @@
 //   return { type: WEB3_REQUEST_SUCCEEDED, name, result }
 // }
 
+export function web3Request(name, args, provider, next) {
+  // This specifically pulls state from the web3 reducer. Smell?
+  let web3 = new Web3(provider)
+  
+  //dispatch(Web3RequestStarted(name))
+
+  let fn = web3.eth[name]
+
+  args.push((err, result) => {
+    if (err) {
+      //dispatch(Web3RequestFailed(name, err))
+    } else {
+      //dispatch(Web3RequestSucceeded(name, result))
+      next(result)
+    }
+  })
+
+  fn.apply(web3.eth, args)
+}
+
 export default function web3ActionCreator(name, args, next) {
   if (typeof args == "function") {
     next = args
@@ -21,23 +41,9 @@ export default function web3ActionCreator(name, args, next) {
   }
 
   return function(dispatch, getState) {
-    // This specifically pulls state from the web3 reducer. Smell?
     let provider = getState().web3.provider
-    let web3 = new Web3(provider)
-    
-    //dispatch(Web3RequestStarted(name))
-
-    let fn = web3.eth[name]
-
-    args.push((err, result) => {
-      if (err) {
-        //dispatch(Web3RequestFailed(name, err))
-      } else {
-        //dispatch(Web3RequestSucceeded(name, result))
-        next(result, dispatch, getState)
-      }
+    web3Request(name, args, provider, (result) => {
+      next(result, dispatch, getState)
     })
-
-    fn.apply(web3.eth, args)
   }
 }

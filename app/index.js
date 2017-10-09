@@ -9,6 +9,7 @@ import SettingsReducer from 'Reducers/Settings'
 import CoreReducer from 'Reducers/Core'
 import Web3Reducer from 'Reducers/Web3'
 import AccountsReducer from 'Reducers/Accounts'
+import BlocksReducer from 'Reducers/Blocks'
 
 import createStore from 'Kernel/createStore'
 import syncStore from 'Kernel/syncStore'
@@ -18,8 +19,8 @@ import AppShell from 'Components/AppShell/components/AppShell'
 import ConfigScreen from 'Components/Config/components/ConfigScreen'
 import Accounts from 'Components/Accounts/components/Accounts'
 
-import BlocksContainer from 'Components/Blocks/components/BlocksContainer'
-import BlockCard from 'Components/Blocks/components/blocks/BlockCard'
+import BlockList from 'Components/Blocks/BlockList'
+import BlockCard from 'Components/Blocks/BlockCard'
 
 import TransactionsContainer from 'Components/Transactions/components/TransactionsContainer'
 import RecentTxs from 'Components/Transactions/components/txs/RecentTxs'
@@ -39,7 +40,8 @@ const store = createStore(combineReducers({
   "settings": SettingsReducer,
   "core": CoreReducer,
   "web3": Web3Reducer,
-  "accounts": AccountsReducer
+  "accounts": AccountsReducer,
+  "blocks": BlocksReducer
 }))
 
 ready(store)
@@ -56,7 +58,7 @@ ReactDOM.render(
       <Route path="/" component={AppShell}>
         <Route path="/first_run" component={FirstRunScreen}/>
         <Route path='/accounts' component={Accounts} />
-        <Route path="/blocks" component={BlocksContainer} />
+        <Route path="/blocks" component={BlockList} />
         <Route path="transactions" component={TransactionsContainer} >
           <IndexRoute component={RecentTxs} />
           <Route path=":txhash" component={TransactionCard} />

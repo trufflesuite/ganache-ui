@@ -52,13 +52,6 @@ export const getBlockNumber = function() {
   })
 }
 
-export const GET_BLOCK = `${prefix}/GET_BLOCK`
-export const getBlock = function(numberOrHash) {
-  return web3ActionCreator("getBlock", [numberOrHash, true], (block, dispatch, getState) => {
-    dispatch({type: GET_BLOCK, block })
-  })
-}
-
 // export const SET_LAST_REQUESTED_BLOCK_NUMBER = `${prefix}/SET_LAST_REQUESTED_BLOCK`
 // export function setLastRequestedBlock(number) {
 //   return function(dispatch, getState) {
