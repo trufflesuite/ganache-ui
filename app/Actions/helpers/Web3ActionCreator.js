@@ -34,7 +34,7 @@ export function web3Request(name, args, provider, next) {
   fn.apply(web3.eth, args)
 }
 
-export default function web3ActionCreator(name, args, next) {
+export function web3ActionCreator(name, args, next) {
   if (typeof args == "function") {
     next = args
     args = []

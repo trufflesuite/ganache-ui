@@ -4,6 +4,7 @@ import { hashHistory } from 'react-router'
 import { shell } from 'electron'
 
 import connect from 'Components/Helpers/connect'
+import * as AppShellActions from 'Actions/AppShell'
 
 import TopNavbar from './TopNavbar'
 import OnlyIf from 'Elements/OnlyIf'
@@ -28,9 +29,6 @@ ElectronCookies.enable({
 class AppShell extends Component {
   constructor () {
     super()
-    this.state = {
-      scrollPosition: "top"
-    }
     this.scrollDedupeTimeout = null
   }
 
@@ -78,9 +76,7 @@ class AppShell extends Component {
       scrollPosition = "middle"
     }
 
-    this.setState({
-      scrollPosition
-    })
+    this.props.dispatch(AppShellActions.setScrollPosition(scrollPosition))
   }
 
   getScrollData = () => {
@@ -169,7 +165,6 @@ class AppShell extends Component {
             this.props.children,
             { 
               ...this.props,
-              scrollPosition: this.state.scrollPosition,
               getScrollData: this.getScrollData
             },
             segment
@@ -231,4 +226,4 @@ ${this.props.core.systemError}`
   }
 }
 
-export default connect(AppShell, "core", "settings", "accounts")
+export default connect(AppShell, "appshell", "core", "settings", "accounts", "transactions")

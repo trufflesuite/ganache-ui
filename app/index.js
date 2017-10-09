@@ -5,11 +5,13 @@ import { combineReducers, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import { Router, Route, IndexRoute, hashHistory } from 'react-router'
 
+import AppShellReducer from 'Reducers/AppShell'
 import SettingsReducer from 'Reducers/Settings'
 import CoreReducer from 'Reducers/Core'
 import Web3Reducer from 'Reducers/Web3'
 import AccountsReducer from 'Reducers/Accounts'
 import BlocksReducer from 'Reducers/Blocks'
+import TransactionsReducer from 'Reducers/Transactions'
 
 import createStore from 'Kernel/createStore'
 import syncStore from 'Kernel/syncStore'
@@ -18,13 +20,8 @@ import ready from 'Kernel/ready'
 import AppShell from 'Components/AppShell/components/AppShell'
 import ConfigScreen from 'Components/Config/components/ConfigScreen'
 import Accounts from 'Components/Accounts/components/Accounts'
-
-import BlockList from 'Components/Blocks/BlockList'
-import BlockCard from 'Components/Blocks/BlockCard'
-
-import TransactionsContainer from 'Components/Transactions/components/TransactionsContainer'
-import RecentTxs from 'Components/Transactions/components/txs/RecentTxs'
-import TransactionCard from 'Components/Transactions/components/txs/TxCard'
+import BlockContainer from 'Components/Blocks/BlockContainer'
+import TransactionContainer from 'Components/Transactions/TransactionContainer'
 
 import Console from 'Components/Console/components/Console'
 import AppUpdateScreen from 'Components/AppUpdate/components/AppUpdateScreen'
@@ -37,11 +34,13 @@ import '../resources/fonts/FiraSans-Bold.ttf'
 import '../resources/fonts/FiraSans-SemiBold.ttf'
 
 const store = createStore(combineReducers({
+  "appshell": AppShellReducer,
   "settings": SettingsReducer,
   "core": CoreReducer,
   "web3": Web3Reducer,
   "accounts": AccountsReducer,
-  "blocks": BlocksReducer
+  "blocks": BlocksReducer,
+  "transactions": TransactionsReducer
 }))
 
 ready(store)
@@ -58,11 +57,8 @@ ReactDOM.render(
       <Route path="/" component={AppShell}>
         <Route path="/first_run" component={FirstRunScreen}/>
         <Route path='/accounts' component={Accounts} />
-        <Route path="/blocks" component={BlockList} />
-        <Route path="transactions" component={TransactionsContainer} >
-          <IndexRoute component={RecentTxs} />
-          <Route path=":txhash" component={TransactionCard} />
-        </Route>
+        <Route path="/blocks(/:blockNumber)" component={BlockContainer} />
+        <Route path="/transactions(/:transactionHash)" component={TransactionContainer} />
         <Route path="/console" component={Console} />
         <Route path='/config' component={props => <ConfigScreen {...props} />} />
       </Route>

@@ -5,8 +5,8 @@ import Styles from './TransactionTypeBadge.css'
 export default class TransactionTypeBadge extends Component {
   render () {
     if (
-      this.props.tx.hasOwnProperty('contractAddress') &&
-      this.props.tx.contractAddress !== null
+      this.props.receipt.hasOwnProperty('contractAddress') &&
+      this.props.receipt.contractAddress !== null
     ) {
       return <div className={Styles.ContractCreationBadge}>CONTRACT CREATION</div>
     }
@@ -15,7 +15,7 @@ export default class TransactionTypeBadge extends Component {
       return <div className={Styles.ValueTransferBadge}>VALUE TRANSFER</div>
     }
 
-    if (this.props.tx.to && this.props.tx.data) {
+    if (this.props.tx.to && this.props.tx.input) {
       return <div className={Styles.ContractCallBadge}>CONTRACT CALL</div>
     }
   }

@@ -2,7 +2,8 @@ import * as Blocks from 'Actions/Blocks'
 
 const initialState = {
   inView: [],
-  requested: {}
+  requested: {}, 
+  currentBlock: null
 }
 
 // Note: This sorts in reverse; higher blocks first
@@ -37,6 +38,10 @@ export default function (state = initialState, action) {
       let blocks = state.inView.concat([action.block])
       return Object.assign({}, state, {
         inView: sort(blocks)
+      })
+    case Blocks.SET_CURRENT_BLOCK_SHOWN:
+      return Object.assign({}, state, {
+        currentBlock: action.block
       })
     default:
       return state

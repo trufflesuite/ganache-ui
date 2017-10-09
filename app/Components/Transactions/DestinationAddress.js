@@ -5,13 +5,13 @@ import Styles from './MiniTxCard.css'
 export default class DestinationAddress extends Component {
   render () {
     const isContractCall =
-      (this.props.tx.hasOwnProperty('contractAddress') &&
-        this.props.tx.contractAddress !== null) ||
-      (this.props.tx.to && this.props.tx.data)
+      (this.props.receipt.hasOwnProperty('contractAddress') &&
+        this.props.receipt.contractAddress !== null) ||
+      (this.props.tx.to && this.props.tx.input)
 
     const isContractCreationCall =
-      this.props.tx.hasOwnProperty('contractAddress') &&
-      this.props.tx.contractAddress !== null
+      this.props.receipt.hasOwnProperty('contractAddress') &&
+      this.props.receipt.contractAddress !== null
 
     return (
       <div className={Styles.To}>
@@ -24,7 +24,7 @@ export default class DestinationAddress extends Component {
           {isContractCreationCall
             ? <div className={Styles.ContractCreationAddress}>
                 <span>
-                  {this.props.tx.contractAddress}
+                  {this.props.receipt.contractAddress}
                 </span>
               </div>
             : <div>

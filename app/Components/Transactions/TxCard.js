@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import connect from 'Components/Helpers/connect'
+import * as Transactions from 'Actions/Transactions'
 
 import EtherUtil from 'ethereumjs-util'
 import Moment from 'react-moment'
@@ -34,27 +36,17 @@ class TxCard extends Component {
     }
   }
 
-  componentWillReceiveProps (nextProps) {
-    if (nextProps.params.txhash !== this.props.params.txhash) {
-      this.props.appSearchTx(this.props.params.txhash)
-    }
-  }
-
   componentDidMount () {
-    this.props.appSearchTx(this.props.params.txhash)
+    this.props.dispatch(Transactions.showTransaction(this.props.transactionHash))
   }
 
   render () {
-    const tx = this.props.testRpcState.currentTxSearchMatch
+    const tx = this.props.transactions.currentTransaction
+    const receipt = this.props.transactions.currentTransactionReceipt
     const cardStyles = `${this.borderStyleSelector(tx)} ${Styles.TxCard}`
 
-    if (!tx) {
-      return (
-        <div className={EmptyTransactionStyles.EmptyTransactions}>
-          <h3>{this.props.params.txhash}</h3>
-          No Transaction found.
-        </div>
-      )
+    if (!tx || !receipt) {
+      return <div />
     }
 
     return (
@@ -71,23 +63,17 @@ class TxCard extends Component {
               </h1>
             </div>
             <div className={BorderStyles.Type}>
-              <TransactionTypeBadge tx={tx} />
+              <TransactionTypeBadge tx={tx} receipt={receipt} />
             </div>
           </header>
           <section className={BorderStyles.Parties}>
             <SenderAddress tx={tx} />
-            <DestinationAddress tx={tx} />
-            <div>
-              <div className={Styles.Label}>NONCE</div>
-              <div className={Styles.Value}>
-                {parseInt(EtherUtil.bufferToInt(tx.tx.nonce, 16))}
-              </div>
-            </div>
+            <DestinationAddress tx={tx} receipt={receipt} />
             <div>
               <div className={Styles.Label}>VALUE</div>
               <div className={Styles.Value}>
                 <FormattedEtherValue
-                  value={EtherUtil.bufferToInt(tx.tx.value, 16)}
+                  value={tx.value.toString()}
                 />
               </div>
             </div>
@@ -96,33 +82,33 @@ class TxCard extends Component {
             <div>
               <div className={Styles.Label}>GAS USED</div>
               <div className={Styles.Value}>
-                {parseInt(EtherUtil.bufferToInt(tx.gasUsed, 16))}
+                {receipt.gasUsed}
               </div>
             </div>
             <div>
               <div className={Styles.Label}>GAS PRICE</div>
               <div className={Styles.Value}>
-                {parseInt(EtherUtil.bufferToInt(tx.tx.gasPrice, 16))}
+                {tx.gasPrice.toString()}
               </div>
             </div>
             <div>
               <div className={Styles.Label}>GAS LIMIT</div>
               <div className={Styles.Value}>
-                {parseInt(EtherUtil.bufferToInt(tx.tx.gasLimit, 16))}
+                {tx.gas}
               </div>
             </div>
-            <div>
+            {/* <div>
               <div className={Styles.Label}>MINED ON</div>
               <div className={Styles.Value}>
                 <Moment unix format="YYYY-MM-DD HH:mm:ss">
                   {EtherUtil.bufferToInt(tx.block.header.timestamp)}
                 </Moment>
               </div>
-            </div>
+            </div> */}
             <div>
               <div className={Styles.Label}>MINED IN BLOCK</div>
               <div className={Styles.Value}>
-                {EtherUtil.bufferToInt(tx.block.header.number)}
+                {receipt.blockNumber}
               </div>
             </div>
           </section>
@@ -130,34 +116,14 @@ class TxCard extends Component {
             <div>
               <div className={Styles.Label}>TX DATA</div>
               <div className={Styles.Value}>
-                {EtherUtil.bufferToHex(tx.tx.data)}
+                {tx.input}
               </div>
             </div>
           </main>
-          <footer>
-            <div>
-              <div className={Styles.Label}>V</div>
-              <div className={Styles.Value}>
-                <FormattedHex value={tx.tx.v} />
-              </div>
-            </div>
-            <div>
-              <div className={Styles.Label}>R</div>
-              <div className={Styles.Value}>
-                <FormattedHex value={tx.tx.r} />
-              </div>
-            </div>
-            <div>
-              <div className={Styles.Label}>S</div>
-              <div className={Styles.Value}>
-                <FormattedHex value={tx.tx.s} />
-              </div>
-            </div>
-          </footer>
         </section>
       </main>
     )
   }
 }
 
-export default TxCard
+export default connect(TxCard, "transactions")

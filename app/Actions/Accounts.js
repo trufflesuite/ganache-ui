@@ -1,4 +1,4 @@
-import web3ActionCreator from './helpers/Web3ActionCreator'
+import { web3ActionCreator } from './helpers/Web3ActionCreator'
 
 const prefix = 'ACCOUNTS'
 

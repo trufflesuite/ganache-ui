@@ -1,5 +1,5 @@
 
-import { web3Request } from './helpers/Web3ActionCreator'
+import { web3Request, web3ActionCreator } from './helpers/Web3ActionCreator'
 
 const prefix = 'BLOCKS'
 const PAGE_SIZE = 15
@@ -36,9 +36,12 @@ export const requestNextPage = function() {
 
 export const requestPreviousPage = function() {
   return function(dispatch, getState) {
-    console.log("REQUESTING_PREVIOUS_PAGE")
-
     var blocksInView = getState().blocks.inView
+
+    if (blocksInView.length == 0) {
+      return dispatch(requestPage(getState().core.latestBlock))
+    }
+
     var latestBlockInView = blocksInView[0].number
     var latestBlock = getState().core.latestBlock
   
@@ -71,4 +74,15 @@ export const getBlock = function(number) {
       dispatch({type: ADD_BLOCK_TO_VIEW, block })
     })
   }
+}
+
+export const SET_CURRENT_BLOCK_SHOWN = `${prefix}/SET_CURRENT_BLOCK_SHOWN`
+export const showBlock = function(number) {
+  console.log("SHOW BLOCK", number)
+  return web3ActionCreator("getBlock", [number, true], (block, dispatch, getState) => {
+    dispatch({type: SET_CURRENT_BLOCK_SHOWN, block})
+  })
+}
+export const clearBlockShown = function() {
+  return {type: SET_CURRENT_BLOCK_SHOWN, block: null}
 }

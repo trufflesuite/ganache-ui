@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import connect from 'Components/Helpers/connect'
+import * as Blocks from 'Actions/Blocks'
 
 import Moment from 'react-moment'
 import EtherUtil from 'ethereumjs-util'
@@ -8,20 +10,23 @@ import { Link, hashHistory } from 'react-router'
 import Styles from './BlockCard.css'
 
 class BlockCard extends Component {
+  constructor(props) {
+    super()
+  }
+
   _renderRecentTransaction = transactions => {
     if (transactions.length === 0) {
       return 'NO TRANSACTIONS'
     }
 
     return transactions.map(tx => {
-      const txHash = EtherUtil.bufferToHex(tx.hash)
       return (
         <a
           href="#"
-          key={txHash}
-          onClick={this._handleTxShow.bind(this, txHash)}
+          key={tx.hash}
+          onClick={this._handleTxShow.bind(this, tx.hash)}
         >
-          {txHash}
+          {tx.hash}
         </a>
       )
     })
@@ -32,24 +37,20 @@ class BlockCard extends Component {
     hashHistory.push(`/transactions/${txHash}`)
   }
 
-  componentWillReceiveProps (nextProps) {
-    if (nextProps.params.block_number !== this.props.params.block_number) {
-      this.props.appSearchBlock(nextProps.params.block_number)
-    }
-  }
-
   componentDidMount () {
-    this.props.appSearchBlock(this.props.params.block_number)
+    this.props.dispatch(Blocks.showBlock(this.props.blockNumber))
   }
 
   render () {
-    const block = this.props.testRpcState.currentBlockSearchMatch
-    const hasTxs = block && !block.hasOwnProperty('error') && block.transactions.length > 0
-    const cardStyles = `${Styles.BlockCard} ${hasTxs ? Styles.HasTxs : ''}`
+    const block = this.props.blocks.currentBlock
 
     if (!block) {
       return <div />
     }
+
+    const hasTxs = block.transactions.length > 0
+    const cardStyles = `${Styles.BlockCard} ${hasTxs ? Styles.HasTxs : ''}`
+
 
     if (block.hasOwnProperty('error')) {
       return <section className={Styles.BlockSearchError}>
@@ -67,27 +68,27 @@ class BlockCard extends Component {
             <div className={Styles.BlockNumber}>
               <span>BLOCK NUMBER</span>
               <h1>
-                {EtherUtil.bufferToInt(block.header.number)}
+                {block.number}
               </h1>
             </div>
             <div className={Styles.HeaderSecondaryInfo}>
               <div className={Styles.GasUsed}>
                 <div>GAS USED</div>
                 <h1>
-                  {parseInt(EtherUtil.bufferToInt(block.header.gasUsed), 16)}
+                  {block.gasUsed}
                 </h1>
               </div>
               <div className={Styles.GasLimit}>
                 <div>GAS LIMIT</div>
                 <h1>
-                  {parseInt(EtherUtil.bufferToInt(block.header.gasLimit), 16)}
+                  {block.gasLimit}
                 </h1>
               </div>
               <div className={Styles.MinedOn}>
                 <div>MINED ON</div>
                 <h1>
                   <Moment unix format="YYYY-MM-DD HH:MM:SS">
-                    {EtherUtil.bufferToInt(block.header.timestamp)}
+                    {block.timestamp}
                   </Moment>
                 </h1>
               </div>
@@ -105,23 +106,24 @@ class BlockCard extends Component {
             <dl>
               <dt>BLOCK HASH</dt>
               <dd>
-                {EtherUtil.bufferToHex(block.hash)}
+                {block.hash}
               </dd>
               <dt>Parent Hash</dt>
               <dd>
-                {EtherUtil.bufferToHex(block.header.parentHash)}
+                {block.parentHash}
               </dd>
 
+              {/* 
               <dt>Nonce</dt>
               <dd>
-                {parseInt(EtherUtil.bufferToInt(block.header.nonce, 16))}
+                {block.nonce}
               </dd>
 
               <dt>Extra Data</dt>
               <dd>
-                {EtherUtil.bufferToHex(block.header.extraData)}
+                {block.extraData}
               </dd>
-
+              
               <dt>Mix Hash</dt>
               <dd>
                 {EtherUtil.bufferToHex(block.header.mixHash)}
@@ -135,7 +137,7 @@ class BlockCard extends Component {
               <dt>Bloom</dt>
               <dd className={Styles.Bloom}>
                 {EtherUtil.bufferToHex(block.header.bloom)}
-              </dd>
+              </dd> */}
             </dl>
           </main>
         </section>
@@ -144,4 +146,4 @@ class BlockCard extends Component {
   }
 }
 
-export default BlockCard
+export default connect(BlockCard, "blocks")

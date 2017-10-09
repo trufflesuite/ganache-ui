@@ -26,13 +26,13 @@ export default class MiniTxCard extends Component {
   }
 
   render () {
-    const { tx } = this.props
+    const { tx, receipt } = this.props
 
     const cardStyles = `${Styles.MiniTxCard} ${this.borderStyleSelector(tx)}`
 
     return (
       <Link
-        to={`/transactions/${EtherUtil.bufferToHex(tx.hash)}`}
+        to={`/transactions/${tx.hash}`}
         className={Styles.Link}
       >
         <div className={cardStyles}>
@@ -41,13 +41,13 @@ export default class MiniTxCard extends Component {
               <div className={Styles.TxHash}>
                 <div className={Styles.Label}>TX HASH</div>
                 <div className={Styles.Value}>
-                  {EtherUtil.bufferToHex(tx.hash)}
+                  {tx.hash}
                 </div>
               </div>
             </div>
 
             <div className={Styles.RowItem}>
-              <TransactionTypeBadge tx={tx} />
+              <TransactionTypeBadge tx={tx} receipt={receipt} />
             </div>
           </div>
 
@@ -63,14 +63,14 @@ export default class MiniTxCard extends Component {
               </div>
 
               <div className={Styles.RowItem}>
-                <DestinationAddress tx={tx} />
+                <DestinationAddress tx={tx} receipt={receipt} />
               </div>
 
               <div className={Styles.RowItem}>
                 <div className={Styles.GasUsed}>
                   <div className={Styles.Label}>GAS USED</div>
                   <div className={Styles.Value}>
-                    {parseInt(EtherUtil.bufferToInt(tx.gasUsed), 16)}
+                    {receipt.gasUsed}
                   </div>
                 </div>
               </div>
@@ -79,12 +79,12 @@ export default class MiniTxCard extends Component {
                 <div className={Styles.Value}>
                   <div className={Styles.Label}>VALUE</div>
                   <div className={Styles.Value}>
-                    {parseInt(EtherUtil.bufferToInt(tx.value), 16)}
+                    {tx.value.toString()}
                   </div>
                 </div>
               </div>
 
-              <div className={Styles.RowItem}>
+              {/* <div className={Styles.RowItem}>
                 <div className={Styles.MinedOn}>
                   <div className={Styles.Label}>MINED ON</div>
                   <div className={Styles.Value}>
@@ -93,7 +93,7 @@ export default class MiniTxCard extends Component {
                     </Moment>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
