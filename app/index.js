@@ -12,6 +12,7 @@ import Web3Reducer from 'Reducers/Web3'
 import AccountsReducer from 'Reducers/Accounts'
 import BlocksReducer from 'Reducers/Blocks'
 import TransactionsReducer from 'Reducers/Transactions'
+import LogsReducer from 'Reducers/Logs'
 
 import createStore from 'Kernel/createStore'
 import syncStore from 'Kernel/syncStore'
@@ -22,8 +23,8 @@ import ConfigScreen from 'Components/Config/components/ConfigScreen'
 import Accounts from 'Components/Accounts/components/Accounts'
 import BlockContainer from 'Components/Blocks/BlockContainer'
 import TransactionContainer from 'Components/Transactions/TransactionContainer'
+import LogsScreen from 'Components/Logs/LogsScreen'
 
-import Console from 'Components/Console/components/Console'
 import AppUpdateScreen from 'Components/AppUpdate/components/AppUpdateScreen'
 import FirstRunScreen from 'Components/FirstRun/components/FirstRunScreen'
 
@@ -40,7 +41,8 @@ const store = createStore(combineReducers({
   "web3": Web3Reducer,
   "accounts": AccountsReducer,
   "blocks": BlocksReducer,
-  "transactions": TransactionsReducer
+  "transactions": TransactionsReducer,
+  "logs": LogsReducer
 }))
 
 ready(store)
@@ -59,7 +61,7 @@ ReactDOM.render(
         <Route path='/accounts' component={Accounts} />
         <Route path="/blocks(/:blockNumber)" component={BlockContainer} />
         <Route path="/transactions(/:transactionHash)" component={TransactionContainer} />
-        <Route path="/console" component={Console} />
+        <Route path="/logs" component={LogsScreen} />
         <Route path='/config' component={props => <ConfigScreen {...props} />} />
       </Route>
     </Router>

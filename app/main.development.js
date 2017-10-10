@@ -4,6 +4,7 @@ import path from 'path'
 import SysLog from 'electron-log'
 
 import { SET_SERVER_STARTED, SET_MNEMONIC_AND_HD_PATH } from './Actions/Core'
+import { ADD_LOG_LINES } from './Actions/Logs'
 
 import ChainService from './Services/Chain'
 import SettingsService from './Services/Settings'
@@ -115,6 +116,12 @@ app.on('ready', async () => {
     chain.on("server-started", (data) => {
       mainWindow.webContents.send(SET_MNEMONIC_AND_HD_PATH, data)
       mainWindow.webContents.send(SET_SERVER_STARTED)
+    })
+    chain.on("stdout", (data) => {
+      mainWindow.webContents.send(ADD_LOG_LINES, data.split(/\n/g))
+    })
+    chain.on("stderr", (data) => {
+      mainWindow.webContents.send(ADD_LOG_LINES, data.split(/\n/g))
     })
     chain.start()
   })

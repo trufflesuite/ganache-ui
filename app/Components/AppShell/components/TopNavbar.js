@@ -8,7 +8,7 @@ import Icon from 'Elements/Icon'
 import AccountIcon from 'Icons/account.svg'
 import BlockIcon from 'Icons/blocks.svg'
 import TxIcon from 'Icons/transactions.svg'
-import ConsoleIcon from 'Icons/console.svg'
+import LogsIcon from 'Icons/console.svg'
 import SettingsIcon from 'Icons/settings.svg'
 import SearchIcon from 'Icons/search.svg'
 import ForceMineIcon from 'Icons/force_mine.svg'
@@ -159,9 +159,9 @@ class TopNavbar extends Component {
               <Icon glyph={TxIcon} size={44} />
               Transactions
             </Link>
-            <Link to="console" activeClassName={Styles.Active}>
-              <Icon glyph={ConsoleIcon} size={44} />
-              Console
+            <Link to="logs" activeClassName={Styles.Active}>
+              <Icon glyph={LogsIcon} size={44} />
+              Logs
             </Link>
           </div>
           <div className={Styles.SearchBar}>

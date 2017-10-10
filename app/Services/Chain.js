@@ -14,7 +14,7 @@ class ChainService extends EventEmitter {
   start() {
     let chainPath = path.join(this.app.getAppPath(), "chain.js")
     const options = {
-      stdio: [ 0, 1, 2, 'ipc' ]
+      stdio: [ 'pipe', 'pipe', 'pipe', 'ipc' ]
     };
     this.child = fork(chainPath, [], options)
     this.child.once('message', () => {
@@ -26,6 +26,14 @@ class ChainService extends EventEmitter {
     this.child.on('error', (error) => {
       console.log(error)
     })
+    this.child.stdout.on('data', (data) => {
+      // Remove all \r's and the final line ending
+      this.emit("stdout", data.toString().replace(/\r/g, "").replace(/\n$/, ""))
+    });
+    this.child.stderr.on('data', (data) => {
+      // Remove all \r's and the final line ending
+      this.emit("stderr", data.toString().replace(/\r/g, "").replace(/\n$/, ""))
+    });
   }
 
   startServer(options) {

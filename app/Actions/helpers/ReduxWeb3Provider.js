@@ -21,6 +21,11 @@ class ReduxWeb3Provider {
       return
     }
 
+    // Mark payload as an internal request
+    // Slightly hacky; our chain won't log internal requests.
+    // See chain.js.
+    payload.internal = true
+
     this.dispatch(RPCRequestStarted(payload))
 
     this.provider.sendAsync(payload, (err, response) => {
