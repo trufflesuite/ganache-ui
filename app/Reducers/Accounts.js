@@ -3,7 +3,7 @@ import * as Accounts from 'Actions/Accounts'
 const initialState = {
   addresses: [], 
   balances: {},
-  nonces: {},
+  nonces: {}
 }
 
 export default function (state = initialState, action) {

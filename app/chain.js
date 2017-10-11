@@ -56,19 +56,26 @@ function startServer(options) {
       oldSendAsync(payload, callback)
     }
   
-    server.listen(options.port, options.hostname, function(err) {
+    server.listen(options.port, options.hostname, function(err, state) {
       if (err) {
         process.send({type: 'start-error', data: err});
         return
       }
       
-      // Little deep; smelly
-      var stateManager = server.provider.manager.state
+      var data = {
+        mnemonic: state.mnemonic,
+        hdPath: state.wallet_hdpath,
+        privateKeys: {}
+      }
 
-      process.send({type: 'server-started', data: {
-        mnemonic: stateManager.mnemonic,
-        hdPath: stateManager.wallet_hdpath
-      }})
+      var accounts = state.accounts;
+      var addresses = Object.keys(accounts);
+    
+      addresses.forEach(function(address, index) {
+        data.privateKeys[address] = accounts[address].secretKey.toString("hex")
+      });
+
+      process.send({type: 'server-started', data: data})
 
       console.log("Ganache started successfully!")
       console.log("Waiting for requests...")

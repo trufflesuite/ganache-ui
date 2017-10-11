@@ -15,10 +15,6 @@ export default class Keys extends PureComponent {
             {this.props.accountAddress}
           </h4>
           <dl>
-            <dt>PUBLIC KEY</dt>
-            <dd>
-              {this.props.publicKey}
-            </dd>
             <dt>PRIVATE KEY</dt>
             <dd>
               {this.props.privateKey}

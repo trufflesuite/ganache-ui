@@ -8,9 +8,9 @@ export function setServerStarted() {
   return { type: SET_SERVER_STARTED }
 }
 
-export const SET_MNEMONIC_AND_HD_PATH = `${prefix}/SET_MNEMONIC_AND_HD_PATH`
-export function setMnemonicAndHDPath(mnemonic, hdPath) {
-  return { type: SET_MNEMONIC_AND_HD_PATH, mnemonic, hdPath }
+export const SET_KEY_DATA = `${prefix}/SET_KEY_DATA`
+export function setKeyData(mnemonic, hdPath, privateKeys) {
+  return { type: SET_KEY_DATA, mnemonic, hdPath, privateKeys }
 }
 
 export const SET_GAS_PRICE = `${prefix}/SET_GAS_PRICE`

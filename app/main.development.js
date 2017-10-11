@@ -3,7 +3,7 @@ import { autoUpdater } from 'electron-updater'
 import path from 'path'
 import SysLog from 'electron-log'
 
-import { SET_SERVER_STARTED, SET_MNEMONIC_AND_HD_PATH } from './Actions/Core'
+import { SET_SERVER_STARTED, SET_KEY_DATA } from './Actions/Core'
 import { ADD_LOG_LINES } from './Actions/Logs'
 
 import ChainService from './Services/Chain'
@@ -114,7 +114,7 @@ app.on('ready', async () => {
       chain.startServer(Settings.getAll().server)
     })
     chain.on("server-started", (data) => {
-      mainWindow.webContents.send(SET_MNEMONIC_AND_HD_PATH, data)
+      mainWindow.webContents.send(SET_KEY_DATA, data)
       mainWindow.webContents.send(SET_SERVER_STARTED)
     })
     chain.on("stdout", (data) => {
@@ -123,6 +123,7 @@ app.on('ready', async () => {
     chain.on("stderr", (data) => {
       mainWindow.webContents.send(ADD_LOG_LINES, data.split(/\n/g))
     })
+
     chain.start()
   })
 

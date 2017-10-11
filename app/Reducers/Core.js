@@ -8,6 +8,7 @@ const initialState = {
   isMining: true,
   mnemonic: "",
   hdPath: "",
+  privateKeys: {},
   latestBlock: 0, // Block the current chain is on
   lastRequestedBlock: -1, // Last block whose data was requested
   gasPrice: "0",
@@ -24,10 +25,11 @@ export default function (state = initialState, action) {
       return Object.assign({}, state, {
         started: true
       })
-    case Core.SET_MNEMONIC_AND_HD_PATH:
+    case Core.SET_KEY_DATA:
       return Object.assign({}, state, {
         mnemonic: action.mnemonic,
-        hdPath: action.hdPath
+        hdPath: action.hdPath,
+        privateKeys: action.privateKeys
       })
     case Core.SET_LAST_REQUESTED_BLOCK_NUMBER:
       return Object.assign({}, state, {

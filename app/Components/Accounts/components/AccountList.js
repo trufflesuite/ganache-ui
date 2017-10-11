@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import connect from 'Components/Helpers/connect'
 
 import OnlyIf from 'Elements/OnlyIf'
 import FormattedEtherValue from 'Elements/FormattedEtherValue'
@@ -12,22 +13,20 @@ import Keys from './Keys'
 
 import Styles from './AccountList.css'
 
-export default class AccountList extends Component {
+class AccountList extends Component {
   constructor (props) {
     super(props)
     this.state = {
       showKeys: false,
       privateKey: '',
-      publicKey: '',
       accountAddress: ''
     }
   }
 
-  showKeys = (accountAddress, privateKey, publicKey) => {
+  showKeys = (accountAddress, privateKey) => {
     this.setState({
       showKeys: true,
       privateKey,
-      publicKey,
       accountAddress
     })
   }
@@ -38,8 +37,8 @@ export default class AccountList extends Component {
     })
   }
 
-  _renderAccounts = accounts => {
-    return accounts.map((account, index) => {
+  _renderAccounts = () => {
+    return this.props.accounts.addresses.map((account, index) => {
       return (
         <div
           className={Styles.AccountCard}
@@ -55,7 +54,7 @@ export default class AccountList extends Component {
             <div className={Styles.AccountBalance}>
               <div className={Styles.Label}>BALANCE</div>
               <div className={Styles.Value}>
-                <FormattedEtherValue value={this.props.balances[account]} />
+                <FormattedEtherValue value={this.props.accounts.balances[account].toString()} />
               </div>
             </div>
           </div>
@@ -63,7 +62,7 @@ export default class AccountList extends Component {
             <div className={Styles.TransactionCount}>
               <div className={Styles.Label}>TX COUNT</div>
               <div className={Styles.Value}>
-                {this.props.nonces[account]}
+                {this.props.accounts.nonces[account]}
               </div>
             </div>
             <div className={Styles.AccountIndex}>
@@ -77,21 +76,21 @@ export default class AccountList extends Component {
               onClick={() => {
                 this.showKeys(
                   account,
-                  "<remove me>",
-                  "<private key>"
+                  this.props.core.privateKeys[account]
                 )
               }}
             >
               <Icon glyph={KeyIcon} size={24} className="isolate" />
               <span className={`${Styles.popover} ${Styles.above}`}>
-                See Account Keys
+                Show Keys
               </span>
             </span>
-            {/* <div className={Styles.AccountState}>
-              {account.isUnlocked
+            <div className={Styles.AccountState}>
+              <Icon glyph={UnlockedIcon} size={24} className="isolate" />
+              {/* {account.isUnlocked
                 ? <Icon glyph={UnlockedIcon} size={24} className="isolate" />
-                : <Icon glyph={LockedIcon} size={24} className="isolate" />}
-            </div> */}
+                : <Icon glyph={LockedIcon} size={24} className="isolate" />} */}
+            </div>
           </div>
         </div>
       )
@@ -101,12 +100,11 @@ export default class AccountList extends Component {
   render () {
     return (
       <div className={Styles.AccountList}>
-        {this._renderAccounts(this.props.accounts)}
+        {this._renderAccounts()}
         <OnlyIf test={this.state.showKeys}>
           <Keys
             accountAddress={this.state.accountAddress}
             privateKey={this.state.privateKey}
-            publicKey={this.state.publicKey}
             onCloseModal={this.onCloseModal}
           />
         </OnlyIf>
@@ -114,3 +112,5 @@ export default class AccountList extends Component {
     )
   }
 }
+
+export default connect(AccountList, "core", "accounts")

@@ -38,8 +38,8 @@ export default function (store) {
   })
 
   // The server will send a second message that sets the mnemonic and hdpath
-  ipcRenderer.on(Core.SET_MNEMONIC_AND_HD_PATH, (event, data) => {
-    store.dispatch(Core.setMnemonicAndHDPath(data.mnemonic, data.hdPath))
+  ipcRenderer.on(Core.SET_KEY_DATA, (event, data) => {
+    store.dispatch(Core.setKeyData(data.mnemonic, data.hdPath, data.privateKeys))
   })
 
   ipcRenderer.on(Logs.ADD_LOG_LINES, (event, lines) => {

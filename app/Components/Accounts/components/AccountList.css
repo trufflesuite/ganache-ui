@@ -107,6 +107,7 @@
     padding: 7px 10px;
     position: absolute;
     z-index: 4;
+    white-space: nowrap;
 
     &:before {
       border-top: 7px solid rgba(0, 0, 0, 0.85);
