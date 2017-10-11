@@ -5,6 +5,9 @@ import * as Transactions from 'Actions/Transactions'
 import MiniTxCard from './MiniTxCard'
 import Styles from './TxList.css'
 
+import MiningIcon from 'Icons/force_mine.svg'
+import Icon from 'Elements/Icon'
+
 class TxList extends Component {
   componentWillReceiveProps(nextProps) {
     // If the scroll position changed...
@@ -26,15 +29,28 @@ class TxList extends Component {
   }
 
   render () {
+    var content
+    if (this.props.transactions.inView.length > 0) {
+      content = this.props.transactions.inView.map((tx) => {
+        return <MiniTxCard
+          tx={tx}
+          receipt={this.props.transactions.receipts[tx.hash]}
+          key={`tx-${tx.hash}`}
+        />
+      })
+    } else {
+      content = 
+        <div className={Styles.Waiting}>
+            <Icon glyph={MiningIcon} size={64} />
+            <p>
+              Waiting for transactions...
+            </p>
+        </div>
+    }
+
     return (
       <div className={Styles.TxList}>
-        {this.props.transactions.inView.map((tx) => {
-          return <MiniTxCard
-            tx={tx}
-            receipt={this.props.transactions.receipts[tx.hash]}
-            key={`tx-${tx.hash}`}
-          />
-        })}
+        { content }
       </div>
     )
   }

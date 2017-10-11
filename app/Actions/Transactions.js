@@ -72,13 +72,13 @@ export const getTransactionsForBlock = function(number) {
     dispatch({type: SET_BLOCK_REQUESTED, number })
 
     // Now request the block and receipts for all its transactions
-    web3Request("getBlock", [number, true], provider, (block) => {
+    web3Request("getBlock", [number, true], provider, (err, block) => {
       if (block.transactions.length == 0) {
         return
       }
 
       map(block.transactions, (tx, done) => {
-        web3Request("getTransactionReceipt", [tx.hash], provider, (receipt) => {
+        web3Request("getTransactionReceipt", [tx.hash], provider, (err, receipt) => {
           done(null, receipt)
         } )
       }, (err, receipts) => {
@@ -92,8 +92,8 @@ export const SET_CURRENT_TRANSACTION_SHOWN = `${prefix}/SET_CURRENT_TRANSACTION_
 export const showTransaction = function(hash) {
   return function(dispatch, getState) {
     let provider = getState().web3.provider
-    web3Request("getTransaction", [hash], provider, (transaction) => {
-      web3Request("getTransactionReceipt", [hash], provider, (receipt) => {
+    web3Request("getTransaction", [hash], provider, (err, transaction) => {
+      web3Request("getTransactionReceipt", [hash], provider, (err, receipt) => {
         dispatch({type: SET_CURRENT_TRANSACTION_SHOWN, transaction, receipt})
       })
     })

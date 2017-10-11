@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
 import { Link, hashHistory } from 'react-router'
+import connect from 'Components/Helpers/connect'
+import * as Search from 'Actions/Search'
+
 import Spinner from 'Elements/Spinner'
 import OnlyIf from 'Elements/OnlyIf'
 import StatusIndicator from 'Elements/StatusIndicator'
@@ -46,29 +49,9 @@ class TopNavbar extends Component {
     this.props.appRevertSnapshot(this.props.core.snapshots.length)
   }
 
-  classifyInput = () => {
-    const searchTerm = this.searchInput.value
-
-    switch (searchTerm) {
-      case (searchTerm.match(/^(\d+)$/) || {}).input:
-        hashHistory.push(`/blocks/${searchTerm}`)
-        break
-      case (searchTerm.match(/^[0(x|X)]*[a-zA-Z0-9]{40,42}$/) || {}).input:
-        hashHistory.push(`/accounts/${searchTerm}`)
-        break
-      case (searchTerm.match(/^[0(x|X)]*[a-zA-Z0-9]{64,66}$/) || {}).input:
-        hashHistory.push(`/transactions/${searchTerm}`)
-        break
-      default:
-        break
-    }
-
-    this.searchInput.value = ''
-  }
-
   handleSearchKeyPress = e => {
     if (e.key === 'Enter') {
-      this.classifyInput()
+      this.props.dispatch(Search.query(this.searchInput.value.trim()))
     }
   }
 
@@ -238,4 +221,4 @@ class TopNavbar extends Component {
   }
 }
 
-export default TopNavbar
+export default connect(TopNavbar)

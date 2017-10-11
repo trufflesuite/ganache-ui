@@ -60,9 +60,9 @@ class BlockCard extends Component {
 
     return (
       <main>
-        <Link to={'/blocks'} className={Styles.Button}>
-          &larr; Back to All Blocks
-        </Link>
+        <button className="Styles.Button" onClick={hashHistory.goBack}>
+          &larr; Back
+        </button>
         <section className={cardStyles}>
           <header className={Styles.Header}>
             <div className={Styles.BlockNumber}>

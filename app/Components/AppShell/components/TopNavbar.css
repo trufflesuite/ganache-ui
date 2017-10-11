@@ -34,8 +34,8 @@
     text-transform: uppercase;
     display: flex;
     align-items: center;
-    font-size: 1.2vw;
-    line-height: 1.2vw;
+    font-size: 0.89rem;
+    line-height: 0.89rem;
 
     > div {
       margin-right: .5rem;

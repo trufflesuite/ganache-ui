@@ -40,7 +40,7 @@ function startServer(options) {
 
     server = TestRPC.server(options);
 
-    // We'll log all methods that aren't marked internal by Ganache
+    // We'll also log all methods that aren't marked internal by Ganache
     var oldSendAsync = server.provider.sendAsync.bind(server.provider)
     server.provider.sendAsync = function(payload, callback) {
       if (payload.internal !== true) {

@@ -70,7 +70,7 @@ export const getBlock = function(number) {
     dispatch({type: SET_BLOCK_REQUESTED, number })
 
     // Now actually request it
-    web3Request("getBlock", [number, true], provider, (block) => {
+    web3Request("getBlock", [number, true], provider, (err, block) => {
       dispatch({type: ADD_BLOCK_TO_VIEW, block })
     })
   }

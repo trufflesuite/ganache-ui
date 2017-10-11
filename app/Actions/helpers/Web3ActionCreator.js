@@ -22,14 +22,7 @@ export function web3Request(name, args, provider, next) {
 
   let fn = web3.eth[name]
 
-  args.push((err, result) => {
-    if (err) {
-      //dispatch(Web3RequestFailed(name, err))
-    } else {
-      //dispatch(Web3RequestSucceeded(name, result))
-      next(result)
-    }
-  })
+  args.push(next)
 
   fn.apply(web3.eth, args)
 }
@@ -42,7 +35,7 @@ export function web3ActionCreator(name, args, next) {
 
   return function(dispatch, getState) {
     let provider = getState().web3.provider
-    web3Request(name, args, provider, (result) => {
+    web3Request(name, args, provider, (err, result) => {
       next(result, dispatch, getState)
     })
   }

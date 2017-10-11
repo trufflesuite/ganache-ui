@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { hashHistory } from 'react-router'
 import connect from 'Components/Helpers/connect'
 import * as Transactions from 'Actions/Transactions'
 
@@ -51,9 +52,9 @@ class TxCard extends Component {
 
     return (
       <main>
-        <Link to={'/transactions'} className={Styles.Button}>
-          &larr; Back to All Transactions
-        </Link>
+        <button className="Styles.Button" onClick={hashHistory.goBack}>
+          &larr; Back
+        </button>
         <section className={cardStyles}>
           <header className={BorderStyles.Header}>
             <div className={BorderStyles.Title}>

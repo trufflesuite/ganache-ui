@@ -1,0 +1,16 @@
+@import "colors.css";
+
+.NotFound {
+  display: flex;
+
+  height: 100%;
+  width: 100%;
+
+  main {
+    display: flex;
+    min-height: calc(100% - 4rem);
+    padding: .5rem 1rem;
+    justify-content: center;
+    align-items: center;
+  }
+}

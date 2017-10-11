@@ -24,6 +24,7 @@ import Accounts from 'Components/Accounts/components/Accounts'
 import BlockContainer from 'Components/Blocks/BlockContainer'
 import TransactionContainer from 'Components/Transactions/TransactionContainer'
 import LogsScreen from 'Components/Logs/LogsScreen'
+import NotFoundScreen from 'Components/NotFound/NotFoundScreen'
 
 import AppUpdateScreen from 'Components/AppUpdate/components/AppUpdateScreen'
 import FirstRunScreen from 'Components/FirstRun/components/FirstRunScreen'
@@ -62,6 +63,7 @@ ReactDOM.render(
         <Route path="/blocks(/:blockNumber)" component={BlockContainer} />
         <Route path="/transactions(/:transactionHash)" component={TransactionContainer} />
         <Route path="/logs" component={LogsScreen} />
+        <Route path="/notfound" component={NotFoundScreen} />
         <Route path='/config' component={props => <ConfigScreen {...props} />} />
       </Route>
     </Router>
