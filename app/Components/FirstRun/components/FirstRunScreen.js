@@ -4,6 +4,8 @@ import { push } from 'react-router-redux'
 import connect from 'Components/Helpers/connect'
 import GanacheLogo from 'Resources/logo.png'
 
+import * as Settings from 'Actions/Settings'
+
 import Styles from './FirstRunScreen.css'
 
 class FirstRunScreen extends Component {
@@ -26,6 +28,12 @@ class FirstRunScreen extends Component {
   }
 
   _recordChoice = () => {
+    var newSettings = Object.assign({}, this.props.settings, {
+      firstRun: false,
+      googleAnalyticsTracking: this.state.enableAnalytics
+    })
+
+    this.props.dispatch(Settings.setSettings(newSettings))
     this.props.dispatch(push('/accounts'))
   }
 
