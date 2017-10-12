@@ -9,8 +9,8 @@ export function setRPCProvider(provider) {
 
 export const SET_RPC_PROVIDER_URL = `${prefix}/SET_RPC_PROVIDER_URL`
 export function setRPCProviderUrl(url) {
-  return function(dispatch) {
-    const provider = new ReduxWeb3Provider(url, dispatch)
+  return function(dispatch, getState) {
+    const provider = new ReduxWeb3Provider(url, dispatch, getState)
     dispatch(setRPCProvider(provider))
   }
 }

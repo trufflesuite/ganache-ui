@@ -33,4 +33,4 @@ class TransactionContainer extends Component {
   }
 }
 
-export default TransactionContainer
+export default connect(TransactionContainer)

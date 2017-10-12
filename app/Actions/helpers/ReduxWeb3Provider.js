@@ -1,11 +1,11 @@
 import Web3 from 'web3'
-import RequestCache from './RequestCache'
+import * as RequestCache from 'Actions/RequestCache'
 
 class ReduxWeb3Provider {
-  constructor (url, dispatch) {
+  constructor (url, dispatch, getState) {
     this.provider = new Web3.providers.HttpProvider(url) 
     this.dispatch = dispatch
-    this.cache = new RequestCache()
+    this.getState = getState
   }
 
   send () {
@@ -13,10 +13,9 @@ class ReduxWeb3Provider {
   }
 
   sendAsync (payload, callback) {
-    var cached = this.cache.check(payload)
+    var cached = RequestCache.checkCache(payload, this.getState)
 
     if (cached) {
-      //this.dispatch(RPCRequestSucceeded(payload, cached)) 
       callback(null, cached)
       return
     }
@@ -32,11 +31,7 @@ class ReduxWeb3Provider {
       if (err) {
         this.dispatch(RPCRequestFailed(payload, err))
       } else {
-        if (payload.method == "eth_blockNumber") {
-          this.cache.setBlockNumber(response.result)
-        } else {
-          this.cache.save(payload, response)
-        }
+        this.dispatch(RequestCache.cacheRequest(payload, response))
         this.dispatch(RPCRequestSucceeded(payload, response.result))
       }
 
