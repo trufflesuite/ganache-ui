@@ -79,16 +79,6 @@ class AppShell extends Component {
     this.props.dispatch(AppShellActions.setScrollPosition(scrollPosition))
   }
 
-  getScrollData = () => {
-    var container = this.refs.shellcontainer
-
-    return {
-      clientHeight: container.clientHeight, 
-      scrollTop: container.scrollTop,
-      scrollHeight: container.scrollHeight
-    }
-  }
-
   setScrollTop = (scrollTop) => {
     this.refs.shellcontainer.scrollTop = scrollTop
   }
@@ -129,10 +119,6 @@ class AppShell extends Component {
   //   })
   // }
 
-  renderClonedChildrenWithPropsAndPathKey = (children, props, pathNameKey) => {
-    return React.cloneElement(children, { ...props, key: pathNameKey })
-  }
-
   componentWillReceiveProps (nextProps) {
     if (
       nextProps.settings.googleAnalyticsTracking &&
@@ -161,14 +147,7 @@ class AppShell extends Component {
         <TopNavbar {...this.props} />
 
         <div className={Styles.ShellContainer} ref="shellcontainer">
-          {this.renderClonedChildrenWithPropsAndPathKey(
-            this.props.children,
-            { 
-              ...this.props,
-              getScrollData: this.getScrollData
-            },
-            segment
-          )}
+          {this.props.children}
         </div>
 
         <OnlyIf test={this.props.core.systemError !== null}>
@@ -226,4 +205,4 @@ ${this.props.core.systemError}`
   }
 }
 
-export default connect(AppShell, "appshell", "core", "settings", "accounts", "transactions")
+export default connect(AppShell, "core", "settings")

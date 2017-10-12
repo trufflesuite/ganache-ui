@@ -10,21 +10,11 @@ import Spinner from 'Elements/Spinner'
 
 import Styles from './Accounts.css'
 
-class LoadingAccounts extends Component {
-  render () {
-    return <Spinner width={40} height={40} />
-  }
-}
-
 class Accounts extends Component {
   constructor (props) {
     super(props)
 
     this.state = {}
-  }
-
-  _handleClearLogs = () => {
-    this.props.appClearLogs()
   }
 
   render () {
@@ -37,7 +27,12 @@ class Accounts extends Component {
               hdPath={this.props.core.hdPath}
             />
           </div>
-          <AccountList accounts={this.props.accounts.addresses} balances={this.props.accounts.balances} nonces={this.props.accounts.nonces} />
+          <AccountList 
+            accounts={this.props.accounts.addresses} 
+            balances={this.props.accounts.balances} 
+            nonces={this.props.accounts.nonces} 
+            privateKeys={this.props.core.privateKeys}
+          />
         </main>
       </div>
     )

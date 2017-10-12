@@ -39,7 +39,7 @@ class AccountList extends Component {
   }
 
   _renderAccounts = () => {
-    return this.props.accounts.addresses.map((account, index) => {
+    return this.props.accounts.map((account, index) => {
       return (
         <div
           className={Styles.AccountCard}
@@ -55,7 +55,7 @@ class AccountList extends Component {
             <div className={Styles.AccountBalance}>
               <div className={Styles.Label}>BALANCE</div>
               <div className={Styles.Value}>
-                <FormattedEtherValue value={this.props.accounts.balances[account].toString()} />
+                <FormattedEtherValue value={this.props.balances[account].toString()} />
               </div>
             </div>
           </div>
@@ -63,7 +63,7 @@ class AccountList extends Component {
             <div className={Styles.TransactionCount}>
               <div className={Styles.Label}>TX COUNT</div>
               <div className={Styles.Value}>
-                {this.props.accounts.nonces[account]}
+                {this.props.nonces[account]}
               </div>
             </div>
             <div className={Styles.AccountIndex}>
@@ -77,7 +77,7 @@ class AccountList extends Component {
               onClick={() => {
                 this.showKeys(
                   account,
-                  this.props.core.privateKeys[account]
+                  this.props.privateKeys[account]
                 )
               }}
             >
@@ -113,4 +113,4 @@ class AccountList extends Component {
   }
 }
 
-export default connect(AccountList, "core", "accounts")
+export default AccountList
