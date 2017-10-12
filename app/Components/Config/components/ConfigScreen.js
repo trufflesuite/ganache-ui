@@ -1,9 +1,10 @@
-import * as Core from 'Actions/Core'
-
 import React, { PureComponent } from 'react'
 import { hashHistory } from 'react-router'
 import _ from 'lodash'
 import connect from 'Components/Helpers/connect'
+
+import * as Core from 'Actions/Core'
+import * as Settings from 'Actions/Settings'
 
 import Icon from 'Elements/Icon'
 import OnlyIf from 'Elements/OnlyIf'
@@ -31,6 +32,9 @@ class ConfigScreen extends PureComponent {
   }
 
   restartServer = () => {
+    if (this.isDirty()) {
+      this.props.dispatch(Settings.requestSaveSettings(this.state.settings))
+    }
     this.props.dispatch(Core.requestServerRestart())
   }
 

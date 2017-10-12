@@ -10,7 +10,7 @@ import {
   SET_KEY_DATA, 
   SET_BLOCK_NUMBER
 } from './Actions/Core'
-
+import { REQUEST_SAVE_SETTINGS } from './Actions/Settings'
 import { ADD_LOG_LINES } from './Actions/Logs'
 
 import ChainService from './Services/Chain'
@@ -152,6 +152,10 @@ app.on('ready', async () => {
     } else {
       chain.startServer(Settings.getAll().server)
     }
+  })
+
+  ipcMain.on(REQUEST_SAVE_SETTINGS, (event, settings) => {
+    Settings.setAll(settings)
   })
 
   mainWindow.on('closed', () => {
