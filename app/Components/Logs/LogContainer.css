@@ -1,0 +1,43 @@
+
+.LogContainer {
+  overflow: hidden;
+  position: relative;
+  height: 100%;
+  width: 100%;
+
+  ul {
+    list-style:none;
+    font-size: 13px;
+    color: #eff1f5;
+    border-radius: 2px;
+    background: #2b303b;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    box-sizing: border-box;
+    padding: 1em;
+    font-family: "Fira Code Regular", monospace;
+    overflow: scroll;
+    position: absolute;
+    top: 0em;
+    left: 0em;
+    right: 0em;
+    bottom: 0em;
+
+    li {
+      margin-bottom: .3rem;
+    }
+  }
+}
+
+.LogContainer .plain {
+  font-weight: 100;
+}
+
+.LogContainer .command {
+  font-weight: 500;
+}
+
+.LogContainer .error {
+  font-weight: 500;
+  color: red;
+}
