@@ -5,6 +5,7 @@ import * as Web3 from 'Actions/Web3'
 import * as Core from 'Actions/Core'
 import * as Accounts from 'Actions/Accounts'
 import * as Logs from 'Actions/Logs'
+import * as Settings from 'Actions/Settings'
 
 // Use the electron-settings app from the main process
 const settings = require('electron').remote.require('electron-settings');
@@ -13,16 +14,14 @@ const settings = require('electron').remote.require('electron-settings');
 // you want here. The Redux Store is available at this point, so you can
 // dispatch any action you want
 export default function (store) {
-  // Ensure the store has these initial settings
-  var currentSettings = settings.getAll()
-  store.dispatch({type: 'APP/SETTINGS', payload: currentSettings})
-
-  // Load the first screen
-  store.dispatch(push('/app_update'))
+  // Load the first screen while we wait for the application to load
+  store.dispatch(Core.showTitleScreen())
 
   // Wait for the server to start...
   ipcRenderer.on(Core.SET_SERVER_STARTED, () => {
-    store.dispatch(Core.setServerStarted())
+    // Get current settings into the store
+    var currentSettings = settings.getAll()
+    store.dispatch(Settings.setSettings(currentSettings))
 
     // Ensure web3 is set
     store.dispatch(Web3.setRPCProviderUrl(`http://${currentSettings.server.hostname}:${currentSettings.server.port}`))
@@ -30,11 +29,14 @@ export default function (store) {
     store.dispatch(Accounts.getAccounts())
     store.dispatch(Core.getGasPrice())
     store.dispatch(Core.getGasLimit())
-  
-    setInterval(() => {
-      store.dispatch(Core.getBlockNumber())
-      //store.dispatch(core.processBlocks())
-    }, 500)
+
+    store.dispatch(Core.setServerStarted())
+  })
+
+  // Block polling happens in the chain process, and is passed through
+  // the main process to the render process when there's a new block.
+  ipcRenderer.on(Core.SET_BLOCK_NUMBER, (event, number) => {
+    store.dispatch(Core.setBlockNumber(number))
   })
 
   // The server will send a second message that sets the mnemonic and hdpath

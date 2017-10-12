@@ -3,7 +3,14 @@ import { autoUpdater } from 'electron-updater'
 import path from 'path'
 import SysLog from 'electron-log'
 
-import { SET_SERVER_STARTED, SET_KEY_DATA } from './Actions/Core'
+import { 
+  REQUEST_SERVER_RESTART,
+  SET_SERVER_STARTED, 
+  SET_SERVER_STOPPED,
+  SET_KEY_DATA, 
+  SET_BLOCK_NUMBER
+} from './Actions/Core'
+
 import { ADD_LOG_LINES } from './Actions/Logs'
 
 import ChainService from './Services/Chain'
@@ -113,25 +120,42 @@ app.on('ready', async () => {
     chain.on("start", () => {
       chain.startServer(Settings.getAll().server)
     })
+
     chain.on("server-started", (data) => {
       mainWindow.webContents.send(SET_KEY_DATA, data)
       mainWindow.webContents.send(SET_SERVER_STARTED)
     })
+
     chain.on("stdout", (data) => {
       mainWindow.webContents.send(ADD_LOG_LINES, data.split(/\n/g))
     })
+
     chain.on("stderr", (data) => {
       mainWindow.webContents.send(ADD_LOG_LINES, data.split(/\n/g))
+    })
+
+    chain.on("block", (blockNumber) => {
+      mainWindow.webContents.send(SET_BLOCK_NUMBER, blockNumber)
     })
 
     chain.start()
   })
 
-  
+  // If the frontend asks to start the server, start the server.
+  // This will trigger then chain event handlers above once the server stops.
+  ipcMain.on(REQUEST_SERVER_RESTART, () => {
+    if (chain.isServerStarted()) {
+      chain.once("server-stopped", () => {
+        chain.startServer(Settings.getAll().server)
+      })
+      chain.stopServer()
+    } else {
+      chain.startServer(Settings.getAll().server)
+    }
+  })
 
   mainWindow.on('closed', () => {
     mainWindow = null
-
   })
 
   // if (process.env.NODE_ENV === 'development') {

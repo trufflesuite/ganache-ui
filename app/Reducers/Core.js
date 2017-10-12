@@ -79,7 +79,8 @@ export default function (state = initialState, action) {
         gasLimit: action.gasLimit
       })
 
-    case Core.GET_BLOCK_NUMBER:
+    case Core.SET_BLOCK_NUMBER:
+    case Core.GET_BLOCK_NUMBER: // TODO: Remove GET_BLOCK_NUMBER
       return Object.assign({}, state, {
         latestBlock: action.number
       })

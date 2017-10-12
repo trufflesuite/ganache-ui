@@ -9,6 +9,7 @@ class ChainService extends EventEmitter {
     super()
     this.app = app
     this.child = null
+    this.lastHeartBeat = null
   }
 
   start() {
@@ -21,6 +22,9 @@ class ChainService extends EventEmitter {
       this.emit("start")
     })
     this.child.on('message', (message) => {
+      if (message.type == "heartbeat") {
+        this.lastHeartBeat = new Date().getTime()
+      }
       this.emit(message.type, message.data)
     })
     this.child.on('error', (error) => {
@@ -41,6 +45,16 @@ class ChainService extends EventEmitter {
       type: 'start-server',
       data: options
     })
+  }
+
+  stopServer(options) {
+    this.child.send({
+      type: 'stop-server',
+    })
+  }
+
+  isServerStarted() {
+    return this.lastHeartBeat && this.lastHeartBeat > new Date().getTime() - 10000
   }
 }
 

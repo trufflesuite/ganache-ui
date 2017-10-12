@@ -1,4 +1,5 @@
-import URL from 'url'
+import * as Core from 'Actions/Core'
+
 import React, { PureComponent } from 'react'
 import { hashHistory } from 'react-router'
 import _ from 'lodash'
@@ -11,11 +12,9 @@ import Tabs from './Tabs/Tabs'
 
 import ServerScreen from './ConfigScreens/ServerScreen'
 import AccountsScreen from './ConfigScreens/AccountsScreen'
-import MnemonicScreen from './ConfigScreens/MnemonicScreen'
-import GanacheScreen from './ConfigScreens/GanacheScreen'
-import GasScreen from './ConfigScreens/GasScreen'
-import LoggingScreen from './ConfigScreens/LoggingScreen'
-import ForkingScreen from './ConfigScreens/ForkingScreen'
+import ChainScreen from './ConfigScreens/ChainScreen'
+import AdvancedScreen from './ConfigScreens/AdvancedScreen'
+
 import RestartIcon from 'Icons/restart.svg'
 import EjectIcon from 'Icons/eject.svg';
 
@@ -31,31 +30,12 @@ class ConfigScreen extends PureComponent {
     }
   }
 
-  componentDidMount () {
-    this.props.appCheckPort(this.state.portNumber)
+  restartServer = () => {
+    this.props.dispatch(Core.requestServerRestart())
   }
-
-  componentWillReceiveProps (nextProps) {
-    // let newSettings = {}
-
-    // Object.keys(nextProps.settings).map(key => {
-    //   if (
-    //     !this.isDirty() &&
-    //     nextProps.settings[key] !== this.state.settings[key]
-    //   ) {
-    //     console.log(`${key} = ${nextProps.settings[key]}`)
-    //     newSettings[key] = nextProps.settings[key]
-    //   }
-    // })
-
-    // if (Object.keys(newSettings).length > 0) {
-    //   this.setState(newSettings)
-    // }
-  }
-
 
   isDirty () {
-    return _.isEqual(this.state.settings, this.props.settings)
+    return _.isEqual(this.state.settings, this.props.settings) == false
   }
 
   handleCancelPressed () {
@@ -65,12 +45,9 @@ class ConfigScreen extends PureComponent {
   _renderConfigTabs = () => {
     return [
       'Server',
-      'Accounts',
-      'Gas',
-      'Mnemonic',
-      'Logging',
-      'Forking',
-      'Ganache'
+      'Accounts & Keys',
+      'Chain',
+      'Advanced'
     ].map((opt, index) => {
       return (
         <Tabs.Tab key={opt} className={Styles.ConfigTabItem}>
@@ -82,8 +59,17 @@ class ConfigScreen extends PureComponent {
 
   handleInputChange = event => {
     const target = event.target
-    const value = target.type === 'checkbox' ? target.checked : target.value
     const name = target.name
+    let value = target.value
+
+    switch (target.type) {
+      case "number":
+        value = parseInt(target.value)
+        break
+      case "checkbox":
+        value = target.checked
+        break;
+    }
 
     var settings = this.state.settings
     var keys = name.split(".")
@@ -99,7 +85,13 @@ class ConfigScreen extends PureComponent {
     }
 
     // There should be one key remaining
-    parent[keys[0]] = value
+    // Only save the value if the text box or input value is non-zero/non-blank.
+    // Otherwise remove the key.
+    if (value && value != "" && value != 0) {
+      parent[keys[0]] = value
+    } else {
+      delete parent[keys[0]]
+    }
 
     this.forceUpdate()
   }
@@ -178,13 +170,6 @@ class ConfigScreen extends PureComponent {
   }
 
   render () {
-    const { ganachePortStatus } = this.props.testRpcState
-    const portIsBlocked =
-      ganachePortStatus.status === 'blocked' &&
-      ganachePortStatus.pid !== undefined &&
-      !ganachePortStatus.pid[0].name.toLowerCase().includes('ganache') &&
-      !ganachePortStatus.pid[0].name.toLowerCase().includes('electron')
-
     return (
       <main>
         <Tabs className={Styles.ConfigScreen}>
@@ -200,16 +185,11 @@ class ConfigScreen extends PureComponent {
               </button>
               <button
                 className="btn btn-primary"
-                onClick={this._startTestRpc}
-                disabled={
-                  this.state.isStartDisabled ||
-                  portIsBlocked ||
-                  this.invalidConfig()
-                }
+                onClick={this.restartServer}
+                disabled={this.invalidConfig()}
               >
                 <Icon glyph={RestartIcon} size={18} />
-
-                { 'RESTART '}
+                { this.isDirty() ? 'SAVE AND RESTART' : 'RESTART' }
               </button>
             </Tabs.TabActions>
           </Tabs.TabHeader>
@@ -234,7 +214,7 @@ class ConfigScreen extends PureComponent {
             </Tabs.TabPanel>
 
             <Tabs.TabPanel>
-              <GasScreen
+              <ChainScreen
                 settings={this.state.settings}
                 handleInputChange={this.handleInputChange}
                 validateChange={this.validateChange}
@@ -243,34 +223,7 @@ class ConfigScreen extends PureComponent {
             </Tabs.TabPanel>
 
             <Tabs.TabPanel>
-              <MnemonicScreen
-                settings={this.state.settings}
-                handleInputChange={this.handleInputChange}
-                validateChange={this.validateChange}
-                validationErrors={this.state.validationErrors}
-              />
-            </Tabs.TabPanel>
-
-            <Tabs.TabPanel>
-              <LoggingScreen
-                settings={this.state.settings}
-                handleInputChange={this.handleInputChange}
-                validateChange={this.validateChange}
-                validationErrors={this.state.validationErrors}
-              />
-            </Tabs.TabPanel>
-
-            <Tabs.TabPanel>
-              <ForkingScreen
-                settings={this.state.settings}
-                handleInputChange={this.handleInputChange}
-                validateChange={this.validateChange}
-                validationErrors={this.state.validationErrors}sed={this.onNotifyValidationsPassed}
-              />
-            </Tabs.TabPanel>
-
-            <Tabs.TabPanel>
-              <GanacheScreen
+              <AdvancedScreen
                 settings={this.state.settings}
                 handleInputChange={this.handleInputChange}
                 validateChange={this.validateChange}

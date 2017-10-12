@@ -93,6 +93,7 @@
 .ShowKeys {
   position: relative;
   cursor: pointer;
+  margin-right: 0.7rem;
 
   .popover {
     background-color: rgba(0, 0, 0, 0.85);

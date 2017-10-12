@@ -7,7 +7,7 @@ import Styles from '../ConfigScreen.css'
 
 const VALIDATIONS = {
   "server.hostname": {
-    format: /(localhost)|(\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b)/,
+    format: /(^localhost$)|(^\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b$)/,
   },
   "server.port": {
     allowedChars: /^\d*$/,
@@ -73,7 +73,7 @@ class ServerScreen extends Component {
 
     return (
       <div>
-        <h2>RPC SERVER OPTIONS</h2>
+        <h2>SERVER</h2>
 
         <section>
           <h4>HOSTNAME</h4>
@@ -101,7 +101,7 @@ class ServerScreen extends Component {
           <div className={Styles.Row}>
             <div className={Styles.RowItem}>
               <input
-                type="text"
+                type="number"
                 name="server.port"
                 value={this.props.settings.server.port}
                 onChange={e => {
@@ -112,16 +112,6 @@ class ServerScreen extends Component {
 
               {this.props.validationErrors["server.port"] &&
                 <p className={Styles.ValidationError}>Must be &gt; 1000 and &lt; 65535.</p>}
-
-              <OnlyIf test={portIsBlocked}>
-                <strong className={Styles.ValidationError}>
-                  <b>WARNING!</b> Port is already in use by "<b>
-                    {portIsBlocked && ganachePortStatus.pid[0].name}
-                  </b>" with PID{' '}
-                  <b>{portIsBlocked && ganachePortStatus.pid[0].pid}</b> running
-                  on this port.
-                </strong>
-              </OnlyIf>
             </div>
             <div className={Styles.RowItem}>
               <p>
@@ -136,7 +126,7 @@ class ServerScreen extends Component {
           <div className={Styles.Row}>
             <div className={Styles.RowItem}>
               <input
-                type="text"
+                type="number"
                 name="server.network_id"
                 value={this.props.settings.server.network_id}
                 onChange={this.validateChange}

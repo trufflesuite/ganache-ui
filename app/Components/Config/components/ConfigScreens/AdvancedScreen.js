@@ -6,7 +6,7 @@ class GanacheScreen extends Component {
   render () {
     return (
       <div>
-        <h2>GANACHE SETTINGS</h2>
+        <h2>ADVANCED SETTINGS</h2>
         <section>
           <h4>GOOGLE ANALYTICS</h4>
           <div className={Styles.Row}>
@@ -17,7 +17,7 @@ class GanacheScreen extends Component {
                   name="googleAnalyticsTracking"
                   id="GoogleAnalyticsTracking"
                   onChange={this.props.handleInputChange}
-                  checked={this.props.formState.googleAnalyticsTracking}
+                  checked={this.props.settings.googleAnalyticsTracking == true}
                 />
                 <label htmlFor="GoogleAnalyticsTracking">
                   GOOGLE ANALYTICS
@@ -26,20 +26,12 @@ class GanacheScreen extends Component {
             </div>
             <div className={Styles.RowItem}>
               <p>
-                We use Google Analytics to track rough Ganache usage. It is
-                completely anonymous, and we respect your privacy so no detailed
-                or otherwise sensitive information is collected. We use this
-                because it helps guide us to where we should most focus our
-                development efforts.{' '}
-                <b>
-                  We appreciate you helping us understand how people use
-                  Ganache!
-                </b>
+                We use Google Analytics to track Ganache usage. This information helps us gain more insight into how Ganache is used. This tracking is anonymous. We do not track personally identifiable information, account data or private keys.{' '}
               </p>
             </div>
           </div>
         </section>
-        <section>
+        {/* <section>
           <h4>CPU &amp; MEMORY PROFILING</h4>
           <div className={Styles.Row}>
             <div className={Styles.RowItem}>
@@ -63,10 +55,10 @@ class GanacheScreen extends Component {
               </p>
             </div>
           </div>
-        </section>
+        </section> */}
       </div>
     )
   }
 }
 
-export default connect(GanacheScreen, "settings")
+export default GanacheScreen

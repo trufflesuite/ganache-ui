@@ -4,13 +4,14 @@ const { app } = require('electron').remote
 import { hashHistory } from 'react-router'
 
 import connect from 'Components/Helpers/connect'
+import * as Core from 'Actions/Core'
 
 import OnlyIf from 'Elements/OnlyIf'
 import GanacheLogo from 'Resources/logo.png'
 
-import Styles from './AppUpdateScreen.css'
+import Styles from './TitleScreen.css'
 
-class AppUpdateScreen extends Component {
+class TitleScreen extends Component {
   constructor () {
     super()
     this.state = {
@@ -69,4 +70,4 @@ class AppUpdateScreen extends Component {
   }
 }
 
-export default connect(AppUpdateScreen, "settings", "core")
+export default connect(TitleScreen, "settings", "core")

@@ -1,15 +1,5 @@
 @import 'colors.css';
 
-.AppUpdateScreen {
-  width: 100%;
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  position: relative;
-  align-items: center;
-  justify-content: center;
-}
-
 @keyframes :global(bgToTransparent) {
   0% {
     background-color: #33302e;

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import connect from 'Components/Helpers/connect'
 
+import ChecksumAddress from 'Elements/ChecksumAddress'
 import OnlyIf from 'Elements/OnlyIf'
 import FormattedEtherValue from 'Elements/FormattedEtherValue'
 
@@ -48,7 +49,7 @@ class AccountList extends Component {
             <div className={Styles.AccountAddress}>
               <div className={Styles.Label}>ADDRESS</div>
               <div className={Styles.Value}>
-                {account}
+                <ChecksumAddress address={account} />
               </div>
             </div>
             <div className={Styles.AccountBalance}>
@@ -85,12 +86,11 @@ class AccountList extends Component {
                 Show Keys
               </span>
             </span>
-            <div className={Styles.AccountState}>
-              <Icon glyph={UnlockedIcon} size={24} className="isolate" />
-              {/* {account.isUnlocked
+            {/* <div className={Styles.AccountState}>
+              {account.isUnlocked
                 ? <Icon glyph={UnlockedIcon} size={24} className="isolate" />
-                : <Icon glyph={LockedIcon} size={24} className="isolate" />} */}
-            </div>
+                : <Icon glyph={LockedIcon} size={24} className="isolate" />}
+            </div> */}
           </div>
         </div>
       )

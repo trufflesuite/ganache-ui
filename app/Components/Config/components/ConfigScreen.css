@@ -137,7 +137,7 @@ main {
       margin-left: 1rem;
     }
 
-    input[type='text'] {
+    input[type='text'], input[type='number'] {
       border-color: var(--app-navbar-text);
       width: 100%;
     }
@@ -159,4 +159,10 @@ main {
   margin: 0;
   font-size: 12px;
   color: #c5c5c5;
+}
+
+.Radio {
+  input {
+    margin: .5rem;
+  }
 }

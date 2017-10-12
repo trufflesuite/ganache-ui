@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react'
 
 import Icon from 'Elements/Icon'
+import ChecksumAddress from 'Elements/ChecksumAddress'
 import AccountIcon from 'Elements/icons/account.svg'
 
 import Styles from './Keys.css'
@@ -12,7 +13,7 @@ export default class Keys extends PureComponent {
         <section>
           <Icon glyph={AccountIcon} size={128} />
           <h4>
-            {this.props.accountAddress}
+            <ChecksumAddress address={this.props.accountAddress} />
           </h4>
           <dl>
             <dt>PRIVATE KEY</dt>

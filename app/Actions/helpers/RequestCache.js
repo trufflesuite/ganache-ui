@@ -3,10 +3,12 @@ class RequestCache {
     this.cache = {}
     this.blockNumber = -1;
 
+    // These requests are never invalidated.
     this.hardCached = {
-      [this.createCacheId("eth_accounts", [])]: true, 
-      [this.createCacheId("eth_gasPrice", [])]: true,
-      [this.createCacheId("eth_getBlockByNumber", [0])]: true
+      "eth_accounts": true,
+      "eth_gasPrice": true,
+      "eth_getBlockByNumber": true,
+      "eth_getTransactionByHash": true
     }
   }
 
@@ -19,7 +21,8 @@ class RequestCache {
 
   invalidateCache() {
     Object.keys(this.cache).forEach((id) => {
-      if (!this.hardCached[id]) {
+      let method = id.substring(0, id.indexOf("("))
+      if (!this.hardCached[method]) {
         delete this.cache[id]
       }
     })
@@ -44,7 +47,7 @@ class RequestCache {
     if (!hit) {
       return null
     }
-    
+
     // Tailor the response to the new rpc id
     var response = Object.assign({}, hit)
     response.id = payload.id

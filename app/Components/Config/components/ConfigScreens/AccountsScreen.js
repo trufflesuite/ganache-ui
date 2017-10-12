@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 
 import Styles from '../ConfigScreen.css'
+import OnlyIf from 'Elements/OnlyIf'
 
 const VALIDATIONS = {
   "server.total_accounts": {
@@ -16,14 +17,12 @@ class AccountsScreen extends Component {
 
     this.state = {
       accountsLocked: props.settings.server.unlocked_accounts.length > 0,
-      validationErrors: {}
+      automnemonic: props.settings.mnemonic == null
     }
   }
 
   validateChange = e => {
-    executeValidations(VALIDATIONS, this, e)
-      ? this.props.onNotifyValidationsPassed(e.target.name)
-      : this.props.onNotifyValidationError(e.target.name)
+    this.props.validateChange(e, VALIDATIONS)
   }
 
   toggleAccountsLocked = () => {
@@ -46,21 +45,42 @@ class AccountsScreen extends Component {
     })
   }
 
+  toggleAutoMnemonic = () => {
+    var toggleValue = !this.state.automnemonic
+
+     // Remove mnemonic if we turn automnemonic on
+     if (toggleValue == true) {
+      delete this.props.settings.server.blocktime
+
+      // Rerun validations now that value has been deleted
+      this.validateChange({
+        target: {
+          name: "server.mnemonic",
+          value: ""
+        }
+      })
+    }
+
+    this.setState({
+      automnemonic: toggleValue
+    })
+  }
+
   render () {
     return (
       <div>
-        <h2>ACCOUNT OPTIONS</h2>
+        <h2>ACCOUNT & KEYS</h2>
         <section>
           <h4>TOTAL ACCOUNTS TO GENERATE</h4>
           <div className={Styles.Row}>
             <div className={Styles.RowItem}>
               <input
                 name="server.total_accounts"
-                type="text"
+                type="number"
                 value={this.props.settings.server.total_accounts}
                 onChange={this.validateChange}
               />
-              {this.state.validationErrors["server.total_accounts"] &&
+              {this.props.validationErrors["server.total_accounts"] &&
                 <p className={Styles.ValidationError}>Must be &gt; {VALIDATIONS["server.total_accounts"].min} and &lt; {VALIDATIONS["server.total_accounts"].max}</p>}
             </div>
             <div className={Styles.RowItem}>
@@ -68,7 +88,7 @@ class AccountsScreen extends Component {
             </div>
           </div>
         </section>
-        <section>
+        {/* <section>
           <h4>LOCK ACCOUNTS</h4>
           <div className={Styles.Row}>
             <div className={Styles.RowItem}>
@@ -87,7 +107,48 @@ class AccountsScreen extends Component {
               <p>Create accounts that are locked by default.</p>
             </div>
           </div>
+        </section> */}
+         <section>
+          <h4>AUTOGENERATE HD MNEMONIC</h4>
+          <div className={Styles.Row}>
+            <div className={Styles.RowItem}>
+              <div className="Switch">
+                <input
+                  type="checkbox"
+                  name="automnemonic"
+                  id="Mnemonic"
+                  onChange={this.toggleAutoMnemonic}
+                  checked={this.state.automnemonic}
+                />
+                <label htmlFor="Mnemonic">AUTOGENERATE HD MNEMONIC</label>
+              </div>
+            </div>
+            <div className={Styles.RowItem}>
+              <p>Automatically generate mnemonic used to create available addresses.</p>
+            </div>
+          </div>
         </section>
+
+        <OnlyIf test={!this.state.automnemonic}>
+          <section>
+            <div className={Styles.Row}>
+              <div className={Styles.RowItem}>
+                <input
+                  type="text"
+                  placeholder="Enter Mnemonic to use"
+                  name="server.mnemonic"
+                  value={this.props.settings.server.mnemonic || ""}
+                  onChange={this.validateChange}
+                />
+                {this.props.validationErrors["server.mnemonic"] &&
+                  <p>Must be at least 12 words long and only contain letters</p>}
+              </div>
+              <div className={Styles.RowItem}>
+                <p>Enter the Mnemonic you wish to use.</p>
+              </div>
+            </div>
+          </section>
+        </OnlyIf>
       </div>
     )
   }

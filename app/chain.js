@@ -1,23 +1,26 @@
 #!/usr/bin/env node
-
 var TestRPC = require("ethereumjs-testrpc");
 var path = require("path");
+var Web3 = require("web3")
 
 if (!process.send) {
   throw new Error("Must be run as a child process!")
 }
 
 var server;
+var provider; 
+var blockInterval;
+var lastBlock;
 
 function stopServer(callback) {
+  callback = callback || function() {}
+
+  clearInterval(blockInterval)
+
   if (server) {
-    server.close(function() {
-      process.send({type: 'server-stopped'})
-      process.send()
-      server = null;
-      callback();
-    })
+    server.close(callback)
   } else {
+    process.send({type: "server-stopped"})
     callback()
   }
 }
@@ -79,23 +82,58 @@ function startServer(options) {
 
       console.log("Ganache started successfully!")
       console.log("Waiting for requests...")
+
+      // Perform block polling within the chain, emitting a block event
+      // when a new block occurs.
+      lastBlock = -1;
+      provider = new Web3.providers.HttpProvider("http://" + options.hostname + ":" + options.port)
+     
+      var web3 = new Web3()
+
+      blockInterval = setInterval(function() {
+        provider.sendAsync({
+          jsonrpc: "2.0", 
+          method: "eth_blockNumber", 
+          params: [], 
+          id: new Date().getTime(),
+          internal: true // Important for ganache requests so they're not logged
+        }, function(err, response) {
+          if (err || !response) {
+            console.log("Block polling error: ", err.stack)
+            return
+          }
+
+          var blockNumber = web3.toDecimal(response.result)
+          if (blockNumber > lastBlock) {
+            lastBlock = blockNumber
+            process.send({type: "block", data: blockNumber})
+          }
+        })
+      }, 500)
+    })
+
+    server.on("close", function() {
+      process.send({type: "server-stopped"})
     })
   })
 }
 
-function sendHeartBeat() {
-  process.send({type: 'heartbeat'})
-}
-
 process.on("message", function(message) {
+  //console.log("CHILD RECEIVED", message)
   switch(message.type) {
     case "start-server": 
       startServer(message.data)
       break;
     case "stop-server":
       stopServer()
+      break;
   }
 });
+
+
+function sendHeartBeat() {
+  process.send({type: 'heartbeat'})
+}
 
 sendHeartBeat()
 
@@ -103,4 +141,8 @@ sendHeartBeat()
 // We can use this interval to maintain a heartbeat
 setInterval(function() {
   sendHeartBeat()
-}, 500);
+}, 1000);
+
+process.on('uncaughtException', (err) => {
+  console.log(err.stack || err)
+});

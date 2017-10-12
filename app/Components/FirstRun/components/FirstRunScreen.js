@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import { hashHistory } from 'react-router'
+import { push } from 'react-router-redux'
 import connect from 'Components/Helpers/connect'
 import GanacheLogo from 'Resources/logo.png'
 
@@ -26,7 +26,7 @@ class FirstRunScreen extends Component {
   }
 
   _recordChoice = () => {
-    
+    this.props.dispatch(push('/accounts'))
   }
 
   render () {
