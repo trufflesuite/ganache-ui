@@ -70,8 +70,13 @@ export const getBlock = function(number) {
     dispatch({type: SET_BLOCK_REQUESTED, number })
 
     // Now actually request it
-    web3Request("getBlock", [number, true], provider, (err, block) => {
-      dispatch({type: ADD_BLOCK_TO_VIEW, block })
+    web3Request("getBlock", [number, false], provider, (err, block) => {
+      if (err || !block) {
+        return // Do something here
+      }
+      web3Request("getBlockTransactionCount", [block.number], provider, (err, transactionCount) => {
+        dispatch({type: ADD_BLOCK_TO_VIEW, block, transactionCount })
+      })
     })
   }
 }

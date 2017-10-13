@@ -43,6 +43,7 @@ class BlockList extends Component {
             <MiniBlockCard
               key={`block-${block.number}`}
               block={block}
+              transactionCount={this.props.blocks.inViewTransactionCounts[block.number]}
             />
           )
         })}

@@ -2,6 +2,7 @@ import * as Blocks from 'Actions/Blocks'
 
 const initialState = {
   inView: [],
+  inViewTransactionCounts: {},
   requested: {}, 
   currentBlock: null
 }
@@ -25,6 +26,7 @@ export default function (state = initialState, action) {
     case Blocks.CLEAR_BLOCKS_IN_VIEW:
       return Object.assign({}, state, {
         inView: [],
+        inViewTransactionCounts: {},
         requested: {}
       })
     case Blocks.SET_BLOCK_REQUESTED:
@@ -36,8 +38,12 @@ export default function (state = initialState, action) {
       })
     case Blocks.ADD_BLOCK_TO_VIEW: 
       let blocks = state.inView.concat([action.block])
+      var inViewTransactionCounts = Object.assign({}, state.inViewTransactionCounts, {
+        [action.block.number]: action.transactionCount
+      })
       return Object.assign({}, state, {
-        inView: sort(blocks)
+        inView: sort(blocks),
+        inViewTransactionCounts
       })
     case Blocks.SET_CURRENT_BLOCK_SHOWN:
       return Object.assign({}, state, {

@@ -51,7 +51,7 @@ export const getGasPrice = function() {
 
 export const SET_GAS_LIMIT = `${prefix}/SET_GAS_LIMIT`
 export const getGasLimit = function() {
-  return web3ActionCreator("getBlock", [0], (block, dispatch, getState) => {
+  return web3ActionCreator("getBlock", ["latest"], (block, dispatch, getState) => {
     var currentGasLimit = getState().core.gasLimit
 
     var gasLimit = block.gasLimit.toString()

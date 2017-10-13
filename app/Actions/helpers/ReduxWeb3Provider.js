@@ -28,8 +28,8 @@ class ReduxWeb3Provider {
     this.dispatch(RPCRequestStarted(payload))
 
     this.provider.sendAsync(payload, (err, response) => {
-      if (err) {
-        this.dispatch(RPCRequestFailed(payload, err))
+      if (err || response.error) {
+        this.dispatch(RPCRequestFailed(payload, response, err))
       } else {
         this.dispatch(RequestCache.cacheRequest(payload, response))
         this.dispatch(RPCRequestSucceeded(payload, response.result))
@@ -49,8 +49,8 @@ export function RPCRequestStarted(payload) {
 }
 
 export const RPC_REQUEST_FAILED = `${prefix}/RPC_REQUEST_FAILED`
-export function RPCRequestFailed(payload, error) {
-  return { type: RPC_REQUEST_FAILED, payload, error}
+export function RPCRequestFailed(payload, response, error) {
+  return { type: RPC_REQUEST_FAILED, payload, response, error}
 }
 
 export const RPC_REQUEST_SUCCEEDED = `${prefix}/RPC_REQUEST_SUCCEEDED`

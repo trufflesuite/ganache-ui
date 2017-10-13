@@ -7,8 +7,34 @@ const initialState = {}
 const HARD_CACHED = {
   "eth_accounts": true,
   "eth_gasPrice": true,
-  "eth_getBlockByNumber": true,
+  "eth_getBlockByNumber": (blockNumber, includeTransactions) => {
+    return blockNumber != "latest" && blockNumber != "pending" 
+  },
+  "eth_getBlockTransactionCountByNumber": (blockNumber) => {
+    return blockNumber != "latest" && blockNumber != "pending" 
+  },
   "eth_getTransactionByHash": true
+}
+
+const isHardCached = function(id) {
+  let method = id.substring(0, id.indexOf("("))
+
+  var hardCachedResult = HARD_CACHED[method]
+
+  if (typeof hardCachedResult == "function") {
+    var split = id.split(/\(|\)/)
+    var params = split[1]
+
+    if (params == '') {
+      params = []
+    } else {
+      params = params.split(",")
+    }
+    
+    return hardCachedResult.apply(null, params)
+  } else {
+    return !!hardCachedResult
+  }
 }
 
 export default function (state = initialState, action) {
@@ -23,8 +49,7 @@ export default function (state = initialState, action) {
       let cache = Object.assign({}, state)
   
       Object.keys(cache).forEach((id) => {
-        let method = id.substring(0, id.indexOf("("))
-        if (!HARD_CACHED[method]) {
+        if (!isHardCached(id)) {
           delete cache[id]
         }
       })

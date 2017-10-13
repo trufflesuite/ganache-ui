@@ -9,24 +9,9 @@ import OnlyIf from 'Elements/OnlyIf'
 import Styles from './MiniBlockCard.css'
 
 export default class MiniBlockCard extends PureComponent {
-  _renderRecentTransaction = transactions => {
-    if (transactions.length === 0) {
-      return 'NO TRANSACTIONS'
-    }
-
-    return transactions.map(tx => {
-      const txHash = EtherUtil.bufferToHex(tx.hash)
-      return (
-        <a href="#" onClick={this._handleTxShow.bind(this, txHash)}>
-          {txHash}
-        </a>
-      )
-    })
-  }
-
   render () {
-    const { block } = this.props
-    const hasTxs = block.transactions.length > 0
+    const { block, transactionCount } = this.props
+    const hasTxs = transactionCount > 0
     const cardStyles = `${Styles.MiniBlockCard} ${hasTxs ? Styles.HasTxs : ''}`
 
     return (
@@ -63,13 +48,13 @@ export default class MiniBlockCard extends PureComponent {
               </div>
             </div>
             <div className={Styles.RowItem}>
-              <OnlyIf test={block.transactions.length > 0}>
+              <OnlyIf test={transactionCount > 0}>
                 <div className={Styles.TransactionBadge}>
-                  {block.transactions.length}{' '}
-                  {Pluralize('TRANSACTION', block.transactions.length)}
+                  {transactionCount}{' '}
+                  {Pluralize('TRANSACTION', transactionCount)}
                 </div>
               </OnlyIf>
-              <OnlyIf test={block.transactions.length === 0}>
+              <OnlyIf test={transactionCount === 0}>
                 <div className={Styles.NoTransactionBadge}>NO TRANSACTIONS</div>
               </OnlyIf>
             </div>
