@@ -120,6 +120,18 @@ class AppShell extends Component {
 
     if (systemError) {
       systemError = systemError.stack || systemError
+
+      // Remove any user-specific paths in exception messages
+      // Prepare our paths so we *always* will get a match no matter 
+      // path separator (oddly, on Windows, different errors will give
+      // us different path separators)
+      var appPath = app.getAppPath().replace(/\\/g, "/")
+      systemError = systemError.replace(/\\/g, "/")
+
+      // I couldn't figure out the regex, so a loop will do.
+      while (systemError.indexOf(appPath) >= 0) {
+        systemError = systemError.replace(appPath, "")
+      }
     }
 
     return (

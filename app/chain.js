@@ -145,4 +145,10 @@ setInterval(function() {
 
 process.on('uncaughtException', (err) => {
   console.log(err.stack || err)
+  process.send({type: 'error', data: err.stack || err})
 });
+
+// If you want to test out an error being thrown here
+// setTimeout(function() {
+//   throw new Error("Error from chain process!")
+// }, 4000)

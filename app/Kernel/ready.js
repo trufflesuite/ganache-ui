@@ -39,6 +39,10 @@ export default function (store) {
     store.dispatch(Core.setBlockNumber(number))
   })
 
+  ipcRenderer.on(Core.SET_SYSTEM_ERROR, (event, error) => {
+    store.dispatch(Core.setSystemError(error))
+  })
+
   // The server will send a second message that sets the mnemonic and hdpath
   ipcRenderer.on(Core.SET_KEY_DATA, (event, data) => {
     store.dispatch(Core.setKeyData(data.mnemonic, data.hdPath, data.privateKeys))

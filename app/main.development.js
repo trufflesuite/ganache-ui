@@ -8,7 +8,8 @@ import {
   SET_SERVER_STARTED, 
   SET_SERVER_STOPPED,
   SET_KEY_DATA, 
-  SET_BLOCK_NUMBER
+  SET_BLOCK_NUMBER,
+  SET_SYSTEM_ERROR
 } from './Actions/Core'
 import { REQUEST_SAVE_SETTINGS } from './Actions/Settings'
 import { ADD_LOG_LINES } from './Actions/Logs'
@@ -40,16 +41,21 @@ if (process.env.NODE_ENV === 'development') {
   SysLog.transports.console.level = 'silly'
 }
 
-process.on('uncaughtException', err => {
-  if (testRpcService && testRpcService.webView) {
-    testRpcService.webView.send('APP/FATALERROR', err.stack)
-  }
+// If you want to test out error handling
+// setTimeout(() => {
+//   throw new Error("Error from main process!")
+// }, 8000)
 
-  SysLog.error(`FATAL ERROR: ${err.stack}`)
+process.on('uncaughtException', err => {
+  if (mainWindow && err) {
+    mainWindow.webContents.send(SET_SYSTEM_ERROR, err.stack || err)
+  }
 })
 
 process.on('unhandledRejection', error => {
-  SysLog.error('unhandledRejection', error)
+  if (mainWindow && err) {
+    mainWindow.webContents.send(SET_SYSTEM_ERROR, err.stack || err)
+  }
 })
 
 app.on('window-all-closed', () => {
@@ -136,6 +142,10 @@ app.on('ready', async () => {
 
     chain.on("block", (blockNumber) => {
       mainWindow.webContents.send(SET_BLOCK_NUMBER, blockNumber)
+    })
+
+    chain.on("error", (error) => {
+      mainWindow.webContents.send(SET_SYSTEM_ERROR, error.stack || error)
     })
 
     chain.start()
