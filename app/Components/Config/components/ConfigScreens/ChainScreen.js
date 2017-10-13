@@ -103,7 +103,7 @@ class ChainScreen extends Component {
             </div>
           </div>
         </section>
-        <h2>CHAIN FORKING</h2>
+        {/* <h2>CHAIN FORKING</h2>
         <section>
           <div className={Styles.Row}>
             <div className={Styles.RowItem}>
@@ -190,9 +190,9 @@ class ChainScreen extends Component {
               <div className={Styles.RowItem}>
                 <p>The URL of the existing chain's RPC server. Eg., https://mainnet.infura.io</p>
               </div>
-            </div> */}
+            </div> 
           </section>
-        </OnlyIf>
+        </OnlyIf> */}
       </div>
     )
   }
