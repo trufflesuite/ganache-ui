@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import { Link, hashHistory } from 'react-router'
 import connect from 'Components/Helpers/connect'
 import * as Search from 'Actions/Search'
-
+import { setSystemError } from 'Actions/Core'
+ 
 import Spinner from 'Elements/Spinner'
 import OnlyIf from 'Elements/OnlyIf'
 import StatusIndicator from 'Elements/StatusIndicator'
@@ -51,7 +52,14 @@ class TopNavbar extends Component {
 
   handleSearchKeyPress = e => {
     if (e.key === 'Enter') {
-      this.props.dispatch(Search.query(this.searchInput.value.trim()))
+      let value = this.searchInput.value.trim()
+
+      // Secret to show the error screen when we need it.
+      if (value.toLowerCase() == "error") {
+        this.props.dispatch(setSystemError(new Error("You found a secret!")))
+      } else {
+        this.props.dispatch(Search.query(value))
+      }
     }
   }
 

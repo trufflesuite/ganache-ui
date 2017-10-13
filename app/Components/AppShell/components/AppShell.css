@@ -1,7 +1,17 @@
+@import "colors.css";
+
 .AppShell {
   display: flex;
   flex-direction: column;
   height: 100%;
+
+  .Bug {
+    textarea {
+      min-height: 5rem; /* Overwrite Modal textarea styles */
+      max-height: 5rem;
+      background-color: var(--app-button-primary-disabled-border-color);
+    }
+  }
 }
 
 .ShellContainer {

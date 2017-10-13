@@ -84,28 +84,9 @@ export default function (state = initialState, action) {
       return Object.assign({}, state, {
         latestBlock: action.number
       })
-    
-    case Core.GET_BLOCK:
-      // Add the block to the list
-      var block = action.block
-      var blocks = [block].concat(state.blocks)
-      
-      // Cut old blocks
-      while (blocks.length > MAX_BLOCKS) {
-        blocks.pop()
-      }
-
-      // Add the block's transactions to the list
-      var transactions = block.transactions.concat(state.transactions)
-
-      // Cut old transactions
-      while (transactions.length > MAX_TRANSACTIONS) {
-        transactions.pop()
-      }
-
+    case Core.SET_SYSTEM_ERROR:
       return Object.assign({}, state, {
-        blocks,
-        transactions
+        systemError: action.error
       })
 
     default:

@@ -83,7 +83,6 @@ export const getBlock = function(number) {
 
 export const SET_CURRENT_BLOCK_SHOWN = `${prefix}/SET_CURRENT_BLOCK_SHOWN`
 export const showBlock = function(number) {
-  console.log("SHOW BLOCK", number)
   return web3ActionCreator("getBlock", [number, true], (block, dispatch, getState) => {
     dispatch({type: SET_CURRENT_BLOCK_SHOWN, block})
   })

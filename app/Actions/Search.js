@@ -8,8 +8,6 @@ export const query = function(message) {
     let provider = getState().web3.provider
     // This will request the block by either its has or number
     web3Request("getBlock", [message, true], provider, (err, block) => {
-      console.log("GOT BLOCK", block)
-
       if (block) {
         dispatch(push(`/blocks/${block.number}`))
         return

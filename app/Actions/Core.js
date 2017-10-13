@@ -83,37 +83,7 @@ export const getBlockNumber = function() {
   })
 }
 
-// export const SET_LAST_REQUESTED_BLOCK_NUMBER = `${prefix}/SET_LAST_REQUESTED_BLOCK`
-// export function setLastRequestedBlock(number) {
-//   return function(dispatch, getState) {
-//     let lastRequestedBlock = getState().core.lastRequestedBlock
-
-//     if (number == lastRequestedBlock) {
-//       return
-//     }
-
-//     dispatch({ type: SET_LAST_REQUESTED_BLOCK_NUMBER, number })
-
-//     // We requested data about a new block; this means one of our accounts
-//     // likely made the transactions. Let's update the account data.
-//     dispatch(getAccounts())
-//   }
-// }
-
-// export const processBlocks = function() {
-//   return function(dispatch, getState) {
-//     var latestBlock = getState().core.latestBlock
-//     var lastRequestedBlock = getState().core.lastRequestedBlock
-
-//     if (latestBlock == lastRequestedBlock) {
-//       return
-//     }
-
-//     while (lastRequestedBlock < latestBlock ) {
-//       lastRequestedBlock += 1
-//       dispatch(getBlock(lastRequestedBlock))
-//     }
-
-//     dispatch(setLastRequestedBlock(lastRequestedBlock))
-//   }
-// }
+export const SET_SYSTEM_ERROR = `${prefix}/SET_SYSTEM_ERROR`
+export const setSystemError = function(error) {
+  return {type: SET_SYSTEM_ERROR, error}
+}

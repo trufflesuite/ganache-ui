@@ -10,7 +10,6 @@ export default function (state = initialState, action) {
       return Object.assign({}, state, {
         scrollPosition: action.scrollPosition
       })
-
     default:
       return state
   }

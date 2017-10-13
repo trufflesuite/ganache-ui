@@ -23,14 +23,9 @@ export const checkCache = function(payload, getState) {
   let id = createCacheId(payload)
   let hit = cache[id]
 
-  console.log(id)
-
   if (!hit) {
-    console.log("MISS!")
     return null
-  } else {
-    console.log("HIT!")
-  }
+  } 
 
   // Tailor the response to the new rpc id
   var response = Object.assign({}, hit)

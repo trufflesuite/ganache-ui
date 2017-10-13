@@ -87,52 +87,27 @@ class AppShell extends Component {
     this.refs.shellcontainer.addEventListener('scroll', this._handleScroll);
   }
 
-  // componentDidMount () {
-  //   Mousetrap.bind(['command+1', 'ctrl+1'], () => {
-  //     this.props.testRpcState.testRpcServerRunning
-  //       ? hashHistory.push('/accounts')
-  //       : null
-  //   })
-
-  //   Mousetrap.bind(['command+2', 'ctrl+2'], () => {
-  //     this.props.testRpcState.testRpcServerRunning
-  //       ? hashHistory.push('/blocks')
-  //       : null
-  //   })
-
-  //   Mousetrap.bind(['command+3', 'ctrl+3'], () => {
-  //     this.props.testRpcState.testRpcServerRunning
-  //       ? hashHistory.push('/transactions')
-  //       : null
-  //   })
-
-  //   Mousetrap.bind(['command+4', 'ctrl+4'], () => {
-  //     this.props.testRpcState.testRpcServerRunning
-  //       ? hashHistory.push('/console')
-  //       : null
-  //   })
-
-  //   Mousetrap.bind(['command+5', 'ctrl+5'], () => {
-  //     this.props.testRpcState.testRpcServerRunning
-  //       ? hashHistory.push('/config')
-  //       : null
-  //   })
-  // }
-
   componentWillReceiveProps (nextProps) {
-    if (
-      nextProps.settings.googleAnalyticsTracking &&
-      nextProps.location.pathname !== this.props.location.pathname
-    ) {
-      const segment = nextProps.location.pathname.split('/')[1] || 'dashboard'
+    // If we're not tracking page use, bail.
+    if (nextProps.settings.googleAnalyticsTracking == false) {
+      return
+    }
 
-      if (!this.user) {
-        this._setupGoogleAnalytics()
-      }
+    // If the page hasn't changed, bail.
+    if (nextProps.location.pathname == this.props.location.pathname) {
+      return
+    }
 
-      this.user && this.user.pageview(nextProps.location.pathname).send()
-      this.user &&
-        this.user.screenview(segment, 'Ganache', app.getVersion()).send()
+    const segment = nextProps.location.pathname.split('/')[1] || 'dashboard'
+
+    // If we haven't initialized GA, do it.
+    if (!this.user) {
+      this._setupGoogleAnalytics()
+    }
+
+    if (this.user) {
+      this.user.pageview(nextProps.location.pathname).send()
+      this.user.screenview(segment, 'Ganache', app.getVersion()).send()
     }
   }
 
@@ -141,6 +116,11 @@ class AppShell extends Component {
   render () {
     const path = this.props.location.pathname
     const segment = path.replace(/^\//g, '').replace(/\//g, '-') || 'root'
+    let systemError = this.props.core.systemError
+
+    if (systemError) {
+      systemError = systemError.stack || systemError
+    }
 
     return (
       <div className={Styles.AppShell}>
@@ -150,20 +130,15 @@ class AppShell extends Component {
           {this.props.children}
         </div>
 
-        <OnlyIf test={this.props.core.systemError !== null}>
+        <OnlyIf test={systemError != null}>
           <div className={ModalStyles.Modal}>
-            <section>
+            <section className={Styles.Bug}>
               <Icon glyph={BugIcon} size={128} />
-              <h4>A SYSTEM ERROR HAS OCCURED</h4>
+              <h4>Uh Oh... That's a bug.</h4>
               <p>
-                Well, this is embarassing. Something's happened and an error has
-                been thrown which means Ganache will need to be restarted.
+                Ganache encountered an error. Help us fix it by raising a GitHub issue! Mention the following error information when writing your ticket, and please include as much information as possible. Sorry about that! 
               </p>
-              <p>
-                It'd be great if you could raise a Github issue with the above
-                contents and a brief description of what you were doing at the
-                time, so we can debug it and make sure it never happens again.
-              </p>
+              <textarea disabled={true} value={systemError} />
               <footer>
                 <button
                   onClick={() => {
@@ -178,7 +153,7 @@ PLATFORM: ${process.platform}
 GANACHE VERSION: ${app.getVersion()}
 
 EXCEPTION:
-${this.props.core.systemError}`
+${systemError}`
                     ).replace(/%09/g, '')
 
                     shell.openExternal(
@@ -191,7 +166,7 @@ ${this.props.core.systemError}`
                 <button
                   onClick={() => {
                     app.relaunch()
-                    app.quit()
+                    app.exit()
                   }}
                 >
                   RELAUNCH
