@@ -60,85 +60,104 @@ class BlockCard extends Component {
 
     return (
       <main>
-        <button className="Styles.Button" onClick={hashHistory.goBack}>
-          &larr; Back
-        </button>
         <section className={cardStyles}>
           <header className={Styles.Header}>
+            <button className="Styles.Button" onClick={hashHistory.goBack}>
+              &larr; Back
+            </button>
+
             <div className={Styles.BlockNumber}>
-              <span>BLOCK NUMBER</span>
               <h1>
-                {block.number}
+                BLOCK {block.number}
               </h1>
             </div>
+          </header>
+
+          <main className={Styles.BlockBody}>
             <div className={Styles.HeaderSecondaryInfo}>
-              <div className={Styles.GasUsed}>
-                <div>GAS USED</div>
-                <h1>
+              <div>
+                <div className={Styles.Label}>GAS USED</div>
+                <div className={Styles.Value}>
                   {block.gasUsed}
-                </h1>
+                </div>
               </div>
-              <div className={Styles.GasLimit}>
-                <div>GAS LIMIT</div>
-                <h1>
+
+              <div>
+                <div className={Styles.Label}>GAS LIMIT</div>
+                <div className={Styles.Value}>
                   {block.gasLimit}
-                </h1>
+                </div>
               </div>
-              <div className={Styles.MinedOn}>
-                <div>MINED ON</div>
-                <h1>
+
+              <div>
+                <div className={Styles.Label}>MINED ON</div>
+                <div className={Styles.Value}>
                   <Moment unix format="YYYY-MM-DD HH:MM:SS">
                     {block.timestamp}
                   </Moment>
-                </h1>
+                </div>
               </div>
             </div>
-          </header>
-          <main>
-            <dl>
-              <dt>
-                Transactions ({block.transactions.length})
-              </dt>
-              <dd>
-                {this._renderRecentTransaction(block.transactions)}
-              </dd>
-            </dl>
-            <dl>
-              <dt>BLOCK HASH</dt>
-              <dd>
-                {block.hash}
-              </dd>
-              <dt>Parent Hash</dt>
-              <dd>
-                {block.parentHash}
-              </dd>
 
-              {/* 
-              <dt>Nonce</dt>
-              <dd>
-                {block.nonce}
-              </dd>
+            <div>
+              <div className={Styles.Item}>
+                <div className={Styles.Label}>BLOCK HASH</div>
+                <div className={Styles.Value}>
+                  {block.hash}
+                </div>
+              </div>
 
-              <dt>Extra Data</dt>
-              <dd>
-                {block.extraData}
-              </dd>
-              
-              <dt>Mix Hash</dt>
-              <dd>
-                {EtherUtil.bufferToHex(block.header.mixHash)}
-              </dd>
+              <div className={Styles.Item}>
+                <div className={Styles.Label}>PARENT HASH</div>
+                <div className={Styles.Value}>
+                  {block.parentHash}
+                </div>
+              </div>
 
-              <dt>Receipts Root</dt>
-              <dd>
-                {EtherUtil.bufferToHex(block.header.receiptTrie)}
-              </dd>
+              {/*<div>
+                <div className={Styles.Label}>NONCE</div>
+                <div className={Styles.Value}>
+                  {block.nonce}
+                </div>
+              </div>
 
-              <dt>Bloom</dt>
-              <dd className={Styles.Bloom}>
-                {EtherUtil.bufferToHex(block.header.bloom)}
-              </dd> */}
-            </dl>
+              <div>
+                <div className={Styles.Label}>EXTRA DATA</div>
+                <div className={Styles.Value}>
+                  {block.extraData}
+                </div>
+              </div>
+
+              <div>
+                <div className={Styles.Label}>MIX HASH</div>
+                <div className={Styles.Value}>
+                  {EtherUtil.bufferToHex(block.header.mixHash)}
+                </div>
+              </div>
+
+              <div>
+                <div className={Styles.Label}>RECEIPTS ROOT</div>
+                <div className={Styles.Value}>
+                  {EtherUtil.bufferToHex(block.header.receiptTrie)}
+                </div>
+              </div>
+
+              <div>
+                <div className={Styles.Label}>BLOOM</div>
+                <div className={Styles.Value}>
+                  {EtherUtil.bufferToHex(block.header.bloom)}
+                </div>
+              </div>*/}
+            </div>
+
+            <div>
+              <div>
+                <div className={Styles.Label}>TRANSACTIONS ({block.transactions.length})</div>
+                <div className={Styles.Value}>
+                  {this._renderRecentTransaction(block.transactions)}
+                </div>
+              </div>
+            </div>
           </main>
         </section>
       </main>

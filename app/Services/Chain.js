@@ -49,13 +49,13 @@ class ChainService extends EventEmitter {
     // Check to see if we lost the process's heartbeat
     // Necessary? Who knows, but we want to know if it happens.
 
-    setInterval(() => {
+    /*setInterval(() => {
       var now = new Date().getTime()
       // If we didn't receive a heartbeat in the last five seconds, error.
       if (this.lastHeartBeat < now - 5000) {
         this.emit("error", new Error("Lost heartbeat from server process!"))
       }
-    }, 5000)
+    }, 5000)*/
   }
 
   startServer(options) {

@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 
 import Icon from 'Elements/Icon'
 import ChecksumAddress from 'Elements/ChecksumAddress'
-import AccountIcon from 'Elements/icons/account.svg'
+import KeyIcon from 'Elements/icons/key.svg'
 
 import Styles from './Keys.css'
 
@@ -10,13 +10,15 @@ export default class Keys extends PureComponent {
   render () {
     return (
       <div className={Styles.Modal}>
-        <section>
-          <Icon glyph={AccountIcon} size={128} />
+        <header>
           <h4>
-            <ChecksumAddress address={this.props.accountAddress} />
+            KEYS OF <ChecksumAddress address={this.props.accountAddress} />
           </h4>
+        </header>
+
+        <section>
           <dl>
-            <dt>PRIVATE KEY</dt>
+            <dt><Icon glyph={KeyIcon} size={28} /> PRIVATE KEY</dt>
             <dd>
               {this.props.privateKey}
             </dd>

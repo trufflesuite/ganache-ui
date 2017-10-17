@@ -10,7 +10,7 @@ import TopNavbar from './TopNavbar'
 import OnlyIf from 'Elements/OnlyIf'
 
 import Icon from 'Elements/Icon'
-import BugIcon from 'Elements/icons/bug.svg'
+import BugIcon from 'Elements/icons/errorant.svg'
 
 import ua from 'universal-analytics'
 import ElectronCookies from '@exponent/electron-cookies'
@@ -122,7 +122,7 @@ class AppShell extends Component {
       systemError = systemError.stack || systemError
 
       // Remove any user-specific paths in exception messages
-      // Prepare our paths so we *always* will get a match no matter 
+      // Prepare our paths so we *always* will get a match no matter
       // path separator (oddly, on Windows, different errors will give
       // us different path separators)
       var appPath = app.getAppPath().replace(/\\/g, "/")
@@ -145,10 +145,10 @@ class AppShell extends Component {
         <OnlyIf test={systemError != null}>
           <div className={ModalStyles.Modal}>
             <section className={Styles.Bug}>
-              <Icon glyph={BugIcon} size={128} />
+              <Icon glyph={BugIcon} size={192} />
               <h4>Uh Oh... That's a bug.</h4>
               <p>
-                Ganache encountered an error. Help us fix it by raising a GitHub issue! Mention the following error information when writing your ticket, and please include as much information as possible. Sorry about that! 
+                Ganache encountered an error. Help us fix it by raising a GitHub issue! Mention the following error information when writing your ticket, and please include as much information as possible. Sorry about that!
               </p>
               <textarea disabled={true} value={systemError} />
               <footer>

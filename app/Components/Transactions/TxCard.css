@@ -11,7 +11,7 @@
 .TxCard {
   font-family: "Fira Code Regular", monospaced;
   width: 100%;
-  margin: .5rem 0;
+  margin: 0;
   background: var(--app-card-default-background);
   border-radius: 4px;
   word-wrap: break-word;
@@ -19,11 +19,25 @@
   flex-direction: column;
   margin-bottom: 1rem;
   word-wrap: break-word;
+  border-bottom: 1px solid #aaa;
 
   header {
+    width: 100%;
+    height: 64px;
+    background: #fff;
+    padding: 0;
+    border-bottom: 1px solid #aaa;
+
     h1 {
-      font-size: 2vw;
+      font-size: 1.5rem;
+      padding: 1.25rem;
     }
+  }
+
+  header button {
+    border-radius: 0;
+    line-height: 1;
+    height: 100%;
   }
 
   main,
@@ -38,6 +52,10 @@
     }
   }
 
+  main {
+    padding-bottom: 2rem;
+  }
+
   footer {
     justify-content: flex-start;
 
@@ -49,8 +67,9 @@
   .Label {
     font-size: .75rem;
     font-family: "RobotoCondensed-Regular";
-    font-weight: 300;
+    font-weight: 800;
     color: var(--app-card-label);
+    margin-bottom: .25rem;
   }
 
   .Value {
@@ -58,6 +77,10 @@
     font-family: "Fira Code Regular";
     color: var(--app-card-value);
     word-break: break-all;
+  }
+
+  [class^="BorderStyles__Parties"] {
+    padding-top: 2rem;
   }
 }
 

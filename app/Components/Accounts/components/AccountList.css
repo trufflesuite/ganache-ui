@@ -16,7 +16,7 @@
 
 .AccountList {
   width: 100%;
-  padding: 1rem;
+  padding: 0;
 
   position: relative;
 }
@@ -26,13 +26,10 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: .8rem;
+  padding: 1.3rem .8rem;
   background-color: var(--app-card-default-background);
-  border-radius: 4px;
-  margin-bottom: 1rem;
   position: relative;
-  box-shadow: 0 0 0 0.5px rgba(49, 49, 93, .14),
-    0 2px 5px 0 rgba(49, 49, 93, .1), 0 1px 2px 0 rgba(0, 0, 0, .08);
+  border-bottom: 1px solid #aaa;
 }
 
 .AccountAddress {

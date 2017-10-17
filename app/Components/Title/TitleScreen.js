@@ -58,7 +58,7 @@ class TitleScreen extends Component {
           </div>
           <h4 className={elementStyles('')}>
             <strong>
-              GANACHE
+              Ganache
             </strong>
             <div className={elementStyles(Styles.GanacheVersion)}>
               v{this.state.version}

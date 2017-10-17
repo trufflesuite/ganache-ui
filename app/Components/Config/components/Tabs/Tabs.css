@@ -26,7 +26,6 @@
   margin: 0 2rem 0 0;
   font-size: .8rem;
   text-transform: uppercase;
-
   transition: color .3s;
 
   &:first-of-type {
@@ -50,7 +49,7 @@
 }
 
 .ConfigTabAction {
-  margin-right: 3.5rem; 
+  margin-right: 3.5rem;
   display: flex;
   justify-content: space-between;
 

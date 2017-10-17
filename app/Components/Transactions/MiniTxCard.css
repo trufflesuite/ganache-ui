@@ -11,18 +11,16 @@
   cursor: pointer;
   margin: .5rem 0;
   background: var(--app-card-default-background);
-  padding: .8rem;
-  border-radius: 4px;
+  padding: 1.3rem .8rem;
   word-wrap: break-word;
   cursor: pointer;
   display: flex;
   flex-direction: column;
-  margin-bottom: 1rem;
-  composes: CardShadow;
+  margin: 0;
   transition: all .3s;
+  border-bottom: 1px solid #aaa;
 
   &:hover {
-    transform: scale(1.01);
   }
 }
 
@@ -48,8 +46,9 @@
 .Label {
   font-size: .75rem;
   font-family: "RobotoCondensed-Regular";
-  font-weight: 300;
+  font-weight: 800;
   color: var(--app-card-label);
+  margin-bottom: .25rem;
 }
 
 .Value {

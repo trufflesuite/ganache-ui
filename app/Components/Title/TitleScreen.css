@@ -83,7 +83,7 @@
   font-size: 20px;
 
   font-weight: 700;
-  line-height: 3.2;
+  line-height: 1;
   will-change: opacity;
 }
 
@@ -97,7 +97,7 @@
 
 .LoadingScreen h4 {
   opacity: 0;
-  margin: 2rem 0 0 0;
+  margin: 1rem 0 0 0;
   height: 42px;
 
   :global {
@@ -121,9 +121,12 @@
 }
 
 .LoadingScreen h4 strong {
-  color: #efefef;
-  font-weight: 700;
+  color: #fff;
+  font-weight: 300;
   line-height: 1.2;
+  font-size: 2.5rem;
+  font-family: "Grand Hotel", cursive;
+  letter-spacing: normal;
 }
 
 .LoadingScreen h4 strong sup {

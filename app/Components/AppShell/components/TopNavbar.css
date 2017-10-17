@@ -36,6 +36,7 @@
     align-items: center;
     font-size: 0.89rem;
     line-height: 0.89rem;
+    transition: all .25s;
 
     > div {
       margin-right: .5rem;
@@ -59,16 +60,11 @@
       }
     }
 
-    transition: all .3s;
-
     &:hover {
       color: white;
 
-      transform: scale(1.01);
-
       svg {
         stroke: white;
-        transform: scale(1.01);
         cursor: pointer;
       }
     }
@@ -87,22 +83,28 @@
     outline: none;
     border: 1px solid var(--app-navbar-icon-color);
     border-radius: 24px;
-    padding: .35rem .5rem;
-    color: lighten(var(--app-navbar-icon-color), 20%);
+    padding: 11px .75rem 10px .75rem;
+    color: #fff;
     font-size: .7rem;
     line-height: 1;
     padding-right: 1.8rem;
     font-family: "Fira Code Regular";
     width: 370px;
+    transition: all .25s;
 
     &::-webkit-input-placeholder {
       color: darken(var(--app-navbar-icon-color), 10%);
+    }
+
+    &:focus {
+      border-color: #fff;
+      color: #fff;
     }
   }
 
   > svg {
     position: absolute;
-    right: 0px;
+    right: 5px;
     color: var(--app-navbar-icon-color);
   }
 }

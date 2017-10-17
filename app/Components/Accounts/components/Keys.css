@@ -1,3 +1,5 @@
+@import 'colors.css';
+
 .Modal {
   position: fixed;
   opacity: 0;
@@ -16,6 +18,19 @@
   align-items: center;
   justify-content: center;
 
+  header {
+    background: var(--app-navbar-background);
+    width: 600px;
+
+    h4 {
+      line-height: 1rem;
+      font-size: 1rem;
+      font-weight: 500;
+      padding: 0 2rem;
+      color: #fff;
+    }
+  }
+
   section {
     display: flex;
     flex-direction: column;
@@ -23,14 +38,14 @@
 
     text-align: left;
 
-    padding: 4rem;
+    padding: 2rem;
     background: white;
     width: 600px;
 
     animation: shrinkIn .3s forwards ease-in-out;
 
     h4 {
-      
+
     }
 
     dl {
@@ -43,8 +58,13 @@
 
       dt {
         font-family: "RobotoCondensed-Regular";
-        font-weight: 300;
+        font-weight: 800;
         color: #605c59;
+        margin-bottom: .5rem;
+
+        svg {
+          vertical-align: middle;
+        }
       }
 
       dd {

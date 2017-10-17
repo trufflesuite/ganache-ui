@@ -9,11 +9,12 @@
     list-style:none;
     font-size: 13px;
     color: #eff1f5;
-    border-radius: 2px;
-    background: #2b303b;
+    border-radius: 0;
+    background: #333;
     white-space: pre-wrap;
     word-wrap: break-word;
     box-sizing: border-box;
+    margin: 0;
     padding: 1em;
     font-family: "Fira Code Regular", monospace;
     overflow: scroll;

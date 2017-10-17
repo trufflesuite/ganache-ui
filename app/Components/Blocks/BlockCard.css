@@ -5,47 +5,51 @@
 .Button {
   text-decoration: none;
   text-align: center;
-  margin: .5rem 0;
+  margin: 0;
 }
 
 .BlockCard {
   font-family: "Fira Code Regular", sans-serif;
   background: var(--app-card-default-background);
-
   display: flex;
   flex-direction: column;
-  margin: 1rem 0 0 0;
-
+  margin: 0;
   border-radius: 4px;
   word-wrap: break-word;
-  composes: CardShadow;
 
   header {
     width: 100%;
+    height: 64px;
     display: flex;
     flex-direction: row;
-    justify-content: flex-end;
-    background-color: var(--subtle-green);
+    justify-content: flex-start;
+    background-color: #fff;
+    border-bottom: 1px solid #aaa;
+    line-height: 1;
 
-    font-size: 12px;
+    h1 {
+      font-size: 1.5rem;
+      padding: 1.25rem;
+      margin: 0;
+    }
   }
 
-  main {
-    display: flex;
-    flex-direction: row;
+  header button {
+    border-radius: 0;
+    line-height: 1;
+    height: 100%;
   }
 
-  h1 {
-    margin: 0;
-  }
-
-  .BlockNumber {
-    align-items: center;
-    padding: .8rem;
-    background-color: var(--subtle-green);
+  .BlockBody {
+    padding: 1rem 0;
+    border-bottom: 1px solid #aaa;
 
     > div {
-      font-weight: bold;
+      padding: 1rem;
+
+      .Item:not(:last-child) {
+        margin-bottom: 1rem;
+      }
     }
   }
 
@@ -61,40 +65,24 @@
   .HeaderSecondaryInfo {
     display: flex;
     align-items: center;
-    flex: 2;
     justify-content: space-between;
-    padding-right: .8rem;
-
-    > div {
-      margin-left: 3rem;
-    }
+    width: 100%;
+    padding: 1rem;
   }
 
-  dl,
-  dt,
-  dd {
-    margin: 0;
-    padding: 0;
-  }
-
-  dl {
-    width: 50%;
-  }
-
-  dt {
-    font-size: 1vw;
+  .Label {
+    font-size: .75rem;
     font-family: "RobotoCondensed-Regular";
-    text-transform: uppercase;
-    font-weight: 300;
+    font-weight: 800;
     color: var(--app-card-label);
+    margin-bottom: .25rem;
   }
 
-  dd {
-    margin-bottom: .8vw;
-    font-size: 1.1vw;
-    font-weight: bold;
+  .Value {
+    font-size: 1.125rem;
     font-family: "Fira Code Regular";
     color: var(--app-card-value);
+    word-break: break-all;
   }
 }
 

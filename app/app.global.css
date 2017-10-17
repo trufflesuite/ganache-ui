@@ -51,6 +51,14 @@
   src: url("../resources/fonts/FiraCode-Regular.ttf") format("truetype");
 }
 
+@font-face {
+  font-family: "Grand Hotel";
+  font-weight: 300;
+  font-style: normal;
+
+  src: url("../resources/fonts/GrandHotel-Regular.ttf") format("truetype");
+}
+
 ::-webkit-scrollbar {
     display: none;
 }

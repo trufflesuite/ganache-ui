@@ -16,6 +16,6 @@
 
   main {
     display: flex;
-    padding-top: 1rem;
+    padding: 0;
   }
 }

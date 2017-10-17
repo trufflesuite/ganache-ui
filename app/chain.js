@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-var TestRPC = require("ethereumjs-testrpc");
-var path = require("path");
+var TestRPC = require("ethereumjs-testrpc")
+var path = require("path")
 var Web3 = require("web3")
 
 if (!process.send) {
@@ -8,7 +8,7 @@ if (!process.send) {
 }
 
 var server;
-var provider; 
+var provider;
 var blockInterval;
 var lastBlock;
 
@@ -31,7 +31,7 @@ function startServer(options) {
 
     // The TestRPC's logging system is archaic. We'd like more control
     // over what's logged. For now, the really important stuff all has
-    // a space on the front of it. So let's only log the stuff with a 
+    // a space on the front of it. So let's only log the stuff with a
     // space on the front. ¯\_(ツ)_/¯
     options.logger = {
       log: (message) => {
@@ -58,13 +58,13 @@ function startServer(options) {
 
       oldSendAsync(payload, callback)
     }
-  
+
     server.listen(options.port, options.hostname, function(err, state) {
       if (err) {
         process.send({type: 'start-error', data: err});
         return
       }
-      
+
       var data = {
         mnemonic: state.mnemonic,
         hdPath: state.wallet_hdpath,
@@ -73,7 +73,7 @@ function startServer(options) {
 
       var accounts = state.accounts;
       var addresses = Object.keys(accounts);
-    
+
       addresses.forEach(function(address, index) {
         data.privateKeys[address] = accounts[address].secretKey.toString("hex")
       });
@@ -87,14 +87,14 @@ function startServer(options) {
       // when a new block occurs.
       lastBlock = -1;
       provider = new Web3.providers.HttpProvider("http://" + options.hostname + ":" + options.port)
-     
+
       var web3 = new Web3()
 
       blockInterval = setInterval(function() {
         provider.sendAsync({
-          jsonrpc: "2.0", 
-          method: "eth_blockNumber", 
-          params: [], 
+          jsonrpc: "2.0",
+          method: "eth_blockNumber",
+          params: [],
           id: new Date().getTime(),
           internal: true // Important for ganache requests so they're not logged
         }, function(err, response) {
@@ -121,7 +121,7 @@ function startServer(options) {
 process.on("message", function(message) {
   //console.log("CHILD RECEIVED", message)
   switch(message.type) {
-    case "start-server": 
+    case "start-server":
       startServer(message.data)
       break;
     case "stop-server":

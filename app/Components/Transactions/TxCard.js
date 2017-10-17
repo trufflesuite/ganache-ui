@@ -52,21 +52,19 @@ class TxCard extends Component {
 
     return (
       <main>
-        <button className="Styles.Button" onClick={hashHistory.goBack}>
-          &larr; Back
-        </button>
         <section className={cardStyles}>
           <header className={BorderStyles.Header}>
+            <button className="Styles.Button" onClick={hashHistory.goBack}>
+              &larr; Back
+            </button>
+
             <div className={BorderStyles.Title}>
-              <span>TX HASH</span>
               <h1>
-                {tx.hash}
+                TX {tx.hash}
               </h1>
             </div>
-            <div className={BorderStyles.Type}>
-              <TransactionTypeBadge tx={tx} receipt={receipt} />
-            </div>
           </header>
+
           <section className={BorderStyles.Parties}>
             <SenderAddress tx={tx} />
             <DestinationAddress tx={tx} receipt={receipt} />
@@ -79,25 +77,39 @@ class TxCard extends Component {
               </div>
             </div>
           </section>
+
           <section className={BorderStyles.Gas}>
+            <div>
+              <div className={Styles.Label}>TYPE</div>
+
+              <div className={Styles.Value}>
+                <div className={BorderStyles.Type}>
+                  <TransactionTypeBadge tx={tx} receipt={receipt} />
+                </div>
+              </div>
+            </div>
+
             <div>
               <div className={Styles.Label}>GAS USED</div>
               <div className={Styles.Value}>
                 {receipt.gasUsed}
               </div>
             </div>
+
             <div>
               <div className={Styles.Label}>GAS PRICE</div>
               <div className={Styles.Value}>
                 {tx.gasPrice.toString()}
               </div>
             </div>
+
             <div>
               <div className={Styles.Label}>GAS LIMIT</div>
               <div className={Styles.Value}>
                 {tx.gas}
               </div>
             </div>
+
             {/* <div>
               <div className={Styles.Label}>MINED ON</div>
               <div className={Styles.Value}>
@@ -106,6 +118,7 @@ class TxCard extends Component {
                 </Moment>
               </div>
             </div> */}
+
             <div>
               <div className={Styles.Label}>MINED IN BLOCK</div>
               <div className={Styles.Value}>
