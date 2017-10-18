@@ -1,4 +1,4 @@
-import * as Web3 from 'Actions/Web3'
+import * as Web3 from '../Actions/Web3'
 
 const initialState = {
   provider: null

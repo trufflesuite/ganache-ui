@@ -1,4 +1,4 @@
-import * as Accounts from 'Actions/Accounts'
+import * as Accounts from '../Actions/Accounts'
 
 const initialState = {
   addresses: [], 

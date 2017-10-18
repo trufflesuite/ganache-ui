@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
-import connect from 'Components/Helpers/connect'
-import * as Transactions from 'Actions/Transactions'
+import connect from '../Helpers/connect'
+import * as Transactions from '../../Actions/Transactions'
 
 import MiniTxCard from './MiniTxCard'
 import Styles from './TxList.css'
 
-import MiningIcon from 'Icons/force_mine.svg'
-import Icon from 'Elements/Icon'
+import MiningIcon from '../../Elements/icons/force_mine.svg'
+import Icon from '../../Elements/Icon'
 
 class TxList extends Component {
   componentWillReceiveProps(nextProps) {

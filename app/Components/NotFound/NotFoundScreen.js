@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import SearchIcon from 'Icons/search.svg'
-import Icon from 'Elements/Icon'
+import SearchIcon from '../../Elements/icons/search.svg'
+import Icon from '../../Elements/Icon'
 import Styles from './NotFoundScreen.css'
 
 class NotFoundScreen extends Component {  

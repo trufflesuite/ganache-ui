@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import connect from 'Components/Helpers/connect'
-import * as Blocks from 'Actions/Blocks'
-import BlockList from 'Components/Blocks/BlockList'
-import BlockCard from 'Components/Blocks/BlockCard'
+import connect from '../Helpers/connect'
+import * as Blocks from '../../Actions/Blocks'
+import BlockList from './BlockList'
+import BlockCard from './BlockCard'
 
 import Styles from './Blocks.css'
 

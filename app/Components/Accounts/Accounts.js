@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 
-import connect from 'Components/Helpers/connect'
+import connect from '../Helpers/connect'
 
 import MnemonicAndHdPath from './MnemonicAndHdPath'
 import AccountList from './AccountList'
 
-import WithEmptyState from 'Elements/WithEmptyState'
-import Spinner from 'Elements/Spinner'
+import WithEmptyState from '../../Elements/WithEmptyState'
+import Spinner from '../../Elements/Spinner'
 
 import Styles from './Accounts.css'
 

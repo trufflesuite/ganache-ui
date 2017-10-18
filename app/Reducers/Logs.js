@@ -1,4 +1,4 @@
-import * as Logs from 'Actions/Logs'
+import * as Logs from '../Actions/Logs'
 
 const initialState = {
   lines: []

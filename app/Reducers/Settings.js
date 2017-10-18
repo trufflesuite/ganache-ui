@@ -1,4 +1,4 @@
-import * as Settings from 'Actions/Settings'
+import * as Settings from '../Actions/Settings'
 
 const initialState = {}
 

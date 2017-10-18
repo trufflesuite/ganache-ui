@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import TxList from './TxList'
-import WithEmptyState from 'Elements/WithEmptyState'
+import WithEmptyState from '../../Elements/WithEmptyState'
 import EmptyTransactions from './EmptyTransactions'
 
 class RecentTxs extends Component {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 
-import Icon from 'Elements/Icon'
-import EmptyTxIcon from 'Icons/no_transactions.svg'
+import Icon from '../../Elements/Icon'
+import EmptyTxIcon from '../../Elements/icons/no_transactions.svg'
 
 import Styles from './EmptyTransactions.css'
 

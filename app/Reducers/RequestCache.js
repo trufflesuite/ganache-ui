@@ -1,5 +1,5 @@
-import * as RequestCache from 'Actions/RequestCache'
-import * as Core from 'Actions/Core'
+import * as RequestCache from '../Actions/RequestCache'
+import * as Core from '../Actions/Core'
 
 const initialState = {}
 

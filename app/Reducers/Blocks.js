@@ -1,4 +1,4 @@
-import * as Blocks from 'Actions/Blocks'
+import * as Blocks from '../Actions/Blocks'
 
 const initialState = {
   inView: [],

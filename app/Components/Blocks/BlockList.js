@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import connect from 'Components/Helpers/connect'
-import * as Blocks from 'Actions/Blocks'
+import connect from '../Helpers/connect'
+import * as Blocks from '../../Actions/Blocks'
 
 import EtherUtil from 'ethereumjs-util'
 import MiniBlockCard from './MiniBlockCard'

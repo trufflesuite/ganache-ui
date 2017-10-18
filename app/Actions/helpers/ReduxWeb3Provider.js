@@ -1,5 +1,5 @@
 import Web3 from 'web3'
-import * as RequestCache from 'Actions/RequestCache'
+import * as RequestCache from '../RequestCache'
 
 class ReduxWeb3Provider {
   constructor (url, dispatch, getState) {

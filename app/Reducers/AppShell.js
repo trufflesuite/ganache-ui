@@ -1,4 +1,4 @@
-import * as AppShell from 'Actions/AppShell'
+import * as AppShell from '../Actions/AppShell'
 
 const initialState = {
   scrollPosition: "top"

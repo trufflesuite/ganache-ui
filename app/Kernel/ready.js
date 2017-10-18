@@ -1,11 +1,11 @@
 import { ipcRenderer } from 'electron'
 import { push } from 'react-router-redux' 
 
-import * as Web3 from 'Actions/Web3'
-import * as Core from 'Actions/Core'
-import * as Accounts from 'Actions/Accounts'
-import * as Logs from 'Actions/Logs'
-import * as Settings from 'Actions/Settings'
+import * as Web3 from '../Actions/Web3'
+import * as Core from '../Actions/Core'
+import * as Accounts from '../Actions/Accounts'
+import * as Logs from '../Actions/Logs'
+import * as Settings from '../Actions/Settings'
 
 // Use the electron-settings app from the main process
 const settings = require('electron').remote.require('electron-settings');

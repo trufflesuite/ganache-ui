@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 
 import Styles from '../ConfigScreen.css'
-import OnlyIf from 'Elements/OnlyIf'
+import OnlyIf from '../../../Elements/OnlyIf'
 
 const VALIDATIONS = {
   "server.total_accounts": {

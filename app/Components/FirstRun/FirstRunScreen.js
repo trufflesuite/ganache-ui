@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
 
 import { push } from 'react-router-redux'
-import connect from 'Components/Helpers/connect'
-import GanacheLogo from 'Resources/logo.png'
+import connect from '../Helpers/connect'
 
-import * as Settings from 'Actions/Settings'
+import * as Settings from '../../Actions/Settings'
 
 import Styles from './FirstRunScreen.css'
 
@@ -44,7 +43,7 @@ class FirstRunScreen extends Component {
           <div className={Styles.MainContent}>
             <div className={Styles.LeftColumn}>
             <div   className={Styles.Logo}>
-                <img src={GanacheLogo} width={'64px'} height={'64px'} />
+                <img src={"/resources/logo.png"} width={'64px'} height={'64px'} />
               </div>
               <h1>
                 SUPPORT GANACHE

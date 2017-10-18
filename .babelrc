@@ -5,7 +5,7 @@
     "react"
   ],
   "plugins": ["add-module-exports"],
-  "env": {
+  "env": { 
     "production": {
       "presets": ["react-optimize"],
       "plugins": ["babel-plugin-dev-expression"]

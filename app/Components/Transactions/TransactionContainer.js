@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import connect from 'Components/Helpers/connect'
-import * as Transactions from 'Actions/Transactions'
-import TxList from 'Components/Transactions/TxList'
-import TxCard from 'Components/Transactions/TxCard'
+import connect from '../Helpers/connect'
+import * as Transactions from '../../Actions/Transactions'
+import TxList from './TxList'
+import TxCard from './TxCard'
 
 import Styles from './Transactions.css'
 

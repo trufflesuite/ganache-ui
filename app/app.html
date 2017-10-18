@@ -14,17 +14,6 @@
         return false
       })
     </script>
-    <script>
-      (function() {
-        if (!process.env.HOT) {
-          const link = document.createElement('link');
-          link.rel = 'stylesheet';
-          link.href = './dist/style.css';
-          // HACK: Writing the script path should be done with webpack
-          document.getElementsByTagName('head')[0].appendChild(link);
-        }
-      }());
-    </script>
     <style>
       html {
         box-sizing: border-box;
@@ -48,33 +37,35 @@
         margin: 0;
       }
     </style>
+    <link rel="stylesheet" href="app.global.scss" />
   </head>
   <body>
     <div id="root"></div>
     <script>
-      {
-        const scripts = [];
+      // {
+      //   const scripts = [];
 
-        // Dynamically insert the DLL script in development env in the
-        // renderer process
-        if (process.env.NODE_ENV === 'development') {
-          scripts.push('../app/vendor.dll.js');
-        }
+      //   // Dynamically insert the DLL script in development env in the
+      //   // renderer process
+      //   if (process.env.NODE_ENV === 'development') {
+      //     scripts.push('../app/vendor.dll.js');
+      //   }
 
-        // Dynamically insert the bundled app script in the renderer process
-        const port = process.env.PORT || 3000;
-        scripts.push(
-          (process.env.HOT)
-            ? 'http://localhost:' + port + '/dist/bundle.js'
-            : './dist/bundle.js'
-        );
+      //   // Dynamically insert the bundled app script in the renderer process
+      //   const port = process.env.PORT || 3000;
+      //   scripts.push(
+      //     (process.env.HOT)
+      //       ? 'http://localhost:' + port + '/dist/bundle.js'
+      //       : './dist/bundle.js'
+      //   );
 
-        document.write(
-          scripts
-            .map(script => '<script defer src="' + script + '"><\/script>')
-            .join('')
-        );
-      }
+      //   document.write(
+      //     scripts
+      //       .map(script => '<script defer src="' + script + '"><\/script>')
+      //       .join('')
+      //   );
+      // }
     </script>
+    <script src="index.js"></script>
   </body>
 </html>

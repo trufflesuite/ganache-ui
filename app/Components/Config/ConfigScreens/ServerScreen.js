@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import OnlyIf from 'Elements/OnlyIf'
+import OnlyIf from '../../../Elements/OnlyIf'
 
 import Styles from '../ConfigScreen.css'
 

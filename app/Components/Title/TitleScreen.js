@@ -3,13 +3,10 @@ const { app } = require('electron').remote
 
 import { hashHistory } from 'react-router'
 
-import connect from 'Components/Helpers/connect'
-import * as Core from 'Actions/Core'
+import connect from '../Helpers/connect'
+import * as Core from '../../Actions/Core'
 
-import OnlyIf from 'Elements/OnlyIf'
-import GanacheLogo from 'Resources/logo.png'
-
-import Styles from './TitleScreen.css'
+import OnlyIf from '../../Elements/OnlyIf'
 
 class TitleScreen extends Component {
   constructor () {
@@ -41,26 +38,26 @@ class TitleScreen extends Component {
   }
 
   render () {
-    const styles = `${Styles.LoadingScreen} ${this.state.loadingScreenFinished
-      ? Styles.FadeOutLoadingScreen
+    const styles = `TitleScreen ${this.state.loadingScreenFinished
+      ? "FadeOutLoadingScreen"
       : ''}`
 
     const elementStyles = className =>
       `${className} ${this.state.loadingScreenFinished
-        ? Styles.FadeOutElement
+        ? "FadeOutElement"
         : ''}`
 
     return (
       <div className={styles}>
-        <div className={Styles.Wrapper}>
-          <div className={elementStyles(Styles.Logo)}>
-            <img src={GanacheLogo} width={'128px'} height={'128px'} />
+        <div className="Wrapper">
+          <div className="Logo">
+            <img src={"/resources/logo.png"} width={'128px'} height={'128px'} />
           </div>
           <h4 className={elementStyles('')}>
             <strong>
               Ganache
             </strong>
-            <div className={elementStyles(Styles.GanacheVersion)}>
+            <div className={elementStyles("GanacheVersion")}>
               v{this.state.version}
             </div>
           </h4>

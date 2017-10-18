@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import connect from 'Components/Helpers/connect'
+import connect from '../Helpers/connect'
 
 import Styles from './LogContainer.css'
 

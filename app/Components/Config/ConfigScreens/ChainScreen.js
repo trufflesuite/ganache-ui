@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import connect from 'Components/Helpers/connect'
+import connect from '../../Helpers/connect'
 import Styles from '../ConfigScreen.css'
-import OnlyIf from 'Elements/OnlyIf'
+import OnlyIf from '../../../Elements/OnlyIf'
 
 const VALIDATIONS = {
   "server.gasPrice": {

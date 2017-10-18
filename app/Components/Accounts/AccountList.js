@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
-import connect from 'Components/Helpers/connect'
+import connect from '../Helpers/connect'
 
-import ChecksumAddress from 'Elements/ChecksumAddress'
-import OnlyIf from 'Elements/OnlyIf'
-import FormattedEtherValue from 'Elements/FormattedEtherValue'
+import ChecksumAddress from '../../Elements/ChecksumAddress'
+import OnlyIf from '../../Elements/OnlyIf'
+import FormattedEtherValue from '../../Elements/FormattedEtherValue'
 
-import Icon from 'Elements/Icon'
-import LockedIcon from 'Elements/icons/locked.svg'
-import UnlockedIcon from 'Elements/icons/unlocked.svg'
-import KeyIcon from 'Elements/icons/key.svg'
+import Icon from '../../Elements/Icon'
+import LockedIcon from '../../Elements/icons/locked.svg'
+import UnlockedIcon from '../../Elements/icons/unlocked.svg'
+import KeyIcon from '../../Elements/icons/key.svg'
 
 import Keys from './Keys'
 

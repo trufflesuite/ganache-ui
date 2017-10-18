@@ -7,17 +7,17 @@
 //
 ////
 import { combineReducers } from 'redux'
-import { REQUEST_SERVER_RESTART } from 'Actions/Core'
+import { REQUEST_SERVER_RESTART } from '../Actions/Core'
 
-import AppShellReducer from 'Reducers/AppShell'
-import SettingsReducer from 'Reducers/Settings'
-import CoreReducer from 'Reducers/Core'
-import Web3Reducer from 'Reducers/Web3'
-import AccountsReducer from 'Reducers/Accounts'
-import BlocksReducer from 'Reducers/Blocks'
-import TransactionsReducer from 'Reducers/Transactions'
-import LogsReducer from 'Reducers/Logs'
-import RequestCacheReducer from 'Reducers/RequestCache'
+import AppShellReducer from './AppShell'
+import SettingsReducer from './Settings'
+import CoreReducer from './Core'
+import Web3Reducer from './Web3'
+import AccountsReducer from './Accounts'
+import BlocksReducer from './Blocks'
+import TransactionsReducer from './Transactions'
+import LogsReducer from './Logs'
+import RequestCacheReducer from './RequestCache'
 
 const appReducer = combineReducers({
   "appshell": AppShellReducer,

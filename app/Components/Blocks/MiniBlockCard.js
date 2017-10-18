@@ -4,7 +4,7 @@ import EtherUtil from 'ethereumjs-util'
 import Pluralize from 'pluralize'
 import { Link } from 'react-router'
 
-import OnlyIf from 'Elements/OnlyIf'
+import OnlyIf from '../../Elements/OnlyIf'
 
 import Styles from './MiniBlockCard.css'
 

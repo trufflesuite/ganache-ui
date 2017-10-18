@@ -1,13 +1,13 @@
 import React, { PureComponent } from 'react'
 import { hashHistory } from 'react-router'
 import _ from 'lodash'
-import connect from 'Components/Helpers/connect'
+import connect from '../Helpers/connect'
 
-import * as Core from 'Actions/Core'
-import * as Settings from 'Actions/Settings'
+import * as Core from '../../Actions/Core'
+import * as Settings from '../../Actions/Settings'
 
-import Icon from 'Elements/Icon'
-import OnlyIf from 'Elements/OnlyIf'
+import Icon from '../../Elements/Icon'
+import OnlyIf from '../../Elements/OnlyIf'
 
 import Tabs from './Tabs/Tabs'
 
@@ -16,8 +16,8 @@ import AccountsScreen from './ConfigScreens/AccountsScreen'
 import ChainScreen from './ConfigScreens/ChainScreen'
 import AdvancedScreen from './ConfigScreens/AdvancedScreen'
 
-import RestartIcon from 'Icons/restart.svg'
-import EjectIcon from 'Icons/eject.svg';
+import RestartIcon from '../../Elements/icons/restart.svg'
+import EjectIcon from '../../Elements/icons/eject.svg';
 
 import Styles from './ConfigScreen.css'
 

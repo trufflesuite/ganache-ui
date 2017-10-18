@@ -1,4 +1,4 @@
-import * as Transactions from 'Actions/Transactions'
+import * as Transactions from '../Actions/Transactions'
 
 const initialState = {
   inView: [],

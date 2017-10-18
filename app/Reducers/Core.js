@@ -1,4 +1,4 @@
-import * as Core from 'Actions/Core'
+import * as Core from '../Actions/Core'
 
 const MAX_BLOCKS = 10
 const MAX_TRANSACTIONS = 10
