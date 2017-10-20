@@ -1,7 +1,7 @@
-@import "./Styles/colors.css";
-@import "./Styles/normalize.css";
-@import "./Styles/buttons.css";
-@import "./Styles/forms.css";
+// @import "./Styles/colors.scss";
+// @import "./Styles/normalize.scss";
+// @import "./Styles/buttons.scss";
+// @import "./Styles/forms.scss";
 
 @font-face {
   font-family: "RobotoCondensed-Regular";
@@ -49,6 +49,15 @@
   font-style: normal;
 
   src: url("../resources/fonts/FiraCode-Regular.ttf") format("truetype");
+}
+
+
+@font-face {
+  font-family: "Grand Hotel";
+  font-weight: 300;
+  font-style: normal;
+
+  src: url("../resources/fonts/GrandHotel-Regular.ttf") format("truetype");
 }
 
 ::-webkit-scrollbar {
@@ -110,6 +119,7 @@ input[type="reset"],
 input[type="button"],
 input[type="text"],
 button,
-textarea {
+textarea { 
 	-webkit-app-region: no-drag;
 }
+

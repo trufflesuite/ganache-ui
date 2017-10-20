@@ -1,6 +1,13 @@
-@import 'colors.css';
-
 .Modal {
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 100;
+    }
+  }
+
   position: fixed;
   opacity: 0;
   animation: fadeIn .2s forwards;
@@ -91,11 +98,4 @@
   }
 }
 
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 100;
-  }
-}
+

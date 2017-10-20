@@ -8,9 +8,7 @@ import AccountList from './AccountList'
 import WithEmptyState from '../../Elements/WithEmptyState'
 import Spinner from '../../Elements/Spinner'
 
-import Styles from './Accounts.css'
-
-class Accounts extends Component {
+class AccountsScreen extends Component {
   constructor (props) {
     super(props)
 
@@ -19,9 +17,9 @@ class Accounts extends Component {
 
   render () {
     return (
-      <div className={Styles.Accounts}>
+      <div className="AccountsScreen">
         <main>
-          <div className={Styles.Mnemonic}>
+          <div className="Mnemonic">
             <MnemonicAndHdPath
               mnemonic={this.props.core.mnemonic}
               hdPath={this.props.core.hdPath}
@@ -39,4 +37,4 @@ class Accounts extends Component {
   }
 }
 
-export default connect(Accounts, "core", "accounts")
+export default connect(AccountsScreen, "core", "accounts")

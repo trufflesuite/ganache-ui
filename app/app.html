@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html>
   <head>
     <meta charset="utf-8">
@@ -37,10 +36,11 @@
         margin: 0;
       }
     </style>
-    <link rel="stylesheet" href="app.global.scss" />
+   
   </head>
   <body>
     <div id="root"></div>
+    <script src="index.js"></script>
     <script>
       // {
       //   const scripts = [];
@@ -66,6 +66,47 @@
       //   );
       // }
     </script>
-    <script src="index.js"></script>
+    
+    <script>
+      function addLink(url) {
+        var ss = document.createElement("link");
+        ss.type = "text/css";
+        ss.rel = "stylesheet";
+        ss.href = url;
+        document.getElementsByTagName("head")[0].appendChild(ss);
+      }
+      window.addEventListener("load", function() {
+        addLink("./Styles/colors.scss");
+        addLink("./Styles/normalize.scss");
+        addLink("./Styles/buttons.scss");
+        addLink("./Styles/forms.scss");
+        addLink("./app.global.scss");
+        addLink("./Elements/StatusIndicator.scss");
+        addLink("./Elements/Modal.scss");
+        addLink("./Components/AppShell/AppShell.scss");
+        addLink("./Components/AppShell/TopNavBar.scss");
+        addLink("./Components/Accounts/AccountsScreen.scss");
+        addLink("./Components/Accounts/AccountList.scss");
+        addLink("./Components/Accounts/KeyModal.scss");
+        addLink("./Components/Accounts/MnemonicAndHdPath.scss");
+        addLink("./Components/Title/TitleScreen.scss");
+        addLink("./Components/FirstRun/FirstRunScreen.scss")
+        
+
+
+        // <link rel="stylesheet" type="text/scss" href="./Styles/colors.css" />
+        // <link rel="stylesheet" type="text/scss" href="./Styles/normalize.scss" />
+        // <link rel="stylesheet" type="text/scss" href="./Styles/buttons.scss" />
+        // <link rel="stylesheet" type="text/scss" href="./Styles/forms.scss" />
+        // <link rel="stylesheet" type="text/scss" href="./app.global.scss" />
+        // <link rel="stylesheet" type="text/scss" href="./Components/AppShell/AppShell.scss" />
+        // <link rel="stylesheet" type="text/scss" href="./Components/AppShell/TopNavBar.scss" />
+        // <link rel="stylesheet" type="text/scss" href="./Components/Accounts/AccountsScreen.scss" />
+        // <link rel="stylesheet" type="text/scss" href="./Components/Accounts/AccountList.scss" />
+        // <link rel="stylesheet" type="text/scss" href="./Components/Accounts/Keys.scss" />
+        // <link rel="stylesheet" type="text/scss" href="./Components/Accounts/MnemonicAndHdPath.scss" />
+        // <link rel="stylesheet" type="text/scss" href="./Components/Title/TitleScreen.scss" />
+      })
+    </script>
   </body>
 </html>

@@ -13,7 +13,6 @@ class TitleScreen extends Component {
     super()
     this.state = {
       version: '0.0.1',
-      loadingScreenFinished: false,
       timeoutStarted: false
     }
   }
@@ -38,30 +37,19 @@ class TitleScreen extends Component {
   }
 
   render () {
-    const styles = `TitleScreen ${this.state.loadingScreenFinished
-      ? "FadeOutLoadingScreen"
-      : ''}`
-
-    const elementStyles = className =>
-      `${className} ${this.state.loadingScreenFinished
-        ? "FadeOutElement"
-        : ''}`
-
     return (
-      <div className={styles}>
-        <div className="Wrapper">
-          <div className="Logo">
-            <img src={"/resources/logo.png"} width={'128px'} height={'128px'} />
-          </div>
-          <h4 className={elementStyles('')}>
-            <strong>
-              Ganache
-            </strong>
-            <div className={elementStyles("GanacheVersion")}>
-              v{this.state.version}
-            </div>
-          </h4>
+      <div className="TitleScreen">
+        <div className="LogoWrapper">
+          <div className="Logo FadeInElement"/>
         </div>
+        <h4>
+          <strong>
+            Ganache
+          </strong>
+          <div className="GanacheVersion">
+            v{this.state.version}
+          </div>
+        </h4>
       </div>
     )
   }

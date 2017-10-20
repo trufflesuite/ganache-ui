@@ -5,8 +5,6 @@ import connect from '../Helpers/connect'
 
 import * as Settings from '../../Actions/Settings'
 
-import Styles from './FirstRunScreen.css'
-
 class FirstRunScreen extends Component {
   constructor (props) {
     super(props)
@@ -38,13 +36,11 @@ class FirstRunScreen extends Component {
 
   render () {
     return (
-      <div className={Styles.FirstRunScreen}>
-        <div className={Styles.Card}>
-          <div className={Styles.MainContent}>
-            <div className={Styles.LeftColumn}>
-            <div   className={Styles.Logo}>
-                <img src={"/resources/logo.png"} width={'64px'} height={'64px'} />
-              </div>
+      <div className="FirstRunScreen">
+        <div className="Card">
+          <div className="MainContent">
+            <div className="LeftColumn">
+              <div className="Logo"></div>
               <h1>
                 SUPPORT GANACHE
               </h1>
@@ -65,10 +61,10 @@ class FirstRunScreen extends Component {
                 <i>-- The Truffle Team</i>
               </p>
             </div>
-            <div className={Styles.RightColumn}>
+            <div className="RightColumn">
               <h1>&nbsp;</h1>
               <h4>WHAT WE TRACK</h4>
-              <ul className={Styles.MetricList}>
+              <ul className="MetricList">
                 <li>
                   <span>A unique UUID generated upon first use</span>
                 </li>
@@ -78,14 +74,14 @@ class FirstRunScreen extends Component {
                 <li><span>Screens viewed during use</span></li>
               </ul>
 
-              <strong className={Styles.Covenant}>
+              <strong className="Covenant">
                 We do not collect addresses or private keys.
               </strong>
             </div>
           </div>
-          <div className={Styles.Rule} />
-          <div className={Styles.Footer}>
-            <div className={Styles.Control}>
+          <div className="Rule" />
+          <div className="Footer">
+            <div className="Control">
               
               <div className="Switch">
                 <input
@@ -96,7 +92,7 @@ class FirstRunScreen extends Component {
                   onChange={this._handleInputChange}
                   checked={this.state.enableAnalytics}
                 />
-                <label htmlFor="EnableAnalytics" className={Styles.SwitchLabel}>ENABLE ANALYTICS</label>
+                <label htmlFor="EnableAnalytics" className="SwitchLabel">ENABLE ANALYTICS</label>
                 {this.state.enableAnalytics
                   ? <span>Analytics enabled. Thanks!</span>
                   : <span>You've opted out. You can always opt-in later via the Settings tab. </span>}

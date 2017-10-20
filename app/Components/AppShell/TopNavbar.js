@@ -21,8 +21,6 @@ import StartMiningIcon from '../../Elements/icons/start.svg'
 import StopMiningIcon from '../../Elements/icons/stop.svg'
 import RevertIcon from '../../Elements/icons/revert.svg'
 
-import Styles from './TopNavbar.css'
-
 class TopNavbar extends Component {
   constructor (props) {
     super(props)
@@ -71,7 +69,7 @@ class TopNavbar extends Component {
 
     return hasSnapshots
       ? <button
-          className={Styles.MiningBtn}
+          className="MiningBtn"
           onClick={this._handleRevertSnapshot}
           disabled={snapshots.length === 0}
         >
@@ -102,19 +100,19 @@ class TopNavbar extends Component {
   _renderMiningControls = () => {
     return this.props.core.isMining
       ? <button
-          className={Styles.MiningBtn}
+          className="MiningBtn"
           disabled={!this.props.core.isMining}
           onClick={this._handleStopMining}
         >
           <Icon
             glyph={StopMiningIcon}
             size={18}
-            className={Styles.StopMining}
+            className="StopMining"
           />{' '}
           Stop {this._renderMiningButtonText()}
         </button>
       : <button
-          className={Styles.MiningBtn}
+          className="MiningBtn"
           disabled={this.props.core.isMining}
           onClick={this._handleStartMining}
         >
@@ -135,27 +133,27 @@ class TopNavbar extends Component {
     const showControls = false
 
     return (
-      <nav className={Styles.Nav}>
-        <main className={Styles.Main}>
-          <div className={Styles.Menu}>
-            <Link to="accounts" activeClassName={Styles.Active}>
-              <Icon glyph={AccountIcon} size={44} />
+      <nav className="TopNavBar">
+        <main className="Main">
+          <div className="Menu">
+            <Link to="accounts" activeClassName="Active">
+              <AccountIcon />
               Accounts
             </Link>
-            <Link to="blocks" activeClassName={Styles.Active}>
-              <Icon glyph={BlockIcon} size={44} />
+            <Link to="blocks" activeClassName="Active">
+              <BlockIcon />
               Blocks
             </Link>
-            <Link to="transactions" activeClassName={Styles.Active}>
-              <Icon glyph={TxIcon} size={44} />
+            <Link to="transactions" activeClassName="Active">
+              <TxIcon />
               Transactions
             </Link>
-            <Link to="logs" activeClassName={Styles.Active}>
-              <Icon glyph={LogsIcon} size={44} />
+            <Link to="logs" activeClassName="Active">
+              <LogsIcon />
               Logs
             </Link>
           </div>
-          <div className={Styles.SearchBar}>
+          <div className="SearchBar">
             <input
               type="text"
               placeholder="SEARCH FOR BLOCK NUMBERS OR TX HASHES"
@@ -164,16 +162,16 @@ class TopNavbar extends Component {
               }}
               onKeyPress={this.handleSearchKeyPress}
             />
-            <Icon glyph={SearchIcon} size={16} />
+            <SearchIcon />
           </div>
-          <div className={Styles.Menu}>
-            <Link to="config" activeClassName={Styles.Active}>
+          <div className="Menu">
+            <Link to="config" activeClassName="Active">
               <Icon glyph={SettingsIcon} size={44} />
             </Link>
           </div>
         </main>
-        <section className={Styles.StatusAndControls}>
-          <div className={Styles.Status}>
+        <section className="StatusAndControls">
+          <div className="Status">
             <StatusIndicator title="CURRENT BLOCK" value={blockNumber} />
             <StatusIndicator title="GAS PRICE" value={gasPrice} />
             <StatusIndicator
@@ -198,14 +196,14 @@ class TopNavbar extends Component {
               </OnlyIf>
             </StatusIndicator>
           </div>
-          <div className={Styles.Actions}>
+          <div className="Actions">
             <OnlyIf
               test={
                 showControls
               }
             >
               <button
-                className={Styles.MiningBtn}
+                className="MiningBtn"
                 onClick={this._handleForceMine}
               >
                 <Icon glyph={ForceMineIcon} size={18} /> Force Mine
@@ -213,7 +211,7 @@ class TopNavbar extends Component {
             </OnlyIf>
             <OnlyIf test={showControls}>
               <button
-                className={Styles.MiningBtn}
+                className="MiningBtn"
                 onClick={this._handleMakeSnapshot}
               >
                 <Icon glyph={SnapshotIcon} size={18} /> TAKE SNAPSHOT #{currentSnapshotId + 1}

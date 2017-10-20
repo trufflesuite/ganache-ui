@@ -16,13 +16,16 @@ const ThickStrokeIcon = styled.svg`
   stroke-width: 4;
 `
 
-export default ({ glyph, size, className}) => (
-  className === 'isolate' ?
-  <Icon viewBox={`${glyph.viewBox}`} width={size} height={size} className={className}>
-    <use xlinkHref={`#${glyph.id}`} />
-  </Icon>
-  :
-  <ThickStrokeIcon viewBox={`${glyph.viewBox}`} width={size} height={size} className={className}>
-    <use xlinkHref={`#${glyph.id}`} />
-  </ThickStrokeIcon>
-)
+export default ({ glyph, size, className}) => {
+  console.log(glyph)
+
+  if (className === 'isolate') {
+    return <Icon viewBox={`${glyph.viewBox}`} width={size} height={size} className={className}>
+      <use xlinkHref={`#${glyph.id}`} />
+    </Icon>
+  } else {
+    return <ThickStrokeIcon viewBox={`${glyph.viewBox}`} width={size} height={size} className={className}>
+      <use xlinkHref={`#${glyph.id}`} />
+    </ThickStrokeIcon>
+  }
+}

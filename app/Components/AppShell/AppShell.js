@@ -3,14 +3,14 @@ import Mousetrap from 'mousetrap'
 import { hashHistory } from 'react-router'
 import { shell } from 'electron'
 
-import connect from 'Components/Helpers/connect'
-import * as AppShellActions from 'Actions/AppShell'
+import connect from '../Helpers/connect'
+import * as AppShellActions from '../../Actions/AppShell'
 
 import TopNavbar from './TopNavbar'
-import OnlyIf from 'Elements/OnlyIf'
+import OnlyIf from '../../Elements/OnlyIf'
 
-import Icon from 'Elements/Icon'
-import BugIcon from 'Elements/icons/errorant.svg'
+import Icon from '../../Elements/Icon'
+import BugIcon from '../../Elements/icons/errorant.svg'
 
 import ua from 'universal-analytics'
 import ElectronCookies from '@exponent/electron-cookies'
@@ -18,9 +18,6 @@ import ElectronCookies from '@exponent/electron-cookies'
 import CSSTransitionGroup from 'react-addons-css-transition-group'
 
 const { app } = require('electron').remote
-
-import Styles from './AppShell.css'
-import ModalStyles from 'CoreStyles/modals.css'
 
 ElectronCookies.enable({
   origin: 'http://truffleframework.com/ganache'
@@ -135,16 +132,16 @@ class AppShell extends Component {
     }
 
     return (
-      <div className={Styles.AppShell}>
+      <div className="AppShell">
         <TopNavbar {...this.props} />
 
-        <div className={Styles.ShellContainer} ref="shellcontainer">
+        <div className="ShellContainer" ref="shellcontainer">
           {this.props.children}
         </div>
 
         <OnlyIf test={systemError != null}>
-          <div className={ModalStyles.Modal}>
-            <section className={Styles.Bug}>
+          <div className="Modal">
+            <section className="Bug">
               <Icon glyph={BugIcon} size={192} />
               <h4>Uh Oh... That's a bug.</h4>
               <p>

@@ -1,7 +1,5 @@
 import React, { PureComponent } from 'react'
 
-import Styles from './MnemonicAndHdPath.css'
-
 export default class MnemonicAndHdPath extends PureComponent {
   shouldComponentUpdate (nextProps, nextState) {
     return (
@@ -12,14 +10,14 @@ export default class MnemonicAndHdPath extends PureComponent {
 
   render () {
     return (
-      <section className={Styles.MnemonicAndHdPath}>
-        <div className={Styles.Mnemonic}>
+      <section className="MnemonicAndHdPath">
+        <div className="Mnemonic">
           <h4>MNEMONIC</h4>
           <span>
             {this.props.mnemonic}
           </span>
         </div>
-        <div className={Styles.HDPath}>
+        <div className="HDPath">
           <h4>HD PATH</h4>
           <span>
             {this.props.hdPath}account_index
