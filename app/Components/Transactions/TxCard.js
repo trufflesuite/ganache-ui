@@ -9,14 +9,9 @@ import Moment from 'react-moment'
 import { Link } from 'react-router'
 
 import DestinationAddress from './DestinationAddress'
-import SenderAddress from './SenderAddress'
 import TransactionTypeBadge from './TransactionTypeBadge'
 import FormattedEtherValue from '../../Elements/FormattedEtherValue'
 import FormattedHex from '../../Elements/FormattedHex'
-
-import Styles from './TxCard.css'
-import BorderStyles from './BorderStyles.css'
-import EmptyTransactionStyles from './EmptyTransactions.css'
 
 class TxCard extends Component {
   borderStyleSelector = tx => {
@@ -25,15 +20,15 @@ class TxCard extends Component {
     }
 
     if (tx.hasOwnProperty('contractAddress') && tx.contractAddress !== null) {
-      return BorderStyles.ContractCreation
+      return "ContractCreation"
     }
 
     if (tx.to && tx.value > 0) {
-      return BorderStyles.ValueTransfer
+      return "ValueTransfer"
     }
 
     if (tx.to && tx.data) {
-      return BorderStyles.ContractCall
+      return "ContractCall"
     }
   }
 
@@ -44,98 +39,100 @@ class TxCard extends Component {
   render () {
     const tx = this.props.transactions.currentTransaction
     const receipt = this.props.transactions.currentTransactionReceipt
-    const cardStyles = `${this.borderStyleSelector(tx)} ${Styles.TxCard}`
 
     if (!tx || !receipt) {
       return <div />
     }
 
     return (
-      <main>
-        <section className={cardStyles}>
-          <header className={BorderStyles.Header}>
-            <button className="Styles.Button" onClick={hashHistory.goBack}>
-              &larr; Back
-            </button>
+      <section className="TxCard">
+        <header>
+          <button className="Button" onClick={hashHistory.goBack}>
+            &larr; Back
+          </button>
 
-            <div className={BorderStyles.Title}>
-              <h1>
-                TX {tx.hash}
-              </h1>
+          <div className="Title">
+            <h1>
+              TX {tx.hash}
+            </h1>
+          </div>
+        </header>
+
+        <section className="Parties">
+          <div className="From">
+            <div className="Label">SENDER ADDRESS</div>
+            <div className="Value">
+              {tx.from}
             </div>
-          </header>
+          </div>
+          <DestinationAddress tx={tx} receipt={receipt} />
+          <div>
+            <div className="Label">TYPE</div>
 
-          <section className={BorderStyles.Parties}>
-            <SenderAddress tx={tx} />
-            <DestinationAddress tx={tx} receipt={receipt} />
-            <div>
-              <div className={Styles.Label}>VALUE</div>
-              <div className={Styles.Value}>
-                <FormattedEtherValue
-                  value={tx.value.toString()}
-                />
+            <div className="Value">
+              <div className="Type">
+                <TransactionTypeBadge tx={tx} receipt={receipt} />
               </div>
             </div>
-          </section>
+          </div>
 
-          <section className={BorderStyles.Gas}>
-            <div>
-              <div className={Styles.Label}>TYPE</div>
-
-              <div className={Styles.Value}>
-                <div className={BorderStyles.Type}>
-                  <TransactionTypeBadge tx={tx} receipt={receipt} />
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <div className={Styles.Label}>GAS USED</div>
-              <div className={Styles.Value}>
-                {receipt.gasUsed}
-              </div>
-            </div>
-
-            <div>
-              <div className={Styles.Label}>GAS PRICE</div>
-              <div className={Styles.Value}>
-                {tx.gasPrice.toString()}
-              </div>
-            </div>
-
-            <div>
-              <div className={Styles.Label}>GAS LIMIT</div>
-              <div className={Styles.Value}>
-                {tx.gas}
-              </div>
-            </div>
-
-            {/* <div>
-              <div className={Styles.Label}>MINED ON</div>
-              <div className={Styles.Value}>
-                <Moment unix format="YYYY-MM-DD HH:mm:ss">
-                  {EtherUtil.bufferToInt(tx.block.header.timestamp)}
-                </Moment>
-              </div>
-            </div> */}
-
-            <div>
-              <div className={Styles.Label}>MINED IN BLOCK</div>
-              <div className={Styles.Value}>
-                {receipt.blockNumber}
-              </div>
-            </div>
-          </section>
-          <main>
-            <div>
-              <div className={Styles.Label}>TX DATA</div>
-              <div className={Styles.Value}>
-                {tx.input}
-              </div>
-            </div>
-          </main>
         </section>
-      </main>
+
+        <section className="Gas">
+          <div>
+            <div className="Label">VALUE</div>
+            <div className="Value">
+              <FormattedEtherValue
+                value={tx.value.toString()}
+              />
+            </div>
+          </div>
+          <div>
+            <div className="Label">GAS USED</div>
+            <div className="Value">
+              {receipt.gasUsed}
+            </div>
+          </div>
+
+          <div>
+            <div className="Label">GAS PRICE</div>
+            <div className="Value">
+              {tx.gasPrice.toString()}
+            </div>
+          </div>
+
+          <div>
+            <div className="Label">GAS LIMIT</div>
+            <div className="Value">
+              {tx.gas}
+            </div>
+          </div>
+
+          {/* <div>
+            <div className="Label">MINED ON</div>
+            <div className="Value">
+              <Moment unix format="YYYY-MM-DD HH:mm:ss">
+                {EtherUtil.bufferToInt(tx.block.header.timestamp)}
+              </Moment>
+            </div>
+          </div> */}
+
+          <div>
+            <div className="Label">MINED IN BLOCK</div>
+            <div className="Value">
+              {receipt.blockNumber}
+            </div>
+          </div>
+        </section>
+        <main>
+          <div>
+            <div className="Label">TX DATA</div>
+            <div className="Value">
+              {tx.input}
+            </div>
+          </div>
+        </main>
+      </section>
     )
   }
 }

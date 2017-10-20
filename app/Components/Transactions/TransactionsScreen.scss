@@ -1,15 +1,11 @@
-@import "colors.css";
-
-.Blocks {
+.TransactionsScreen {
   display: flex;
   flex-direction: column;
 
   height: 100%;
   width: 100%;
 
-  main {
-    display: flex;
-    min-height: calc(100% - 4rem);
+  > main {
     padding: 0;
   }
 }

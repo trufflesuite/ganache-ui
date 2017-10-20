@@ -27,86 +27,10 @@
         font-weight: 200;
         background-color: #312c2a;
       }
-
-      svg[class^='isolate'],
-      svg[class*=' isolate'] {
-        stroke-width: inherit;
-        fill: inherit;
-        stroke: inherit;
-        margin: 0;
-      }
     </style>
-   
   </head>
   <body>
     <div id="root"></div>
     <script src="index.js"></script>
-    <script>
-      // {
-      //   const scripts = [];
-
-      //   // Dynamically insert the DLL script in development env in the
-      //   // renderer process
-      //   if (process.env.NODE_ENV === 'development') {
-      //     scripts.push('../app/vendor.dll.js');
-      //   }
-
-      //   // Dynamically insert the bundled app script in the renderer process
-      //   const port = process.env.PORT || 3000;
-      //   scripts.push(
-      //     (process.env.HOT)
-      //       ? 'http://localhost:' + port + '/dist/bundle.js'
-      //       : './dist/bundle.js'
-      //   );
-
-      //   document.write(
-      //     scripts
-      //       .map(script => '<script defer src="' + script + '"><\/script>')
-      //       .join('')
-      //   );
-      // }
-    </script>
-    
-    <script>
-      function addLink(url) {
-        var ss = document.createElement("link");
-        ss.type = "text/css";
-        ss.rel = "stylesheet";
-        ss.href = url;
-        document.getElementsByTagName("head")[0].appendChild(ss);
-      }
-      window.addEventListener("load", function() {
-        addLink("./Styles/colors.scss");
-        addLink("./Styles/normalize.scss");
-        addLink("./Styles/buttons.scss");
-        addLink("./Styles/forms.scss");
-        addLink("./app.global.scss");
-        addLink("./Elements/StatusIndicator.scss");
-        addLink("./Elements/Modal.scss");
-        addLink("./Components/AppShell/AppShell.scss");
-        addLink("./Components/AppShell/TopNavBar.scss");
-        addLink("./Components/Accounts/AccountsScreen.scss");
-        addLink("./Components/Accounts/AccountList.scss");
-        addLink("./Components/Accounts/KeyModal.scss");
-        addLink("./Components/Accounts/MnemonicAndHdPath.scss");
-        addLink("./Components/Title/TitleScreen.scss");
-        addLink("./Components/FirstRun/FirstRunScreen.scss")
-        
-
-
-        // <link rel="stylesheet" type="text/scss" href="./Styles/colors.css" />
-        // <link rel="stylesheet" type="text/scss" href="./Styles/normalize.scss" />
-        // <link rel="stylesheet" type="text/scss" href="./Styles/buttons.scss" />
-        // <link rel="stylesheet" type="text/scss" href="./Styles/forms.scss" />
-        // <link rel="stylesheet" type="text/scss" href="./app.global.scss" />
-        // <link rel="stylesheet" type="text/scss" href="./Components/AppShell/AppShell.scss" />
-        // <link rel="stylesheet" type="text/scss" href="./Components/AppShell/TopNavBar.scss" />
-        // <link rel="stylesheet" type="text/scss" href="./Components/Accounts/AccountsScreen.scss" />
-        // <link rel="stylesheet" type="text/scss" href="./Components/Accounts/AccountList.scss" />
-        // <link rel="stylesheet" type="text/scss" href="./Components/Accounts/Keys.scss" />
-        // <link rel="stylesheet" type="text/scss" href="./Components/Accounts/MnemonicAndHdPath.scss" />
-        // <link rel="stylesheet" type="text/scss" href="./Components/Title/TitleScreen.scss" />
-      })
-    </script>
   </body>
 </html>

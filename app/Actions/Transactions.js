@@ -54,6 +54,20 @@ export const requestPreviousPage = function() {
   }
 }
 
+export const ADD_RECEIPTS = `${prefix}/ADD_RECEIPTS`
+export const getReceipts = function(transactions) {
+  return function(dispatch, getState) {
+    let provider = getState().web3.provider
+    map(transactions, (tx, done) => {
+      web3Request("getTransactionReceipt", [tx.hash], provider, (err, receipt) => {
+        done(null, receipt)
+      } )
+    }, (err, receipts) => {
+      dispatch({type: ADD_RECEIPTS, receipts })
+    })
+  }
+}
+
 export const SET_BLOCK_REQUESTED = `${prefix}/SET_BLOCK_REQUESTED`
 export const ADD_TRANSACTIONS_TO_VIEW = `${prefix}/ADD_TRANSACTIONS_TO_VIEW`
 export const getTransactionsForBlock = function(number) {
@@ -77,13 +91,8 @@ export const getTransactionsForBlock = function(number) {
         return
       }
 
-      map(block.transactions, (tx, done) => {
-        web3Request("getTransactionReceipt", [tx.hash], provider, (err, receipt) => {
-          done(null, receipt)
-        } )
-      }, (err, receipts) => {
-        dispatch({type: ADD_TRANSACTIONS_TO_VIEW, transactions: block.transactions, receipts })
-      })
+      dispatch(getReceipts(block.transactions))
+      dispatch({type: ADD_TRANSACTIONS_TO_VIEW, transactions: block.transactions })
     })
   }
 }

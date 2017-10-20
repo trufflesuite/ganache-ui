@@ -6,56 +6,54 @@ import { Link } from 'react-router'
 
 import OnlyIf from '../../Elements/OnlyIf'
 
-import Styles from './MiniBlockCard.css'
-
 export default class MiniBlockCard extends PureComponent {
   render () {
     const { block, transactionCount } = this.props
     const hasTxs = transactionCount > 0
-    const cardStyles = `${Styles.MiniBlockCard} ${hasTxs ? Styles.HasTxs : ''}`
+    const cardStyles = `MiniBlockCard ${hasTxs ? "HasTxs" : ''}`
 
     return (
       <Link
         to={`/blocks/${this.props.block.number}`}
-        className={Styles.Link}
+        className="Link"
       >
         <section className={cardStyles} key={`block_${block.number}_detail`}>
-          <div className={Styles.RowItem}>
-            <div className={Styles.BlockNumber}>
-              <div className={Styles.Label}>BLOCK</div>
-              <div className={Styles.Value}>
+          <div className="RowItem">
+            <div className="BlockNumber">
+              <div className="Label">BLOCK</div>
+              <div className="Value">
                 {block.number}
               </div>
             </div>
           </div>
-          <div className={Styles.PrimaryItems}>
-            <div className={Styles.RowItem}>
-              <div className={Styles.MinedOn}>
-                <div className={Styles.Label}>MINED ON</div>
-                <div className={Styles.Value}>
+          <div className="PrimaryItems">
+            <div className="RowItem">
+              <div className="MinedOn">
+                <div className="Label">MINED ON</div>
+                <div className="Value">
                   <Moment unix format="YYYY-MM-DD HH:mm:ss">
                     {block.timestamp}
                   </Moment>
                 </div>
               </div>
             </div>
-            <div className={Styles.RowItem}>
-              <div className={Styles.GasUsed}>
-                <div className={Styles.Label}>GAS USED</div>
-                <div className={Styles.Value}>
+            <div className="RowItem">
+              <div className="GasUsed">
+                <div className="Label">GAS USED</div>
+                <div className="Value">
                   {block.gasUsed}
                 </div>
               </div>
             </div>
-            <div className={Styles.RowItem}>
+            <div className="RowItem">
               <OnlyIf test={transactionCount > 0}>
-                <div className={Styles.TransactionBadge}>
+                <div className="TransactionBadge">
                   {transactionCount}{' '}
                   {Pluralize('TRANSACTION', transactionCount)}
                 </div>
               </OnlyIf>
               <OnlyIf test={transactionCount === 0}>
-                <div className={Styles.NoTransactionBadge}>NO TRANSACTIONS</div>
+                <div className="NoTransactionBadge">NO TRANSACTIONS</div>
               </OnlyIf>
             </div>
           </div>

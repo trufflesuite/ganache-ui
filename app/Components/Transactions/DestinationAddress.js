@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
 
-import Styles from './MiniTxCard.css'
-
 export default class DestinationAddress extends Component {
   render () {
     const isContractCall =
@@ -14,15 +12,15 @@ export default class DestinationAddress extends Component {
       this.props.receipt.contractAddress !== null
 
     return (
-      <div className={Styles.To}>
-        <div className={Styles.Label}>
+      <div className="DestinationAddress">
+        <div className="Label">
           {isContractCreationCall
             ? 'CREATED CONTRACT ADDRESS'
             : isContractCall ? `TO CONTRACT ADDRESS` : `TO ADDRESS`}
         </div>
-        <div className={Styles.Value}>
+        <div className="Value">
           {isContractCreationCall
-            ? <div className={Styles.ContractCreationAddress}>
+            ? <div className="ContractCreationAddress">
                 <span>
                   {this.props.receipt.contractAddress}
                 </span>

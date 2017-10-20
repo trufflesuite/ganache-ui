@@ -1,12 +1,10 @@
 import React, { Component } from 'react'
 import connect from '../Helpers/connect'
 import * as Transactions from '../../Actions/Transactions'
-import TxList from './TxList'
+import RecentTransactions from './RecentTransactions'
 import TxCard from './TxCard'
 
-import Styles from './Transactions.css'
-
-class TransactionContainer extends Component {
+class TransactionsScreen extends Component {
 
   componentDidMount() {
     this.props.dispatch(Transactions.requestPage())
@@ -21,10 +19,10 @@ class TransactionContainer extends Component {
     if (this.props.params.transactionHash != null) {
       content = <TxCard transactionHash={this.props.params.transactionHash} />
     } else {
-      content = <TxList scrollPosition={this.props.scrollPosition} />
+      content = <RecentTransactions scrollPosition={this.props.scrollPosition} />
     }
     return (
-      <div className={Styles.Transactions}>
+      <div className="TransactionsScreen">
         <main>
           {content}
         </main>
@@ -33,4 +31,4 @@ class TransactionContainer extends Component {
   }
 }
 
-export default connect(TransactionContainer)
+export default connect(TransactionsScreen)

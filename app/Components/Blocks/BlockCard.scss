@@ -1,21 +1,13 @@
-@import 'colors.css';
-@import 'buttons.css';
-@import 'cards.css';
-
-.Button {
-  text-decoration: none;
-  text-align: center;
-  margin: 0;
-}
-
 .BlockCard {
   font-family: "Fira Code Regular", sans-serif;
   background: var(--app-card-default-background);
   display: flex;
   flex-direction: column;
+  flex-grow: 1;
   margin: 0;
   border-radius: 4px;
   word-wrap: break-word;
+  width: 100%;
 
   header {
     width: 100%;
@@ -34,6 +26,12 @@
     }
   }
 
+  .Button {
+    text-decoration: none;
+    text-align: center;
+    margin: 0;
+  }
+
   header button {
     border-radius: 0;
     line-height: 1;
@@ -46,19 +44,6 @@
 
     > div {
       padding: 1rem;
-
-      .Item:not(:last-child) {
-        margin-bottom: 1rem;
-      }
-    }
-  }
-
-  .BlockHash {
-    align-items: center;
-    padding: .8rem;
-
-    > div {
-      font-weight: bold;
     }
   }
 
@@ -84,25 +69,8 @@
     color: var(--app-card-value);
     word-break: break-all;
   }
-}
 
-.Bloom {
-  display: block;
-
-  padding-right: 2rem;
-
-  word-wrap: break-word;
-  word-break: break-word;
-}
-
-.HasTxs {
-  border-color: var(--primary-color);
-}
-
-.BlockSearchError {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  width: 100%;
+  .HasTxs {
+    border-color: var(--primary-color);
+  }
 }

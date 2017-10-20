@@ -44,18 +44,21 @@ export default function (state = initialState, action) {
       return Object.assign({}, state, {
         blocksRequested
       })
-    case Transactions.ADD_TRANSACTIONS_TO_VIEW: 
+    case Transactions.ADD_RECEIPTS:
       let receipts = Object.assign({}, state.receipts)
-
+    
       action.receipts.forEach((receipt) => {
         receipts[receipt.transactionHash] = receipt
       })
 
+      return Object.assign({}, state, {
+        receipts
+      })
+    case Transactions.ADD_TRANSACTIONS_TO_VIEW: 
       let inView = state.inView.concat(action.transactions)
 
       return Object.assign({}, state, {
-        inView: sort(inView),
-        receipts: receipts
+        inView: sort(inView)
       })
     case Transactions.SET_CURRENT_TRANSACTION_SHOWN:
       return Object.assign({}, state, {

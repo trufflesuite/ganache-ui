@@ -1,27 +1,23 @@
-@import 'colors.css';
-@import 'cards.css';
-@import 'buttons.css';
-
-.Button {
-  text-decoration: none;
-  text-align: center;
-  margin: .5rem 0;
-}
-
 .TxCard {
   font-family: "Fira Code Regular", monospaced;
   width: 100%;
   margin: 0;
   background: var(--app-card-default-background);
-  border-radius: 4px;
   word-wrap: break-word;
   display: flex;
   flex-direction: column;
-  margin-bottom: 1rem;
   word-wrap: break-word;
-  border-bottom: 1px solid #aaa;
+
+  .Button {
+    text-decoration: none;
+    text-align: center;
+    margin: .5rem 0;
+  }
 
   header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     width: 100%;
     height: 64px;
     background: #fff;
@@ -29,6 +25,7 @@
     border-bottom: 1px solid #aaa;
 
     h1 {
+      margin: 0;
       font-size: 1.5rem;
       padding: 1.25rem;
     }
@@ -64,6 +61,26 @@
     }
   }
 
+  .Title,
+  .Type {
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .Title {
+    flex-grow: 1;
+    align-items: center;
+  }
+
+  .Parties,
+  .Gas {
+    display: flex;
+    flex-direction: row;
+    padding: 1rem;
+    justify-content: space-between;
+  }
+
   .Label {
     font-size: .75rem;
     font-family: "RobotoCondensed-Regular";
@@ -79,21 +96,7 @@
     word-break: break-all;
   }
 
-  [class^="BorderStyles__Parties"] {
-    padding-top: 2rem;
+  .CreatedContract {
+    border-color: var(--primary-color);
   }
-}
-
-.CreatedContract {
-  border-color: var(--primary-color);
-}
-
-.ContractCallBadge {
-  background-color: var(--primary-color);
-  color: white;
-  font-size: .75rem;
-  padding: 8px;
-  height: 28px;
-  border-radius: 25px;
-  margin-bottom: 1rem;
 }

@@ -166,7 +166,7 @@ class TopNavbar extends Component {
           </div>
           <div className="Menu">
             <Link to="config" activeClassName="Active">
-              <Icon glyph={SettingsIcon} size={44} />
+              <SettingsIcon />
             </Link>
           </div>
         </main>

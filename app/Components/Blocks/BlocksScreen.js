@@ -4,8 +4,6 @@ import * as Blocks from '../../Actions/Blocks'
 import BlockList from './BlockList'
 import BlockCard from './BlockCard'
 
-import Styles from './Blocks.css'
-
 class BlockContainer extends Component {
   constructor(props) {
     super(props);
@@ -27,10 +25,8 @@ class BlockContainer extends Component {
       content = <BlockList scrollPosition={this.props.scrollPosition} />
     }
     return (
-      <div className={Styles.Blocks}>
-        <main>
-          {content}
-        </main>
+      <div className="BlocksScreen">
+        {content}
       </div>
     )
   }

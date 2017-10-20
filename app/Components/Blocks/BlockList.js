@@ -5,8 +5,6 @@ import * as Blocks from '../../Actions/Blocks'
 import EtherUtil from 'ethereumjs-util'
 import MiniBlockCard from './MiniBlockCard'
 
-import Styles from './BlockList.css'
-
 class BlockList extends Component {
   constructor(props) {
     super(props);
@@ -37,7 +35,7 @@ class BlockList extends Component {
   
   render () {
     return (
-      <div className={Styles.BlockList} ref="container">
+      <div className="BlockList" ref="container">
         {this.props.blocks.inView.map((block) => {
           return (
             <MiniBlockCard
