@@ -3,7 +3,7 @@
   "productName": "Ganache",
   "version": "0.0.11",
   "description": "An Electron UI for Ganache",
-  "main": "./app/main.js",
+  "main": "./app/init.js",
   "private": true,
   "scripts": {
     "start": "electron-forge start",

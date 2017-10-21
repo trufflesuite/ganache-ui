@@ -47,6 +47,7 @@ const stylesheets = [
   "./Styles/normalize.scss",
   "./Styles/buttons.scss",
   "./Styles/forms.scss",
+  "./Styles/cards.scss",
   "./app.global.scss",
   "./Elements/StatusIndicator.scss",
   "./Elements/Modal.scss",

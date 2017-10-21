@@ -37,7 +37,7 @@ class FirstRunScreen extends Component {
   render () {
     return (
       <div className="FirstRunScreen">
-        <div className="Card">
+        <div className="Card CardShadow">
           <div className="MainContent">
             <div className="LeftColumn">
               <div className="Logo"></div>
@@ -46,7 +46,7 @@ class FirstRunScreen extends Component {
               </h1>
               <p>
                 Ganache includes Google Analytics tracking to help us better understand 
-                how you use Ganache during your normal development practices. You can
+                how you use it during your normal development practices. You can
                 opt-out of this tracking by selecting the option below.
               </p>
               <p>
