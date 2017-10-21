@@ -8,6 +8,7 @@ import * as AppShellActions from '../../Actions/AppShell'
 
 import TopNavbar from './TopNavbar'
 import OnlyIf from '../../Elements/OnlyIf'
+import Modal from '../../Elements/Modal'
 
 import BugIcon from '../../Elements/icons/errorant.svg'
 
@@ -139,12 +140,12 @@ class AppShell extends Component {
         </div>
 
         <OnlyIf test={systemError != null}>
-          <div className="Modal">
+          <Modal> 
             <section className="Bug">
               <BugIcon /*size={192}*/ />
               <h4>Uh Oh... That's a bug.</h4>
               <p>
-                Ganache encountered an error. Help us fix it by raising a GitHub issue! Mention the following error information when writing your ticket, and please include as much information as possible. Sorry about that!
+                Ganache encountered an error. Help us fix it by raising a GitHub issue!<br/><br/> Mention the following error information when writing your ticket, and please include as much information as possible. Sorry about that!
               </p>
               <textarea disabled={true} value={systemError} />
               <footer>
@@ -181,7 +182,7 @@ ${systemError}`
                 </button>
               </footer>
             </section>
-          </div>
+          </Modal>
         </OnlyIf>
       </div>
     )
