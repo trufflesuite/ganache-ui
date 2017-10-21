@@ -35,7 +35,7 @@ For all platforms, you can build versions for all platforms by running `npm run 
 
 On Windows: 
 
-* To build the `appx` make target, ensure you have the [Windows 10 SDK](https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk) installed. 
+* To build the `appx` make target, ensure you have the [Windows 10 SDK](https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk) installed. If you have errors during make, ensure the package.json file's `windowsStoreConfig.windowsKit` points to your Windows 10 SDK directory.
 
 ### License
 
