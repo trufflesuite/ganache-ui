@@ -27,6 +27,16 @@ To get started:
 
 If using Windows, you may need [windows-build-tools](https://www.npmjs.com/package/windows-build-tools) installed first.
 
+### Building
+
+For all platforms, you can build versions for all platforms by running `npm run make`. Each platform and make target may require special configuration. Note that Windows and Mac require certificates; for security reasons these certs aren't uploaded to github. Before building, create the `./certs` directory with the following files:
+
+* `./certs/cert.pfx` - for Windows builds.
+
+On Windows: 
+
+* To build the `appx` make target, ensure you have the [Windows 10 SDK](https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk) installed. 
+
 ### License
 
 See LICENSE file
