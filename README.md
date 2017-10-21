@@ -31,7 +31,7 @@ If using Windows, you may need [windows-build-tools](https://www.npmjs.com/packa
 
 For all platforms, you can build versions for all platforms by running `npm run make`. Each platform and make target may require special configuration. Note that Windows and Mac require certificates; for security reasons these certs aren't uploaded to github. Before building, create the `./certs` directory with the following files:
 
-* `./certs/cert.pfx` - for Windows builds.
+* `./certs/cert.pfx` - for Windows builds. Note a `.pfx` file is identical to a `.p12`. (Just change the extension.)
 
 On Windows: 
 
