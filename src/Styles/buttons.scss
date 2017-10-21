@@ -1,0 +1,34 @@
+button,
+.Button {
+  margin: 0;
+  padding: 0;
+  resize: none;
+  border: 0;
+  outline: 0;
+  background-color: var(--app-button-primary-color);
+  height: 32px;
+  padding: 0 20px;
+  cursor: pointer;
+  white-space: nowrap;
+  text-transform: uppercase;
+  color: var(--app-button-primary-background-color);
+  border-radius: 3px;
+  font-family: "RobotoCondensed-Bold";
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 32px;
+  transition: all .3s;
+
+  &[disabled] {
+    background-color: transparent;
+    color: #888;
+    border: 1px solid #888;
+    cursor: not-allowed;
+  }
+
+  &:hover {
+    background-color: color(var(--app-button-primary-color) tint(10%));
+    color: color(var(--app-button-primary-background-color) shade(20%));
+    box-shadow: 0;
+  }
+}

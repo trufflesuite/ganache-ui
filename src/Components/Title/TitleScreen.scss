@@ -1,0 +1,123 @@
+
+@keyframes bgToTransparent {
+  0% {
+    background-color: #33302e;
+  }
+  100% {
+    background-color: transparent;
+    display: none;
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes slideUp {
+  0% {
+    transform: translateY(8px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.TitleScreen {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #33302e;
+  font-family: "RobotoCondensed-Bold", Helvetica, Arial, sans-serif;
+  font-size: 20px;
+  letter-spacing:4px;
+  will-change: opacity, transform;
+
+  .LogoWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-size: 20px;
+
+    font-weight: 700;
+    line-height: 3.2;
+
+    .Logo {
+      height: 128px;
+      width: 128px;
+      background-image: url(../../../resources/icons/png/256x256.png);
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-size: 128px 128px;
+      will-change: opacity;
+
+      opacity: 0;
+    
+      animation: fadeIn 500ms .8s forwards;
+    }
+  }
+
+  h4 {
+    opacity: 0;
+    margin: 2rem 0 0 0;
+    height: 42px;
+
+    animation: fadeIn 500ms 1.6s forwards, slideUp 1s 1.6s forwards;
+  }
+
+  p {
+    opacity: 0;
+
+    animation: fadeIn 500ms 2s forwards, slideUp 1s 2s forwards;
+  }
+
+  .GanacheVersion {
+    margin: 0;
+    font-size: 14px;
+    letter-spacing: initial;
+    color: #525456;
+  }
+
+  h4 strong {
+    color: #fff;
+    font-weight: 300;
+    line-height: 1.2;
+    font-size: 2.5rem;
+    font-family: "Grand Hotel", cursive;
+    letter-spacing: normal;
+  }
+
+  h4 strong sup {
+    font-family: Arial;
+    color: rgba(157, 174, 189, 0.47);
+    margin-left: 4px;
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+    top: -0.5em;
+  }
+}

@@ -1,0 +1,132 @@
+.AccountList {
+  width: 100%;
+  padding: 0;
+
+  position: relative;
+
+  .Label {
+    font-size: .875rem;
+    font-family: "RobotoCondensed-Regular";
+    font-weight: 300;
+    color: var(--app-card-label);
+    min-width: 42px;
+  }
+  
+  .Value {
+    font-size: 1.125rem;
+    font-family: "Fira Code Regular";
+    color: var(--app-card-value);
+  }
+  
+  .AccountCard {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.3rem .8rem;
+    background-color: var(--app-card-default-background);
+    position: relative;
+    border-bottom: 1px solid #aaa;
+
+    svg {
+      stroke-width: 4;
+      width: 24px;
+      height: 24px;
+    }
+  }
+  
+  .AccountAddress {
+    font-weight: bold;
+    margin-right: 2rem;
+  
+    .Value {
+      font-size: 1.222222222rem;
+    }
+  }
+  
+  .AccountBalance {
+    .Value {
+      font-weight: bold;
+      font-size: 1.222222222rem;
+    }
+  }
+  
+  .AddressAndBalance {
+    display: flex;
+    flex-direction: row;
+    width: 60%;
+  }
+  
+  .AccountPrivateKey {
+    .Label,
+    .Value {
+      font-size: 14px;
+    }
+  }
+  
+  .AccountState {
+    font-size: 2rem;
+    background: #ffffff;
+    border-radius: 50%;
+    width: 3rem;
+    height: 3rem;
+    border: 2px solid gray;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 1rem;
+  }
+  
+  .SecondaryInfo {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 40%;
+  
+    > div {
+      width: 20%;
+    }
+  }
+  
+  .ShowKeys {
+    position: relative;
+    cursor: pointer;
+    margin-right: 0.7rem;
+  
+    .popover {
+      background-color: rgba(0, 0, 0, 0.85);
+      border-radius: 5px;
+      bottom: 42px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+      color: #fff;
+      display: none;
+      font-size: 12px;
+      font-family: 'Helvetica', sans-serif;
+      transform: translateX(-35%);
+      padding: 7px 10px;
+      position: absolute;
+      z-index: 4;
+      white-space: nowrap;
+  
+      &:before {
+        border-top: 7px solid rgba(0, 0, 0, 0.85);
+        border-right: 7px solid transparent;
+        border-left: 7px solid transparent;
+        bottom: -7px;
+        content: '';
+        display: block;
+        left: 50%;
+        margin-left: -7px;
+        position: absolute;
+      }
+    }
+  
+    &:hover,
+    &:focus {
+      .popover {
+        display: block;
+      }
+    }
+  }
+  
+}

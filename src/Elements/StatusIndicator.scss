@@ -1,0 +1,41 @@
+.StatusIndicator {
+  padding: 0 0rem 0 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 55px;
+  border-right: 1px solid var(--app-statusbar-item-border-color);
+
+  .Metric {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-shrink: 0;
+  
+    padding-right: 1rem;
+  
+    h4 {
+      font-size: 10px;
+      margin: 0;
+      padding: 0;
+    }
+  
+    span {
+      font-size: 13px;
+      color: var(--primary-color);
+      text-transform: uppercase;
+    }
+  }
+  
+  .Indicator {
+    display: flex;
+    flex: 2;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  
+  .Metric + .Indicator {
+    padding-right: 1rem;
+  }  
+}
+
