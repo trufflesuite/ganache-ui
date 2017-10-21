@@ -14,18 +14,14 @@ import syncStore from './Kernel/syncStore'
 import ready from './Kernel/ready'
 
 import AppShell from './Components/AppShell/AppShell'
-// import ConfigScreen from './Components/Config/ConfigScreen'
+import ConfigScreen from './Components/Config/ConfigScreen'
 import AccountsScreen from './Components/Accounts/AccountsScreen'
 import BlocksScreen from './Components/Blocks/BlocksScreen'
 import TransactionsScreen from './Components/Transactions/TransactionsScreen'
-// import LogsScreen from './Components/Logs/LogsScreen'
-// import NotFoundScreen from './Components/NotFound/NotFoundScreen'
+import LogsScreen from './Components/Logs/LogsScreen'
+import NotFoundScreen from './Components/NotFound/NotFoundScreen'
 import TitleScreen from './Components/Title/TitleScreen'
 import FirstRunScreen from './Components/FirstRun/FirstRunScreen'
-
-// import '../resources/fonts/FiraSans-Regular.ttf'
-// import '../resources/fonts/FiraSans-Bold.ttf'
-// import '../resources/fonts/FiraSans-SemiBold.ttf'
 
 const store = createStore(RootReducer)
 
@@ -40,9 +36,9 @@ const routes = <Route>
     <Route path='/accounts' component={AccountsScreen} />
     <Route path="/blocks(/:blockNumber)" component={BlocksScreen} />
     <Route path="/transactions(/:transactionHash)" component={TransactionsScreen} />
-    {/* <Route path="/logs" component={LogsScreen} />
+    <Route path="/logs" component={LogsScreen} />
     <Route path="/notfound" component={NotFoundScreen} />
-    <Route path='/config' component={props => <ConfigScreen {...props} />} />  */}
+    <Route path='/config' component={ConfigScreen} /> 
   </Route>
 </Route>
 
@@ -54,6 +50,7 @@ const stylesheets = [
   "./app.global.scss",
   "./Elements/StatusIndicator.scss",
   "./Elements/Modal.scss",
+  "./Components/FirstRun/FirstRunScreen.scss",
   "./Components/AppShell/AppShell.scss",
   "./Components/AppShell/TopNavBar.scss",
   "./Components/Accounts/AccountsScreen.scss",
@@ -65,13 +62,17 @@ const stylesheets = [
   "./Components/Blocks/BlockCard.scss",
   "./Components/Blocks/MiniBlockCard.scss",
   "./Components/Transactions/TransactionsScreen.scss",
+  "./Components/Transactions/RecentTransactions.scss",
   "./Components/Transactions/TxList.scss",
   "./Components/Transactions/TxCard.scss",
   "./Components/Transactions/TransactionTypeBadge.scss",
   "./Components/Transactions/MiniTxCard.scss",
   "./Components/Title/TitleScreen.scss",
-  "./Components/FirstRun/FirstRunScreen.scss"
-]
+  "./Components/Logs/LogsScreen.scss",
+  "./Components/Logs/LogContainer.scss",
+  "./Components/Config/ConfigScreen.scss",
+  "./Components/NotFound/NotFoundScreen.scss"
+] 
 
 const render = () => {
 

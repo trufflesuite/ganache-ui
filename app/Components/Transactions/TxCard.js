@@ -14,24 +14,6 @@ import FormattedEtherValue from '../../Elements/FormattedEtherValue'
 import FormattedHex from '../../Elements/FormattedHex'
 
 class TxCard extends Component {
-  borderStyleSelector = tx => {
-    if (!tx) {
-      return ''
-    }
-
-    if (tx.hasOwnProperty('contractAddress') && tx.contractAddress !== null) {
-      return "ContractCreation"
-    }
-
-    if (tx.to && tx.value > 0) {
-      return "ValueTransfer"
-    }
-
-    if (tx.to && tx.data) {
-      return "ContractCall"
-    }
-  }
-
   componentDidMount () {
     this.props.dispatch(Transactions.showTransaction(this.props.transactionHash))
   }
@@ -67,8 +49,6 @@ class TxCard extends Component {
           </div>
           <DestinationAddress tx={tx} receipt={receipt} />
           <div>
-            <div className="Label">TYPE</div>
-
             <div className="Value">
               <div className="Type">
                 <TransactionTypeBadge tx={tx} receipt={receipt} />

@@ -4,6 +4,7 @@
   flex-shrink: 0;
   flex-direction: column;
   font-family: 'RobotoCondensed-Bold';
+  border-bottom: solid 1px var(--app-navbar-background);
 
   .Main {
     width: 100vw;

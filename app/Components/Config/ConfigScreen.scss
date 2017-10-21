@@ -1,0 +1,209 @@
+
+.ConfigScreen {
+  color: var(--text-color);
+  background: white;
+  position: fixed;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  width: 100%;
+
+  main {
+    width: 100%;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    position: relative;
+  }
+  
+  img {
+    margin-top: 2rem;
+  }
+
+  > svg {
+    margin: 2rem auto;
+  }
+
+
+  h3 {
+    padding: 0;
+    margin: 0;
+  }
+
+  h4 {
+    font-family: "Fira Code Regular";
+    font-size: .8rem;
+    letter-spacing: 1px;
+    font-weight: normal;
+  }
+
+  footer {
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+
+    button {
+      box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.20);
+    }
+  }
+
+  .Tabs {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    width: 100%;
+  }
+  
+  .Header {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    width: 100%;
+    margin-top: 1.5rem;
+
+    .TabItems {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+
+      .TabItem {
+        cursor: pointer;
+        text-align: center;
+        margin: 0 2rem 0 0;
+        font-size: .8rem;
+        text-transform: uppercase;
+        transition: color .3s;
+        height: 1rem;
+      
+        &:first-of-type {
+          margin-left: 4rem;
+        }
+      
+        &:last-of-type {
+          margin-right: 4rem;
+        }
+      
+        &.active {
+          border-bottom: 2px solid var(--app-config-tab-active-text-color);
+        }
+      
+        &.active,
+        &:hover {
+          color: var(--app-config-tab-active-text-color);
+          font-weight: bold;
+        }
+      }
+    }
+
+    .Actions {
+      flex-grow: 1;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-right: 3rem;
+  
+      > button {
+        display: flex;
+        align-items: center;
+        -webkit-app-region: no-drag;
+        padding-left: 1rem;
+        margin: 0.75rem 0.5rem 0.75rem 0;
+
+        &:active {
+          transform: scale(.98);
+        }
+
+        &:hover {
+          background: white;
+        }
+  
+        svg {
+          height: 18px;
+          width: 18px;
+          margin-right: 0.5rem;
+        }
+      }
+    }
+  }
+   
+  .ActiveTab {
+    color: var(--app-config-tab-active-text-color);
+    border-bottom: 2px solid var(--app-config-tab-active-text-color);
+  }
+  
+  .ConfigCard {
+    background: white;
+    padding: 2rem;
+    width: 100%;
+
+    box-shadow: 0 -40px 40px -40px rgba(0,0,0,0.15);
+
+    p {
+      margin: 0;
+    }
+
+    h4 {
+      margin: 0 0 .25rem 0;
+    }
+
+    p {
+      color: var(--app-navbar-text);
+      font-family: "Fira Code Regular";
+      font-size: .875rem;
+    }
+
+    h2 {
+      color: var(--app-window-control-background);
+      font-family: "RobotoCondensed-Bold";
+      font-weight: bold;
+      margin-top: 0;
+    }
+
+    section {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .Row {
+      display: flex;
+      align-items: flex-start;
+      flex-direction: row;
+      margin-bottom: 2rem;
+    }
+
+    .RowItem {
+      width: 50%;
+      align-items: center;
+      margin-right: 1rem;
+    }
+
+    .RowItem + .RowItem {
+      margin-right: 0;
+      margin-left: 1rem;
+    }
+
+    input[type='text'], input[type='number'] {
+      border-color: var(--app-navbar-text);
+      width: 100%;
+    }
+
+    .ValidationError {
+      background-color: var(--primary-color);
+      color: white;
+      display: block;
+      padding: .5rem;
+      font-size: 14px;
+      border-bottom-left-radius: 5px;
+      border-bottom-right-radius: 5px;
+    }
+  }
+
+  .Radio {
+    input {
+      margin: .5rem;
+    }
+  }
+}

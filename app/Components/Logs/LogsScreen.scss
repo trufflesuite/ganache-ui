@@ -1,4 +1,4 @@
-.Logs {
+.LogsScreen {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -36,10 +36,4 @@
   footer {
     padding: 0 1rem 1rem 1rem;
   }
-}
-
-.Logs footer input {
-  width: 100%;
-  font-family: "Fira Code Regular", monospaced;
-  outline: none;
 }

@@ -23,9 +23,7 @@ class TransactionsScreen extends Component {
     }
     return (
       <div className="TransactionsScreen">
-        <main>
-          {content}
-        </main>
+        {content}
       </div>
     )
   }

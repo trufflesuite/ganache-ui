@@ -2,9 +2,6 @@ import React, { Component } from 'react'
 
 import OnlyIf from '../../../Elements/OnlyIf'
 
-import Styles from '../ConfigScreen.css'
-
-
 const VALIDATIONS = {
   "server.hostname": {
     format: /(^localhost$)|(^\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b$)/,
@@ -77,8 +74,8 @@ class ServerScreen extends Component {
 
         <section>
           <h4>HOSTNAME</h4>
-          <div className={Styles.Row}>
-            <div className={Styles.RowItem}>
+          <div className="Row">
+            <div className="RowItem">
               <input
                 type="text"
                 name="server.hostname"
@@ -86,9 +83,9 @@ class ServerScreen extends Component {
                 onChange={this.validateChange}
               />
               {this.props.validationErrors["server.hostname"] &&
-                <p className={Styles.ValidationError}>Must be a valid IP address or "localhost"</p>}
+                <p className="ValidationError">Must be a valid IP address or "localhost"</p>}
             </div>
-            <div className={Styles.RowItem}>
+            <div className="RowItem">
               <p>
                 The server will accept RPC connections on the following host and port.
               </p>
@@ -98,8 +95,8 @@ class ServerScreen extends Component {
 
         <section>
           <h4>PORT NUMBER</h4>
-          <div className={Styles.Row}>
-            <div className={Styles.RowItem}>
+          <div className="Row">
+            <div className="RowItem">
               <input
                 type="number"
                 name="server.port"
@@ -111,9 +108,9 @@ class ServerScreen extends Component {
               />
 
               {this.props.validationErrors["server.port"] &&
-                <p className={Styles.ValidationError}>Must be &gt; 1000 and &lt; 65535.</p>}
+                <p className="ValidationError">Must be &gt; 1000 and &lt; 65535.</p>}
             </div>
-            <div className={Styles.RowItem}>
+            <div className="RowItem">
               <p>
                 &nbsp;
               </p>
@@ -123,8 +120,8 @@ class ServerScreen extends Component {
 
         <section>
           <h4>NETWORK ID</h4>
-          <div className={Styles.Row}>
-            <div className={Styles.RowItem}>
+          <div className="Row">
+            <div className="RowItem">
               <input
                 type="number"
                 name="server.network_id"
@@ -132,11 +129,11 @@ class ServerScreen extends Component {
                 onChange={this.validateChange}
               />
               {this.props.validationErrors["server.network_id"] &&
-                <p className={Styles.ValidationError}>
+                <p className="ValidationError">
                   Must be &gt; 1
                 </p>}
             </div>
-            <div className={Styles.RowItem}>
+            <div className="RowItem">
               <p>
                 Internal blockchain identifier of Ganache server.
               </p>
@@ -146,8 +143,8 @@ class ServerScreen extends Component {
 
         <section>
           <h4>AUTOMINE</h4>
-          <div className={Styles.Row}>
-            <div className={Styles.RowItem}>
+          <div className="Row">
+            <div className="RowItem">
               <div className="Switch">
                 <input
                   type="checkbox"
@@ -159,7 +156,7 @@ class ServerScreen extends Component {
                 <label htmlFor="Automine">AUTOMINE ENABLED</label>
               </div>
             </div>
-            <div className={Styles.RowItem}>
+            <div className="RowItem">
               <p>
                 Process transactions instantaneously.
               </p>
@@ -170,8 +167,8 @@ class ServerScreen extends Component {
         <OnlyIf test={!this.state.automine}>
           <section>
             <h4>MINING BLOCK TIME (SECONDS)</h4>
-            <div className={Styles.Row}>
-              <div className={Styles.RowItem}>
+            <div className="Row">
+              <div className="RowItem">
                 <input
                   name="server.blocktime"
                   type="text"
@@ -179,9 +176,9 @@ class ServerScreen extends Component {
                   onChange={this.validateChange}
                 />
                 {this.props.validationErrors["server.blocktime"] &&
-                  <p className={Styles.ValidationError}>Must be &gt; 1 and &lt; 200</p>}
+                  <p className="ValidationError">Must be &gt; 1 and &lt; 200</p>}
               </div>
-              <div className={Styles.RowItem}>
+              <div className="RowItem">
                 <p>
                   The number of seconds to wait between mining new blocks and
                   transactions.

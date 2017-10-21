@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 
-import Styles from '../ConfigScreen.css'
 import OnlyIf from '../../../Elements/OnlyIf'
 
 const VALIDATIONS = {
@@ -72,8 +71,8 @@ class AccountsScreen extends Component {
         <h2>ACCOUNT & KEYS</h2>
         <section>
           <h4>TOTAL ACCOUNTS TO GENERATE</h4>
-          <div className={Styles.Row}>
-            <div className={Styles.RowItem}>
+          <div className="Row">
+            <div className="RowItem">
               <input
                 name="server.total_accounts"
                 type="number"
@@ -81,17 +80,17 @@ class AccountsScreen extends Component {
                 onChange={this.validateChange}
               />
               {this.props.validationErrors["server.total_accounts"] &&
-                <p className={Styles.ValidationError}>Must be &gt; {VALIDATIONS["server.total_accounts"].min} and &lt; {VALIDATIONS["server.total_accounts"].max}</p>}
+                <p className="ValidationError">Must be &gt; {VALIDATIONS["server.total_accounts"].min} and &lt; {VALIDATIONS["server.total_accounts"].max}</p>}
             </div>
-            <div className={Styles.RowItem}>
+            <div className="RowItem">
               <p>Total number of Accounts to create and pre-fund.</p>
             </div>
           </div>
         </section>
         {/* <section>
           <h4>LOCK ACCOUNTS</h4>
-          <div className={Styles.Row}>
-            <div className={Styles.RowItem}>
+          <div className="Row">
+            <div className="RowItem">
               <div className="Switch">
                 <input
                   type="checkbox"
@@ -103,15 +102,15 @@ class AccountsScreen extends Component {
                 <label htmlFor="AccountsLocked">ACCOUNTS LOCKED</label>
               </div>
             </div>
-            <div className={Styles.RowItem}>
+            <div className="RowItem">
               <p>Create accounts that are locked by default.</p>
             </div>
           </div>
         </section> */}
          <section>
           <h4>AUTOGENERATE HD MNEMONIC</h4>
-          <div className={Styles.Row}>
-            <div className={Styles.RowItem}>
+          <div className="Row">
+            <div className="RowItem">
               <div className="Switch">
                 <input
                   type="checkbox"
@@ -123,7 +122,7 @@ class AccountsScreen extends Component {
                 <label htmlFor="Mnemonic">AUTOGENERATE HD MNEMONIC</label>
               </div>
             </div>
-            <div className={Styles.RowItem}>
+            <div className="RowItem">
               <p>Automatically generate mnemonic used to create available addresses.</p>
             </div>
           </div>
@@ -131,8 +130,8 @@ class AccountsScreen extends Component {
 
         <OnlyIf test={!this.state.automnemonic}>
           <section>
-            <div className={Styles.Row}>
-              <div className={Styles.RowItem}>
+            <div className="Row">
+              <div className="RowItem">
                 <input
                   type="text"
                   placeholder="Enter Mnemonic to use"
@@ -143,7 +142,7 @@ class AccountsScreen extends Component {
                 {this.props.validationErrors["server.mnemonic"] &&
                   <p>Must be at least 12 words long and only contain letters</p>}
               </div>
-              <div className={Styles.RowItem}>
+              <div className="RowItem">
                 <p>Enter the Mnemonic you wish to use.</p>
               </div>
             </div>

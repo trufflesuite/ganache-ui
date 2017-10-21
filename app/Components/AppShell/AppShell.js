@@ -9,7 +9,6 @@ import * as AppShellActions from '../../Actions/AppShell'
 import TopNavbar from './TopNavbar'
 import OnlyIf from '../../Elements/OnlyIf'
 
-import Icon from '../../Elements/Icon'
 import BugIcon from '../../Elements/icons/errorant.svg'
 
 import ua from 'universal-analytics'
@@ -142,7 +141,7 @@ class AppShell extends Component {
         <OnlyIf test={systemError != null}>
           <div className="Modal">
             <section className="Bug">
-              <Icon glyph={BugIcon} size={192} />
+              <BugIcon /*size={192}*/ />
               <h4>Uh Oh... That's a bug.</h4>
               <p>
                 Ganache encountered an error. Help us fix it by raising a GitHub issue! Mention the following error information when writing your ticket, and please include as much information as possible. Sorry about that!

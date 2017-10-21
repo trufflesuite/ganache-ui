@@ -15,7 +15,7 @@
     word-wrap: break-word;
     box-sizing: border-box;
     margin: 0;
-    padding: 1em;
+    padding: 1rem;
     font-family: "Fira Code Regular", monospace;
     overflow: scroll;
     position: absolute;
@@ -24,7 +24,7 @@
     right: 0em;
     bottom: 0em;
 
-    li {
+    li:not(:last-child) {
       margin-bottom: .3rem;
     }
   }

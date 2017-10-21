@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import connect from '../../Helpers/connect'
-import Styles from '../ConfigScreen.css'
 
 class GanacheScreen extends Component {
   render () {
@@ -9,8 +8,8 @@ class GanacheScreen extends Component {
         <h2>ADVANCED SETTINGS</h2>
         <section>
           <h4>GOOGLE ANALYTICS</h4>
-          <div className={Styles.Row}>
-            <div className={Styles.RowItem}>
+          <div className="Row">
+            <div className="RowItem">
               <div className="Switch">
                 <input
                   type="checkbox"
@@ -24,7 +23,7 @@ class GanacheScreen extends Component {
                 </label>
               </div>
             </div>
-            <div className={Styles.RowItem}>
+            <div className="RowItem">
               <p>
                 We use Google Analytics to track Ganache usage. This information helps us gain more insight into how Ganache is used. This tracking is anonymous. We do not track personally identifiable information, account data or private keys.{' '}
               </p>
@@ -33,8 +32,8 @@ class GanacheScreen extends Component {
         </section>
         {/* <section>
           <h4>CPU &amp; MEMORY PROFILING</h4>
-          <div className={Styles.Row}>
-            <div className={Styles.RowItem}>
+          <div className="Row">
+            <div className="RowItem">
               <div className="Switch">
                 <input
                   type="checkbox"
@@ -48,7 +47,7 @@ class GanacheScreen extends Component {
                 </label>
               </div>
             </div>
-            <div className={Styles.RowItem}>
+            <div className="RowItem">
               <p>
                 Strictly for debugging Ganache. Dumps detailed metrics to a log
                 file. Only enable if you are asked to by Truffle support.

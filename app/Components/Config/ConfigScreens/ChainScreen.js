@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import connect from '../../Helpers/connect'
-import Styles from '../ConfigScreen.css'
 import OnlyIf from '../../../Elements/OnlyIf'
 
 const VALIDATIONS = {
@@ -65,8 +64,8 @@ class ChainScreen extends Component {
         <h2>GAS</h2>
         <section>
           <h4>GAS LIMIT</h4>
-          <div className={Styles.Row}>
-            <div className={Styles.RowItem}>
+          <div className="Row">
+            <div className="RowItem">
               <input
                 name="server.gasLimit"
                 type="number"
@@ -74,19 +73,19 @@ class ChainScreen extends Component {
                 onChange={this.validateChange}
               />
               {this.props.validationErrors["server.gasLimit"] &&
-                <p className={Styles.ValidationError}>
+                <p className="ValidationError">
                   Must be &ge; 1
                 </p>}
             </div>
-            <div className={Styles.RowItem}>
+            <div className="RowItem">
               <p>Maximum amount of gas available to each block and transaction. Leave blank for default.</p>
             </div>
           </div>
         </section>
         <section>
           <h4>GAS PRICE</h4>
-          <div className={Styles.Row}>
-            <div className={Styles.RowItem}>
+          <div className="Row">
+            <div className="RowItem">
               <input
                 name="server.gasPrice"
                 type="number"
@@ -94,19 +93,19 @@ class ChainScreen extends Component {
                 onChange={this.validateChange}
               />
               {this.props.validationErrors["server.gasPrice"] &&
-                <p className={Styles.ValidationError}>
+                <p className="ValidationError">
                   Must be &ge; 1
                 </p>}
             </div>
-            <div className={Styles.RowItem}>
+            <div className="RowItem">
               <p>The price of each unit of gas, in WEI. Leave blank for default.</p>
             </div>
           </div>
         </section>
         {/* <h2>CHAIN FORKING</h2>
         <section>
-          <div className={Styles.Row}>
-            <div className={Styles.RowItem}>
+          <div className="Row">
+            <div className="RowItem">
               <div className="Switch">
                 <input
                   type="checkbox"
@@ -118,7 +117,7 @@ class ChainScreen extends Component {
                 <label htmlFor="ForkChain">FORK CHAIN</label>
               </div>
             </div>
-            <div className={Styles.RowItem}>
+            <div className="RowItem">
               <p>Fork an existing chain creating a new sandbox with the existing chain's accounts, contracts, transactions and data.</p>
             </div>
           </div>
@@ -126,9 +125,9 @@ class ChainScreen extends Component {
         <OnlyIf test={this.state.forking}>
           <section>
             <h4>SELECT CHAIN (PROVIDED BY INFURA)</h4>
-            <div className={Styles.Row}>
-              <div className={Styles.RowItem}>
-                <div className={Styles.Radio}>
+            <div className="Row">
+              <div className="RowItem">
+                <div className="Radio">
                   <label>
                     <input type="radio" 
                       value={FORK_URLS.mainnet} 
@@ -139,7 +138,7 @@ class ChainScreen extends Component {
                     Main Ethereum Network
                   </label>
                 </div>
-                <div className={Styles.Radio}>
+                <div className="Radio">
                   <label>
                     <input type="radio" 
                       value={FORK_URLS.ropsten}
@@ -150,7 +149,7 @@ class ChainScreen extends Component {
                     Ropsten
                   </label>
                 </div>
-                <div className={Styles.Radio}>
+                <div className="Radio">
                   <label>
                     <input type="radio" 
                       value={FORK_URLS.kovan} 
@@ -161,7 +160,7 @@ class ChainScreen extends Component {
                     Kovan
                   </label>
                 </div>
-                <div className={Styles.Radio}>
+                <div className="Radio">
                   <label>
                     <input type="radio" 
                       value={FORK_URLS.rinkeby} 
@@ -173,13 +172,13 @@ class ChainScreen extends Component {
                   </label>
                 </div>
               </div>
-              <div className={Styles.RowItem}>
+              <div className="RowItem">
                 <p>Note: Chain forking is an advanced feature and is still in active development. Please let the Truffle team know if you run into any issues.</p>
               </div>
             </div>
             {/* <h4>OR CUSTOM URL</h4>
-            <div className={Styles.Row}>
-              <div className={Styles.RowItem}>
+            <div className="Row">
+              <div className="RowItem">
                 <input
                   name="server.fork"
                   type="text"
@@ -187,7 +186,7 @@ class ChainScreen extends Component {
                   onChange={this.validateChange}
                 />
               </div>
-              <div className={Styles.RowItem}>
+              <div className="RowItem">
                 <p>The URL of the existing chain's RPC server. Eg., https://mainnet.infura.io</p>
               </div>
             </div> 

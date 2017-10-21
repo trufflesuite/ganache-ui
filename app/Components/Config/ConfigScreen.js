@@ -6,10 +6,7 @@ import connect from '../Helpers/connect'
 import * as Core from '../../Actions/Core'
 import * as Settings from '../../Actions/Settings'
 
-import Icon from '../../Elements/Icon'
 import OnlyIf from '../../Elements/OnlyIf'
-
-import Tabs from './Tabs/Tabs'
 
 import ServerScreen from './ConfigScreens/ServerScreen'
 import AccountsScreen from './ConfigScreens/AccountsScreen'
@@ -19,7 +16,12 @@ import AdvancedScreen from './ConfigScreens/AdvancedScreen'
 import RestartIcon from '../../Elements/icons/restart.svg'
 import EjectIcon from '../../Elements/icons/eject.svg';
 
-import Styles from './ConfigScreen.css'
+const TABS = [
+  {name: 'Server', component: ServerScreen}, 
+  {name: 'Accounts & Keys', component: AccountsScreen},
+  {name: 'Chain', component: ChainScreen},
+  {name: 'Advanced', component: AdvancedScreen}
+]
 
 class ConfigScreen extends PureComponent {
   constructor (props) {
@@ -27,7 +29,8 @@ class ConfigScreen extends PureComponent {
 
     this.state = {
       settings: _.cloneDeep(props.settings),
-      validationErrors: {}
+      validationErrors: {},
+      activeIndex: 0
     }
   }
 
@@ -46,18 +49,21 @@ class ConfigScreen extends PureComponent {
     hashHistory.pop();
   }
 
-  _renderConfigTabs = () => {
-    return [
-      'Server',
-      'Accounts & Keys',
-      'Chain',
-      'Advanced'
-    ].map((opt, index) => {
+  _renderTabHeader = () => {
+    return TABS.map((tab, index) => {
+      let className = `TabItem ${this.state.activeIndex == index ? 'ActiveTab' : ''}`
+
       return (
-        <Tabs.Tab key={opt} className={Styles.ConfigTabItem}>
-          {opt}
-        </Tabs.Tab>
+        <div key={tab.name} className={className} onClick={this.handleMakeTabActive.bind(this, index)}>
+          {tab.name}
+        </div>
       )
+    })
+  }
+
+  handleMakeTabActive = (index, event) => {
+    this.setState({
+      activeIndex: index
     })
   }
 
@@ -174,17 +180,23 @@ class ConfigScreen extends PureComponent {
   }
 
   render () {
-    return (
-      <main>
-        <Tabs className={Styles.ConfigScreen}>
-          <Tabs.TabHeader>
-            <Tabs.TabList className={Styles.ConfigTabs}>
-              {this._renderConfigTabs()}
-            </Tabs.TabList>
-            <Tabs.TabActions>
-              <button className="btn btn-primary" onClick={hashHistory.goBack}>
-                <Icon glyph={EjectIcon} size={18} />
+    let activeTab = React.createElement(TABS[this.state.activeIndex].component, {
+      settings: this.state.settings,
+      handleInputChange: this.handleInputChange,
+      validateChange: this.validateChange,
+      validationErrors: this.state.validationErrors
+    })
 
+    return (
+      <main className="ConfigScreen">
+        <div className="Tabs">
+          <div className="Header">
+            <div className="TabItems">
+              {this._renderTabHeader()}
+            </div>
+            <div className="Actions">
+              <button className="btn btn-primary" onClick={hashHistory.goBack}>
+                <EjectIcon /*size={18}*/ />
                 CANCEL
               </button>
               <button
@@ -192,50 +204,15 @@ class ConfigScreen extends PureComponent {
                 onClick={this.restartServer}
                 disabled={this.invalidConfig()}
               >
-                <Icon glyph={RestartIcon} size={18} />
+                <RestartIcon /*size={18}*/ />
                 { this.isDirty() ? 'SAVE AND RESTART' : 'RESTART' }
               </button>
-            </Tabs.TabActions>
-          </Tabs.TabHeader>
-
-          <Tabs.TabPanels className={Styles.ConfigCard}>
-            <Tabs.TabPanel>
-              <ServerScreen
-                settings={this.state.settings}
-                handleInputChange={this.handleInputChange}
-                validateChange={this.validateChange}
-                validationErrors={this.state.validationErrors}
-              />
-            </Tabs.TabPanel>
-
-            <Tabs.TabPanel>
-              <AccountsScreen
-                settings={this.state.settings}
-                handleInputChange={this.handleInputChange}
-                validateChange={this.validateChange}
-                validationErrors={this.state.validationErrors}
-              />
-            </Tabs.TabPanel>
-
-            <Tabs.TabPanel>
-              <ChainScreen
-                settings={this.state.settings}
-                handleInputChange={this.handleInputChange}
-                validateChange={this.validateChange}
-                validationErrors={this.state.validationErrors}
-              />
-            </Tabs.TabPanel>
-
-            <Tabs.TabPanel>
-              <AdvancedScreen
-                settings={this.state.settings}
-                handleInputChange={this.handleInputChange}
-                validateChange={this.validateChange}
-                validationErrors={this.state.validationErrors}
-              />
-            </Tabs.TabPanel>
-          </Tabs.TabPanels>
-        </Tabs>
+            </div>
+          </div>
+          <div className="ConfigCard">
+            { activeTab } 
+          </div>
+        </div>
       </main>
     )
   }

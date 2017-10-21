@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import InputText from '../../Elements/InputText'
 import LogContainer from './LogContainer'
-import Styles from './Logs.css'
 
 import connect from '../Helpers/connect'
 
@@ -12,7 +11,7 @@ class Logs extends Component {
 
   render () {
     return (
-      <div className={Styles.Logs}>
+      <div className="LogsScreen">
         <main>
           <LogContainer />
         </main>

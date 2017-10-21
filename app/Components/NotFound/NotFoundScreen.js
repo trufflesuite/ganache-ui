@@ -1,17 +1,11 @@
 import React, { Component } from 'react'
-import SearchIcon from '../../Elements/icons/search.svg'
-import Icon from '../../Elements/Icon'
-import Styles from './NotFoundScreen.css'
 
 class NotFoundScreen extends Component {  
   render () {
     return (
-      <div className={Styles.NotFound}>
+      <div className="NotFoundScreen">
         <main>
-          <Icon glyph={SearchIcon} size={64} />
-          <p>
-            Nothing found. 
-          </p>
+          Nothing found
         </main>
       </div>
     )

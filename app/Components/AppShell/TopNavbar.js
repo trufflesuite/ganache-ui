@@ -7,7 +7,6 @@ import { setSystemError } from '../../Actions/Core'
 import Spinner from '../../Elements/Spinner'
 import OnlyIf from '../../Elements/OnlyIf'
 import StatusIndicator from '../../Elements/StatusIndicator'
-import Icon from '../../Elements/Icon'
 
 import AccountIcon from '../../Elements/icons/account.svg'
 import BlockIcon from '../../Elements/icons/blocks.svg'
@@ -73,7 +72,7 @@ class TopNavbar extends Component {
           onClick={this._handleRevertSnapshot}
           disabled={snapshots.length === 0}
         >
-          <Icon glyph={RevertIcon} size={18} />
+          <RevertIcon /*size={18}*/ />
           {firstSnapshot
             ? `REVERT TO BASE`
             : `REVERT TO SNAPSHOT #${currentSnapshotId - 1}`}
@@ -104,11 +103,7 @@ class TopNavbar extends Component {
           disabled={!this.props.core.isMining}
           onClick={this._handleStopMining}
         >
-          <Icon
-            glyph={StopMiningIcon}
-            size={18}
-            className="StopMining"
-          />{' '}
+          <StopMiningIcon /*size={18} className="StopMining" */ />{' '}
           Stop {this._renderMiningButtonText()}
         </button>
       : <button
@@ -116,7 +111,7 @@ class TopNavbar extends Component {
           disabled={this.props.core.isMining}
           onClick={this._handleStartMining}
         >
-          <Icon glyph={StartMiningIcon} size={18} /> Start{' '}
+          <StartMiningIcon /*size={18}*/ /> Start{' '}
           {this._renderMiningButtonText()}
         </button>
   }
@@ -184,8 +179,7 @@ class TopNavbar extends Component {
             />
             <StatusIndicator
               title="RPC SERVER"
-              value={`http://${this.props.settings.server.hostname}:${this.props
-                .settings.server.port}`}
+              value={`http://${this.props.settings.server.hostname}:${this.props.settings.server.port}`}
             />
             <StatusIndicator
               title="MINING STATUS"
@@ -206,7 +200,7 @@ class TopNavbar extends Component {
                 className="MiningBtn"
                 onClick={this._handleForceMine}
               >
-                <Icon glyph={ForceMineIcon} size={18} /> Force Mine
+                <ForceMineIcon /*size={18}*/ /> Force Mine
               </button>
             </OnlyIf>
             <OnlyIf test={showControls}>
@@ -214,7 +208,7 @@ class TopNavbar extends Component {
                 className="MiningBtn"
                 onClick={this._handleMakeSnapshot}
               >
-                <Icon glyph={SnapshotIcon} size={18} /> TAKE SNAPSHOT #{currentSnapshotId + 1}
+                <SnapshotIcon /*size={18}*/ /> TAKE SNAPSHOT #{currentSnapshotId + 1}
               </button>
             </OnlyIf>
             <OnlyIf test={showControls}>

@@ -5,7 +5,6 @@ import * as Transactions from '../../Actions/Transactions'
 import MiniTxCard from './MiniTxCard'
 
 import MiningIcon from '../../Elements/icons/force_mine.svg'
-import Icon from '../../Elements/Icon'
 
 class TxList extends Component {
   render () {
@@ -21,10 +20,7 @@ class TxList extends Component {
     } else {
       content = 
         <div className="Waiting">
-          <MiningIcon /*size={64}*/ />
-          <p>
-            No transactions.
-          </p>
+          No transactions
         </div>
     }
 

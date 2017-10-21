@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import connect from '../Helpers/connect'
 
-import Styles from './LogContainer.css'
-
 class LogContainer extends Component {
   shouldComponentUpdate (nextProps, nextState) {
     return nextProps.logs.lines.length !== this.props.logs.lines.length
@@ -26,11 +24,11 @@ class LogContainer extends Component {
 
   render () {
     return (
-      <div className={Styles.LogContainer} ref="LogContainer">
+      <div className="LogContainer" ref="LogContainer">
         <ul ref="LogItems">
           {this.props.logs.lines.map((log, index) => {
             return (
-              <li key={index} className={Styles[log.level || 'plain']}>
+              <li key={index} className="plain">
                 {`[${new Date(log.time).toLocaleTimeString()}]`} {log.line}
               </li>
             )

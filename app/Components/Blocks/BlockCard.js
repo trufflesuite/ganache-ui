@@ -23,6 +23,10 @@ class BlockCard extends Component {
     if (this.props.blocks.currentBlock != nextProps.blocks.currentBlock) {
       this.props.dispatch(Transactions.getReceipts(nextProps.blocks.currentBlock.transactions))
     }
+
+    if (this.props.blockNumber != nextProps.blockNumber ) {
+      this.props.dispatch(Blocks.showBlock(nextProps.blockNumber))
+    }
   }
 
   render () {
