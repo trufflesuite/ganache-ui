@@ -15,8 +15,6 @@ import BugIcon from '../../Elements/icons/errorant.svg'
 import ua from 'universal-analytics'
 import ElectronCookies from '@exponent/electron-cookies'
 
-import CSSTransitionGroup from 'react-addons-css-transition-group'
-
 const { app } = require('electron').remote
 
 ElectronCookies.enable({

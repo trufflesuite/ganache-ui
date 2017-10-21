@@ -53,7 +53,7 @@ const stylesheets = [
   "./Elements/Modal.scss",
   "./Components/FirstRun/FirstRunScreen.scss",
   "./Components/AppShell/AppShell.scss",
-  "./Components/AppShell/TopNavBar.scss",
+  "./Components/AppShell/TopNavbar.scss",
   "./Components/Accounts/AccountsScreen.scss",
   "./Components/Accounts/AccountList.scss",
   "./Components/Accounts/KeyModal.scss",

@@ -3,7 +3,6 @@ import { hashHistory } from 'react-router'
 import connect from '../Helpers/connect'
 import * as Transactions from '../../Actions/Transactions'
 
-import EtherUtil from 'ethereumjs-util'
 import Moment from 'react-moment'
 
 import { Link } from 'react-router'
@@ -11,7 +10,6 @@ import { Link } from 'react-router'
 import DestinationAddress from './DestinationAddress'
 import TransactionTypeBadge from './TransactionTypeBadge'
 import FormattedEtherValue from '../../Elements/FormattedEtherValue'
-import FormattedHex from '../../Elements/FormattedHex'
 
 class TxCard extends Component {
   componentDidMount () {

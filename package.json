@@ -3,7 +3,7 @@
   "productName": "Ganache",
   "version": "0.0.11",
   "description": "An Electron UI for Ganache",
-  "main": "./app/init.js",
+  "main": "./src/init.js",
   "private": true,
   "scripts": {
     "start": "electron-forge start",
@@ -17,31 +17,28 @@
     "forge": {
       "make_targets": {
         "win32": [
-          "squirrel"
+          "squirrel",
+          "appx"
         ],
         "darwin": [
-          "zip"
+          "dmg"
         ],
         "linux": [
-          "deb",
-          "rpm"
+          "deb"
         ]
       },
-      "electronPackagerConfig": {
-        "packageManager": "yarn"
-      },
+      "electronPackagerConfig": {},
       "electronWinstallerConfig": {
-        "name": "my_new_project"
+        "name": "<%= productName %>"
       },
       "electronInstallerDebian": {},
-      "electronInstallerRedhat": {},
       "github_repository": {
         "owner": "",
         "name": ""
       },
       "windowsStoreConfig": {
-        "packageName": "",
-        "name": "mynewproject"
+        "packageName": "Ganache",
+        "name": "Ganache"
       }
     }
   },
@@ -50,116 +47,65 @@
     "url": "git+https://github.com/trufflesuite/ganache.git"
   },
   "author": {
-    "name": "John McDowall",
-    "email": "john@kantan.io",
-    "url": "https://github.com/johnmcdowall"
+    "name": "Truffle",
+    "email": "inquiry@trufflesuite.com",
+    "url": "https://github.com/trufflesuite"
   },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/trufflesuite/ganache/issues"
   },
   "keywords": [
-    "electron",
-    "boilerplate",
-    "react",
-    "react-router",
-    "flux",
-    "webpack",
-    "react-hot"
+    "ganache",
+    "ethereum",
+    "blockchain",
+    "truffle"
   ],
   "homepage": "https://github.com/trufflesuite/ganache#readme",
   "devDependencies": {
     "asar": "^0.13.0",
     "babel-core": "^6.21.0",
     "babel-eslint": "^7.1.1",
-    "babel-loader": "^6.2.10",
     "babel-plugin-add-module-exports": "^0.2.1",
-    "babel-plugin-css-modules-transform": "^1.2.7",
     "babel-plugin-dev-expression": "^0.2.1",
     "babel-plugin-inline-react-svg": "^0.4.0",
-    "babel-plugin-react-css-modules": "^3.3.1",
-    "babel-plugin-tcomb": "^0.3.24",
     "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-plugin-transform-class-properties": "^6.19.0",
     "babel-plugin-transform-es2015-classes": "^6.18.0",
-    "babel-plugin-webpack-loaders": "^0.8.0",
     "babel-polyfill": "^6.20.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
     "babel-preset-react-hmre": "^1.1.1",
     "babel-preset-react-optimize": "^1.0.1",
     "babel-preset-stage-0": "^6.16.0",
-    "babel-register": "^6.18.0",
-    "babili-webpack-plugin": "^0.0.7",
-    "boiler-room-custodian": "^0.5.0",
     "chai": "^3.5.0",
     "concurrently": "^3.1.0",
     "cross-env": "^3.1.4",
-    "css-loader": "^0.26.1",
-    "devtron": "^1.4.0",
     "electron-debug": "^1.1.0",
     "electron-devtools-installer": "^2.0.1",
+    "electron-forge": "^4.1.2",
     "electron-icon-maker": "0.0.3",
     "electron-log": "^2.2.9",
     "electron-prebuilt-compile": "1.6.11",
     "electron-rebuild": "^1.6.0",
-    "electron-updater": "^2.9.3",
-    "enzyme": "^2.7.0",
-    "express": "^4.14.0",
-    "extract-text-webpack-plugin": "^1.0.1",
-    "fbjs-scripts": "^0.7.1",
-    "file-loader": "^0.9.0",
-    "html-webpack-plugin": "^2.26.0",
     "jsdom": "^9.9.1",
-    "json-loader": "^0.5.4",
     "minimist": "^1.2.0",
     "mocha": "^3.2.0",
-    "node-gyp": "^3.5.0",
     "node-sass": "^4.5.3",
-    "postcss": "^5.2.11",
-    "postcss-color-function": "^2.0.1",
-    "postcss-import": "^9.1.0",
-    "postcss-loader": "^1.2.2",
-    "postcss-scss": "^1.0.2",
-    "precss": "^1.4.0",
     "prop-types": "^15.5.10",
     "rcedit": "^0.9.0",
-    "react-addons-test-utils": "^15.4.2",
     "redux-logger": "^2.7.4",
-    "sass-loader": "^4.1.1",
-    "serve-static-throttle": "^1.0.2",
-    "sinon": "^1.17.7",
-    "source-map-support": "^0.4.8",
-    "spectron": "^3.4.1",
-    "style-loader": "^0.13.1",
-    "styled-components": "^2.1.1",
-    "svg-inline-loader": "^0.7.1",
-    "svg-sprite-loader": "^3.0.5",
-    "svgo": "^0.7.2",
-    "svgo-loader": "^1.2.1",
-    "tcomb": "^3.2.16",
-    "url-loader": "^0.5.7",
-    "webpack": "^1.14.0",
-    "webpack-dev-middleware": "^1.9.0",
-    "webpack-hot-middleware": "^2.15.0",
-    "webpack-merge": "^2.4.0",
-    "webpack-validator": "^2.3.0"
+    "source-map-support": "^0.4.8"
   },
   "dependencies": {
     "@exponent/electron-cookies": "^2.0.0",
     "async": "^2.5.0",
-    "bn.js": "^4.11.6",
-    "class-autobind": "^0.1.4",
-    "core-js": "^2.4.1",
     "electron-compile": "^6.4.2",
-    "electron-forge": "^4.1.2",
     "electron-settings": "^3.1.2",
     "electron-squirrel-startup": "^1.0.0",
     "ethereumjs-testrpc": "^4.1.3",
     "ethereumjs-units": "^0.2.0",
-    "ethereumjs-util": "^5.1.1",
     "find-process": "^1.1.0",
-    "font-awesome": "^4.7.0",
     "lodash": "^3.10.1",
     "moment": "^2.17.1",
     "moment-timezone": "^0.5.11",
@@ -167,7 +113,6 @@
     "pidusage": "^1.1.5",
     "pluralize": "^5.0.0",
     "react": "^15.4.2",
-    "react-addons-css-transition-group": "^15.6.0",
     "react-dom": "^15.6.2",
     "react-hot-loader": "^3.1.1",
     "react-moment": "^0.2.2",

@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react'
 import Moment from 'react-moment'
-import EtherUtil from 'ethereumjs-util'
 import Pluralize from 'pluralize'
 import { Link } from 'react-router'
 

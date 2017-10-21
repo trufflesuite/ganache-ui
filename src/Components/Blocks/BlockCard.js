@@ -4,7 +4,6 @@ import * as Blocks from '../../Actions/Blocks'
 import * as Transactions from '../../Actions/Transactions'
 
 import Moment from 'react-moment'
-import EtherUtil from 'ethereumjs-util'
 
 import { Link, hashHistory } from 'react-router'
 

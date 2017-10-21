@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import Moment from 'react-moment'
-import EtherUtil from 'ethereumjs-util'
 
 import { Link } from 'react-router'
 
