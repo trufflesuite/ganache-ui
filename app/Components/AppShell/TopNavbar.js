@@ -24,7 +24,9 @@ class TopNavbar extends Component {
   constructor (props) {
     super(props)
 
-    this.searchInput = null
+    this.state = {
+      searchInput: ""
+    }
   }
 
   _handleStopMining = e => {
@@ -47,9 +49,15 @@ class TopNavbar extends Component {
     this.props.appRevertSnapshot(this.props.core.snapshots.length)
   }
 
+  handleSearchChange = e => {
+    this.setState({
+      searchInput: e.target.value
+    })
+  }
+
   handleSearchKeyPress = e => {
     if (e.key === 'Enter') {
-      let value = this.searchInput.value.trim()
+      let value = this.state.searchInput.trim()
 
       // Secret to show the error screen when we need it.
       if (value.toLowerCase() == "error") {
@@ -57,6 +65,10 @@ class TopNavbar extends Component {
       } else {
         this.props.dispatch(Search.query(value))
       }
+
+      this.setState({
+        searchInput: ""
+      })
     }
   }
 
@@ -152,9 +164,8 @@ class TopNavbar extends Component {
             <input
               type="text"
               placeholder="SEARCH FOR BLOCK NUMBERS OR TX HASHES"
-              ref={input => {
-                this.searchInput = input
-              }}
+              value={this.state.searchInput}
+              onChange={this.handleSearchChange}
               onKeyPress={this.handleSearchKeyPress}
             />
             <SearchIcon />
