@@ -42,7 +42,7 @@ On Windows:
 Two tools were used:
 
 * [electron-icon-maker](https://www.npmjs.com/package/electron-icon-maker)
-* (UWP Visual Assets Generator](https://marketplace.visualstudio.com/items?itemName=PeterR.UWPVisualAssetsGenerator)
+* [UWP Visual Assets Generator](https://marketplace.visualstudio.com/items?itemName=PeterR.UWPVisualAssetsGenerator)
 
 ### License
 
