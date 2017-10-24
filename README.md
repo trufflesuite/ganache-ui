@@ -37,6 +37,13 @@ On Windows:
 
 * To build the `appx` make target, ensure you have the [Windows 10 SDK](https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk) installed. If you have errors during make, ensure the package.json file's `windowsStoreConfig.windowsKit` points to your Windows 10 SDK directory.
 
+### Generating Icon Assets
+
+Two tools were used:
+
+* [electron-icon-maker](https://www.npmjs.com/package/electron-icon-maker)
+* (UWP Visual Assets Generator](https://marketplace.visualstudio.com/items?itemName=PeterR.UWPVisualAssetsGenerator)
+
 ### License
 
 See LICENSE file
