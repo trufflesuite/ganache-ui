@@ -1,3 +1,6 @@
+certs
+out
+
 # Logs
 *.log
 profiling/

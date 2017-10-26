@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package
+   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities">
+  <Identity Name="Ganache"
+    ProcessorArchitecture="x64"
+    Publisher="CN=Consensys Inc, O=Consensys Inc, L=New York, S=New York, C=US"
+    Version="0.0.11.0" />
+  <Properties>
+    <DisplayName>Ganache</DisplayName>
+    <PublisherDisplayName>Truffle</PublisherDisplayName>
+    <Description>Personal blockchain for Ethereum development</Description>
+    <Logo>assets\Square150x150Logo.png</Logo>
+  </Properties>
+  <Resources>
+    <Resource Language="en-us" />
+  </Resources>
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.14316.0" MaxVersionTested="10.0.14316.0" />
+  </Dependencies>
+  <Capabilities>
+    <rescap:Capability Name="runFullTrust"/>
+  </Capabilities>
+  <Applications>
+    <Application Id="Ganache" Executable="app\Ganache.exe" EntryPoint="Windows.FullTrustApplication">
+      <!-- This was a lifesaver: https://www.npmjs.com/package/svg2uwptiles -->
+      <uap:VisualElements 
+        DisplayName="Ganache" 
+        Square150x150Logo="assets\Square150x150Logo.png" 
+        Square44x44Logo="assets\Square44x44Logo.png" 
+        Description="Personal Blockchain for Ethereum development" 
+        BackgroundColor="#34262A">
+        <uap:LockScreen Notification="badgeAndTileText" BadgeLogo="assets\BadgeLogo.png" />
+        <uap:DefaultTile Wide310x150Logo="assets\Wide310x150Logo.png" Square310x310Logo="assets\LargeTile.png" Square71x71Logo="assets\SmallTile.png"></uap:DefaultTile>
+      </uap:VisualElements>
+    </Application>
+  </Applications>
+</Package>

@@ -10,14 +10,14 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
-    "lint": "echo \"No linting configured\""
+    "lint": "echo \"No linting configured\"",
+    "makeappxassets": "svg2uwptiles -i ./Logo.svg -c ./blank.svg -o ./resources/appx/"
   },
   "browserslist": "chrome 50",
   "config": {
     "forge": {
       "make_targets": {
         "win32": [
-          "squirrel",
           "appx"
         ],
         "darwin": [
@@ -27,7 +27,9 @@
           "deb"
         ]
       },
-      "electronPackagerConfig": {},
+      "electronPackagerConfig": {
+        "icon": "resources/icons/icon.ico"
+      },
       "electronWinstallerConfig": {
         "name": "<%= productName %>"
       },
@@ -37,8 +39,16 @@
         "name": ""
       },
       "windowsStoreConfig": {
-        "packageName": "Ganache",
-        "name": "Ganache"
+        "packageVersion": "<%= version %>.0",
+        "packageName": "<%= productName %>",
+        "packageDescription": "Personal blockchain for Ethereum development",
+        "publisher": "CN=Consensys Inc, O=Consensys Inc, L=New York, S=New York, C=US",
+        "windowsKit": "C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.16299.0\\x64",
+        "assets": "./resources/appx",
+        "manifest": "./AppXManifest.xml",
+        "makePri": true,
+        "devCert": "./certs/cert.pfx",
+        "certPass": "<%= process.env.CERT_PASS %>"
       }
     }
   },
@@ -95,7 +105,8 @@
     "prop-types": "^15.5.10",
     "rcedit": "^0.9.0",
     "redux-logger": "^2.7.4",
-    "source-map-support": "^0.4.8"
+    "source-map-support": "^0.4.8",
+    "svg2uwptiles": "0.0.4"
   },
   "dependencies": {
     "@exponent/electron-cookies": "^2.0.0",
