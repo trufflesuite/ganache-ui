@@ -1,0 +1,47 @@
+@import "colors.css";
+
+.Header {
+  position: -webkit-sticky;
+  position: sticky;
+  top: -1px;
+  background: white;
+  font-size: 2.5vw;
+  height: 32px;
+  font-family: "RobotoCondensed-Bold";
+  margin: .5em;
+  padding: .8em 0;
+  border-bottom: 2px solid rgba(155, 152, 150, 1.000);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+
+  * {
+    stroke: var(--primary-color) !important;
+  }
+
+  > div {
+    margin-right: .25em;
+  }
+
+  > h4 {
+    flex: 1;
+    line-height: 1;
+    margin: 0;
+  }
+
+  span {
+    a {
+      background: rgba(44, 54, 67, 1.000);
+      border-radius: 4px;
+      color: rgba(242, 175, 103, 1.000);
+      padding: .5rem;
+      text-decoration: none;
+      font-size: .8rem;
+      text-transform: uppercase;
+
+      &:hover {
+        color: lighten( rgba(242, 175, 103, 1.000), 10%);
+      }
+    }
+  }
+}

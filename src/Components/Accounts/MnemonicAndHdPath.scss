@@ -1,0 +1,26 @@
+
+.MnemonicAndHdPath {
+  display: flex;
+  background-color: var(--app-mnemonic-background-color);
+  font-size: 0.8em;
+  margin: 0;
+  border-bottom: 1px solid #aaa;
+
+  .Mnemonic {
+    flex-grow: 1;
+  }
+
+  div {
+    margin: 1rem;
+
+    h4 {
+      margin: 0 0 .3rem 0;
+    }
+
+    span {
+      font-family: "Fira Code Regular", monospace;
+      color: var(--text-color);
+      font-size: 0.9rem;
+    }
+  }
+}

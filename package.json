@@ -1,209 +1,149 @@
 {
   "name": "ganache",
   "productName": "Ganache",
-  "version": "0.0.1",
+  "version": "0.0.11",
   "description": "An Electron UI for Ganache",
-  "main": "main.js",
+  "main": "./src/init.js",
   "private": true,
   "scripts": {
-    "test": "cross-env NODE_ENV=test BABEL_DISABLE_CACHE=1 mocha --retries 2 --compilers js:babel-register --recursive --require ./test/setup.js test/**/*.spec.js",
-    "test-all": "npm run lint && npm run test && npm run build",
-    "test-watch": "npm test -- --watch",
-    "test-e2e": "cross-env NODE_ENV=test BABEL_DISABLE_CACHE=1 mocha --retries 2 --compilers js:babel-register --require ./test/setup.js ./test/e2e.js",
-    "lint": "eslint --cache --ignore-path .gitignore --format=node_modules/eslint-formatter-pretty app test *.js",
-    "lint-fix": "npm run lint -- --fix",
-    "hot-server": "cross-env NODE_ENV=development node --max_old_space_size=2096 -r babel-register server.js",
-    "build-main": "cross-env NODE_ENV=production node -r babel-register ./node_modules/webpack/bin/webpack --config webpack.config.electron.js --progress --profile --colors",
-    "build-renderer": "cross-env NODE_ENV=production node -r babel-register ./node_modules/webpack/bin/webpack --config webpack.config.production.js --progress --profile --colors",
-    "build": "npm run build-main && npm run build-renderer",
-    "start": "cross-env NODE_ENV=production electron ./app/",
-    "start-hot": "cross-env HOT=1 NODE_ENV=development electron -r babel-register -r babel-polyfill ./app/main.development",
-    "postinstall": "concurrently \"install-app-deps\" \"node node_modules/fbjs-scripts/node/check-dev-engines.js package.json\"",
-    "dev": "npm run hot-server -- --start-hot",
-    "package": "npm run build && build --publish never",
-    "package-prerelease": "npm run build && build --publish always --prerelease true",
-    "package-win": "npm run build && build --win --x64",
-    "package-linux": "npm run build && build --linux",
-    "package-all": "npm run build && build -mwl",
-    "cleanup": "mop -v",
-    "rebuild": "electron-rebuild -f"
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish",
+    "lint": "echo \"No linting configured\"",
+    "sign-mac": "codesign --deep --force --verbose --sign '58RKXWC272' ./out/make/*.dmg",
+    "makeappxassets": "svg2uwptiles -i ./Logo.svg -c ./blank.svg -o ./resources/appx/"
   },
   "browserslist": "chrome 50",
-  "build": {
-    "productName": "Ganache",
-    "appId": "org.trufflesuite.Ganache",
-    "category": "public.app-category.tools",
-    "mac": {
-      "icon": "resources/icons/mac/icon.icns"
-    },
-    "win": {
-      "target": "nsis",
-      "icon": "resources/icons/win/icon.ico"
-    },
-    "linux": {
-      "target": [
-        "deb",
-        "AppImage"
-      ]
-    },
-    "dmg": {
-      "contents": [
-        {
-          "x": 410,
-          "y": 150,
-          "type": "link",
-          "path": "/Applications"
-        },
-        {
-          "x": 130,
-          "y": 150,
-          "type": "file"
-        }
-      ]
-    },
-    "files": [
-      "dist/",
-      "node_modules/",
-      "app.html",
-      "main.js",
-      "main.js.map",
-      "package.json"
-    ],
-    "extraResources": [
-      {
-        "from": "app/Services/ReplService/ReplScripts",
-        "to": "ReplScripts",
-        "filter": [
-          "**/*"
+  "config": {
+    "forge": {
+      "make_targets": {
+        "win32": [
+          "appx"
+        ],
+        "darwin": [
+          "dmg"
+        ],
+        "linux": [
+          "deb"
         ]
+      },
+      "electronPackagerConfig": {
+        "icon": "resources/icons/icon.ico"
+      },
+      "electronWinstallerConfig": {
+        "name": "<%= productName %>"
+      },
+      "electronInstallerDebian": {},
+      "github_repository": {
+        "owner": "",
+        "name": ""
+      },
+      "electronInstallerDMG": {
+        "background": "./resources/dmg/background.png",
+        "icon": "./resources/icons/icon.icns",
+        "format": "ULFO",
+        "code-sign": {
+          "signing-identity": "58RKXWC272"
+        }
+      },
+      "windowsStoreConfig": {
+        "packageVersion": "<%= version %>.0",
+        "packageName": "<%= productName %>",
+        "packageDescription": "Personal blockchain for Ethereum development",
+        "publisher": "CN=Consensys Inc, O=Consensys Inc, L=New York, S=New York, C=US",
+        "windowsKit": "C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.16299.0\\x64",
+        "assets": "./resources/appx",
+        "manifest": "./AppXManifest.xml",
+        "makePri": true,
+        "devCert": "./certs/cert.pfx",
+        "certPass": "<%= process.env.CERT_PASS %>"
       }
-    ],
-    "directories": {
-      "buildResources": "resources",
-      "output": "release"
     }
-  },
-  "bin": {
-    "electron": "./node_modules/.bin/electron"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/trufflesuite/ganache.git"
   },
   "author": {
-    "name": "John McDowall",
-    "email": "john@kantan.io",
-    "url": "https://github.com/johnmcdowall"
+    "name": "Truffle",
+    "email": "inquiry@trufflesuite.com",
+    "url": "https://github.com/trufflesuite"
   },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/trufflesuite/ganache/issues"
   },
   "keywords": [
-    "electron",
-    "boilerplate",
-    "react",
-    "react-router",
-    "flux",
-    "webpack",
-    "react-hot"
+    "ganache",
+    "ethereum",
+    "blockchain",
+    "truffle"
   ],
   "homepage": "https://github.com/trufflesuite/ganache#readme",
   "devDependencies": {
     "asar": "^0.13.0",
     "babel-core": "^6.21.0",
     "babel-eslint": "^7.1.1",
-    "babel-loader": "^6.2.10",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-dev-expression": "^0.2.1",
-    "babel-plugin-tcomb": "^0.3.24",
+    "babel-plugin-inline-react-svg": "^0.4.0",
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-plugin-transform-class-properties": "^6.19.0",
     "babel-plugin-transform-es2015-classes": "^6.18.0",
-    "babel-plugin-webpack-loaders": "^0.8.0",
     "babel-polyfill": "^6.20.0",
-    "babel-preset-env": "^1.1.8",
-    "babel-preset-react": "^6.16.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
     "babel-preset-react-hmre": "^1.1.1",
     "babel-preset-react-optimize": "^1.0.1",
     "babel-preset-stage-0": "^6.16.0",
-    "babel-register": "^6.18.0",
-    "babili-webpack-plugin": "^0.0.7",
-    "boiler-room-custodian": "^0.5.0",
     "chai": "^3.5.0",
     "concurrently": "^3.1.0",
     "cross-env": "^3.1.4",
-    "css-loader": "^0.26.1",
-    "devtron": "^1.4.0",
-    "electron": "^1.4.14",
-    "electron-builder": "^11.2.5",
+    "electron-debug": "^1.1.0",
     "electron-devtools-installer": "^2.0.1",
-    "electron-rebuild": "^1.5.7",
-    "enzyme": "^2.7.0",
-    "eslint": "^3.13.1",
-    "eslint-formatter-pretty": "^1.1.0",
-    "eslint-import-resolver-webpack": "^0.8.0",
-    "eslint-loader": "^1.6.1",
-    "eslint-plugin-compat": "^1.0.0",
-    "eslint-plugin-import": "^2.2.0",
-    "eslint-plugin-jsx-a11y": "^3.0.2",
-    "eslint-plugin-mocha": "^4.8.0",
-    "eslint-plugin-promise": "^3.4.0",
-    "eslint-plugin-react": "^6.9.0",
-    "ethereumjs-util": "^5.1.1",
-    "express": "^4.14.0",
-    "extract-text-webpack-plugin": "^1.0.1",
-    "fbjs-scripts": "^0.7.1",
-    "file-loader": "^0.9.0",
-    "html-webpack-plugin": "^2.26.0",
+    "electron-forge": "^4.1.2",
+    "electron-icon-maker": "0.0.3",
+    "electron-log": "^2.2.9",
+    "electron-prebuilt-compile": "1.6.11",
+    "electron-rebuild": "^1.6.0",
     "jsdom": "^9.9.1",
-    "json-loader": "^0.5.4",
     "minimist": "^1.2.0",
     "mocha": "^3.2.0",
-    "node-gyp": "^3.5.0",
-    "react-addons-test-utils": "^15.4.2",
+    "node-sass": "^4.5.3",
+    "prop-types": "^15.5.10",
+    "rcedit": "^0.9.0",
     "redux-logger": "^2.7.4",
-    "sinon": "^1.17.7",
-    "spectron": "^3.4.1",
-    "style-loader": "^0.13.1",
-    "svg-react-loader": "^0.3.7",
-    "tcomb": "^3.2.16",
-    "url-loader": "^0.5.7",
-    "webpack": "^1.14.0",
-    "webpack-dev-middleware": "^1.9.0",
-    "webpack-hot-middleware": "^2.15.0",
-    "webpack-merge": "^2.4.0",
-    "webpack-validator": "^2.3.0"
+    "source-map-support": "^0.4.8",
+    "svg2uwptiles": "0.0.4"
   },
   "dependencies": {
-    "bn.js": "^4.11.6",
-    "class-autobind": "^0.1.4",
-    "core-js": "^2.4.1",
-    "electron-debug": "^1.1.0",
-    "electron-log": "^2.2.6",
-    "eslint-config-standard": "^6.2.1",
-    "eslint-plugin-standard": "^2.0.1",
-    "font-awesome": "^4.7.0",
+    "@exponent/electron-cookies": "^2.0.0",
+    "async": "^2.5.0",
+    "electron-compile": "^6.4.2",
+    "electron-settings": "^3.1.2",
+    "electron-squirrel-startup": "^1.0.0",
+    "ethereumjs-testrpc": "^4.1.3",
+    "ethereumjs-units": "^0.2.0",
+    "find-process": "^1.1.0",
     "lodash": "^3.10.1",
     "moment": "^2.17.1",
     "moment-timezone": "^0.5.11",
-    "node-sass": "^4.5.3",
+    "mousetrap": "^1.6.1",
     "pidusage": "^1.1.5",
-    "postcss": "^5.2.11",
-    "postcss-color-function": "^2.0.1",
-    "postcss-import": "^9.1.0",
-    "postcss-loader": "^1.2.2",
-    "precss": "^1.4.0",
+    "pluralize": "^5.0.0",
     "react": "^15.4.2",
-    "react-dom": "^15.4.2",
+    "react-dom": "^15.6.2",
+    "react-hot-loader": "^3.1.1",
     "react-moment": "^0.2.2",
     "react-redux": "^5.0.2",
     "react-router": "^3.0.1",
     "react-router-redux": "^4.0.7",
     "redux": "^3.6.0",
-    "redux-thunk": "^2.1.0",
+    "redux-thunk": "^2.2.0",
     "reselect": "^2.5.4",
-    "sass-loader": "^4.1.1",
-    "source-map-support": "^0.4.8",
+    "universal-analytics": "^0.4.13",
+    "uuid": "^3.1.0",
     "web3": "^0.18.2"
   },
   "devEngines": {

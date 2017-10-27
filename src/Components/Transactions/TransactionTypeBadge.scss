@@ -1,0 +1,21 @@
+.TransactionTypeBadge {
+  font-size: .75rem;
+  padding: 8px;
+  height: 28px;
+  border-radius: 25px;
+
+  &.ContractCallBadge {
+    background-color: var(--complimentary1);
+    color: white;
+  }
+  
+  &.ContractCreationBadge {
+    background-color: darken(rgba(222, 142, 149, 1.000), 10%);
+    color: white;
+  }
+  
+  &.ValueTransferBadge {
+    background-color: var(--truffle-green);
+    color: white;
+  }
+}
