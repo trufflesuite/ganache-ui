@@ -11,6 +11,7 @@
     "make": "electron-forge make",
     "publish": "electron-forge publish",
     "lint": "echo \"No linting configured\"",
+    "sign-mac": "codesign --deep --force --verbose --sign '58RKXWC272' ./out/make/*.dmg",
     "makeappxassets": "svg2uwptiles -i ./Logo.svg -c ./blank.svg -o ./resources/appx/"
   },
   "browserslist": "chrome 50",
@@ -37,6 +38,14 @@
       "github_repository": {
         "owner": "",
         "name": ""
+      },
+      "electronInstallerDMG": {
+        "background": "./resources/dmg/background.png",
+        "icon": "./resources/icons/icon.icns",
+        "format": "ULFO",
+        "code-sign": {
+          "signing-identity": "58RKXWC272"
+        }
       },
       "windowsStoreConfig": {
         "packageVersion": "<%= version %>.0",
