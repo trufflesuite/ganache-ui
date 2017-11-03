@@ -59,9 +59,16 @@ function startServer(options) {
       oldSendAsync(payload, callback)
     }
 
-    server.listen(options.port, options.hostname, function(err, state) {
+    server.listen(options.port, options.hostname, function(err, result) {
       if (err) {
         process.send({type: 'start-error', data: err});
+        return
+      }
+
+      var state = result ? result : server.provider.manager.state;
+
+      if (!state) {
+        process.send({type: 'start-error', data: "Couldn't get a reference to TestRPC's StateManager."});
         return
       }
 
