@@ -14,19 +14,21 @@ Ganache is your personal blockchain for Ethereum development.
 
 Please open issues and pull requests for new features, questions, and bug fixes.
 
+### Getting started
+
 Requirements:
 
 - `npm v5.3.0`
 - `node v8.3.0`
+- If using Windows, you may need [windows-build-tools](https://www.npmjs.com/package/windows-build-tools) installed first.
 
-=======
-To get started:
+Steps:
 
-0. Clone this repo
+0. Clone this repo and cd into directory
 0. Run `npm install`
 0. Run `npm start`
+0. Ganache application will open
 
-If using Windows, you may need [windows-build-tools](https://www.npmjs.com/package/windows-build-tools) installed first.
 
 ### Building for All Platforms
 
