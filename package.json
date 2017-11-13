@@ -25,7 +25,7 @@
           "dmg"
         ],
         "linux": [
-          "deb"
+          "appimage"
         ]
       },
       "electronPackagerConfig": {
@@ -121,6 +121,7 @@
     "@exponent/electron-cookies": "^2.0.0",
     "async": "^2.5.0",
     "electron-compile": "^6.4.2",
+    "electron-forge-maker-appimage": "^19.30.3",
     "electron-settings": "^3.1.2",
     "electron-squirrel-startup": "^1.0.0",
     "ethereumjs-testrpc": "^4.1.3",
