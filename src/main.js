@@ -61,7 +61,7 @@ app.setName('Ganache')
 const getIconPath = () => {
   return process.platform === 'win32'
     ? path.resolve(`${__dirname}/../resources/icons/win/icon.ico`)
-    : path.resolve(`${__dirname}/../resources/icons/png/256x256.png`)
+    : path.resolve(`${__dirname}/../resources/icons/png/256x256.png`) // Mac & Linux, use an icon
 }
 
 if (process.platform === 'darwin') {
@@ -71,6 +71,10 @@ if (process.platform === 'darwin') {
 app.on('ready', async () => {
   const chain = new ChainService(app)
   const Settings = new SettingsService() 
+
+  app.on('will-quit', function () {
+    chain.stopProcess();
+  });
   
   Settings.bootstrap();
 

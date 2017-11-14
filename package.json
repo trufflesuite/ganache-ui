@@ -1,7 +1,7 @@
 {
   "name": "ganache",
   "productName": "Ganache",
-  "version": "0.0.11",
+  "version": "1.0.0-rc.0",
   "description": "An Electron UI for Ganache",
   "main": "./src/init.js",
   "private": true,
@@ -12,9 +12,21 @@
     "publish": "electron-forge publish",
     "lint": "echo \"No linting configured\"",
     "sign-mac": "codesign --deep --force --verbose --sign '58RKXWC272' ./out/make/*.dmg",
-    "makeappxassets": "svg2uwptiles -i ./Logo.svg -c ./blank.svg -o ./resources/appx/"
+    "makeappxassets": "svg2uwptiles -i ./Logo.svg -c ./blank.svg -o ./resources/appx/",
+    "build-linux": "cd ./node_modules/rabin-bindings && node-gyp rebuild && cd ../../ && npm run make"
   },
   "browserslist": "chrome 50",
+  "build": {
+    "mac": {
+      "icon": "./resources/icons/icon.icns"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "./resources/icons/png/",
+      "category": "Development",
+      "executableName": "Ganache"
+    }
+  },
   "config": {
     "forge": {
       "make_targets": {
@@ -25,7 +37,7 @@
           "dmg"
         ],
         "linux": [
-          "deb"
+          "appimage"
         ]
       },
       "electronPackagerConfig": {
@@ -34,7 +46,13 @@
       "electronWinstallerConfig": {
         "name": "<%= productName %>"
       },
-      "electronInstallerDebian": {},
+      "electronInstallerDebian": {
+        "icon": "resources/logo.png",
+        "categories": [
+          "Development"
+        ],
+        "homepage": "https://truffleframework.com"
+      },
       "github_repository": {
         "owner": "",
         "name": ""
@@ -121,6 +139,7 @@
     "@exponent/electron-cookies": "^2.0.0",
     "async": "^2.5.0",
     "electron-compile": "^6.4.2",
+    "electron-forge-maker-appimage": "^19.30.3",
     "electron-settings": "^3.1.2",
     "electron-squirrel-startup": "^1.0.0",
     "ethereumjs-testrpc": "^4.1.3",
