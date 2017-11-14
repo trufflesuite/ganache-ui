@@ -14,7 +14,8 @@
     "sign-mac": "codesign --deep --force --verbose --sign '58RKXWC272' ./out/make/*.dmg",
     "makeappxassets": "svg2uwptiles -i ./Logo.svg -c ./blank.svg -o ./resources/appx/",
     "build-linux": "cd ./node_modules/rabin-bindings && node-gyp rebuild && cd ../../ && npm run make",
-    "build-mac": "npm run make && npm run sign-mac"
+    "build-mac": "npm run make && npm run sign-mac",
+    "build-windows": "bash -c \"echo ${CERT_PASS?\\\"Need to set CERT_PASS to build on Windows\\\"} > /dev/null\" && npm run make"
   },
   "browserslist": "chrome 50",
   "build": {
@@ -76,7 +77,8 @@
         "manifest": "./AppXManifest.xml",
         "makePri": true,
         "devCert": "./certs/cert.pfx",
-        "certPass": "<%= process.env.CERT_PASS %>"
+        "certPass": "<%= process.env.CERT_PASS %>",
+        "makeVersionWinStoreCompatible": true
       }
     }
   },
@@ -143,7 +145,7 @@
     "electron-forge-maker-appimage": "^19.30.3",
     "electron-settings": "^3.1.2",
     "electron-squirrel-startup": "^1.0.0",
-    "ethereumjs-testrpc": "^4.1.3",
+    "ethereumjs-testrpc": "^6.0.1",
     "ethereumjs-units": "^0.2.0",
     "find-process": "^1.1.0",
     "lodash": "^3.10.1",
