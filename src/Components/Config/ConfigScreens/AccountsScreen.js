@@ -16,7 +16,7 @@ class AccountsScreen extends Component {
 
     this.state = {
       accountsLocked: props.settings.server.unlocked_accounts.length > 0,
-      automnemonic: props.settings.mnemonic == null
+      automnemonic: props.settings.server.mnemonic == null
     }
   }
 
@@ -123,7 +123,7 @@ class AccountsScreen extends Component {
               </div>
             </div>
             <div className="RowItem">
-              <p>Automatically generate mnemonic used to create available addresses.</p>
+              <p>Turn on to automatically generate a new mnemonic and account addresses on each run.</p>
             </div>
           </div>
         </section>
