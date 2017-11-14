@@ -13,7 +13,9 @@ const initialSettings = {
     port: 7545,
     network_id: 5777,
     total_accounts: 10,
-    unlocked_accounts: []
+    unlocked_accounts: [],
+    gasLimit: 6721975,
+    mnemonic: "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat"
   }
 }
 
@@ -57,10 +59,9 @@ class Settings {
     // Ensure new settings variables get added by merging
     // all the settings, where the current values take precedence. 
     var currentSettings = settings.getAll();
-    var allSettings = _.merge({}, initialSettings, currentSettings)
 
     // Apply the merged settings
-    this.setAll(allSettings);
+    this.setAll(currentSettings);
   }
 }
 
