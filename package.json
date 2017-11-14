@@ -13,7 +13,8 @@
     "lint": "echo \"No linting configured\"",
     "sign-mac": "codesign --deep --force --verbose --sign '58RKXWC272' ./out/make/*.dmg",
     "makeappxassets": "svg2uwptiles -i ./Logo.svg -c ./blank.svg -o ./resources/appx/",
-    "build-linux": "cd ./node_modules/rabin-bindings && node-gyp rebuild && cd ../../ && npm run make"
+    "build-linux": "cd ./node_modules/rabin-bindings && node-gyp rebuild && cd ../../ && npm run make",
+    "build-mac": "npm run make && npm run sign-mac"
   },
   "browserslist": "chrome 50",
   "build": {
