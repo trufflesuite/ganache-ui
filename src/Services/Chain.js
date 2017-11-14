@@ -71,6 +71,12 @@ class ChainService extends EventEmitter {
     })
   }
 
+  stopProcess() {
+    if (this.child) {
+      this.child.kill('SIGHUP');
+    }
+  }
+
   isServerStarted() {
     return this.isServerStarted
   }
