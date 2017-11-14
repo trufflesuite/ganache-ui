@@ -2,7 +2,7 @@
   "name": "ganache",
   "productName": "Ganache",
   "version": "1.0.0-rc.0",
-  "description": "An Electron UI for Ganache",
+  "description": "Personal Blockchain for Ethereum",
   "main": "./src/init.js",
   "private": true,
   "scripts": {
@@ -37,7 +37,7 @@
           "dmg"
         ],
         "linux": [
-          "appimage"
+          "deb"
         ]
       },
       "electronPackagerConfig": {
