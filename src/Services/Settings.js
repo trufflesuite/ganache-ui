@@ -14,7 +14,6 @@ const initialSettings = {
     network_id: 5777,
     total_accounts: 10,
     unlocked_accounts: [],
-    gasLimit: 6721975,
     mnemonic: "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat"
   }
 }
