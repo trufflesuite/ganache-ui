@@ -13,7 +13,8 @@
     "lint": "echo \"No linting configured\"",
     "sign-mac": "codesign --deep --force --verbose --sign '58RKXWC272' ./out/make/*.dmg",
     "makeappxassets": "svg2uwptiles -i ./Logo.svg -c ./blank.svg -o ./resources/appx/",
-    "build-linux": "cd ./node_modules/rabin-bindings && node-gyp rebuild && cd ../../ && npm run make"
+    "build-linux": "cd ./node_modules/rabin-bindings && node-gyp rebuild && cd ../../ && npm run make",
+    "build-windows": "bash -c \"echo ${CERT_PASS?\\\"Need to set CERT_PASS to build on Windows\\\"} > /dev/null\" && npm run make"
   },
   "browserslist": "chrome 50",
   "build": {
@@ -75,7 +76,8 @@
         "manifest": "./AppXManifest.xml",
         "makePri": true,
         "devCert": "./certs/cert.pfx",
-        "certPass": "<%= process.env.CERT_PASS %>"
+        "certPass": "<%= process.env.CERT_PASS %>",
+        "makeVersionWinStoreCompatible": true
       }
     }
   },
