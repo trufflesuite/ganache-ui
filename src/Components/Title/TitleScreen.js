@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 const { app } = require('electron').remote
 
 import { hashHistory } from 'react-router'
+import * as pkg from '../../../package.json'
 
 import connect from '../Helpers/connect'
 import * as Core from '../../Actions/Core'
@@ -12,7 +13,7 @@ class TitleScreen extends Component {
   constructor () {
     super()
     this.state = {
-      version: '0.0.1',
+      version: pkg.version,
       timeoutStarted: false
     }
   }
