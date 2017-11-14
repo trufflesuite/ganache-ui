@@ -39,7 +39,7 @@
           "dmg"
         ],
         "linux": [
-          "deb"
+          "appimage"
         ]
       },
       "electronPackagerConfig": {
