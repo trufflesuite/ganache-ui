@@ -89,10 +89,6 @@ Two tools were used:
 
 Note from the author: I found managing these assets manually -- especially the appx assets -- was a pain. If possible, try not to edit the assets themselves and use one of the generators above.
 
-### License
-
-See LICENSE file
-
 ### By Truffle
 
 Ganache is part of the Truffle suite of tools. [Find out more!](http://truffleframework.com)
