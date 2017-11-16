@@ -19,7 +19,6 @@ Requirements:
 - `npm v5.3.0`
 - `node v8.3.0`
 
-=======
 To get started:
 
 0. Clone this repo
@@ -48,6 +47,8 @@ Because Windows requires a certificate to build the package -- and that certific
 $ CERT_PASS="..." npm run build-windows
 ```
 
+Replace `...` in the command above with your certificate password.
+
 This will create a `.appx` file in `./out/make`.
 
 #### On Mac: 
@@ -61,8 +62,6 @@ $ npm run build-mac
 ```
 
 This will create a signed `.dmg` file in `./out/make`. 
-
-Replace `...` in the command above with your certificate password.
 
 #### On Linux: 
 
