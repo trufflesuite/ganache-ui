@@ -12,6 +12,9 @@ class Logs extends Component {
   render () {
     return (
       <div className="LogsScreen">
+      <button className="ClearLogs" onClick={() => {document.getElementsByClassName("LogContainer")[0].getElementsByTagName("ul")[0].innerHTML = "";}}>
+      Clear Logs
+    </button>
         <main>
           <LogContainer />
         </main>
