@@ -1,7 +1,7 @@
 {
   "name": "ganache",
   "productName": "Ganache",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Personal Blockchain for Ethereum",
   "main": "./src/init.js",
   "private": true,
@@ -145,7 +145,7 @@
     "electron-forge-maker-appimage": "^19.30.3",
     "electron-settings": "^3.1.2",
     "electron-squirrel-startup": "^1.0.0",
-    "ethereumjs-testrpc": "^6.0.2",
+    "ethereumjs-testrpc": "^6.0.3",
     "ethereumjs-units": "^0.2.0",
     "find-process": "^1.1.0",
     "lodash": "^3.10.1",
