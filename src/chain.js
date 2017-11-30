@@ -137,6 +137,11 @@ process.on("message", function(message) {
   }
 });
 
+process.on('uncaughtException', (err) => {		
+  console.log(err.stack || err)		
+  process.send({type: 'error', data: err.stack || err})		
+});
+
 process.send({type: 'started'})
 
 // If you want to test out an error being thrown here
