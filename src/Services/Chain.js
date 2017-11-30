@@ -9,7 +9,6 @@ class ChainService extends EventEmitter {
     super()
     this.app = app
     this.child = null
-    this.lastHeartBeat = new Date().getTime()
     this.serverStarted = false
   }
 
@@ -19,12 +18,9 @@ class ChainService extends EventEmitter {
       stdio: [ 'pipe', 'pipe', 'pipe', 'ipc' ]
     };
     this.child = fork(chainPath, [], options)
-    this.child.once('message', () => {
-      this.emit("start")
-    })
     this.child.on('message', (message) => {
-      if (message.type == "heartbeat") {
-        this.lastHeartBeat = new Date().getTime()
+      if (message.type == "process-started") {
+        this.emit("start")
       }
       if (message.type == "server-started") {
         this.serverStarted = true
@@ -37,6 +33,7 @@ class ChainService extends EventEmitter {
     this.child.on('error', (error) => {
       this.emit("error", error.stack || error)
     })
+    this.child.on('exit', this._exitHandler);
     this.child.stdout.on('data', (data) => {
       // Remove all \r's and the final line ending
       this.emit("stdout", data.toString().replace(/\r/g, "").replace(/\n$/, ""))
@@ -45,17 +42,14 @@ class ChainService extends EventEmitter {
       // Remove all \r's and the final line ending
       this.emit("stderr", data.toString().replace(/\r/g, "").replace(/\n$/, ""))
     });
-
-    // Check to see if we lost the process's heartbeat
-    // Necessary? Who knows, but we want to know if it happens.
-
-    setInterval(() => {
-      var now = new Date().getTime()
-      // If we didn't receive a heartbeat in the last five seconds, error.
-      if (this.lastHeartBeat < now - 5000) {
-        this.emit("error", new Error("Lost heartbeat from server process!"))
+  }
+  
+  _exitHandler(code, signal) {
+      if (code != null) {
+        this.emit("error", `Blockchain process exited prematurely with code '${code}', due to signal '${signal}'.`)
+      } else {
+        this.emit("error", `Blockchain process exited prematurely due to signal '${signal}'.`)
       }
-    }, 5000)
   }
 
   startServer(options) {
@@ -72,6 +66,7 @@ class ChainService extends EventEmitter {
   }
 
   stopProcess() {
+    this.child.removeListener('exit', this._exitHandler);
     if (this.child) {
       this.child.kill('SIGHUP');
     }
