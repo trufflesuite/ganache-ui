@@ -13,8 +13,6 @@ class ChainService extends EventEmitter {
   }
 
   start() {
-    this.stopping = false;
-
     let chainPath = path.join(__dirname, "../", "chain.js")
     const options = {
       stdio: [ 'pipe', 'pipe', 'pipe', 'ipc' ]
@@ -35,15 +33,7 @@ class ChainService extends EventEmitter {
     this.child.on('error', (error) => {
       this.emit("error", error.stack || error)
     })
-    this.child.on('exit', (code, signal) => {
-      if (!this.stopping) {
-        if (code != null) {
-          this.emit("error", `Blockchain process exited prematurely with code '${code}', due to signal '${signal}'.`)
-        } else {
-          this.emit("error", `Blockchain process exited prematurely due to signal '${signal}'.`)
-        }
-      }
-    })
+    this.child.on('exit', this._exitHandler);
     this.child.stdout.on('data', (data) => {
       // Remove all \r's and the final line ending
       this.emit("stdout", data.toString().replace(/\r/g, "").replace(/\n$/, ""))
@@ -53,9 +43,16 @@ class ChainService extends EventEmitter {
       this.emit("stderr", data.toString().replace(/\r/g, "").replace(/\n$/, ""))
     });
   }
+  
+  _exitHandler(code, signal) {
+      if (code != null) {
+        this.emit("error", `Blockchain process exited prematurely with code '${code}', due to signal '${signal}'.`)
+      } else {
+        this.emit("error", `Blockchain process exited prematurely due to signal '${signal}'.`)
+      }
+  }
 
   startServer(options) {
-    this.stopping = false;
     this.child.send({
       type: 'start-server',
       data: options
@@ -63,13 +60,13 @@ class ChainService extends EventEmitter {
   }
 
   stopServer(options) {
-    this.stopping = true;
     this.child.send({
       type: 'stop-server',
     })
   }
 
   stopProcess() {
+    this.child.removeListener('exit', this._exitHandler);
     if (this.child) {
       this.child.kill('SIGHUP');
     }
