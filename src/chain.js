@@ -142,7 +142,7 @@ process.on('uncaughtException', (err) => {
   process.send({type: 'error', data: err.stack || err})		
 });
 
-process.send({type: 'started'})
+process.send({type: 'process-started'})
 
 // If you want to test out an error being thrown here
 // setTimeout(function() {

@@ -18,10 +18,10 @@ class ChainService extends EventEmitter {
       stdio: [ 'pipe', 'pipe', 'pipe', 'ipc' ]
     };
     this.child = fork(chainPath, [], options)
-    this.child.once('message', () => {
-      this.emit("start")
-    })
     this.child.on('message', (message) => {
+      if (message.type == "process-started") {
+        this.emit("start")
+      }
       if (message.type == "server-started") {
         this.serverStarted = true
       }
