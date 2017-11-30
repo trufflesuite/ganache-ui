@@ -137,23 +137,7 @@ process.on("message", function(message) {
   }
 });
 
-
-function sendHeartBeat() {
-  process.send({type: 'heartbeat'})
-}
-
-sendHeartBeat()
-
-// Keep an interval going so the process stays open.
-// We can use this interval to maintain a heartbeat
-setInterval(function() {
-  sendHeartBeat()
-}, 1000);
-
-process.on('uncaughtException', (err) => {
-  console.log(err.stack || err)
-  process.send({type: 'error', data: err.stack || err})
-});
+process.send({type: 'started'})
 
 // If you want to test out an error being thrown here
 // setTimeout(function() {

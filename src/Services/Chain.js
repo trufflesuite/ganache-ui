@@ -9,11 +9,12 @@ class ChainService extends EventEmitter {
     super()
     this.app = app
     this.child = null
-    this.lastHeartBeat = new Date().getTime()
     this.serverStarted = false
   }
 
   start() {
+    this.stopping = false;
+
     let chainPath = path.join(__dirname, "../", "chain.js")
     const options = {
       stdio: [ 'pipe', 'pipe', 'pipe', 'ipc' ]
@@ -23,9 +24,6 @@ class ChainService extends EventEmitter {
       this.emit("start")
     })
     this.child.on('message', (message) => {
-      if (message.type == "heartbeat") {
-        this.lastHeartBeat = new Date().getTime()
-      }
       if (message.type == "server-started") {
         this.serverStarted = true
       }
@@ -37,6 +35,15 @@ class ChainService extends EventEmitter {
     this.child.on('error', (error) => {
       this.emit("error", error.stack || error)
     })
+    this.child.on('exit', (code, signal) => {
+      if (!this.stopping) {
+        if (code != null) {
+          this.emit("error", `Blockchain process exited prematurely with code '${code}', due to signal '${signal}'.`)
+        } else {
+          this.emit("error", `Blockchain process exited prematurely due to signal '${signal}'.`)
+        }
+      }
+    })
     this.child.stdout.on('data', (data) => {
       // Remove all \r's and the final line ending
       this.emit("stdout", data.toString().replace(/\r/g, "").replace(/\n$/, ""))
@@ -45,20 +52,10 @@ class ChainService extends EventEmitter {
       // Remove all \r's and the final line ending
       this.emit("stderr", data.toString().replace(/\r/g, "").replace(/\n$/, ""))
     });
-
-    // Check to see if we lost the process's heartbeat
-    // Necessary? Who knows, but we want to know if it happens.
-
-    setInterval(() => {
-      var now = new Date().getTime()
-      // If we didn't receive a heartbeat in the last five seconds, error.
-      if (this.lastHeartBeat < now - 5000) {
-        this.emit("error", new Error("Lost heartbeat from server process!"))
-      }
-    }, 5000)
   }
 
   startServer(options) {
+    this.stopping = false;
     this.child.send({
       type: 'start-server',
       data: options
@@ -66,6 +63,7 @@ class ChainService extends EventEmitter {
   }
 
   stopServer(options) {
+    this.stopping = true;
     this.child.send({
       type: 'stop-server',
     })
