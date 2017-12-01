@@ -108,25 +108,45 @@ class AppShell extends Component {
 
   onCloseFatalErrorModal = () => {}
 
+  // grabs the last 500 log lines as a string formatted for inclusion as a github issue
+  prepareLogLines () {
+    if (this.props.logs.lines) {
+      let firstLogTime = this.props.logs.lines[0].time.getTime()
+      return this.props.logs.lines
+      .slice(-500) 
+      .map(v => `T+${v.time.getTime() - firstLogTime}ms: ${v.line}`)
+        .join('\n')
+    }
+
+    return ''
+  }
+
+  // Remove any user-specific paths in exception messages
+  sanitizePaths(message) {
+    // Prepare our paths so we *always* will get a match no matter
+    // path separator (oddly, on Windows, different errors will give
+    // us different path separators)
+    var appPath = app.getAppPath().replace(/\\/g, "/")
+
+    // I couldn't figure out the regex, so a loop will do.
+    while (message.indexOf(appPath) >= 0) {
+      message = systemError.replace(appPath, "")
+    }
+
+    return message;
+  }
+
   render () {
     const path = this.props.location.pathname
     const segment = path.replace(/^\//g, '').replace(/\//g, '-') || 'root'
     let systemError = this.props.core.systemError
-
+    let logLines = ''
     if (systemError) {
       systemError = systemError.stack || systemError
 
-      // Remove any user-specific paths in exception messages
-      // Prepare our paths so we *always* will get a match no matter
-      // path separator (oddly, on Windows, different errors will give
-      // us different path separators)
-      var appPath = app.getAppPath().replace(/\\/g, "/")
-      systemError = systemError.replace(/\\/g, "/")
-
-      // I couldn't figure out the regex, so a loop will do.
-      while (systemError.indexOf(appPath) >= 0) {
-        systemError = systemError.replace(appPath, "")
-      }
+      // avoid leaking details about the user's environment
+      systemError = this.sanitizePaths(systemError)
+      logLines = this.sanitizePaths(this.prepareLogLines())
     }
 
     return (
@@ -160,7 +180,14 @@ PLATFORM: ${process.platform}
 GANACHE VERSION: ${app.getVersion()}
 
 EXCEPTION:
-${systemError}`
+\`\`\`
+${systemError}
+\`\`\`
+
+APPLICATION LOG:
+\`\`\`
+${logLines}
+\`\`\``
                     ).replace(/%09/g, '')
 
                     shell.openExternal(
@@ -187,4 +214,4 @@ ${systemError}`
   }
 }
 
-export default connect(AppShell, "core", "settings")
+export default connect(AppShell, "core", "settings", "logs")
