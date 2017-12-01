@@ -147,7 +147,7 @@
     "electron-squirrel-startup": "^1.0.0",
     "ethereumjs-units": "^0.2.0",
     "find-process": "^1.1.0",
-    "ganache-core": "^2.0.2",
+    "ganache-cli": "^6.0.3",
     "lodash": "^3.10.1",
     "moment": "^2.17.1",
     "moment-timezone": "^0.5.11",
