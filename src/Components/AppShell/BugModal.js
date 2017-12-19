@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 
 import connect from '../Helpers/connect'
 
-import OnlyIf from '../../Elements/OnlyIf'
 import Modal from '../../Elements/Modal'
 
 import BugIcon from '../../Elements/icons/errorant.svg'
@@ -67,24 +66,23 @@ class BugModal extends Component {
     }
 
     return (
-      <OnlyIf test={systemError != null}>
-        <Modal className="BugModal">
-          <section className="Bug">
-            <BugIcon /*size={192}*/ />
-            <h4>Uh Oh... That's a bug.</h4>
-            <p>
-              Ganache encountered an error. Help us fix it by raising a GitHub issue!<br /><br /> Mention the following error information when writing your ticket, and please include as much information as possible. Sorry about that!
-              </p>
-            <textarea disabled={true} value={systemError} />
-            <footer>
-              <button
-                onClick={() => {
-                  const title = encodeURIComponent(
-                    `System Error when running Ganache ${app.getVersion()} on ${process.platform}`
-                  )
+      <Modal className="BugModal">
+        <section className="Bug">
+          <BugIcon /*size={192}*/ />
+          <h4>Uh Oh... That's a bug.</h4>
+          <p>
+            Ganache encountered an error. Help us fix it by raising a GitHub issue!<br /><br /> Mention the following error information when writing your ticket, and please include as much information as possible. Sorry about that!
+            </p>
+          <textarea disabled={true} value={systemError} />
+          <footer>
+            <button
+              onClick={() => {
+                const title = encodeURIComponent(
+                  `System Error when running Ganache ${app.getVersion()} on ${process.platform}`
+                )
 
-                  const body = encodeURIComponent(
-                    `<!-- Please give us as much detail as you can about what you were doing at the time of the error, and any other relevant information -->
+                const body = encodeURIComponent(
+                  `<!-- Please give us as much detail as you can about what you were doing at the time of the error, and any other relevant information -->
 
 PLATFORM: ${process.platform}
 GANACHE VERSION: ${app.getVersion()}
@@ -98,27 +96,26 @@ APPLICATION LOG:
 \`\`\`
 ${logLines}
 \`\`\``
-                  ).replace(/%09/g, '')
+                ).replace(/%09/g, '')
 
-                  shell.openExternal(
-                    `https://github.com/trufflesuite/ganache/issues/new?title=${title}&body=${body}`
-                  )
-                }}
-              >
-                Raise Github Issue
-                </button>
-              <button
-                onClick={() => {
-                  app.relaunch()
-                  app.exit()
-                }}
-              >
-                RELAUNCH
-                </button>
-            </footer>
-          </section>
-        </Modal>
-      </OnlyIf>
+                shell.openExternal(
+                  `https://github.com/trufflesuite/ganache/issues/new?title=${title}&body=${body}`
+                )
+              }}
+            >
+              Raise Github Issue
+              </button>
+            <button
+              onClick={() => {
+                app.relaunch()
+                app.exit()
+              }}
+            >
+              RELAUNCH
+              </button>
+          </footer>
+        </section>
+      </Modal>
     )
   }
 }

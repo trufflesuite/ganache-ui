@@ -7,6 +7,7 @@ import connect from '../Helpers/connect'
 import * as AppShellActions from '../../Actions/AppShell'
 
 import TopNavbar from './TopNavbar'
+import OnlyIf from '../../Elements/OnlyIf'
 import BugModal from './BugModal'
 import ua from 'universal-analytics'
 import ElectronCookies from '@exponent/electron-cookies'
@@ -113,7 +114,9 @@ class AppShell extends Component {
         <div className="ShellContainer" ref="shellcontainer">
           {this.props.children}
         </div>
-        <BugModal core={this.props.core } logs={this.props.logs} />
+        <OnlyIf test={this.props.core.systemError != null}>
+          <BugModal core={this.props.core } logs={this.props.logs} />
+        </OnlyIf>
       </div>
     )
   }
