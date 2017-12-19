@@ -6,6 +6,8 @@ import Modal from '../../Elements/Modal'
 
 import BugIcon from '../../Elements/icons/errorant.svg'
 
+import { sanitizeError, sanitizePaths } from '../Helpers/sanitize.js'
+
 import { shell } from 'electron'
 
 const { app } = require('electron').remote
@@ -16,53 +18,52 @@ class BugModal extends Component {
     this.scrollDedupeTimeout = null
   }
 
-  _getLastNLines(maxLines) {
-    let firstLogTime = this.props.logs.lines[0].time.getTime()
-    return this.props.logs.lines
-      .slice(maxLines)
-      .map(v => `T+${v.time.getTime() - firstLogTime}ms: ${v.line}`)
-        .join('\n')
-  }
   // grabs the last 500 log lines as a string formatted for inclusion as a github issue
-  prepareLogLines () {
+  renderAndSanitizeLogLines () {
     let result = ''
-    if (this.props.logs.lines) {
-      let maxLines = -175
+    if (this.props.logs && this.props.logs.lines && this.props.logs.lines.length > 0) {
+      let maxLines = -175 // negative because Array.slice -- we want the last 175 lines, not the first 175
 
       // GitHub has a max URL length of ~8KiB, so we truncate logs to fit within that
-      while (encodeURIComponent(result = this._getLastNLines(maxLines)).length > 7500) {
-        maxLines++
+      while (encodeURIComponent(result = _getLastNLogLines(maxLines, this.props.logs)).length > 7500) {
+        maxLines++ // reduces number of lines we get next time
       }
-
     }
-
-    return result
+    return sanitizePaths(result)
   }
 
-  // Remove any user-specific paths in exception messages
-  sanitizePaths(message) {
-    // Prepare our paths so we *always* will get a match no matter
-    // path separator (oddly, on Windows, different errors will give
-    // us different path separators)
-    var appPath = app.getAppPath().replace(/\\/g, "/")
+  renderIssueBody(sanitizedSystemError, sanitizedLogLines) {
+    let issueBody =
+      "<!-- Please give us as much detail as you can about what you were doing at the time of the error, and any other relevant information -->\n" +
+      "\n" +
+      "\n" +
+      `PLATFORM: ${process.platform}\n` +
+      `GANACHE VERSION: ${app.getVersion()}\n` +
+      "\n" +
+      "EXCEPTION:\n" +
+      "```\n" +
+      `${sanitizedSystemError}\n` +
+      "```"
 
-    // I couldn't figure out the regex, so a loop will do.
-    while (message.indexOf(appPath) >= 0) {
-      message = systemError.replace(appPath, "")
+    if (sanitizedLogLines) {
+      issueBody += "\n" +
+        "\n" +
+        "APPLICATION LOG:\n" +
+        "```\n" +
+        `${sanitizedLogLines}\n` +
+        "```"
     }
-
-    return message
+    return encodeURIComponent(issueBody).replace(/%09/g, '')
   }
 
   render () {
-    let systemError = this.props.core.systemError
-    let logLines = ''
-    if (systemError) {
-      systemError = systemError.stack || systemError
+    let unsanitizedSystemError = this.props.systemError
+    let sanitizedSystemError = ''
+    let sanitizedLogLines = ''
 
-      // avoid leaking details about the user's environment
-      systemError = this.sanitizePaths(systemError)
-      logLines = this.sanitizePaths(this.prepareLogLines())
+    if (unsanitizedSystemError) {
+      sanitizedSystemError = sanitizeError(unsanitizedSystemError)
+      sanitizedLogLines = this.renderAndSanitizeLogLines()
     }
 
     return (
@@ -73,7 +74,7 @@ class BugModal extends Component {
           <p>
             Ganache encountered an error. Help us fix it by raising a GitHub issue!<br /><br /> Mention the following error information when writing your ticket, and please include as much information as possible. Sorry about that!
             </p>
-          <textarea disabled={true} value={systemError} />
+          <textarea disabled={true} value={sanitizedSystemError} />
           <footer>
             <button
               onClick={() => {
@@ -81,22 +82,7 @@ class BugModal extends Component {
                   `System Error when running Ganache ${app.getVersion()} on ${process.platform}`
                 )
 
-                const body = encodeURIComponent(
-                  `<!-- Please give us as much detail as you can about what you were doing at the time of the error, and any other relevant information -->
-
-PLATFORM: ${process.platform}
-GANACHE VERSION: ${app.getVersion()}
-
-EXCEPTION:
-\`\`\`
-${systemError}
-\`\`\`
-
-APPLICATION LOG:
-\`\`\`
-${logLines}
-\`\`\``
-                ).replace(/%09/g, '')
+                const body = this.renderIssueBody(sanitizedSystemError, sanitizedLogLines)
 
                 shell.openExternal(
                   `https://github.com/trufflesuite/ganache/issues/new?title=${title}&body=${body}`
@@ -104,7 +90,7 @@ ${logLines}
               }}
             >
               Raise Github Issue
-              </button>
+            </button>
             <button
               onClick={() => {
                 app.relaunch()
@@ -119,5 +105,14 @@ ${logLines}
     )
   }
 }
+
+function _getLastNLogLines(maxLines, logs) {
+  let firstLogTime = logs.lines[0].time.getTime()
+  return logs.lines
+    .slice(maxLines)
+    .map(v => `T+${v.time.getTime() - firstLogTime}ms: ${v.line}`)
+    .join('\n')
+}
+
 
 export default connect(BugModal)

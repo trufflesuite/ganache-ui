@@ -115,7 +115,7 @@ class AppShell extends Component {
           {this.props.children}
         </div>
         <OnlyIf test={this.props.core.systemError != null}>
-          <BugModal core={this.props.core } logs={this.props.logs} />
+          <BugModal systemError={this.props.core.systemError} logs={this.props.logs} />
         </OnlyIf>
       </div>
     )
