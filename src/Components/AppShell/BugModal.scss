@@ -1,0 +1,18 @@
+.Modal {
+  &.BugModal {
+    .Bug {
+      textarea {
+        min-height: 5rem; /* Overwrite Modal textarea styles */
+        max-height: 5rem;
+        background-color: var(--app-button-primary-disabled-border-color);
+        width: 100%;
+        margin-bottom: 1rem;
+      }
+
+      svg {
+        width: 192px;
+        height: 192px;
+      }
+    }
+  }
+}
