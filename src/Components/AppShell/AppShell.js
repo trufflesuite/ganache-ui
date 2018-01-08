@@ -8,10 +8,7 @@ import * as AppShellActions from '../../Actions/AppShell'
 
 import TopNavbar from './TopNavbar'
 import OnlyIf from '../../Elements/OnlyIf'
-import Modal from '../../Elements/Modal'
-
-import BugIcon from '../../Elements/icons/errorant.svg'
-
+import BugModal from './BugModal'
 import ua from 'universal-analytics'
 import ElectronCookies from '@exponent/electron-cookies'
 
@@ -110,25 +107,6 @@ class AppShell extends Component {
 
   render () {
     const path = this.props.location.pathname
-    const segment = path.replace(/^\//g, '').replace(/\//g, '-') || 'root'
-    let systemError = this.props.core.systemError
-
-    if (systemError) {
-      systemError = systemError.stack || systemError
-
-      // Remove any user-specific paths in exception messages
-      // Prepare our paths so we *always* will get a match no matter
-      // path separator (oddly, on Windows, different errors will give
-      // us different path separators)
-      var appPath = app.getAppPath().replace(/\\/g, "/")
-      systemError = systemError.replace(/\\/g, "/")
-
-      // I couldn't figure out the regex, so a loop will do.
-      while (systemError.indexOf(appPath) >= 0) {
-        systemError = systemError.replace(appPath, "")
-      }
-    }
-
     return (
       <div className="AppShell">
         <TopNavbar {...this.props} />
@@ -136,55 +114,12 @@ class AppShell extends Component {
         <div className="ShellContainer" ref="shellcontainer">
           {this.props.children}
         </div>
-
-        <OnlyIf test={systemError != null}>
-          <Modal> 
-            <section className="Bug">
-              <BugIcon /*size={192}*/ />
-              <h4>Uh Oh... That's a bug.</h4>
-              <p>
-                Ganache encountered an error. Help us fix it by raising a GitHub issue!<br/><br/> Mention the following error information when writing your ticket, and please include as much information as possible. Sorry about that!
-              </p>
-              <textarea disabled={true} value={systemError} />
-              <footer>
-                <button
-                  onClick={() => {
-                    const title = encodeURIComponent(
-                      `System Error when running Ganache ${app.getVersion()} on ${process.platform}`
-                    )
-
-                    const body = encodeURIComponent(
-                      `<!-- Please give us as much detail as you can about what you were doing at the time of the error, and any other relevant information -->
-
-PLATFORM: ${process.platform}
-GANACHE VERSION: ${app.getVersion()}
-
-EXCEPTION:
-${systemError}`
-                    ).replace(/%09/g, '')
-
-                    shell.openExternal(
-                      `https://github.com/trufflesuite/ganache/issues/new?title=${title}&body=${body}`
-                    )
-                  }}
-                >
-                  Raise Github Issue
-                </button>
-                <button
-                  onClick={() => {
-                    app.relaunch()
-                    app.exit()
-                  }}
-                >
-                  RELAUNCH
-                </button>
-              </footer>
-            </section>
-          </Modal>
+        <OnlyIf test={this.props.core.systemError != null}>
+          <BugModal systemError={this.props.core.systemError} logs={this.props.logs} />
         </OnlyIf>
       </div>
     )
   }
 }
 
-export default connect(AppShell, "core", "settings")
+export default connect(AppShell, "core", "settings", "logs");

@@ -54,6 +54,7 @@ const stylesheets = [
   "./Components/FirstRun/FirstRunScreen.scss",
   "./Components/AppShell/AppShell.scss",
   "./Components/AppShell/TopNavbar.scss",
+  "./Components/AppShell/BugModal.scss",
   "./Components/Accounts/AccountsScreen.scss",
   "./Components/Accounts/AccountList.scss",
   "./Components/Accounts/KeyModal.scss",

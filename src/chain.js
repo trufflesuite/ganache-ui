@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var TestRPC = require("ethereumjs-testrpc")
+var ganacheLib = require("ganache-cli")
 var path = require("path")
 var Web3 = require("web3")
 
@@ -41,7 +41,7 @@ function startServer(options) {
       }
     }
 
-    server = TestRPC.server(options);
+    server = ganacheLib.server(options);
 
     // We'll also log all methods that aren't marked internal by Ganache
     var oldSendAsync = server.provider.sendAsync.bind(server.provider)
