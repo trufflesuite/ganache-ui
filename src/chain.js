@@ -29,7 +29,7 @@ function stopServer(callback) {
 
 function startServer(options) {
   stopServer(function() {
-    console.log("Starting server version "+pkg.version+" with configuration: " + JSON.stringify(options))
+    console.log("Starting server version " + pkg.version + " with configuration: " + JSON.stringify(options))
 
     // The TestRPC's logging system is archaic. We'd like more control
     // over what's logged. For now, the really important stuff all has
