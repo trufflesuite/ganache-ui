@@ -197,7 +197,7 @@ class TopNavbar extends Component {
               value={miningPaused ? 'STOPPED' : this._renderMiningTime()}
             >
               <OnlyIf test={isMining}>
-                <Spinner width={'30px'} height={'30px'} />
+                <Spinner />
               </OnlyIf>
             </StatusIndicator>
           </div>

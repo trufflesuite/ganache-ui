@@ -51,6 +51,7 @@ const stylesheets = [
   "./app.global.scss",
   "./Elements/StatusIndicator.scss",
   "./Elements/Modal.scss",
+  "./Elements/Spinner.css",
   "./Components/FirstRun/FirstRunScreen.scss",
   "./Components/AppShell/AppShell.scss",
   "./Components/AppShell/TopNavbar.scss",
