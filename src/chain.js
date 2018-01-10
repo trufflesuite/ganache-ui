@@ -3,7 +3,7 @@ var ganacheLib = require("ganache-cli")
 var path = require("path")
 var Web3 = require("web3")
 
-import * as pkg from '../../../package.json'
+import * as pkg from '../package.json'
 
 if (!process.send) {
   throw new Error("Must be run as a child process!")
