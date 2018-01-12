@@ -11,7 +11,7 @@
     "make": "electron-forge make",
     "publish": "electron-forge publish",
     "lint": "echo \"No linting configured\"",
-    "sign-mac": "codesign --deep --force --verbose --sign '58RKXWC272' ./out/make/*.dmg",
+    "sign-mac": "codesign --deep --force --verbose --sign 'Developer ID Application: Timothy Coulter (58RKXWC272)' ./out/make/*.dmg",
     "makeappxassets": "svg2uwptiles -i ./Logo.svg -c ./blank.svg -o ./resources/appx/",
     "build-linux": "cd ./node_modules/rabin-bindings && node-gyp rebuild && cd ../../ && npm run make",
     "build-mac": "npm run make && npm run sign-mac",
@@ -43,7 +43,19 @@
         ]
       },
       "electronPackagerConfig": {
-        "icon": "resources/icons/icon.ico"
+        "icon": "resources/icons/icon.ico",
+        "osxSign": {
+          "identity": "Developer ID Application: Timothy Coulter (58RKXWC272)"
+        },
+        "prune": true,
+        "ignore": [
+          ".*node_modules/fsevents/build.*",
+          "forge_hooks",
+          ".vscode"
+        ],
+        "afterPrune": [
+          "./forge_hooks/afterPrune.js"
+        ]
       },
       "electronWinstallerConfig": {
         "name": "<%= productName %>"
@@ -64,7 +76,7 @@
         "icon": "./resources/icons/icon.icns",
         "format": "ULFO",
         "code-sign": {
-          "signing-identity": "58RKXWC272"
+          "signing-identity": "Developer ID Installer: Timothy Coulter (58RKXWC272)"
         }
       },
       "windowsStoreConfig": {
