@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import InputText from '../../Elements/InputText'
 import LogContainer from './LogContainer'
+import { clearLogLines } from '../../Actions/Logs'
 
 import connect from '../Helpers/connect'
 
@@ -9,9 +10,18 @@ class Logs extends Component {
     super()
   }
 
+  clearLogs = () => {
+    this.props.dispatch(clearLogLines())
+  }
+
   render () {
     return (
       <div className="LogsScreen">
+        <button
+          className="ClearLogs"
+          onClick={this.clearLogs}>
+          Clear Logs
+        </button>
         <main>
           <LogContainer />
         </main>
@@ -20,4 +30,4 @@ class Logs extends Component {
   }
 }
 
-export default Logs
+export default connect(Logs)
