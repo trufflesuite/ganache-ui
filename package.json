@@ -1,7 +1,7 @@
 {
   "name": "ganache",
   "productName": "Ganache",
-  "version": "2.0.0-beta.0",
+  "version": "1.1.0-beta.0",
   "description": "Personal Blockchain for Ethereum",
   "main": "./src/init.js",
   "private": true,
@@ -84,7 +84,7 @@
         "packageName": "<%= productName %>",
         "packageDescription": "Personal blockchain for Ethereum development",
         "publisher": "CN=Consensys Inc, O=Consensys Inc, L=New York, S=New York, C=US",
-        "windowsKit": "C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.16299.0\\x64",
+        "windowsKit": "<%= process.env.WIN10_SDK_PATH %>",
         "assets": "./resources/appx",
         "manifest": "./AppXManifest.xml",
         "makePri": true,
