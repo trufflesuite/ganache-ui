@@ -55,7 +55,7 @@ export const requestPreviousPage = function() {
 export const SET_BLOCK_REQUESTED = `${prefix}/SET_BLOCK_REQUESTED`
 export const ADD_BLOCK_TO_VIEW = `${prefix}/ADD_BLOCK_TO_VIEW`
 export const getBlock = function(number) {
-  return function(dispatch, getState) {
+  return async function(dispatch, getState) {
     let requested = getState().blocks.requested
 
     // If it's already requested, bail
@@ -63,29 +63,25 @@ export const getBlock = function(number) {
       return
     }
 
-    let provider = getState().web3.provider
+    let web3Instance = getState().web3.web3Instance
 
     // It's not requested? Let's get the drop on it so 
     // no other process requests it
     dispatch({type: SET_BLOCK_REQUESTED, number })
 
     // Now actually request it
-    web3Request("getBlock", [number, false], provider, (err, block) => {
-      if (err || !block) {
-        return // Do something here
-      }
-      web3Request("getBlockTransactionCount", [block.number], provider, (err, transactionCount) => {
-        dispatch({type: ADD_BLOCK_TO_VIEW, block, transactionCount })
-      })
-    })
+    let block = await web3Request("getBlock", [number, false], web3Instance)
+    let transactionCount = await web3Request("getBlockTransactionCount", [block.number], web3Instance)
+    dispatch({type: ADD_BLOCK_TO_VIEW, block, transactionCount })
   }
 }
 
 export const SET_CURRENT_BLOCK_SHOWN = `${prefix}/SET_CURRENT_BLOCK_SHOWN`
 export const showBlock = function(number) {
-  return web3ActionCreator("getBlock", [number, true], (block, dispatch, getState) => {
+  return async function(dispatch, getState) {
+    let block = await web3ActionCreator(dispatch, getState, "getBlock", [number, true])
     dispatch({type: SET_CURRENT_BLOCK_SHOWN, block})
-  })
+  }
 }
 export const clearBlockShown = function() {
   return {type: SET_CURRENT_BLOCK_SHOWN, block: null}

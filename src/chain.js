@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 var ganacheLib = require("ganache-cli")
 var path = require("path")
-var Web3 = require("web3")
 
 if (!process.send) {
   throw new Error("Must be run as a child process!")
@@ -44,8 +43,8 @@ function startServer(options) {
     server = ganacheLib.server(options);
 
     // We'll also log all methods that aren't marked internal by Ganache
-    var oldSendAsync = server.provider.sendAsync.bind(server.provider)
-    server.provider.sendAsync = function(payload, callback) {
+    var oldSend = server.provider.send.bind(server.provider)
+    server.provider.send = function(payload, callback) {
       if (payload.internal !== true) {
         if (Array.isArray(payload)) {
           payload.forEach(function(item) {
@@ -56,7 +55,7 @@ function startServer(options) {
         }
       }
 
-      oldSendAsync(payload, callback)
+      oldSend(payload, callback)
     }
 
     server.listen(options.port, options.hostname, function(err, result) {
@@ -89,34 +88,6 @@ function startServer(options) {
 
       console.log("Ganache started successfully!")
       console.log("Waiting for requests...")
-
-      // Perform block polling within the chain, emitting a block event
-      // when a new block occurs.
-      lastBlock = -1;
-      provider = new Web3.providers.HttpProvider("http://" + options.hostname + ":" + options.port)
-
-      var web3 = new Web3()
-
-      blockInterval = setInterval(function() {
-        provider.sendAsync({
-          jsonrpc: "2.0",
-          method: "eth_blockNumber",
-          params: [],
-          id: new Date().getTime(),
-          internal: true // Important for ganache requests so they're not logged
-        }, function(err, response) {
-          if (err || !response) {
-            console.log("Block polling error: ", err.stack)
-            return
-          }
-
-          var blockNumber = web3.toDecimal(response.result)
-          if (blockNumber > lastBlock) {
-            lastBlock = blockNumber
-            process.send({type: "block", data: blockNumber})
-          }
-        })
-      }, 500)
     })
 
     server.on("close", function() {

@@ -80,7 +80,6 @@ export default function (state = initialState, action) {
       })
 
     case Core.SET_BLOCK_NUMBER:
-    case Core.GET_BLOCK_NUMBER: // TODO: Remove GET_BLOCK_NUMBER
       return Object.assign({}, state, {
         latestBlock: action.number
       })

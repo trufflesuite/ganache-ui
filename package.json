@@ -177,9 +177,10 @@
     "redux": "^3.6.0",
     "redux-thunk": "^2.2.0",
     "reselect": "^2.5.4",
+    "scrypt": "^6.0.3",
     "universal-analytics": "^0.4.13",
     "uuid": "^3.1.0",
-    "web3": "^0.18.2"
+    "web3": "1.0.0-beta.27"
   },
   "devEngines": {
     "node": ">=6.x",

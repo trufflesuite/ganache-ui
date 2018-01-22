@@ -16,7 +16,6 @@ import {
   SET_SERVER_STARTED, 
   SET_SERVER_STOPPED,
   SET_KEY_DATA, 
-  SET_BLOCK_NUMBER,
   SET_SYSTEM_ERROR
 } from './Actions/Core'
 import { REQUEST_SAVE_SETTINGS } from './Actions/Settings'
@@ -119,10 +118,6 @@ app.on('ready', async () => {
 
     chain.on("stderr", (data) => {
       mainWindow.webContents.send(ADD_LOG_LINES, data.split(/\n/g))
-    })
-
-    chain.on("block", (blockNumber) => {
-      mainWindow.webContents.send(SET_BLOCK_NUMBER, blockNumber)
     })
 
     chain.on("error", (error) => {

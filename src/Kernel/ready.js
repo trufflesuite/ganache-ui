@@ -24,11 +24,13 @@ export default function (store) {
     store.dispatch(Settings.setSettings(currentSettings))
 
     // Ensure web3 is set
-    store.dispatch(Web3.setRPCProviderUrl(`http://${currentSettings.server.hostname}:${currentSettings.server.port}`))
+    store.dispatch(Web3.setRPCProviderUrl(`ws://${currentSettings.server.hostname}:${currentSettings.server.port}`))
   
     store.dispatch(Accounts.getAccounts())
     store.dispatch(Core.getGasPrice())
     store.dispatch(Core.getGasLimit())
+
+    store.dispatch(Core.getBlockSubscription())
 
     store.dispatch(Core.setServerStarted())
   })
