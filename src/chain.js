@@ -35,7 +35,7 @@ function startServer(options) {
     // space on the front. ¯\_(ツ)_/¯
     options.logger = {
       log: (message) => {
-        if (message && message.indexOf(" ") == 0) {
+        if (typeof message === 'string' && message.indexOf(" ") == 0) {
           console.log(message)
         }
       }
