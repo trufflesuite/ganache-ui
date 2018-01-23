@@ -1,18 +1,31 @@
-import Web3 from 'web3'
+import WsProvider from 'web3-providers-ws'
+import HttpProvider from 'web3-providers-http'
 import * as RequestCache from '../RequestCache'
+import EventEmitter from 'events'
 
-class ReduxWeb3Provider {
+class ReduxWeb3Provider extends EventEmitter {
   constructor (url, dispatch, getState) {
-    this.provider = new Web3.providers.HttpProvider(url) 
+    super()
+    const self = this
+
+    let parsedURL = new URL(url)
+    let scheme = parsedURL.protocol.toLowerCase()
+
+    if (scheme === 'ws:' || scheme === 'wss:') {
+      this.provider = new WsProvider(url)
+      this.provider.on('data', this.emit.bind(this, 'data'))
+    } else {
+      this.provider = new HttpProvider(url)
+      delete this.on
+      delete this.once
+    }
     this.dispatch = dispatch
     this.getState = getState
+
   }
 
-  send () {
-    throw new Error("Synchronous HTTP requests not supported!")
-  }
-
-  sendAsync (payload, callback) {
+  send (payload, callback) {
+    var sendMethod = this.provider.sendAsync || this.provider.send
     var cached = RequestCache.checkCache(payload, this.getState)
 
     if (cached) {
@@ -27,7 +40,7 @@ class ReduxWeb3Provider {
 
     this.dispatch(RPCRequestStarted(payload))
 
-    this.provider.sendAsync(payload, (err, response) => {
+    this.provider.send(payload, (err, response) => {
       if (err || response.error) {
         this.dispatch(RPCRequestFailed(payload, response, err))
       } else {

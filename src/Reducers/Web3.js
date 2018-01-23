@@ -1,14 +1,14 @@
-import * as Web3 from '../Actions/Web3'
+import * as Web3Action from '../Actions/Web3'
 
 const initialState = {
-  provider: null
+  web3Instance: null
 }
 
 export default function (state = initialState, action) {
   switch (action.type) {
-    case Web3.SET_RPC_PROVIDER:
+    case Web3Action.SET_WEB3_INSTANCE:
       return Object.assign({}, state, {
-        provider: action.provider
+        web3Instance: action.web3Instance
       })
 
     default:

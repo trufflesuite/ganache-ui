@@ -4,22 +4,26 @@ import { push } from 'react-router-redux'
 const prefix = 'SEARCH'
 
 export const query = function(message) {
-  return function(dispatch, getState) {
-    let provider = getState().web3.provider
-    // This will request the block by either its has or number
-    web3Request("getBlock", [message, true], provider, (err, block) => {
-      if (block) {
-        dispatch(push(`/blocks/${block.number}`))
-        return
-      }
+  return async function(dispatch, getState) {
+    // do nothing if user submits empty search string
+    if (message === '') return
 
-      web3Request("getTransaction", [message], provider, (err, transaction) => {
-        if (transaction) {
-          dispatch(push(`/transactions/${transaction.hash}`))
-        } else {
-          dispatch(push('/notfound'))
-        }
-      })
-    })
+    let web3Instance = getState().web3.web3Instance
+    // This will request the block by either its has or number
+    try {
+      let block = await web3Request('getBlock', [message, true], web3Instance)
+      dispatch(push(`/blocks/${block.number}`))
+      return
+    } catch(err) {
+      console.log('Block search error: ', err)
+    }
+
+    try {
+      let transaction = await web3Request('getTransaction', [message], web3Instance)
+      dispatch(push(`/transactions/${transaction.hash}`))
+    } catch(err) {
+      console.log('Transaction search error: ', err)
+      dispatch(push('/notfound'))
+    }
   }
 }
