@@ -187,6 +187,31 @@ class ServerScreen extends Component {
             </div>
           </section>
         </OnlyIf>
+
+        <OnlyIf test={this.state.automine}>
+          <section>
+            <h4>ERROR ON TRANSACTION FAILURE</h4>
+            <div className="Row">
+              <div className="RowItem">
+                <div className="Switch">
+                  <input
+                    type="checkbox"
+                    name="server.vmErrorsOnRPCResponse"
+                    id="server.vmErrorsOnRPCResponse"
+                    defaultChecked={this.props.settings.server.vmErrorsOnRPCResponse}
+                    onChange={this.props.handleInputChange}
+                  />
+                  <label htmlFor="server.vmErrorsOnRPCResponse">ENABLED</label>
+                </div>
+              </div>
+              <div className="RowItem">
+                <p>
+                  When transactions fail, return an RPC error. If disabled, transaction failures will only be detectable via the "status" flag in the transaction receipt. Disabling this is recommended for newer projects. This will eventually be the default.
+                </p>
+              </div>
+            </div>
+          </section>
+        </OnlyIf>
       </div>
     )
   }

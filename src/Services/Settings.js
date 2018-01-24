@@ -14,7 +14,8 @@ const initialSettings = {
     network_id: 5777,
     total_accounts: 10,
     unlocked_accounts: [],
-    mnemonic: "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat"
+    mnemonic: "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat",
+    vmErrorsOnRPCResponse: true
   }
 }
 
@@ -57,10 +58,42 @@ class Settings {
 
     // Ensure new settings variables get added by merging
     // all the settings, where the current values take precedence. 
-    var currentSettings = settings.getAll();
+    var currentSettings = deepMergeSettings(initialSettings, settings.getAll());
 
     // Apply the merged settings
     this.setAll(currentSettings);
+  }
+}
+
+function deepMergeSettings(...args) {
+  let result = {}
+
+  for (let obj of args) {
+    if (typeof obj === 'object') {
+      for (let fieldName of Object.keys(obj)) {
+        if (Array.isArray(obj[fieldName])) {
+          result[fieldName] = deepMergeSettingsArrays(result[fieldName], obj[fieldName])
+        } else if (typeof obj[fieldName] === 'object') {
+          result[fieldName] = deepMergeSettings(result[fieldName], obj[fieldName])
+        } else {
+          result[fieldName] = obj[fieldName]
+        }
+      }
+    }
+  }
+
+  return result;
+}
+
+function deepMergeSettingsArrays(...args) {
+  let result = []
+  for (let arr of args) {
+    if (!Array.isArray(arr)) continue
+    for (let value of arr) {
+      if (result.indexOf(value) == -1) {
+        result.push(value)
+      }
+    }
   }
 }
 
