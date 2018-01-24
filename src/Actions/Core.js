@@ -1,4 +1,4 @@
-import { web3ActionCreator } from './helpers/Web3ActionCreator'
+import { web3ActionCreator, web3CleanUpHelper } from './helpers/Web3ActionCreator'
 import { getAccounts } from './Accounts'
 import { push } from 'react-router-redux'
 import { ipcRenderer } from 'electron'
@@ -13,6 +13,8 @@ export function setServerStarted() {
 export const REQUEST_SERVER_RESTART = `${prefix}/REQUEST_SERVER_RESTART`
 export function requestServerRestart() {
   return function(dispatch, getState) {
+    web3CleanUpHelper(dispatch, getState)
+
     // Show the title screen
     dispatch(showTitleScreen())
 
