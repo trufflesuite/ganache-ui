@@ -51,10 +51,6 @@ app.on('window-all-closed', () => {
   app.quit()
 })
 
-// if (process.platform === 'darwin') {
-//   app.dock.setIcon(path.resolve(__dirname, '../icons/png/512x512.png'))
-// }
-
 app.setName('Ganache')
 
 const getIconPath = () => {
@@ -70,6 +66,11 @@ if (process.platform === 'darwin') {
 app.on('ready', async () => {
   const chain = new ChainService(app)
   const Settings = new SettingsService() 
+
+  // Chuck the settings service in a global so that renderer processes can
+  // fetch it. See note at the top of src/Kernel/ready.js for why this is the
+  // best compromise
+  global['settingsService'] = Settings
 
   app.on('will-quit', function () {
     chain.stopProcess();
