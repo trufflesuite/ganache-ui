@@ -206,7 +206,7 @@ class ServerScreen extends Component {
               </div>
               <div className="RowItem">
                 <p>
-                  When transactions fail, return an RPC error. If disabled, transaction failures will only be detectable via the "status" flag in the transaction receipt. Disabling this is recommended for newer projects. This will eventually be the default.
+                  When transactions fail, throw an error. If disabled, transaction failures will only be detectable via the "status" flag in the transaction receipt. Disabling this feature will make Ganache handle transaction failures like other Ethereum clients.
                 </p>
               </div>
             </div>
