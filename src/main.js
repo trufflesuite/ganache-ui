@@ -67,11 +67,6 @@ app.on('ready', async () => {
   const chain = new ChainService(app)
   const Settings = new SettingsService() 
 
-  // Chuck the settings service in a global so that renderer processes can
-  // fetch it. See note at the top of src/Kernel/ready.js for why this is the
-  // best compromise
-  global['settingsService'] = Settings
-
   app.on('will-quit', function () {
     chain.stopProcess();
   });
@@ -110,7 +105,7 @@ app.on('ready', async () => {
 
     chain.on("server-started", (data) => {
       mainWindow.webContents.send(SET_KEY_DATA, data)
-      mainWindow.webContents.send(SET_SERVER_STARTED)
+      mainWindow.webContents.send(SET_SERVER_STARTED, Settings.getAll())
     })
 
     chain.on("stdout", (data) => {
