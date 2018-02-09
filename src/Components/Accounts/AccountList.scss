@@ -9,15 +9,15 @@
     font-family: "RobotoCondensed-Regular";
     font-weight: 300;
     color: var(--app-card-label);
-    min-width: 42px;
+    min-width: 90px;
   }
-  
+
   .Value {
     font-size: 1.125rem;
     font-family: "Fira Code Regular";
     color: var(--app-card-value);
   }
-  
+
   .AccountCard {
     display: flex;
     flex-direction: row;
@@ -34,36 +34,51 @@
       height: 24px;
     }
   }
-  
+
   .AccountAddress {
     font-weight: bold;
     margin-right: 2rem;
-  
+
     .Value {
       font-size: 1.222222222rem;
     }
   }
-  
+
   .AccountBalance {
     .Value {
       font-weight: bold;
       font-size: 1.222222222rem;
     }
   }
-  
+
   .AddressAndBalance {
     display: flex;
     flex-direction: row;
     width: 60%;
   }
-  
+
+  .AccountName {
+    margin-left: 2rem;
+
+    input {
+      outline: none;
+      box-shadow:none !important;
+      border:1px solid #dddddd !important;
+      -webkit-border-radius: 3px;
+      -moz-border-radius: 3px;
+      border-radius: 3px;
+      padding: 2px 4px;
+      width: 100%;
+    }
+  }
+
   .AccountPrivateKey {
     .Label,
     .Value {
       font-size: 14px;
     }
   }
-  
+
   .AccountState {
     font-size: 2rem;
     background: #ffffff;
@@ -76,23 +91,23 @@
     justify-content: center;
     margin-left: 1rem;
   }
-  
+
   .SecondaryInfo {
     display: flex;
     justify-content: flex-end;
     align-items: center;
     width: 40%;
-  
+
     > div {
       width: 20%;
     }
   }
-  
+
   .ShowKeys {
     position: relative;
     cursor: pointer;
     margin-right: 0.7rem;
-  
+
     .popover {
       background-color: rgba(0, 0, 0, 0.85);
       border-radius: 5px;
@@ -107,7 +122,7 @@
       position: absolute;
       z-index: 4;
       white-space: nowrap;
-  
+
       &:before {
         border-top: 7px solid rgba(0, 0, 0, 0.85);
         border-right: 7px solid transparent;
@@ -120,7 +135,7 @@
         position: absolute;
       }
     }
-  
+
     &:hover,
     &:focus {
       .popover {
@@ -128,5 +143,5 @@
       }
     }
   }
-  
+
 }
