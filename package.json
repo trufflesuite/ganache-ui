@@ -39,7 +39,8 @@
           "dmg"
         ],
         "linux": [
-          "appimage"
+          "appimage",
+          "snap"
         ]
       },
       "electronPackagerConfig": {
@@ -66,6 +67,11 @@
           "Development"
         ],
         "homepage": "https://truffleframework.com"
+      },
+      "electronInstallerSnap": {
+        "features": {
+          "alsa": true
+        }
       },
       "github_repository": {
         "owner": "",
@@ -135,7 +141,7 @@
     "cross-env": "^3.1.4",
     "electron-debug": "^1.1.0",
     "electron-devtools-installer": "^2.0.1",
-    "electron-forge": "^4.1.2",
+    "electron-forge": "^5.0.0",
     "electron-icon-maker": "0.0.3",
     "electron-log": "^2.2.9",
     "electron-prebuilt-compile": "1.6.11",
