@@ -97,10 +97,20 @@ class ConfigScreen extends PureComponent {
     // There should be one key remaining
     // Only save the value if the text box or input value is non-zero/non-blank.
     // Otherwise remove the key.
-    if (value && value != "" && value != 0) {
+    if (value !== null && value !== undefined && value !== "" && value !== 0) {
       parent[keys[0]] = value
     } else {
-      delete parent[keys[0]]
+      // We used to delete the key here, but if we do that then the settings
+      // migration logic in the bootstrap method of the Settings service won't
+      // be able to tell that we're aware of this setting already, causing it
+      // to apply the initial default value the next time the application
+      // starts. Setting it to null gives the merge logic something to override
+      // the initial default with. This is fine, so long as we preserve the
+      // semantics of "null" meaning "purposefully left unset". Further, we
+      // strip out nulls in Settings.getAll just to be certain that nothing can
+      // surprise us by interpreting a key with a null value differently from a
+      // missing key.
+      parent[keys[0]] = null
     }
 
     this.forceUpdate()

@@ -15,8 +15,8 @@ class AccountsScreen extends Component {
     super(props)
 
     this.state = {
-      accountsLocked: props.settings.server.unlocked_accounts.length > 0,
-      automnemonic: props.settings.server.mnemonic == null
+      accountsLocked: !!props.settings.server.unlocked_accounts,
+      automnemonic: !props.settings.server.mnemonic
     }
   }
 

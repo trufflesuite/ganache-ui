@@ -7,9 +7,6 @@ import * as Accounts from '../Actions/Accounts'
 import * as Logs from '../Actions/Logs'
 import * as Settings from '../Actions/Settings'
 
-// Use the electron-settings app from the main process
-const settings = require('electron').remote.require('electron-settings');
-
 // This will be called before the very first render, so you can do whatever
 // you want here. The Redux Store is available at this point, so you can
 // dispatch any action you want
@@ -18,9 +15,8 @@ export default function (store) {
   store.dispatch(Core.showTitleScreen())
 
   // Wait for the server to start...
-  ipcRenderer.on(Core.SET_SERVER_STARTED, () => {
+  ipcRenderer.on(Core.SET_SERVER_STARTED, (sender, currentSettings) => {
     // Get current settings into the store
-    var currentSettings = settings.getAll()
     store.dispatch(Settings.setSettings(currentSettings))
 
     // Ensure web3 is set

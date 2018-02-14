@@ -51,10 +51,6 @@ app.on('window-all-closed', () => {
   app.quit()
 })
 
-// if (process.platform === 'darwin') {
-//   app.dock.setIcon(path.resolve(__dirname, '../icons/png/512x512.png'))
-// }
-
 app.setName('Ganache')
 
 const getIconPath = () => {
@@ -109,7 +105,7 @@ app.on('ready', async () => {
 
     chain.on("server-started", (data) => {
       mainWindow.webContents.send(SET_KEY_DATA, data)
-      mainWindow.webContents.send(SET_SERVER_STARTED)
+      mainWindow.webContents.send(SET_SERVER_STARTED, Settings.getAll())
     })
 
     chain.on("stdout", (data) => {
