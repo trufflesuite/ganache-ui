@@ -1,6 +1,6 @@
-# Contributing to zircon
+# Contributing to ganache
 
-Love Zircon and want to help? Thanks so much, there's something to do for everybody!
+Love Ganache and want to help? Thanks so much, there's something to do for everybody!
 
 Please take a moment to review this document in order to make the contribution process easy and effective for everyone involved.
 
@@ -8,7 +8,7 @@ Following these guidelines helps to communicate that you respect the time of the
 
 ## Using the issue tracker
 
-The [issue tracker](https://github.com/trufflesuite/zircon/issues) is
+The [issue tracker](https://github.com/trufflesuite/ganache/issues) is
 the preferred channel for [bug reports](#bugs), [features requests](#features)
 and [submitting pull requests](#pull-requests).
 
@@ -76,11 +76,11 @@ included in the project:
 
    ```bash
    # Clone your fork of the repo into the current directory
-   git clone https://github.com/<your-username>/zircon.git
+   git clone https://github.com/<your-username>/ganache.git
    # Navigate to the newly cloned directory
-   cd zircon
+   cd ganache
    # Assign the original repo to a remote called "upstream"
-   git remote add upstream https://github.com/trufflesuite/zircon.git
+   git remote add upstream https://github.com/trufflesuite/ganache.git
    ```
 
 2. If you cloned a while ago, get the latest changes from upstream:
