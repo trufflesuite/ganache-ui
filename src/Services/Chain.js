@@ -31,7 +31,7 @@ class ChainService extends EventEmitter {
       this.emit(message.type, message.data)
     })
     this.child.on('error', (error) => {
-      this.emit("error", error.stack || error)
+      this.emit("error", error)
     })
     this.child.on('exit', this._exitHandler);
     this.child.stdout.on('data', (data) => {

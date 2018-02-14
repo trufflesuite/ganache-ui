@@ -57,7 +57,11 @@ class BugModal extends Component {
   }
 
   render () {
-    let unsanitizedSystemError = this.props.systemError
+    // in the future we can use the info on the systemError object to implement
+    // a feature which searches for existing github issues rather than always
+    // submitting a new one
+
+    let unsanitizedSystemError = this.props.systemError.stack || this.props.systemError
     let sanitizedSystemError = ''
     let sanitizedLogLines = ''
 

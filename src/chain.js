@@ -1,6 +1,10 @@
 #!/usr/bin/env node
+
 var ganacheLib = require("ganache-cli")
 var path = require("path")
+
+// remove the uncaughtException listener added by ganache-cli
+process.removeAllListeners('uncaughtException')
 
 if (!process.send) {
   throw new Error("Must be run as a child process!")
@@ -108,9 +112,27 @@ process.on("message", function(message) {
   }
 });
 
+function copyErrorFields(e) {
+  let err = Object.assign({}, e)
+
+  // I think these properties aren't enumerable on Error objects, so we copy
+  // them manually if we don't do this, they aren't passed via IPC back to the
+  // main process
+  err.message = e.message
+  err.stack = e.stack
+  err.name = e.name
+
+  return err
+}
+
+process.on('unhandledRejection', (err) => {		
+  //console.log('unhandled rejection:', err.stack || err)		
+  process.send({type: 'error', data: copyErrorFields(err)})		
+});
+
 process.on('uncaughtException', (err) => {		
-  console.log(err.stack || err)		
-  process.send({type: 'error', data: err.stack || err})		
+  //console.log('uncaught exception:', err.stack || err)		
+  process.send({type: 'error', data: copyErrorFields(err)})		
 });
 
 process.send({type: 'process-started'})
