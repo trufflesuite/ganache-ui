@@ -48,7 +48,7 @@ process.on('unhandledRejection', error => {
 })
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') app.quit()
+  app.quit()
 })
 
 // if (process.platform === 'darwin') {
