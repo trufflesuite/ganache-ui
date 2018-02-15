@@ -118,7 +118,7 @@ app.on('ready', async () => {
 
     chain.on("error", (error) => {
       console.log(error)
-      mainWindow.webContents.send(SET_SYSTEM_ERROR, error.stack || error)
+      mainWindow.webContents.send(SET_SYSTEM_ERROR, error)
     })
 
     chain.start()
