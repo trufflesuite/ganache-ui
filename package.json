@@ -1,7 +1,7 @@
 {
   "name": "ganache",
   "productName": "Ganache",
-  "version": "1.1.0-beta.0",
+  "version": "1.1.0-beta.1",
   "description": "Personal Blockchain for Ethereum",
   "main": "./src/init.js",
   "private": true,
@@ -159,7 +159,7 @@
     "electron-squirrel-startup": "^1.0.0",
     "ethereumjs-units": "^0.2.0",
     "find-process": "^1.1.0",
-    "ganache-cli": "7.0.0-beta.0",
+    "ganache-cli": "6.1.0-beta.1",
     "lodash": "^3.10.1",
     "moment": "^2.17.1",
     "moment-timezone": "^0.5.11",
