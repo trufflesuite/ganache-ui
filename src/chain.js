@@ -6,6 +6,8 @@ var path = require("path")
 // remove the uncaughtException listener added by ganache-cli
 process.removeAllListeners('uncaughtException')
 
+import * as pkg from '../package.json'
+
 if (!process.send) {
   throw new Error("Must be run as a child process!")
 }
@@ -30,7 +32,7 @@ function stopServer(callback) {
 
 function startServer(options) {
   stopServer(function() {
-    console.log("Starting server with configuration: " + JSON.stringify(options))
+    console.log("Starting server version " + pkg.version + " with configuration: " + JSON.stringify(options))
 
     // The TestRPC's logging system is archaic. We'd like more control
     // over what's logged. For now, the really important stuff all has
