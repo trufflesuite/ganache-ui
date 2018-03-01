@@ -116,7 +116,12 @@ class Settings {
     return currentSettings;
   }
 
-  _onNewMnemonic(mnemonic) {
+  /**
+   * Called when a new mnemonic is read back from the underlying chain, will
+   * persist this new mnemonic if it differs from the one stored and if
+   * randomizeMnemonicOnStart is false.
+   */
+  handleNewMnemonic(mnemonic) {
     let currentSettings = this._getAllRaw()
     if (!currentSettings.randomizeMnemonicOnStart) {
       this.set('server.mnemonic', mnemonic);

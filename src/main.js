@@ -110,7 +110,7 @@ app.on('ready', async () => {
         hdPath: data.hdPath
       })
 
-      Settings._onNewMnemonic(data.mnemonic)
+      Settings.handleNewMnemonic(data.mnemonic)
 
       mainWindow.webContents.send(SET_SERVER_STARTED, Settings.getAll())
     })
