@@ -100,8 +100,7 @@ app.on('ready', async () => {
     mainWindow.setMenu(null);
 
     chain.on("start", () => {
-      let settings = Settings.getAll()
-      chain.startServer(settings.server)
+      chain.startServer(Settings.getAll())
     })
 
     chain.on("server-started", (data) => {
@@ -137,11 +136,11 @@ app.on('ready', async () => {
   ipcMain.on(REQUEST_SERVER_RESTART, () => {
     if (chain.isServerStarted()) {
       chain.once("server-stopped", () => {
-        chain.startServer(Settings.getAll().server)
+        chain.startServer(Settings.getAll())
       })
       chain.stopServer()
     } else {
-      chain.startServer(Settings.getAll().server)
+      chain.startServer(Settings.getAll())
     }
   })
 

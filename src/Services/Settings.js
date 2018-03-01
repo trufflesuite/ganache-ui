@@ -10,13 +10,13 @@ const initialSettings = {
   cpuAndMemoryProfiling: false,
   verboseLogging: false,
   firstRun: true,
+  randomizeMnemonicOnStart: false,
   server: {
     hostname: "127.0.0.1",
     port: 7545,
     network_id: 5777,
     total_accounts: 10,
     unlocked_accounts: [],
-    randomizeMnemonicOnStart: false,
     vmErrorsOnRPCResponse: true
   }
 }
@@ -55,10 +55,6 @@ class Settings {
   setAll (obj) {
     // The loop over Object.keys(obj) below doesn't prevent overwriting stored
     // null values in nested objects, so we make sure to preserve them here.
-    // Remember that if the UI cleared a particular setting from a non-null
-    // value, it will always set that key to `null` when that occurs, so
-    // there's no risk here of a previously stored non-null setting overwriting
-    // a setting which the UI just cleared.
     obj = _.merge({}, this._getAllRaw(), obj)
 
     // Translate old setAll to electron-settings setAll
@@ -102,13 +98,13 @@ class Settings {
     // If we're migrating a settings file from before we used a persistent,
     // randomly generated mnemonic by default, randomizeMnemonic on start will
     // be undefined.
-    if (currentSettings.server.randomizeMnemonicOnStart === undefined) {
+    if (currentSettings.randomizeMnemonicOnStart === undefined) {
 
       // Before we added the randomizeMnemonicOnStart flag, the absence of a
       // mnemonic meant that we wanted a random one one each run. We want to
       // preserve this preference.
       if (currentSettings.server.mnemonic === "") {
-        currentSettings.server.randomizeMnemonicOnStart = true;
+        currentSettings.randomizeMnemonicOnStart = true;
       } else if (currentSettings.server.mnemonic === oldDefaultMnemonic || !currentSettings.server.mnemonic) {
 
         // This will cause a new mnemonic to be generated and persisted only in
@@ -122,7 +118,7 @@ class Settings {
 
   _onNewMnemonic(mnemonic) {
     let currentSettings = this._getAllRaw()
-    if (!currentSettings.server.randomizeMnemonicOnStart) {
+    if (!currentSettings.randomizeMnemonicOnStart) {
       this.set('server.mnemonic', mnemonic);
     }
   }

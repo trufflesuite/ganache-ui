@@ -16,7 +16,7 @@ class AccountsScreen extends Component {
 
     this.state = {
       accountsLocked: !!props.settings.server.unlocked_accounts,
-      automnemonic: props.settings.server.randomizeMnemonicOnStart
+      automnemonic: props.settings.randomizeMnemonicOnStart
     }
   }
 
@@ -48,11 +48,11 @@ class AccountsScreen extends Component {
     var toggleValue = !this.state.automnemonic
 
     // Remove mnemonic if we turn automnemonic on
-    this.props.settings.server.randomizeMnemonicOnStart = toggleValue
+    this.props.settings.randomizeMnemonicOnStart = toggleValue
 
     this.validateChange({
       target: {
-        name: "server.randomizeMnemonicOnStart",
+        name: "randomizeMnemonicOnStart",
         value: toggleValue
       }
     })
