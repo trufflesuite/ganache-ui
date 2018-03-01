@@ -100,11 +100,19 @@ app.on('ready', async () => {
     mainWindow.setMenu(null);
 
     chain.on("start", () => {
-      chain.startServer(Settings.getAll().server)
+      let settings = Settings.getAll()
+      chain.startServer(settings.server)
     })
 
     chain.on("server-started", (data) => {
-      mainWindow.webContents.send(SET_KEY_DATA, data)
+      mainWindow.webContents.send(SET_KEY_DATA, { 
+        privateKeys: data.privateKeys,
+        mnemonic: data.mnemonic,
+        hdPath: data.hdPath
+      })
+
+      Settings._onNewMnemonic(data.mnemonic)
+
       mainWindow.webContents.send(SET_SERVER_STARTED, Settings.getAll())
     })
 

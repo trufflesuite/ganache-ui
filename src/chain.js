@@ -30,7 +30,11 @@ function stopServer(callback) {
 
 function startServer(options) {
   stopServer(function() {
-    console.log("Starting server with configuration: " + JSON.stringify(options))
+    let sanitizedOptions = Object.assign({}, options)
+    delete sanitizedOptions.mnemonic
+
+    // log startup options without logging user's mnemonic
+    console.log("Starting server with initial configuration: " + JSON.stringify(sanitizedOptions))
 
     // The TestRPC's logging system is archaic. We'd like more control
     // over what's logged. For now, the really important stuff all has
@@ -75,18 +79,29 @@ function startServer(options) {
         return
       }
 
-      var data = {
-        mnemonic: state.mnemonic,
-        hdPath: state.wallet_hdpath,
-        privateKeys: {}
-      }
+      let privateKeys = {}
 
       var accounts = state.accounts;
       var addresses = Object.keys(accounts);
 
       addresses.forEach(function(address, index) {
-        data.privateKeys[address] = accounts[address].secretKey.toString("hex")
+        privateKeys[address] = accounts[address].secretKey.toString("hex")
       });
+
+      let data = Object.assign({}, server.provider.options)
+
+      // delete anything which might've been in the ganache-core options object
+      // that we don't want to pass on to the main process
+      delete data.logger
+      delete data.vm
+      delete data.state
+      delete data.trie
+
+      // ensure certain fields are present for backward compatibility with old
+      // versions of ganache-core
+      data.hdPath = data.hdPath || state.wallet_hdpath
+      data.mnemonic = data.mnemonic || state.mnemonic
+      data.privateKeys = privateKeys
 
       process.send({type: 'server-started', data: data})
 

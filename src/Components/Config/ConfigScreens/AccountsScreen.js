@@ -16,7 +16,7 @@ class AccountsScreen extends Component {
 
     this.state = {
       accountsLocked: !!props.settings.server.unlocked_accounts,
-      automnemonic: !props.settings.server.mnemonic
+      automnemonic: props.settings.server.randomizeMnemonicOnStart
     }
   }
 
@@ -47,18 +47,15 @@ class AccountsScreen extends Component {
   toggleAutoMnemonic = () => {
     var toggleValue = !this.state.automnemonic
 
-     // Remove mnemonic if we turn automnemonic on
-     if (toggleValue == true) {
-      delete this.props.settings.server.blocktime
+    // Remove mnemonic if we turn automnemonic on
+    this.props.settings.server.randomizeMnemonicOnStart = toggleValue
 
-      // Rerun validations now that value has been deleted
-      this.validateChange({
-        target: {
-          name: "server.mnemonic",
-          value: ""
-        }
-      })
-    }
+    this.validateChange({
+      target: {
+        name: "server.randomizeMnemonicOnStart",
+        value: toggleValue
+      }
+    })
 
     this.setState({
       automnemonic: toggleValue

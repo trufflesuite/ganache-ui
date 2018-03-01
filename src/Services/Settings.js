@@ -3,6 +3,8 @@ import _ from 'lodash'
 
 const settings = require('electron-settings');
 
+const oldDefaultMnemonic =  "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat";
+
 const initialSettings = {
   googleAnalyticsTracking: true,
   cpuAndMemoryProfiling: false,
@@ -14,7 +16,7 @@ const initialSettings = {
     network_id: 5777,
     total_accounts: 10,
     unlocked_accounts: [],
-    mnemonic: "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat",
+    randomizeMnemonicOnStart: false,
     vmErrorsOnRPCResponse: true
   }
 }
@@ -85,10 +87,44 @@ class Settings {
     // Ensure new settings variables get added by merging all the settings,
     // where the current values take precedence. 
     let currentSettings = this._getAllRaw()
+
+    // Add any non-additive settings changes here by creating a function which
+    // handles the settings change in question.
+    currentSettings = this.migrateMnemonicSettings(currentSettings);
+
     currentSettings = _.merge({}, initialSettings, currentSettings);
 
     // Apply the merged settings
     this.setAll(currentSettings);
+  }
+
+  migrateMnemonicSettings(currentSettings) {
+    // If we're migrating a settings file from before we used a persistent,
+    // randomly generated mnemonic by default, randomizeMnemonic on start will
+    // be undefined.
+    if (currentSettings.server.randomizeMnemonicOnStart === undefined) {
+
+      // Before we added the randomizeMnemonicOnStart flag, the absence of a
+      // mnemonic meant that we wanted a random one one each run. We want to
+      // preserve this preference.
+      if (currentSettings.server.mnemonic === "") {
+        currentSettings.server.randomizeMnemonicOnStart = true;
+      } else if (currentSettings.server.mnemonic === oldDefaultMnemonic || !currentSettings.server.mnemonic) {
+
+        // This will cause a new mnemonic to be generated and persisted only in
+        // the case when the old default mnemonic was being used.
+        currentSettings.server.mnemonic = null;
+      }
+    }
+
+    return currentSettings;
+  }
+
+  _onNewMnemonic(mnemonic) {
+    let currentSettings = this._getAllRaw()
+    if (!currentSettings.server.randomizeMnemonicOnStart) {
+      this.set('server.mnemonic', mnemonic);
+    }
   }
 }
 
