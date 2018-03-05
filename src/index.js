@@ -60,6 +60,7 @@ const stylesheets = [
   "./Components/Accounts/AccountList.scss",
   "./Components/Accounts/KeyModal.scss",
   "./Components/Accounts/MnemonicAndHdPath.scss",
+  "./Components/Accounts/MnemonicInfoModal.scss",
   "./Components/Blocks/BlocksScreen.scss",
   "./Components/Blocks/BlockList.scss",
   "./Components/Blocks/BlockCard.scss",

@@ -10,7 +10,7 @@
     flex-grow: 1;
   }
 
-  div {
+  .Mnemonic, .HDPath {
     margin: 1rem;
 
     h4 {
@@ -21,6 +21,23 @@
       font-family: "Fira Code Regular", monospace;
       color: var(--text-color);
       font-size: 0.9rem;
+    }
+
+    .WarningIndicator {
+      font-size: 0.8rem;
+      padding: 0 .125rem;
+      border: 2px solid transparent;
+      border-radius: .35rem;
+      color: white;
+      background: #DDD;
+      display: inline-block;
+      margin-left: .3rem;
+      font-weight: bold;
+      cursor: pointer;
+  
+      &:hover {
+        background: #ebb67e;
+      }
     }
   }
 }
