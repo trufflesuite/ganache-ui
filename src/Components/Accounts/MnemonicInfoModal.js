@@ -16,7 +16,7 @@ export default class MnemonicInfoModal extends PureComponent {
 
         <section>
           <p>
-            Your mnemonic is a special secret created for you by Ganache. It's used to generate the addresses available during development as well as sign transactions sent from those address.
+            Your mnemonic is a special secret created for you by Ganache. It's used to generate the addresses available during development as well as sign transactions sent from those addresses.
           </p>
           <p>
             You should only use this mnemonic during development. If you use a wallet application configured with this mnemonic, ensure you switch to a separate configuration when using that wallet with production blockchains.
