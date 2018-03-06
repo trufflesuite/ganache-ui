@@ -7,6 +7,7 @@
   "private": true,
   "scripts": {
     "start": "electron-forge start",
+    "start-browser": "NODE_ENV=development webpack-dev-server",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
@@ -15,7 +16,8 @@
     "makeappxassets": "svg2uwptiles -i ./Logo.svg -c ./blank.svg -o ./resources/appx/",
     "build-linux": "cd ./node_modules/rabin-bindings && node-gyp rebuild && cd ../../ && npm run make",
     "build-mac": "npm run make && npm run sign-mac",
-    "build-windows": "bash -c \"echo ${CERT_PASS?\\\"Need to set CERT_PASS to build on Windows\\\"} > /dev/null\" && npm run make"
+    "build-windows": "bash -c \"echo ${CERT_PASS?\\\"Need to set CERT_PASS to build on Windows\\\"} > /dev/null\" && npm run make",
+    "build-browser": "NODE_ENV=production webpack"
   },
   "browserslist": "chrome 50",
   "build": {
@@ -120,6 +122,7 @@
     "asar": "^0.13.0",
     "babel-core": "^6.21.0",
     "babel-eslint": "^7.1.1",
+    "babel-loader": "^7.1.4",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-dev-expression": "^0.2.1",
     "babel-plugin-inline-react-svg": "^0.5.2",
@@ -135,6 +138,7 @@
     "chai": "^3.5.0",
     "concurrently": "^3.1.0",
     "cross-env": "^3.1.4",
+    "css-loader": "^0.28.10",
     "electron-debug": "^1.1.0",
     "electron-devtools-installer": "^2.0.1",
     "electron-forge": "^4.1.2",
@@ -142,6 +146,8 @@
     "electron-log": "^2.2.9",
     "electron-prebuilt-compile": "1.6.11",
     "electron-rebuild": "^1.6.0",
+    "file-loader": "^1.1.11",
+    "html-webpack-plugin": "^3.0.6",
     "jsdom": "^9.9.1",
     "minimist": "^1.2.0",
     "mocha": "^3.2.0",
@@ -149,8 +155,14 @@
     "prop-types": "^15.5.10",
     "rcedit": "^0.9.0",
     "redux-logger": "^2.7.4",
+    "sass-loader": "^6.0.7",
     "source-map-support": "^0.4.8",
-    "svg2uwptiles": "0.0.4"
+    "style-loader": "^0.20.2",
+    "svg2uwptiles": "0.0.4",
+    "uglifyjs-webpack-plugin": "^1.2.2",
+    "webpack": "^3.11.0",
+    "webpack-cli": "^2.0.10",
+    "webpack-dev-server": "^2.11.2"
   },
   "dependencies": {
     "@exponent/electron-cookies": "^2.0.0",
