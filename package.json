@@ -173,6 +173,7 @@
     "electron-settings": "^3.1.2",
     "electron-squirrel-startup": "^1.0.0",
     "ethereumjs-units": "^0.2.0",
+    "express": "^4.16.2",
     "find-process": "^1.1.0",
     "ganache-cli": "6.1.0",
     "lodash": "^3.10.1",
@@ -195,7 +196,8 @@
     "scrypt": "^6.0.3",
     "universal-analytics": "^0.4.13",
     "uuid": "^3.1.0",
-    "web3": "1.0.0-beta.27"
+    "web3": "1.0.0-beta.27",
+    "ws": "^5.0.0"
   },
   "devEngines": {
     "node": ">=6.x",
