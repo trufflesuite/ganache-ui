@@ -8,9 +8,9 @@ import BugIcon from '../../Elements/icons/errorant.svg'
 
 import { sanitizeError, sanitizePaths } from '../Helpers/sanitize.js'
 
-import { shell } from 'electron'
+// import { shell } from 'electron'
 
-const { app } = require('electron').remote
+// const { app } = require('electron').remote
 
 class BugModal extends Component {
   constructor () {
@@ -38,7 +38,7 @@ class BugModal extends Component {
       "\n" +
       "\n" +
       `PLATFORM: ${process.platform}\n` +
-      `GANACHE VERSION: ${app.getVersion()}\n` +
+      // `GANACHE VERSION: ${app.getVersion()}\n` +
       "\n" +
       "EXCEPTION:\n" +
       "```\n" +
@@ -82,23 +82,23 @@ class BugModal extends Component {
           <footer>
             <button
               onClick={() => {
-                const title = encodeURIComponent(
-                  `System Error when running Ganache ${app.getVersion()} on ${process.platform}`
-                )
+                // const title = encodeURIComponent(
+                //   `System Error when running Ganache ${app.getVersion()} on ${process.platform}`
+                // )
 
                 const body = this.renderIssueBody(sanitizedSystemError, sanitizedLogLines)
 
-                shell.openExternal(
-                  `https://github.com/trufflesuite/ganache/issues/new?title=${title}&body=${body}`
-                )
+                // shell.openExternal(
+                //   `https://github.com/trufflesuite/ganache/issues/new?title=${title}&body=${body}`
+                // )
               }}
             >
               Raise Github Issue
             </button>
             <button
               onClick={() => {
-                app.relaunch()
-                app.exit()
+                // app.relaunch()
+                // app.exit()
               }}
             >
               RELAUNCH

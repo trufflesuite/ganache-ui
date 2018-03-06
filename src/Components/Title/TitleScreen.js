@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-const { app } = require('electron').remote
+// const { app } = require('electron').remote
 
 import { hashHistory } from 'react-router'
 import * as pkg from '../../../package.json'

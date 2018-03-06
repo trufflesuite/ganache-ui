@@ -38,48 +38,48 @@ const routes = <Route>
     <Route path="/transactions(/:transactionHash)" component={TransactionsScreen} />
     <Route path="/logs" component={LogsScreen} />
     <Route path="/notfound" component={NotFoundScreen} />
-    <Route path='/config' component={ConfigScreen} /> 
+    <Route path='/config' component={ConfigScreen} />
   </Route>
 </Route>
 
-const stylesheets = [
-  "./Styles/colors.scss",
-  "./Styles/normalize.scss",
-  "./Styles/buttons.scss",
-  "./Styles/forms.scss",
-  "./Styles/cards.scss",
-  "./app.global.scss",
-  "./Elements/StatusIndicator.scss",
-  "./Elements/Modal.scss",
-  "./Elements/Spinner.css",
-  "./Components/FirstRun/FirstRunScreen.scss",
-  "./Components/AppShell/AppShell.scss",
-  "./Components/AppShell/TopNavbar.scss",
-  "./Components/AppShell/BugModal.scss",
-  "./Components/Accounts/AccountsScreen.scss",
-  "./Components/Accounts/AccountList.scss",
-  "./Components/Accounts/KeyModal.scss",
-  "./Components/Accounts/MnemonicAndHdPath.scss",
-  "./Components/Accounts/MnemonicInfoModal.scss",
-  "./Components/Blocks/BlocksScreen.scss",
-  "./Components/Blocks/BlockList.scss",
-  "./Components/Blocks/BlockCard.scss",
-  "./Components/Blocks/MiniBlockCard.scss",
-  "./Components/Transactions/TransactionsScreen.scss",
-  "./Components/Transactions/RecentTransactions.scss",
-  "./Components/Transactions/TxList.scss",
-  "./Components/Transactions/TxCard.scss",
-  "./Components/Transactions/TransactionTypeBadge.scss",
-  "./Components/Transactions/MiniTxCard.scss",
-  "./Components/Title/TitleScreen.scss",
-  "./Components/Logs/LogsScreen.scss",
-  "./Components/Logs/LogContainer.scss",
-  "./Components/Config/ConfigScreen.scss",
-  "./Components/NotFound/NotFoundScreen.scss"
-] 
+//const stylesheets = [
+import "./Styles/colors.scss"
+import "./Styles/normalize.scss"
+import "./Styles/buttons.scss"
+import "./Styles/forms.scss"
+import "./Styles/cards.scss"
+import "./app.global.scss"
+import "./Elements/StatusIndicator.scss"
+import "./Elements/Modal.scss"
+import "./Elements/Spinner.css"
+import "./Components/FirstRun/FirstRunScreen.scss"
+import "./Components/AppShell/AppShell.scss"
+import "./Components/AppShell/TopNavbar.scss"
+import "./Components/AppShell/BugModal.scss"
+import "./Components/Accounts/AccountsScreen.scss"
+import "./Components/Accounts/AccountList.scss"
+import "./Components/Accounts/KeyModal.scss"
+import "./Components/Accounts/MnemonicAndHdPath.scss"
+import "./Components/Accounts/MnemonicInfoModal.scss"
+import "./Components/Blocks/BlocksScreen.scss"
+import "./Components/Blocks/BlockList.scss"
+import "./Components/Blocks/BlockCard.scss"
+import "./Components/Blocks/MiniBlockCard.scss"
+import "./Components/Transactions/TransactionsScreen.scss"
+import "./Components/Transactions/RecentTransactions.scss"
+import "./Components/Transactions/TxList.scss"
+import "./Components/Transactions/TxCard.scss"
+import "./Components/Transactions/TransactionTypeBadge.scss"
+import "./Components/Transactions/MiniTxCard.scss"
+import "./Components/Title/TitleScreen.scss"
+import "./Components/Logs/LogsScreen.scss"
+import "./Components/Logs/LogContainer.scss"
+import "./Components/Config/ConfigScreen.scss"
+import "./Components/NotFound/NotFoundScreen.scss"
+//]
 
 const render = () => {
-
+/*
   // This is "our hack"; basically, when HMR tells the Javascript
   // to rerender the whole app, we remove all stylesheets and re-add
   // them, so they refresh too. Pretty sweet.
@@ -95,9 +95,9 @@ const render = () => {
     ss.type = "text/css"
     ss.rel = "stylesheet"
     ss.href = stylesheet
-    document.getElementsByTagName("head")[0].appendChild(ss) 
+    document.getElementsByTagName("head")[0].appendChild(ss)
   })
-
+*/
   ReactDOM.render(
     (
       <AppContainer>

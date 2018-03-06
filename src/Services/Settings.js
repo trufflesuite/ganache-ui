@@ -27,7 +27,7 @@ class Settings {
   }
 
   _getRaw (key, defaultValue = null) {
-    return settings.get(key, defaultValue);  
+    return settings.get(key, defaultValue);
   }
 
   getAll () {
@@ -77,11 +77,11 @@ class Settings {
       settings.setAll(initialSettings);
 
       // Set a specific uuid.
-      this.set('uuid', uuid.v4()) 
+      this.set('uuid', uuid.v4())
     }
 
     // Ensure new settings variables get added by merging all the settings,
-    // where the current values take precedence. 
+    // where the current values take precedence.
     let currentSettings = this._getAllRaw()
 
     // Add any non-additive settings changes here by creating a function which
