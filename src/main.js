@@ -11,11 +11,11 @@ if (isDevMode) {
   // let REACT_DEVELOPER_TOOLS = installExtension.REACT_DEVELOPER_TOOLS
 }
 
-import { 
+import {
   REQUEST_SERVER_RESTART,
-  SET_SERVER_STARTED, 
+  SET_SERVER_STARTED,
   SET_SERVER_STOPPED,
-  SET_KEY_DATA, 
+  SET_KEY_DATA,
   SET_SYSTEM_ERROR
 } from './Actions/Core'
 import { REQUEST_SAVE_SETTINGS } from './Actions/Settings'
@@ -67,8 +67,8 @@ app.on('ready', () => {
   // workaround for electron race condition, causing hang on startup.
   // see https://github.com/electron/electron/issues/9179 for more info
   setTimeout(async () => {
-    const chain = new ChainService(app)
-    const Settings = new SettingsService() 
+    const chain = new ChainService()
+    const Settings = new SettingsService()
 
     app.on('will-quit', function () {
       chain.stopProcess();
@@ -107,7 +107,7 @@ app.on('ready', () => {
       })
 
       chain.on("server-started", (data) => {
-        mainWindow.webContents.send(SET_KEY_DATA, { 
+        mainWindow.webContents.send(SET_KEY_DATA, {
           privateKeys: data.privateKeys,
           mnemonic: data.mnemonic,
           hdPath: data.hdPath

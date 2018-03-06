@@ -12,9 +12,8 @@ import _ from 'lodash'
  * representation mismatches between Ganache and the child process.
  */
 class ChainService extends EventEmitter {
-  constructor(app) {
+  constructor() {
     super()
-    this.app = app
     this.child = null
     this.serverStarted = false
   }
@@ -50,7 +49,7 @@ class ChainService extends EventEmitter {
       this.emit("stderr", data.toString().replace(/\r/g, "").replace(/\n$/, ""))
     });
   }
-  
+
   startServer(settings) {
     let options = this._ganacheCoreOptionsFromGanacheSettingsObject(settings)
     this.child.send({
