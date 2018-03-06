@@ -1,11 +1,12 @@
-var webpack = require('webpack')
-var path = require('path')
-var UglifyJsPlugin = require('uglifyjs-webpack-plugin')
-var HtmlWebpackPlugin = require('html-webpack-plugin')
+const webpack = require('webpack')
+const path = require('path')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const CleanWebpackPlugin = require('clean-webpack-plugin')
 
 const outputDir = path.resolve(__dirname, 'dist')
 
-var config = {
+const config = {
   entry: './src/index.js',
   output: {
     path: outputDir,
@@ -42,7 +43,7 @@ var config = {
       use: [{
         loader: 'file-loader',
         options: {
-          outputPath: path.resolve(outputDir, 'assets'),
+          outputPath: 'assets',
           publicPath: '/assets'
         }
       }]
@@ -63,7 +64,8 @@ if (process.env.NODE_ENV === 'production') {
   config.plugins.push(
     new UglifyJsPlugin({
       sourceMap: false
-    })
+    }),
+    new CleanWebpackPlugin(outputDir)
   )
 } else {
   config.devtool = 'eval-source-map'
