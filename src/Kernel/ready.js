@@ -8,10 +8,10 @@ import * as Logs from '../Actions/Logs'
 import * as Settings from '../Actions/Settings'
 
 const initialSettings = {
-  googleAnalyticsTracking: true,
+  googleAnalyticsTracking: false,
   cpuAndMemoryProfiling: false,
   verboseLogging: false,
-  firstRun: true,
+  firstRun: false,
   server: {
     hostname: "127.0.0.1",
     port: 7545,
