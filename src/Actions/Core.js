@@ -1,7 +1,7 @@
 import { web3ActionCreator, web3CleanUpHelper } from './helpers/Web3ActionCreator'
 import { getAccounts } from './Accounts'
 import { push } from 'react-router-redux'
-// import { ipcRenderer } from 'electron'
+import actionClient from '../Kernel/actionClient'
 
 const prefix = 'CORE'
 
@@ -23,7 +23,7 @@ export function requestServerRestart() {
     dispatch({type: REQUEST_SERVER_RESTART})
 
     // Fire off the restart request.
-    // ipcRenderer.send(REQUEST_SERVER_RESTART)
+    actionClient.send(REQUEST_SERVER_RESTART)
   }
 }
 

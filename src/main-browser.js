@@ -2,6 +2,10 @@
 import express from 'express'
 import WebSocket from 'ws'
 import http from 'http'
+import EventEmitter from 'events'
+import { createMainActionClient } from './websocket'
+
+import init from './main'
 
 const initialSettings = {
   googleAnalyticsTracking: false,
@@ -20,23 +24,19 @@ const initialSettings = {
 }
 
 const app = express()
-
 app.use(express.static('../dist'))
 
 const server = http.createServer(app)
-
 const wss = new WebSocket.Server({ server })
 
-wss.on('connection', (ws, req) => {
-  ws.on('message', (message) => {
-    //
-    // Here we can now use session parameters.
-    //
-    console.log(`WS message ${message}`)
-  })
-})
+const actionClient = createMainActionClient(wss)
 
-//
-// Start the server.
-//
+const { setUp, tearDown, handleError } = init(actionClient.send, actionClient)
+
+process.on('uncaughtException', handleError)
+process.on('unhandledRejection', handleError)
+process.on('exit', tearDown)
+
+setUp()
+
 server.listen(8080, () => console.log('Listening on %d', server.address().port))

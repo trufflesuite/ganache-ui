@@ -7,9 +7,10 @@ const CleanWebpackPlugin = require('clean-webpack-plugin')
 const outputDir = path.resolve(__dirname, 'dist')
 const publicDir = path.resolve(outputDir, 'public')
 
-const nodeEnvPlugin = new webpack.DefinePlugin({
-  'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
-})
+const envPlugin = (target) => new webpack.DefinePlugin({
+  'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+  'process.env.TARGET': JSON.stringify(target)
+});
 
 const jsRule = {
   test: /\.js$/,
@@ -50,17 +51,17 @@ const fileRule = {
 
 const serverConfig = {
   target: 'node',
-  entry: './src/server.js',
+  entry: './src/main-browser.js',
   output: {
     path: outputDir,
     filename: 'server.js'
   },
-  plugins: [
-    nodeEnvPlugin
-  ],
   module: {
     rules: [jsRule]
   },
+  plugins: [
+    envPlugin('node')
+  ],
   externals: {
     ws: 'ws',
     express: 'express'
@@ -74,18 +75,18 @@ const webConfig = {
     path: outputDir,
     filename: 'bundle.js'
   },
-  node: {
-    fs: 'empty',
-  },
   module: {
     rules: [jsRule, cssRule, fileRule]
   },
   plugins: [
-    nodeEnvPlugin,
+    envPlugin('web'),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, 'src/app.webpack.html')
     })
-  ]
+  ],
+  node: {
+    fs: 'empty',
+  }
 }
 
 if (process.env.NODE_ENV === 'production') {

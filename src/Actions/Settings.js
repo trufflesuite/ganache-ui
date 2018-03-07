@@ -1,4 +1,4 @@
-// import { ipcRenderer } from 'electron'
+import actionClient from '../Kernel/actionClient'
 
 const prefix = 'SETTINGS'
 
@@ -16,6 +16,6 @@ export const setSettings = function(settings) {
 export const REQUEST_SAVE_SETTINGS = `${prefix}/REQUEST_SAVE_SETTINGS`
 export const requestSaveSettings = function(settings) {
   return function(dispatch, getState) {
-    // ipcRenderer.send(REQUEST_SAVE_SETTINGS, settings)
+    actionClient.send(REQUEST_SAVE_SETTINGS, settings)
   }
 }
