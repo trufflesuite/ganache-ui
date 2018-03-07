@@ -1,7 +1,22 @@
 import uuid from 'uuid'
 import _ from 'lodash'
 
-const settings = require('electron-settings');
+let settings
+if (process.env.TARGET === 'node') {
+  const Configstore = require('configstore')
+  const pkg = require('../../package.json')
+  const conf = new Configstore(pkg.name)
+  settings = {
+    get: conf.get.bind(conf),
+    getAll: () => conf.all,
+    set: conf.set.bind(conf),
+    setAll: (o) => { conf.all = o; },
+    delete: conf.delete.bind(conf),
+    deleteAll: conf.clear.bind(conf)
+  }
+} else {
+  settings = require('electron-settings')
+}
 
 const oldDefaultMnemonic =  "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat";
 
@@ -46,10 +61,6 @@ class Settings {
     // nothing can surprise us by interpreting a key with a null value
     // differently from a missing key.
     return settings.getAll();
-  }
-
-  onChange (key, fn) {
-    settings.watch(key, fn);
   }
 
   setAll (obj) {
