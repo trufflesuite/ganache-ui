@@ -36,13 +36,17 @@ function init(sendAction, actionEmitter) {
       sendAction(SET_SERVER_STARTED, Settings.getAll())
     })
 
-    chain.on("stdout", (data) => {
-      sendAction(ADD_LOG_LINES, data.split(/\n/g))
-    })
+    const chainLogger = (level, data) => {
+      const lines = data.split(/\n/g)
+      sendAction(ADD_LOG_LINES, lines)
+      if (process.env.TARGET === 'node') {
+        lines.map((line) => console[level]('ChainService:', line))
+      }
+    }
 
-    chain.on("stderr", (data) => {
-      sendAction(ADD_LOG_LINES, data.split(/\n/g))
-    })
+    chain.on("stdout", (data) => chainLogger('log', data))
+
+    chain.on("stderr", (data) => chainLogger('error', data))
 
     chain.on("error", (error) => {
       console.log(error)
