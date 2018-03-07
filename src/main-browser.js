@@ -1,4 +1,3 @@
-
 import express from 'express'
 import WebSocket from 'ws'
 import http from 'http'
@@ -6,6 +5,12 @@ import EventEmitter from 'events'
 import { createMainActionClient } from './websocket'
 
 import init from './main'
+
+if (process.argv.length < 2) {
+  console.error(`usage: node ${path.basename(process.argv[1])} <frontendAssetDir>`)
+  process.exit(1)
+}
+const frontendAssetDir = process.argv[2]
 
 const initialSettings = {
   googleAnalyticsTracking: false,
@@ -24,7 +29,7 @@ const initialSettings = {
 }
 
 const app = express()
-app.use(express.static('../dist'))
+app.use(express.static(frontendAssetDir))
 
 const server = http.createServer(app)
 const wss = new WebSocket.Server({ server })

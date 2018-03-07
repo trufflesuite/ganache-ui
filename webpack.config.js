@@ -1,11 +1,14 @@
 const webpack = require('webpack')
 const path = require('path')
+const fs = require('fs')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
+const WebpackShellPlugin = require('webpack-shell-plugin')
 
 const outputDir = path.resolve(__dirname, 'dist')
-const publicDir = path.resolve(outputDir, 'public')
+const serverOutputDir = path.resolve(outputDir, 'server')
+const webOutputDir = path.resolve(outputDir, 'web')
 
 const envPlugin = (target) => new webpack.DefinePlugin({
   'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
@@ -49,37 +52,46 @@ const fileRule = {
   }]
 }
 
+// Source: https://jlongster.com/Backend-Apps-with-Webpack--Part-I
+var nodeModules = {}
+fs.readdirSync('node_modules')
+  .filter(function(x) {
+    return ['.bin'].indexOf(x) === -1
+  })
+  .forEach(function(mod) {
+    nodeModules[mod] = 'commonjs ' + mod
+  });
+
 const serverConfig = {
   target: 'node',
   entry: './src/main-browser.js',
   output: {
-    path: outputDir,
-    filename: 'server.js'
+    path: serverOutputDir,
+    filename: 'bundle.js'
   },
   module: {
     rules: [jsRule]
   },
   plugins: [
-    envPlugin('node')
+    envPlugin('node'),
+    new CleanWebpackPlugin(serverOutputDir)
   ],
-  externals: {
-    ws: 'ws',
-    express: 'express'
-  }
+  externals: nodeModules
 }
 
 const webConfig = {
   target: 'web',
   entry: './src/index.js',
   output: {
-    path: outputDir,
-    filename: 'bundle.js'
+    path: webOutputDir,
+    filename: 'bundle.[hash:6].js'
   },
   module: {
     rules: [jsRule, cssRule, fileRule]
   },
   plugins: [
     envPlugin('web'),
+    new CleanWebpackPlugin(webOutputDir),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, 'src/app.webpack.html')
     })
@@ -90,21 +102,18 @@ const webConfig = {
 }
 
 if (process.env.NODE_ENV === 'production') {
-  webConfig.devtool = false
   webConfig.plugins.push(
     new UglifyJsPlugin({
       sourceMap: false
-    }),
-    new CleanWebpackPlugin(publicDir)
+    })
   )
 } else {
   webConfig.devtool = 'eval-source-map'
-  webConfig.devServer = {
-    contentBase: publicDir,
-    compress: true,
-    historyApiFallback: true,
-    inline: true
-  }
+  serverConfig.devtool = 'eval-source-map'
+  serverConfig.plugins.push(
+    new webpack.BannerPlugin({ banner: 'require("source-map-support").install();', raw: true, entryOnly: false }),
+    new WebpackShellPlugin({ onBuildEnd: [`nodemon -w ${serverOutputDir} ${serverOutputDir}/bundle.js ${webOutputDir}`] })
+  )
 }
 
 module.exports = [webConfig, serverConfig]

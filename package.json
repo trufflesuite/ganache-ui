@@ -7,7 +7,7 @@
   "private": true,
   "scripts": {
     "start": "electron-forge start",
-    "start-browser": "NODE_ENV=development webpack-dev-server",
+    "start-browser": "NODE_ENV=development webpack --watch",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
@@ -137,7 +137,6 @@
     "babel-preset-stage-0": "^6.16.0",
     "chai": "^3.5.0",
     "clean-webpack-plugin": "^0.1.18",
-    "concurrently": "^3.1.0",
     "cross-env": "^3.1.4",
     "css-loader": "^0.28.10",
     "electron-debug": "^1.1.0",
@@ -153,16 +152,17 @@
     "minimist": "^1.2.0",
     "mocha": "^3.2.0",
     "node-sass": "^4.5.3",
+    "nodemon": "^1.17.1",
     "prop-types": "^15.5.10",
     "rcedit": "^0.9.0",
     "redux-logger": "^2.7.4",
     "sass-loader": "^6.0.7",
-    "source-map-support": "^0.4.8",
+    "source-map-support": "^0.4.18",
     "style-loader": "^0.20.2",
     "svg2uwptiles": "0.0.4",
     "uglifyjs-webpack-plugin": "^1.2.2",
     "webpack": "^3.11.0",
-    "webpack-dev-server": "^2.11.2"
+    "webpack-shell-plugin": "^0.5.0"
   },
   "dependencies": {
     "@exponent/electron-cookies": "^2.0.0",
