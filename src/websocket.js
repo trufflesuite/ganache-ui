@@ -13,7 +13,7 @@ const parseAction = (actionString) => {
 const createActionSender = (sendMessage) => (type, payload) => sendMessage(stringifyAction({ type, payload }))
 
 export const emitActions = (ws, actionEmitter) => {
-  ws.on('message', (message) => {
+  ws.addEventListener('message', ({ data: message }) => {
     const action = parseAction(message)
     if (typeof action === 'object' && action !== null) {
       const { type, payload } = action
