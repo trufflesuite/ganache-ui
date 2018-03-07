@@ -162,7 +162,6 @@
     "svg2uwptiles": "0.0.4",
     "uglifyjs-webpack-plugin": "^1.2.2",
     "webpack": "^3.11.0",
-    "webpack-cli": "^2.0.10",
     "webpack-dev-server": "^2.11.2"
   },
   "dependencies": {
