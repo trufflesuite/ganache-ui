@@ -1,6 +1,4 @@
 if (process.env.TARGET === 'web') {
-  const WebSocket = require('ws')
-  const EventEmitter = require('events')
   const { createRendererActionClient } = require('../websocket')
 
   const ws = new WebSocket(`ws://${location.host}`)

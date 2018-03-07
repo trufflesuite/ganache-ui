@@ -1,3 +1,4 @@
+const EventEmitter = require('events')
 
 const stringifyAction = JSON.stringify
 
