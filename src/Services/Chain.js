@@ -19,7 +19,7 @@ class ChainService extends EventEmitter {
   }
 
   start() {
-    let chainPath = path.join(__dirname, "../", "chain.js")
+    const chainPath = path.join(__dirname, process.env.CHAIN_PATH || '../chain.js')
     const options = {
       stdio: [ 'pipe', 'pipe', 'pipe', 'ipc' ]
     };

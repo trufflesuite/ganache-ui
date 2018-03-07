@@ -64,18 +64,28 @@ fs.readdirSync('node_modules')
 
 const serverConfig = {
   target: 'node',
-  entry: './src/main-browser.js',
+  entry: {
+    server: './src/main-browser.js',
+    chain: './src/chain.js'
+  },
   output: {
     path: serverOutputDir,
-    filename: 'bundle.js'
+    filename: '[name].js'
   },
   module: {
     rules: [jsRule]
   },
   plugins: [
     envPlugin('node'),
-    new CleanWebpackPlugin(serverOutputDir)
+    new CleanWebpackPlugin(serverOutputDir),
+    new webpack.DefinePlugin({
+      'process.env.CHAIN_PATH': JSON.stringify('./chain.js')
+    })
   ],
+  node: {
+    __dirname: false,
+    __filename: false
+  },
   externals: nodeModules
 }
 
@@ -112,7 +122,7 @@ if (process.env.NODE_ENV === 'production') {
   serverConfig.devtool = 'eval-source-map'
   serverConfig.plugins.push(
     new webpack.BannerPlugin({ banner: 'require("source-map-support").install();', raw: true, entryOnly: false }),
-    new WebpackShellPlugin({ onBuildEnd: [`nodemon -w ${serverOutputDir} ${serverOutputDir}/bundle.js ${webOutputDir}`] })
+    new WebpackShellPlugin({ onBuildEnd: [`nodemon -w ${serverOutputDir} ${serverOutputDir}/server.js ${webOutputDir}`] })
   )
 }
 
