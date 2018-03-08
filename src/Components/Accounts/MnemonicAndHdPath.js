@@ -1,18 +1,32 @@
 import React, { PureComponent } from 'react'
+import MnemonicInfoModal from './MnemonicInfoModal'
+import OnlyIf from '../../Elements/OnlyIf'
 
 export default class MnemonicAndHdPath extends PureComponent {
-  shouldComponentUpdate (nextProps, nextState) {
-    return (
-      nextProps.mnemonic !== this.props.mnemonic ||
-      nextProps.hdPath !== this.props.hdPath
-    )
+  constructor (props) {
+    super(props)
+    this.state = {
+      showWarning: false
+    }
+  }
+
+  showWarning () {
+    this.setState({
+      showWarning: true
+    })
+  }
+
+  hideWarning () {
+    this.setState({
+      showWarning: false
+    })
   }
 
   render () {
     return (
       <section className="MnemonicAndHdPath">
         <div className="Mnemonic">
-          <h4>MNEMONIC</h4>
+          <h4>MNEMONIC <span className="WarningIndicator" onClick={this.showWarning.bind(this)}>?</span></h4>
           <span>
             {this.props.mnemonic}
           </span>
@@ -23,6 +37,9 @@ export default class MnemonicAndHdPath extends PureComponent {
             {this.props.hdPath}account_index
           </span>
         </div>
+        <OnlyIf test={this.state.showWarning == true}>
+          <MnemonicInfoModal onCloseModal={this.hideWarning.bind(this)}/>
+        </OnlyIf>
       </section>
     )
   }
