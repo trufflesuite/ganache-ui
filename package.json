@@ -6,7 +6,8 @@
   "main": "./dist/electron/main/index.js",
   "private": true,
   "scripts": {
-    "start": "npm run watch-electron",
+    "start": "NODE_ENV=development webpack --watch --config build/webpack.config.electron.js",
+    "start-web": "NODE_ENV=development webpack --watch --config build/webpack.config.web.js",
     "package": "electron-forge package",
     "make": "npm run compile-electron && electron-forge make",
     "publish": "electron-forge publish",
@@ -17,9 +18,7 @@
     "build-mac": "npm run make && npm run sign-mac",
     "build-windows": "bash -c \"echo ${CERT_PASS?\\\"Need to set CERT_PASS to build on Windows\\\"} > /dev/null\" && npm run make",
     "compile-electron": "NODE_ENV=production webpack --config build/webpack.config.electron.js",
-    "compile-web": "NODE_ENV=production webpack --config build/webpack.config.web.js",
-    "watch-electron": "NODE_ENV=development webpack --watch --config build/webpack.config.electron.js",
-    "watch-web": "NODE_ENV=development webpack --watch --config build/webpack.config.web.js"
+    "compile-web": "NODE_ENV=production webpack --config build/webpack.config.web.js"
   },
   "browserslist": "chrome 50",
   "build": {
