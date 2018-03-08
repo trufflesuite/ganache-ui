@@ -1,4 +1,4 @@
-if (process.env.TARGET === 'web') {
+if (process.env.WEBPACK_TARGET === 'web') {
   const { createActionClient } = require('../websocket')
 
   const ws = new WebSocket(`ws://${location.host}`)
@@ -7,7 +7,7 @@ if (process.env.TARGET === 'web') {
   ws.addEventListener('close', () => console.log('WebSocket connection closed'))
 
   module.exports = createActionClient(ws)
-} else if (process.env.TARGET === 'node') {
+} else if (process.env.WEBPACK_TARGET === 'node') {
   module.exports = {}
 } else { // electron
   const actionClient = require('electron').ipcRenderer

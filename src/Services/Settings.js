@@ -2,7 +2,7 @@ import uuid from 'uuid'
 import _ from 'lodash'
 
 let settings
-if (process.env.TARGET === 'node') {
+if (process.env.WEBPACK_TARGET === 'node') {
   const Configstore = require('configstore')
   const pkg = require('../../package.json')
   const conf = new Configstore(pkg.name)
