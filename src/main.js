@@ -21,7 +21,13 @@ function init(actionEmitter) {
 
   Settings.bootstrap();
 
-  const actionHistory = new ActionHistory(Settings.get('maxActionHistoryPerType'))
+  const maxActionHistoryPerType = Settings.get('maxActionHistoryPerType')
+  const actionHistory = new ActionHistory(maxActionHistoryPerType, {
+    [SET_KEY_DATA]: 1,
+    [SET_SERVER_STARTED]: 1,
+    [SET_SYSTEM_ERROR]: 1,
+    [SET_SETTINGS]: 1
+  })
 
   function setUp() {
     chain.on("start", () => {

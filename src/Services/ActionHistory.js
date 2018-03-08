@@ -15,9 +15,10 @@ class Action extends LinkedList.Item {
 export default class ActionHistory extends LinkedList {
   actionTypeTracker = {}
 
-  constructor(maxHistoryPerType) {
+  constructor(defaultMaxPerType, maxByType) {
     super()
-    this.maxHistoryPerType = maxHistoryPerType
+    this.defaultMaxPerType = defaultMaxPerType
+    this.maxByType = maxByType
   }
 
   forEach(cb) {
@@ -29,6 +30,8 @@ export default class ActionHistory extends LinkedList {
       current = current.next
     }
   }
+
+  getMaxForType = (type) => (typeof this.maxByType[type] !== 'undefined' ? this.maxByType[type] : this.defaultMaxPerType)
 
   add(type, payload) {
     let action = type
@@ -49,7 +52,7 @@ export default class ActionHistory extends LinkedList {
     tracker.count += 1
     tracker.tail = action
     // Restrict maximum number of actions of the same type
-    if (tracker.count > this.maxHistoryPerType) {
+    if (tracker.count > this.getMaxForType(type)) {
       const newHead = tracker.head.nextOfType
       tracker.head.detach()
       tracker.head = newHead
