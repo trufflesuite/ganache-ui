@@ -8,9 +8,7 @@ import BugIcon from '../../Elements/icons/errorant.svg'
 
 import { sanitizeError, sanitizePaths } from '../Helpers/sanitize.js'
 
-// import { shell } from 'electron'
-
-// const { app } = require('electron').remote
+import app from '../../Kernel/app'
 
 class BugModal extends Component {
   constructor () {
@@ -37,8 +35,8 @@ class BugModal extends Component {
       "<!-- Please give us as much detail as you can about what you were doing at the time of the error, and any other relevant information -->\n" +
       "\n" +
       "\n" +
-      `PLATFORM: ${process.platform}\n` +
-      // `GANACHE VERSION: ${app.getVersion()}\n` +
+      `PLATFORM: ${app.getPlatform()}\n` +
+      `GANACHE VERSION: ${app.getVersion()}\n` +
       "\n" +
       "EXCEPTION:\n" +
       "```\n" +
@@ -82,27 +80,22 @@ class BugModal extends Component {
           <footer>
             <button
               onClick={() => {
-                // const title = encodeURIComponent(
-                //   `System Error when running Ganache ${app.getVersion()} on ${process.platform}`
-                // )
+                const title = encodeURIComponent(
+                  `System Error when running Ganache ${app.getVersion()} on ${app.getPlatform()}`
+                )
 
                 const body = this.renderIssueBody(sanitizedSystemError, sanitizedLogLines)
 
-                // shell.openExternal(
-                //   `https://github.com/trufflesuite/ganache/issues/new?title=${title}&body=${body}`
-                // )
+                app.openExternal(
+                  `https://github.com/trufflesuite/ganache/issues/new?title=${title}&body=${body}`
+                )
               }}
             >
               Raise Github Issue
             </button>
-            <button
-              onClick={() => {
-                // app.relaunch()
-                // app.exit()
-              }}
-            >
+            <button onClick={app.relaunch}>
               RELAUNCH
-              </button>
+            </button>
           </footer>
         </section>
       </Modal>

@@ -12,7 +12,8 @@ const webOutputDir = path.resolve(outputDir, 'web')
 
 const envPlugin = (target) => new webpack.DefinePlugin({
   'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-  'process.env.WEBPACK_TARGET': JSON.stringify(target)
+  'process.env.WEBPACK_TARGET': JSON.stringify(target),
+  'process.env.PLATFORM': JSON.stringify('browser')
 });
 
 const jsRule = {
