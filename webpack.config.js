@@ -6,12 +6,14 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const WebpackShellPlugin = require('webpack-shell-plugin')
 
+const env = process.env.NODE_ENV
+
 const outputDir = path.resolve(__dirname, 'dist')
 const serverOutputDir = path.resolve(outputDir, 'server')
 const webOutputDir = path.resolve(outputDir, 'web')
 
 const envPlugin = (target) => new webpack.DefinePlugin({
-  'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+  'process.env.NODE_ENV': JSON.stringify(env),
   'process.env.WEBPACK_TARGET': JSON.stringify(target),
   'process.env.PLATFORM': JSON.stringify('browser')
 });
@@ -48,7 +50,14 @@ const fileRule = {
     loader: 'file-loader',
     options: {
       outputPath: 'assets',
-      publicPath: '/assets'
+      publicPath: '/assets',
+      name (file) {
+        if (env === 'development') {
+          return '[path][name].[ext]'
+        }
+
+        return '[hash].[ext]'
+      }
     }
   }]
 }
@@ -115,7 +124,7 @@ const webConfig = {
   }
 }
 
-if (process.env.NODE_ENV === 'production') {
+if (env === 'production') {
   webConfig.plugins.push(
     new UglifyJsPlugin({
       sourceMap: false
