@@ -7,10 +7,10 @@ if (process.env.WEBPACK_TARGET === 'web') {
   ws.addEventListener('close', () => console.log('WebSocket connection closed'))
 
   module.exports = createActionClient(ws)
-} else if (process.env.WEBPACK_TARGET === 'node') {
-  module.exports = {}
-} else { // electron
+} else if (process && process.type === 'renderer') { // electron-renderer
   const actionClient = require('electron').ipcRenderer
   actionClient.emit('open')
   module.exports = actionClient
+} else {
+  module.exports = {}
 }
