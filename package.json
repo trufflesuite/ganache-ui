@@ -33,7 +33,8 @@
     "forge": {
       "make_targets": {
         "win32": [
-          "appx"
+          "appx",
+          "squirrel"
         ],
         "darwin": [
           "dmg"
@@ -58,7 +59,8 @@
         ]
       },
       "electronWinstallerConfig": {
-        "name": "<%= productName %>"
+        "name": "<%= productName %>",
+        "setupIcon": "resources/icons/win/icon.ico"
       },
       "electronInstallerDebian": {
         "icon": "resources/logo.png",
