@@ -61,6 +61,7 @@ module.exports = (target, relOutputDir) => {
   const outputDir = path.join(baseOutputDir, relOutputDir)
   return {
     target: target,
+    context: projectRoot,
     output: {
       path: outputDir
     },
@@ -69,7 +70,7 @@ module.exports = (target, relOutputDir) => {
     },
     plugins: [
       envPlugin(target),
-      new CleanWebpackPlugin(outputDir, { root: projectRoot }),
+      new CleanWebpackPlugin(outputDir),
     ],
     devtool: env === 'development' && 'eval-source-map'
   }
