@@ -23,6 +23,9 @@ module.exports = (target, relOutputDir) => {
     ],
     node: {
       fs: 'empty',
+    },
+    resolve: {
+      mainFields: ['browser', 'module', 'main']
     }
   })
   if (process.env.NODE_ENV === 'production') {

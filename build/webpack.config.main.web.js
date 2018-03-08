@@ -1,6 +1,8 @@
 const webpack = require('webpack')
 const merge = require('webpack-merge')
 const path = require('path')
+const WebpackShellPlugin = require('webpack-shell-plugin')
+
 const createMainConfig = require('./webpack.config.main.base')
 const rendererConfig = require('./webpack.config.renderer.web')
 const chainConfig = require('./webpack.config.main.chain')

@@ -3,10 +3,10 @@
   "productName": "Ganache",
   "version": "1.1.0",
   "description": "Personal Blockchain for Ethereum",
-  "main": "./dist/main/electron.js",
+  "main": "./dist/electron/main/index.js",
   "private": true,
   "scripts": {
-    "start": "concurrently \"npm run watch-electron\" \"electron-forge start\"",
+    "start": "npm run watch-electron",
     "package": "electron-forge package",
     "make": "npm run compile-electron && electron-forge make",
     "publish": "electron-forge publish",

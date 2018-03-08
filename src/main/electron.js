@@ -24,9 +24,9 @@ app.on('window-all-closed', () => {
 app.setName('Ganache')
 
 const getIconPath = () => {
-  return process.platform === 'win32'
+  return path.join(__dirname, process.platform === 'win32'
     ? require('../../resources/icons/win/icon.ico')
-    : require('../../resources/icons/png/256x256.png') // Mac & Linux, use an icon
+    : require('../../resources/icons/png/256x256.png')) // Mac & Linux, use an icon
 }
 
 if (process.platform === 'darwin') {

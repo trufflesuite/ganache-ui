@@ -4,7 +4,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin')
 
 const env = process.env.NODE_ENV
 
-const projectRoot = path.resolve(__dirname, '..')
+const projectRoot = path.resolve(__dirname, '../')
 const baseOutputDir = path.join(projectRoot, 'dist')
 
 const envPlugin = (target) => new webpack.DefinePlugin({
@@ -44,8 +44,8 @@ const fileRule = {
   use: [{
     loader: 'file-loader',
     options: {
-      outputPath: 'assets',
-      publicPath: '/assets',
+      outputPath: 'assets/',
+      publicPath: 'assets/',
       name (file) {
         if (env === 'development') {
           return '[path][name].[ext]'

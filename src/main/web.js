@@ -1,9 +1,11 @@
 #!/usr/bin/env node
 import express from 'express'
 import http from 'http'
-import { createServerActionClient } from '../websocket'
+import path from 'path'
 
 import init from './init'
+
+import { createServerActionClient } from '../websocket'
 
 const app = express()
 app.use(express.static(path.dirname(path.resolve(__dirname, process.env.APP_INDEX_PATH))))
