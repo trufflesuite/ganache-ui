@@ -13,6 +13,7 @@ const parseAction = (actionString) => {
 const createActionSender = (sendMessage) => (type, payload) => sendMessage(stringifyAction({ type, payload }))
 
 export const emitActions = (ws, actionEmitter) => {
+  (['error', 'open', 'close']).forEach((name) => ws.addEventListener(name, (...args) => actionEmitter.emit(name, ...args)))
   ws.addEventListener('message', ({ data: message }) => {
     const action = parseAction(message)
     if (typeof action === 'object' && action !== null) {
@@ -28,7 +29,7 @@ export const emitActions = (ws, actionEmitter) => {
 }
 
 /** Create an event emitter that mimics electrons ipcRenderer */
-export const createRendererActionClient = (ws) => {
+export const createActionClient = (ws) => {
   const actionClient = new EventEmitter()
   emitActions(ws, actionClient)
   actionClient.send = createActionSender(ws.send.bind(ws))
@@ -36,7 +37,7 @@ export const createRendererActionClient = (ws) => {
 }
 
 /** Create an event emitter that mimics electrons ipcMain */
-export const createMainActionClient = (wss) => {
+export const createServerActionClient = (wss) => {
   // Broadcast to all.
   wss.broadcast = (data) => {
     wss.clients.forEach((client) => {
@@ -47,7 +48,10 @@ export const createMainActionClient = (wss) => {
   };
 
   const actionClient = new EventEmitter()
-  wss.on('connection', (ws) => emitActions(ws, actionClient))
+  wss.on('connection', (ws) => {
+    actionClient.emit('connection')
+    emitActions(ws, actionClient)
+  })
   actionClient.send = createActionSender(wss.broadcast)
   return actionClient
 }

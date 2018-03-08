@@ -26,6 +26,7 @@ const initialSettings = {
   verboseLogging: false,
   firstRun: true,
   randomizeMnemonicOnStart: false,
+  maxActionHistoryPerType: 250,
   server: {
     hostname: "127.0.0.1",
     port: 7545,

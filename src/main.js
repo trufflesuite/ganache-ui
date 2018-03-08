@@ -1,23 +1,27 @@
 import path from 'path'
 
 import {
+  REQUEST_ACTION_HISTORY,
   REQUEST_SERVER_RESTART,
   SET_SERVER_STARTED,
   SET_SERVER_STOPPED,
   SET_KEY_DATA,
   SET_SYSTEM_ERROR
 } from './Actions/Core'
-import { REQUEST_SAVE_SETTINGS } from './Actions/Settings'
+import { REQUEST_SAVE_SETTINGS, SET_SETTINGS } from './Actions/Settings'
 import { ADD_LOG_LINES } from './Actions/Logs'
 
 import ChainService from './Services/Chain'
 import SettingsService from './Services/Settings'
+import ActionHistory from './Services/ActionHistory'
 
-function init(sendAction, actionEmitter) {
+function init(actionEmitter) {
   const chain = new ChainService()
   const Settings = new SettingsService()
 
   Settings.bootstrap();
+
+  const actionHistory = new ActionHistory(Settings.get('maxActionHistoryPerType'))
 
   function setUp() {
     chain.on("start", () => {
@@ -25,7 +29,7 @@ function init(sendAction, actionEmitter) {
     })
 
     chain.on("server-started", (data) => {
-      sendAction(SET_KEY_DATA, {
+      actionHistory.add(SET_KEY_DATA, {
         privateKeys: data.privateKeys,
         mnemonic: data.mnemonic,
         hdPath: data.hdPath
@@ -33,12 +37,12 @@ function init(sendAction, actionEmitter) {
 
       Settings.handleNewMnemonic(data.mnemonic)
 
-      sendAction(SET_SERVER_STARTED, Settings.getAll())
+      actionHistory.add(SET_SERVER_STARTED, Settings.getAll())
     })
 
     const chainLogger = (level, data) => {
       const lines = data.split(/\n/g)
-      sendAction(ADD_LOG_LINES, lines)
+      actionHistory.add(ADD_LOG_LINES, lines)
       if (process.env.TARGET === 'node') {
         lines.map((line) => console[level]('ChainService:', line))
       }
@@ -50,7 +54,7 @@ function init(sendAction, actionEmitter) {
 
     chain.on("error", (error) => {
       console.log(error)
-      sendAction(SET_SYSTEM_ERROR, error)
+      actionHistory.add(SET_SYSTEM_ERROR, error)
     })
 
     chain.start()
@@ -62,7 +66,7 @@ function init(sendAction, actionEmitter) {
 
   function handleError(err) {
     if (err) {
-      sendAction(SET_SYSTEM_ERROR, err.stack || err)
+      actionHistory.add(SET_SYSTEM_ERROR, err.stack || err)
     }
   }
 
@@ -81,6 +85,11 @@ function init(sendAction, actionEmitter) {
 
   actionEmitter.on(REQUEST_SAVE_SETTINGS, (event, settings) => {
     Settings.setAll(settings)
+    actionHistory.add(SET_SETTINGS, settings)
+  })
+
+  actionEmitter.on(REQUEST_ACTION_HISTORY, (event) => {
+    actionHistory.forEach(({ type, payload }) => event.sender.send(type, payload))
   })
 
   return {

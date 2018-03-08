@@ -1,10 +1,7 @@
 #!/usr/bin/env node
 import express from 'express'
-import WebSocket from 'ws'
 import http from 'http'
-import EventEmitter from 'events'
-import { createMainActionClient } from './websocket'
-import { }
+import { createServerActionClient } from './websocket'
 
 import init from './main'
 
@@ -20,9 +17,9 @@ app.use(express.static(frontendAssetDir))
 const server = http.createServer(app)
 const wss = new WebSocket.Server({ server })
 
-const actionClient = createMainActionClient(wss)
+const serverActionClient = createServerActionClient(wss)
 
-const { setUp, tearDown, handleError } = init(actionClient.send, actionClient)
+const { setUp, tearDown, handleError } = init(serverActionClient)
 
 process.on('uncaughtException', handleError)
 process.on('unhandledRejection', handleError)

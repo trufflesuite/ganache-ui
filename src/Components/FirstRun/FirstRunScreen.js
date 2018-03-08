@@ -30,7 +30,7 @@ class FirstRunScreen extends Component {
       googleAnalyticsTracking: this.state.enableAnalytics
     })
 
-    this.props.dispatch(Settings.setSettings(newSettings))
+    this.props.dispatch(Settings.requestSaveSettings(newSettings))
     this.props.dispatch(push('/accounts'))
   }
 
@@ -45,7 +45,7 @@ class FirstRunScreen extends Component {
                 SUPPORT GANACHE
               </h1>
               <p>
-                Ganache includes Google Analytics tracking to help us better understand 
+                Ganache includes Google Analytics tracking to help us better understand
                 how you use it during your normal development practices. You can
                 opt-out of this tracking by selecting the option below.
               </p>
@@ -55,7 +55,7 @@ class FirstRunScreen extends Component {
                 patterns and add new features and bug fixes faster.
               </p>
               <p>
-                Thanks for your help, and happy coding! 
+                Thanks for your help, and happy coding!
               </p>
               <p>
                 <i>-- The Truffle Team</i>
@@ -82,7 +82,7 @@ class FirstRunScreen extends Component {
           <div className="Rule" />
           <div className="Footer">
             <div className="Control">
-              
+
               <div className="Switch">
                 <input
                   type="checkbox"

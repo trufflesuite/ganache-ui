@@ -15,6 +15,11 @@ export default function (store) {
   // Load the first screen while we wait for the application to load
   store.dispatch(Core.showTitleScreen())
 
+  // Request all actions that already occured before this point (only applies to browser mode)
+  actionClient.on('open', () => {
+    actionClient.send(Core.REQUEST_ACTION_HISTORY)
+  })
+
   // Wait for the server to start...
   actionClient.on(Core.SET_SERVER_STARTED, (event, currentSettings) => {
     // Get current settings into the store
@@ -49,6 +54,10 @@ export default function (store) {
 
   actionClient.on(Logs.ADD_LOG_LINES, (event, lines) => {
     store.dispatch(Logs.addLogLines(lines))
+  })
+
+  actionClient.on(Settings.SET_SETTINGS, (event, settings) => {
+    store.dispatch(Settings.setSettings(settings))
   })
 
 }

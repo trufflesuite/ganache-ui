@@ -80,6 +80,9 @@ const serverConfig = {
     new CleanWebpackPlugin(serverOutputDir),
     new webpack.DefinePlugin({
       'process.env.CHAIN_PATH': JSON.stringify('./chain.js')
+    }),
+    new webpack.ProvidePlugin({
+      WebSocket: 'ws'
     })
   ],
   node: {

@@ -5,6 +5,8 @@ import actionClient from '../Kernel/actionClient'
 
 const prefix = 'CORE'
 
+export const REQUEST_ACTION_HISTORY = `${prefix}/REQUEST_ACTION_HISTORY`
+
 export const SET_SERVER_STARTED = `${prefix}/SET_SERVER_STARTED`
 export function setServerStarted() {
   return { type: SET_SERVER_STARTED }

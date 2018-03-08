@@ -1,14 +1,16 @@
 if (process.env.TARGET === 'web') {
-  const { createRendererActionClient } = require('../websocket')
+  const { createActionClient } = require('../websocket')
 
   const ws = new WebSocket(`ws://${location.host}`)
-  ws.onerror = (e) => console.error('WebSocket error', e)
-  ws.onopen = () => console.log('WebSocket connection established')
-  ws.onclose = () => console.log('WebSocket connection closed')
+  ws.addEventListener('error', (e) => console.error('WebSocket error', e))
+  ws.addEventListener('open', () => console.log('WebSocket connection established'))
+  ws.addEventListener('close', () => console.log('WebSocket connection closed'))
 
-  module.exports = createRendererActionClient(ws)
+  module.exports = createActionClient(ws)
 } else if (process.env.TARGET === 'node') {
   module.exports = {}
 } else { // electron
-  module.exports = require('electron').ipcRenderer
+  const actionClient = require('electron').ipcRenderer
+  actionClient.emit('open')
+  module.exports = actionClient
 }
