@@ -7,13 +7,13 @@ import {
   SET_SERVER_STOPPED,
   SET_KEY_DATA,
   SET_SYSTEM_ERROR
-} from './Actions/Core'
-import { REQUEST_SAVE_SETTINGS, SET_SETTINGS } from './Actions/Settings'
-import { ADD_LOG_LINES } from './Actions/Logs'
+} from '../Actions/Core'
+import { REQUEST_SAVE_SETTINGS, SET_SETTINGS } from '../Actions/Settings'
+import { ADD_LOG_LINES } from '../Actions/Logs'
 
-import ChainService from './Services/Chain'
-import SettingsService from './Services/Settings'
-import ActionHistory from './Services/ActionHistory'
+import ChainService from '../Services/Chain'
+import SettingsService from '../Services/Settings'
+import ActionHistory from '../Services/ActionHistory'
 
 function init(actionEmitter) {
   const chain = new ChainService()
@@ -49,7 +49,7 @@ function init(actionEmitter) {
     const chainLogger = (level, data) => {
       const lines = data.split(/\n/g)
       actionHistory.add(ADD_LOG_LINES, lines)
-      if (process.env.TARGET === 'node') {
+      if (process.env.WEBPACK_TARGET === 'node') {
         lines.map((line) => console[level]('ChainService:', line))
       }
     }

@@ -1,18 +1,10 @@
 import { app, BrowserWindow, Menu, shell, ipcMain } from 'electron'
-import { enableLiveReload } from 'electron-compile';
 import path from 'path'
 import EventEmitter from 'events'
 
-import init from './main'
+import init from './init'
 
-const isDevMode = process.execPath.match(/[\\/]electron/);
-
-if (isDevMode) {
-  enableLiveReload({strategy: 'react-hmr'});
-
-  // let installExtension = require('electron-devtools-installer')
-  // let REACT_DEVELOPER_TOOLS = installExtension.REACT_DEVELOPER_TOOLS
-}
+const isDevMode = process.env.NODE_ENV === 'development'
 
 let menu
 let template
@@ -33,8 +25,8 @@ app.setName('Ganache')
 
 const getIconPath = () => {
   return process.platform === 'win32'
-    ? path.resolve(`${__dirname}/../resources/icons/win/icon.ico`)
-    : path.resolve(`${__dirname}/../resources/icons/png/256x256.png`) // Mac & Linux, use an icon
+    ? require('../../resources/icons/win/icon.ico')
+    : require('../../resources/icons/png/256x256.png') // Mac & Linux, use an icon
 }
 
 if (process.platform === 'darwin') {
@@ -69,7 +61,7 @@ app.on('ready', async () => {
       mainWindow.webContents.openDevTools();
     }
 
-    mainWindow.loadURL(`file://${__dirname}/app.html`)
+    mainWindow.loadURL(`file://${path.join(__dirname, process.env.APP_INDEX_PATH)}`)
 
     mainWindow.webContents.on('did-finish-load', () => {
       mainWindow.show()

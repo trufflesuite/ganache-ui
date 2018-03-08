@@ -1,18 +1,12 @@
 #!/usr/bin/env node
 import express from 'express'
 import http from 'http'
-import { createServerActionClient } from './websocket'
+import { createServerActionClient } from '../websocket'
 
-import init from './main'
-
-if (process.argv.length < 2) {
-  console.error(`usage: node ${path.basename(process.argv[1])} <frontendAssetDir>`)
-  process.exit(1)
-}
-const frontendAssetDir = process.argv[2]
+import init from './init'
 
 const app = express()
-app.use(express.static(frontendAssetDir))
+app.use(express.static(path.dirname(path.resolve(__dirname, process.env.APP_INDEX_PATH))))
 
 const server = http.createServer(app)
 const wss = new WebSocket.Server({ server })

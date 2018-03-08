@@ -5,7 +5,7 @@ const getVersion = () => pkg.version
 const getPlatform = () => process.env.PLATFORM || process.platform
 
 const relaunch = () => {
-  if (process.env.PLATFORM === 'browser') {
+  if (process.env.WEBPACK_TARGET === 'web') {
     location.reload()
   } else {
     const { remote } = require('electron')
@@ -15,7 +15,7 @@ const relaunch = () => {
 }
 
 const openExternal = (url) => {
-  if (process.env.PLATFORM === 'browser') {
+  if (process.env.WEBPACK_TARGET === 'web') {
     window.open(url)
   } else {
     require('electron').shell.openExternal(url)
@@ -23,7 +23,7 @@ const openExternal = (url) => {
 }
 
 const enableCookies = () => {
-  if (process.env.PLATFORM !== 'browser') {
+  if (process.env.WEBPACK_TARGET !== 'web') {
     const ElectronCookies = require('@exponent/electron-cookies')
     ElectronCookies.enable({
       origin: 'http://truffleframework.com/ganache'

@@ -51,7 +51,6 @@ const routes = <Route>
   </Route>
 </Route>
 
-//const stylesheets = [
 import "./Styles/colors.scss"
 import "./Styles/normalize.scss"
 import "./Styles/buttons.scss"
@@ -85,28 +84,8 @@ import "./Components/Logs/LogsScreen.scss"
 import "./Components/Logs/LogContainer.scss"
 import "./Components/Config/ConfigScreen.scss"
 import "./Components/NotFound/NotFoundScreen.scss"
-//]
 
 const render = () => {
-/*
-  // This is "our hack"; basically, when HMR tells the Javascript
-  // to rerender the whole app, we remove all stylesheets and re-add
-  // them, so they refresh too. Pretty sweet.
-  let links = document.getElementsByTagName("link")
-  links = Array.prototype.slice.call(links);
-
-  links.forEach((link) => {
-    link.parentElement.removeChild(link)
-  })
-
-  stylesheets.forEach((stylesheet) => {
-    var ss = document.createElement("link")
-    ss.type = "text/css"
-    ss.rel = "stylesheet"
-    ss.href = stylesheet
-    document.getElementsByTagName("head")[0].appendChild(ss)
-  })
-*/
   ReactDOM.render(
     (
       <AppContainer>
@@ -115,7 +94,7 @@ const render = () => {
         </Provider>
       </AppContainer>
     ),
-    document.getElementById("root")
+    document.getElementById("app")
   )
 }
 

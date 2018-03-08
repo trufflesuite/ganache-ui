@@ -6,7 +6,7 @@ export function sanitizeError(errorUnsanitized) {
 
 // Remove any user-specific paths in exception messages
 export function sanitizePaths (message) {
-  if (process.env.PLATFORM !== 'browser') {
+  if (process.env.ELECTRON) {
     const { remote } = require('electron')
     // Prepare our paths so we *always* will get a match no matter
     // path separator (oddly, on Windows, different errors will give
