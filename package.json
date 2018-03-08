@@ -188,6 +188,7 @@
     "rabin-bindings": "^1.7.4",
     "react": "^15.4.2",
     "react-dom": "^15.6.2",
+    "react-ga": "^2.4.1",
     "react-hot-loader": "^3.1.1",
     "react-moment": "^0.2.2",
     "react-redux": "^5.0.2",
@@ -197,7 +198,6 @@
     "redux-thunk": "^2.2.0",
     "reselect": "^2.5.4",
     "scrypt": "^6.0.3",
-    "universal-analytics": "^0.4.13",
     "uuid": "^3.1.0",
     "web3": "1.0.0-beta.27",
     "ws": "^5.0.0"
