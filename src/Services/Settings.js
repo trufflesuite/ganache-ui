@@ -3,18 +3,20 @@ import _ from 'lodash'
 
 const settings = require('electron-settings');
 
+const oldDefaultMnemonic =  "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat";
+
 const initialSettings = {
   googleAnalyticsTracking: true,
   cpuAndMemoryProfiling: false,
   verboseLogging: false,
   firstRun: true,
+  randomizeMnemonicOnStart: false,
   server: {
     hostname: "127.0.0.1",
     port: 7545,
     network_id: 5777,
     total_accounts: 10,
     unlocked_accounts: [],
-    mnemonic: "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat",
     vmErrorsOnRPCResponse: true
   }
 }
@@ -53,10 +55,6 @@ class Settings {
   setAll (obj) {
     // The loop over Object.keys(obj) below doesn't prevent overwriting stored
     // null values in nested objects, so we make sure to preserve them here.
-    // Remember that if the UI cleared a particular setting from a non-null
-    // value, it will always set that key to `null` when that occurs, so
-    // there's no risk here of a previously stored non-null setting overwriting
-    // a setting which the UI just cleared.
     obj = _.merge({}, this._getAllRaw(), obj)
 
     // Translate old setAll to electron-settings setAll
@@ -85,10 +83,49 @@ class Settings {
     // Ensure new settings variables get added by merging all the settings,
     // where the current values take precedence. 
     let currentSettings = this._getAllRaw()
+
+    // Add any non-additive settings changes here by creating a function which
+    // handles the settings change in question.
+    currentSettings = this.migrateMnemonicSettings(currentSettings);
+
     currentSettings = _.merge({}, initialSettings, currentSettings);
 
     // Apply the merged settings
     this.setAll(currentSettings);
+  }
+
+  migrateMnemonicSettings(currentSettings) {
+    // If we're migrating a settings file from before we used a persistent,
+    // randomly generated mnemonic by default, randomizeMnemonic on start will
+    // be undefined.
+    if (currentSettings.randomizeMnemonicOnStart === undefined) {
+
+      // Before we added the randomizeMnemonicOnStart flag, the absence of a
+      // mnemonic meant that we wanted a random one one each run. We want to
+      // preserve this preference.
+      if (currentSettings.server.mnemonic === "") {
+        currentSettings.randomizeMnemonicOnStart = true;
+      } else if (currentSettings.server.mnemonic === oldDefaultMnemonic || !currentSettings.server.mnemonic) {
+
+        // This will cause a new mnemonic to be generated and persisted only in
+        // the case when the old default mnemonic was being used.
+        currentSettings.server.mnemonic = null;
+      }
+    }
+
+    return currentSettings;
+  }
+
+  /**
+   * Called when a new mnemonic is read back from the underlying chain, will
+   * persist this new mnemonic if it differs from the one stored and if
+   * randomizeMnemonicOnStart is false.
+   */
+  handleNewMnemonic(mnemonic) {
+    let currentSettings = this._getAllRaw()
+    if (!currentSettings.randomizeMnemonicOnStart) {
+      this.set('server.mnemonic', mnemonic);
+    }
   }
 }
 
