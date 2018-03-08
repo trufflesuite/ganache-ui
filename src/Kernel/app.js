@@ -22,12 +22,12 @@ const openExternal = (url) => {
   }
 }
 
-const setCookies = (cookies) => {
-  if (process.env.PLATFORM === 'browser') {
-    // TODO
-  } else {
+const enableCookies = () => {
+  if (process.env.PLATFORM !== 'browser') {
     const ElectronCookies = require('@exponent/electron-cookies')
-    ElectronCookies.enable(cookies)
+    ElectronCookies.enable({
+      origin: 'http://truffleframework.com/ganache'
+    })
   }
 }
 
@@ -35,5 +35,6 @@ export default {
   getVersion,
   getPlatform,
   relaunch,
-  openExternal
+  openExternal,
+  enableCookies
 }
