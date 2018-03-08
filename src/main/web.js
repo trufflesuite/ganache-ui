@@ -15,7 +15,7 @@ const wss = new WebSocket.Server({ server })
 
 const serverActionClient = createServerActionClient(wss)
 
-const { setUp, tearDown, handleError } = init(serverActionClient)
+const { setUp, tearDown, handleError } = init(serverActionClient.send, serverActionClient)
 
 process.on('uncaughtException', handleError)
 process.on('unhandledRejection', handleError)

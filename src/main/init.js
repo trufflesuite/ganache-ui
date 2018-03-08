@@ -15,7 +15,7 @@ import ChainService from '../Services/Chain'
 import SettingsService from '../Services/Settings'
 import ActionHistory from '../Services/ActionHistory'
 
-function init(actionEmitter) {
+function init(sendAction, actionEmitter) {
   const chain = new ChainService()
   const Settings = new SettingsService()
 
@@ -29,13 +29,18 @@ function init(actionEmitter) {
     [SET_SETTINGS]: 1
   })
 
+  const send = (type, payload) => {
+    actionHistory.add(type, payload)
+    sendAction(type, payload)
+  }
+
   function setUp() {
     chain.on("start", () => {
       chain.startServer(Settings.getAll().server)
     })
 
     chain.on("server-started", (data) => {
-      actionHistory.add(SET_KEY_DATA, {
+      send(SET_KEY_DATA, {
         privateKeys: data.privateKeys,
         mnemonic: data.mnemonic,
         hdPath: data.hdPath
@@ -43,12 +48,12 @@ function init(actionEmitter) {
 
       Settings.handleNewMnemonic(data.mnemonic)
 
-      actionHistory.add(SET_SERVER_STARTED, Settings.getAll())
+      send(SET_SERVER_STARTED, Settings.getAll())
     })
 
     const chainLogger = (level, data) => {
       const lines = data.split(/\n/g)
-      actionHistory.add(ADD_LOG_LINES, lines)
+      send(ADD_LOG_LINES, lines)
       if (process.env.NODE_ENV === 'development') {
         lines.map((line) => console[level]('ChainService:', line))
       }
@@ -60,7 +65,7 @@ function init(actionEmitter) {
 
     chain.on("error", (error) => {
       console.log(error)
-      actionHistory.add(SET_SYSTEM_ERROR, error)
+      send(SET_SYSTEM_ERROR, error)
     })
 
     chain.start()
@@ -72,7 +77,7 @@ function init(actionEmitter) {
 
   function handleError(err) {
     if (err) {
-      actionHistory.add(SET_SYSTEM_ERROR, err.stack || err)
+      send(SET_SYSTEM_ERROR, err.stack || err)
     }
   }
 
