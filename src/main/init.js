@@ -49,7 +49,7 @@ function init(actionEmitter) {
     const chainLogger = (level, data) => {
       const lines = data.split(/\n/g)
       actionHistory.add(ADD_LOG_LINES, lines)
-      if (process.env.WEBPACK_TARGET === 'node') {
+      if (process.env.NODE_ENV === 'development') {
         lines.map((line) => console[level]('ChainService:', line))
       }
     }
