@@ -4,7 +4,8 @@ const CleanWebpackPlugin = require('clean-webpack-plugin')
 
 const env = process.env.NODE_ENV
 
-const baseOutputDir = path.resolve(__dirname, '../dist')
+const projectRoot = path.resolve(__dirname, '..')
+const baseOutputDir = path.join(projectRoot, 'dist')
 
 const envPlugin = (target) => new webpack.DefinePlugin({
   'process.env.NODE_ENV': JSON.stringify(env),
@@ -68,7 +69,7 @@ module.exports = (target, relOutputDir) => {
     },
     plugins: [
       envPlugin(target),
-      new CleanWebpackPlugin(outputDir),
+      new CleanWebpackPlugin(outputDir, { root: projectRoot }),
     ],
     devtool: env === 'development' && 'eval-source-map'
   }
