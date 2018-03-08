@@ -23,6 +23,15 @@ import NotFoundScreen from './Components/NotFound/NotFoundScreen'
 import TitleScreen from './Components/Title/TitleScreen'
 import FirstRunScreen from './Components/FirstRun/FirstRunScreen'
 
+document.addEventListener('dragover', event => {
+  event.preventDefault()
+  return false
+})
+document.addEventListener('drop', event => {
+  event.preventDefault()
+  return false
+})
+
 const store = createStore(RootReducer)
 
 ready(store)
