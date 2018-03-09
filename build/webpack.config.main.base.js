@@ -18,23 +18,23 @@ fs.readdirSync(path.resolve(__dirname, '../node_modules'))
   });
 
 module.exports = (target, relOutputDir, relEntryFile) => {
-  const config = merge(createBaseConfig(target, relOutputDir), {
-    target: target,
-    entry: path.join(sourceDir, relEntryFile),
+  let config = merge(createBaseConfig(target, relOutputDir), {
+    entry: [path.join(sourceDir, relEntryFile)],
     output: {
       filename: 'index.js'
     },
     node: {
       __dirname: false,
-      __filename: false,
-      process: false
+      __filename: false
     },
     externals: nodeModules
   })
   if (process.env.NODE_ENV === 'development') {
-    config.plugins.push(
-      new webpack.BannerPlugin({ banner: 'require("source-map-support").install();', raw: true, entryOnly: false }),
-    )
+    config = merge(config, {
+      plugins: [
+        new webpack.BannerPlugin({ banner: 'require("source-map-support").install();', raw: true, entryOnly: false }),
+      ]
+    })
   }
   return config
 }

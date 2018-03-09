@@ -70,7 +70,7 @@ module.exports = (target, relOutputDir) => {
     },
     plugins: [
       envPlugin(target),
-      new CleanWebpackPlugin(outputDir),
+      new CleanWebpackPlugin(outputDir, { root: projectRoot }),
     ],
     devtool: env === 'development' && 'eval-source-map'
   }

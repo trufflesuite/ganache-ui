@@ -7,12 +7,14 @@ const createMainConfig = require('./webpack.config.main.base')
 const rendererConfig = require('./webpack.config.renderer.web')
 const chainConfig = require('./webpack.config.main.chain')
 
-const baseConfig = createMainConfig('node', 'web/main', 'main/web.js')
+const BACKEND_PORT = process.env.BACKEND_PORT || 8181
 
-const appIndexPath = path.relative(baseConfig.output.path, path.join(rendererConfig.output.path, 'index.html'))
-const chainPath = path.relative(baseConfig.output.path, path.join(chainConfig.output.path, chainConfig.output.filename))
+let config = createMainConfig('node', 'web/main', 'main/web.js')
 
-const config = merge(baseConfig, {
+const appIndexPath = path.relative(config.output.path, path.join(rendererConfig.output.path, 'index.html'))
+const chainPath = path.relative(config.output.path, path.join(chainConfig.output.path, chainConfig.output.filename))
+
+config = merge(config, {
   plugins: [
     new webpack.ProvidePlugin({
       WebSocket: 'ws'
@@ -27,9 +29,14 @@ const config = merge(baseConfig, {
 const outputDir = config.output.path
 const outputFile = config.output.filename
 if (process.env.NODE_ENV === 'development') {
-  config.plugins.push(
-    new WebpackShellPlugin({ onBuildEnd: [`nodemon -w ${outputDir} ${path.join(outputDir, outputFile)}`] })
-  )
+  config = merge(config, {
+    plugins: [
+      new webpack.DefinePlugin({
+        'process.env.PORT': BACKEND_PORT
+      }),
+      new WebpackShellPlugin({ onBuildEnd: [`nodemon -w ${outputDir} -w ${chainConfig.output.path} ${path.join(outputDir, outputFile)}`] })
+    ]
+  })
 }
 
-module.exports = config
+module.exports = [config, chainConfig]

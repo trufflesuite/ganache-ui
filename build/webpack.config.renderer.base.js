@@ -10,8 +10,9 @@ const createBaseConfig = require('./webpack.config.base')
 const sourceDir = path.resolve(__dirname, '../src')
 
 module.exports = (target, relOutputDir) => {
-  const config = merge(createBaseConfig(target, relOutputDir), {
-    entry: path.join(sourceDir, 'app.js'),
+  const baseConfig = createBaseConfig(target, relOutputDir)
+  let config = merge(baseConfig, {
+    entry: [path.join(sourceDir, 'app.js')],
     output: {
       filename: 'bundle.[hash:6].js'
     },
@@ -29,9 +30,22 @@ module.exports = (target, relOutputDir) => {
     }
   })
   if (process.env.NODE_ENV === 'production') {
-    config.plugins.push(new UglifyJsPlugin({
-      sourceMap: false
-    }))
+    config = merge(config, {
+      plugins: [
+        new UglifyJsPlugin({ sourceMap: false })
+      ]
+    })
+  } else {
+    config = merge(config, {
+      devServer: {
+        contentBase: baseConfig.output.path,
+        hot: true
+      },
+      plugins: [
+        new webpack.NamedModulesPlugin(),
+        new webpack.HotModuleReplacementPlugin()
+      ]
+    })
   }
   return config
 }

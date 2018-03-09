@@ -7,12 +7,12 @@ const createMainConfig = require('./webpack.config.main.base')
 const rendererConfig = require('./webpack.config.renderer.electron')
 const chainConfig = require('./webpack.config.main.chain')
 
-const baseConfig = createMainConfig('electron-main', 'electron/main', 'main/electron.js')
+let config = createMainConfig('electron-main', 'electron/main', 'main/electron.js')
 
-const appIndexPath = path.relative(baseConfig.output.path, path.join(rendererConfig.output.path, 'index.html'))
-const chainPath = path.relative(baseConfig.output.path, path.join(chainConfig.output.path, chainConfig.output.filename))
+const appIndexPath = path.relative(config.output.path, path.join(rendererConfig.output.path, 'index.html'))
+const chainPath = path.relative(config.output.path, path.join(chainConfig.output.path, chainConfig.output.filename))
 
-const config = merge(baseConfig, {
+config = merge(config, {
   plugins: [
     new webpack.DefinePlugin({
       'process.env.APP_INDEX_PATH': JSON.stringify(appIndexPath),
@@ -24,9 +24,11 @@ const config = merge(baseConfig, {
 const outputDir = config.output.path
 const outputFile = config.output.filename
 if (process.env.NODE_ENV === 'development') {
-  config.plugins.push(
-    new WebpackShellPlugin({ onBuildEnd: ['electron-forge start'] })
-  )
+  config = merge(config, {
+    plugins: [
+      new WebpackShellPlugin({ onBuildEnd: ['electron-forge start'] })
+    ]
+  })
 }
 
-module.exports = config
+module.exports = [config, chainConfig]

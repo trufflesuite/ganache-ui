@@ -7,6 +7,8 @@ import init from './init'
 
 import { createServerActionClient } from '../websocket'
 
+const PORT = process.env.PORT || 8081
+
 const app = express()
 app.use(express.static(path.dirname(path.resolve(__dirname, process.env.APP_INDEX_PATH))))
 
@@ -23,4 +25,4 @@ process.on('exit', tearDown)
 
 setUp()
 
-server.listen(8080, () => console.log('Listening on %d', server.address().port))
+server.listen(PORT, () => console.log('Backend server listening on %d', server.address().port))

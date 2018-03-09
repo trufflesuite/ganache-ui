@@ -94,7 +94,7 @@ const render = () => {
         </Provider>
       </AppContainer>
     ),
-    document.getElementById("app")
+    document.getElementById("root")
   )
 }
 
