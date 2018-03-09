@@ -6,10 +6,9 @@
   "main": "./dist/electron/main/index.js",
   "private": true,
   "scripts": {
-    "start": "cross-env NODE_ENV=development concurrently \"webpack-dev-server --config build/webpack.config.renderer.electron.js\" \"webpack --watch --config build/webpack.config.main.electron.js\"",
-    "start-web": "cross-env NODE_ENV=development concurrently \"webpack-dev-server --config build/webpack.config.renderer.web.js\" \"webpack --watch --config build/webpack.config.main.web.js\"",
+    "start": "npm run dev:electron",
     "package": "electron-forge package",
-    "make": "npm run compile-electron && electron-forge make",
+    "make": "npm run compile:electron && electron-forge make",
     "publish": "electron-forge publish",
     "lint": "echo \"No linting configured\"",
     "sign-mac": "codesign --deep --force --verbose --sign 'Developer ID Application: Timothy Coulter (58RKXWC272)' ./out/make/*.dmg",
@@ -17,8 +16,12 @@
     "build-linux": "cd ./node_modules/rabin-bindings && node-gyp rebuild && cd ../../ && npm run make",
     "build-mac": "npm run make && npm run sign-mac",
     "build-windows": "bash -c \"echo ${CERT_PASS?\\\"Need to set CERT_PASS to build on Windows\\\"} > /dev/null\" && npm run make",
-    "compile-electron": "cross-env NODE_ENV=production webpack --config build/webpack.config.electron.js",
-    "compile-web": "cross-env NODE_ENV=production webpack --config build/webpack.config.web.js"
+    "dev": "build/scripts/dev.js",
+    "dev:electron": "npm run dev -- electron",
+    "dev:web": "npm run dev -- web",
+    "compile": "build/scripts/compile.js",
+    "compile:electron": "npm run compile -- electron",
+    "compile:web": "npm run compile -- web"
   },
   "browserslist": "chrome 50",
   "build": {
