@@ -68,6 +68,11 @@ function init(sendAction, actionEmitter) {
       send(SET_SYSTEM_ERROR, error)
     })
 
+    chain.on('server-stopped', () => {
+      actionHistory.clear(SET_KEY_DATA)
+      actionHistory.clear(SET_SERVER_STARTED)
+    })
+
     chain.start()
   }
 
@@ -84,6 +89,7 @@ function init(sendAction, actionEmitter) {
   // If the frontend asks to start the server, start the server.
   // This will trigger then chain event handlers above once the server stops.
   actionEmitter.on(REQUEST_SERVER_RESTART, () => {
+    actionHistory.clear(SET_SYSTEM_ERROR)
     if (chain.isServerStarted()) {
       chain.once("server-stopped", () => {
         chain.startServer(Settings.getAll())

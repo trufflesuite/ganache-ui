@@ -6,7 +6,7 @@ const getPlatform = () => process.env.PLATFORM || process.platform
 
 const relaunch = () => {
   if (process.env.WEBPACK_TARGET === 'web') {
-    location.reload()
+    window.location.reload()
   } else {
     const { remote } = require('electron')
     remote.app.relaunch()
