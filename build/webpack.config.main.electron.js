@@ -3,6 +3,8 @@ const merge = require('webpack-merge')
 const path = require('path')
 const WebpackShellPlugin = require('webpack-shell-plugin')
 
+const { PORT_ELECTRON_FRONTEND } = require('./env.js')
+
 const createMainConfig = require('./webpack.config.main.base')
 const rendererConfig = require('./webpack.config.renderer.electron')
 const chainConfig = require('./webpack.config.main.chain')
@@ -26,6 +28,9 @@ const outputFile = config.output.filename
 if (process.env.NODE_ENV === 'development') {
   config = merge(config, {
     plugins: [
+      new webpack.DefinePlugin({
+        'process.env.APP_URL': JSON.stringify(`http://localhost:${PORT_ELECTRON_FRONTEND}`)
+      }),
       new WebpackShellPlugin({ onBuildEnd: ['electron-forge start'] })
     ]
   })

@@ -61,7 +61,7 @@ app.on('ready', async () => {
       mainWindow.webContents.openDevTools();
     }
 
-    mainWindow.loadURL(`file://${path.join(__dirname, process.env.APP_INDEX_PATH)}`)
+    mainWindow.loadURL(process.env.APP_URL || `file://${path.join(__dirname, process.env.APP_INDEX_PATH)}`)
 
     mainWindow.webContents.on('did-finish-load', () => {
       mainWindow.show()

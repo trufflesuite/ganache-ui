@@ -3,11 +3,11 @@ const merge = require('webpack-merge')
 const path = require('path')
 const WebpackShellPlugin = require('webpack-shell-plugin')
 
+const { PORT_WEB_BACKEND } = require('./env.js')
+
 const createMainConfig = require('./webpack.config.main.base')
 const rendererConfig = require('./webpack.config.renderer.web')
 const chainConfig = require('./webpack.config.main.chain')
-
-const BACKEND_PORT = process.env.BACKEND_PORT || 8181
 
 let config = createMainConfig('node', 'web/main', 'main/web.js')
 
@@ -32,7 +32,7 @@ if (process.env.NODE_ENV === 'development') {
   config = merge(config, {
     plugins: [
       new webpack.DefinePlugin({
-        'process.env.PORT': BACKEND_PORT
+        'process.env.PORT': PORT_WEB_BACKEND
       }),
       new WebpackShellPlugin({ onBuildEnd: [`nodemon -w ${outputDir} -w ${chainConfig.output.path} ${path.join(outputDir, outputFile)}`] })
     ]

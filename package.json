@@ -6,7 +6,7 @@
   "main": "./dist/electron/main/index.js",
   "private": true,
   "scripts": {
-    "start": "cross-env NODE_ENV=development webpack --watch --config build/webpack.config.electron.js",
+    "start": "cross-env NODE_ENV=development concurrently \"webpack-dev-server --config build/webpack.config.renderer.electron.js\" \"webpack --watch --config build/webpack.config.main.electron.js\"",
     "start-web": "cross-env NODE_ENV=development concurrently \"webpack-dev-server --config build/webpack.config.renderer.web.js\" \"webpack --watch --config build/webpack.config.main.web.js\"",
     "package": "electron-forge package",
     "make": "npm run compile-electron && electron-forge make",
