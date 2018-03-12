@@ -41,7 +41,7 @@ export const createServerActionClient = (wss) => {
   // Broadcast to all.
   wss.broadcast = (data) => {
     wss.clients.forEach((client) => {
-      if (client.readyState === window.WebSocket.OPEN) {
+      if (client.readyState === WebSocket.OPEN) {
         client.send(data)
       }
     })
