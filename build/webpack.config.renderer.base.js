@@ -1,7 +1,6 @@
 const webpack = require('webpack')
 const merge = require('webpack-merge')
 const path = require('path')
-const fs = require('fs')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
@@ -14,7 +13,7 @@ module.exports = (target, relOutputDir) => {
   let config = merge(baseConfig, {
     entry: [path.join(sourceDir, 'app.js')],
     output: {
-      filename: 'bundle.[hash:6].js'
+      filename: 'ganache.[hash:6].js'
     },
     plugins: [
       new HtmlWebpackPlugin({
@@ -23,7 +22,7 @@ module.exports = (target, relOutputDir) => {
       })
     ],
     node: {
-      fs: 'empty',
+      fs: 'empty'
     },
     resolve: {
       mainFields: ['browser', 'module', 'main']
