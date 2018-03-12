@@ -31,6 +31,7 @@ export default function (store) {
     store.dispatch(Accounts.getAccounts())
     store.dispatch(Core.getGasPrice())
     store.dispatch(Core.getGasLimit())
+    store.dispatch(Core.getLatestBlock())
 
     store.dispatch(Core.getBlockSubscription())
 

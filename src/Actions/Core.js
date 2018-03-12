@@ -77,6 +77,15 @@ export const setBlockNumber = function(number) {
     dispatch(getAccounts())
   }
 }
+export const getLatestBlock = function() {
+  return async function(dispatch, getState) {
+    let blockNumber = await web3ActionCreator(dispatch, getState, "getBlockNumber")
+    let currentBlockNumber = getState().core.latestBlock
+    if (blockNumber !== currentBlockNumber) {
+      dispatch(setBlockNumber(blockNumber))
+    }
+  }
+}
 
 export const GET_BLOCK_SUBSCRIPTION = `${prefix}/GET_BLOCK_SUBSCRIPTION`
 export const getBlockSubscription = function() {
