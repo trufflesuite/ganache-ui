@@ -1,6 +1,5 @@
 import { app, BrowserWindow, Menu, shell, ipcMain } from 'electron'
 import path from 'path'
-import EventEmitter from 'events'
 
 import init from './init'
 
@@ -53,12 +52,12 @@ app.on('ready', async () => {
     process.on('uncaughtException', handleError)
     process.on('unhandledRejection', handleError)
 
-    app.on('will-quit', tearDown);
+    app.on('will-quit', tearDown)
 
-     // Open the DevTools.
+    // Open the DevTools.
     if (isDevMode) {
-      //installExtension(REACT_DEVELOPER_TOOLS);
-      mainWindow.webContents.openDevTools();
+      // installExtension(REACT_DEVELOPER_TOOLS)
+      mainWindow.webContents.openDevTools()
     }
 
     mainWindow.loadURL(process.env.APP_URL || `file://${path.join(__dirname, process.env.APP_INDEX_PATH)}`)
@@ -69,7 +68,7 @@ app.on('ready', async () => {
       mainWindow.setTitle('Ganache')
 
       // Remove the menu bar
-      mainWindow.setMenu(null);
+      mainWindow.setMenu(null)
 
       setUp()
     })
