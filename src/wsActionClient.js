@@ -12,7 +12,7 @@ const parseAction = (actionString) => {
 
 const createActionSender = (sendMessage) => (type, payload) => sendMessage(stringifyAction({ type, payload }))
 
-export const emitActions = (ws, actionEmitter) => {
+const emitActions = (ws, actionEmitter) => {
   (['error', 'open', 'close']).forEach((name) => ws.addEventListener(name, (...args) => actionEmitter.emit(name, ...args)))
   ws.addEventListener('message', ({ data: message }) => {
     const action = parseAction(message)
@@ -41,11 +41,11 @@ export const createServerActionClient = (wss) => {
   // Broadcast to all.
   wss.broadcast = (data) => {
     wss.clients.forEach((client) => {
-      if (client.readyState === WebSocket.OPEN) {
-        client.send(data);
+      if (client.readyState === window.WebSocket.OPEN) {
+        client.send(data)
       }
-    });
-  };
+    })
+  }
 
   const actionClient = new EventEmitter()
   wss.on('connection', (ws) => {

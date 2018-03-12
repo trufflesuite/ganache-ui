@@ -5,7 +5,7 @@ import path from 'path'
 
 import init from './init'
 
-import { createServerActionClient } from '../websocket'
+import { createServerActionClient } from '../wsActionClient'
 
 const PORT = process.env.PORT || 8080
 
