@@ -62,6 +62,7 @@ app.on('ready', async () => {
 
     mainWindow.loadURL(process.env.APP_URL || `file://${path.join(__dirname, process.env.APP_INDEX_PATH)}`)
 
+    let didSetUp = false
     mainWindow.webContents.on('did-finish-load', () => {
       mainWindow.show()
       mainWindow.focus()
@@ -70,7 +71,13 @@ app.on('ready', async () => {
       // Remove the menu bar
       mainWindow.setMenu(null)
 
-      setUp()
+      if (!didSetUp) {
+        // The did-finish-load event can be triggered multiple times when
+        // webpack hot reloading is enabled so we need to avoid calling
+        // setUp multiple times
+        setUp()
+        didSetUp = true
+      }
     })
 
     mainWindow.on('closed', () => {
