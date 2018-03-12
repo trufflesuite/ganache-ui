@@ -3,8 +3,6 @@ const merge = require('webpack-merge')
 const path = require('path')
 const WebpackShellPlugin = require('webpack-shell-plugin')
 
-const { PORT_WEB_BACKEND } = require('./env.js')
-
 const createMainConfig = require('./webpack.config.main.base')
 const rendererConfig = require('./webpack.config.renderer.web')
 const chainConfig = require('./webpack.config.main.chain')
@@ -16,19 +14,21 @@ const chainPath = path.relative(config.output.path, path.join(chainConfig.output
 
 config = merge(config, {
   plugins: [
-    new webpack.ProvidePlugin({
-      WebSocket: 'ws'
-    }),
     new webpack.DefinePlugin({
       'process.env.APP_INDEX_PATH': JSON.stringify(appIndexPath),
       'process.env.CHAIN_PATH': JSON.stringify(chainPath)
+    }),
+    new webpack.ProvidePlugin({
+      WebSocket: 'ws'
     })
   ]
 })
 
-const outputDir = config.output.path
-const outputFile = config.output.filename
-if (process.env.NODE_ENV === 'development') {
+if (process.env.RUN_DEV) { // Executing via "npm run dev"
+  const { PORT_WEB_BACKEND } = require('./env.js')
+  const outputDir = config.output.path
+  const outputFile = config.output.filename
+
   config = merge(config, {
     plugins: [
       new webpack.DefinePlugin({

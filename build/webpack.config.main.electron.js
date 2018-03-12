@@ -3,8 +3,6 @@ const merge = require('webpack-merge')
 const path = require('path')
 const WebpackShellPlugin = require('webpack-shell-plugin')
 
-const { PORT_ELECTRON_FRONTEND } = require('./env.js')
-
 const createMainConfig = require('./webpack.config.main.base')
 const rendererConfig = require('./webpack.config.renderer.electron')
 const chainConfig = require('./webpack.config.main.chain')
@@ -23,9 +21,8 @@ config = merge(config, {
   ]
 })
 
-const outputDir = config.output.path
-const outputFile = config.output.filename
-if (process.env.NODE_ENV === 'development') {
+if (process.env.RUN_DEV) { // Executing via "npm run dev"
+  const { PORT_ELECTRON_FRONTEND } = require('./env.js')
   config = merge(config, {
     plugins: [
       new webpack.DefinePlugin({

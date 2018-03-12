@@ -10,12 +10,10 @@ const sourceDir = path.resolve(__dirname, '../src')
 // Source: https://jlongster.com/Backend-Apps-with-Webpack--Part-I
 var nodeModules = {}
 fs.readdirSync(path.resolve(__dirname, '../node_modules'))
-  .filter(function(x) {
-    return ['.bin'].indexOf(x) === -1
-  })
-  .forEach(function(mod) {
+  .filter((x) => ['.bin'].indexOf(x) === -1)
+  .forEach((mod) => {
     nodeModules[mod] = 'commonjs ' + mod
-  });
+  })
 
 module.exports = (target, relOutputDir, relEntryFile) => {
   let config = merge(createBaseConfig(target, relOutputDir), {
