@@ -2,9 +2,10 @@
 
 let actionClient
 if (process.env.WEBPACK_TARGET === 'web') {
+  const ReconnectingWebSocket = require('reconnecting-websocket')
   const { createActionClient } = require('../wsActionClient')
   const backendHost = `ws://${window.location.host}/wss`
-  const ws = new window.WebSocket(backendHost)
+  const ws = new ReconnectingWebSocket(backendHost)
   ws.addEventListener('error', (e) => console.error(`WebSocket error connecting to backend ${backendHost}`, e))
   ws.addEventListener('open', () => console.log(`Opened WebSocket connection to backend ${backendHost}`))
   ws.addEventListener('close', () => console.log(`Closed WebSocket connection to backend ${backendHost}`))
