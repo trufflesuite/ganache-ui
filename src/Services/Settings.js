@@ -2,7 +2,9 @@ import uuid from 'uuid'
 import _ from 'lodash'
 
 let settings
-if (process.env.WEBPACK_TARGET === 'node') {
+if (process.env.ELECTRON) {
+  settings = require('electron-settings')
+} else { // Web backend
   const Configstore = require('configstore')
   const pkg = require('../../package.json')
   const conf = new Configstore(pkg.name)
@@ -10,12 +12,10 @@ if (process.env.WEBPACK_TARGET === 'node') {
     get: conf.get.bind(conf),
     getAll: () => conf.all,
     set: conf.set.bind(conf),
-    setAll: (o) => { conf.all = o; },
+    setAll: (o) => { conf.all = o },
     delete: conf.delete.bind(conf),
     deleteAll: conf.clear.bind(conf)
   }
-} else {
-  settings = require('electron-settings')
 }
 
 const oldDefaultMnemonic =  "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat";
