@@ -21,7 +21,9 @@
     "dev:web": "npm run dev -- web",
     "compile": "build/scripts/compile.js",
     "compile:electron": "npm run compile -- electron",
-    "compile:web": "npm run compile -- web"
+    "compile:web": "npm run compile -- web",
+    "start:electron": "electron-forge start",
+    "start:web": "node dist/web/main/index.js"
   },
   "browserslist": "chrome 50",
   "build": {
