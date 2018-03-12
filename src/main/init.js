@@ -36,7 +36,7 @@ function init(sendAction, actionEmitter) {
 
   function setUp() {
     chain.on("start", () => {
-      chain.startServer(Settings.getAll().server)
+      chain.startServer(Settings.getAll())
     })
 
     chain.on("server-started", (data) => {
