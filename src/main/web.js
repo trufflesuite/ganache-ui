@@ -25,4 +25,4 @@ process.on('exit', tearDown)
 
 setUp()
 
-server.listen(PORT, () => console.log('Backend server listening on %d', server.address().port))
+server.listen(PORT, () => console.log('Ganache backend server listening on %d', server.address().port))
