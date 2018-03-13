@@ -1,8 +1,10 @@
 const webpack = require('webpack')
+const merge = require('webpack-merge')
 const path = require('path')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 
 const env = process.env.NODE_ENV
+const isDev = env === 'development'
 
 const projectRoot = path.resolve(__dirname, '../')
 const baseOutputDir = path.join(projectRoot, 'dist')
@@ -24,7 +26,7 @@ const jsRule = {
 const cssRule = {
   test: /(\.css|\.scss)$/,
   rules: [
-    { loader: 'style-loader'},
+    { loader: 'style-loader' },
     { loader: 'css-loader',
       options: {
         sourceMap: true,
@@ -39,33 +41,40 @@ const cssRule = {
   ]
 }
 
-const fileRule = {
-  test: /\.(png|jpg|gif|ttf|ico)$/,
+const createFileRule = (test, subDir) => ({
+  test,
   use: [{
     loader: 'file-loader',
     options: {
+      context: path.join(projectRoot, 'resources'),
       outputPath: 'assets/',
-      publicPath: 'assets/',
-      name: '[name].[hash:8].[ext]'
+      name: () => isDev ? '[path][name].[ext]' : `${subDir}/[hash].[ext]`
     }
   }]
-}
+})
+
+const imgRule = createFileRule(/\.(png|jpe?g|gif|svg|ico)(\?.*)?$/, 'img')
+const fontRule = createFileRule(/\.(woff2?|eot|ttf|otf)(\?.*)?$/, 'font')
+
+// Explicitly specify what to clean to avoid wiping favicons cache
+const filesToClean = ['*.*', 'assets/img/', 'assets/font/']
 
 module.exports = (target, relOutputDir) => {
   const outputDir = path.join(baseOutputDir, relOutputDir)
-  return {
+  let config = {
     target: target,
     context: projectRoot,
     output: {
       path: outputDir
     },
     module: {
-      rules: [jsRule, cssRule, fileRule]
+      rules: [jsRule, cssRule, imgRule, fontRule]
     },
     plugins: [
       envPlugin(target),
-      new CleanWebpackPlugin(outputDir, { root: projectRoot }),
+      new CleanWebpackPlugin(filesToClean.map((f) => path.join(outputDir, f)), { root: baseOutputDir })
     ],
     devtool: env === 'development' && 'eval-source-map'
   }
+  return config
 }
