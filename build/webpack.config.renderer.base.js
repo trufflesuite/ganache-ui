@@ -6,19 +6,17 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const createBaseConfig = require('./webpack.config.base')
 
-const sourceDir = path.resolve(__dirname, '../src')
-
 module.exports = (target, relOutputDir) => {
   const baseConfig = createBaseConfig(target, relOutputDir)
   let config = merge(baseConfig, {
-    entry: [path.join(sourceDir, 'app.js')],
+    entry: [path.join(baseConfig.context, 'src/app.js')],
     output: {
-      filename: 'ganache.[hash:6].js'
+      filename: 'ganache.[hash:8].js'
     },
     plugins: [
       new HtmlWebpackPlugin({
         filename: 'index.html',
-        template: path.join(sourceDir, 'app.html')
+        template: path.join(baseConfig.context, 'src/app.html')
       })
     ],
     node: {

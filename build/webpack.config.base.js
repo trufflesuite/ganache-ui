@@ -11,7 +11,7 @@ const envPlugin = (target) => new webpack.DefinePlugin({
   'process.env.NODE_ENV': JSON.stringify(env),
   'process.env.WEBPACK_TARGET': JSON.stringify(target),
   'process.env.ELECTRON': JSON.stringify(target.includes('electron'))
-});
+})
 
 const jsRule = {
   test: /\.js$/,
@@ -46,13 +46,7 @@ const fileRule = {
     options: {
       outputPath: 'assets/',
       publicPath: 'assets/',
-      name (file) {
-        if (env === 'development') {
-          return '[path][name].[ext]'
-        }
-
-        return '[hash].[ext]'
-      }
+      name: '[name].[hash:8].[ext]'
     }
   }]
 }
