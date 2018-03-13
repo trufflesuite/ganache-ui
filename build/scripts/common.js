@@ -1,5 +1,5 @@
 const path = require('path')
-const { execSync } = require('child_process')
+const { spawnSync } = require('child_process')
 const fs = require('fs')
 
 const webpackDir = path.resolve(__dirname, '../')
@@ -10,7 +10,7 @@ const getConfigNames = () => fs.readdirSync(webpackDir)
   .filter((f) => f.startsWith('webpack.config'))
   .map((f) => f.replace('webpack.config.', '').replace('.js', ''))
 
-const run = (cmd) => execSync(cmd, { stdio: 'inherit' })
+const run = (cmd, ...args) => spawnSync(cmd, args, { stdio: 'inherit' })
 
 module.exports = {
   webpackDir,

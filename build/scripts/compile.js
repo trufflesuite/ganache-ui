@@ -20,4 +20,4 @@ const configName = process.argv[2]
 const configPath = getConfigPath(configName)
 console.log(`Compiling using webpack config ${configPath}`)
 
-run(`cross-env NODE_ENV=${nodeEnv} webpack --config "${configPath}"`)
+run('cross-env', `NODE_ENV=${nodeEnv}`, 'webpack', '--config', configPath)
