@@ -6,10 +6,6 @@ const FaviconsWebpackPlugin = require('favicons-webpack-plugin')
 const pkg = require('../package.json')
 const createRendererConfig = require('./webpack.config.renderer.base')
 
-const { PORT_WEB_FRONTEND, PORT_WEB_BACKEND } = require('./env.js')
-
-const env = process.env.NODE_ENV
-
 let config = createRendererConfig('web', 'web/renderer')
 
 config = merge(config, {
@@ -26,7 +22,8 @@ config = merge(config, {
   ]
 })
 
-if (env === 'development') {
+if (process.env.RUN_DEV) {
+  const { PORT_WEB_FRONTEND, PORT_WEB_BACKEND } = require('./env.js')
   config = merge(config, {
     devServer: {
       port: PORT_WEB_FRONTEND,
