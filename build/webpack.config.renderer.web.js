@@ -17,8 +17,7 @@ config = merge(config, {
     new FaviconsWebpackPlugin({
       logo: path.join(config.context, 'resources/logo.png'),
       prefix: 'assets/favicon-[hash:8]/',
-      emitStats: env === 'development',
-      statsFilename: 'faviconstats.[hash:8].json',
+      emitStats: false,
       cache: true,
       inject: true,
       background: '#fff',
