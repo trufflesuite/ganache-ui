@@ -1,14 +1,7 @@
 #!/usr/bin/env node
-const path = require('path')
-const { getConfigPath, run } = require('./common')
+const { run, getConfigPath, getArg } = require('./common')
 
-if (process.argv.length < 3) {
-  const validConfigNames = ['electron', 'web']
-  console.error(`Usage: ${path.basename(process.argv[1])} <${validConfigNames.join('|')}>`)
-  process.exit(1)
-}
-
-const configName = process.argv[2]
+const configName = getArg(['electron', 'web'])
 const rendererConfigPath = getConfigPath(`renderer.${configName}`)
 const mainConfigPath = getConfigPath(`main.${configName}`)
 console.log(`Starting dev server using webpack config ${rendererConfigPath}`)
