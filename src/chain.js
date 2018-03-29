@@ -3,12 +3,24 @@
 var ganacheLib = require("ganache-cli")
 var path = require("path")
 
+if (!process.send) {
+  console.log("Not running as child process. Throwing.")
+  throw new Error("Must be run as a child process!")
+}
+
 // remove the uncaughtException listener added by ganache-cli
 process.removeAllListeners('uncaughtException')
 
-if (!process.send) {
-  throw new Error("Must be run as a child process!")
-}
+process.on('unhandledRejection', (err) => {		
+  //console.log('unhandled rejection:', err.stack || err)		
+  process.send({type: 'error', data: copyErrorFields(err)})		
+});
+
+process.on('uncaughtException', (err) => {		
+  //console.log('uncaught exception:', err.stack || err)		
+  process.send({type: 'error', data: copyErrorFields(err)})		
+});
+
 
 var server;
 var provider;
@@ -139,16 +151,6 @@ function copyErrorFields(e) {
 
   return err
 }
-
-process.on('unhandledRejection', (err) => {		
-  //console.log('unhandled rejection:', err.stack || err)		
-  process.send({type: 'error', data: copyErrorFields(err)})		
-});
-
-process.on('uncaughtException', (err) => {		
-  //console.log('uncaught exception:', err.stack || err)		
-  process.send({type: 'error', data: copyErrorFields(err)})		
-});
 
 process.send({type: 'process-started'})
 

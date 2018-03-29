@@ -96,3 +96,4 @@ export const SET_SYSTEM_ERROR = `${prefix}/SET_SYSTEM_ERROR`
 export const setSystemError = function(error) {
   return {type: SET_SYSTEM_ERROR, error}
 }
+

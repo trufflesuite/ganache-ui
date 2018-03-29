@@ -17,6 +17,7 @@ const initialState = {
   systemError: null,
   blocks: [], 
   transactions: [],
+  updateInfo: {}
 }
 
 export default function (state = initialState, action) {
@@ -83,9 +84,18 @@ export default function (state = initialState, action) {
       return Object.assign({}, state, {
         latestBlock: action.number
       })
+
     case Core.SET_SYSTEM_ERROR:
       return Object.assign({}, state, {
         systemError: action.error
+      })
+
+    case Core.SET_NEW_VERSION_INFO:
+      return Object.assign({}, state, {
+        updateInfo: {
+          newVersion: action.newVersion,
+          releaseNotes: action.releaseNotes
+        }
       })
 
     default:

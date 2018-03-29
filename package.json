@@ -7,47 +7,111 @@
   "private": true,
   "scripts": {
     "start": "electron-forge start",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
-    "publish": "electron-forge publish",
+    "package": "electron-builder package",
+    "make": "electron-builder build",
+    "publish": "electron-builder publish",
     "lint": "echo \"No linting configured\"",
-    "sign-mac": "codesign --deep --force --verbose --sign 'Developer ID Application: Timothy Coulter (58RKXWC272)' ./out/make/*.dmg",
+    "sign-mac": "codesign --deep --force --verbose --sign 'Developer ID Application: Timothy Coulter (58RKXWC272)' ./dist/*.dmg",
     "makeappxassets": "svg2uwptiles -i ./Logo.svg -c ./blank.svg -o ./resources/appx/",
     "build-linux": "cd ./node_modules/rabin-bindings && node-gyp rebuild && cd ../../ && npm run make",
-    "build-mac": "npm run make && npm run sign-mac",
+    "build-mac": "npm run make",
     "build-windows": "bash -c \"echo ${CERT_PASS?\\\"Need to set CERT_PASS to build on Windows\\\"} > /dev/null\" && npm run make"
   },
   "browserslist": "chrome 50",
   "build": {
+    "appId": "org.trufflesuite.ganache",
+    "files": [
+      "src/**/*",
+      "node_modules/**/*",
+      "resources/fonts/*",
+      "resources/icons/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "buildResources": "resources",
+      "output": "dist"
+    },
+    "win": {
+      "icon": "resources/icons/win/icon.ico",
+      "certificateFile": "./certs/cert.pfx",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        },
+        {
+          "target": "appx",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ]
+    },
+    "appx": {
+      "identityName": "Ganache",
+      "publisher": "CN=Consensys Inc, O=Consensys Inc, L=New York, S=New York, C=US",
+      "publisherDisplayName": "Consensys Inc",
+      "backgroundColor": "#34262A"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": "true",
+      "deleteAppDataOnUninstall": "true",
+      "artifactName": "ganache-setup-${version}.${ext}"
+    },
     "mac": {
-      "icon": "./resources/icons/icon.icns"
+      "icon": "resources/icons/icon.icns",
+      "identity": "Timothy Coulter (58RKXWC272)"
+    },
+    "dmg": {
+      "background": "resources/dmg/background.tiff",
+      "contents": [
+        {
+          "x": 219,
+          "y": 358,
+          "type": "dir",
+          "name": "Ganache.app"
+        },
+        {
+          "x": 439,
+          "y": 358,
+          "type": "link",
+          "name": "Applications",
+          "path": "/Applications"
+        }
+      ],
+      "icon": "resources/icons/icon.icns",
+      "format": "ULFO"
     },
     "linux": {
-      "target": "AppImage",
-      "icon": "./resources/icons/png/",
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "resources/icons/png/",
       "category": "Development",
       "executableName": "Ganache"
-    }
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "trufflesuite",
+        "repo": "ganache"
+      }
+    ]
   },
   "config": {
     "forge": {
-      "make_targets": {
-        "win32": [
-          "appx",
-          "squirrel"
-        ],
-        "darwin": [
-          "dmg"
-        ],
-        "linux": [
-          "appimage"
-        ]
-      },
       "electronPackagerConfig": {
-        "icon": "resources/icons/icon.ico",
-        "osxSign": {
-          "identity": "Developer ID Application: Timothy Coulter (58RKXWC272)"
-        },
+        "icon": "resources/icons/win/icon.ico",
         "prune": true,
         "ignore": [
           ".*node_modules/fsevents/build.*",
@@ -57,42 +121,6 @@
         "afterPrune": [
           "./forge_hooks/afterPrune.js"
         ]
-      },
-      "electronWinstallerConfig": {
-        "name": "<%= productName %>",
-        "setupIcon": "resources/icons/win/icon.ico"
-      },
-      "electronInstallerDebian": {
-        "icon": "resources/logo.png",
-        "categories": [
-          "Development"
-        ],
-        "homepage": "https://truffleframework.com"
-      },
-      "github_repository": {
-        "owner": "",
-        "name": ""
-      },
-      "electronInstallerDMG": {
-        "background": "./resources/dmg/background.png",
-        "icon": "./resources/icons/icon.icns",
-        "format": "ULFO",
-        "code-sign": {
-          "signing-identity": "Developer ID Installer: Timothy Coulter (58RKXWC272)"
-        }
-      },
-      "windowsStoreConfig": {
-        "packageVersion": "<%= version %>.0",
-        "packageName": "<%= productName %>",
-        "packageDescription": "Personal blockchain for Ethereum development",
-        "publisher": "CN=Consensys Inc, O=Consensys Inc, L=New York, S=New York, C=US",
-        "windowsKit": "<%= process.env.WIN10_SDK_PATH %>",
-        "assets": "./resources/appx",
-        "manifest": "./AppXManifest.xml",
-        "makePri": true,
-        "devCert": "./certs/cert.pfx",
-        "certPass": "<%= process.env.CERT_PASS %>",
-        "makeVersionWinStoreCompatible": true
       }
     }
   },
@@ -135,13 +163,14 @@
     "chai": "^3.5.0",
     "concurrently": "^3.1.0",
     "cross-env": "^3.1.4",
+    "electron-builder": "^20.6.2",
+    "electron-compilers": "^5.9.0",
     "electron-debug": "^1.1.0",
     "electron-devtools-installer": "^2.0.1",
-    "electron-forge": "^4.1.2",
+    "electron-forge": "^5.1.1",
     "electron-icon-maker": "0.0.3",
     "electron-log": "^2.2.9",
-    "electron-prebuilt-compile": "1.6.11",
-    "electron-rebuild": "^1.6.0",
+    "electron-prebuilt-compile": "1.8.4",
     "jsdom": "^9.9.1",
     "minimist": "^1.2.0",
     "mocha": "^3.2.0",
@@ -150,16 +179,20 @@
     "rcedit": "^0.9.0",
     "redux-logger": "^2.7.4",
     "source-map-support": "^0.4.8",
-    "svg2uwptiles": "0.0.4"
+    "svg2uwptiles": "0.0.4",
+    "webpack": "^3.11.0"
   },
   "dependencies": {
     "@exponent/electron-cookies": "^2.0.0",
     "async": "^2.5.0",
+    "benjamincburns-forked-electron-updater": "2.21.6",
+    "builder-util-runtime": "^4.2.0",
     "electron-compile": "^6.4.2",
     "electron-forge-maker-appimage": "^19.30.3",
     "electron-settings": "^3.1.2",
     "electron-squirrel-startup": "^1.0.0",
     "ethereumjs-units": "^0.2.0",
+    "filesize": "^3.6.1",
     "find-process": "^1.1.0",
     "ganache-cli": "6.1.0",
     "lodash": "^3.10.1",
@@ -172,8 +205,10 @@
     "react": "^15.4.2",
     "react-dom": "^15.6.2",
     "react-hot-loader": "^3.1.1",
+    "react-marked-markdown": "^1.4.6",
     "react-moment": "^0.2.2",
     "react-redux": "^5.0.2",
+    "react-render-html": "^0.6.0",
     "react-router": "^3.0.1",
     "react-router-redux": "^4.0.7",
     "redux": "^3.6.0",

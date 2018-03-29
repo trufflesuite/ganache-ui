@@ -1,8 +1,10 @@
 import { app, BrowserWindow, Menu, shell, ipcMain } from 'electron'
 import { enableLiveReload } from 'electron-compile';
+import { initAutoUpdates, getAutoUpdateService } from './Init/Main/AutoUpdate.js'
 import path from 'path'
 
 const isDevMode = process.execPath.match(/[\\/]electron/);
+
 
 if (isDevMode) {
   enableLiveReload({strategy: 'react-hmr'});
@@ -18,6 +20,7 @@ import {
   SET_KEY_DATA, 
   SET_SYSTEM_ERROR
 } from './Actions/Core'
+
 import { REQUEST_SAVE_SETTINGS } from './Actions/Settings'
 import { ADD_LOG_LINES } from './Actions/Logs'
 
@@ -41,14 +44,17 @@ process.on('uncaughtException', err => {
   }
 })
 
-process.on('unhandledRejection', error => {
+process.on('unhandledRejection', err => {
   if (mainWindow && err) {
     mainWindow.webContents.send(SET_SYSTEM_ERROR, err.stack || err)
   }
 })
 
 app.on('window-all-closed', () => {
-  app.quit()
+  // don't quit the app before the updater can do its thing
+  if (!getAutoUpdateService().isRestartingForUpdate) {
+    app.quit()
+  }
 })
 
 app.setName('Ganache')
@@ -91,13 +97,17 @@ app.on('ready', () => {
       //installExtension(REACT_DEVELOPER_TOOLS);
       mainWindow.webContents.openDevTools();
     }
+    // if a user clicks a link to an external webpage, open it in the user's browser, not our app
+    mainWindow.webContents.on('new-window', ensureExternalLinksAreOpenedInBrowser);
+    mainWindow.webContents.on('will-navigate', ensureExternalLinksAreOpenedInBrowser);
+
 
     mainWindow.loadURL(`file://${__dirname}/app.html`)
-
     mainWindow.webContents.on('did-finish-load', () => {
       mainWindow.show()
       mainWindow.focus()
       mainWindow.setTitle('Ganache')
+      initAutoUpdates(Settings.getAll(), mainWindow)
 
       // Remove the menu bar
       mainWindow.setMenu(null);
@@ -470,3 +480,12 @@ app.on('ready', () => {
     }
   }, 0)
 })
+
+function ensureExternalLinksAreOpenedInBrowser(event, url) {
+    // we're a one-window application, and we only ever want to load external
+    // resources in the user's browser, not via a new browser window
+    if (url.startsWith('http:') || url.startsWith('https:')) {
+      shell.openExternal(url)
+      event.preventDefault()
+    }
+  }
