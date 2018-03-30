@@ -9,6 +9,7 @@ import * as AppShellActions from '../../Actions/AppShell'
 import TopNavbar from './TopNavbar'
 import OnlyIf from '../../Elements/OnlyIf'
 import BugModal from './BugModal'
+import UpdateModal from '../AutoUpdate/UpdateModal'
 import ua from 'universal-analytics'
 import ElectronCookies from '@exponent/electron-cookies'
 
@@ -117,9 +118,12 @@ class AppShell extends Component {
         <OnlyIf test={this.props.core.systemError != null}>
           <BugModal systemError={this.props.core.systemError} logs={this.props.logs} />
         </OnlyIf>
+        <OnlyIf test={!this.props.core.systemError && this.props.autoUpdate.showModal}>
+          <UpdateModal />
+        </OnlyIf>
       </div>
     )
   }
 }
 
-export default connect(AppShell, "core", "settings", "logs");
+export default connect(AppShell, "core", "settings", "logs", "autoUpdate");

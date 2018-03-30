@@ -1,0 +1,19 @@
+.ProgressBar {
+  .ProgressBarOuter {
+    display: block;
+    border-width:1px;
+    border-style:solid;
+    border-color: black;
+    border-radius: 0.25rem;
+    height: 1rem;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    width: 100%;
+
+    .ProgressBarInner {
+      height: 100%;
+      width: 0%;
+      background-color: var(--primary-color);
+    }
+  }
+}
