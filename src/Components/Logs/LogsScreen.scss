@@ -5,6 +5,7 @@
   flex: 1;
   width: 100%;
   height: 100%;
+  background-color: #333;
 
   > h4 {
     position: -webkit-sticky;
@@ -31,9 +32,21 @@
     display: flex;
     flex: 1;
     padding: 0;
+    background: #333;
   }
 
   footer {
     padding: 0 1rem 1rem 1rem;
+  }
+
+  .ClearLogs {
+    margin: 15px;
+    border: 1px solid white;
+    width: 150px;
+    align-self: flex-end;
+  }
+
+  .ClearLogs:hover {
+   background-color: #9b9896;
   }
 }
