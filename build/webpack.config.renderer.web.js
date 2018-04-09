@@ -6,13 +6,15 @@ const FaviconsWebpackPlugin = require('favicons-webpack-plugin')
 const pkg = require('../package.json')
 const createRendererConfig = require('./webpack.config.renderer.base')
 
-let config = createRendererConfig('web', 'web/renderer')
+const faviconOutputPath = 'favicon'
+
+let config = createRendererConfig('web', 'web/renderer', [faviconOutputPath])
 
 config = merge(config, {
   plugins: [
     new FaviconsWebpackPlugin({
       logo: path.join(config.context, 'resources/logo.png'),
-      prefix: 'assets/favicon-[hash:8]/',
+      prefix: faviconOutputPath + '/[hash:8]',
       emitStats: false,
       cache: true,
       inject: true,

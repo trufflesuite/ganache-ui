@@ -6,8 +6,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const createBaseConfig = require('./webpack.config.base')
 
-module.exports = (target, relOutputDir) => {
-  const baseConfig = createBaseConfig(target, relOutputDir)
+module.exports = (target, relOutputDir, excludeFromClean) => {
+  const baseConfig = createBaseConfig(target, relOutputDir, excludeFromClean)
   let config = merge(baseConfig, {
     entry: [path.join(baseConfig.context, 'src/app.js')],
     output: {

@@ -56,10 +56,7 @@ const createFileRule = (test, subDir) => ({
 const imgRule = createFileRule(/\.(png|jpe?g|gif|svg|ico)(\?.*)?$/, 'img')
 const fontRule = createFileRule(/\.(woff2?|eot|ttf|otf)(\?.*)?$/, 'font')
 
-// Explicitly specify what to clean to avoid wiping favicons cache
-const filesToClean = ['*.*', 'assets/img/', 'assets/font/']
-
-module.exports = (target, relOutputDir) => {
+module.exports = (target, relOutputDir, excludeFromClean) => {
   const outputDir = path.join(baseOutputDir, relOutputDir)
   let config = {
     target: target,
@@ -72,7 +69,10 @@ module.exports = (target, relOutputDir) => {
     },
     plugins: [
       envPlugin(target),
-      new CleanWebpackPlugin(filesToClean.map((f) => path.join(outputDir, f)), { root: baseOutputDir })
+      new CleanWebpackPlugin(outputDir, {
+        root: baseOutputDir,
+        exclude: excludeFromClean
+      })
     ],
     devtool: env === 'development' && 'eval-source-map'
   }
