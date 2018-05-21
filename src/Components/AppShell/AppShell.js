@@ -115,10 +115,7 @@ class AppShell extends Component {
 
         <div className="ShellContainer" ref="shellcontainer">
           <Scrollbars
-            className="scrollBar"
-            autoHide
-            autoHideTimeout={1000}
-            autoHideDuration={200}>
+            className="scrollBar">
             {this.props.children}
           </Scrollbars>
         </div>

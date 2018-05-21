@@ -29,9 +29,6 @@ class LogContainer extends Component {
         <ul ref="LogItems">
           <Scrollbars
             className="scrollBar"
-            autoHide
-            autoHideTimeout={1000}
-            autoHideDuration={200}
             renderThumbVertical={props => <div {...props} className="scroll-light"/>}>
             {this.props.logs.lines.map((log, index) => {
               return (
