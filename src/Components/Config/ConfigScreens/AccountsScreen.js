@@ -7,6 +7,10 @@ const VALIDATIONS = {
     allowedChars: /^\d*$/,
     min: 1,
     max: 100
+  },
+  "server.default_balance_ether": {
+    allowedChars: /^[0-9]*\.?[0-9]*$/,
+    min: 0
   }
 }
 
@@ -65,7 +69,25 @@ class AccountsScreen extends Component {
   render () {
     return (
       <div>
-        <h2>ACCOUNT & KEYS</h2>
+        <h2>ACCOUNTS &amp; KEYS</h2>
+        <section>
+          <h4>ACCOUNT DEFAULT BALANCE</h4>
+          <div className="Row">
+            <div className="RowItem">
+              <input
+                name="server.default_balance_ether"
+                type="text"
+                value={this.props.settings.server.default_balance_ether}
+                onChange={this.validateChange}
+              />
+              {this.props.validationErrors["server.default_balance_ether"] &&
+                <p className="ValidationError">Must be a valid number that is at least {VALIDATIONS["server.default_balance_ether"].min}</p>}
+            </div>
+            <div className="RowItem">
+              <p>Number of Ether that created accounts should be initialized with.</p>
+            </div>
+          </div>
+        </section>
         <section>
           <h4>TOTAL ACCOUNTS TO GENERATE</h4>
           <div className="Row">
@@ -84,27 +106,7 @@ class AccountsScreen extends Component {
             </div>
           </div>
         </section>
-        {/* <section>
-          <h4>LOCK ACCOUNTS</h4>
-          <div className="Row">
-            <div className="RowItem">
-              <div className="Switch">
-                <input
-                  type="checkbox"
-                  name="accountsLocked"
-                  id="AccountsLocked"
-                  checked={this.state.accountsLocked}
-                  onChange={this.toggleAccountsLocked}
-                />
-                <label htmlFor="AccountsLocked">ACCOUNTS LOCKED</label>
-              </div>
-            </div>
-            <div className="RowItem">
-              <p>Create accounts that are locked by default.</p>
-            </div>
-          </div>
-        </section> */}
-         <section>
+        <section>
           <h4>AUTOGENERATE HD MNEMONIC</h4>
           <div className="Row">
             <div className="RowItem">
@@ -145,6 +147,27 @@ class AccountsScreen extends Component {
             </div>
           </section>
         </OnlyIf>
+
+        <section>
+          <h4>LOCK ACCOUNTS</h4>
+          <div className="Row">
+            <div className="RowItem">
+              <div className="Switch">
+                <input
+                  type="checkbox"
+                  name="server.locked"
+                  id="LockAccounts"
+                  checked={this.props.settings.server.locked}
+                  onChange={this.props.handleInputChange}
+                />
+                <label htmlFor="LockAccounts">LOCK ACCOUNTS</label>
+              </div>
+            </div>
+            <div className="RowItem">
+              <p>Created accounts are locked by default.</p>
+            </div>
+          </div>
+        </section>
       </div>
     )
   }
