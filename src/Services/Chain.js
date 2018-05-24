@@ -90,6 +90,8 @@ class ChainService extends EventEmitter {
       delete options.mnemonic
     }
 
+    options.logDirectory = settings.logDirectory;
+
     return options
   }
 
