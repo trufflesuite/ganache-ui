@@ -203,7 +203,6 @@
     .FilePicker {
       position: relative;
       width: 100%;
-      border: 1px solid var(--app-navbar-text);
 
       > input[type="file"] {
         position: absolute;
@@ -218,13 +217,14 @@
       > button {
         width: 100px;
         padding: 0 5px;
-        margin: .5rem .75rem;
+        height: 30px;
       }
 
       > div {
         position: relative;
         display: inline-flex;
-        width: calc(100% - 100px - 1.5rem - .75rem);
+        width: calc(100% - 100px - .75rem - .75rem);
+        margin-left: .75rem;
 
         > p {
           overflow: hidden;
