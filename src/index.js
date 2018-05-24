@@ -23,6 +23,8 @@ import NotFoundScreen from './Components/NotFound/NotFoundScreen'
 import TitleScreen from './Components/Title/TitleScreen'
 import FirstRunScreen from './Components/FirstRun/FirstRunScreen'
 
+import {ipcRenderer} from 'electron'
+
 const store = createStore(RootReducer)
 
 ready(store)
@@ -41,6 +43,10 @@ const routes = <Route>
     <Route path='/config' component={ConfigScreen} /> 
   </Route>
 </Route>
+
+ipcRenderer.on('navigate', (event, path) => {
+    hashHistory.push(path)
+});
 
 const stylesheets = [
   "./Styles/colors.scss",
