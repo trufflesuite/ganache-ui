@@ -84,7 +84,7 @@ class AccountsScreen extends Component {
                 <p className="ValidationError">Must be a valid number that is at least {VALIDATIONS["server.default_balance_ether"].min}</p>}
             </div>
             <div className="RowItem">
-              <p>Number of Ether that created accounts should be initialized with.</p>
+              <p>The starting balance for accounts, in Ether.</p>
             </div>
           </div>
         </section>
@@ -164,7 +164,7 @@ class AccountsScreen extends Component {
               </div>
             </div>
             <div className="RowItem">
-              <p>Created accounts are locked by default.</p>
+              <p>If enabled, accounts will be locked on startup.</p>
             </div>
           </div>
         </section>
