@@ -97,7 +97,7 @@ class GanacheScreen extends Component {
             <h4>LOG FILE DIRECTORY</h4>
             <div className="Row">
               <div className="RowItem">
-                <div className="FolderPicker">
+                <div className="FilePicker">
                   <button
                     htmlFor="LogDirectory"
                     onClick={this.clickLogDirectoryPicker}
