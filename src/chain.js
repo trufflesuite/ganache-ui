@@ -2,8 +2,7 @@
 
 var ganacheLib = require("ganache-cli")
 var path = require("path")
-var fs = require("fs")
-var padStart = require("lodash.padstart")
+var logging = require("./logging")
 
 if (!process.send) {
   console.log("Not running as child process. Throwing.")
@@ -28,43 +27,6 @@ var server;
 var provider;
 var blockInterval;
 var lastBlock;
-var logFile;
-
-function getFileTimestamp() {
-  const currentDate = new Date()
-  const currentDateString = [
-    currentDate.getFullYear(),
-    padStart(currentDate.getMonth() + 1, 2, "0"),
-    padStart(currentDate.getDate(), 2, "0"),
-    "-",
-    padStart(currentDate.getHours(), 2, "0"),
-    padStart(currentDate.getMinutes(), 2, "0"),
-    padStart(currentDate.getSeconds(), 2, "0")
-  ].join("")
-
-  return currentDateString
-}
-
-function getLogTimestamp() {
-  const currentDate = new Date()
-  const currentDateString = [
-    currentDate.getFullYear(),
-    "/",
-    padStart(currentDate.getMonth() + 1, 2, "0"),
-    "/",
-    padStart(currentDate.getDate(), 2, "0"),
-    " ",
-    padStart(currentDate.getHours(), 2, "0"),
-    ":",
-    padStart(currentDate.getMinutes(), 2, "0"),
-    ":",
-    padStart(currentDate.getSeconds(), 2, "0"),
-    ".",
-    padStart(currentDate.getMilliseconds(), 3, "0")
-  ].join("")
-
-  return currentDateString
-}
 
 function stopServer(callback) {
   callback = callback || function() {}
@@ -84,28 +46,26 @@ function startServer(options) {
     let sanitizedOptions = Object.assign({}, options)
     delete sanitizedOptions.mnemonic
 
-    // log startup options without logging user's mnemonic
-    console.log("Starting server with initial configuration: " + JSON.stringify(sanitizedOptions))
+    const logToFile = options.logDirectory !== null && typeof options.logDirectory === 'string'
 
-    // The TestRPC's logging system is archaic. We'd like more control
-    // over what's logged. For now, the really important stuff all has
-    // a space on the front of it. So let's only log the stuff with a
-    // space on the front. ¯\_(ツ)_/¯
     if (typeof options.logger === 'undefined') {
-      if (options.logDirectory !== null && typeof options.logDirectory === 'string') {
-        logFile = path.join(options.logDirectory, "ganache-" + getFileTimestamp() + ".log")
+      if (logToFile) {
+        logging.generateLogFilePath(options.logDirectory)
 
         options.logger = {
           log: (message) => {
             if (typeof message === 'string') {
-              message = "[" + getLogTimestamp() + "] - " + message + "\n"
-
-              fs.appendFileSync(logFile, message)
+              logging.logToFile(message)
             }
           }
         }
       }
       else {
+        // The TestRPC's logging system is archaic. We'd like more control
+        // over what's logged. For now, the really important stuff all has
+        // a space on the front of it. So let's only log the stuff with a
+        // space on the front. ¯\_(ツ)_/¯
+
         options.logger = {
           log: (message) => {
             if (typeof message === 'string' && (options.verbose || message.indexOf(" ") == 0)) {
@@ -114,6 +74,13 @@ function startServer(options) {
           }
         }
       }
+    }
+
+    // log startup options without logging user's mnemonic
+    const startingMessage = "Starting server with initial configuration: " + JSON.stringify(sanitizedOptions)
+    console.log(startingMessage)
+    if (logToFile) {
+      logging.logToFile(startingMessage)
     }
 
     server = ganacheLib.server(options);
