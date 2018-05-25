@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import Mousetrap from 'mousetrap'
 import { hashHistory } from 'react-router'
 import { shell } from 'electron'
+import { Scrollbars } from 'react-custom-scrollbars';
 
 import connect from '../Helpers/connect'
 import * as AppShellActions from '../../Actions/AppShell'
@@ -113,7 +114,10 @@ class AppShell extends Component {
         <TopNavbar {...this.props} />
 
         <div className="ShellContainer" ref="shellcontainer">
-          {this.props.children}
+          <Scrollbars
+            className="scrollBar">
+            {this.props.children}
+          </Scrollbars>
         </div>
         <OnlyIf test={this.props.core.systemError != null}>
           <BugModal systemError={this.props.core.systemError} logs={this.props.logs} />

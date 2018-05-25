@@ -179,6 +179,7 @@ app.on('ready', () => {
     })
 
     if (process.platform === 'darwin') {
+      const navigate = (path) => mainWindow.webContents.send('navigate', path);
       template = [
         {
           label: 'Ganache',
@@ -186,6 +187,17 @@ app.on('ready', () => {
             {
               label: 'About Ganache ' + app.getVersion(),
               selector: 'orderFrontStandardAboutPanel:'
+            },
+            {
+              type: 'separator'
+            },
+            {
+              label: 'Preferences...',
+              accelerator: 'Command+,',
+              click(){ navigate('/config') }
+            },
+            {
+                type: 'separator'
             },
             {
               type: 'separator'
@@ -304,27 +316,27 @@ app.on('ready', () => {
             {
               label: 'Accounts',
               accelerator: 'Command+1',
-              selector: 'performAccounts:'
+              click(){ navigate('/accounts') }
             },
             {
               label: 'Blocks',
               accelerator: 'Command+2',
-              selector: 'performBlocks:'
+              click(){ navigate('/blocks') }
             },
             {
               label: 'Transactions',
               accelerator: 'Command+3',
-              selector: 'performTransactions:'
+              click(){ navigate('/transactions') }
             },
             {
-              label: 'Console',
+              label: 'Logs',
               accelerator: 'Command+4',
-              selector: 'performConsole:'
+              click(){ navigate('/logs') }
             },
             {
               label: 'Settings',
               accelerator: 'Command+5',
-              selector: 'performSettings:'
+              click(){ navigate('/config') }
             },
             {
               label: 'Minimize',

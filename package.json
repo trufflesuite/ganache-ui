@@ -203,6 +203,7 @@
     "pluralize": "^5.0.0",
     "rabin-bindings": "^1.7.4",
     "react": "^16.3.2",
+    "react-custom-scrollbars": "^4.2.1",
     "react-dom": "^16.3.2",
     "react-hot-loader": "^3.1.1",
     "react-marked-markdown": "^1.4.6",
