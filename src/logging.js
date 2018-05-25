@@ -68,7 +68,7 @@ module.exports.generateLogFilePath = function(directory) {
     fs.mkdirSync(directory)
   }
 
-  logFile = path.join(options.logDirectory, "ganache-" + getFileTimestamp() + ".log")
+  logFile = path.join(directory, "ganache-" + getFileTimestamp() + ".log")
 }
 
 module.exports.logToFile = function(message) {
@@ -78,6 +78,8 @@ module.exports.logToFile = function(message) {
     try {
       fs.appendFileSync(logFile, message)
     }
-    catch()
+    catch(e) {
+      console.error("Error: Could not write to file. Details: " + e);
+    }
   }
 }
