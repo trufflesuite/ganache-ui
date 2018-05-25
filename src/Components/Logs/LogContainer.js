@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Scrollbars } from 'react-custom-scrollbars';
 import connect from '../Helpers/connect'
 
 class LogContainer extends Component {
@@ -26,13 +27,17 @@ class LogContainer extends Component {
     return (
       <div className="LogContainer" ref="LogContainer">
         <ul ref="LogItems">
-          {this.props.logs.lines.map((log, index) => {
-            return (
-              <li key={index} className="plain">
-                {`[${new Date(log.time).toLocaleTimeString()}]`} {log.line}
-              </li>
-            )
-          })}
+          <Scrollbars
+            className="scrollBar"
+            renderThumbVertical={props => <div {...props} className="scroll-light"/>}>
+            {this.props.logs.lines.map((log, index) => {
+              return (
+                <li key={index} className="plain">
+                  {`[${new Date(log.time).toLocaleTimeString()}]`} {log.line}
+                </li>
+              )
+            })}
+          </Scrollbars>
         </ul>
       </div>
     )
