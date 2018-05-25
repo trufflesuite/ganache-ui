@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import connect from '../../Helpers/connect'
 import OnlyIf from '../../../Elements/OnlyIf'
+import FilePicker from './FilePicker'
 
 const VALIDATIONS = {
   "logDirectory": {
@@ -31,14 +32,8 @@ class GanacheScreen extends Component {
     this.validateChange(e)
   }
 
-  clickLogDirectoryPicker = () => {
-    if (this.logDirectoryButton) {
-      this.logDirectoryButton.click()
-    }
-  }
-
-  changeLogDirectory = (e) => {
-    this.state.logDirectory = this.logDirectoryButton.files.length > 0 ? this.logDirectoryButton.files[0].path : "Select a Directory"
+  changeLogDirectory = (value, e) => {
+    this.state.logDirectory = value
 
     this.validateChange(e)
   }
@@ -97,26 +92,15 @@ class GanacheScreen extends Component {
             <h4>LOG FILE DIRECTORY</h4>
             <div className="Row">
               <div className="RowItem">
-                <div className="FilePicker">
-                  <button
-                    htmlFor="LogDirectory"
-                    onClick={this.clickLogDirectoryPicker}
-                  >
-                    Pick a Folder
-                  </button>
-                  <div>
-                    <p>{this.state.logDirectory}</p>
-                    <span className="tooltiptext">{this.state.logDirectory}</span>
-                  </div>
-                  <input
-                    type="file"
-                    name="logDirectory"
-                    id="LogDirectory"
-                    webkitdirectory="true"
-                    ref={input => this.logDirectoryButton = input}
-                    onChange={this.changeLogDirectory}
-                  />
-                </div>
+                <FilePicker
+                  id="Logdirectory"
+                  name="logDirectory"
+                  defaultValue="Select a Directory"
+                  buttonValue="Pick a Folder"
+                  directoriesOnly="true"
+                  value={this.state.logDirectory}
+                  onChangeFunction={(value, e) => this.changeLogDirectory(value, e)}
+                />
                 {this.props.validationErrors["logDirectory"] &&
                   <p className="ValidationError">Must select a directory or disable "Output Logs To File"</p>}
               </div>
