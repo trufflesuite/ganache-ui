@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-const { app } = require('electron').remote
+import app from '../../Kernel/app'
 
 import { hashHistory } from 'react-router'
 import * as pkg from '../../../package.json'
@@ -14,7 +14,6 @@ class TitleScreen extends Component {
   constructor () {
     super()
     this.state = {
-      version: pkg.version,
       timeoutStarted: false
     }
   }
@@ -50,7 +49,7 @@ class TitleScreen extends Component {
               Ganache
             </strong>
             <div className="GanacheVersion">
-              v{this.state.version}
+              v{app.getVersion()}
             </div>
           </h4>
         </div>

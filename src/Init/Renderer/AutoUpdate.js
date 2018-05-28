@@ -9,17 +9,17 @@ import {
   setDownloadError
 } from '../../Actions/AutoUpdate'
 
-export function initAutoUpdates(ipcRenderer, dispatch) {
-  ipcRenderer.on(UPDATE_AVAILABLE, (event, updateInfo) => {
+export function initAutoUpdates(actionClient, dispatch) {
+  actionClient.on(UPDATE_AVAILABLE, (event, updateInfo) => {
     dispatch(setUpdateAvailable(updateInfo))
   })
-  ipcRenderer.on(DOWNLOAD_PROGRESS, (event, progressInfo) => {
+  actionClient.on(DOWNLOAD_PROGRESS, (event, progressInfo) => {
     dispatch(setDownloadProgress(progressInfo))
   })
-  ipcRenderer.on(UPDATE_DOWNLOADED, (event, path) => {
+  actionClient.on(UPDATE_DOWNLOADED, (event, path) => {
     dispatch(setUpdateDownloaded())
   })
-  ipcRenderer.on(DOWNLOAD_ERROR, (event, errorInfo) => {
+  actionClient.on(DOWNLOAD_ERROR, (event, errorInfo) => {
     dispatch(setDownloadError(errorInfo))
   })
 }

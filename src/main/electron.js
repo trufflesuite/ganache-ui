@@ -1,31 +1,10 @@
 import { app, BrowserWindow, Menu, shell, ipcMain } from 'electron'
-import { enableLiveReload } from 'electron-compile';
-import { initAutoUpdates, getAutoUpdateService } from './Init/Main/AutoUpdate.js'
+import { initAutoUpdates, getAutoUpdateService } from '../Init/Main/AutoUpdate.js'
 import path from 'path'
 
-const isDevMode = process.execPath.match(/[\\/]electron/);
+import init from './init'
 
-
-if (isDevMode) {
-  enableLiveReload({strategy: 'react-hmr'});
-
-  // let installExtension = require('electron-devtools-installer')
-  // let REACT_DEVELOPER_TOOLS = installExtension.REACT_DEVELOPER_TOOLS
-}
-
-import { 
-  REQUEST_SERVER_RESTART,
-  SET_SERVER_STARTED, 
-  SET_SERVER_STOPPED,
-  SET_KEY_DATA, 
-  SET_SYSTEM_ERROR
-} from './Actions/Core'
-
-import { REQUEST_SAVE_SETTINGS } from './Actions/Settings'
-import { ADD_LOG_LINES } from './Actions/Logs'
-
-import ChainService from './Services/Chain'
-import SettingsService from './Services/Settings'
+const isDevMode = process.env.NODE_ENV === 'development'
 
 let menu
 let template
@@ -38,18 +17,6 @@ let consoleService = null // eslint-disable-line
 //   throw new Error("Error from main process!")
 // }, 8000)
 
-process.on('uncaughtException', err => {
-  if (mainWindow && err) {
-    mainWindow.webContents.send(SET_SYSTEM_ERROR, err.stack || err)
-  }
-})
-
-process.on('unhandledRejection', err => {
-  if (mainWindow && err) {
-    mainWindow.webContents.send(SET_SYSTEM_ERROR, err.stack || err)
-  }
-})
-
 app.on('window-all-closed', () => {
   // don't quit the app before the updater can do its thing
   if (!getAutoUpdateService().isRestartingForUpdate) {
@@ -60,28 +27,19 @@ app.on('window-all-closed', () => {
 app.setName('Ganache')
 
 const getIconPath = () => {
-  return process.platform === 'win32'
-    ? path.resolve(`${__dirname}/../resources/icons/win/icon.ico`)
-    : path.resolve(`${__dirname}/../resources/icons/png/256x256.png`) // Mac & Linux, use an icon
+  return path.join(__dirname, process.platform === 'win32'
+    ? require('../../resources/icons/win/icon.ico')
+    : require('../../resources/icons/png/256x256.png')) // Mac & Linux, use an icon
 }
 
 if (process.platform === 'darwin') {
   app.dock.setIcon(getIconPath())
 }
 
-app.on('ready', () => {
+app.on('ready', async () => {
   // workaround for electron race condition, causing hang on startup.
   // see https://github.com/electron/electron/issues/9179 for more info
   setTimeout(async () => {
-    const chain = new ChainService(app)
-    const Settings = new SettingsService() 
-
-    app.on('will-quit', function () {
-      chain.stopProcess();
-    });
-
-    Settings.bootstrap();
-
     mainWindow = new BrowserWindow({
       show: false,
       minWidth: 1200,
@@ -92,73 +50,42 @@ app.on('ready', () => {
       icon: getIconPath()
     })
 
+    const sendAction = (type, payload) => mainWindow.webContents.send(type, payload)
+    const { setUp, tearDown, handleError, Settings } = init(sendAction, ipcMain)
+
+    process.on('uncaughtException', handleError)
+    process.on('unhandledRejection', handleError)
+
+    app.on('will-quit', tearDown)
+
     // Open the DevTools.
     if (isDevMode) {
-      //installExtension(REACT_DEVELOPER_TOOLS);
-      mainWindow.webContents.openDevTools();
+      // installExtension(REACT_DEVELOPER_TOOLS)
+      mainWindow.webContents.openDevTools()
     }
     // if a user clicks a link to an external webpage, open it in the user's browser, not our app
     mainWindow.webContents.on('new-window', ensureExternalLinksAreOpenedInBrowser);
     mainWindow.webContents.on('will-navigate', ensureExternalLinksAreOpenedInBrowser);
 
+    mainWindow.loadURL(process.env.APP_URL || `file://${path.join(__dirname, process.env.APP_INDEX_PATH)}`)
 
-    mainWindow.loadURL(`file://${__dirname}/app.html`)
+    let didSetUp = false
     mainWindow.webContents.on('did-finish-load', () => {
       mainWindow.show()
       mainWindow.focus()
       mainWindow.setTitle('Ganache')
-      initAutoUpdates(Settings.getAll(), mainWindow)
+      initAutoUpdates(Settings.getAll(), sendAction)
 
       // Remove the menu bar
-      mainWindow.setMenu(null);
+      mainWindow.setMenu(null)
 
-      chain.on("start", () => {
-        chain.startServer(Settings.getAll())
-      })
-
-      chain.on("server-started", (data) => {
-        mainWindow.webContents.send(SET_KEY_DATA, { 
-          privateKeys: data.privateKeys,
-          mnemonic: data.mnemonic,
-          hdPath: data.hdPath
-        })
-
-        Settings.handleNewMnemonic(data.mnemonic)
-
-        mainWindow.webContents.send(SET_SERVER_STARTED, Settings.getAll())
-      })
-
-      chain.on("stdout", (data) => {
-        mainWindow.webContents.send(ADD_LOG_LINES, data.split(/\n/g))
-      })
-
-      chain.on("stderr", (data) => {
-        mainWindow.webContents.send(ADD_LOG_LINES, data.split(/\n/g))
-      })
-
-      chain.on("error", (error) => {
-        console.log(error)
-        mainWindow.webContents.send(SET_SYSTEM_ERROR, error)
-      })
-
-      chain.start()
-    })
-
-    // If the frontend asks to start the server, start the server.
-    // This will trigger then chain event handlers above once the server stops.
-    ipcMain.on(REQUEST_SERVER_RESTART, () => {
-      if (chain.isServerStarted()) {
-        chain.once("server-stopped", () => {
-          chain.startServer(Settings.getAll())
-        })
-        chain.stopServer()
-      } else {
-        chain.startServer(Settings.getAll())
+      if (!didSetUp) {
+        // The did-finish-load event can be triggered multiple times when
+        // webpack hot reloading is enabled so we need to avoid calling
+        // setUp multiple times
+        setUp()
+        didSetUp = true
       }
-    })
-
-    ipcMain.on(REQUEST_SAVE_SETTINGS, (event, settings) => {
-      Settings.setAll(settings)
     })
 
     mainWindow.on('closed', () => {

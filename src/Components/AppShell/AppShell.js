@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Mousetrap from 'mousetrap'
 import { hashHistory } from 'react-router'
-import { shell } from 'electron'
+import ReactGA from 'react-ga'
 import { Scrollbars } from 'react-custom-scrollbars';
 
 import connect from '../Helpers/connect'
@@ -11,14 +11,10 @@ import TopNavbar from './TopNavbar'
 import OnlyIf from '../../Elements/OnlyIf'
 import BugModal from './BugModal'
 import UpdateModal from '../AutoUpdate/UpdateModal'
-import ua from 'universal-analytics'
-import ElectronCookies from '@exponent/electron-cookies'
 
-const { app } = require('electron').remote
+import app from '../../Kernel/app'
 
-ElectronCookies.enable({
-  origin: 'http://truffleframework.com/ganache'
-})
+app.enableCookies()
 
 class AppShell extends Component {
   constructor () {
@@ -27,17 +23,20 @@ class AppShell extends Component {
   }
 
   _setupGoogleAnalytics = () => {
-    this.user = ua('UA-83874933-5', this.props.settings.uuid)
-    this.user.set('location', 'http://truffleframework.com/ganache')
-    this.user.set('checkProtocolTask', null)
-    this.user.set('an', 'Ganache')
-    this.user.set('av', app.getVersion())
-    this.user.set('ua', navigator.userAgent)
-    this.user.set('sr', screen.width + 'x' + screen.height)
-    this.user.set(
-      'vp',
-      window.screen.availWidth + 'x' + window.screen.availHeight
-    )
+    ReactGA.initialize('UA-83874933-5', {
+      gaOptions: {
+        clientId: this.props.settings.uuid
+      }
+    })
+    ReactGA.set({
+      location: 'http://truffleframework.com/ganache',
+      checkProtocolTask: null,
+      an: 'Ganache',
+      av: app.getVersion(),
+      ua: navigator.userAgent,
+      sr: screen.width + 'x' + screen.height,
+      vp: window.screen.availWidth + 'x' + window.screen.availHeight
+    })
 
     window.onerror = (msg, url, lineNo, columnNo, error) => {
       var message = [
@@ -48,13 +47,13 @@ class AppShell extends Component {
       ].join(' - ')
 
       // setTimeout(() => {
-      //   this.user.exception(message.toString())
+      //   ReactGA.exception({ description: message.toString() })
       // }, 0)
 
       return false
     }
 
-    this.user.pageview('/').send()
+    ReactGA.pageview('/')
   }
 
   _handleScroll = () => {
@@ -77,6 +76,12 @@ class AppShell extends Component {
     this.refs.shellcontainer.scrollTop = scrollTop
   }
 
+  componentWillMount() {
+    if (this.props.settings.googleAnalyticsTracking) {
+      this._setupGoogleAnalytics()
+    }
+  }
+
   componentDidMount() {
     this.refs.shellcontainer.addEventListener('scroll', this._handleScroll);
   }
@@ -87,6 +92,11 @@ class AppShell extends Component {
       return
     }
 
+    // Analytics should already be set up during componentWillMount, this covers case where setting is changed
+    if (nextProps.settings.googleAnalyticsTracking !== this.props.settings.googleAnalyticsTracking) {
+      this._setupGoogleAnalytics()
+    }
+
     // If the page hasn't changed, bail.
     if (nextProps.location.pathname == this.props.location.pathname) {
       return
@@ -94,15 +104,8 @@ class AppShell extends Component {
 
     const segment = nextProps.location.pathname.split('/')[1] || 'dashboard'
 
-    // If we haven't initialized GA, do it.
-    if (!this.user) {
-      this._setupGoogleAnalytics()
-    }
-
-    if (this.user) {
-      this.user.pageview(nextProps.location.pathname).send()
-      this.user.screenview(segment, 'Ganache', app.getVersion()).send()
-    }
+    ReactGA.pageview(nextProps.location.pathname)
+    ReactGA.send('screenview', { screenName: segment, appName: 'Ganache', appVersion: app.getVersion() })
   }
 
   onCloseFatalErrorModal = () => {}

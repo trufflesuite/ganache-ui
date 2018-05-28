@@ -1,9 +1,11 @@
 import { web3ActionCreator, web3CleanUpHelper } from './helpers/Web3ActionCreator'
 import { getAccounts } from './Accounts'
 import { push } from 'react-router-redux'
-import { ipcRenderer } from 'electron'
+import actionClient from '../Kernel/actionClient'
 
 const prefix = 'CORE'
+
+export const REQUEST_ACTION_HISTORY = `${prefix}/REQUEST_ACTION_HISTORY`
 
 export const SET_SERVER_STARTED = `${prefix}/SET_SERVER_STARTED`
 export function setServerStarted() {
@@ -23,7 +25,7 @@ export function requestServerRestart() {
     dispatch({type: REQUEST_SERVER_RESTART})
 
     // Fire off the restart request.
-    ipcRenderer.send(REQUEST_SERVER_RESTART)
+    actionClient.send(REQUEST_SERVER_RESTART)
   }
 }
 
@@ -70,9 +72,18 @@ export const SET_BLOCK_NUMBER = `${prefix}/SET_BLOCK_NUMBER`
 export const setBlockNumber = function(number) {
   return function(dispatch, getState) {
     dispatch({ type: SET_BLOCK_NUMBER, number })
-    
+
     // Refresh our accounts if the block changed.
     dispatch(getAccounts())
+  }
+}
+export const getLatestBlock = function() {
+  return async function(dispatch, getState) {
+    let blockNumber = await web3ActionCreator(dispatch, getState, "getBlockNumber")
+    let currentBlockNumber = getState().core.latestBlock
+    if (blockNumber !== currentBlockNumber) {
+      dispatch(setBlockNumber(blockNumber))
+    }
   }
 }
 

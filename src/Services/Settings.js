@@ -1,7 +1,22 @@
 import uuid from 'uuid'
 import _ from 'lodash'
 
-const settings = require('electron-settings');
+let settings
+if (process.env.ELECTRON) {
+  settings = require('electron-settings')
+} else { // Web backend
+  const Configstore = require('configstore')
+  const pkg = require('../../package.json')
+  const conf = new Configstore(pkg.name)
+  settings = {
+    get: conf.get.bind(conf),
+    getAll: () => conf.all,
+    set: conf.set.bind(conf),
+    setAll: (o) => { conf.all = o },
+    delete: conf.delete.bind(conf),
+    deleteAll: conf.clear.bind(conf)
+  }
+}
 
 const oldDefaultMnemonic =  "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat";
 
@@ -11,6 +26,7 @@ const initialSettings = {
   verboseLogging: false,
   firstRun: true,
   randomizeMnemonicOnStart: false,
+  maxActionHistoryPerType: 250,
   server: {
     hostname: "127.0.0.1",
     port: 7545,
@@ -27,7 +43,7 @@ class Settings {
   }
 
   _getRaw (key, defaultValue = null) {
-    return settings.get(key, defaultValue);  
+    return settings.get(key, defaultValue);
   }
 
   getAll () {
@@ -46,10 +62,6 @@ class Settings {
     // nothing can surprise us by interpreting a key with a null value
     // differently from a missing key.
     return settings.getAll();
-  }
-
-  onChange (key, fn) {
-    settings.watch(key, fn);
   }
 
   setAll (obj) {
@@ -77,11 +89,11 @@ class Settings {
       settings.setAll(initialSettings);
 
       // Set a specific uuid.
-      this.set('uuid', uuid.v4()) 
+      this.set('uuid', uuid.v4())
     }
 
     // Ensure new settings variables get added by merging all the settings,
-    // where the current values take precedence. 
+    // where the current values take precedence.
     let currentSettings = this._getAllRaw()
 
     // Add any non-additive settings changes here by creating a function which

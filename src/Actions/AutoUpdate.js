@@ -1,4 +1,5 @@
-import {ipcRenderer } from 'electron'
+import actionClient from '../Kernel/actionClient'
+
 const prefix = 'UPDATE'
 
 export const SHOW_UPDATE_MODAL = `${prefix}/SHOW_UPDATE_MODAL`
@@ -12,7 +13,7 @@ export const CANCEL_UPDATE = `${prefix}/CANCEL_UPDATE`
 export const cancelUpdate = function() {
   return function(dispatch, getState) {
     dispatch({ type: CANCEL_UPDATE })
-    ipcRenderer.send(CANCEL_UPDATE)
+    actionClient.send(CANCEL_UPDATE)
   }
 }
 
@@ -62,7 +63,7 @@ export const BEGIN_DOWNLOADING = `${prefix}/BEGIN_DOWNLOADING`
 export const beginDownloading = function() {
   return function(dispatch, getState) {
     dispatch({ type: BEGIN_DOWNLOADING })
-    ipcRenderer.send(BEGIN_DOWNLOADING)
+    actionClient.send(BEGIN_DOWNLOADING)
   }
 }
 
@@ -70,6 +71,6 @@ export const INSTALL_AND_RELAUNCH = `${prefix}/INSTALL_AND_RELAUNCH`
 export const installAndRelaunch = function() {
   return function(dispatch, getState) {
     dispatch({ type: INSTALL_AND_RELAUNCH })
-    ipcRenderer.send(INSTALL_AND_RELAUNCH)
+    actionClient.send(INSTALL_AND_RELAUNCH)
   }
 }

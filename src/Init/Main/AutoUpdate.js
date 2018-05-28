@@ -9,24 +9,24 @@ export function getAutoUpdateService() {
   return autoUpdateService
 }
 
-export function initAutoUpdates(settings, mainWindow) {
+export function initAutoUpdates(settings, sendAction) {
   if (!autoUpdateService) {
     const options = getAutoUpdateServiceOptions(settings)
     autoUpdateService = new AutoUpdateService(options)
   }
 
   autoUpdateService.on('update-available',(updateInfo) => {
-    mainWindow.webContents.send(AutoUpdate.UPDATE_AVAILABLE, updateInfo)
+    sendAction(AutoUpdate.UPDATE_AVAILABLE, updateInfo)
   })
   autoUpdateService.on('download-progress',(progressInfo) => {
-    mainWindow.webContents.send(AutoUpdate.DOWNLOAD_PROGRESS, progressInfo)
+    sendAction(AutoUpdate.DOWNLOAD_PROGRESS, progressInfo)
   })
   autoUpdateService.on('update-downloaded',(path) => {
-    mainWindow.webContents.send(AutoUpdate.UPDATE_DOWNLOADED)
+    sendAction(AutoUpdate.UPDATE_DOWNLOADED)
     setTimeout(() => { autoUpdateService.installAndRelaunch() }, 1000)
   })
   autoUpdateService.on('download-error',(errorInfo) => {
-    mainWindow.webContents.send(AutoUpdate.DOWNLOAD_ERROR, {
+    sendAction(AutoUpdate.DOWNLOAD_ERROR, {
       message: errorInfo.message || errorInfo.toString(),
       stack: errorInfo.stack || null
     })
