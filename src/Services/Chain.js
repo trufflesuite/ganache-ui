@@ -16,6 +16,7 @@ class ChainService extends EventEmitter {
     super()
     this.child = null
     this.serverStarted = false
+    this.setMaxListeners(1)
   }
 
   start() {

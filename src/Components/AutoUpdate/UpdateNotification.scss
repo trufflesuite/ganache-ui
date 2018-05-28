@@ -1,0 +1,43 @@
+.UpdateNotification {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  a {
+    padding: .5rem;
+    margin: .3rem;
+    color: var(--app-navbar-text);
+    cursor: pointer;
+    text-decoration: none;
+    position: relative;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    font-size: 0.89rem;
+    line-height: 0.89rem;
+    transition: all .25s;
+
+    > div {
+      margin-right: .5rem;
+    }
+
+    svg {
+      width: 36px;
+      height: 36px;
+      color: var(--primary-color);
+      stroke: var(--primary-color);
+      margin-right: 0.5rem;
+    }
+
+    &:hover {
+      color: white;
+
+      svg {
+        color: var(--primary-color);
+        stroke: var(--primary-color);
+        cursor: pointer;
+      }
+    }
+  }
+}
+

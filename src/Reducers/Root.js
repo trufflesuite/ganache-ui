@@ -18,6 +18,7 @@ import BlocksReducer from './Blocks'
 import TransactionsReducer from './Transactions'
 import LogsReducer from './Logs'
 import RequestCacheReducer from './RequestCache'
+import UpdateReducer from './AutoUpdate'
 
 const appReducer = combineReducers({
   "appshell": AppShellReducer,
@@ -28,7 +29,8 @@ const appReducer = combineReducers({
   "blocks": BlocksReducer,
   "transactions": TransactionsReducer,
   "logs": LogsReducer,
-  "requestCache": RequestCacheReducer
+  "requestCache": RequestCacheReducer,
+  "autoUpdate": UpdateReducer
 })
 
 // This reducer is used to wipe all state on restart

@@ -112,7 +112,8 @@ function init(sendAction, actionEmitter) {
   return {
     setUp,
     tearDown,
-    handleError
+    handleError,
+    Settings
   }
 }
 

@@ -1,4 +1,5 @@
 import { app, BrowserWindow, Menu, shell, ipcMain } from 'electron'
+import { initAutoUpdates, getAutoUpdateService } from '../Init/Main/AutoUpdate.js'
 import path from 'path'
 
 import init from './init'
@@ -17,7 +18,10 @@ let consoleService = null // eslint-disable-line
 // }, 8000)
 
 app.on('window-all-closed', () => {
-  app.quit()
+  // don't quit the app before the updater can do its thing
+  if (!getAutoUpdateService().isRestartingForUpdate) {
+    app.quit()
+  }
 })
 
 app.setName('Ganache')
@@ -47,7 +51,7 @@ app.on('ready', async () => {
     })
 
     const sendAction = (type, payload) => mainWindow.webContents.send(type, payload)
-    const { setUp, tearDown, handleError } = init(sendAction, ipcMain)
+    const { setUp, tearDown, handleError, Settings } = init(sendAction, ipcMain)
 
     process.on('uncaughtException', handleError)
     process.on('unhandledRejection', handleError)
@@ -59,6 +63,9 @@ app.on('ready', async () => {
       // installExtension(REACT_DEVELOPER_TOOLS)
       mainWindow.webContents.openDevTools()
     }
+    // if a user clicks a link to an external webpage, open it in the user's browser, not our app
+    mainWindow.webContents.on('new-window', ensureExternalLinksAreOpenedInBrowser);
+    mainWindow.webContents.on('will-navigate', ensureExternalLinksAreOpenedInBrowser);
 
     mainWindow.loadURL(process.env.APP_URL || `file://${path.join(__dirname, process.env.APP_INDEX_PATH)}`)
 
@@ -67,6 +74,7 @@ app.on('ready', async () => {
       mainWindow.show()
       mainWindow.focus()
       mainWindow.setTitle('Ganache')
+      initAutoUpdates(Settings.getAll(), sendAction)
 
       // Remove the menu bar
       mainWindow.setMenu(null)
@@ -98,6 +106,7 @@ app.on('ready', async () => {
     })
 
     if (process.platform === 'darwin') {
+      const navigate = (path) => mainWindow.webContents.send('navigate', path);
       template = [
         {
           label: 'Ganache',
@@ -105,6 +114,17 @@ app.on('ready', async () => {
             {
               label: 'About Ganache ' + app.getVersion(),
               selector: 'orderFrontStandardAboutPanel:'
+            },
+            {
+              type: 'separator'
+            },
+            {
+              label: 'Preferences...',
+              accelerator: 'Command+,',
+              click(){ navigate('/config') }
+            },
+            {
+                type: 'separator'
             },
             {
               type: 'separator'
@@ -223,27 +243,27 @@ app.on('ready', async () => {
             {
               label: 'Accounts',
               accelerator: 'Command+1',
-              selector: 'performAccounts:'
+              click(){ navigate('/accounts') }
             },
             {
               label: 'Blocks',
               accelerator: 'Command+2',
-              selector: 'performBlocks:'
+              click(){ navigate('/blocks') }
             },
             {
               label: 'Transactions',
               accelerator: 'Command+3',
-              selector: 'performTransactions:'
+              click(){ navigate('/transactions') }
             },
             {
-              label: 'Console',
+              label: 'Logs',
               accelerator: 'Command+4',
-              selector: 'performConsole:'
+              click(){ navigate('/logs') }
             },
             {
               label: 'Settings',
               accelerator: 'Command+5',
-              selector: 'performSettings:'
+              click(){ navigate('/config') }
             },
             {
               label: 'Minimize',
@@ -399,3 +419,12 @@ app.on('ready', async () => {
     }
   }, 0)
 })
+
+function ensureExternalLinksAreOpenedInBrowser(event, url) {
+    // we're a one-window application, and we only ever want to load external
+    // resources in the user's browser, not via a new browser window
+    if (url.startsWith('http:') || url.startsWith('https:')) {
+      shell.openExternal(url)
+      event.preventDefault()
+    }
+  }

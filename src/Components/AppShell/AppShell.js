@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import Mousetrap from 'mousetrap'
 import { hashHistory } from 'react-router'
+import ReactGA from 'react-ga'
+import { Scrollbars } from 'react-custom-scrollbars';
 
 import connect from '../Helpers/connect'
 import * as AppShellActions from '../../Actions/AppShell'
@@ -8,7 +10,7 @@ import * as AppShellActions from '../../Actions/AppShell'
 import TopNavbar from './TopNavbar'
 import OnlyIf from '../../Elements/OnlyIf'
 import BugModal from './BugModal'
-import ReactGA from 'react-ga'
+import UpdateModal from '../AutoUpdate/UpdateModal'
 
 import app from '../../Kernel/app'
 
@@ -115,14 +117,20 @@ class AppShell extends Component {
         <TopNavbar {...this.props} />
 
         <div className="ShellContainer" ref="shellcontainer">
-          {this.props.children}
+          <Scrollbars
+            className="scrollBar">
+            {this.props.children}
+          </Scrollbars>
         </div>
         <OnlyIf test={this.props.core.systemError != null}>
           <BugModal systemError={this.props.core.systemError} logs={this.props.logs} />
+        </OnlyIf>
+        <OnlyIf test={!this.props.core.systemError && this.props.autoUpdate.showModal}>
+          <UpdateModal />
         </OnlyIf>
       </div>
     )
   }
 }
 
-export default connect(AppShell, "core", "settings", "logs");
+export default connect(AppShell, "core", "settings", "logs", "autoUpdate");

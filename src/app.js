@@ -12,6 +12,7 @@ import RootReducer from './Reducers/Root'
 import createStore from './Kernel/createStore'
 import syncStore from './Kernel/syncStore'
 import ready from './Kernel/ready'
+import actionClient from './Kernel/actionClient'
 
 import AppShell from './Components/AppShell/AppShell'
 import ConfigScreen from './Components/Config/ConfigScreen'
@@ -59,6 +60,7 @@ import "./Styles/cards.scss"
 import "./app.global.scss"
 import "./Elements/StatusIndicator.scss"
 import "./Elements/Modal.scss"
+import "./Elements/ProgressBar.scss"
 import "./Elements/Spinner.css"
 import "./Components/FirstRun/FirstRunScreen.scss"
 import "./Components/AppShell/AppShell.scss"
@@ -80,10 +82,16 @@ import "./Components/Transactions/TxCard.scss"
 import "./Components/Transactions/TransactionTypeBadge.scss"
 import "./Components/Transactions/MiniTxCard.scss"
 import "./Components/Title/TitleScreen.scss"
+import "./Components/AutoUpdate/UpdateModal.scss"
+import "./Components/AutoUpdate/UpdateNotification.scss"
 import "./Components/Logs/LogsScreen.scss"
 import "./Components/Logs/LogContainer.scss"
 import "./Components/Config/ConfigScreen.scss"
 import "./Components/NotFound/NotFoundScreen.scss"
+
+actionClient.on('navigate', (event, path) => {
+  hashHistory.push(path)
+});
 
 const render = () => {
   ReactDOM.render(

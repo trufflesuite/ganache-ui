@@ -8,6 +8,8 @@ import * as Accounts from '../Actions/Accounts'
 import * as Logs from '../Actions/Logs'
 import * as Settings from '../Actions/Settings'
 
+import { initAutoUpdates } from '../Init/Renderer/AutoUpdate'
+
 // This will be called before the very first render, so you can do whatever
 // you want here. The Redux Store is available at this point, so you can
 // dispatch any action you want
@@ -61,4 +63,5 @@ export default function (store) {
     store.dispatch(Settings.setSettings(settings))
   })
 
+  initAutoUpdates(actionClient, store.dispatch)
 }

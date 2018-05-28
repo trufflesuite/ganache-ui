@@ -33,7 +33,8 @@ module.exports = (target, relOutputDir, excludeFromClean) => {
       ]
     })
   } else {
-    config = merge(config, {
+    config = merge.strategy({ entry: 'prepend' })(config, {
+      entry: ['react-hot-loader/patch'],
       devServer: {
         contentBase: baseConfig.output.path,
         hot: true
