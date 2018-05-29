@@ -145,28 +145,30 @@ class ConfigScreen extends PureComponent {
     if (validation) {
       let isValid = true
     
-      if (!validation.canBeBlank && value == '') {
-        isValid = false
-      }
-    
-      if (validation.allowedChars && !value.match(validation.allowedChars)) {
-        isValid = false
-      }
-    
-      if (validation.format && !value.match(validation.format)) {
-        isValid = false
-      }
-
-      // If we at least have a value, check to see if it has a min/max
-      if (value != "") {
-        value = parseInt(value, 10)
-
-        if (validation.min && (value < validation.min || isNaN(value))) {
-          isValid = false     
+      if (value != null) {
+        if (!validation.canBeBlank && value === '') {
+          isValid = false
+        }
+      
+        if (validation.allowedChars && !value.match(validation.allowedChars)) {
+          isValid = false
+        }
+      
+        if (validation.format && !value.match(validation.format)) {
+          isValid = false
         }
 
-        if (validation.max && value > validation.max) {
-          isValid = false
+        // If we at least have a value, check to see if it has a min/max
+        if (value != "") {
+          value = parseInt(value, 10)
+
+          if (validation.min && (value < validation.min || isNaN(value))) {
+            isValid = false     
+          }
+
+          if (validation.max && value > validation.max) {
+            isValid = false
+          }
         }
       }
 

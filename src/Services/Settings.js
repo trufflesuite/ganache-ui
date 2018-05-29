@@ -11,13 +11,18 @@ const initialSettings = {
   verboseLogging: false,
   firstRun: true,
   randomizeMnemonicOnStart: false,
+  logsDirectory: null,
   server: {
     hostname: "127.0.0.1",
     port: 7545,
     network_id: 5777,
+    default_balance_ether: 100,
     total_accounts: 10,
     unlocked_accounts: [],
-    vmErrorsOnRPCResponse: true
+    locked: false,
+    vmErrorsOnRPCResponse: true,
+    logger: null,
+    verbose: false
   }
 }
 

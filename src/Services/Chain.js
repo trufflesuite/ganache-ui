@@ -21,7 +21,7 @@ class ChainService extends EventEmitter {
   }
 
   start() {
-    let chainPath = path.join(__dirname, "../", "chain.js")
+    let chainPath = path.join(__dirname, "../chain/", "chain.js")
     const options = {
       stdio: [ 'pipe', 'pipe', 'pipe', 'ipc' ]
     };
@@ -89,6 +89,8 @@ class ChainService extends EventEmitter {
     if (settings.randomizeMnemonicOnStart) {
       delete options.mnemonic
     }
+
+    options.logDirectory = settings.logDirectory;
 
     return options
   }
