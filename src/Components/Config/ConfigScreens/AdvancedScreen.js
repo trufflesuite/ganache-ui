@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import connect from '../../Helpers/connect'
 import OnlyIf from '../../../Elements/OnlyIf'
-import FilePicker from './FilePicker'
+import FilePicker from '../../../Elements/FilePicker'
 
 const VALIDATIONS = {
   "logDirectory": {
@@ -56,8 +56,6 @@ class GanacheScreen extends Component {
       tempValidations.logDirectory = null;
     }
 
-    console.log(e)
-
     this.props.validateChange(e, VALIDATIONS)
   }
 
@@ -97,7 +95,7 @@ class GanacheScreen extends Component {
                   name="logDirectory"
                   defaultValue="Select a Directory"
                   buttonValue="Pick a Folder"
-                  directoriesOnly="true"
+                  directoriesOnly={true}
                   value={this.state.logDirectory}
                   onChangeFunction={(value, e) => this.changeLogDirectory(value, e)}
                 />
