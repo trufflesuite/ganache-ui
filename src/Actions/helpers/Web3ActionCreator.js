@@ -28,12 +28,14 @@ export async function web3ActionCreator(dispatch, getState, name, args) {
 
 export function web3CleanUpHelper(dispatch, getState) {
   let web3Instance = getState().web3.web3Instance
-  let provider = web3Instance.currentProvider
+  if (web3Instance) {
+    let provider = web3Instance.currentProvider
 
-  // clear out current provider to stop active subscription monitoring
-  web3Instance.setProvider(null)
+    // clear out current provider to stop active subscription monitoring
+    web3Instance.setProvider(null)
 
-  if (provider && provider.connection && provider.connection.close) {
-    provider.connection.close()
+    if (provider && provider.connection && provider.connection.close) {
+      provider.connection.close()
+    }
   }
 }
