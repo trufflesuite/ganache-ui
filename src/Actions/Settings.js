@@ -19,3 +19,13 @@ export const requestSaveSettings = function(settings) {
     ipcRenderer.send(REQUEST_SAVE_SETTINGS, settings)
   }
 }
+
+export const SET_SETTING_ERROR = `${prefix}/SET_SETTING_ERROR`
+export const setSettingError = function(key, errorText) {
+  return {type: SET_SETTING_ERROR, key, errorText};
+}
+
+export const CLEAR_SETTING_ERROR = `${prefix}/CLEAR_SETTING_ERROR`
+export const clearSettingError = function(key) {
+  return {type: CLEAR_SETTING_ERROR, key};
+}
