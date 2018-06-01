@@ -16,6 +16,10 @@ export default function (store) {
   // Load the first screen while we wait for the application to load
   store.dispatch(Core.showTitleScreen())
 
+  ipcRenderer.on(Settings.SET_SETTINGS, (event, settigns) => {
+    store.dispatch(Settings.setSettings(settings))
+  })
+
   // Wait for the server to start...
   ipcRenderer.on(Core.SET_SERVER_STARTED, (sender, currentSettings) => {
     // Get current settings into the store

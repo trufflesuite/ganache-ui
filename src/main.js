@@ -15,11 +15,15 @@ if (isDevMode) {
 
 import { 
   REQUEST_SERVER_RESTART,
-  SET_SERVER_STARTED, 
+  SET_SERVER_STARTED,
   SET_SERVER_STOPPED,
-  SET_KEY_DATA, 
+  SET_KEY_DATA,
   SET_SYSTEM_ERROR
 } from './Actions/Core'
+
+import { 
+  SET_SETTINGS,
+} from './Actions/Settings'
 
 import { REQUEST_SAVE_SETTINGS } from './Actions/Settings'
 import { ADD_LOG_LINES } from './Actions/Logs'
@@ -112,6 +116,9 @@ app.on('ready', () => {
       // Remove the menu bar
       mainWindow.setMenu(null);
 
+      // make sure the store registers the settings ASAP in the event of a startup crash
+      mainWindow.webContents.send(SET_SETTINGS, Settings.getAll())
+
       chain.on("start", () => {
         chain.startServer(Settings.getAll())
       })
@@ -147,6 +154,9 @@ app.on('ready', () => {
     // If the frontend asks to start the server, start the server.
     // This will trigger then chain event handlers above once the server stops.
     ipcMain.on(REQUEST_SERVER_RESTART, () => {
+      // make sure the store registers the settings ASAP in the event of a startup crash
+      mainWindow.webContents.send(SET_SETTINGS, Settings.getAll())
+
       if (chain.isServerStarted()) {
         chain.once("server-stopped", () => {
           chain.startServer(Settings.getAll())
