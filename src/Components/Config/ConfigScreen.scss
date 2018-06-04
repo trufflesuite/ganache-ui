@@ -196,8 +196,14 @@
       display: block;
       padding: .5rem;
       font-size: 14px;
-      border-bottom-left-radius: 5px;
-      border-bottom-right-radius: 5px;
+      border-bottom: 1px solid;
+      border-bottom-color: rgba(255, 255, 255, 0.25);
+
+      &:last-child {
+        border-bottom: 0;
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+      }
     }
   }
 
