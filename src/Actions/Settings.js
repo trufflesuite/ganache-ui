@@ -1,6 +1,14 @@
 import { ipcRenderer } from 'electron'
+import { push } from 'react-router-redux'
 
 const prefix = 'SETTINGS'
+
+export const SHOW_CONFIG_SCREEN = `${prefix}/SHOW_CONFIG_SCREEN`
+export function showConfigScreen() {
+  return function(dispatch, getState) {
+    dispatch(push("/config"))
+  }
+}
 
 export const SET_SETTINGS = `${prefix}/SET_SETTINGS`
 export const setSettings = function(settings) {
