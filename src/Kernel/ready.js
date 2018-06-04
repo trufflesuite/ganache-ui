@@ -7,6 +7,8 @@ import * as Accounts from '../Actions/Accounts'
 import * as Logs from '../Actions/Logs'
 import * as Settings from '../Actions/Settings'
 
+import * as ErrorHandler from './ErrorHandler'
+
 import { initAutoUpdates } from '../Init/Renderer/AutoUpdate'
 
 // This will be called before the very first render, so you can do whatever
@@ -18,6 +20,14 @@ export default function (store) {
 
   ipcRenderer.on(Settings.SHOW_CONFIG_SCREEN, (event) => {
     store.dispatch(Settings.showConfigScreen())
+  })
+
+  ipcRenderer.on(Settings.SET_SETTING_ERROR, (event, key, value) => {
+    store.dispatch(Settings.setSettingError(key, value))
+  })
+
+  ipcRenderer.on(Settings.CLEAR_SETTING_ERROR, (event, key) => {
+    store.dispatch(Settings.clearSettingError(key))
   })
 
   ipcRenderer.on(Settings.SET_SETTINGS, (event, settings) => {
@@ -48,7 +58,7 @@ export default function (store) {
   })
 
   ipcRenderer.on(Core.SET_SYSTEM_ERROR, (event, error) => {
-    store.dispatch(Core.setSystemError(error))
+    ErrorHandler.handleError(store, error)
   })
 
   // The server will send a second message that sets the mnemonic and hdpath

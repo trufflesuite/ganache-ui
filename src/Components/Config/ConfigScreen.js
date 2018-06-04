@@ -16,6 +16,8 @@ import AdvancedScreen from './ConfigScreens/AdvancedScreen'
 import RestartIcon from '../../Elements/icons/restart.svg'
 import EjectIcon from '../../Elements/icons/eject.svg';
 
+const { getCurrentWebContents } = require('electron').remote
+
 const TABS = [
   {name: 'Server', component: ServerScreen}, 
   {name: 'Accounts & Keys', component: AccountsScreen},
@@ -71,6 +73,13 @@ class ConfigScreen extends PureComponent {
     const target = event.target
     const name = target.name
     let value = target.value
+
+    // the user is modifying this field; if there is an error, send an action to clear it
+    // the user has acknowledged the error by modifying the field
+    if (target.name in this.state.settings.validationErrors) {
+      getCurrentWebContents().send(Settings.CLEAR_SETTING_ERROR, target.name)
+      delete this.state.settings.validationErrors[target.name]
+    }
 
     switch (target.type) {
       case "number":

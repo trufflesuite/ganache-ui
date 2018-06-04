@@ -29,7 +29,7 @@ class ServerScreen extends Component {
     super(props)
 
     this.state = {
-      automine: typeof props.settings.server.blocktime == "undefined" 
+      automine: typeof props.settings.server.blocktime == "undefined"
     }
   }
 
@@ -56,6 +56,7 @@ class ServerScreen extends Component {
 
   validateChange = (e) => {
     this.props.validateChange(e, VALIDATIONS)
+    this.forceUpdate()
   }
 
   render () {
@@ -84,6 +85,8 @@ class ServerScreen extends Component {
               />
               {this.props.validationErrors["server.hostname"] &&
                 <p className="ValidationError">Must be a valid IP address or "localhost"</p>}
+              {!("server.hostname" in this.props.validationErrors) && this.props.settings.validationErrors["server.hostname"] &&
+                <p className="ValidationError">{this.props.settings.validationErrors["server.hostname"]}</p>}
             </div>
             <div className="RowItem">
               <p>
@@ -109,6 +112,8 @@ class ServerScreen extends Component {
 
               {this.props.validationErrors["server.port"] &&
                 <p className="ValidationError">Must be &gt; 1000 and &lt; 65535.</p>}
+              {this.props.settings.validationErrors["server.port"] &&
+                <p className="ValidationError">{this.props.settings.validationErrors["server.port"]}</p>}
             </div>
             <div className="RowItem">
               <p>
