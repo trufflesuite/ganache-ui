@@ -19,10 +19,10 @@ import EjectIcon from '../../Elements/icons/eject.svg';
 const { getCurrentWebContents } = require('electron').remote
 
 const TABS = [
-  {name: 'Server', component: ServerScreen}, 
-  {name: 'Accounts & Keys', component: AccountsScreen},
-  {name: 'Chain', component: ChainScreen},
-  {name: 'Advanced', component: AdvancedScreen}
+  {name: 'Server', subRoute: 'server', component: ServerScreen},
+  {name: 'Accounts & Keys', subRoute: 'accounts-keys', component: AccountsScreen},
+  {name: 'Chain', subRoute: 'chain', component: ChainScreen},
+  {name: 'Advanced', subRoute: 'advanced', component: AdvancedScreen}
 ]
 
 class ConfigScreen extends PureComponent {
@@ -34,6 +34,15 @@ class ConfigScreen extends PureComponent {
       validationErrors: {},
       cancelIsRestart: Object.keys(props.settings.validationErrors).length > 0, // see handleCancelPressed
       activeIndex: 0
+    }
+
+    if ("params" in this.props && "activeTab" in this.props.params) {
+      for (let i = 0; i < TABS.length; i++) {
+        if (TABS[i].subRoute === this.props.params.activeTab) {
+          this.state.activeIndex = i
+          break
+        }
+      }
     }
   }
 

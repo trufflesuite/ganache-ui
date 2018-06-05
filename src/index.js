@@ -40,7 +40,7 @@ const routes = <Route>
     <Route path="/transactions(/:transactionHash)" component={TransactionsScreen} />
     <Route path="/logs" component={LogsScreen} />
     <Route path="/notfound" component={NotFoundScreen} />
-    <Route path='/config' component={ConfigScreen} /> 
+    <Route path='/config(/:activeTab)' component={ConfigScreen} /> 
   </Route>
 </Route>
 

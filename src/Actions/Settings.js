@@ -4,9 +4,9 @@ import { push } from 'react-router-redux'
 const prefix = 'SETTINGS'
 
 export const SHOW_CONFIG_SCREEN = `${prefix}/SHOW_CONFIG_SCREEN`
-export function showConfigScreen() {
+export function showConfigScreen(tab) {
   return function(dispatch, getState) {
-    dispatch(push("/config"))
+    dispatch(push("/config" + (tab ? ("/" + tab) : "")))
   }
 }
 
