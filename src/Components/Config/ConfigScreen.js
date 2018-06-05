@@ -32,6 +32,7 @@ class ConfigScreen extends PureComponent {
     this.state = {
       settings: _.cloneDeep(props.settings),
       validationErrors: {},
+      cancelIsRestart: Object.keys(props.settings.validationErrors).length > 0, // see handleCancelPressed
       activeIndex: 0
     }
   }
@@ -47,8 +48,15 @@ class ConfigScreen extends PureComponent {
     return _.isEqual(this.state.settings, this.props.settings) == false
   }
 
-  handleCancelPressed () {
-    hashHistory.pop();
+  handleCancelPressed = (e) => {
+    if (this.state.cancelIsRestart) {
+      // we are in the config screen because of a system error
+      // restart application without saving settings if the user hit cancel
+      this.props.dispatch(Core.requestServerRestart())
+    }
+    else {
+      hashHistory.goBack();
+    }
   }
 
   _renderTabHeader = () => {
@@ -216,7 +224,7 @@ class ConfigScreen extends PureComponent {
               {this._renderTabHeader()}
             </div>
             <div className="Actions">
-              <button className="btn btn-primary" onClick={hashHistory.goBack}>
+              <button className="btn btn-primary" onClick={this.handleCancelPressed}>
                 <EjectIcon /*size={18}*/ />
                 CANCEL
               </button>
