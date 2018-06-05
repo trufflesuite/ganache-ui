@@ -21,8 +21,8 @@ import {
   SET_SYSTEM_ERROR
 } from './Actions/Core'
 
-import { 
-  SET_SETTINGS,
+import {
+  SET_SETTINGS
 } from './Actions/Settings'
 
 import { REQUEST_SAVE_SETTINGS } from './Actions/Settings'
@@ -113,6 +113,7 @@ app.on('ready', () => {
       //installExtension(REACT_DEVELOPER_TOOLS);
       mainWindow.webContents.openDevTools();
     }
+
     // if a user clicks a link to an external webpage, open it in the user's browser, not our app
     mainWindow.webContents.on('new-window', ensureExternalLinksAreOpenedInBrowser);
     mainWindow.webContents.on('will-navigate', ensureExternalLinksAreOpenedInBrowser);
@@ -158,6 +159,11 @@ app.on('ready', () => {
       chain.on("error", (error) => {
         console.log(error)
         mainWindow.webContents.send(SET_SYSTEM_ERROR, error)
+
+        if (chain.isServerStarted()) {
+          // Something wrong happened in the chain, let's try to stop it
+          chain.stopServer()
+        }
       })
 
       chain.start()
