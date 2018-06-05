@@ -11,8 +11,8 @@ import TopNavbar from './TopNavbar'
 import OnlyIf from '../../Elements/OnlyIf'
 import BugModal from './BugModal'
 import UpdateModal from '../AutoUpdate/UpdateModal'
-import ua from 'universal-analytics'
 import ElectronCookies from '@exponent/electron-cookies'
+import {GoogleAnalytics as GA} from '../../Services/GoogleAnalytics'
 
 const { app } = require('electron').remote
 
@@ -24,37 +24,6 @@ class AppShell extends Component {
   constructor () {
     super()
     this.scrollDedupeTimeout = null
-  }
-
-  _setupGoogleAnalytics = () => {
-    this.user = ua('UA-83874933-5', this.props.settings.uuid)
-    this.user.set('location', 'http://truffleframework.com/ganache')
-    this.user.set('checkProtocolTask', null)
-    this.user.set('an', 'Ganache')
-    this.user.set('av', app.getVersion())
-    this.user.set('ua', navigator.userAgent)
-    this.user.set('sr', screen.width + 'x' + screen.height)
-    this.user.set(
-      'vp',
-      window.screen.availWidth + 'x' + window.screen.availHeight
-    )
-
-    window.onerror = (msg, url, lineNo, columnNo, error) => {
-      var message = [
-        'Message: ' + msg,
-        'Line: ' + lineNo,
-        'Column: ' + columnNo,
-        'Error object: ' + JSON.stringify(error)
-      ].join(' - ')
-
-      // setTimeout(() => {
-      //   this.user.exception(message.toString())
-      // }, 0)
-
-      return false
-    }
-
-    this.user.pageview('/').send()
   }
 
   _handleScroll = () => {
@@ -84,7 +53,11 @@ class AppShell extends Component {
   componentWillReceiveProps (nextProps) {
     // If we're not tracking page use, bail.
     if (nextProps.settings.googleAnalyticsTracking == false) {
+      GA.isEnabled = false
       return
+    }
+    else {
+      GA.isEnabled = true
     }
 
     // If the page hasn't changed, bail.
@@ -95,14 +68,12 @@ class AppShell extends Component {
     const segment = nextProps.location.pathname.split('/')[1] || 'dashboard'
 
     // If we haven't initialized GA, do it.
-    if (!this.user) {
-      this._setupGoogleAnalytics()
+    if (!GA.isSetup) {
+      GA.setup(nextProps.settings.googleAnalyticsTracking, nextProps.settings.uuid)
     }
 
-    if (this.user) {
-      this.user.pageview(nextProps.location.pathname).send()
-      this.user.screenview(segment, 'Ganache', app.getVersion()).send()
-    }
+    GA.reportPageview(nextProps.location.pathname)
+    GA.reportScreenview(segment)
   }
 
   onCloseFatalErrorModal = () => {}
