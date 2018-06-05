@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 
 import OnlyIf from '../../../Elements/OnlyIf'
 
+import * as os from 'os'
+
 const VALIDATIONS = {
   "server.hostname": {
     format: /(^localhost$)|(^\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b$)/,
@@ -69,6 +71,8 @@ class ServerScreen extends Component {
     //   !ganachePortStatus.pid[0].name.toLowerCase().includes('ganache') &&
     //   !ganachePortStatus.pid[0].name.toLowerCase().includes('electron')
 
+    const networkInterfaces = os.networkInterfaces()
+
     return (
       <div>
         <h2>SERVER</h2>
@@ -77,12 +81,17 @@ class ServerScreen extends Component {
           <h4>HOSTNAME</h4>
           <div className="Row">
             <div className="RowItem">
-              <input
-                type="text"
+              <select
                 name="server.hostname"
-                value={this.props.settings.server.hostname}
+                defaultValue={this.props.settings.server.hostname}
                 onChange={this.validateChange}
-              />
+              >
+                {Object.keys(networkInterfaces).map((key) => {
+                  return networkInterfaces[key].map((instance) => {
+                    return <option value={instance.address}>{key} - {instance.address} ({instance.family})</option>
+                  })
+                })}
+              </select>
               {this.props.validationErrors["server.hostname"] &&
                 <p className="ValidationError">Must be a valid IP address or "localhost"</p>}
               {!("server.hostname" in this.props.validationErrors) && this.props.settings.validationErrors["server.hostname"] &&
