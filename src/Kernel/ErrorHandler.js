@@ -5,7 +5,7 @@ import * as Settings from '../Actions/Settings'
 export function handleError(store, error) {
   let showModal = false
 
-  if ("code" in error) {
+  if (typeof error === "object" && "code" in error) {
     switch (error.code) {
       case "EADDRINUSE":
       case "EACESS":
@@ -13,6 +13,9 @@ export function handleError(store, error) {
         break
       case "EADDRNOTAVAIL":
         store.dispatch(Settings.setSettingError("server.hostname", "The hostname is not local address; only use hostnames/IPs associated with this machine"))
+        break
+      case "CUSTOMERROR":
+        store.dispatch(Settings.setSettingError(error.key, error.value))
         break
       default:
         showModal = true
