@@ -86,9 +86,12 @@ class ServerScreen extends Component {
                 defaultValue={this.props.settings.server.hostname}
                 onChange={this.validateChange}
               >
+                <option key="0.0.0.0" value="0.0.0.0">All Interfaces - 0.0.0.0</option>
                 {Object.keys(networkInterfaces).map((key) => {
                   return networkInterfaces[key].map((instance) => {
-                    return <option value={instance.address}>{key} - {instance.address} ({instance.family})</option>
+                    if (instance.family.toLowerCase() === "ipv4") {
+                      return <option key={instance.address} value={instance.address}>{key} - {instance.address}</option>
+                    }
                   })
                 })}
               </select>
