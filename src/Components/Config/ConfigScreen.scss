@@ -185,7 +185,7 @@
       margin-left: 1rem;
     }
 
-    input[type='text'], input[type='number'], input[type='file'] {
+    input[type='text'], input[type='number'], input[type='file'], select {
       border-color: var(--app-navbar-text);
       width: 100%;
     }
