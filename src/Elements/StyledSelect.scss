@@ -1,4 +1,8 @@
 div.StyledSelect {
+  display: flex;
+  position: relative;
+  align-items: center;
+
   select {
     -webkit-appearance: none;
     color: var(--text-color);
@@ -8,14 +12,11 @@ div.StyledSelect {
   }
 
   &::after {
-    display: inline-block;
+    display: inline-flex;
     position: absolute;
-    top: 0.5rem;
-    right: 1rem;
-    font-family: FontAwesome;
-    content: '\f0d7';
+    right: 0.5rem;
+    content: '\25bc';
     color: var(--text-color);
+    pointer-events: none;
   }
-
-  position: relative;
 }
