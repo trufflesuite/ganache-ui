@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import OnlyIf from '../../../Elements/OnlyIf'
 
 import * as os from 'os'
+import StyledSelect from '../../../Elements/StyledSelect';
 
 const VALIDATIONS = {
   "server.hostname": {
@@ -81,20 +82,20 @@ class ServerScreen extends Component {
           <h4>HOSTNAME</h4>
           <div className="Row">
             <div className="RowItem">
-              <select
+              <StyledSelect
                 name="server.hostname"
                 defaultValue={this.props.settings.server.hostname}
-                onChange={this.validateChange}
+                changeFunction={this.validateChange}
               >
-                <option key="0.0.0.0" value="0.0.0.0">All Interfaces - 0.0.0.0</option>
+                <option key="0.0.0.0" value="0.0.0.0">0.0.0.0 - All Interfaces</option>
                 {Object.keys(networkInterfaces).map((key) => {
                   return networkInterfaces[key].map((instance) => {
                     if (instance.family.toLowerCase() === "ipv4") {
-                      return <option key={instance.address} value={instance.address}>{key} - {instance.address}</option>
+                      return <option key={instance.address} value={instance.address}>{instance.address} - {key}</option>
                     }
                   })
                 })}
-              </select>
+              </StyledSelect>
               {this.props.validationErrors["server.hostname"] &&
                 <p className="ValidationError">Must be a valid IP address or "localhost"</p>}
               {!("server.hostname" in this.props.validationErrors) && this.props.settings.validationErrors["server.hostname"] &&
