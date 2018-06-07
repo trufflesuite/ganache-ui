@@ -9,15 +9,23 @@ export default function (state = initialState, action) {
     case Settings.SET_SETTINGS:
       // Ignore state; we're overwriting the settings.
       nextState = JSON.parse(JSON.stringify(action.settings))
-      break;
+      break
     case Settings.SET_SETTING_ERROR: 
+      if (typeof nextState.validationErrors === "undefined") {
+        nextState.validationErrors = {}
+      }
       nextState.validationErrors[action.key] = action.errorText
-      break;
+      break
     case Settings.CLEAR_SETTING_ERROR:
-      delete nextState.validationErrors[action.key]
-      break;
+      if (action.key in nextState.validationErrors) {
+        delete nextState.validationErrors[action.key]
+      }
+      break
+    case Settings.CLEAR_ALL_SETTING_ERRORS:
+      nextState.validationErrors = {}
+      break
     default:
-      break;
+      break
   }
 
   return nextState

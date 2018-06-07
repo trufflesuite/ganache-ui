@@ -30,6 +30,10 @@ export default function (store) {
     store.dispatch(Settings.clearSettingError(key))
   })
 
+  ipcRenderer.on(Settings.CLEAR_ALL_SETTING_ERRORS, (event) => {
+    store.dispatch(Settings.clearAllSettingErrors())
+  })
+
   ipcRenderer.on(Settings.SET_SETTINGS, (event, settings) => {
     store.dispatch(Settings.setSettings(settings))
   })

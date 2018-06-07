@@ -47,6 +47,9 @@ class ConfigScreen extends PureComponent {
   }
 
   restartServer = () => {
+    this.props.dispatch(Settings.clearAllSettingErrors())
+    this.state.settings.validationErrors = {}
+
     if (this.isDirty()) {
       this.props.dispatch(Settings.requestSaveSettings(this.state.settings))
     }

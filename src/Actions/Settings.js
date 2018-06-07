@@ -37,3 +37,8 @@ export const CLEAR_SETTING_ERROR = `${prefix}/CLEAR_SETTING_ERROR`
 export const clearSettingError = function(key) {
   return {type: CLEAR_SETTING_ERROR, key};
 }
+
+export const CLEAR_ALL_SETTING_ERRORS = `${prefix}/CLEAR_ALL_SETTING_ERRORS`
+export const clearAllSettingErrors = function() {
+  return {type: CLEAR_ALL_SETTING_ERRORS};
+}
