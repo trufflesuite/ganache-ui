@@ -1,0 +1,24 @@
+div.StyledSelect {
+  select {
+    -webkit-appearance: none;
+    color: var(--text-color);
+    border: 1px solid var(--text-color);
+    background-color: transparent;
+    padding: .5rem;
+
+    option {
+    }
+  }
+
+  &::after {
+    display: inline-block;
+    position: absolute;
+    top: 0.5rem;
+    right: 1rem;
+    font-family: FontAwesome;
+    content: '\f0d7';
+    color: var(--text-color);
+  }
+
+  position: relative;
+}
