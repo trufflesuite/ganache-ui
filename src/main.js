@@ -90,7 +90,8 @@ app.on('ready', () => {
   // see https://github.com/electron/electron/issues/9179 for more info
   setTimeout(async () => {
     const chain = new ChainService(app)
-    const Settings = new SettingsService() 
+    const Settings = new SettingsService()
+    let logError = ""
 
     app.on('will-quit', function () {
       chain.stopProcess();
@@ -153,11 +154,31 @@ app.on('ready', () => {
       })
 
       chain.on("stderr", (data) => {
-        mainWindow.webContents.send(ADD_LOG_LINES, data.split(/\n/g))
+        const lines = data.split(/\n/g)
+        mainWindow.webContents.send(ADD_LOG_LINES, lines)
+
+        const errorPattern = /Error: /g
+        const stackPattern = /^    at /g
+        for (let i = 0; i < lines.length; i++) {
+          if (errorPattern.exec(lines[i])) {
+            // check if the next line has a stack
+            if (i === lines.length - 1 || stackPattern.exec(lines[i+1])) {
+              // either it's the last line that has an error or there is an error
+              //   with a call stack trace, lets keep track of this in case we crash
+              logError = lines[i]
+              if (i < lines.length - 1) {
+                logError += lines[i+1]
+              }
+            }
+          }
+        }
       })
 
       chain.on("error", (error) => {
-        console.log(error)
+        if (logError) {
+          // we noticed an error on the stderr of the chain process
+          error.logError = logError
+        }
         mainWindow.webContents.send(SET_SYSTEM_ERROR, error)
 
         if (chain.isServerStarted()) {
