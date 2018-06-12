@@ -44,7 +44,8 @@ class ReduxWeb3Provider extends EventEmitter {
     GA.reportEvent({
       category: "rpc",
       action: "started",
-      label: payload.method || "(unknown method)"
+      label: payload.method || "(unknown method)",
+      value: payload.params ? payload.params.length : 0
     })
 
     this.provider.send(payload, (err, response) => {
