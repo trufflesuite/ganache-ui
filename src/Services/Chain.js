@@ -96,11 +96,15 @@ class ChainService extends EventEmitter {
   }
 
   _exitHandler(code, signal) {
-      if (code != null) {
-        this.emit("error", `Blockchain process exited prematurely with code '${code}', due to signal '${signal}'.`)
-      } else {
-        this.emit("error", `Blockchain process exited prematurely due to signal '${signal}'.`)
-      }
+    const message = `Blockchain process exited prematurely with code '${code}', due to signal '${signal}'.`
+    const error = {
+      code: "CHAINEXIT",
+      message: message,
+      stack: message,
+      exitCode: code,
+      exitSignal: signal
+    }
+    this.emit("error", error)
   }
 }
 
