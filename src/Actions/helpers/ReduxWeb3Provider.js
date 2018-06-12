@@ -62,6 +62,16 @@ class ReduxWeb3Provider extends EventEmitter {
         label: payload.method || "(unknown method)"
       })
 
+      if ("result" in response && "status" in response.result) {
+        if (response.result.status === '0x0' || response.result.status == 0) {
+          GA.reportEvent({
+            category: "error",
+            action: "tx-status-failure",
+            label: payload.method || "(unknown method)"
+          })
+        }
+      }
+
       callback(err, response)
     })
   }
