@@ -21,9 +21,14 @@ ElectronCookies.enable({
 })
 
 class AppShell extends Component {
-  constructor () {
-    super()
+  constructor (props) {
+    super(props)
     this.scrollDedupeTimeout = null
+
+    if (!GA.isSetup) {
+      GA.setup(props.settings.googleAnalyticsTracking, props.settings.uuid)
+      GA.reportSettings(props.settings)
+    }
   }
 
   _handleScroll = () => {
@@ -70,6 +75,7 @@ class AppShell extends Component {
     // If we haven't initialized GA, do it.
     if (!GA.isSetup) {
       GA.setup(nextProps.settings.googleAnalyticsTracking, nextProps.settings.uuid)
+      GA.reportSettings(nextProps.settings)
     }
 
     GA.reportPageview(nextProps.location.pathname)
