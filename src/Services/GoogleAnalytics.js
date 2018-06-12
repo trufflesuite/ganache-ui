@@ -120,16 +120,16 @@ export let GoogleAnalytics = {
           gasPrice: settings.server.gasPrice
         }
 
-        GoogleAnalytics.user.set('dimension1', config.hostname)
-        GoogleAnalytics.user.set('dimension2', config.port)
-        GoogleAnalytics.user.set('dimension3', config.networkId)
-        GoogleAnalytics.user.set('dimension4', config.blockTime)
-        GoogleAnalytics.user.set('dimension5', config.defaultBalance)
-        GoogleAnalytics.user.set('dimension6', config.totalAccounts)
-        GoogleAnalytics.user.set('dimension7', config.autoMnemonic)
-        GoogleAnalytics.user.set('dimension8', config.locked)
-        GoogleAnalytics.user.set('dimension9', config.gasLimit)
-        GoogleAnalytics.user.set('dimension10', config.gasPrice)
+        GoogleAnalytics.user.set('cd1', config.hostname)
+        GoogleAnalytics.user.set('cd2', config.port)
+        GoogleAnalytics.user.set('cd3', config.networkId)
+        GoogleAnalytics.user.set('cd4', config.blockTime)
+        GoogleAnalytics.user.set('cd5', config.defaultBalance)
+        GoogleAnalytics.user.set('cd6', config.totalAccounts)
+        GoogleAnalytics.user.set('cd7', config.autoMnemonic)
+        GoogleAnalytics.user.set('cd8', config.locked)
+        GoogleAnalytics.user.set('cd9', config.gasLimit)
+        GoogleAnalytics.user.set('cd10', config.gasPrice)
       }
     }
   },
