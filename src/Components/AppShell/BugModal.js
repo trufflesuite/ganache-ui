@@ -20,7 +20,7 @@ class BugModal extends Component {
     this.scrollDedupeTimeout = null
   }
 
-  // grabs the last 500 log lines as a string formatted for inclusion as a github issue
+  // grabs the last 175 log lines as a string formatted for inclusion as a github issue
   renderAndSanitizeLogLines () {
     let result = ''
     if (this.props.logs && this.props.logs.lines && this.props.logs.lines.length > 0) {
