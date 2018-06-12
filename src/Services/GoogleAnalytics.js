@@ -3,7 +3,7 @@ import ua from 'universal-analytics'
 
 const { app } = require('electron').remote
 
-const ganacheAnalyticsId = 'UA-120580191-1'
+const ganacheAnalyticsId = 'UA-83874933-5'
 const ganacheUrl = 'http://truffleframework.com/ganache'
 const ganacheName = 'Ganache'
 const appVersion = app.getVersion()
