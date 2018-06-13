@@ -12,6 +12,7 @@ import ServerScreen from './ConfigScreens/ServerScreen'
 import AccountsScreen from './ConfigScreens/AccountsScreen'
 import ChainScreen from './ConfigScreens/ChainScreen'
 import AdvancedScreen from './ConfigScreens/AdvancedScreen'
+import AboutScreen from './ConfigScreens/AboutScreen'
 
 import RestartIcon from '../../Elements/icons/restart.svg'
 import EjectIcon from '../../Elements/icons/eject.svg';
@@ -20,7 +21,8 @@ const TABS = [
   {name: 'Server', component: ServerScreen}, 
   {name: 'Accounts & Keys', component: AccountsScreen},
   {name: 'Chain', component: ChainScreen},
-  {name: 'Advanced', component: AdvancedScreen}
+  {name: 'Advanced', component: AdvancedScreen},
+  {name: 'About', component: AboutScreen}
 ]
 
 class ConfigScreen extends PureComponent {
