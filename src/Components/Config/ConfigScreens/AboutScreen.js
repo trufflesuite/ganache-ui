@@ -18,8 +18,8 @@ class AccountsScreen extends Component {
             </div>
           </h4>
           <div className="GanacheDescription">
-            Ganache is created and maintained with <span className="heart">♥</span> by <a href="http://truffleframework.com">Truffle</a><br/>
-            Please check the status of or report any bugs or feature requests on <a href="https://github.com/trufflesuite/ganache/issues">GitHub</a>
+            Ganache is created with <span className="heart">♥</span> by <a href="http://truffleframework.com">Truffle</a><br/>
+            Follow development and report issues on <a href="https://github.com/trufflesuite/ganache/issues">GitHub</a>
           </div>
         </div>
       </div>
