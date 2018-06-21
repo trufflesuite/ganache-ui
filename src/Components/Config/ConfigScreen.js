@@ -6,8 +6,6 @@ import connect from '../Helpers/connect'
 import * as Core from '../../Actions/Core'
 import * as Settings from '../../Actions/Settings'
 
-import OnlyIf from '../../Elements/OnlyIf'
-
 import ServerScreen from './ConfigScreens/ServerScreen'
 import AccountsScreen from './ConfigScreens/AccountsScreen'
 import ChainScreen from './ConfigScreens/ChainScreen'
@@ -15,8 +13,6 @@ import AdvancedScreen from './ConfigScreens/AdvancedScreen'
 
 import RestartIcon from '../../Elements/icons/restart.svg'
 import EjectIcon from '../../Elements/icons/eject.svg';
-
-const { getCurrentWebContents } = require('electron').remote
 
 const TABS = [
   {name: 'Server', subRoute: 'server', component: ServerScreen},
@@ -101,7 +97,7 @@ class ConfigScreen extends PureComponent {
     // the user is modifying this field; if there is an error, send an action to clear it
     // the user has acknowledged the error by modifying the field
     if (target.name in this.state.settings.validationErrors) {
-      getCurrentWebContents().send(Settings.CLEAR_SETTING_ERROR, target.name)
+      this.props.dispatch(Settings.clearSettingError(target.name))
       delete this.state.settings.validationErrors[target.name]
     }
 
