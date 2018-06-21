@@ -1,14 +1,15 @@
 import * as Settings from '../Actions/Settings'
+import _ from 'lodash'
 
 const initialState = {}
 
 export default function (state = initialState, action) {
-  let nextState = JSON.parse(JSON.stringify(state))
+  let nextState = _.cloneDeep(state)
 
   switch (action.type) {
     case Settings.SET_SETTINGS:
       // Ignore state; we're overwriting the settings.
-      nextState = JSON.parse(JSON.stringify(action.settings))
+      nextState = _.cloneDeep(action.settings)
       break
     case Settings.SET_SETTING_ERROR: 
       if (typeof nextState.validationErrors === "undefined") {
