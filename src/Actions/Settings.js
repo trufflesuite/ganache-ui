@@ -5,9 +5,7 @@ const prefix = 'SETTINGS'
 
 export const SHOW_CONFIG_SCREEN = `${prefix}/SHOW_CONFIG_SCREEN`
 export function showConfigScreen(tab) {
-  return function(dispatch, getState) {
-    dispatch(push("/config" + (tab ? ("/" + tab) : "")))
-  }
+  return push("/config" + (tab ? ("/" + tab) : ""))
 }
 
 export const SET_SETTINGS = `${prefix}/SET_SETTINGS`
@@ -35,10 +33,10 @@ export const setSettingError = function(key, errorText) {
 
 export const CLEAR_SETTING_ERROR = `${prefix}/CLEAR_SETTING_ERROR`
 export const clearSettingError = function(key) {
-  return {type: CLEAR_SETTING_ERROR, key};
+  return {type: CLEAR_SETTING_ERROR, key}
 }
 
 export const CLEAR_ALL_SETTING_ERRORS = `${prefix}/CLEAR_ALL_SETTING_ERRORS`
 export const clearAllSettingErrors = function() {
-  return {type: CLEAR_ALL_SETTING_ERRORS};
+  return {type: CLEAR_ALL_SETTING_ERRORS}
 }
