@@ -12,7 +12,7 @@ import * as Core from '../../Actions/Core'
 
 import { shell } from 'electron'
 
-const { app, getCurrentWebContents } = require('electron').remote
+const { app } = require('electron').remote
 
 class BugModal extends Component {
   constructor () {
