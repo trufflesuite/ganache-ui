@@ -6,7 +6,6 @@ const settings = require('electron-settings');
 const oldDefaultMnemonic =  "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat";
 
 const initialSettings = {
-  validationErrors: {}, // of the format {SETTING_NAME (i.e. hosname would be server.hostname): "error text"}
   googleAnalyticsTracking: true,
   cpuAndMemoryProfiling: false,
   verboseLogging: false,

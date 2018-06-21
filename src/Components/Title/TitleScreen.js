@@ -25,10 +25,10 @@ class TitleScreen extends Component {
     }
 
     // Ensure we have full props
-    if (typeof nextProps.settings.firstRun != "undefined" && this.state.timeoutStarted == false) {
+    if (typeof nextProps.config.settings.firstRun != "undefined" && this.state.timeoutStarted == false) {
       this.setState({timeoutStarted: true}, function() {
         setTimeout(() => {
-          if (nextProps.settings.firstRun) {
+          if (nextProps.config.settings.firstRun) {
             hashHistory.push('/first_run')
           } else {
             hashHistory.push('/accounts')
@@ -62,4 +62,4 @@ class TitleScreen extends Component {
   }
 }
 
-export default connect(TitleScreen, "settings", "core", "logs")
+export default connect(TitleScreen, "config", "core", "logs")

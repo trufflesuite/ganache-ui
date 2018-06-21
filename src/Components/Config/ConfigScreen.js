@@ -4,7 +4,7 @@ import _ from 'lodash'
 import connect from '../Helpers/connect'
 
 import * as Core from '../../Actions/Core'
-import * as Settings from '../../Actions/Settings'
+import * as Config from '../../Actions/Config'
 
 import ServerScreen from './ConfigScreens/ServerScreen'
 import AccountsScreen from './ConfigScreens/AccountsScreen'
@@ -26,9 +26,9 @@ class ConfigScreen extends PureComponent {
     super(props)
 
     this.state = {
-      settings: _.cloneDeep(props.settings),
+      config: _.cloneDeep(props.config),
       validationErrors: {},
-      restartOnCancel: Object.keys(props.settings.validationErrors).length > 0, // see handleCancelPressed
+      restartOnCancel: Object.keys(props.config.validationErrors).length > 0, // see handleCancelPressed
       activeIndex: 0
     }
 
@@ -47,17 +47,17 @@ class ConfigScreen extends PureComponent {
   }
 
   restartServer = () => {
-    this.props.dispatch(Settings.clearAllSettingErrors())
-    this.state.settings.validationErrors = {}
+    this.props.dispatch(Config.clearAllSettingErrors())
+    this.state.config.validationErrors = {}
 
     if (this.isDirty()) {
-      this.props.dispatch(Settings.requestSaveSettings(this.state.settings))
+      this.props.dispatch(Config.requestSaveSettings(this.state.config.settings))
     }
     this.props.dispatch(Core.requestServerRestart())
   }
 
   isDirty () {
-    return _.isEqual(this.state.settings, this.props.settings) == false
+    return _.isEqual(this.state.config.settings, this.props.config.settings) == false
   }
 
   handleCancelPressed = (e) => {
@@ -96,9 +96,9 @@ class ConfigScreen extends PureComponent {
 
     // the user is modifying this field; if there is an error, send an action to clear it
     // the user has acknowledged the error by modifying the field
-    if (target.name in this.state.settings.validationErrors) {
-      this.props.dispatch(Settings.clearSettingError(target.name))
-      delete this.state.settings.validationErrors[target.name]
+    if (target.name in this.state.config.validationErrors) {
+      this.props.dispatch(Config.clearSettingError(target.name))
+      delete this.state.config.validationErrors[target.name]
     }
 
     switch (target.type) {
@@ -110,9 +110,8 @@ class ConfigScreen extends PureComponent {
         break;
     }
 
-    var settings = this.state.settings
     var keys = name.split(".")
-    var parent = this.state.settings
+    var parent = this.state.config.settings
 
     while (keys.length > 1) {
       var key = keys.shift()
@@ -222,7 +221,7 @@ class ConfigScreen extends PureComponent {
 
   render () {
     let activeTab = React.createElement(TABS[this.state.activeIndex].component, {
-      settings: this.state.settings,
+      config: this.state.config,
       handleInputChange: this.handleInputChange,
       validateChange: this.validateChange,
       validationErrors: this.state.validationErrors
@@ -259,4 +258,4 @@ class ConfigScreen extends PureComponent {
   }
 }
 
-export default connect(ConfigScreen, "settings")
+export default connect(ConfigScreen, "config")
