@@ -3,7 +3,7 @@ import * as Core from '../Actions/Core'
 import * as Settings from '../Actions/Settings'
 
 export function handleError(store, error) {
-  let showModal = false
+  let showBugModal = false
   let activeConfigTab = ""
 
   if (typeof error === "object" && "code" in error) {
@@ -22,17 +22,17 @@ export function handleError(store, error) {
         activeConfigTab = error.tab
         break
       default:
-        showModal = true
+      showBugModal = true
         break
     }
   }
   else {
-    showModal = true
+    showBugModal = true
   }
 
-  store.dispatch(Core.setSystemError(error, showModal))
+  store.dispatch(Core.setSystemError(error, showBugModal))
 
-  if (!showModal) {
+  if (!showBugModal) {
     // show the config screen
     store.dispatch(Settings.showConfigScreen(activeConfigTab))
   }

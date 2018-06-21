@@ -119,7 +119,7 @@ class AppShell extends Component {
             {this.props.children}
           </Scrollbars>
         </div>
-        <OnlyIf test={this.props.core.systemError != null && this.props.core.showModal}>
+        <OnlyIf test={this.props.core.systemError != null && this.props.core.showBugModal}>
           <BugModal systemError={this.props.core.systemError} logs={this.props.logs} />
         </OnlyIf>
         <OnlyIf test={!this.props.core.systemError && this.props.autoUpdate.showModal}>
