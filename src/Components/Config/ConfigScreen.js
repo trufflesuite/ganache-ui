@@ -32,7 +32,7 @@ class ConfigScreen extends PureComponent {
     this.state = {
       settings: _.cloneDeep(props.settings),
       validationErrors: {},
-      cancelIsRestart: Object.keys(props.settings.validationErrors).length > 0, // see handleCancelPressed
+      restartOnCancel: Object.keys(props.settings.validationErrors).length > 0, // see handleCancelPressed
       activeIndex: 0
     }
 
@@ -65,7 +65,7 @@ class ConfigScreen extends PureComponent {
   }
 
   handleCancelPressed = (e) => {
-    if (this.state.cancelIsRestart) {
+    if (this.state.restartOnCancel) {
       // we are in the config screen because of a system error
       // restart application without saving settings if the user hit cancel
       this.props.dispatch(Core.requestServerRestart())
