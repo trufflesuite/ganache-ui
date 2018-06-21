@@ -196,7 +196,6 @@
     "find-process": "^1.1.0",
     "ganache-cli": "6.1.0",
     "lodash": "^3.10.1",
-    "lodash.padstart": "^4.6.1",
     "moment": "^2.17.1",
     "moment-timezone": "^0.5.11",
     "mousetrap": "^1.6.1",
