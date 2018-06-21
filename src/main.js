@@ -157,21 +157,7 @@ app.on('ready', () => {
         const lines = data.split(/\n/g)
         mainWindow.webContents.send(ADD_LOG_LINES, lines)
 
-        const errorPattern = /Error: /g
-        const stackPattern = /^    at /g
-        for (let i = 0; i < lines.length; i++) {
-          if (errorPattern.exec(lines[i])) {
-            // check if the next line has a stack
-            if (i === lines.length - 1 || stackPattern.exec(lines[i+1])) {
-              // either it's the last line that has an error or there is an error
-              //   with a call stack trace, lets keep track of this in case we crash
-              logError = lines[i]
-              if (i < lines.length - 1) {
-                logError += lines[i+1]
-              }
-            }
-          }
-        }
+        logError = parseErrorInLogs(lines)
       })
 
       chain.on("error", (error) => {
@@ -543,10 +529,32 @@ app.on('ready', () => {
 })
 
 function ensureExternalLinksAreOpenedInBrowser(event, url) {
-    // we're a one-window application, and we only ever want to load external
-    // resources in the user's browser, not via a new browser window
-    if (url.startsWith('http:') || url.startsWith('https:')) {
-      shell.openExternal(url)
-      event.preventDefault()
+  // we're a one-window application, and we only ever want to load external
+  // resources in the user's browser, not via a new browser window
+  if (url.startsWith('http:') || url.startsWith('https:')) {
+    shell.openExternal(url)
+    event.preventDefault()
+  }
+}
+
+function parseErrorInLogs(lines) {
+  let logError = ''
+  const errorPattern = /Error: /g
+  const stackPattern = /^    at /g
+
+  for (let i = 0; i < lines.length; i++) {
+    if (errorPattern.exec(lines[i])) {
+      // check if the next line has a stack
+      if (i === lines.length - 1 || stackPattern.exec(lines[i+1])) {
+        // either it's the last line that has an error or there is an error
+        //   with a call stack trace, lets keep track of this in case we crash
+        logError = lines[i]
+        if (i < lines.length - 1) {
+          logError += lines[i+1]
+        }
+      }
     }
   }
+
+  return logError
+}
