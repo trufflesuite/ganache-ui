@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Menu, shell, ipcMain } from 'electron'
+import { app, BrowserWindow, Menu, shell, ipcMain, screen } from 'electron'
 import { enableLiveReload } from 'electron-compile';
 import { initAutoUpdates, getAutoUpdateService } from './Init/Main/AutoUpdate.js'
 import path from 'path'
@@ -72,7 +72,9 @@ if (process.platform === 'darwin') {
 app.on('ready', () => {
   // workaround for electron race condition, causing hang on startup.
   // see https://github.com/electron/electron/issues/9179 for more info
+
   setTimeout(async () => {
+    const {width, height, x, y} = screen.getPrimaryDisplay().bounds
     const chain = new ChainService(app)
     const Settings = new SettingsService() 
 
@@ -81,14 +83,17 @@ app.on('ready', () => {
     });
 
     Settings.bootstrap();
-
+    const appWidth = width * 0.9;
+    const appHeight = height * 0.9
+    const xPosition = (width - appWidth) / 2;
+    const yPosition = (height - appHeight) / 2;
     mainWindow = new BrowserWindow({
-      show: false,
-      minWidth: 1200,
-      minHeight: 800,
-      width: 1200,
-      height: 930,
-      frame: true,
+      minWidth: 1100,
+      minHeight: 680,
+      x:xPosition,
+      y: yPosition,
+      width: appWidth,
+      height: appHeight,
       icon: getIconPath()
     })
 
