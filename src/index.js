@@ -60,6 +60,7 @@ const stylesheets = [
   "./Elements/ProgressBar.scss",
   "./Elements/Spinner.css",
   "./Elements/FilePicker.scss",
+  "./Elements/StyledSelect.scss",
   "./Components/FirstRun/FirstRunScreen.scss",
   "./Components/AppShell/AppShell.scss",
   "./Components/AppShell/TopNavbar.scss",

@@ -3,6 +3,7 @@
 var ganacheLib = require("ganache-cli")
 var path = require("path")
 var logging = require("./logging")
+var pkg = require("../../package.json")
 
 if (!process.send) {
   console.log("Not running as child process. Throwing.")
@@ -12,14 +13,14 @@ if (!process.send) {
 // remove the uncaughtException listener added by ganache-cli
 process.removeAllListeners('uncaughtException')
 
-process.on('unhandledRejection', (err) => {		
-  //console.log('unhandled rejection:', err.stack || err)		
-  process.send({type: 'error', data: copyErrorFields(err)})		
+process.on('unhandledRejection', (err) => {
+  //console.log('unhandled rejection:', err.stack || err)
+  process.send({type: 'error', data: copyErrorFields(err)})
 });
 
-process.on('uncaughtException', (err) => {		
-  //console.log('uncaught exception:', err.stack || err)		
-  process.send({type: 'error', data: copyErrorFields(err)})		
+process.on('uncaughtException', (err) => {
+  //console.log('uncaught exception:', err.stack || err)
+  process.send({type: 'error', data: copyErrorFields(err)})
 });
 
 
@@ -77,7 +78,7 @@ function startServer(options) {
     }
 
     // log startup options without logging user's mnemonic
-    const startingMessage = "Starting server with initial configuration: " + JSON.stringify(sanitizedOptions)
+    const startingMessage = `Starting server (version ${pkg.version}) with initial configuration: ${JSON.stringify(sanitizedOptions)}`
     console.log(startingMessage)
     if (logToFile) {
       logging.logToFile(startingMessage)

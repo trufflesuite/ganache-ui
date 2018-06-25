@@ -10,7 +10,7 @@ import { combineReducers } from 'redux'
 import { REQUEST_SERVER_RESTART } from '../Actions/Core'
 
 import AppShellReducer from './AppShell'
-import SettingsReducer from './Settings'
+import ConfigReducer from './Config'
 import CoreReducer from './Core'
 import Web3Reducer from './Web3'
 import AccountsReducer from './Accounts'
@@ -22,7 +22,7 @@ import UpdateReducer from './AutoUpdate'
 
 const appReducer = combineReducers({
   "appshell": AppShellReducer,
-  "settings": SettingsReducer,
+  "config": ConfigReducer,
   "core": CoreReducer,
   "web3": Web3Reducer,
   "accounts": AccountsReducer,

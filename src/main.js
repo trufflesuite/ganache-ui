@@ -22,10 +22,10 @@ import {
 } from './Actions/Core'
 
 import {
-  SET_SETTINGS
-} from './Actions/Settings'
+  SET_SETTINGS,
+  REQUEST_SAVE_SETTINGS
+} from './Actions/Config'
 
-import { REQUEST_SAVE_SETTINGS } from './Actions/Settings'
 import { ADD_LOG_LINES } from './Actions/Logs'
 
 import ChainService from './Services/Chain'

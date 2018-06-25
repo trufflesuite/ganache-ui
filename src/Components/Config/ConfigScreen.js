@@ -4,25 +4,23 @@ import _ from 'lodash'
 import connect from '../Helpers/connect'
 
 import * as Core from '../../Actions/Core'
-import * as Settings from '../../Actions/Settings'
-
-import OnlyIf from '../../Elements/OnlyIf'
+import * as Config from '../../Actions/Config'
 
 import ServerScreen from './ConfigScreens/ServerScreen'
 import AccountsScreen from './ConfigScreens/AccountsScreen'
 import ChainScreen from './ConfigScreens/ChainScreen'
 import AdvancedScreen from './ConfigScreens/AdvancedScreen'
+import AboutScreen from './ConfigScreens/AboutScreen'
 
 import RestartIcon from '../../Elements/icons/restart.svg'
 import EjectIcon from '../../Elements/icons/eject.svg';
-
-const { getCurrentWebContents } = require('electron').remote
 
 const TABS = [
   {name: 'Server', subRoute: 'server', component: ServerScreen},
   {name: 'Accounts & Keys', subRoute: 'accounts-keys', component: AccountsScreen},
   {name: 'Chain', subRoute: 'chain', component: ChainScreen},
-  {name: 'Advanced', subRoute: 'advanced', component: AdvancedScreen}
+  {name: 'Advanced', subRoute: 'advanced', component: AdvancedScreen},
+  {name: 'About', subRoute: 'about', component: AboutScreen}
 ]
 
 class ConfigScreen extends PureComponent {
@@ -30,12 +28,16 @@ class ConfigScreen extends PureComponent {
     super(props)
 
     this.state = {
-      settings: _.cloneDeep(props.settings),
+      config: _.cloneDeep(props.config),
       validationErrors: {},
-      cancelIsRestart: Object.keys(props.settings.validationErrors).length > 0, // see handleCancelPressed
+      restartOnCancel: Object.keys(props.config.validationErrors).length > 0, // see handleCancelPressed
       activeIndex: 0
     }
 
+    this.initActiveIndex()
+  }
+
+  initActiveIndex = () => {
     if ("params" in this.props && "activeTab" in this.props.params) {
       for (let i = 0; i < TABS.length; i++) {
         if (TABS[i].subRoute === this.props.params.activeTab) {
@@ -47,18 +49,21 @@ class ConfigScreen extends PureComponent {
   }
 
   restartServer = () => {
+    this.props.dispatch(Config.clearAllSettingErrors())
+    this.state.config.validationErrors = {}
+
     if (this.isDirty()) {
-      this.props.dispatch(Settings.requestSaveSettings(this.state.settings))
+      this.props.dispatch(Config.requestSaveSettings(this.state.config.settings))
     }
     this.props.dispatch(Core.requestServerRestart())
   }
 
   isDirty () {
-    return _.isEqual(this.state.settings, this.props.settings) == false
+    return _.isEqual(this.state.config.settings, this.props.config.settings) == false
   }
 
   handleCancelPressed = (e) => {
-    if (this.state.cancelIsRestart) {
+    if (this.state.restartOnCancel) {
       // we are in the config screen because of a system error
       // restart application without saving settings if the user hit cancel
       this.props.dispatch(Core.requestServerRestart())
@@ -93,9 +98,9 @@ class ConfigScreen extends PureComponent {
 
     // the user is modifying this field; if there is an error, send an action to clear it
     // the user has acknowledged the error by modifying the field
-    if (target.name in this.state.settings.validationErrors) {
-      getCurrentWebContents().send(Settings.CLEAR_SETTING_ERROR, target.name)
-      delete this.state.settings.validationErrors[target.name]
+    if (target.name in this.state.config.validationErrors) {
+      this.props.dispatch(Config.clearSettingError(target.name))
+      delete this.state.config.validationErrors[target.name]
     }
 
     switch (target.type) {
@@ -107,9 +112,8 @@ class ConfigScreen extends PureComponent {
         break;
     }
 
-    var settings = this.state.settings
     var keys = name.split(".")
-    var parent = this.state.settings
+    var parent = this.state.config.settings
 
     while (keys.length > 1) {
       var key = keys.shift()
@@ -219,7 +223,7 @@ class ConfigScreen extends PureComponent {
 
   render () {
     let activeTab = React.createElement(TABS[this.state.activeIndex].component, {
-      settings: this.state.settings,
+      config: this.state.config,
       handleInputChange: this.handleInputChange,
       validateChange: this.validateChange,
       validationErrors: this.state.validationErrors
@@ -256,4 +260,4 @@ class ConfigScreen extends PureComponent {
   }
 }
 
-export default connect(ConfigScreen, "settings")
+export default connect(ConfigScreen, "config")

@@ -1,9 +1,9 @@
 
 import * as Core from '../Actions/Core'
-import * as Settings from '../Actions/Settings'
+import * as Config from '../Actions/Config'
 
 export function handleError(store, error) {
-  let showModal = false
+  let showBugModal = false
   let activeConfigTab = ""
   let category = "generic"
   let detail = ""
@@ -12,19 +12,19 @@ export function handleError(store, error) {
     switch (error.code) {
       case "EADDRINUSE":
       case "EACESS":
-        store.dispatch(Settings.setSettingError("server.port", "The port is used by another application; please change it"))
+        store.dispatch(Config.setSettingError("server.port", "The port is used by another application; please change it"))
         activeConfigTab = "server"
         category = "network"
         detail = error.code
         break
       case "EADDRNOTAVAIL":
-        store.dispatch(Settings.setSettingError("server.hostname", "The hostname is not local address; only use hostnames/IPs associated with this machine"))
+        store.dispatch(Config.setSettingError("server.hostname", "The hostname is not local address; only use hostnames/IPs associated with this machine"))
         activeConfigTab = "server"
         category = "network"
         detail = error.code
         break
       case "CUSTOMERROR":
-        store.dispatch(Settings.setSettingError(error.key, error.value))
+        store.dispatch(Config.setSettingError(error.key, error.value))
         activeConfigTab = error.tab
         category = "custom"
         detail = error.key + " - " + error.value
@@ -35,22 +35,22 @@ export function handleError(store, error) {
         detail = error.exitCode + " - " + error.exitSignal + (error.logError ? (" - " + error.logError) : "")
         break
       default:
-        showModal = true
+        showBugModal = true
         category = "generic"
         detail = error.code
         break
     }
   }
   else {
-    showModal = true
+    showBugModal = true
     category = "generic"
     detail = JSON.stringify(error)
   }
 
-  store.dispatch(Core.setSystemError(error, showModal, category, detail))
+  store.dispatch(Core.setSystemError(error, showBugModal, category, detail))
 
-  if (!showModal) {
+  if (!showBugModal) {
     // show the config screen
-    store.dispatch(Settings.showConfigScreen(activeConfigTab))
+    store.dispatch(Config.showConfigScreen(activeConfigTab))
   }
 }

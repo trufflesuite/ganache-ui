@@ -1,11 +1,10 @@
 import { ipcRenderer } from 'electron'
-import { push } from 'react-router-redux' 
 
 import * as Web3 from '../Actions/Web3'
 import * as Core from '../Actions/Core'
 import * as Accounts from '../Actions/Accounts'
 import * as Logs from '../Actions/Logs'
-import * as Settings from '../Actions/Settings'
+import * as Config from '../Actions/Config'
 
 import * as ErrorHandler from './ErrorHandler'
 
@@ -18,26 +17,30 @@ export default function (store) {
   // Load the first screen while we wait for the application to load
   store.dispatch(Core.showTitleScreen())
 
-  ipcRenderer.on(Settings.SHOW_CONFIG_SCREEN, (event) => {
-    store.dispatch(Settings.showConfigScreen())
+  ipcRenderer.on(Config.SHOW_CONFIG_SCREEN, (event) => {
+    store.dispatch(Config.showConfigScreen())
   })
 
-  ipcRenderer.on(Settings.SET_SETTING_ERROR, (event, key, value) => {
-    store.dispatch(Settings.setSettingError(key, value))
+  ipcRenderer.on(Config.SET_SETTING_ERROR, (event, key, value) => {
+    store.dispatch(Config.setSettingError(key, value))
   })
 
-  ipcRenderer.on(Settings.CLEAR_SETTING_ERROR, (event, key) => {
-    store.dispatch(Settings.clearSettingError(key))
+  ipcRenderer.on(Config.CLEAR_SETTING_ERROR, (event, key) => {
+    store.dispatch(Config.clearSettingError(key))
   })
 
-  ipcRenderer.on(Settings.SET_SETTINGS, (event, settings) => {
-    store.dispatch(Settings.setSettings(settings))
+  ipcRenderer.on(Config.CLEAR_ALL_SETTING_ERRORS, (event) => {
+    store.dispatch(Config.clearAllSettingErrors())
+  })
+
+  ipcRenderer.on(Config.SET_SETTINGS, (event, settings) => {
+    store.dispatch(Config.setSettings(settings))
   })
 
   // Wait for the server to start...
   ipcRenderer.on(Core.SET_SERVER_STARTED, (sender, currentSettings) => {
     // Get current settings into the store
-    store.dispatch(Settings.setSettings(currentSettings))
+    store.dispatch(Config.setSettings(currentSettings))
 
     // Ensure web3 is set
     store.dispatch(Web3.setRPCProviderUrl(`ws://${currentSettings.server.hostname}:${currentSettings.server.port}`))

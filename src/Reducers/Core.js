@@ -15,7 +15,7 @@ const initialState = {
   gasLimit: "0",
   snapshots: [],
   systemError: null,
-  showModal: false,
+  showBugModal: false,
   blocks: [],
   transactions: [],
   updateInfo: {}
@@ -89,7 +89,7 @@ export default function (state = initialState, action) {
     case Core.SET_SYSTEM_ERROR:
       return Object.assign({}, state, {
         systemError: action.error,
-        showModal: action.showModal
+        showBugModal: action.showBugModal
       })
 
     case Core.SET_NEW_VERSION_INFO:
