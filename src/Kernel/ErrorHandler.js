@@ -1,24 +1,12 @@
 
 import * as Core from '../Actions/Core'
 import * as Settings from '../Actions/Settings'
-import {GoogleAnalytics as GA} from '../Services/GoogleAnalytics'
-
-function reportError(action, label) {
-  let event = {
-    category: "error",
-    action
-  }
-
-  if (label) {
-    event.label = label
-  }
-
-  GA.reportEvent(event)
-}
 
 export function handleError(store, error) {
   let showModal = false
   let activeConfigTab = ""
+  let category = "generic"
+  let detail = ""
 
   if (typeof error === "object" && "code" in error) {
     switch (error.code) {
@@ -26,34 +14,40 @@ export function handleError(store, error) {
       case "EACESS":
         store.dispatch(Settings.setSettingError("server.port", "The port is used by another application; please change it"))
         activeConfigTab = "server"
-        reportError("network", error.code)
+        category = "network"
+        detail = error.code
         break
       case "EADDRNOTAVAIL":
         store.dispatch(Settings.setSettingError("server.hostname", "The hostname is not local address; only use hostnames/IPs associated with this machine"))
         activeConfigTab = "server"
-        reportError("network", error.code)
+        category = "network"
+        detail = error.code
         break
       case "CUSTOMERROR":
         store.dispatch(Settings.setSettingError(error.key, error.value))
         activeConfigTab = error.tab
-        reportError("custom", error.key + " - " + error.value)
+        category = "custom"
+        detail = error.key + " - " + error.value
         break
       case "CHAINEXIT":
         showModal = true
-        reportError("chain-exit", error.exitCode + " - " + error.exitSignal + (error.logError ? (" - " + error.logError) : ""))
+        category = "chain-exit"
+        detail = error.exitCode + " - " + error.exitSignal + (error.logError ? (" - " + error.logError) : "")
         break
       default:
         showModal = true
-        reportError("generic", error.code)
+        category = "generic"
+        detail = error.code
         break
     }
   }
   else {
     showModal = true
-    reportError("generic", JSON.stringify(error))
+    category = "generic"
+    detail = JSON.stringify(error)
   }
 
-  store.dispatch(Core.setSystemError(error, showModal))
+  store.dispatch(Core.setSystemError(error, showModal, category, detail))
 
   if (!showModal) {
     // show the config screen

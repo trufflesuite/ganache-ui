@@ -1,101 +1,91 @@
-
 import ua from 'universal-analytics'
-
-const { app } = require('electron').remote
+import * as pkg from '../../package.json'
 
 const ganacheAnalyticsId = 'UA-83874933-5'
 const ganacheUrl = 'http://truffleframework.com/ganache'
 const ganacheName = 'Ganache'
-const appVersion = app.getVersion()
+const appVersion = pkg.version
 
-export let GoogleAnalytics = {
-  uuid: "",
-  isEnabled: false,
-  isSetup: false,
-  user: null,
+class GoogleAnalyticsService {
+  constructor() {
+    this.init()
+  }
 
-  canSend: () => {
-    return GoogleAnalytics.isEnabled && GoogleAnalytics.isSetup
-  },
+  init() {
+    this.uuid = ""
+    this.isEnabled = false
+    this.isSetup = false
+    this.user = null
+  }
 
-  setup: (enabled, uuid) => {
-    if (GoogleAnalytics.uuid === "" && uuid) {
+  canSend() {
+    return this.isEnabled && this.isSetup
+  }
+
+  setup(enabled, uuid) {
+    if (this.uuid === "" && uuid) {
       // this allows us to initialize the uuid at setup, but call the setup
       // function later if the analytics become enabled (which should restart the app)
       // meh. it's safe :)
-      GoogleAnalytics.uuid = uuid
+      this.uuid = uuid
     }
 
     if (typeof enabled !== "undefined") {
-      GoogleAnalytics.isEnabled = enabled
+      this.isEnabled = enabled
     }
 
-    if (GoogleAnalytics.isEnabled && GoogleAnalytics.uuid) {
-      GoogleAnalytics.user = ua(ganacheAnalyticsId, GoogleAnalytics.uuid)
-      GoogleAnalytics.user.set('location', ganacheUrl)
-      GoogleAnalytics.user.set('checkProtocolTask', null)
-      GoogleAnalytics.user.set('an', ganacheName)
-      GoogleAnalytics.user.set('av', appVersion)
-      GoogleAnalytics.user.set('ua', navigator.userAgent)
-      GoogleAnalytics.user.set('sr', screen.width + 'x' + screen.height)
-      GoogleAnalytics.user.set(
-        'vp',
-        window.screen.availWidth + 'x' + window.screen.availHeight
-      )
+    if (this.isEnabled && this.uuid) {
+      this.user = ua(ganacheAnalyticsId, this.uuid)
+      this.user.set('location', ganacheUrl)
+      this.user.set('checkProtocolTask', null)
+      this.user.set('an', ganacheName)
+      this.user.set('av', appVersion)
 
-      window.onerror = (msg, url, lineNo, columnNo, error) => {
-        var message = [
-          'Message: ' + msg,
-          'Line: ' + lineNo,
-          'Column: ' + columnNo,
-          'Error object: ' + JSON.stringify(error)
-        ].join(' - ')
-    
-        // setTimeout(() => {
-        //   this.user.exception(message.toString())
-        // }, 0)
-    
-        return false
-      }
-
-      GoogleAnalytics.isSetup = true
-
-      GoogleAnalytics.reportPageview('/')
+      this.isSetup = true
     }
-  },
+  }
 
-  reportPageview: (page) => {
-    if (GoogleAnalytics.isEnabled) {
-      if (!GoogleAnalytics.isSetup || GoogleAnalytics.user === null) {
-        GoogleAnalytics.setup()
+  reportRendererSettings(navigator, screen, window) {
+    this.user.set('ua', navigator.userAgent)
+    this.user.set('sr', screen.width + 'x' + screen.height)
+    this.user.set(
+      'vp',
+      window.screen.availWidth + 'x' + window.screen.availHeight
+    )
+  }
+
+  reportPageview(page) {
+    if (this.isEnabled) {
+      if (!this.isSetup || this.user === null) {
+        this.setup()
       }
 
-      if (GoogleAnalytics.canSend()) {
-        GoogleAnalytics.user.pageview(page).send()
+      if (this.canSend()) {
+        this.user.pageview(page).send()
       }
     }
-  },
+  }
 
-  reportScreenview: (screen) => {
-    if (GoogleAnalytics.isEnabled) {
-      if (!GoogleAnalytics.isSetup || GoogleAnalytics.user === null) {
-        GoogleAnalytics.setup()
+  reportScreenview(screen) {
+    if (this.isEnabled) {
+      if (!this.isSetup || this.user === null) {
+        this.setup()
       }
 
-      if (GoogleAnalytics.canSend()) {
-        GoogleAnalytics.user.screenview(screen, ganacheName, appVersion).send()
+      if (this.canSend()) {
+        this.user.screenview(screen, ganacheName, appVersion).send()
       }
     }
-  },
+  }
 
   // this function picks some useful settings we like to track
-  reportSettings: (settings) => {
-    if (GoogleAnalytics.isEnabled) {
-      if (!GoogleAnalytics.isSetup || GoogleAnalytics.user === null) {
-        GoogleAnalytics.setup()
+  reportSettings(settings) {
+    if (this.isEnabled) {
+      if (!this.isSetup || this.user === null) {
+        this.setup()
       }
 
-      if (GoogleAnalytics.canSend()) {
+      if (this.canSend()) {
         let hostname = settings.server.hostname
         if (hostname !== "127.0.0.1" && hostname !== "0.0.0.0") {
           const localIp = /(^127\.)|(^10\.)|(^172\.1[6-9]\.)|(^172\.2[0-9]\.)|(^172\.3[0-1]\.)|(^192\.168\.)/
@@ -120,19 +110,19 @@ export let GoogleAnalytics = {
           gasPrice: settings.server.gasPrice
         }
 
-        GoogleAnalytics.user.set('cd1', config.hostname)
-        GoogleAnalytics.user.set('cd2', config.port)
-        GoogleAnalytics.user.set('cd3', config.networkId)
-        GoogleAnalytics.user.set('cd4', config.blockTime)
-        GoogleAnalytics.user.set('cd5', config.defaultBalance)
-        GoogleAnalytics.user.set('cd6', config.totalAccounts)
-        GoogleAnalytics.user.set('cd7', config.autoMnemonic)
-        GoogleAnalytics.user.set('cd8', config.locked)
-        GoogleAnalytics.user.set('cd9', config.gasLimit)
-        GoogleAnalytics.user.set('cd10', config.gasPrice)
+        this.user.set('cd1', config.hostname)
+        this.user.set('cd2', config.port)
+        this.user.set('cd3', config.networkId)
+        this.user.set('cd4', config.blockTime)
+        this.user.set('cd5', config.defaultBalance)
+        this.user.set('cd6', config.totalAccounts)
+        this.user.set('cd7', config.autoMnemonic)
+        this.user.set('cd8', config.locked)
+        this.user.set('cd9', config.gasLimit)
+        this.user.set('cd10', config.gasPrice)
       }
     }
-  },
+  }
 
   /*  event => {
    *    category, // required, string
@@ -141,15 +131,15 @@ export let GoogleAnalytics = {
    *    value // optional, integer
    *  }
    */
-  reportEvent: (event) => {
-    if (GoogleAnalytics.isEnabled) {
-      if (!GoogleAnalytics.isSetup || GoogleAnalytics.user === null) {
-        GoogleAnalytics.setup()
+  reportEvent(event) {
+    if (this.isEnabled) {
+      if (!this.isSetup || this.user === null) {
+        this.setup()
       }
 
-      if (GoogleAnalytics.canSend()) {
+      if (this.canSend()) {
         if (event.category && event.action) {
-          GoogleAnalytics.user.event({
+          this.user.event({
             eventCategory: event.category,
             eventAction: event.action,
             eventLabel: event.label,
@@ -160,3 +150,5 @@ export let GoogleAnalytics = {
     }
   }
 }
+
+export default GoogleAnalyticsService

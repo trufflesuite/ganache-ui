@@ -2,7 +2,6 @@ import WsProvider from 'web3-providers-ws'
 import HttpProvider from 'web3-providers-http'
 import * as RequestCache from '../RequestCache'
 import EventEmitter from 'events'
-import {GoogleAnalytics as GA} from '../../Services/GoogleAnalytics'
 
 class ReduxWeb3Provider extends EventEmitter {
   constructor (url, dispatch, getState) {
@@ -41,35 +40,12 @@ class ReduxWeb3Provider extends EventEmitter {
 
     this.dispatch(RPCRequestStarted(payload))
 
-    GA.reportEvent({
-      category: "rpc",
-      action: "started",
-      label: payload.method || "(unknown method)",
-      value: payload.params ? payload.params.length : 0
-    })
-
     this.provider.send(payload, (err, response) => {
       if (err || response.error) {
         this.dispatch(RPCRequestFailed(payload, response, err))
       } else {
         this.dispatch(RequestCache.cacheRequest(payload, response))
         this.dispatch(RPCRequestSucceeded(payload, response.result))
-      }
-
-      GA.reportEvent({
-        category: "rpc",
-        action: (err || response.error) ? "failed" : "succeeded",
-        label: payload.method || "(unknown method)"
-      })
-
-      if ("result" in response && "status" in response.result) {
-        if (response.result.status === '0x0' || response.result.status == 0) {
-          GA.reportEvent({
-            category: "error",
-            action: "tx-status-failure",
-            label: payload.method || "(unknown method)"
-          })
-        }
       }
 
       callback(err, response)

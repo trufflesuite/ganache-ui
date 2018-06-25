@@ -30,6 +30,7 @@ import { ADD_LOG_LINES } from './Actions/Logs'
 
 import ChainService from './Services/Chain'
 import SettingsService from './Services/Settings'
+import GoogleAnalyticsService from './Services/GoogleAnalytics'
 
 let menu
 let template
@@ -91,6 +92,8 @@ app.on('ready', () => {
   setTimeout(async () => {
     const chain = new ChainService(app)
     const Settings = new SettingsService()
+    const GoogleAnalytics = new GoogleAnalyticsService()
+    const inProduction = process.env.NODE_ENV === 'production'
     let logError = ""
 
     app.on('will-quit', function () {
@@ -98,6 +101,10 @@ app.on('ready', () => {
     });
 
     Settings.bootstrap();
+
+    var settings = Settings.getAll()
+    GoogleAnalytics.setup(settings.googleAnalyticsTracking && inProduction, settings.uuid)
+    GoogleAnalytics.reportSettings(settings)
 
     mainWindow = new BrowserWindow({
       show: false,
@@ -194,6 +201,7 @@ app.on('ready', () => {
 
     ipcMain.on(REQUEST_SAVE_SETTINGS, (event, settings) => {
       Settings.setAll(settings)
+      GoogleAnalytics.reportSettings(settings)
     })
 
     mainWindow.on('closed', () => {
