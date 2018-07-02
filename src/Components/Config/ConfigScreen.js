@@ -224,6 +224,7 @@ class ConfigScreen extends PureComponent {
   render () {
     let activeTab = React.createElement(TABS[this.state.activeIndex].component, {
       config: this.state.config,
+      network: this.props.network,
       handleInputChange: this.handleInputChange,
       validateChange: this.validateChange,
       validationErrors: this.state.validationErrors
@@ -260,4 +261,4 @@ class ConfigScreen extends PureComponent {
   }
 }
 
-export default connect(ConfigScreen, "config")
+export default connect(ConfigScreen, "config", "network")

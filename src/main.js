@@ -2,6 +2,7 @@ import { app, BrowserWindow, Menu, shell, ipcMain } from 'electron'
 import { enableLiveReload } from 'electron-compile';
 import { initAutoUpdates, getAutoUpdateService } from './Init/Main/AutoUpdate.js'
 import path from 'path'
+import * as os from 'os'
 
 const isDevMode = process.execPath.match(/[\\/]electron/);
 
@@ -25,6 +26,10 @@ import {
   SET_SETTINGS,
   REQUEST_SAVE_SETTINGS
 } from './Actions/Config'
+
+import {
+  SET_INTERFACES
+} from './Actions/Network'
 
 import { ADD_LOG_LINES } from './Actions/Logs'
 
@@ -181,6 +186,10 @@ app.on('ready', () => {
       })
 
       chain.start()
+
+      // this sends the network interfaces to the renderer process for
+      //  enumering in the config screen. it sends repeatedly
+      continuouslySendNetworkInterfaces()
     })
 
     // If the frontend asks to start the server, start the server.
@@ -192,6 +201,9 @@ app.on('ready', () => {
       if (chain.isServerStarted()) {
         chain.once("server-stopped", () => {
           chain.startServer(Settings.getAll())
+
+          // send the interfaces again once on restart
+          sendNetworkInterfaces()
         })
         chain.stopServer()
       } else {
@@ -535,6 +547,25 @@ app.on('ready', () => {
     }
   }, 0)
 })
+
+  // Do this every 2 minutes to keep it up to date without
+  //   being unreasonable since it shouldn't change frequently
+function continuouslySendNetworkInterfaces() {
+  sendNetworkInterfaces()
+
+  setInterval(() => {
+    sendNetworkInterfaces()
+  }, 2 * 60 * 1000)
+}
+
+function sendNetworkInterfaces() {
+  // Send the network interfaces to the renderer process
+  const interfaces = os.networkInterfaces()
+
+  if (mainWindow) {
+    mainWindow.webContents.send(SET_INTERFACES, interfaces)
+  }
+}
 
 function ensureExternalLinksAreOpenedInBrowser(event, url) {
   // we're a one-window application, and we only ever want to load external
