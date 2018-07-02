@@ -1,9 +1,12 @@
 import { ipcRenderer } from 'electron'
 
-import * as Logs from '../../Actions/Logs'
+import {
+  ADD_LOG_LINES,
+  addLogLines
+} from '../../Actions/Logs'
 
 export function initLogs(store) {
-  ipcRenderer.on(Logs.ADD_LOG_LINES, (event, lines) => {
-    store.dispatch(Logs.addLogLines(lines))
+  ipcRenderer.on(ADD_LOG_LINES, (event, lines) => {
+    store.dispatch(addLogLines(lines))
   })
 }

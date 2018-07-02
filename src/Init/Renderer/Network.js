@@ -1,9 +1,12 @@
 import { ipcRenderer } from 'electron'
 
-import * as Network from '../../Actions/Network'
+import {
+  SET_INTERFACES,
+  setInterfaces
+} from '../../Actions/Network'
 
 export function initNetwork(store) {
-  ipcRenderer.on(Network.SET_INTERFACES, (event, interfaces) => {
-    store.dispatch(Network.setInterfaces(interfaces))
+  ipcRenderer.on(SET_INTERFACES, (event, interfaces) => {
+    store.dispatch(setInterfaces(interfaces))
   })
 }

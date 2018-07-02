@@ -1,25 +1,36 @@
 import { ipcRenderer } from 'electron'
 
-import * as Config from '../../Actions/Config'
+import {
+  SHOW_CONFIG_SCREEN,
+  SET_SETTING_ERROR,
+  CLEAR_SETTING_ERROR,
+  CLEAR_ALL_SETTING_ERRORS,
+  SET_SETTINGS,
+  showConfigScreen,
+  setSettingError,
+  clearSettingError,
+  clearAllSettingErrors,
+  setSettings
+} from '../../Actions/Config'
 
 export function initConfig(store) {
-  ipcRenderer.on(Config.SHOW_CONFIG_SCREEN, (event) => {
-    store.dispatch(Config.showConfigScreen())
+  ipcRenderer.on(SHOW_CONFIG_SCREEN, (event) => {
+    store.dispatch(showConfigScreen())
   })
 
-  ipcRenderer.on(Config.SET_SETTING_ERROR, (event, key, value) => {
-    store.dispatch(Config.setSettingError(key, value))
+  ipcRenderer.on(SET_SETTING_ERROR, (event, key, value) => {
+    store.dispatch(setSettingError(key, value))
   })
 
-  ipcRenderer.on(Config.CLEAR_SETTING_ERROR, (event, key) => {
-    store.dispatch(Config.clearSettingError(key))
+  ipcRenderer.on(CLEAR_SETTING_ERROR, (event, key) => {
+    store.dispatch(clearSettingError(key))
   })
 
-  ipcRenderer.on(Config.CLEAR_ALL_SETTING_ERRORS, (event) => {
-    store.dispatch(Config.clearAllSettingErrors())
+  ipcRenderer.on(CLEAR_ALL_SETTING_ERRORS, (event) => {
+    store.dispatch(clearAllSettingErrors())
   })
 
-  ipcRenderer.on(Config.SET_SETTINGS, (event, settings) => {
-    store.dispatch(Config.setSettings(settings))
+  ipcRenderer.on(SET_SETTINGS, (event, settings) => {
+    store.dispatch(setSettings(settings))
   })
 }

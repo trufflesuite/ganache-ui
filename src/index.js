@@ -11,7 +11,7 @@ import RootReducer from './Reducers/Root'
 
 import createStore from './Kernel/createStore'
 import syncStore from './Kernel/syncStore'
-import ready from './Kernel/ready'
+import { initRenderer } from './Init/Renderer/index'
 
 import AppShell from './Components/AppShell/AppShell'
 import ConfigScreen from './Components/Config/ConfigScreen'
@@ -27,7 +27,7 @@ import {ipcRenderer} from 'electron'
 
 const store = createStore(RootReducer)
 
-ready(store)
+initRenderer(store)
 
 // Routes and stylesheets are declared here, rather than in the render
 // function, so that hot module reloading doesn't cause issues with react-router.
