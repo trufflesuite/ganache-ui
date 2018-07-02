@@ -99,7 +99,6 @@ app.on('ready', () => {
     const Settings = new SettingsService()
     const GoogleAnalytics = new GoogleAnalyticsService()
     const inProduction = process.env.NODE_ENV === 'production'
-    let logError = ""
 
     app.on('will-quit', function () {
       chain.stopProcess();
@@ -168,15 +167,9 @@ app.on('ready', () => {
       chain.on("stderr", (data) => {
         const lines = data.split(/\n/g)
         mainWindow.webContents.send(ADD_LOG_LINES, lines)
-
-        logError = parseErrorInLogs(lines)
       })
 
       chain.on("error", (error) => {
-        if (logError) {
-          // we noticed an error on the stderr of the chain process
-          error.logError = logError
-        }
         mainWindow.webContents.send(SET_SYSTEM_ERROR, error)
 
         if (chain.isServerStarted()) {
@@ -574,26 +567,4 @@ function ensureExternalLinksAreOpenedInBrowser(event, url) {
     shell.openExternal(url)
     event.preventDefault()
   }
-}
-
-function parseErrorInLogs(lines) {
-  let logError = ''
-  const errorPattern = /Error: /g
-  const stackPattern = /^    at /g
-
-  for (let i = 0; i < lines.length; i++) {
-    if (errorPattern.exec(lines[i])) {
-      // check if the next line has a stack
-      if (i === lines.length - 1 || stackPattern.exec(lines[i+1])) {
-        // either it's the last line that has an error or there is an error
-        //   with a call stack trace, lets keep track of this in case we crash
-        logError = lines[i]
-        if (i < lines.length - 1) {
-          logError += lines[i+1]
-        }
-      }
-    }
-  }
-
-  return logError
 }

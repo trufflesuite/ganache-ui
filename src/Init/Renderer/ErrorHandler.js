@@ -33,11 +33,6 @@ export function handleError(store, error) {
         category = "custom"
         detail = error.key + " - " + error.value
         break
-      case "CHAINEXIT":
-        showModal = true
-        category = "chain-exit"
-        detail = error.exitCode + " - " + error.exitSignal + (error.logError ? (" - " + error.logError) : "")
-        break
       default:
         showBugModal = true
         category = "generic"
