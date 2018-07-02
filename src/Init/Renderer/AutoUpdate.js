@@ -1,3 +1,5 @@
+import { ipcRenderer } from 'electron'
+
 import {
   UPDATE_AVAILABLE,
   DOWNLOAD_PROGRESS,
@@ -9,7 +11,7 @@ import {
   setDownloadError
 } from '../../Actions/AutoUpdate'
 
-export function initAutoUpdates(ipcRenderer, dispatch) {
+export function initAutoUpdates(dispatch) {
   ipcRenderer.on(UPDATE_AVAILABLE, (event, updateInfo) => {
     dispatch(setUpdateAvailable(updateInfo))
   })
