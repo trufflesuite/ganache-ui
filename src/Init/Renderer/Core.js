@@ -19,7 +19,7 @@ import { getAccounts } from '../../Actions/Accounts'
 
 import { setSettings } from '../../Actions/Config'
 
-import { handleError } from '../../Kernel/ErrorHandler'
+import { handleError } from './ErrorHandler'
 
 export function initCore(store) {
   // Wait for the server to start...
