@@ -1,6 +1,10 @@
 
-import * as Core from '../Actions/Core'
-import * as Config from '../Actions/Config'
+import { setSystemError } from '../../Actions/Core'
+
+import {
+  setSettingError,
+  showConfigScreen
+} from '../../Actions/Config'
 
 export function handleError(store, error) {
   let showBugModal = false
@@ -10,15 +14,15 @@ export function handleError(store, error) {
     switch (error.code) {
       case "EADDRINUSE":
       case "EACESS":
-        store.dispatch(Config.setSettingError("server.port", "The port is used by another application; please change it"))
+        store.dispatch(setSettingError("server.port", "The port is used by another application; please change it"))
         activeConfigTab = "server"
         break
       case "EADDRNOTAVAIL":
-        store.dispatch(Config.setSettingError("server.hostname", "The hostname is not local address; only use hostnames/IPs associated with this machine"))
+        store.dispatch(setSettingError("server.hostname", "The hostname is not local address; only use hostnames/IPs associated with this machine"))
         activeConfigTab = "server"
         break
       case "CUSTOMERROR":
-        store.dispatch(Config.setSettingError(error.key, error.value))
+        store.dispatch(setSettingError(error.key, error.value))
         activeConfigTab = error.tab
         break
       default:
@@ -30,10 +34,10 @@ export function handleError(store, error) {
     showBugModal = true
   }
 
-  store.dispatch(Core.setSystemError(error, showBugModal))
+  store.dispatch(setSystemError(error, showBugModal))
 
   if (!showBugModal) {
     // show the config screen
-    store.dispatch(Config.showConfigScreen(activeConfigTab))
+    store.dispatch(showConfigScreen(activeConfigTab))
   }
 }

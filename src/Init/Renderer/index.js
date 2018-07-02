@@ -1,6 +1,6 @@
-import { showTitleScreen } from '../Actions/Core'
+import { showTitleScreen } from '../../Actions/Core'
 
-import { initAutoUpdates } from '.AutoUpdate'
+import { initAutoUpdates } from './AutoUpdate'
 import { initCore } from './Core'
 import { initConfig } from './Config'
 import { initLogs } from './Logs'
