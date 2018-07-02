@@ -2,6 +2,7 @@ import { app, BrowserWindow, Menu, shell, ipcMain } from 'electron'
 import { enableLiveReload } from 'electron-compile';
 import { initAutoUpdates, getAutoUpdateService } from './Init/Main/AutoUpdate.js'
 import path from 'path'
+import * as os from 'os'
 
 const isDevMode = process.execPath.match(/[\\/]electron/);
 
@@ -25,6 +26,10 @@ import {
   SET_SETTINGS,
   REQUEST_SAVE_SETTINGS
 } from './Actions/Config'
+
+import {
+  SET_INTERFACES
+} from './Actions/Network'
 
 import { ADD_LOG_LINES } from './Actions/Logs'
 
@@ -167,6 +172,10 @@ app.on('ready', () => {
       })
 
       chain.start()
+
+      // this sends the network interfaces to the renderer process for
+      //  enumering in the config screen. it sends repeatedly
+      sendNetworkInterfaces()
     })
 
     // If the frontend asks to start the server, start the server.
@@ -520,6 +529,21 @@ app.on('ready', () => {
     }
   }, 0)
 })
+
+function sendNetworkInterfaces() {
+  // Send the network interfaces to the renderer process
+  const interfaces = os.networkInterfaces()
+
+  if (mainWindow) {
+    mainWindow.webContents.send(SET_INTERFACES, interfaces)
+  }
+
+  setTimeout(() => {
+    // Do this every 2 minutes to keep it up to date without
+    //   being unreasonable since it shouldn't change frequently
+    sendNetworkInterfaces()
+  }, 2 * 60 * 1000)
+}
 
 function ensureExternalLinksAreOpenedInBrowser(event, url) {
     // we're a one-window application, and we only ever want to load external

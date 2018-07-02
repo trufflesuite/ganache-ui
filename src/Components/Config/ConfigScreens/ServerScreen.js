@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 
 import OnlyIf from '../../../Elements/OnlyIf'
 
-import * as os from 'os'
 import StyledSelect from '../../../Elements/StyledSelect';
 
 const VALIDATIONS = {
@@ -72,8 +71,6 @@ class ServerScreen extends Component {
     //   !ganachePortStatus.pid[0].name.toLowerCase().includes('ganache') &&
     //   !ganachePortStatus.pid[0].name.toLowerCase().includes('electron')
 
-    const networkInterfaces = os.networkInterfaces()
-
     return (
       <div>
         <h2>SERVER</h2>
@@ -88,8 +85,8 @@ class ServerScreen extends Component {
                 changeFunction={this.validateChange}
               >
                 <option key="0.0.0.0" value="0.0.0.0">0.0.0.0 - All Interfaces</option>
-                {Object.keys(networkInterfaces).map((key) => {
-                  return networkInterfaces[key].map((instance) => {
+                {Object.keys(this.props.network.interfaces).map((key) => {
+                  return this.props.network.interfaces[key].map((instance) => {
                     if (instance.family.toLowerCase() === "ipv4") {
                       return <option key={instance.address} value={instance.address}>{instance.address} - {key}</option>
                     }
