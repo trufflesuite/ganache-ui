@@ -546,10 +546,10 @@ function sendNetworkInterfaces() {
 }
 
 function ensureExternalLinksAreOpenedInBrowser(event, url) {
-    // we're a one-window application, and we only ever want to load external
-    // resources in the user's browser, not via a new browser window
-    if (url.startsWith('http:') || url.startsWith('https:')) {
-      shell.openExternal(url)
-      event.preventDefault()
-    }
+  // we're a one-window application, and we only ever want to load external
+  // resources in the user's browser, not via a new browser window
+  if (url.startsWith('http:') || url.startsWith('https:')) {
+    shell.openExternal(url)
+    event.preventDefault()
   }
+}
