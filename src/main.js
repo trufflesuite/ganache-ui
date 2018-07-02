@@ -175,7 +175,7 @@ app.on('ready', () => {
 
       // this sends the network interfaces to the renderer process for
       //  enumering in the config screen. it sends repeatedly
-      sendNetworkInterfaces()
+      continuouslySendNetworkInterfaces()
     })
 
     // If the frontend asks to start the server, start the server.
@@ -187,6 +187,9 @@ app.on('ready', () => {
       if (chain.isServerStarted()) {
         chain.once("server-stopped", () => {
           chain.startServer(Settings.getAll())
+
+          // send the interfaces again once on restart
+          sendNetworkInterfaces()
         })
         chain.stopServer()
       } else {
@@ -530,6 +533,16 @@ app.on('ready', () => {
   }, 0)
 })
 
+  // Do this every 2 minutes to keep it up to date without
+  //   being unreasonable since it shouldn't change frequently
+function continuouslySendNetworkInterfaces() {
+  sendNetworkInterfaces()
+
+  setInterval(() => {
+    sendNetworkInterfaces()
+  }, 2 * 60 * 1000)
+}
+
 function sendNetworkInterfaces() {
   // Send the network interfaces to the renderer process
   const interfaces = os.networkInterfaces()
@@ -537,12 +550,6 @@ function sendNetworkInterfaces() {
   if (mainWindow) {
     mainWindow.webContents.send(SET_INTERFACES, interfaces)
   }
-
-  setTimeout(() => {
-    // Do this every 2 minutes to keep it up to date without
-    //   being unreasonable since it shouldn't change frequently
-    sendNetworkInterfaces()
-  }, 2 * 60 * 1000)
 }
 
 function ensureExternalLinksAreOpenedInBrowser(event, url) {
