@@ -93,8 +93,8 @@ export const getBlockSubscription = function() {
 }
 
 export const SET_SYSTEM_ERROR = `${prefix}/SET_SYSTEM_ERROR`
-export const setSystemError = function(error, showBugModal) {
-  return {type: SET_SYSTEM_ERROR, error, showBugModal}
+export const setSystemError = function(error, showBugModal, category, detail) {
+  return {type: SET_SYSTEM_ERROR, error, showBugModal, category, detail}
 }
 
 export const DISMISS_BUG_MODAL = `${prefix}/DISMISS_BUG_MODAL`

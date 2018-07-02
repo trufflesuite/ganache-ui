@@ -18,7 +18,7 @@ const VALIDATIONS = {
     min: 1,
     max: Number.MAX_SAFE_INTEGER
   },
-  "server.blocktime": {
+  "server.blockTime": {
     allowedChars: /^\d*$/,
     min: 1,
     max: 200,
@@ -38,14 +38,14 @@ class ServerScreen extends Component {
   toggleAutomine = () => {
     var newValue = !this.state.automine
 
-    // Remove blocktime value if we turn automine on
+    // Remove blockTime value if we turn automine on
     if (newValue == true) {
       delete this.props.config.settings.server.blocktime
 
       // Rerun validations now that value has been deleted
       this.validateChange({
         target: {
-          name: "server.blocktime",
+          name: "server.blockTime",
           value: ""
         }
       })
@@ -185,12 +185,12 @@ class ServerScreen extends Component {
             <div className="Row">
               <div className="RowItem">
                 <input
-                  name="server.blocktime"
+                  name="server.blockTime"
                   type="text"
                   value={this.props.config.settings.server.blockTime}
                   onChange={this.validateChange}
                 />
-                {this.props.validationErrors["server.blocktime"] &&
+                {this.props.validationErrors["server.blockTime"] &&
                   <p className="ValidationError">Must be &gt; 1 and &lt; 200</p>}
               </div>
               <div className="RowItem">

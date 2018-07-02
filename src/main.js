@@ -35,6 +35,7 @@ import { ADD_LOG_LINES } from './Actions/Logs'
 
 import ChainService from './Services/Chain'
 import SettingsService from './Services/Settings'
+import GoogleAnalyticsService from './Services/GoogleAnalytics'
 
 let menu
 let template
@@ -95,13 +96,19 @@ app.on('ready', () => {
   // see https://github.com/electron/electron/issues/9179 for more info
   setTimeout(async () => {
     const chain = new ChainService(app)
-    const Settings = new SettingsService() 
+    const Settings = new SettingsService()
+    const GoogleAnalytics = new GoogleAnalyticsService()
+    const inProduction = process.env.NODE_ENV === 'production'
 
     app.on('will-quit', function () {
       chain.stopProcess();
     });
 
     Settings.bootstrap();
+
+    var settings = Settings.getAll()
+    GoogleAnalytics.setup(settings.googleAnalyticsTracking && inProduction, settings.uuid)
+    GoogleAnalytics.reportSettings(settings)
 
     mainWindow = new BrowserWindow({
       show: false,
@@ -158,11 +165,11 @@ app.on('ready', () => {
       })
 
       chain.on("stderr", (data) => {
-        mainWindow.webContents.send(ADD_LOG_LINES, data.split(/\n/g))
+        const lines = data.split(/\n/g)
+        mainWindow.webContents.send(ADD_LOG_LINES, lines)
       })
 
       chain.on("error", (error) => {
-        console.log(error)
         mainWindow.webContents.send(SET_SYSTEM_ERROR, error)
 
         if (chain.isServerStarted()) {
@@ -199,6 +206,7 @@ app.on('ready', () => {
 
     ipcMain.on(REQUEST_SAVE_SETTINGS, (event, settings) => {
       Settings.setAll(settings)
+      GoogleAnalytics.reportSettings(settings)
     })
 
     mainWindow.on('closed', () => {
