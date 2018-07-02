@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 
 import OnlyIf from '../../../Elements/OnlyIf'
 
+import StyledSelect from '../../../Elements/StyledSelect';
+
 const VALIDATIONS = {
   "server.hostname": {
     format: /(^localhost$)|(^\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b$)/,
@@ -29,7 +31,7 @@ class ServerScreen extends Component {
     super(props)
 
     this.state = {
-      automine: typeof props.settings.server.blocktime == "undefined" 
+      automine: typeof props.config.settings.server.blocktime == "undefined"
     }
   }
 
@@ -38,7 +40,7 @@ class ServerScreen extends Component {
 
     // Remove blocktime value if we turn automine on
     if (newValue == true) {
-      delete this.props.settings.server.blocktime
+      delete this.props.config.settings.server.blocktime
 
       // Rerun validations now that value has been deleted
       this.validateChange({
@@ -56,6 +58,7 @@ class ServerScreen extends Component {
 
   validateChange = (e) => {
     this.props.validateChange(e, VALIDATIONS)
+    this.forceUpdate()
   }
 
   render () {
@@ -76,14 +79,24 @@ class ServerScreen extends Component {
           <h4>HOSTNAME</h4>
           <div className="Row">
             <div className="RowItem">
-              <input
-                type="text"
+              <StyledSelect
                 name="server.hostname"
-                value={this.props.settings.server.hostname}
-                onChange={this.validateChange}
-              />
+                defaultValue={this.props.config.settings.server.hostname}
+                changeFunction={this.validateChange}
+              >
+                <option key="0.0.0.0" value="0.0.0.0">0.0.0.0 - All Interfaces</option>
+                {Object.keys(this.props.network.interfaces).map((key) => {
+                  return this.props.network.interfaces[key].map((instance) => {
+                    if (instance.family.toLowerCase() === "ipv4") {
+                      return <option key={instance.address} value={instance.address}>{instance.address} - {key}</option>
+                    }
+                  })
+                })}
+              </StyledSelect>
               {this.props.validationErrors["server.hostname"] &&
                 <p className="ValidationError">Must be a valid IP address or "localhost"</p>}
+              {!("server.hostname" in this.props.validationErrors) && this.props.config.validationErrors["server.hostname"] &&
+                <p className="ValidationError">{this.props.config.validationErrors["server.hostname"]}</p>}
             </div>
             <div className="RowItem">
               <p>
@@ -100,7 +113,7 @@ class ServerScreen extends Component {
               <input
                 type="number"
                 name="server.port"
-                value={this.props.settings.server.port}
+                value={this.props.config.settings.server.port}
                 onChange={e => {
                  // this.props.appCheckPort(e.target.value)
                   this.validateChange(e)
@@ -109,6 +122,8 @@ class ServerScreen extends Component {
 
               {this.props.validationErrors["server.port"] &&
                 <p className="ValidationError">Must be &gt; 1000 and &lt; 65535.</p>}
+              {this.props.config.validationErrors["server.port"] &&
+                <p className="ValidationError">{this.props.config.validationErrors["server.port"]}</p>}
             </div>
             <div className="RowItem">
               <p>
@@ -125,7 +140,7 @@ class ServerScreen extends Component {
               <input
                 type="number"
                 name="server.network_id"
-                value={this.props.settings.server.network_id}
+                value={this.props.config.settings.server.network_id}
                 onChange={this.validateChange}
               />
               {this.props.validationErrors["server.network_id"] &&
@@ -172,7 +187,7 @@ class ServerScreen extends Component {
                 <input
                   name="server.blocktime"
                   type="text"
-                  value={this.props.settings.server.blockTime}
+                  value={this.props.config.settings.server.blockTime}
                   onChange={this.validateChange}
                 />
                 {this.props.validationErrors["server.blocktime"] &&
@@ -198,7 +213,7 @@ class ServerScreen extends Component {
                     type="checkbox"
                     name="server.vmErrorsOnRPCResponse"
                     id="server.vmErrorsOnRPCResponse"
-                    defaultChecked={this.props.settings.server.vmErrorsOnRPCResponse}
+                    defaultChecked={this.props.config.settings.server.vmErrorsOnRPCResponse}
                     onChange={this.props.handleInputChange}
                   />
                   <label htmlFor="server.vmErrorsOnRPCResponse">ENABLED</label>

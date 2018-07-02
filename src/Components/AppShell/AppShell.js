@@ -27,7 +27,7 @@ class AppShell extends Component {
   }
 
   _setupGoogleAnalytics = () => {
-    this.user = ua('UA-83874933-5', this.props.settings.uuid)
+    this.user = ua('UA-83874933-5', this.props.config.settings.uuid)
     this.user.set('location', 'http://truffleframework.com/ganache')
     this.user.set('checkProtocolTask', null)
     this.user.set('an', 'Ganache')
@@ -83,7 +83,7 @@ class AppShell extends Component {
 
   componentWillReceiveProps (nextProps) {
     // If we're not tracking page use, bail.
-    if (nextProps.settings.googleAnalyticsTracking == false) {
+    if (nextProps.config.settings.googleAnalyticsTracking == false) {
       return
     }
 
@@ -119,7 +119,7 @@ class AppShell extends Component {
             {this.props.children}
           </Scrollbars>
         </div>
-        <OnlyIf test={this.props.core.systemError != null}>
+        <OnlyIf test={this.props.core.systemError != null && this.props.core.showBugModal}>
           <BugModal systemError={this.props.core.systemError} logs={this.props.logs} />
         </OnlyIf>
         <OnlyIf test={!this.props.core.systemError && this.props.autoUpdate.showModal}>
@@ -130,4 +130,4 @@ class AppShell extends Component {
   }
 }
 
-export default connect(AppShell, "core", "settings", "logs", "autoUpdate");
+export default connect(AppShell, "core", "config", "logs", "autoUpdate");

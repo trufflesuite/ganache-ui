@@ -8,6 +8,8 @@ import BugIcon from '../../Elements/icons/errorant.svg'
 
 import { sanitizeError, sanitizePaths } from '../Helpers/sanitize.js'
 
+import * as Core from '../../Actions/Core'
+
 import { shell } from 'electron'
 
 const { app } = require('electron').remote
@@ -97,8 +99,7 @@ class BugModal extends Component {
             </button>
             <button
               onClick={() => {
-                app.relaunch()
-                app.exit()
+                this.props.dispatch(Core.requestServerRestart())
               }}
             >
               RELAUNCH

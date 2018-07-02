@@ -1,0 +1,22 @@
+div.StyledSelect {
+  display: flex;
+  position: relative;
+  align-items: center;
+
+  select {
+    -webkit-appearance: none;
+    color: var(--text-color);
+    border: 1px solid var(--text-color);
+    background-color: transparent;
+    padding: .5rem;
+  }
+
+  &::after {
+    display: inline-flex;
+    position: absolute;
+    right: 0.5rem;
+    content: '\25bc';
+    color: var(--text-color);
+    pointer-events: none;
+  }
+}

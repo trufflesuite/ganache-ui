@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import { push } from 'react-router-redux'
 import connect from '../Helpers/connect'
 
-import * as Settings from '../../Actions/Settings'
+import * as Config from '../../Actions/Config'
 
 class FirstRunScreen extends Component {
   constructor (props) {
@@ -25,12 +25,12 @@ class FirstRunScreen extends Component {
   }
 
   _recordChoice = () => {
-    var newSettings = Object.assign({}, this.props.settings, {
+    var newSettings = Object.assign({}, this.props.config.settings, {
       firstRun: false,
       googleAnalyticsTracking: this.state.enableAnalytics
     })
 
-    this.props.dispatch(Settings.setSettings(newSettings))
+    this.props.dispatch(Config.setSettings(newSettings))
     this.props.dispatch(push('/accounts'))
   }
 
@@ -108,4 +108,4 @@ class FirstRunScreen extends Component {
   }
 }
 
-export default connect(FirstRunScreen, "settings")
+export default connect(FirstRunScreen, "config")
