@@ -9,8 +9,8 @@ import { Router, Route, IndexRoute, hashHistory } from 'react-router'
 
 import RootReducer from './Reducers/Root'
 
-import createStore from './Kernel/createStore'
-import syncStore from './Kernel/syncStore'
+import createStore from './Init/Renderer/Store/createStore'
+import syncStore from './Init/Renderer/Store/syncStore'
 import { initRenderer } from './Init/Renderer/index'
 
 import AppShell from './Components/AppShell/AppShell'
