@@ -31,7 +31,7 @@ class ServerScreen extends Component {
     super(props)
 
     this.state = {
-      automine: typeof props.config.settings.server.blocktime == "undefined"
+      automine: typeof props.config.settings.server.blockTime == "undefined"
     }
   }
 
@@ -40,13 +40,13 @@ class ServerScreen extends Component {
 
     // Remove blockTime value if we turn automine on
     if (newValue == true) {
-      delete this.props.config.settings.server.blocktime
+      delete this.props.config.settings.server.blockTime
 
       // Rerun validations now that value has been deleted
       this.validateChange({
         target: {
           name: "server.blockTime",
-          value: ""
+          value: undefined
         }
       })
     }
@@ -186,8 +186,8 @@ class ServerScreen extends Component {
               <div className="RowItem">
                 <input
                   name="server.blockTime"
-                  type="text"
-                  value={this.props.config.settings.server.blockTime}
+                  type="number"
+                  value={this.props.config.settings.server.blockTime || 0}
                   onChange={this.validateChange}
                 />
                 {this.props.validationErrors["server.blockTime"] &&

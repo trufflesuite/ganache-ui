@@ -98,8 +98,8 @@ class TopNavbar extends Component {
   }
 
   _renderMiningTime() {
-    if (this.props.config.settings.server.blocktime) {
-      return `${this.props.config.settings.server.blocktime} SEC block time`
+    if (this.props.config.settings.server.blockTime) {
+      return `${this.props.config.settings.server.blockTime} SEC block time`
     } else {
       return 'Automining'
     }

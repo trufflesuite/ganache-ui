@@ -101,7 +101,7 @@ class GoogleAnalyticsService {
           hostname,
           port: settings.server.port,
           networkId: settings.server.network_id,
-          blockTime: typeof settings.server.blocktime == "undefined" ? 'automine' : settings.server.blockTime,
+          blockTime: typeof settings.server.blockTime == "undefined" ? 'automine' : settings.server.blockTime,
           defaultBalance: settings.server.default_balance_ether,
           totalAccounts: settings.server.total_accounts,
           autoMnemonic: settings.randomizeMnemonicOnStart,
