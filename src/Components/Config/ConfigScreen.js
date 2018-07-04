@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react'
 import { hashHistory } from 'react-router'
-import _ from 'lodash'
+import cloneDeep from 'lodash.clonedeep'
+import isEqual from 'lodash.isequal'
 import connect from '../Helpers/connect'
 
 import * as Core from '../../Actions/Core'
@@ -28,7 +29,7 @@ class ConfigScreen extends PureComponent {
     super(props)
 
     this.state = {
-      config: _.cloneDeep(props.config),
+      config: cloneDeep(props.config),
       validationErrors: {},
       restartOnCancel: Object.keys(props.config.validationErrors).length > 0, // see handleCancelPressed
       activeIndex: 0
@@ -59,7 +60,7 @@ class ConfigScreen extends PureComponent {
   }
 
   isDirty () {
-    return _.isEqual(this.state.config.settings, this.props.config.settings) == false
+    return isEqual(this.state.config.settings, this.props.config.settings) == false
   }
 
   handleCancelPressed = (e) => {
