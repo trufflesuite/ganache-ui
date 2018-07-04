@@ -12,7 +12,7 @@ import {
 
 export function processPage(pathname, state) {
   const GoogleAnalytics = new GoogleAnalyticsService()
-  GoogleAnalytics.setup(state.settings.googleAnalyticsTracking, state.settings.uuid)
+  GoogleAnalytics.setup(state.config.settings.googleAnalyticsTracking, state.config.settings.uuid)
 
   GoogleAnalytics.reportPageview(pathname)
   const segment = pathname.split('/')[1] || 'dashboard'
@@ -21,7 +21,7 @@ export function processPage(pathname, state) {
 
 export function process(action, state) {
   const GoogleAnalytics = new GoogleAnalyticsService()
-  GoogleAnalytics.setup(state.settings.googleAnalyticsTracking, state.settings.uuid)
+  GoogleAnalytics.setup(state.config.settings.googleAnalyticsTracking, state.config.settings.uuid)
 
   switch(action.type) {
     case SET_SYSTEM_ERROR: {
