@@ -35,7 +35,7 @@ class FilePicker extends Component {
     this.props.onChangeFunction(value, e)
 
     this.setState({
-      file: value
+      value: value
     })
   }
 
