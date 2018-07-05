@@ -1,6 +1,6 @@
 var path = require("path")
 var fs = require("fs")
-var _ = require("lodash")
+var padStart = require("lodash.padstart")
 
 var logFile;
 
@@ -8,12 +8,12 @@ function getFileTimestamp() {
   const currentDate = new Date()
   const currentDateString = [
     currentDate.getFullYear(),
-    _.padstart(currentDate.getMonth() + 1, 2, "0"),
-    _.padstart(currentDate.getDate(), 2, "0"),
+    padStart(currentDate.getMonth() + 1, 2, "0"),
+    padStart(currentDate.getDate(), 2, "0"),
     "-",
-    _.padstart(currentDate.getHours(), 2, "0"),
-    _.padstart(currentDate.getMinutes(), 2, "0"),
-    _.padstart(currentDate.getSeconds(), 2, "0")
+    padStart(currentDate.getHours(), 2, "0"),
+    padStart(currentDate.getMinutes(), 2, "0"),
+    padStart(currentDate.getSeconds(), 2, "0")
   ].join("")
 
   return currentDateString
@@ -24,17 +24,17 @@ function getLogTimestamp() {
   const currentDateString = [
     currentDate.getFullYear(),
     "/",
-    _.padstart(currentDate.getMonth() + 1, 2, "0"),
+    padStart(currentDate.getMonth() + 1, 2, "0"),
     "/",
-    _.padstart(currentDate.getDate(), 2, "0"),
+    padStart(currentDate.getDate(), 2, "0"),
     " ",
-    _.padstart(currentDate.getHours(), 2, "0"),
+    padStart(currentDate.getHours(), 2, "0"),
     ":",
-    _.padstart(currentDate.getMinutes(), 2, "0"),
+    padStart(currentDate.getMinutes(), 2, "0"),
     ":",
-    _.padstart(currentDate.getSeconds(), 2, "0"),
+    padStart(currentDate.getSeconds(), 2, "0"),
     ".",
-    _.padstart(currentDate.getMilliseconds(), 3, "0")
+    padStart(currentDate.getMilliseconds(), 3, "0")
   ].join("")
 
   return currentDateString
