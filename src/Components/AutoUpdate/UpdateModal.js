@@ -1,4 +1,6 @@
-import React, { Component, shell } from 'react'
+import { shell } from 'electron'
+
+import React, { Component } from 'react'
 
 import connect from '../Helpers/connect'
 
