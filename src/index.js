@@ -21,6 +21,7 @@ import TransactionsScreen from './Components/Transactions/TransactionsScreen'
 import LogsScreen from './Components/Logs/LogsScreen'
 import NotFoundScreen from './Components/NotFound/NotFoundScreen'
 import TitleScreen from './Components/Title/TitleScreen'
+import WorkspacesScreen from './Components/Startup/WorkspacesScreen'
 import FirstRunScreen from './Components/FirstRun/FirstRunScreen'
 
 import {ipcRenderer} from 'electron'
@@ -33,8 +34,9 @@ ready(store)
 // function, so that hot module reloading doesn't cause issues with react-router.
 const routes = <Route>
   <Route path='/title' component={TitleScreen} />
+  <Route path='/workspaces' component={WorkspacesScreen} />
+  <Route path="/first_run" component={FirstRunScreen} />
   <Route path="/" component={AppShell}>
-    <Route path="/first_run" component={FirstRunScreen} />
     <Route path='/accounts' component={AccountsScreen} />
     <Route path="/blocks(/:blockNumber)" component={BlocksScreen} />
     <Route path="/transactions(/:transactionHash)" component={TransactionsScreen} />

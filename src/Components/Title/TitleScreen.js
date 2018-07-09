@@ -11,30 +11,28 @@ import OnlyIf from '../../Elements/OnlyIf'
 import BugModal from '../AppShell/BugModal'
 
 class TitleScreen extends Component {
-  constructor () {
-    super()
+  constructor (props) {
+    super(props)
     this.state = {
       version: pkg.version,
-      timeoutStarted: false
+      firstRun: undefined
     }
+
+    const intervalId = setInterval(() => {
+      if (this.state.firstRun === true) {
+        hashHistory.push('/first_run')
+        clearInterval(intervalId)
+      }
+      else if (this.state.firstRun === false) {
+        hashHistory.push('/workspaces')
+        clearInterval(intervalId)
+      }
+    }, 1000)
   }
 
-  componentWillReceiveProps (nextProps) {
-    if (nextProps.core.started !== true) {
-      return
-    }
-
-    // Ensure we have full props
-    if (typeof nextProps.settings.firstRun != "undefined" && this.state.timeoutStarted == false) {
-      this.setState({timeoutStarted: true}, function() {
-        setTimeout(() => {
-          if (nextProps.settings.firstRun) {
-            hashHistory.push('/first_run')
-          } else {
-            hashHistory.push('/accounts')
-          }
-        }, 1000)
-      })
+  componentWillReceiveProps(nextProps) {
+    if ("global" in nextProps.settings && "firstRun" in nextProps.settings.global) {
+      this.state.firstRun = nextProps.settings.global.firstRun
     }
   }
 

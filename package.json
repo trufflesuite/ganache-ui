@@ -189,6 +189,7 @@
     "builder-util-runtime": "^4.2.0",
     "electron-compile": "^6.4.2",
     "electron-forge-maker-appimage": "^19.30.3",
+    "electron-json-storage": "^4.1.0",
     "electron-settings": "^3.1.2",
     "electron-squirrel-startup": "^1.0.0",
     "ethereumjs-units": "^0.2.0",

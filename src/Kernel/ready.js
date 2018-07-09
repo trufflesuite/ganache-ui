@@ -16,13 +16,17 @@ export default function (store) {
   // Load the first screen while we wait for the application to load
   store.dispatch(Core.showTitleScreen())
 
+  ipcRenderer.on(Settings.SET_SETTINGS, (event, globalSettings, workspaceSettings) => {
+    store.dispatch(Settings.setSettings(globalSettings, workspaceSettings))
+  })
+
   // Wait for the server to start...
-  ipcRenderer.on(Core.SET_SERVER_STARTED, (sender, currentSettings) => {
+  ipcRenderer.on(Core.SET_SERVER_STARTED, (sender, globalSettings, workspaceSettings) => {
     // Get current settings into the store
-    store.dispatch(Settings.setSettings(currentSettings))
+    store.dispatch(Settings.setSettings(globalSettings, workspaceSettings))
 
     // Ensure web3 is set
-    store.dispatch(Web3.setRPCProviderUrl(`ws://${currentSettings.server.hostname}:${currentSettings.server.port}`))
+    store.dispatch(Web3.setRPCProviderUrl(`ws://${workspaceSettings.server.hostname}:${workspaceSettings.server.port}`))
   
     store.dispatch(Accounts.getAccounts())
     store.dispatch(Core.getGasPrice())

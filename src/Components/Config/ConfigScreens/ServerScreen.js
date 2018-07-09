@@ -29,7 +29,7 @@ class ServerScreen extends Component {
     super(props)
 
     this.state = {
-      automine: typeof props.settings.server.blocktime == "undefined" 
+      automine: typeof props.settings.workspace.server.blocktime == "undefined" 
     }
   }
 
@@ -38,7 +38,7 @@ class ServerScreen extends Component {
 
     // Remove blocktime value if we turn automine on
     if (newValue == true) {
-      delete this.props.settings.server.blocktime
+      delete this.props.settings.workspace.server.blocktime
 
       // Rerun validations now that value has been deleted
       this.validateChange({
@@ -79,7 +79,7 @@ class ServerScreen extends Component {
               <input
                 type="text"
                 name="server.hostname"
-                value={this.props.settings.server.hostname}
+                value={this.props.settings.workspace.server.hostname}
                 onChange={this.validateChange}
               />
               {this.props.validationErrors["server.hostname"] &&
@@ -100,7 +100,7 @@ class ServerScreen extends Component {
               <input
                 type="number"
                 name="server.port"
-                value={this.props.settings.server.port}
+                value={this.props.settings.workspace.server.port}
                 onChange={e => {
                  // this.props.appCheckPort(e.target.value)
                   this.validateChange(e)
@@ -125,7 +125,7 @@ class ServerScreen extends Component {
               <input
                 type="number"
                 name="server.network_id"
-                value={this.props.settings.server.network_id}
+                value={this.props.settings.workspace.server.network_id}
                 onChange={this.validateChange}
               />
               {this.props.validationErrors["server.network_id"] &&
@@ -172,7 +172,7 @@ class ServerScreen extends Component {
                 <input
                   name="server.blocktime"
                   type="text"
-                  value={this.props.settings.server.blockTime}
+                  value={this.props.settings.workspace.server.blockTime}
                   onChange={this.validateChange}
                 />
                 {this.props.validationErrors["server.blocktime"] &&
@@ -198,7 +198,7 @@ class ServerScreen extends Component {
                     type="checkbox"
                     name="server.vmErrorsOnRPCResponse"
                     id="server.vmErrorsOnRPCResponse"
-                    defaultChecked={this.props.settings.server.vmErrorsOnRPCResponse}
+                    defaultChecked={this.props.settings.workspace.server.vmErrorsOnRPCResponse}
                     onChange={this.props.handleInputChange}
                   />
                   <label htmlFor="server.vmErrorsOnRPCResponse">ENABLED</label>

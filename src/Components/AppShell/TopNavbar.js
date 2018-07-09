@@ -98,8 +98,8 @@ class TopNavbar extends Component {
   }
 
   _renderMiningTime() {
-    if (this.props.settings.server.blocktime) {
-      return `${this.props.settings.server.blocktime} SEC block time`
+    if (this.props.settings.workspace.server.blocktime) {
+      return `${this.props.settings.workspace.server.blocktime} SEC block time`
     } else {
       return 'Automining'
     }
@@ -167,11 +167,11 @@ class TopNavbar extends Component {
             />
             <StatusIndicator
               title="NETWORK ID"
-              value={this.props.settings.server.network_id}
+              value={this.props.settings.workspace.server.network_id}
             />
             <StatusIndicator
               title="RPC SERVER"
-              value={`http://${this.props.settings.server.hostname}:${this.props.settings.server.port}`}
+              value={`http://${this.props.settings.workspace.server.hostname}:${this.props.settings.workspace.server.port}`}
             />
             <StatusIndicator
               title="MINING STATUS"

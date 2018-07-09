@@ -18,14 +18,19 @@ import {
   SET_SERVER_STARTED, 
   SET_SERVER_STOPPED,
   SET_KEY_DATA, 
-  SET_SYSTEM_ERROR
+  SET_SYSTEM_ERROR,
+  OPEN_WORKSPACE
 } from './Actions/Core'
 
-import { REQUEST_SAVE_SETTINGS } from './Actions/Settings'
+import {
+  SET_SETTINGS,
+  REQUEST_SAVE_SETTINGS,
+} from './Actions/Settings'
 import { ADD_LOG_LINES } from './Actions/Logs'
 
 import ChainService from './Services/Chain'
-import SettingsService from './Services/Settings'
+import GlobalSettings from './Services/Settings/GlobalSettings'
+import Workspace from './Services/Workspace.js';
 
 let menu
 let template
@@ -52,7 +57,8 @@ process.on('unhandledRejection', err => {
 
 app.on('window-all-closed', () => {
   // don't quit the app before the updater can do its thing
-  if (!getAutoUpdateService().isRestartingForUpdate) {
+  const service = getAutoUpdateService()
+  if (service == null || !service.isRestartingForUpdate) {
     app.quit()
   }
 })
@@ -73,14 +79,15 @@ app.on('ready', () => {
   // workaround for electron race condition, causing hang on startup.
   // see https://github.com/electron/electron/issues/9179 for more info
   setTimeout(async () => {
-    const chain = new ChainService(app)
-    const Settings = new SettingsService() 
+    const chain = new ChainService()
+    const global = new GlobalSettings(path.join(app.getPath('userData'), 'global'))
+    let workspace
 
     app.on('will-quit', function () {
       chain.stopProcess();
     });
 
-    Settings.bootstrap();
+    await global.bootstrap()
 
     mainWindow = new BrowserWindow({
       show: false,
@@ -101,31 +108,45 @@ app.on('ready', () => {
     mainWindow.webContents.on('new-window', ensureExternalLinksAreOpenedInBrowser);
     mainWindow.webContents.on('will-navigate', ensureExternalLinksAreOpenedInBrowser);
 
-
     mainWindow.loadURL(`file://${__dirname}/app.html`)
-    mainWindow.webContents.on('did-finish-load', () => {
+    mainWindow.webContents.on('did-finish-load', async () => {
       mainWindow.show()
       mainWindow.focus()
       mainWindow.setTitle('Ganache')
-      initAutoUpdates(Settings.getAll(), mainWindow)
 
       // Remove the menu bar
       mainWindow.setMenu(null);
 
-      chain.on("start", () => {
-        chain.startServer(Settings.getAll())
+      // make sure the store registers the settings ASAP in the event of a startup crash
+      const globalSettings = await global.getAll()
+      mainWindow.webContents.send(SET_SETTINGS, globalSettings, {})
+    })
+
+    ipcMain.on(OPEN_WORKSPACE, async (name) => {
+      workspace = new Workspace(name)
+
+      await workspace.bootstrap()
+
+      const globalSettings = await global.getAll()
+      initAutoUpdates(globalSettings, mainWindow)
+
+      chain.on("start", async () => {
+        const workspaceSettings = await workspace.settings.getAll()
+        chain.startServer(workspaceSettings)
       })
 
-      chain.on("server-started", (data) => {
+      chain.on("server-started", async (data) => {
         mainWindow.webContents.send(SET_KEY_DATA, { 
           privateKeys: data.privateKeys,
           mnemonic: data.mnemonic,
           hdPath: data.hdPath
         })
 
-        Settings.handleNewMnemonic(data.mnemonic)
+        await workspace.settings.handleNewMnemonic(data.mnemonic)
 
-        mainWindow.webContents.send(SET_SERVER_STARTED, Settings.getAll())
+        const globalSettings = await global.getAll()
+        const workspaceSettings = await workspace.settings.getAll()
+        mainWindow.webContents.send(SET_SERVER_STARTED, globalSettings, workspaceSettings)
       })
 
       chain.on("stdout", (data) => {
@@ -146,19 +167,31 @@ app.on('ready', () => {
 
     // If the frontend asks to start the server, start the server.
     // This will trigger then chain event handlers above once the server stops.
-    ipcMain.on(REQUEST_SERVER_RESTART, () => {
-      if (chain.isServerStarted()) {
-        chain.once("server-stopped", () => {
-          chain.startServer(Settings.getAll())
-        })
-        chain.stopServer()
-      } else {
-        chain.startServer(Settings.getAll())
+    ipcMain.on(REQUEST_SERVER_RESTART, async () => {
+      // make sure the store registers the settings ASAP in the event of a startup crash
+      const globalSettings = await global.getAll()
+      mainWindow.webContents.send(SET_SETTINGS, globalSettings, {})
+
+      if (workspace) {
+        if (chain.isServerStarted()) {
+          chain.once("server-stopped", async () => {
+            const workspaceSettings = await workspace.settings.getAll()
+            chain.startServer(workspaceSettings)
+          })
+          chain.stopServer()
+        } else {
+          const workspaceSettings = await workspace.settings.getAll()
+          chain.startServer(workspaceSettings)
+        }
       }
     })
 
-    ipcMain.on(REQUEST_SAVE_SETTINGS, (event, settings) => {
-      Settings.setAll(settings)
+    ipcMain.on(REQUEST_SAVE_SETTINGS, async (event, globalSettings, workspaceSettings) => {
+      await global.setAll(globalSettings)
+
+      if (workspace) {
+        await workspace.settings.setAll(workspaceSettings)
+      }
     })
 
     mainWindow.on('closed', () => {
@@ -494,10 +527,10 @@ app.on('ready', () => {
 })
 
 function ensureExternalLinksAreOpenedInBrowser(event, url) {
-    // we're a one-window application, and we only ever want to load external
-    // resources in the user's browser, not via a new browser window
-    if (url.startsWith('http:') || url.startsWith('https:')) {
-      shell.openExternal(url)
-      event.preventDefault()
-    }
+  // we're a one-window application, and we only ever want to load external
+  // resources in the user's browser, not via a new browser window
+  if (url.startsWith('http:') || url.startsWith('https:')) {
+    shell.openExternal(url)
+    event.preventDefault()
   }
+}

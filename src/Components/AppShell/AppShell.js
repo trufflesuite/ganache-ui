@@ -27,7 +27,7 @@ class AppShell extends Component {
   }
 
   _setupGoogleAnalytics = () => {
-    this.user = ua('UA-83874933-5', this.props.settings.uuid)
+    this.user = ua('UA-83874933-5', this.props.settings.global.uuid)
     this.user.set('location', 'http://truffleframework.com/ganache')
     this.user.set('checkProtocolTask', null)
     this.user.set('an', 'Ganache')
@@ -83,7 +83,7 @@ class AppShell extends Component {
 
   componentWillReceiveProps (nextProps) {
     // If we're not tracking page use, bail.
-    if (nextProps.settings.googleAnalyticsTracking == false) {
+    if (nextprops.settings.global.googleAnalyticsTracking == false) {
       return
     }
 

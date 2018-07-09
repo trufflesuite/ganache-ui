@@ -97,3 +97,4 @@ export const setSystemError = function(error) {
   return {type: SET_SYSTEM_ERROR, error}
 }
 
+export const OPEN_WORKSPACE = `${prefix}/OPEN_WORKSPACE`

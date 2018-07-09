@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-
 import { push } from 'react-router-redux'
+import _ from 'lodash'
+
 import connect from '../Helpers/connect'
 
 import * as Settings from '../../Actions/Settings'
@@ -25,13 +26,13 @@ class FirstRunScreen extends Component {
   }
 
   _recordChoice = () => {
-    var newSettings = Object.assign({}, this.props.settings, {
+    var newGlobalSettings = _.merge({}, this.props.settings.global, {
       firstRun: false,
       googleAnalyticsTracking: this.state.enableAnalytics
     })
 
-    this.props.dispatch(Settings.setSettings(newSettings))
-    this.props.dispatch(push('/accounts'))
+    this.props.dispatch(Settings.setSettings(newGlobalSettings, this.props.settings.workspace))
+    this.props.dispatch(push('/workspaces'))
   }
 
   render () {

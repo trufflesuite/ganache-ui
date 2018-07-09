@@ -12,9 +12,8 @@ import _ from 'lodash'
  * representation mismatches between Ganache and the child process.
  */
 class ChainService extends EventEmitter {
-  constructor(app) {
+  constructor() {
     super()
-    this.app = app
     this.child = null
     this.serverStarted = false
     this.setMaxListeners(1)
@@ -53,23 +52,29 @@ class ChainService extends EventEmitter {
   }
   
   startServer(settings) {
-    let options = this._ganacheCoreOptionsFromGanacheSettingsObject(settings)
-    this.child.send({
-      type: 'start-server',
-      data: options
-    })
+    if (this.child !== null) {
+      let options = this._ganacheCoreOptionsFromGanacheSettingsObject(settings)
+      this.child.send({
+        type: 'start-server',
+        data: options
+      })
+    }
   }
 
   stopServer(options) {
-    this.child.send({
-      type: 'stop-server',
-    })
+    if (this.child !== null) {
+      this.child.send({
+        type: 'stop-server',
+      })
+    }
   }
 
   stopProcess() {
-    this.child.removeListener('exit', this._exitHandler);
-    if (this.child) {
-      this.child.kill('SIGHUP');
+    if (this.child !== null) {
+      this.child.removeListener('exit', this._exitHandler);
+      if (this.child) {
+        this.child.kill('SIGHUP');
+      }
     }
   }
 
