@@ -6,12 +6,12 @@ class JsonStorage {
   constructor(directory, name, obj) {
     this.obj = new JsonWithKeyPaths(obj)
     this.name = name
-    storage.setDataPath(directory)
+    this.directory = directory
   }
 
   getFromStorage() {
     return new Promise((resolve, reject) => {
-      storage.get(this.name, (err, data) => {
+      storage.get(this.name, {dataPath: this.directory}, (err, data) => {
         if (err) {
           console.error(err)
           reject(err)
@@ -55,7 +55,7 @@ class JsonStorage {
 
   setToStorage() {
     return new Promise((resolve, reject) => {
-      storage.set(this.name, this.obj.obj, (error) => {
+      storage.set(this.name, {dataPath: this.directory}, this.obj.obj, (error) => {
         if (error) {
           reject(error)
         }
