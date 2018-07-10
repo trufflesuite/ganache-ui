@@ -31,6 +31,7 @@ import { ADD_LOG_LINES } from './Actions/Logs'
 import ChainService from './Services/Chain'
 import GlobalSettings from './Services/Settings/GlobalSettings'
 import Workspace from './Services/Workspace.js';
+import WorkspaceManager from './Services/WorkspaceManager.js';
 
 let menu
 let template
@@ -81,6 +82,7 @@ app.on('ready', () => {
   setTimeout(async () => {
     const chain = new ChainService()
     const global = new GlobalSettings(path.join(app.getPath('userData'), 'global'))
+    const workspaceManager = new WorkspaceManager()
     let workspace
 
     app.on('will-quit', function () {
@@ -88,6 +90,7 @@ app.on('ready', () => {
     });
 
     await global.bootstrap()
+    workspaceManager.enumerateWorkspaces()
 
     mainWindow = new BrowserWindow({
       show: false,
@@ -120,6 +123,8 @@ app.on('ready', () => {
       // make sure the store registers the settings ASAP in the event of a startup crash
       const globalSettings = await global.getAll()
       mainWindow.webContents.send(SET_SETTINGS, globalSettings, {})
+
+      mainWindow.webContents.send(SET_WORKSPACES, workspaceManager.workspaces)
     })
 
     ipcMain.on(OPEN_WORKSPACE, async (name) => {

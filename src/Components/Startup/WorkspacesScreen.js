@@ -11,8 +11,8 @@ import OnlyIf from '../../Elements/OnlyIf'
 import BugModal from '../AppShell/BugModal'
 
 class WorkspacesScreen extends Component {
-  constructor () {
-    super()
+  constructor (props) {
+    super(props)
   }
 
   render () {
@@ -28,4 +28,4 @@ class WorkspacesScreen extends Component {
   }
 }
 
-export default connect(WorkspacesScreen, "settings", "core", "logs")
+export default connect(WorkspacesScreen, "core")
