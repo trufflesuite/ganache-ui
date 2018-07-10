@@ -155,7 +155,7 @@ app.on('ready', () => {
       initAutoUpdates(globalSettings, mainWindow)
     })
 
-    ipcMain.on(OPEN_WORKSPACE, async (name) => {
+    ipcMain.on(OPEN_WORKSPACE, async (event, name) => {
       workspace = workspaceManager.get(name)
 
       if (typeof workspace === "undefined") {

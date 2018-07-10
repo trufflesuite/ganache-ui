@@ -1,10 +1,16 @@
 import React, { Component } from 'react'
 
+import { openWorkspace } from '../../Actions/Workspaces'
 import connect from '../Helpers/connect'
 
 class WorkspacesScreen extends Component {
   constructor (props) {
     super(props)
+  }
+
+  selectWorkspace(e) {
+    console.log(e)
+    this.props.dispatch(openWorkspace(e.target.innerText))
   }
 
   render () {
@@ -16,7 +22,7 @@ class WorkspacesScreen extends Component {
           </button>
           <ul>
             {this.props.workspaces.names.map((workspaceName) => {
-                return <li key={workspaceName}>{workspaceName}</li>
+                return <li key={workspaceName}><a onClick={this.selectWorkspace.bind(this)}>{workspaceName}</a></li>
               })
             }
           </ul>

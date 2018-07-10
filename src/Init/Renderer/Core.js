@@ -1,4 +1,5 @@
 import { ipcRenderer } from 'electron'
+import { push } from 'react-router-redux'
 
 import { setRPCProviderUrl } from '../../Actions/Web3'
 
@@ -23,12 +24,12 @@ import { handleError } from './ErrorHandler'
 
 export function initCore(store) {
   // Wait for the server to start...
-  ipcRenderer.on(SET_SERVER_STARTED, (sender, currentSettings) => {
+  ipcRenderer.on(SET_SERVER_STARTED, (sender, globalSettings, workspaceSettings) => {
     // Get current settings into the store
-    store.dispatch(setSettings(currentSettings))
+    store.dispatch(setSettings(globalSettings, workspaceSettings))
 
     // Ensure web3 is set
-    store.dispatch(setRPCProviderUrl(`ws://${currentSettings.server.hostname}:${currentSettings.server.port}`))
+    store.dispatch(setRPCProviderUrl(`ws://${workspaceSettings.server.hostname}:${workspaceSettings.server.port}`))
   
     store.dispatch(getAccounts())
     store.dispatch(getGasPrice())
@@ -37,6 +38,8 @@ export function initCore(store) {
     store.dispatch(getBlockSubscription())
 
     store.dispatch(setServerStarted())
+
+    store.dispatch(push("/accounts"))
   })
 
   // Block polling happens in the chain process, and is passed through

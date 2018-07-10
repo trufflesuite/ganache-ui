@@ -9,7 +9,8 @@ class Workspace {
     this.basename = basename
     this.projects = projects || []
     this.workspaceDirectory = Workspace.generateDirectoryPath(this.basename)
-    this.settings = new WorkspaceSettings(this.workspaceDirectory)
+    this.chaindataDirectory = path.join(this.workspaceDirectory, "chaindata")
+    this.settings = new WorkspaceSettings(this.workspaceDirectory, this.chaindataDirectory)
   }
 
   static generateDirectoryPath(name) {
@@ -29,12 +30,19 @@ class Workspace {
   // creates the directory if needed (recursively)
   bootstrapDirectory() {
     const folders = this.workspaceDirectory.split(path.sep)
+
+    // make sure the workspace directory exists
     let curPath = ""
     for (let i = 0; i < folders.length; i++) {
       curPath += folders[i] + path.sep
       if (!fs.existsSync(curPath)) {
         fs.mkdirSync(curPath)
       }
+    }
+
+    // make sure the chaindata folder exists
+    if (!fs.existsSync(this.chaindataDirectory)) {
+      fs.mkdirSync(this.chaindataDirectory)
     }
   }
 
@@ -53,10 +61,6 @@ class Workspace {
 
   addProject(project) {
     this.projects.push(project)
-  }
-
-  getChainDatabase() {
-
   }
 }
 

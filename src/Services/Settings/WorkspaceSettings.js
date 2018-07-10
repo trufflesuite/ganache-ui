@@ -1,4 +1,5 @@
 import Settings from './Settings'
+import merge from 'lodash.merge'
 
 const oldDefaultMnemonic = "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat";
 
@@ -21,15 +22,18 @@ const initialSettings = {
 }
 
 class WorkspaceSettings extends Settings {
-  constructor(directory) {
+  constructor(directory, chaindataDirectory) {
     super(directory, initialSettings)
+
+    this.chaindataDirectory = chaindataDirectory
   }
 
   bootstrapModification(currentSettings) {
-    // Add any non-additive settings changes here by creating a function which
+    // Add any settings changes here by creating a function which
     // handles the settings change in question.
 
     currentSettings = migrateMnemonicSettings(currentSettings)
+    currentSettings = this.insertDbPath(currentSettings)
 
     return currentSettings
   }
@@ -43,6 +47,10 @@ class WorkspaceSettings extends Settings {
     if (!this._getRaw("randomizeMnemonicOnStart", true)) {
       await this.set('server.mnemonic', mnemonic)
     }
+  }
+
+  insertDbPath(currentSettings) {
+    return merge({}, currentSettings, {'db_path': this.chaindataDirectory})
   }
 }
 
