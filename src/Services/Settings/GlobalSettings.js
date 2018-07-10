@@ -1,4 +1,3 @@
-import UUID from 'uuid'
 import Settings from './Settings'
 
 const initialSettings = {
@@ -14,15 +13,6 @@ class GlobalSettings extends Settings {
 
   async bootstrap() {
     await super.bootstrap()
-
-    const uuid = await this.settings.get("uuid")
-    if (typeof uuid == 'undefined') {
-      // Remember: setAll replaces what's there.
-      await this.settings.setAll(this.initialSettings);
-
-      // Set a specific uuid.
-      await this.set('uuid', UUID.v4()) 
-    }
   }
 }
 

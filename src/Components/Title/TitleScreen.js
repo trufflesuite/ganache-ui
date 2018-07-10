@@ -32,7 +32,7 @@ class TitleScreen extends Component {
 
   componentWillReceiveProps(nextProps) {
     if ("global" in nextProps.config.settings && "firstRun" in nextProps.config.settings.global) {
-      this.state.firstRun = nextProps.settings.global.firstRun
+      this.state.firstRun = nextProps.config.settings.global.firstRun
     }
   }
 

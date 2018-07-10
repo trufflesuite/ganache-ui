@@ -101,5 +101,3 @@ export const DISMISS_BUG_MODAL = `${prefix}/DISMISS_BUG_MODAL`
 export const dismissBugModal = function() {
   return {type: DISMISS_BUG_MODAL}
 }
-
-export const OPEN_WORKSPACE = `${prefix}/OPEN_WORKSPACE`

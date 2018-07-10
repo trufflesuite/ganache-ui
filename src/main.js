@@ -19,9 +19,13 @@ import {
   SET_SERVER_STARTED,
   SET_SERVER_STOPPED,
   SET_KEY_DATA,
-  SET_SYSTEM_ERROR,
-  OPEN_WORKSPACE
+  SET_SYSTEM_ERROR
 } from './Actions/Core'
+
+import { 
+  SET_WORKSPACES,
+  OPEN_WORKSPACE
+} from './Actions/Workspaces'
 
 import {
   SET_SETTINGS,
@@ -113,10 +117,6 @@ app.on('ready', () => {
     await global.bootstrap()
     workspaceManager.enumerateWorkspaces()
 
-    var settings = Settings.getAll()
-    GoogleAnalytics.setup(settings.googleAnalyticsTracking && inProduction, settings.uuid)
-    GoogleAnalytics.reportSettings(settings)
-
     mainWindow = new BrowserWindow({
       show: false,
       minWidth: 1200,
@@ -160,6 +160,10 @@ app.on('ready', () => {
 
       const globalSettings = await global.getAll()
       initAutoUpdates(globalSettings, mainWindow)
+
+      const workspaceSettings = await workspace.settings.getAll()
+      GoogleAnalytics.setup(await global.get("googleAnalyticsTracking") && inProduction, workspaceSettings.uuid)
+      GoogleAnalytics.reportWorkspaceSettings(workspaceSettings)
 
       chain.on("start", async () => {
         const workspaceSettings = await workspace.settings.getAll()
@@ -236,7 +240,7 @@ app.on('ready', () => {
         await workspace.settings.setAll(workspaceSettings)
       }
 
-      GoogleAnalytics.reportSettings(settings)
+      GoogleAnalytics.reportWorkspaceSettings(workspaceSettings)
     })
 
     mainWindow.on('closed', () => {

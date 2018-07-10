@@ -8,11 +8,11 @@ class Workspace {
   constructor(name, projects) {
     this.name = name || ""
     this.projects = projects || []
-    this.workspaceDirectory = Workspace.generateDirectory(this.name)
+    this.workspaceDirectory = Workspace.generateDirectoryPath(this.name)
     this.settings = new WorkspaceSettings(this.workspaceDirectory)
   }
 
-  static generateDirectory(name) {
+  static generateDirectoryPath(name) {
     if (name === "") {
       return path.join(app.getPath('userData'), 'default')
     }

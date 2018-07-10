@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import JsonStorage from '../../Utils/JsonStorage'
+import UUID from 'uuid'
 
 class Settings {
   constructor(directory, initialSettings) {
@@ -71,10 +72,14 @@ class Settings {
     // handles the settings change in question.
     currentSettings = this.bootstrapModification(currentSettings)
 
-    currentSettings = _.merge({}, this.initialSettings, currentSettings);
+    if (typeof currentSettings.uuid == 'undefined') {
+      currentSettings.uuid = UUID.v4()
+    }
+
+    currentSettings = _.merge({}, this.initialSettings, currentSettings)
 
     // Apply the merged settings
-    await this.setAll(currentSettings);
+    await this.setAll(currentSettings)
   }
 }
 

@@ -79,14 +79,14 @@ class GoogleAnalyticsService {
   }
 
   // this function picks some useful settings we like to track
-  reportSettings(settings) {
+  reportWorkspaceSettings(workspaceSettings) {
     if (this.isEnabled) {
       if (!this.isSetup || this.user === null) {
         this.setup()
       }
 
       if (this.canSend()) {
-        let hostname = settings.server.hostname
+        let hostname = workspaceSettings.server.hostname
         if (hostname !== "127.0.0.1" && hostname !== "0.0.0.0") {
           const localIp = /(^127\.)|(^10\.)|(^172\.1[6-9]\.)|(^172\.2[0-9]\.)|(^172\.3[0-1]\.)|(^192\.168\.)/
           if (localIp.exec(hostname)) {
@@ -99,15 +99,15 @@ class GoogleAnalyticsService {
 
         const config = {
           hostname,
-          port: settings.server.port,
-          networkId: settings.server.network_id,
-          blockTime: typeof settings.server.blockTime == "undefined" ? 'automine' : settings.server.blockTime,
-          defaultBalance: settings.server.default_balance_ether,
-          totalAccounts: settings.server.total_accounts,
-          autoMnemonic: settings.randomizeMnemonicOnStart,
-          locked: settings.server.locked,
-          gasLimit: settings.server.gasLimit,
-          gasPrice: settings.server.gasPrice
+          port: workspaceSettings.server.port,
+          networkId: workspaceSettings.server.network_id,
+          blockTime: typeof workspaceSettings.server.blockTime == "undefined" ? 'automine' : workspaceSettings.server.blockTime,
+          defaultBalance: workspaceSettings.server.default_balance_ether,
+          totalAccounts: workspaceSettings.server.total_accounts,
+          autoMnemonic: workspaceSettings.randomizeMnemonicOnStart,
+          locked: workspaceSettings.server.locked,
+          gasLimit: workspaceSettings.server.gasLimit,
+          gasPrice: workspaceSettings.server.gasPrice
         }
 
         this.user.set('cd1', config.hostname)
