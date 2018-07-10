@@ -20,6 +20,7 @@ import LogsReducer from './Logs'
 import RequestCacheReducer from './RequestCache'
 import UpdateReducer from './AutoUpdate'
 import NetworkReducer from './Network'
+import WorkspacesReducer from './Workspaces'
 
 const appReducer = combineReducers({
   "appshell": AppShellReducer,
@@ -32,7 +33,8 @@ const appReducer = combineReducers({
   "logs": LogsReducer,
   "requestCache": RequestCacheReducer,
   "autoUpdate": UpdateReducer,
-  "network": NetworkReducer
+  "network": NetworkReducer,
+  "workspaces": WorkspacesReducer
 })
 
 // This reducer is used to wipe all state on restart

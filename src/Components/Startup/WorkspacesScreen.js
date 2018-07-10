@@ -1,14 +1,6 @@
 import React, { Component } from 'react'
-const { app } = require('electron').remote
-
-import { hashHistory } from 'react-router'
-import * as pkg from '../../../package.json'
 
 import connect from '../Helpers/connect'
-import * as Core from '../../Actions/Core'
-
-import OnlyIf from '../../Elements/OnlyIf'
-import BugModal from '../AppShell/BugModal'
 
 class WorkspacesScreen extends Component {
   constructor (props) {
@@ -22,10 +14,16 @@ class WorkspacesScreen extends Component {
           <button>
             Instachain
           </button>
+          <ul>
+            {this.props.workspaces.names.map((workspaceName) => {
+                return <li key={workspaceName}>{workspaceName}</li>
+              })
+            }
+          </ul>
         </div>
       </div>
     )
   }
 }
 
-export default connect(WorkspacesScreen, "core")
+export default connect(WorkspacesScreen, "workspaces")

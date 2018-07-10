@@ -115,7 +115,7 @@ app.on('ready', () => {
     });
 
     await global.bootstrap()
-    workspaceManager.enumerateWorkspaces()
+    await workspaceManager.bootstrap()
 
     mainWindow = new BrowserWindow({
       show: false,
@@ -150,63 +150,65 @@ app.on('ready', () => {
       const globalSettings = await global.getAll()
       mainWindow.webContents.send(SET_SETTINGS, globalSettings, {})
 
-      mainWindow.webContents.send(SET_WORKSPACES, workspaceManager.workspaces)
+      mainWindow.webContents.send(SET_WORKSPACES, workspaceManager.getNames())
+
+      initAutoUpdates(globalSettings, mainWindow)
     })
 
     ipcMain.on(OPEN_WORKSPACE, async (name) => {
-      workspace = new Workspace(name)
+      workspace = workspaceManager.get(name)
 
-      await workspace.bootstrap()
-
-      const globalSettings = await global.getAll()
-      initAutoUpdates(globalSettings, mainWindow)
-
-      const workspaceSettings = await workspace.settings.getAll()
-      GoogleAnalytics.setup(await global.get("googleAnalyticsTracking") && inProduction, workspaceSettings.uuid)
-      GoogleAnalytics.reportWorkspaceSettings(workspaceSettings)
-
-      chain.on("start", async () => {
+      if (typeof workspace === "undefined") {
+        // couldn't find the workspace in the manager?
+      }
+      else {
         const workspaceSettings = await workspace.settings.getAll()
-        chain.startServer(workspaceSettings)
-      })
+        GoogleAnalytics.setup(await global.get("googleAnalyticsTracking") && inProduction, workspaceSettings.uuid)
+        GoogleAnalytics.reportWorkspaceSettings(workspaceSettings)
 
-      chain.on("server-started", async (data) => {
-        mainWindow.webContents.send(SET_KEY_DATA, { 
-          privateKeys: data.privateKeys,
-          mnemonic: data.mnemonic,
-          hdPath: data.hdPath
+        chain.on("start", async () => {
+          const workspaceSettings = await workspace.settings.getAll()
+          chain.startServer(workspaceSettings)
         })
 
-        await workspace.settings.handleNewMnemonic(data.mnemonic)
+        chain.on("server-started", async (data) => {
+          mainWindow.webContents.send(SET_KEY_DATA, { 
+            privateKeys: data.privateKeys,
+            mnemonic: data.mnemonic,
+            hdPath: data.hdPath
+          })
 
-        const globalSettings = await global.getAll()
-        const workspaceSettings = await workspace.settings.getAll()
-        mainWindow.webContents.send(SET_SERVER_STARTED, globalSettings, workspaceSettings)
-      })
+          await workspace.settings.handleNewMnemonic(data.mnemonic)
 
-      chain.on("stdout", (data) => {
-        mainWindow.webContents.send(ADD_LOG_LINES, data.split(/\n/g))
-      })
+          const globalSettings = await global.getAll()
+          const workspaceSettings = await workspace.settings.getAll()
+          mainWindow.webContents.send(SET_SERVER_STARTED, globalSettings, workspaceSettings)
+        })
 
-      chain.on("stderr", (data) => {
-        const lines = data.split(/\n/g)
-        mainWindow.webContents.send(ADD_LOG_LINES, lines)
-      })
+        chain.on("stdout", (data) => {
+          mainWindow.webContents.send(ADD_LOG_LINES, data.split(/\n/g))
+        })
 
-      chain.on("error", (error) => {
-        mainWindow.webContents.send(SET_SYSTEM_ERROR, error)
+        chain.on("stderr", (data) => {
+          const lines = data.split(/\n/g)
+          mainWindow.webContents.send(ADD_LOG_LINES, lines)
+        })
 
-        if (chain.isServerStarted()) {
-          // Something wrong happened in the chain, let's try to stop it
-          chain.stopServer()
-        }
-      })
+        chain.on("error", (error) => {
+          mainWindow.webContents.send(SET_SYSTEM_ERROR, error)
 
-      chain.start()
+          if (chain.isServerStarted()) {
+            // Something wrong happened in the chain, let's try to stop it
+            chain.stopServer()
+          }
+        })
 
-      // this sends the network interfaces to the renderer process for
-      //  enumering in the config screen. it sends repeatedly
-      continuouslySendNetworkInterfaces()
+        chain.start()
+
+        // this sends the network interfaces to the renderer process for
+        //  enumering in the config screen. it sends repeatedly
+        continuouslySendNetworkInterfaces()
+      }
     })
 
     // If the frontend asks to start the server, start the server.
