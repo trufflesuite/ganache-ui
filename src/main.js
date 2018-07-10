@@ -2,6 +2,7 @@ import { app, BrowserWindow, Menu, shell, ipcMain } from 'electron'
 import { enableLiveReload } from 'electron-compile';
 import { initAutoUpdates, getAutoUpdateService } from './Init/Main/AutoUpdate.js'
 import path from 'path'
+import * as os from 'os'
 
 const isDevMode = process.execPath.match(/[\\/]electron/);
 
@@ -15,23 +16,29 @@ if (isDevMode) {
 
 import { 
   REQUEST_SERVER_RESTART,
-  SET_SERVER_STARTED, 
+  SET_SERVER_STARTED,
   SET_SERVER_STOPPED,
-  SET_KEY_DATA, 
+  SET_KEY_DATA,
   SET_SYSTEM_ERROR,
   OPEN_WORKSPACE
 } from './Actions/Core'
 
 import {
   SET_SETTINGS,
-  REQUEST_SAVE_SETTINGS,
-} from './Actions/Settings'
+  REQUEST_SAVE_SETTINGS
+} from './Actions/Config'
+
+import {
+  SET_INTERFACES
+} from './Actions/Network'
+
 import { ADD_LOG_LINES } from './Actions/Logs'
 
 import ChainService from './Services/Chain'
 import GlobalSettings from './Services/Settings/GlobalSettings'
-import Workspace from './Services/Workspace.js';
-import WorkspaceManager from './Services/WorkspaceManager.js';
+import Workspace from './Services/Workspace.js'
+import WorkspaceManager from './Services/WorkspaceManager.js'
+import GoogleAnalyticsService from './Services/GoogleAnalytics'
 
 let menu
 let template
@@ -55,6 +62,18 @@ process.on('unhandledRejection', err => {
     mainWindow.webContents.send(SET_SYSTEM_ERROR, err.stack || err)
   }
 })
+
+var shouldQuit = app.makeSingleInstance(function(commandLine, workingDirectory) {
+  // Someone tried to run a second instance, we should focus our window.
+  if (mainWindow) {
+    if (mainWindow.isMinimized()) mainWindow.restore();
+    mainWindow.focus();
+  }
+});
+
+if (shouldQuit) {
+  app.quit();
+}
 
 app.on('window-all-closed', () => {
   // don't quit the app before the updater can do its thing
@@ -80,8 +99,10 @@ app.on('ready', () => {
   // workaround for electron race condition, causing hang on startup.
   // see https://github.com/electron/electron/issues/9179 for more info
   setTimeout(async () => {
-    const chain = new ChainService()
+    const inProduction = process.env.NODE_ENV === 'production'
+    const chain = new ChainService(app)
     const global = new GlobalSettings(path.join(app.getPath('userData'), 'global'))
+    const GoogleAnalytics = new GoogleAnalyticsService()
     const workspaceManager = new WorkspaceManager()
     let workspace
 
@@ -91,6 +112,10 @@ app.on('ready', () => {
 
     await global.bootstrap()
     workspaceManager.enumerateWorkspaces()
+
+    var settings = Settings.getAll()
+    GoogleAnalytics.setup(settings.googleAnalyticsTracking && inProduction, settings.uuid)
+    GoogleAnalytics.reportSettings(settings)
 
     mainWindow = new BrowserWindow({
       show: false,
@@ -107,6 +132,7 @@ app.on('ready', () => {
       //installExtension(REACT_DEVELOPER_TOOLS);
       mainWindow.webContents.openDevTools();
     }
+
     // if a user clicks a link to an external webpage, open it in the user's browser, not our app
     mainWindow.webContents.on('new-window', ensureExternalLinksAreOpenedInBrowser);
     mainWindow.webContents.on('will-navigate', ensureExternalLinksAreOpenedInBrowser);
@@ -159,15 +185,24 @@ app.on('ready', () => {
       })
 
       chain.on("stderr", (data) => {
-        mainWindow.webContents.send(ADD_LOG_LINES, data.split(/\n/g))
+        const lines = data.split(/\n/g)
+        mainWindow.webContents.send(ADD_LOG_LINES, lines)
       })
 
       chain.on("error", (error) => {
-        console.log(error)
         mainWindow.webContents.send(SET_SYSTEM_ERROR, error)
+
+        if (chain.isServerStarted()) {
+          // Something wrong happened in the chain, let's try to stop it
+          chain.stopServer()
+        }
       })
 
       chain.start()
+
+      // this sends the network interfaces to the renderer process for
+      //  enumering in the config screen. it sends repeatedly
+      continuouslySendNetworkInterfaces()
     })
 
     // If the frontend asks to start the server, start the server.
@@ -182,6 +217,9 @@ app.on('ready', () => {
           chain.once("server-stopped", async () => {
             const workspaceSettings = await workspace.settings.getAll()
             chain.startServer(workspaceSettings)
+
+            // send the interfaces again once on restart
+            sendNetworkInterfaces()
           })
           chain.stopServer()
         } else {
@@ -197,6 +235,8 @@ app.on('ready', () => {
       if (workspace) {
         await workspace.settings.setAll(workspaceSettings)
       }
+
+      GoogleAnalytics.reportSettings(settings)
     })
 
     mainWindow.on('closed', () => {
@@ -530,6 +570,25 @@ app.on('ready', () => {
     }
   }, 0)
 })
+
+  // Do this every 2 minutes to keep it up to date without
+  //   being unreasonable since it shouldn't change frequently
+function continuouslySendNetworkInterfaces() {
+  sendNetworkInterfaces()
+
+  setInterval(() => {
+    sendNetworkInterfaces()
+  }, 2 * 60 * 1000)
+}
+
+function sendNetworkInterfaces() {
+  // Send the network interfaces to the renderer process
+  const interfaces = os.networkInterfaces()
+
+  if (mainWindow) {
+    mainWindow.webContents.send(SET_INTERFACES, interfaces)
+  }
+}
 
 function ensureExternalLinksAreOpenedInBrowser(event, url) {
   // we're a one-window application, and we only ever want to load external

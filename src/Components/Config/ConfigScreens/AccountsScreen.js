@@ -19,8 +19,8 @@ class AccountsScreen extends Component {
     super(props)
 
     this.state = {
-      accountsLocked: !!props.settings.workspace.server.unlocked_accounts,
-      automnemonic: props.settings.workspace.randomizeMnemonicOnStart
+      accountsLocked: !!props.config.settings.workspace.server.unlocked_accounts,
+      automnemonic: props.config.settings.workspace.randomizeMnemonicOnStart
     }
   }
 
@@ -30,17 +30,17 @@ class AccountsScreen extends Component {
 
   toggleAccountsLocked = () => {
     var toggleState = !this.state.accountsLocked
-    var unlocked_accounts = this.props.settings.workspace.server.unlocked_accounts
-    var total_accounts = this.props.settings.workspace.server.total_accounts
+    var unlocked_accounts = this.props.config.settings.workspace.server.unlocked_accounts
+    var total_accounts = this.props.config.settings.workspace.server.total_accounts
 
     if (toggleState == true) {
-      this.props.settings.workspace.server.unlocked_accounts = new Array(total_accounts)
+      this.props.config.settings.workspace.server.unlocked_accounts = new Array(total_accounts)
 
       for (var i = 0; i < total_accounts; i++) {
-        this.props.settings.workspace.server.unlocked_accounts[i] = i
+        this.props.config.settings.workspace.server.unlocked_accounts[i] = i
       }
     } else {
-      this.props.settings.workspace.server.unlocked_accounts = []
+      this.props.config.settings.workspace.server.unlocked_accounts = []
     }
 
     this.setState({
@@ -52,7 +52,7 @@ class AccountsScreen extends Component {
     var toggleValue = !this.state.automnemonic
 
     // Remove mnemonic if we turn automnemonic on
-    this.props.settings.workspace.randomizeMnemonicOnStart = toggleValue
+    this.props.config.settings.workspace.randomizeMnemonicOnStart = toggleValue
 
     this.validateChange({
       target: {
@@ -77,7 +77,7 @@ class AccountsScreen extends Component {
               <input
                 name="server.default_balance_ether"
                 type="text"
-                value={this.props.settings.workspace.server.default_balance_ether}
+                value={this.props.config.settings.workspace.server.default_balance_ether}
                 onChange={this.validateChange}
               />
               {this.props.validationErrors["server.default_balance_ether"] &&
@@ -95,7 +95,7 @@ class AccountsScreen extends Component {
               <input
                 name="server.total_accounts"
                 type="number"
-                value={this.props.settings.workspace.server.total_accounts}
+                value={this.props.config.settings.workspace.server.total_accounts}
                 onChange={this.validateChange}
               />
               {this.props.validationErrors["server.total_accounts"] &&
@@ -135,7 +135,7 @@ class AccountsScreen extends Component {
                   type="text"
                   placeholder="Enter Mnemonic to use"
                   name="server.mnemonic"
-                  value={this.props.settings.workspace.server.mnemonic || ""}
+                  value={this.props.config.settings.workspace.server.mnemonic || ""}
                   onChange={this.validateChange}
                 />
                 {this.props.validationErrors["server.mnemonic"] &&
@@ -157,7 +157,7 @@ class AccountsScreen extends Component {
                   type="checkbox"
                   name="server.locked"
                   id="LockAccounts"
-                  checked={this.props.settings.workspace.server.locked}
+                  checked={this.props.config.settings.workspace.server.locked}
                   onChange={this.props.handleInputChange}
                 />
                 <label htmlFor="LockAccounts">LOCK ACCOUNTS</label>

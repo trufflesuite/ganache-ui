@@ -31,7 +31,7 @@ class TitleScreen extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if ("global" in nextProps.settings && "firstRun" in nextProps.settings.global) {
+    if ("global" in nextProps.config.settings && "firstRun" in nextProps.config.settings.global) {
       this.state.firstRun = nextProps.settings.global.firstRun
     }
   }
@@ -60,4 +60,4 @@ class TitleScreen extends Component {
   }
 }
 
-export default connect(TitleScreen, "settings", "core", "logs")
+export default connect(TitleScreen, "config", "core", "logs")

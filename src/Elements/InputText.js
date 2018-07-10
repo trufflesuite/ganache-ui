@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import omit from 'lodash/object/omit.js'
+import omit from 'lodash.omit'
 
 class InputSelect extends React.Component {
   constructor (props) {

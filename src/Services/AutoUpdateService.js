@@ -3,7 +3,7 @@ import { app, protocol, ipcMain } from 'electron'
 import { autoUpdater } from 'benjamincburns-forked-electron-updater'
 import { CancellationToken } from 'builder-util-runtime'
 import path from 'path'
-import _ from 'lodash'
+import merge from 'lodash.merge'
 
 const isDevMode = process.execPath.match(/[\\/]electron/);
 
@@ -18,7 +18,7 @@ export default class AutoUpdateService extends EventEmitter {
     super()
     const self = this
 
-    options = _.merge({}, defaultOptions, options || {})
+    options = merge({}, defaultOptions, options || {})
 
     autoUpdater.allowPrerelease = options.allowPrerelease
     autoUpdater.fullChangelog = options.fullChangelog

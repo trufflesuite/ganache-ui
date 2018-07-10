@@ -4,7 +4,7 @@ import _ from 'lodash'
 
 import connect from '../Helpers/connect'
 
-import * as Settings from '../../Actions/Settings'
+import * as Config from '../../Actions/Config'
 
 class FirstRunScreen extends Component {
   constructor (props) {
@@ -26,12 +26,12 @@ class FirstRunScreen extends Component {
   }
 
   _recordChoice = () => {
-    var newGlobalSettings = _.merge({}, this.props.settings.global, {
+    var newGlobalSettings = Object.assign({}, this.props.config.settings.global, {
       firstRun: false,
       googleAnalyticsTracking: this.state.enableAnalytics
     })
 
-    this.props.dispatch(Settings.setSettings(newGlobalSettings, this.props.settings.workspace))
+    this.props.dispatch(Config.setSettings(newGlobalSettings, this.props.settings.workspace))
     this.props.dispatch(push('/workspaces'))
   }
 
@@ -109,4 +109,4 @@ class FirstRunScreen extends Component {
   }
 }
 
-export default connect(FirstRunScreen, "settings")
+export default connect(FirstRunScreen, "config")

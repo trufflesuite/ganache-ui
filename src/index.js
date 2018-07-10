@@ -9,9 +9,9 @@ import { Router, Route, IndexRoute, hashHistory } from 'react-router'
 
 import RootReducer from './Reducers/Root'
 
-import createStore from './Kernel/createStore'
-import syncStore from './Kernel/syncStore'
-import ready from './Kernel/ready'
+import createStore from './Init/Renderer/Store/createStore'
+import syncStore from './Init/Renderer/Store/syncStore'
+import { initRenderer } from './Init/Renderer/index'
 
 import AppShell from './Components/AppShell/AppShell'
 import ConfigScreen from './Components/Config/ConfigScreen'
@@ -28,7 +28,7 @@ import {ipcRenderer} from 'electron'
 
 const store = createStore(RootReducer)
 
-ready(store)
+initRenderer(store)
 
 // Routes and stylesheets are declared here, rather than in the render
 // function, so that hot module reloading doesn't cause issues with react-router.
@@ -42,7 +42,7 @@ const routes = <Route>
     <Route path="/transactions(/:transactionHash)" component={TransactionsScreen} />
     <Route path="/logs" component={LogsScreen} />
     <Route path="/notfound" component={NotFoundScreen} />
-    <Route path='/config' component={ConfigScreen} /> 
+    <Route path='/config(/:activeTab)' component={ConfigScreen} /> 
   </Route>
 </Route>
 
@@ -62,6 +62,7 @@ const stylesheets = [
   "./Elements/ProgressBar.scss",
   "./Elements/Spinner.css",
   "./Elements/FilePicker.scss",
+  "./Elements/StyledSelect.scss",
   "./Components/FirstRun/FirstRunScreen.scss",
   "./Components/AppShell/AppShell.scss",
   "./Components/AppShell/TopNavbar.scss",

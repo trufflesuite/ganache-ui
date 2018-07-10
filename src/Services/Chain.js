@@ -1,7 +1,7 @@
 import EventEmitter from 'events'
 import { fork } from 'child_process'
 import path from 'path'
-import _ from 'lodash'
+import cloneDeep from 'lodash.clonedeep'
 
 // https://github.com/electron/electron/blob/cd0aa4a956cb7a13cbe0e12029e6156c3e892924/docs/api/process.md#process-object
 
@@ -89,7 +89,7 @@ class ChainService extends EventEmitter {
    */
   _ganacheCoreOptionsFromGanacheSettingsObject(settings) {
     // clone to avoid mutating the settings object in case it's sent elsewhere
-    let options = _.cloneDeep(settings.server)
+    let options = cloneDeep(settings.server)
 
     if (settings.randomizeMnemonicOnStart) {
       delete options.mnemonic
@@ -101,11 +101,11 @@ class ChainService extends EventEmitter {
   }
 
   _exitHandler(code, signal) {
-      if (code != null) {
-        this.emit("error", `Blockchain process exited prematurely with code '${code}', due to signal '${signal}'.`)
-      } else {
-        this.emit("error", `Blockchain process exited prematurely due to signal '${signal}'.`)
-      }
+    if (code != null) {
+      this.emit("error", `Blockchain process exited prematurely with code '${code}', due to signal '${signal}'.`)
+    } else {
+      this.emit("error", `Blockchain process exited prematurely due to signal '${signal}'.`)
+    }
   }
 }
 

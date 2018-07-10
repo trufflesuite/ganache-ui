@@ -185,7 +185,7 @@
       margin-left: 1rem;
     }
 
-    input[type='text'], input[type='number'], input[type='file'] {
+    input[type='text'], input[type='number'], input[type='file'], select {
       border-color: var(--app-navbar-text);
       width: 100%;
     }
@@ -196,8 +196,14 @@
       display: block;
       padding: .5rem;
       font-size: 14px;
-      border-bottom-left-radius: 5px;
-      border-bottom-right-radius: 5px;
+      border-bottom: 1px solid;
+      border-bottom-color: rgba(0, 0, 0, 0.2);
+
+      &:last-child {
+        border-bottom: 0;
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+      }
     }
   }
 
