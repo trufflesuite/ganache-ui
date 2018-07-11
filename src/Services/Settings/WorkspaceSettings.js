@@ -50,7 +50,11 @@ class WorkspaceSettings extends Settings {
   }
 
   insertDbPath(currentSettings) {
-    return merge({}, currentSettings, {'db_path': this.chaindataDirectory})
+    return merge({}, currentSettings, {
+      server: {
+        db_path: this.chaindataDirectory
+      }
+    })
   }
 }
 
