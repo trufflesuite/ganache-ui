@@ -55,7 +55,7 @@ class JsonStorage {
 
   setToStorage() {
     return new Promise((resolve, reject) => {
-      storage.set(this.name, {dataPath: this.directory}, this.obj.obj, (error) => {
+      storage.set(this.name, this.obj.obj, {dataPath: this.directory}, (error) => {
         if (error) {
           reject(error)
         }
