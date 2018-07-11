@@ -62,11 +62,16 @@ class ChainService extends EventEmitter {
   }
 
   stopServer(options) {
-    if (this.child !== null) {
-      this.child.send({
-        type: 'stop-server',
+    return new Promise((resolve, reject) => {
+      this.once("server-stopped",  () => {
+        resolve()
       })
-    }
+      if (this.child !== null) {
+        this.child.send({
+          type: 'stop-server',
+        })
+      }
+    })
   }
 
   stopProcess() {
@@ -79,7 +84,7 @@ class ChainService extends EventEmitter {
   }
 
   isServerStarted() {
-    return this.isServerStarted
+    return this.serverStarted
   }
 
   /**

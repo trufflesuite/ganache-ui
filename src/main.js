@@ -156,6 +156,12 @@ app.on('ready', () => {
     })
 
     ipcMain.on(OPEN_WORKSPACE, async (event, name) => {
+      if (workspace) {
+        if (chain.isServerStarted()) {
+          await chain.stopServer()
+        }
+      }
+
       workspace = workspaceManager.get(name)
 
       if (typeof workspace === "undefined") {
@@ -577,14 +583,17 @@ app.on('ready', () => {
   }, 0)
 })
 
-  // Do this every 2 minutes to keep it up to date without
-  //   being unreasonable since it shouldn't change frequently
+// Do this every 2 minutes to keep it up to date without
+//   being unreasonable since it shouldn't change frequently
+let networkInterfacesIntervalId = null
 function continuouslySendNetworkInterfaces() {
   sendNetworkInterfaces()
 
-  setInterval(() => {
-    sendNetworkInterfaces()
-  }, 2 * 60 * 1000)
+  if (networkInterfacesIntervalId === null) {
+    networkInterfacesIntervalId = setInterval(() => {
+      sendNetworkInterfaces()
+    }, 2 * 60 * 1000)
+  }
 }
 
 function sendNetworkInterfaces() {
