@@ -137,6 +137,10 @@ class TopNavbar extends Component {
               <LogsIcon />
               Logs
             </Link>
+            <Link to="workspaces" activeClassName="Active">
+              <BlockIcon />
+              Workspaces
+            </Link>
           </div>
           <div className="NotificationAndSearchBar">
             <OnlyIf test={isNewVersionAvailable}>
