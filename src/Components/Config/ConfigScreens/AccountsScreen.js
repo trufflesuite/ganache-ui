@@ -75,7 +75,7 @@ class AccountsScreen extends Component {
           <div className="Row">
             <div className="RowItem">
               <input
-                name="server.default_balance_ether"
+                name="workspace.server.default_balance_ether"
                 type="text"
                 value={this.props.config.settings.workspace.server.default_balance_ether}
                 onChange={this.validateChange}
@@ -93,7 +93,7 @@ class AccountsScreen extends Component {
           <div className="Row">
             <div className="RowItem">
               <input
-                name="server.total_accounts"
+                name="workspace.server.total_accounts"
                 type="number"
                 value={this.props.config.settings.workspace.server.total_accounts}
                 onChange={this.validateChange}
@@ -134,7 +134,7 @@ class AccountsScreen extends Component {
                 <input
                   type="text"
                   placeholder="Enter Mnemonic to use"
-                  name="server.mnemonic"
+                  name="workspace.server.mnemonic"
                   value={this.props.config.settings.workspace.server.mnemonic || ""}
                   onChange={this.validateChange}
                 />
@@ -155,7 +155,7 @@ class AccountsScreen extends Component {
               <div className="Switch">
                 <input
                   type="checkbox"
-                  name="server.locked"
+                  name="workspace.server.locked"
                   id="LockAccounts"
                   checked={this.props.config.settings.workspace.server.locked}
                   onChange={this.props.handleInputChange}

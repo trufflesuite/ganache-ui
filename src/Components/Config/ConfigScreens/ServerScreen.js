@@ -80,7 +80,7 @@ class ServerScreen extends Component {
           <div className="Row">
             <div className="RowItem">
               <StyledSelect
-                name="server.hostname"
+                name="workspace.server.hostname"
                 defaultValue={this.props.config.settings.workspace.server.hostname}
                 changeFunction={this.validateChange}
               >
@@ -112,7 +112,7 @@ class ServerScreen extends Component {
             <div className="RowItem">
               <input
                 type="number"
-                name="server.port"
+                name="workspace.server.port"
                 value={this.props.config.settings.workspace.server.port}
                 onChange={e => {
                  // this.props.appCheckPort(e.target.value)
@@ -139,7 +139,7 @@ class ServerScreen extends Component {
             <div className="RowItem">
               <input
                 type="number"
-                name="server.network_id"
+                name="workspace.server.network_id"
                 value={this.props.config.settings.workspace.server.network_id}
                 onChange={this.validateChange}
               />
@@ -185,7 +185,7 @@ class ServerScreen extends Component {
             <div className="Row">
               <div className="RowItem">
                 <input
-                  name="server.blockTime"
+                  name="workspace.server.blockTime"
                   type="number"
                   value={this.props.config.settings.workspace.server.blockTime || 0}
                   onChange={this.validateChange}
@@ -211,7 +211,7 @@ class ServerScreen extends Component {
                 <div className="Switch">
                   <input
                     type="checkbox"
-                    name="server.vmErrorsOnRPCResponse"
+                    name="workspace.server.vmErrorsOnRPCResponse"
                     id="server.vmErrorsOnRPCResponse"
                     defaultChecked={this.props.config.settings.workspace.server.vmErrorsOnRPCResponse}
                     onChange={this.props.handleInputChange}

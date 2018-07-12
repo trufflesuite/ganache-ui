@@ -67,7 +67,7 @@ class ChainScreen extends Component {
           <div className="Row">
             <div className="RowItem">
               <input
-                name="server.gasLimit"
+                name="workspace.server.gasLimit"
                 type="number"
                 value={this.props.config.settings.workspace.server.gasLimit}
                 onChange={this.validateChange}
@@ -87,7 +87,7 @@ class ChainScreen extends Component {
           <div className="Row">
             <div className="RowItem">
               <input
-                name="server.gasPrice"
+                name="workspace.server.gasPrice"
                 type="number"
                 value={this.props.config.settings.workspace.server.gasPrice}
                 onChange={this.validateChange}
@@ -131,7 +131,7 @@ class ChainScreen extends Component {
                   <label>
                     <input type="radio" 
                       value={FORK_URLS.mainnet} 
-                      name="server.fork"
+                      name="workspace.server.fork"
                       checked={this.props.config.settings.workspace.server.fork == FORK_URLS.mainnet} 
                       onChange={this.validateChange} 
                     />
@@ -142,7 +142,7 @@ class ChainScreen extends Component {
                   <label>
                     <input type="radio" 
                       value={FORK_URLS.ropsten}
-                      name="server.fork"
+                      name="workspace.server.fork"
                       checked={this.props.config.settings.workspace.server.fork == FORK_URLS.ropsten} 
                       onChange={this.validateChange} 
                     />
@@ -153,7 +153,7 @@ class ChainScreen extends Component {
                   <label>
                     <input type="radio" 
                       value={FORK_URLS.kovan} 
-                      name="server.fork"
+                      name="workspace.server.fork"
                       checked={this.props.config.settings.workspace.server.fork == FORK_URLS.kovan} 
                       onChange={this.validateChange} 
                     />
@@ -164,7 +164,7 @@ class ChainScreen extends Component {
                   <label>
                     <input type="radio" 
                       value={FORK_URLS.rinkeby} 
-                      name="server.fork"
+                      name="workspace.server.fork"
                       checked={this.props.config.settings.workspace.server.fork == FORK_URLS.rinkeby} 
                       onChange={this.validateChange} 
                     />
@@ -180,7 +180,7 @@ class ChainScreen extends Component {
             <div className="Row">
               <div className="RowItem">
                 <input
-                  name="server.fork"
+                  name="workspace.server.fork"
                   type="text"
                   value={hasCustomURL == true ? this.props.config.settings.workspace.server.fork : ""}
                   onChange={this.validateChange}

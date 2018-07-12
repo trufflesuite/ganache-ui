@@ -115,7 +115,7 @@ class GanacheScreen extends Component {
               <div className="Switch">
                 <input
                   type="checkbox"
-                  name="server.verbose"
+                  name="workspace.server.verbose"
                   id="Verbose"
                   onChange={this.props.handleInputChange}
                   checked={this.props.config.settings.workspace.server.verbose}
@@ -138,7 +138,7 @@ class GanacheScreen extends Component {
               <div className="Switch">
                 <input
                   type="checkbox"
-                  name="googleAnalyticsTracking"
+                  name="global.googleAnalyticsTracking"
                   id="GoogleAnalyticsTracking"
                   onChange={this.props.handleInputChange}
                   checked={this.props.config.settings.global.googleAnalyticsTracking == true}
@@ -150,7 +150,8 @@ class GanacheScreen extends Component {
             </div>
             <div className="RowItem">
               <p>
-                We use Google Analytics to track Ganache usage. This information helps us gain more insight into how Ganache is used. This tracking is anonymous. We do not track personally identifiable information, account data or private keys.{' '}
+                We use Google Analytics to track Ganache usage. This information helps us gain more insight into how Ganache is used. This tracking is anonymous. We do not track personally identifiable information, account data or private keys.<br/>
+                Note: This setting is global and will persist between workspaces.
               </p>
             </div>
           </div>
