@@ -3,7 +3,10 @@ import merge from 'lodash.merge'
 
 const oldDefaultMnemonic = "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat";
 
+export const DEFAULT_WORKSPACE_NAME = "Default"
+
 const initialSettings = {
+  name: DEFAULT_WORKSPACE_NAME,
   verboseLogging: false,
   randomizeMnemonicOnStart: false,
   logsDirectory: null,
@@ -50,11 +53,16 @@ class WorkspaceSettings extends Settings {
   }
 
   insertDbPath(currentSettings) {
-    return merge({}, currentSettings, {
-      server: {
-        db_path: this.chaindataDirectory
-      }
-    })
+    if (this.chaindataDirectory) {
+      return merge({}, currentSettings, {
+        server: {
+          db_path: this.chaindataDirectory
+        }
+      })
+    }
+    else {
+      return currentSettings
+    }
   }
 }
 

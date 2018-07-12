@@ -1,11 +1,15 @@
 import React, { Component } from 'react'
 
-import { openWorkspace } from '../../Actions/Workspaces'
+import { openWorkspace, openDefaultWorkspace } from '../../Actions/Workspaces'
 import connect from '../Helpers/connect'
 
 class WorkspacesScreen extends Component {
   constructor (props) {
     super(props)
+  }
+
+  openDefaultWorkspace() {
+    this.props.dispatch(openDefaultWorkspace())
   }
 
   selectWorkspace(e) {
@@ -16,7 +20,9 @@ class WorkspacesScreen extends Component {
     return (
       <div className="WorkspacesScreenContainer">
         <div className="WorkspacesScreen">
-          <button>
+          <button
+            onClick={this.openDefaultWorkspace.bind(this)}
+          >
             Instachain
           </button>
           <ul>

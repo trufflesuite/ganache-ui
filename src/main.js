@@ -151,7 +151,7 @@ app.on('ready', () => {
       const globalSettings = await global.getAll()
       mainWindow.webContents.send(SET_SETTINGS, globalSettings, {})
 
-      mainWindow.webContents.send(SET_WORKSPACES, workspaceManager.getNames())
+      mainWindow.webContents.send(SET_WORKSPACES, workspaceManager.getNonDefaultNames())
 
       chain.on("start", async () => {
         if (workspace) {
@@ -207,7 +207,7 @@ app.on('ready', () => {
       const globalSettings = await global.getAll()
       mainWindow.webContents.send(SET_SETTINGS, globalSettings, {})
 
-      mainWindow.webContents.send(SET_WORKSPACES, workspaceManager.getNames())
+      mainWindow.webContents.send(SET_WORKSPACES, workspaceManager.getNonDefaultNames())
     })
 
     ipcMain.on(OPEN_WORKSPACE, async (event, name) => {

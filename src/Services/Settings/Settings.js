@@ -8,6 +8,10 @@ class Settings {
     this.settings = new JsonStorage(directory, 'Settings')
   }
 
+  setDirectory(directory) {
+    this.settings.directory = directory
+  }
+
   async get (key, defaultValue = null) {
     const obj = await this._getRaw(key, defaultValue)
     return removeNullSettings(obj)
@@ -68,6 +72,8 @@ class Settings {
     // where the current values take precedence. 
     let currentSettings = await this._getAllRaw()
 
+    currentSettings = _.merge({}, this.initialSettings, currentSettings)
+
     // Add any non-additive settings changes here by creating a function which
     // handles the settings change in question.
     currentSettings = this.bootstrapModification(currentSettings)
@@ -76,8 +82,6 @@ class Settings {
       currentSettings.uuid = UUID.v4()
     }
 
-    currentSettings = _.merge({}, this.initialSettings, currentSettings)
-
     // Apply the merged settings
     await this.setAll(currentSettings)
   }
@@ -85,7 +89,7 @@ class Settings {
 
 const removeNullSettings = function(options) {
   // get rid of nulls first, because apparently typeof null === object :-(
-  if (options === null) {
+  if (typeof options === "undefined" || options === null) {
     return undefined
   }
 

@@ -2,19 +2,27 @@ import path from 'path'
 import fs from 'fs'
 import { app } from 'electron'
 
-import WorkspaceSettings from './Settings/WorkspaceSettings'
+import WorkspaceSettings, { DEFAULT_WORKSPACE_NAME } from './Settings/WorkspaceSettings'
 
 class Workspace {
-  constructor(basename, projects) {
-    this.basename = basename
+  constructor(name, projects) {
+    this.name = name
     this.projects = projects || []
-    this.workspaceDirectory = Workspace.generateDirectoryPath(this.basename)
-    this.chaindataDirectory = path.join(this.workspaceDirectory, "chaindata")
+    this.init()
+
+    // This doesn't go in the init() function because the init is used for initializing
+    //   the other parameters (and when the workspaced is "Saved As" something else)
     this.settings = new WorkspaceSettings(this.workspaceDirectory, this.chaindataDirectory)
   }
 
+  init() {
+    this.workspaceDirectory = Workspace.generateDirectoryPath(this.name)
+    this.basename = path.basename(this.workspaceDirectory)
+    this.chaindataDirectory = this.generateChaindataDirectory()
+  }
+
   static generateDirectoryPath(name) {
-    if (name === "") {
+    if (name === DEFAULT_WORKSPACE_NAME) {
       return path.join(app.getPath('userData'), 'default')
     }
     else {
@@ -23,8 +31,13 @@ class Workspace {
     }
   }
 
-  async getName() {
-    return await this.settings.get("name") || this.basename
+  generateChaindataDirectory() {
+    if (this.name === DEFAULT_WORKSPACE_NAME) {
+      return null
+    }
+    else {
+      return path.join(this.workspaceDirectory, "chaindata")
+    }
   }
 
   // creates the directory if needed (recursively)
@@ -41,22 +54,25 @@ class Workspace {
     }
 
     // make sure the chaindata folder exists
-    if (!fs.existsSync(this.chaindataDirectory)) {
-      fs.mkdirSync(this.chaindataDirectory)
+    if (this.chaindataDirectory) {
+      if (!fs.existsSync(this.chaindataDirectory)) {
+        fs.mkdirSync(this.chaindataDirectory)
+      }
     }
   }
 
   async bootstrap() {
     this.bootstrapDirectory()
     await this.settings.bootstrap()
-    this.name = await this.getName()
   }
 
-  saveAs(name) {
+  async saveAs(name) {
     this.name = name
-    this.workspaceDirectory = Workspace.generateDirectory(this.name)
-    this.basename = path.basename(this.workspaceDirectory)
+    this.init()
     this.bootstrapDirectory()
+
+    this.settings.setDirectory(this.workspaceDirectory)
+    await this.settings.set("name", name)
   }
 
   addProject(project) {
