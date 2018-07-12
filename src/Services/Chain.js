@@ -71,6 +71,9 @@ class ChainService extends EventEmitter {
           type: 'stop-server',
         })
       }
+      else {
+        resolve()
+      }
     })
   }
 

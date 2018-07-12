@@ -9,7 +9,6 @@ class WorkspacesScreen extends Component {
   }
 
   selectWorkspace(e) {
-    console.log(e)
     this.props.dispatch(openWorkspace(e.target.innerText))
   }
 

@@ -4,6 +4,7 @@ import connect from '../Helpers/connect'
 import * as Search from '../../Actions/Search'
 import { setSystemError } from '../../Actions/Core'
 import { setUpdateAvailable, showUpdateModal } from '../../Actions/AutoUpdate'
+import { closeWorkspace } from '../../Actions/Workspaces'
  
 import Spinner from '../../Elements/Spinner'
 import OnlyIf from '../../Elements/OnlyIf'
@@ -76,6 +77,9 @@ class TopNavbar extends Component {
     }
   }
 
+  handleWorkspacesPress(e) {
+    this.props.dispatch(closeWorkspace())
+  }
 
   _renderSnapshotControls() {
     const { snapshots } = this.props.core
@@ -137,7 +141,7 @@ class TopNavbar extends Component {
               <LogsIcon />
               Logs
             </Link>
-            <Link to="workspaces" activeClassName="Active">
+            <Link onClick={this.handleWorkspacesPress.bind(this)}>
               <BlockIcon />
               Workspaces
             </Link>

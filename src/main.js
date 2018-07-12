@@ -24,7 +24,8 @@ import {
 
 import { 
   SET_WORKSPACES,
-  OPEN_WORKSPACE
+  OPEN_WORKSPACE,
+  CLOSE_WORKSPACE
 } from './Actions/Workspaces'
 
 import {
@@ -152,7 +153,61 @@ app.on('ready', () => {
 
       mainWindow.webContents.send(SET_WORKSPACES, workspaceManager.getNames())
 
+      chain.on("start", async () => {
+        if (workspace) {
+          const workspaceSettings = await workspace.settings.getAll()
+          chain.startServer(workspaceSettings)
+        }
+      })
+
+      chain.on("server-started", async (data) => {
+        if (workspace) {
+          mainWindow.webContents.send(SET_KEY_DATA, { 
+            privateKeys: data.privateKeys,
+            mnemonic: data.mnemonic,
+            hdPath: data.hdPath
+          })
+
+          await workspace.settings.handleNewMnemonic(data.mnemonic)
+
+          const globalSettings = await global.getAll()
+          const workspaceSettings = await workspace.settings.getAll()
+          mainWindow.webContents.send(SET_SERVER_STARTED, globalSettings, workspaceSettings)
+        }
+      })
+
+      chain.on("stdout", (data) => {
+        mainWindow.webContents.send(ADD_LOG_LINES, data.split(/\n/g))
+      })
+
+      chain.on("stderr", (data) => {
+        const lines = data.split(/\n/g)
+        mainWindow.webContents.send(ADD_LOG_LINES, lines)
+      })
+
+      chain.on("error", (error) => {
+        mainWindow.webContents.send(SET_SYSTEM_ERROR, error)
+
+        if (chain.isServerStarted()) {
+          // Something wrong happened in the chain, let's try to stop it
+          chain.stopServer()
+        }
+      })
+
       initAutoUpdates(globalSettings, mainWindow)
+    })
+
+    ipcMain.on(CLOSE_WORKSPACE, async (event) => {
+      if (workspace) {
+        if (chain.isServerStarted()) {
+          await chain.stopServer()
+        }
+      }
+
+      const globalSettings = await global.getAll()
+      mainWindow.webContents.send(SET_SETTINGS, globalSettings, {})
+
+      mainWindow.webContents.send(SET_WORKSPACES, workspaceManager.getNames())
     })
 
     ipcMain.on(OPEN_WORKSPACE, async (event, name) => {
@@ -172,43 +227,6 @@ app.on('ready', () => {
         GoogleAnalytics.setup(await global.get("googleAnalyticsTracking") && inProduction, workspaceSettings.uuid)
         GoogleAnalytics.reportWorkspaceSettings(workspaceSettings)
 
-        chain.on("start", async () => {
-          const workspaceSettings = await workspace.settings.getAll()
-          chain.startServer(workspaceSettings)
-        })
-
-        chain.on("server-started", async (data) => {
-          mainWindow.webContents.send(SET_KEY_DATA, { 
-            privateKeys: data.privateKeys,
-            mnemonic: data.mnemonic,
-            hdPath: data.hdPath
-          })
-
-          await workspace.settings.handleNewMnemonic(data.mnemonic)
-
-          const globalSettings = await global.getAll()
-          const workspaceSettings = await workspace.settings.getAll()
-          mainWindow.webContents.send(SET_SERVER_STARTED, globalSettings, workspaceSettings)
-        })
-
-        chain.on("stdout", (data) => {
-          mainWindow.webContents.send(ADD_LOG_LINES, data.split(/\n/g))
-        })
-
-        chain.on("stderr", (data) => {
-          const lines = data.split(/\n/g)
-          mainWindow.webContents.send(ADD_LOG_LINES, lines)
-        })
-
-        chain.on("error", (error) => {
-          mainWindow.webContents.send(SET_SYSTEM_ERROR, error)
-
-          if (chain.isServerStarted()) {
-            // Something wrong happened in the chain, let's try to stop it
-            chain.stopServer()
-          }
-        })
-
         chain.start()
 
         // this sends the network interfaces to the renderer process for
@@ -226,18 +244,14 @@ app.on('ready', () => {
 
       if (workspace) {
         if (chain.isServerStarted()) {
-          chain.once("server-stopped", async () => {
-            const workspaceSettings = await workspace.settings.getAll()
-            chain.startServer(workspaceSettings)
-
-            // send the interfaces again once on restart
-            sendNetworkInterfaces()
-          })
-          chain.stopServer()
-        } else {
-          const workspaceSettings = await workspace.settings.getAll()
-          chain.startServer(workspaceSettings)
+          await chain.stopServer()
         }
+
+        const workspaceSettings = await workspace.settings.getAll()
+        chain.startServer(workspaceSettings)
+
+        // send the interfaces again once on restart
+        sendNetworkInterfaces()
       }
     })
 
