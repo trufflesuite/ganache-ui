@@ -77,6 +77,22 @@ class ChainService extends EventEmitter {
     })
   }
 
+  getDbLocation() {
+    return new Promise((resolve, reject) => {
+      this.once("db-location", (location) => {
+        resolve(location)
+      })
+      if (this.child !== null) {
+        this.child.send({
+          type: 'get-db-location',
+        })
+      }
+      else {
+        resolve(undefined)
+      }
+    })
+  }
+
   stopProcess() {
     if (this.child !== null) {
       this.child.removeListener('exit', this._exitHandler);

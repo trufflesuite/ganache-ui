@@ -25,7 +25,8 @@ import {
 import { 
   SET_WORKSPACES,
   OPEN_WORKSPACE,
-  CLOSE_WORKSPACE
+  CLOSE_WORKSPACE,
+  SAVE_WORKSPACE
 } from './Actions/Workspaces'
 
 import {
@@ -195,6 +196,23 @@ app.on('ready', () => {
       })
 
       initAutoUpdates(globalSettings, mainWindow)
+    })
+
+    ipcMain.on(SAVE_WORKSPACE, async (event, name) => {
+      if (workspace) {
+        if (chain.isServerStarted()) {
+          await chain.stopServer()
+        }
+
+        const chaindataLocation = workspace.chaindataDirectory || await chain.getDbLocation()
+
+        workspace.saveAs(name, chaindataLocation)
+      }
+
+      const globalSettings = await global.getAll()
+      mainWindow.webContents.send(SET_SETTINGS, globalSettings, {})
+
+      mainWindow.webContents.send(SET_WORKSPACES, workspaceManager.getNonDefaultNames())
     })
 
     ipcMain.on(CLOSE_WORKSPACE, async (event) => {

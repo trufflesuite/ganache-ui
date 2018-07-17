@@ -1,5 +1,5 @@
 import path from 'path'
-import fs from 'fs'
+import fse from 'fs-extra'
 import { app } from 'electron'
 
 import WorkspaceSettings, { DEFAULT_WORKSPACE_NAME } from './Settings/WorkspaceSettings'
@@ -42,23 +42,11 @@ class Workspace {
 
   // creates the directory if needed (recursively)
   bootstrapDirectory() {
-    const folders = this.workspaceDirectory.split(path.sep)
-
     // make sure the workspace directory exists
-    let curPath = ""
-    for (let i = 0; i < folders.length; i++) {
-      curPath += folders[i] + path.sep
-      if (!fs.existsSync(curPath)) {
-        fs.mkdirSync(curPath)
-      }
-    }
+    fse.mkdirpSync(this.workspaceDirectory)
 
     // make sure the chaindata folder exists
-    if (this.chaindataDirectory) {
-      if (!fs.existsSync(this.chaindataDirectory)) {
-        fs.mkdirSync(this.chaindataDirectory)
-      }
-    }
+    fse.mkdirpSync(this.chaindataDirectory)
   }
 
   async bootstrap() {
@@ -66,13 +54,17 @@ class Workspace {
     await this.settings.bootstrap()
   }
 
-  async saveAs(name) {
+  async saveAs(name, chaindataDirectory) {
     this.name = name
     this.init()
     this.bootstrapDirectory()
 
     this.settings.setDirectory(this.workspaceDirectory)
     await this.settings.set("name", name)
+
+    if (chaindataDirectory && chaindataDirectory !== this.chaindataDirectory) {
+      fse.copySync(chaindataDirectory, this.chaindataDirectory)
+    }
   }
 
   addProject(project) {

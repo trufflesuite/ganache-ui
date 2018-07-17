@@ -41,3 +41,11 @@ export const openDefaultWorkspace = function() {
     ipcRenderer.send(OPEN_WORKSPACE, DEFAULT_WORKSPACE_NAME)
   }
 }
+
+export const SAVE_WORKSPACE = `${prefix}/SAVE_WORKSPACE`
+export const saveWorkspace = function(name) {
+  return function(dispatch, getState) {
+    dispatch({type: SAVE_WORKSPACE, name})
+    ipcRenderer.send(SAVE_WORKSPACE, name)
+  }
+}
