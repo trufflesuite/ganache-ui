@@ -4,7 +4,7 @@ import connect from '../Helpers/connect'
 import * as Search from '../../Actions/Search'
 import { setSystemError } from '../../Actions/Core'
 import { setUpdateAvailable, showUpdateModal } from '../../Actions/AutoUpdate'
-import { closeWorkspace } from '../../Actions/Workspaces'
+import { closeWorkspace, saveWorkspace } from '../../Actions/Workspaces'
  
 import Spinner from '../../Elements/Spinner'
 import OnlyIf from '../../Elements/OnlyIf'
@@ -81,6 +81,10 @@ class TopNavbar extends Component {
     this.props.dispatch(closeWorkspace())
   }
 
+  handleSaveWorkspacePress(e) {
+    this.props.dispatch(saveWorkspace(Date.now().toString()))
+  }
+
   _renderSnapshotControls() {
     const { snapshots } = this.props.core
     const currentSnapshotId = snapshots.length
@@ -144,6 +148,10 @@ class TopNavbar extends Component {
             <Link onClick={this.handleWorkspacesPress.bind(this)}>
               <BlockIcon />
               Workspaces
+            </Link>
+            <Link onClick={this.handleSaveWorkspacePress.bind(this)}>
+              <BlockIcon />
+              Save
             </Link>
           </div>
           <div className="NotificationAndSearchBar">

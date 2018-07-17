@@ -209,6 +209,8 @@ app.on('ready', () => {
         workspace.saveAs(name, chaindataLocation)
       }
 
+      await workspaceManager.bootstrap()
+
       const globalSettings = await global.getAll()
       mainWindow.webContents.send(SET_SETTINGS, globalSettings, {})
 
@@ -221,6 +223,8 @@ app.on('ready', () => {
           await chain.stopServer()
         }
       }
+
+      await workspaceManager.bootstrap()
 
       const globalSettings = await global.getAll()
       mainWindow.webContents.send(SET_SETTINGS, globalSettings, {})

@@ -46,7 +46,9 @@ class Workspace {
     fse.mkdirpSync(this.workspaceDirectory)
 
     // make sure the chaindata folder exists
-    fse.mkdirpSync(this.chaindataDirectory)
+    if (this.chaindataDirectory) {
+      fse.mkdirpSync(this.chaindataDirectory)
+    }
   }
 
   async bootstrap() {
