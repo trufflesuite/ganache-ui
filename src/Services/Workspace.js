@@ -3,11 +3,12 @@ import fse from 'fs-extra'
 import { app } from 'electron'
 
 import WorkspaceSettings, { DEFAULT_WORKSPACE_NAME } from './Settings/WorkspaceSettings'
+import TruffleProject from './TruffleProject'
 
 class Workspace {
-  constructor(name, projects) {
+  constructor(name) {
     this.name = name
-    this.projects = projects || []
+    this.projects = []
     this.init()
 
     // This doesn't go in the init() function because the init is used for initializing
@@ -51,9 +52,22 @@ class Workspace {
     }
   }
 
+  bootstrapProjects() {
+    const projects = await this.settings.get("projects")
+
+    this.projects = projects.map(async (project) => {
+      const truffleProject = new TruffleProject(project)
+      await truffleProject.bootstrap()
+      return truffleProject
+    })
+
+    this.projects = Promise.all(this.projects)
+  }
+
   async bootstrap() {
     this.bootstrapDirectory()
     await this.settings.bootstrap()
+    await this.bootstrapProjects()
   }
 
   async saveAs(name, chaindataDirectory) {

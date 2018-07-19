@@ -21,7 +21,8 @@ const initialSettings = {
     vmErrorsOnRPCResponse: true,
     logger: null,
     verbose: false
-  }
+  },
+  projects: []
 }
 
 class WorkspaceSettings extends Settings {
