@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 
 // Connect a component to specific reducer names.
-// e.g., connect(MyComponent, "core", "settings")
+// e.g., connect(MyComponent, "core", "config")
 export default function(component, ...reducers) {
   let connector = connect((state) => {
     var props =  {}

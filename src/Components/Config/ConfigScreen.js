@@ -1,26 +1,27 @@
 import React, { PureComponent } from 'react'
 import { hashHistory } from 'react-router'
-import _ from 'lodash'
+import cloneDeep from 'lodash.clonedeep'
+import isEqual from 'lodash.isequal'
 import connect from '../Helpers/connect'
 
 import * as Core from '../../Actions/Core'
-import * as Settings from '../../Actions/Settings'
-
-import OnlyIf from '../../Elements/OnlyIf'
+import * as Config from '../../Actions/Config'
 
 import ServerScreen from './ConfigScreens/ServerScreen'
 import AccountsScreen from './ConfigScreens/AccountsScreen'
 import ChainScreen from './ConfigScreens/ChainScreen'
 import AdvancedScreen from './ConfigScreens/AdvancedScreen'
+import AboutScreen from './ConfigScreens/AboutScreen'
 
 import RestartIcon from '../../Elements/icons/restart.svg'
 import EjectIcon from '../../Elements/icons/eject.svg';
 
 const TABS = [
-  {name: 'Server', component: ServerScreen}, 
-  {name: 'Accounts & Keys', component: AccountsScreen},
-  {name: 'Chain', component: ChainScreen},
-  {name: 'Advanced', component: AdvancedScreen}
+  {name: 'Server', subRoute: 'server', component: ServerScreen},
+  {name: 'Accounts & Keys', subRoute: 'accounts-keys', component: AccountsScreen},
+  {name: 'Chain', subRoute: 'chain', component: ChainScreen},
+  {name: 'Advanced', subRoute: 'advanced', component: AdvancedScreen},
+  {name: 'About', subRoute: 'about', component: AboutScreen}
 ]
 
 class ConfigScreen extends PureComponent {
@@ -28,25 +29,49 @@ class ConfigScreen extends PureComponent {
     super(props)
 
     this.state = {
-      settings: _.cloneDeep(props.settings),
+      config: cloneDeep(props.config),
       validationErrors: {},
+      restartOnCancel: Object.keys(props.config.validationErrors).length > 0, // see handleCancelPressed
       activeIndex: 0
+    }
+
+    this.initActiveIndex()
+  }
+
+  initActiveIndex = () => {
+    if ("params" in this.props && "activeTab" in this.props.params) {
+      for (let i = 0; i < TABS.length; i++) {
+        if (TABS[i].subRoute === this.props.params.activeTab) {
+          this.state.activeIndex = i
+          break
+        }
+      }
     }
   }
 
   restartServer = () => {
+    this.props.dispatch(Config.clearAllSettingErrors())
+    this.state.config.validationErrors = {}
+
     if (this.isDirty()) {
-      this.props.dispatch(Settings.requestSaveSettings(this.state.settings))
+      this.props.dispatch(Config.requestSaveSettings(this.state.config.settings))
     }
     this.props.dispatch(Core.requestServerRestart())
   }
 
   isDirty () {
-    return _.isEqual(this.state.settings, this.props.settings) == false
+    return isEqual(this.state.config.settings, this.props.config.settings) == false
   }
 
-  handleCancelPressed () {
-    hashHistory.pop();
+  handleCancelPressed = (e) => {
+    if (this.state.restartOnCancel) {
+      // we are in the config screen because of a system error
+      // restart application without saving settings if the user hit cancel
+      this.props.dispatch(Core.requestServerRestart())
+    }
+    else {
+      hashHistory.goBack();
+    }
   }
 
   _renderTabHeader = () => {
@@ -72,6 +97,13 @@ class ConfigScreen extends PureComponent {
     const name = target.name
     let value = target.value
 
+    // the user is modifying this field; if there is an error, send an action to clear it
+    // the user has acknowledged the error by modifying the field
+    if (target.name in this.state.config.validationErrors) {
+      this.props.dispatch(Config.clearSettingError(target.name))
+      delete this.state.config.validationErrors[target.name]
+    }
+
     switch (target.type) {
       case "number":
         value = parseInt(target.value)
@@ -81,9 +113,8 @@ class ConfigScreen extends PureComponent {
         break;
     }
 
-    var settings = this.state.settings
     var keys = name.split(".")
-    var parent = this.state.settings
+    var parent = this.state.config.settings
 
     while (keys.length > 1) {
       var key = keys.shift()
@@ -97,10 +128,20 @@ class ConfigScreen extends PureComponent {
     // There should be one key remaining
     // Only save the value if the text box or input value is non-zero/non-blank.
     // Otherwise remove the key.
-    if (value && value != "" && value != 0) {
+    if (value !== null && value !== undefined && value !== "" && value !== 0) {
       parent[keys[0]] = value
     } else {
-      delete parent[keys[0]]
+      // We used to delete the key here, but if we do that then the settings
+      // migration logic in the bootstrap method of the Settings service won't
+      // be able to tell that we're aware of this setting already, causing it
+      // to apply the initial default value the next time the application
+      // starts. Setting it to null gives the merge logic something to override
+      // the initial default with. This is fine, so long as we preserve the
+      // semantics of "null" meaning "purposefully left unset". Further, we
+      // strip out nulls in Settings.getAll just to be certain that nothing can
+      // surprise us by interpreting a key with a null value differently from a
+      // missing key.
+      parent[keys[0]] = null
     }
 
     this.forceUpdate()
@@ -135,28 +176,30 @@ class ConfigScreen extends PureComponent {
     if (validation) {
       let isValid = true
     
-      if (!validation.canBeBlank && value == '') {
-        isValid = false
-      }
-    
-      if (validation.allowedChars && !value.match(validation.allowedChars)) {
-        isValid = false
-      }
-    
-      if (validation.format && !value.match(validation.format)) {
-        isValid = false
-      }
-
-      // If we at least have a value, check to see if it has a min/max
-      if (value != "") {
-        value = parseInt(value, 10)
-
-        if (validation.min && (value < validation.min || isNaN(value))) {
-          isValid = false     
+      if (value != null) {
+        if (!validation.canBeBlank && value === '') {
+          isValid = false
+        }
+      
+        if (validation.allowedChars && !value.match(validation.allowedChars)) {
+          isValid = false
+        }
+      
+        if (validation.format && !value.match(validation.format)) {
+          isValid = false
         }
 
-        if (validation.max && value > validation.max) {
-          isValid = false
+        // If we at least have a value, check to see if it has a min/max
+        if (value != "") {
+          value = parseInt(value, 10)
+
+          if (validation.min && (value < validation.min || isNaN(value))) {
+            isValid = false     
+          }
+
+          if (validation.max && value > validation.max) {
+            isValid = false
+          }
         }
       }
 
@@ -181,7 +224,8 @@ class ConfigScreen extends PureComponent {
 
   render () {
     let activeTab = React.createElement(TABS[this.state.activeIndex].component, {
-      settings: this.state.settings,
+      config: this.state.config,
+      network: this.props.network,
       handleInputChange: this.handleInputChange,
       validateChange: this.validateChange,
       validationErrors: this.state.validationErrors
@@ -195,7 +239,7 @@ class ConfigScreen extends PureComponent {
               {this._renderTabHeader()}
             </div>
             <div className="Actions">
-              <button className="btn btn-primary" onClick={hashHistory.goBack}>
+              <button className="btn btn-primary" onClick={this.handleCancelPressed}>
                 <EjectIcon /*size={18}*/ />
                 CANCEL
               </button>
@@ -218,4 +262,4 @@ class ConfigScreen extends PureComponent {
   }
 }
 
-export default connect(ConfigScreen, "settings")
+export default connect(ConfigScreen, "config", "network")

@@ -9,9 +9,9 @@ import { Router, Route, IndexRoute, hashHistory } from 'react-router'
 
 import RootReducer from './Reducers/Root'
 
-import createStore from './Kernel/createStore'
-import syncStore from './Kernel/syncStore'
-import ready from './Kernel/ready'
+import createStore from './Init/Renderer/Store/createStore'
+import syncStore from './Init/Renderer/Store/syncStore'
+import { initRenderer } from './Init/Renderer/index'
 
 import AppShell from './Components/AppShell/AppShell'
 import ConfigScreen from './Components/Config/ConfigScreen'
@@ -23,9 +23,11 @@ import NotFoundScreen from './Components/NotFound/NotFoundScreen'
 import TitleScreen from './Components/Title/TitleScreen'
 import FirstRunScreen from './Components/FirstRun/FirstRunScreen'
 
+import {ipcRenderer} from 'electron'
+
 const store = createStore(RootReducer)
 
-ready(store)
+initRenderer(store)
 
 // Routes and stylesheets are declared here, rather than in the render
 // function, so that hot module reloading doesn't cause issues with react-router.
@@ -38,9 +40,13 @@ const routes = <Route>
     <Route path="/transactions(/:transactionHash)" component={TransactionsScreen} />
     <Route path="/logs" component={LogsScreen} />
     <Route path="/notfound" component={NotFoundScreen} />
-    <Route path='/config' component={ConfigScreen} /> 
+    <Route path='/config(/:activeTab)' component={ConfigScreen} /> 
   </Route>
 </Route>
+
+ipcRenderer.on('navigate', (event, path) => {
+    hashHistory.push(path)
+});
 
 const stylesheets = [
   "./Styles/colors.scss",
@@ -51,15 +57,20 @@ const stylesheets = [
   "./app.global.scss",
   "./Elements/StatusIndicator.scss",
   "./Elements/Modal.scss",
+  "./Elements/ProgressBar.scss",
   "./Elements/Spinner.css",
+  "./Elements/FilePicker.scss",
+  "./Elements/StyledSelect.scss",
   "./Components/FirstRun/FirstRunScreen.scss",
   "./Components/AppShell/AppShell.scss",
   "./Components/AppShell/TopNavbar.scss",
+  "./Components/AppShell/BugModal.scss",
   "./Components/AppShell/BugModal.scss",
   "./Components/Accounts/AccountsScreen.scss",
   "./Components/Accounts/AccountList.scss",
   "./Components/Accounts/KeyModal.scss",
   "./Components/Accounts/MnemonicAndHdPath.scss",
+  "./Components/Accounts/MnemonicInfoModal.scss",
   "./Components/Blocks/BlocksScreen.scss",
   "./Components/Blocks/BlockList.scss",
   "./Components/Blocks/BlockCard.scss",
@@ -71,6 +82,8 @@ const stylesheets = [
   "./Components/Transactions/TransactionTypeBadge.scss",
   "./Components/Transactions/MiniTxCard.scss",
   "./Components/Title/TitleScreen.scss",
+  "./Components/AutoUpdate/UpdateModal.scss",
+  "./Components/AutoUpdate/UpdateNotification.scss",
   "./Components/Logs/LogsScreen.scss",
   "./Components/Logs/LogContainer.scss",
   "./Components/Config/ConfigScreen.scss",

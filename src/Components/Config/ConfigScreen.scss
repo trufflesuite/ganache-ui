@@ -185,7 +185,7 @@
       margin-left: 1rem;
     }
 
-    input[type='text'], input[type='number'] {
+    input[type='text'], input[type='number'], input[type='file'], select {
       border-color: var(--app-navbar-text);
       width: 100%;
     }
@@ -196,14 +196,102 @@
       display: block;
       padding: .5rem;
       font-size: 14px;
-      border-bottom-left-radius: 5px;
-      border-bottom-right-radius: 5px;
+      border-bottom: 1px solid;
+      border-bottom-color: rgba(0, 0, 0, 0.2);
+
+      &:last-child {
+        border-bottom: 0;
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+      }
     }
   }
 
   .Radio {
     input {
       margin: .5rem;
+    }
+  }
+
+  .AboutScreen {
+    margin-top: 10rem;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    font-family: "RobotoCondensed-Bold", Helvetica, Arial, sans-serif;
+    font-size: 20px;
+    letter-spacing:4px;
+
+    .LogoWrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      font-size: 20px;
+
+      font-weight: 700;
+      line-height: 3.2;
+
+      .Logo {
+        height: 128px;
+        width: 128px;
+        background-image: url(../../../resources/icons/png/256x256.png);
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: 128px 128px;
+      }
+    }
+
+    h4 {
+      margin: 2rem 0 0 0;
+      height: 42px;
+    }
+
+    .GanacheVersion {
+      margin: 0;
+      font-size: 14px;
+      letter-spacing: initial;
+      color: #525456;
+    }
+
+    .GanacheDescription {
+      margin-top: 3rem;
+      font-size: 14px;
+      font-family: Arial;
+      letter-spacing: initial;
+      line-height: 1.35rem;
+      color: #525456;
+
+      .heart {
+        color: rgb(228, 37, 37);
+        font-size: 1.4em;
+      }
+
+      a {
+        color: var(--primary-color);
+        font-weight: bold;
+      }
+    }
+
+    h4 strong {
+      color: #525456;
+      font-weight: 300;
+      line-height: 1.2;
+      font-size: 2.5rem;
+      font-family: "Grand Hotel", cursive;
+      letter-spacing: normal;
+    }
+
+    h4 strong sup {
+      font-family: Arial;
+      color: rgba(157, 174, 189, 0.47);
+      margin-left: 4px;
+      font-size: 75%;
+      line-height: 0;
+      position: relative;
+      vertical-align: baseline;
+      top: -0.5em;
     }
   }
 }

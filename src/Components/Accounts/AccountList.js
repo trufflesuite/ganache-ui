@@ -34,6 +34,7 @@ class AccountList extends Component {
   }
 
   _renderAccounts = () => {
+    const self = this
     return this.props.accounts.map((account, index) => {
       return (
         <div
@@ -70,9 +71,11 @@ class AccountList extends Component {
             <span
               className="ShowKeys"
               onClick={() => {
-                this.showKeys(
+                self.showKeys(
                   account,
-                  this.props.privateKeys[account]
+                  // need to pass lower case account here because account is
+                  // checksummed address
+                  self.props.privateKeys[account.toLowerCase()]
                 )
               }}
             >

@@ -4,10 +4,12 @@ import connect from '../Helpers/connect'
 import * as Search from '../../Actions/Search'
 import { clearLogLines } from '../../Actions/Logs'
 import { setSystemError } from '../../Actions/Core'
+import { setUpdateAvailable, showUpdateModal } from '../../Actions/AutoUpdate'
 
 import Spinner from '../../Elements/Spinner'
 import OnlyIf from '../../Elements/OnlyIf'
 import StatusIndicator from '../../Elements/StatusIndicator'
+import UpdateNotification from '../AutoUpdate/UpdateNotification'
 
 import AccountIcon from '../../Elements/icons/account.svg'
 import BlockIcon from '../../Elements/icons/blocks.svg'
@@ -30,43 +32,45 @@ class TopNavbar extends Component {
     }
   }
 
-  _handleStopMining = e => {
+  _handleStopMining(e) {
     this.props.appStopMining()
   }
 
-  _handleStartMining = e => {
+  _handleStartMining(e) {
     this.props.appStartMining()
   }
 
-  _handleForceMine = e => {
+  _handleForceMine(e) {
     this.props.appForceMine()
   }
 
-  _handleMakeSnapshot = e => {
+  _handleMakeSnapshot(e) {
     this.props.appMakeSnapshot()
   }
 
-  _handleRevertSnapshot = e => {
+  _handleRevertSnapshot(e) {
     this.props.appRevertSnapshot(this.props.core.snapshots.length)
   }
 
-  _handleClearLogs = e => {
+  _handleClearLogs(e) {
     this.props.dispatch(clearLogLines())
   }
 
-  handleSearchChange = e => {
+  handleSearchChange(e) {
     this.setState({
       searchInput: e.target.value
     })
   }
 
-  handleSearchKeyPress = e => {
+  handleSearchKeyPress(e) {
     if (e.key === 'Enter') {
       let value = this.state.searchInput.trim()
 
       // Secret to show the error screen when we need it.
       if (value.toLowerCase() == "error") {
         this.props.dispatch(setSystemError(new Error("You found a secret!")))
+      } else if (value.toLowerCase() == "test-update") {
+        this.props.dispatch(setUpdateAvailable("9.9.9", "Release Name", "This is a release note.\n\n**bold** _italic_ or is this *italic*? [trufflesuite/ganache-cli#417](https://github.com/trufflesuite/ganache-cli/issues/417)\n\nDo we scroll to get here?\n\nHow about here?"))
       } else {
         this.props.dispatch(Search.query(value))
       }
@@ -77,7 +81,8 @@ class TopNavbar extends Component {
     }
   }
 
-  _renderSnapshotControls = () => {
+
+  _renderSnapshotControls() {
     const { snapshots } = this.props.core
     const currentSnapshotId = snapshots.length
     const hasSnapshots = currentSnapshotId > 0
@@ -97,40 +102,12 @@ class TopNavbar extends Component {
       : null
   }
 
-  _renderMiningTime = () => {
-    if (this.props.settings.server.blocktime) {
-      return `${this.props.settings.server.blocktime} SEC block time`
+  _renderMiningTime() {
+    if (this.props.config.settings.server.blockTime) {
+      return `${this.props.config.settings.server.blockTime} SEC block time`
     } else {
       return 'Automining'
     }
-  }
-
-  _renderMiningButtonText = () => {
-    if (this.props.settings.server.blocktime) {
-      return `MINING`
-    } else {
-      return 'AUTOMINING'
-    }
-  }
-
-  _renderMiningControls = () => {
-    return this.props.core.isMining
-      ? <button
-          className="MiningBtn"
-          disabled={!this.props.core.isMining}
-          onClick={this._handleStopMining}
-        >
-          <StopMiningIcon /*size={18} className="StopMining" */ />{' '}
-          Stop {this._renderMiningButtonText()}
-        </button>
-      : <button
-          className="MiningBtn"
-          disabled={this.props.core.isMining}
-          onClick={this._handleStartMining}
-        >
-          <StartMiningIcon /*size={18}*/ /> Start{' '}
-          {this._renderMiningButtonText()}
-        </button>
   }
 
   render () {
@@ -140,6 +117,7 @@ class TopNavbar extends Component {
     const snapshots = this.props.core.snapshots
     const isMining = this.props.core.isMining
     const isLogsPage = this.props.location.pathname === '/logs'
+    const isNewVersionAvailable = this.props.autoUpdate.isNewVersionAvailable
     const miningPaused = !isMining
     const currentSnapshotId = snapshots.length
     const showControls = false
@@ -165,13 +143,16 @@ class TopNavbar extends Component {
               Logs
             </Link>
           </div>
-          <div className="SearchBar">
+          <div className="NotificationAndSearchBar">
+            <OnlyIf test={isNewVersionAvailable}>
+              <UpdateNotification />
+            </OnlyIf>
             <input
               type="text"
               placeholder="SEARCH FOR BLOCK NUMBERS OR TX HASHES"
               value={this.state.searchInput}
-              onChange={this.handleSearchChange}
-              onKeyPress={this.handleSearchKeyPress}
+              onChange={this.handleSearchChange.bind(this)}
+              onKeyPress={this.handleSearchKeyPress.bind(this)}
             />
             <SearchIcon />
           </div>
@@ -191,11 +172,11 @@ class TopNavbar extends Component {
             />
             <StatusIndicator
               title="NETWORK ID"
-              value={this.props.settings.server.network_id}
+              value={this.props.config.settings.server.network_id}
             />
             <StatusIndicator
               title="RPC SERVER"
-              value={`http://${this.props.settings.server.hostname}:${this.props.settings.server.port}`}
+              value={`http://${this.props.config.settings.server.hostname}:${this.props.config.settings.server.port}`}
             />
             <StatusIndicator
               title="MINING STATUS"

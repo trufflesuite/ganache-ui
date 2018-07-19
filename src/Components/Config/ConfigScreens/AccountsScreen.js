@@ -7,6 +7,10 @@ const VALIDATIONS = {
     allowedChars: /^\d*$/,
     min: 1,
     max: 100
+  },
+  "server.default_balance_ether": {
+    allowedChars: /^[0-9]*\.?[0-9]*$/,
+    min: 0
   }
 }
 
@@ -15,8 +19,8 @@ class AccountsScreen extends Component {
     super(props)
 
     this.state = {
-      accountsLocked: props.settings.server.unlocked_accounts.length > 0,
-      automnemonic: props.settings.server.mnemonic == null
+      accountsLocked: !!props.config.settings.server.unlocked_accounts,
+      automnemonic: props.config.settings.randomizeMnemonicOnStart
     }
   }
 
@@ -26,17 +30,17 @@ class AccountsScreen extends Component {
 
   toggleAccountsLocked = () => {
     var toggleState = !this.state.accountsLocked
-    var unlocked_accounts = this.props.settings.server.unlocked_accounts
-    var total_accounts = this.props.settings.server.total_accounts
+    var unlocked_accounts = this.props.config.settings.server.unlocked_accounts
+    var total_accounts = this.props.config.settings.server.total_accounts
 
     if (toggleState == true) {
-      this.props.settings.server.unlocked_accounts = new Array(total_accounts)
+      this.props.config.settings.server.unlocked_accounts = new Array(total_accounts)
 
       for (var i = 0; i < total_accounts; i++) {
-        this.props.settings.server.unlocked_accounts[i] = i
+        this.props.config.settings.server.unlocked_accounts[i] = i
       }
     } else {
-      this.props.settings.server.unlocked_accounts = []
+      this.props.config.settings.server.unlocked_accounts = []
     }
 
     this.setState({
@@ -47,18 +51,15 @@ class AccountsScreen extends Component {
   toggleAutoMnemonic = () => {
     var toggleValue = !this.state.automnemonic
 
-     // Remove mnemonic if we turn automnemonic on
-     if (toggleValue == true) {
-      delete this.props.settings.server.blocktime
+    // Remove mnemonic if we turn automnemonic on
+    this.props.config.settings.randomizeMnemonicOnStart = toggleValue
 
-      // Rerun validations now that value has been deleted
-      this.validateChange({
-        target: {
-          name: "server.mnemonic",
-          value: ""
-        }
-      })
-    }
+    this.validateChange({
+      target: {
+        name: "randomizeMnemonicOnStart",
+        value: toggleValue
+      }
+    })
 
     this.setState({
       automnemonic: toggleValue
@@ -68,7 +69,25 @@ class AccountsScreen extends Component {
   render () {
     return (
       <div>
-        <h2>ACCOUNT & KEYS</h2>
+        <h2>ACCOUNTS &amp; KEYS</h2>
+        <section>
+          <h4>ACCOUNT DEFAULT BALANCE</h4>
+          <div className="Row">
+            <div className="RowItem">
+              <input
+                name="server.default_balance_ether"
+                type="text"
+                value={this.props.config.settings.server.default_balance_ether}
+                onChange={this.validateChange}
+              />
+              {this.props.validationErrors["server.default_balance_ether"] &&
+                <p className="ValidationError">Must be a valid number that is at least {VALIDATIONS["server.default_balance_ether"].min}</p>}
+            </div>
+            <div className="RowItem">
+              <p>The starting balance for accounts, in Ether.</p>
+            </div>
+          </div>
+        </section>
         <section>
           <h4>TOTAL ACCOUNTS TO GENERATE</h4>
           <div className="Row">
@@ -76,7 +95,7 @@ class AccountsScreen extends Component {
               <input
                 name="server.total_accounts"
                 type="number"
-                value={this.props.settings.server.total_accounts}
+                value={this.props.config.settings.server.total_accounts}
                 onChange={this.validateChange}
               />
               {this.props.validationErrors["server.total_accounts"] &&
@@ -87,27 +106,7 @@ class AccountsScreen extends Component {
             </div>
           </div>
         </section>
-        {/* <section>
-          <h4>LOCK ACCOUNTS</h4>
-          <div className="Row">
-            <div className="RowItem">
-              <div className="Switch">
-                <input
-                  type="checkbox"
-                  name="accountsLocked"
-                  id="AccountsLocked"
-                  checked={this.state.accountsLocked}
-                  onChange={this.toggleAccountsLocked}
-                />
-                <label htmlFor="AccountsLocked">ACCOUNTS LOCKED</label>
-              </div>
-            </div>
-            <div className="RowItem">
-              <p>Create accounts that are locked by default.</p>
-            </div>
-          </div>
-        </section> */}
-         <section>
+        <section>
           <h4>AUTOGENERATE HD MNEMONIC</h4>
           <div className="Row">
             <div className="RowItem">
@@ -136,7 +135,7 @@ class AccountsScreen extends Component {
                   type="text"
                   placeholder="Enter Mnemonic to use"
                   name="server.mnemonic"
-                  value={this.props.settings.server.mnemonic || ""}
+                  value={this.props.config.settings.server.mnemonic || ""}
                   onChange={this.validateChange}
                 />
                 {this.props.validationErrors["server.mnemonic"] &&
@@ -148,6 +147,27 @@ class AccountsScreen extends Component {
             </div>
           </section>
         </OnlyIf>
+
+        <section>
+          <h4>LOCK ACCOUNTS</h4>
+          <div className="Row">
+            <div className="RowItem">
+              <div className="Switch">
+                <input
+                  type="checkbox"
+                  name="server.locked"
+                  id="LockAccounts"
+                  checked={this.props.config.settings.server.locked}
+                  onChange={this.props.handleInputChange}
+                />
+                <label htmlFor="LockAccounts">LOCK ACCOUNTS</label>
+              </div>
+            </div>
+            <div className="RowItem">
+              <p>If enabled, accounts will be locked on startup.</p>
+            </div>
+          </div>
+        </section>
       </div>
     )
   }

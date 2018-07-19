@@ -1,6 +1,4 @@
-
-import { web3Request, web3ActionCreator } from './helpers/Web3ActionCreator'
-import map from 'async/map'
+import { web3Request } from './helpers/Web3ActionCreator'
 
 const prefix = 'TRANSACTIONS'
 const PAGE_SIZE = 10
@@ -56,13 +54,14 @@ export const requestPreviousPage = function() {
 
 export const ADD_RECEIPTS = `${prefix}/ADD_RECEIPTS`
 export const getReceipts = function(transactions) {
-  return function(dispatch, getState) {
-    let provider = getState().web3.provider
-    map(transactions, (tx, done) => {
-      web3Request("getTransactionReceipt", [tx.hash], provider, (err, receipt) => {
-        done(null, receipt)
-      } )
-    }, (err, receipts) => {
+  return async function(dispatch, getState) {
+    let web3Instance = getState().web3.web3Instance
+
+    return await Promise.all(
+      transactions.map(tx => {
+        return web3Request("getTransactionReceipt", [tx.hash], web3Instance)
+      })
+    ).then(receipts => {
       dispatch({type: ADD_RECEIPTS, receipts })
     })
   }
@@ -71,7 +70,7 @@ export const getReceipts = function(transactions) {
 export const SET_BLOCK_REQUESTED = `${prefix}/SET_BLOCK_REQUESTED`
 export const ADD_TRANSACTIONS_TO_VIEW = `${prefix}/ADD_TRANSACTIONS_TO_VIEW`
 export const getTransactionsForBlock = function(number) {
-  return function(dispatch, getState) {
+  return async function(dispatch, getState) {
     let requested = getState().transactions.blocksRequested
 
     // If it's already requested, bail
@@ -79,33 +78,31 @@ export const getTransactionsForBlock = function(number) {
       return
     }
 
-    let provider = getState().web3.provider
+    let web3Instance = getState().web3.web3Instance
 
     // It's not requested? Let's get the drop on it so 
     // no other process requests it
     dispatch({type: SET_BLOCK_REQUESTED, number })
 
     // Now request the block and receipts for all its transactions
-    web3Request("getBlock", [number, true], provider, (err, block) => {
-      if (block.transactions.length == 0) {
-        return
-      }
+    let block = await web3Request("getBlock", [number, true], web3Instance)
 
-      dispatch(getReceipts(block.transactions))
-      dispatch({type: ADD_TRANSACTIONS_TO_VIEW, transactions: block.transactions })
-    })
+    if (block.transactions.length == 0) {
+      return
+    }
+
+    dispatch(getReceipts(block.transactions))
+    dispatch({type: ADD_TRANSACTIONS_TO_VIEW, transactions: block.transactions })
   }
 }
 
 export const SET_CURRENT_TRANSACTION_SHOWN = `${prefix}/SET_CURRENT_TRANSACTION_SHOWN`
 export const showTransaction = function(hash) {
-  return function(dispatch, getState) {
-    let provider = getState().web3.provider
-    web3Request("getTransaction", [hash], provider, (err, transaction) => {
-      web3Request("getTransactionReceipt", [hash], provider, (err, receipt) => {
-        dispatch({type: SET_CURRENT_TRANSACTION_SHOWN, transaction, receipt})
-      })
-    })
+  return async function(dispatch, getState) {
+    let web3Instance = getState().web3.web3Instance
+    let transaction = await web3Request("getTransaction", [hash], web3Instance)
+    let receipt = await web3Request("getTransactionReceipt", [hash], web3Instance)
+    dispatch({type: SET_CURRENT_TRANSACTION_SHOWN, transaction, receipt})
   }
 }
 export const clearTransactionShown = function() {

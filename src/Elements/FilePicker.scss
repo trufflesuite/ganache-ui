@@ -1,0 +1,77 @@
+
+.FilePicker {
+  position: relative;
+  width: 100%;
+
+  > input[type="file"] {
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+  }
+
+  > button {
+    width: 100px;
+    padding: 0 5px;
+    height: 30px;
+  }
+
+  > div {
+    position: relative;
+    display: inline-flex;
+    width: calc(100% - 100px - .75rem - .75rem);
+    margin-left: .75rem;
+
+    > p {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    &:hover .tooltiptext {
+      /* Show the tooltip text when you mouse over the tooltip container */
+      visibility: visible;
+      opacity: 1;
+    }
+
+    > span.tooltiptext {
+      /* Tooltip Text */
+      visibility: hidden;
+      width: 80%;
+      background-color: #555;
+      color: #fff;
+      text-align: center;
+      padding: 5px;
+      border-radius: 6px;
+      text-overflow: unset;
+      overflow-wrap: break-word;
+      overflow: inherit;
+
+      /* Position the tooltip text */
+      position: absolute;
+      z-index: 1;
+      top: 125%;
+      left: 50%;
+      margin-left: -40%;
+
+      /* Fade in tooltip */
+      opacity: 0;
+      transition: opacity 0.3s;
+
+      /* Tooltip arrow */
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: transparent transparent #555 transparent;
+      }
+    }
+  }
+}

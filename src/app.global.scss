@@ -60,10 +60,6 @@
   src: url("../resources/fonts/GrandHotel-Regular.ttf") format("truetype");
 }
 
-::-webkit-scrollbar {
-    display: none;
-}
-
 *,
 *:before,
 *:after {
@@ -124,3 +120,6 @@ textarea {
 	-webkit-app-region: no-drag;
 }
 
+.scroll-light {
+  background-color: rgba(255, 255, 255, 0.2);
+}
