@@ -14,29 +14,28 @@
 //   return { type: WEB3_REQUEST_SUCCEEDED, name, result }
 // }
 
-export function web3Request(name, args, provider, next) {
-  // This specifically pulls state from the web3 reducer. Smell?
-  let web3 = new Web3(provider)
-  
-  //dispatch(Web3RequestStarted(name))
+export async function web3Request(name, args, web3Instance) {
+  let fn = web3Instance.eth[name]
 
-  let fn = web3.eth[name]
-
-  args.push(next)
-
-  fn.apply(web3.eth, args)
+  return await fn.apply(web3Instance.eth, args)
 }
 
-export function web3ActionCreator(name, args, next) {
-  if (typeof args == "function") {
-    next = args
-    args = []
-  }
+export async function web3ActionCreator(dispatch, getState, name, args) {
+  // This specifically pulls state from the web3 reducer. Smell?
+  let web3Instance = getState().web3.web3Instance
+  return await web3Request(name, args, web3Instance)
+}
 
-  return function(dispatch, getState) {
-    let provider = getState().web3.provider
-    web3Request(name, args, provider, (err, result) => {
-      next(result, dispatch, getState)
-    })
+export function web3CleanUpHelper(dispatch, getState) {
+  let web3Instance = getState().web3.web3Instance
+  if (web3Instance) {
+    let provider = web3Instance.currentProvider
+
+    // clear out current provider to stop active subscription monitoring
+    web3Instance.setProvider(null)
+
+    if (provider && provider.connection && provider.connection.close) {
+      provider.connection.close()
+    }
   }
 }

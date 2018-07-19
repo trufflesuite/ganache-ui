@@ -1,28 +1,40 @@
-# Zircon
+<!--- Provide a general summary of the issue in the Title above -->
 
-Before opening a new issue, please take a moment to review our [**community guidelines**](https://github.com/trufflesuite/zircon/blob/master/.github/CONTRIBUTING.md) to make the contribution process easy and effective for everyone involved.
+<!--- DO NOT PASTE ONLY IMAGES OF TERMINAL OUTPUT AS AN ISSUE --->
 
-**Before opening a new issue, you may find an answer in already closed issues**:
-https://github.com/trufflesuite/zircon/issues?q=is%3Aissue+is%3Aclosed
+<!--- WINDOWS USERS: Please READ all of the error / debug output and make sure that the issue 
+      isn't due to you missing something before creating an issue. A large portion of Windows 
+      issues turn out to be easily self-fixable if you actually read the output before dumping
+      it in an issue here. Thanks! ---> 
 
-## Issue Type
+## Expected Behavior
+<!--- If you're describing a bug, tell us what should happen -->
+<!--- If you're suggesting a change/improvement, tell us how it should work -->
 
-- [ ] Bug (https://github.com/trufflesuite/zircon/blob/master/.github/CONTRIBUTING.md#bug-reports)
-- [ ] Feature (https://github.com/trufflesuite/zircon/blob/master/.github/CONTRIBUTING.md#feature-requests)
+## Current Behavior
+<!--- If describing a bug, tell us what happens instead of the expected behavior -->
+<!--- If suggesting a change/improvement, explain the difference from current behavior -->
 
-If your issue is related to building Ganache on your platform, please make sure you have a correctly setup build environment
-on your platform, and that you have carefully read any error output for instructions that may fix your situation.
+## Possible Solution
+<!--- Not obligatory, but suggest a fix/reason for the bug, -->
+<!--- or ideas how to implement the addition or change -->
 
-## Description
+## Steps to Reproduce (for bugs)
+<!--- Provide a link to a live example, or an unambiguous set of steps to -->
+<!--- reproduce this bug. Include code to reproduce, if relevant -->
+1.
+2.
+3.
+4.
 
-(Add images if possible - but absolutely no images of terminal output please.)
+## Context
+<!--- How has this issue affected you? What are you trying to accomplish? -->
+<!--- Providing context helps us come up with a solution that is most useful in the real world -->
 
-## Steps to reproduce
-
-(Please be thorough)
-
-# Versions
-
-- Platform: (macOS / Windows / Linux)
-- Node:
-- Npm:
+## Your Environment
+<!--- Include as many relevant details about the environment you experienced the bug in -->
+* Version used:
+* Environment name and version (e.g. PHP 5.4 on nginx 1.9.1):
+* Server type and version:
+* Operating System and version:
+* Link to your project:

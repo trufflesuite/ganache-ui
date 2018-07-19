@@ -49,7 +49,7 @@ class BlockCard extends Component {
           </div>
         </header>
 
-          
+
         <div className="BlockBody">
           <div className="HeaderSecondaryInfo">
             <div>
@@ -69,7 +69,7 @@ class BlockCard extends Component {
             <div>
               <div className="Label">MINED ON</div>
               <div className="Value">
-                <Moment unix format="YYYY-MM-DD HH:MM:SS">
+                <Moment unix format="YYYY-MM-DD HH:mm:ss">
                   {block.timestamp}
                 </Moment>
               </div>

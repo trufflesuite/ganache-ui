@@ -1,4 +1,4 @@
-import { web3ActionCreator } from './helpers/Web3ActionCreator'
+import { web3ActionCreator, web3CleanUpHelper } from './helpers/Web3ActionCreator'
 import { getAccounts } from './Accounts'
 import { push } from 'react-router-redux'
 import { ipcRenderer } from 'electron'
@@ -13,6 +13,8 @@ export function setServerStarted() {
 export const REQUEST_SERVER_RESTART = `${prefix}/REQUEST_SERVER_RESTART`
 export function requestServerRestart() {
   return function(dispatch, getState) {
+    web3CleanUpHelper(dispatch, getState)
+
     // Show the title screen
     dispatch(showTitleScreen())
 
@@ -39,19 +41,21 @@ export function setKeyData(mnemonic, hdPath, privateKeys) {
 
 export const SET_GAS_PRICE = `${prefix}/SET_GAS_PRICE`
 export const getGasPrice = function() {
-  return web3ActionCreator("getGasPrice", (gasPrice, dispatch, getState) => {
+  return async function(dispatch, getState) {
+    let gasPrice = await web3ActionCreator(dispatch, getState, "getGasPrice")
     var currentPrice = getState().core.gasPrice
     gasPrice = gasPrice.toString(10)
 
     if (gasPrice != currentPrice) {
       dispatch({ type: SET_GAS_PRICE, gasPrice })
     }
-  })
+  }
 }
 
 export const SET_GAS_LIMIT = `${prefix}/SET_GAS_LIMIT`
 export const getGasLimit = function() {
-  return web3ActionCreator("getBlock", ["latest"], (block, dispatch, getState) => {
+  return async function(dispatch, getState) {
+    let block = await web3ActionCreator(dispatch, getState, "getBlock", ["latest"])
     var currentGasLimit = getState().core.gasLimit
 
     var gasLimit = block.gasLimit.toString()
@@ -59,7 +63,7 @@ export const getGasLimit = function() {
     if (gasLimit != currentGasLimit) {
       dispatch({ type: SET_GAS_LIMIT, gasLimit })
     }
-  })
+  }
 }
 
 export const SET_BLOCK_NUMBER = `${prefix}/SET_BLOCK_NUMBER`
@@ -72,18 +76,29 @@ export const setBlockNumber = function(number) {
   }
 }
 
-export const GET_BLOCK_NUMBER = `${prefix}/GET_BLOCK_NUMBER`
-export const getBlockNumber = function() {
-  return web3ActionCreator("getBlockNumber", (number, dispatch, getState) => {
-    var currentBlockNumber = getState().core.latestBlock
+export const GET_BLOCK_SUBSCRIPTION = `${prefix}/GET_BLOCK_SUBSCRIPTION`
+export const getBlockSubscription = function() {
+  return async function(dispatch, getState) {
+    let subscription = await web3ActionCreator(dispatch, getState, "subscribe", ['newBlockHeaders'])
 
-    if (number != currentBlockNumber) {
-      dispatch(setBlockNumber(number))
-    }
-  })
+    subscription.on('data', blockHeader => {
+      console.log(`new block header for block ${blockHeader.number}`)
+      let currentBlockNumber = getState().core.latestBlock
+
+      if (blockHeader.number != currentBlockNumber) {
+        dispatch(setBlockNumber(blockHeader.number))
+      }
+    })
+  }
 }
 
 export const SET_SYSTEM_ERROR = `${prefix}/SET_SYSTEM_ERROR`
-export const setSystemError = function(error) {
-  return {type: SET_SYSTEM_ERROR, error}
+export const setSystemError = function(error, showBugModal, category, detail) {
+  return {type: SET_SYSTEM_ERROR, error, showBugModal, category, detail}
 }
+
+export const DISMISS_BUG_MODAL = `${prefix}/DISMISS_BUG_MODAL`
+export const dismissBugModal = function() {
+  return {type: DISMISS_BUG_MODAL}
+}
+

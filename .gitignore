@@ -1,6 +1,7 @@
 certs
+dist
 out
-package-lock.json
 node_modules
 .DS_Store
-
+.vscode
+.node_modules_git

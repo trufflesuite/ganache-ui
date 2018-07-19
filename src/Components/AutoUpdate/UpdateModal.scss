@@ -1,0 +1,48 @@
+.Modal {
+  &.UpdateModal {
+    .Update {
+      .releaseName {
+        width: 100%
+      }
+
+      .releaseNotesOrError {
+        height: 5rem;
+        background-color: var(--app-button-primary-disabled-border-color);
+        width: 100%;
+        margin-bottom: 1rem;
+        border: 1px solid #888888;
+        overflow-y: scroll;
+      }
+
+      .updateDetails {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .ProgressBar {
+        width: 200px
+      }
+
+      .downloadSpeed {
+        text-align: right;
+      }
+
+      footer {
+        .delayButton {
+          background-color: rgba(227, 227, 227, 0.9);
+          float: left;
+        }
+
+        .ctaButton {
+          float: right;
+        }
+      }
+
+      svg {
+        width: 192px;
+        height: 192px;
+      }
+    }
+  }
+}

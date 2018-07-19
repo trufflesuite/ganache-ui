@@ -15,8 +15,10 @@ const initialState = {
   gasLimit: "0",
   snapshots: [],
   systemError: null,
-  blocks: [], 
+  showBugModal: false,
+  blocks: [],
   transactions: [],
+  updateInfo: {}
 }
 
 export default function (state = initialState, action) {
@@ -80,13 +82,22 @@ export default function (state = initialState, action) {
       })
 
     case Core.SET_BLOCK_NUMBER:
-    case Core.GET_BLOCK_NUMBER: // TODO: Remove GET_BLOCK_NUMBER
       return Object.assign({}, state, {
         latestBlock: action.number
       })
+
     case Core.SET_SYSTEM_ERROR:
       return Object.assign({}, state, {
-        systemError: action.error
+        systemError: action.error,
+        showBugModal: action.showBugModal
+      })
+
+    case Core.SET_NEW_VERSION_INFO:
+      return Object.assign({}, state, {
+        updateInfo: {
+          newVersion: action.newVersion,
+          releaseNotes: action.releaseNotes
+        }
       })
 
     default:
