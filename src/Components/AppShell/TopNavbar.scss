@@ -156,4 +156,11 @@
     stroke-width: 1;
   }
 
+  .ClearLogs {
+    align-self: center;
+    margin-left: auto;
+    margin-right: 1rem;
+    border: 1px solid var(--app-statusbar-text);
+    width: 100px;
+  }
 }

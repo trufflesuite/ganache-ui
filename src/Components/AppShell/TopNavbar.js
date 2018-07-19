@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import { Link, hashHistory } from 'react-router'
 import connect from '../Helpers/connect'
 import * as Search from '../../Actions/Search'
+import { clearLogLines } from '../../Actions/Logs'
 import { setSystemError } from '../../Actions/Core'
- 
+
 import Spinner from '../../Elements/Spinner'
 import OnlyIf from '../../Elements/OnlyIf'
 import StatusIndicator from '../../Elements/StatusIndicator'
@@ -47,6 +48,10 @@ class TopNavbar extends Component {
 
   _handleRevertSnapshot = e => {
     this.props.appRevertSnapshot(this.props.core.snapshots.length)
+  }
+
+  _handleClearLogs = e => {
+    this.props.dispatch(clearLogLines())
   }
 
   handleSearchChange = e => {
@@ -134,7 +139,7 @@ class TopNavbar extends Component {
     const gasLimit = this.props.core.gasLimit
     const snapshots = this.props.core.snapshots
     const isMining = this.props.core.isMining
-
+    const isLogsPage = this.props.location.pathname === '/logs'
     const miningPaused = !isMining
     const currentSnapshotId = snapshots.length
     const showControls = false
@@ -200,6 +205,13 @@ class TopNavbar extends Component {
                 <Spinner />
               </OnlyIf>
             </StatusIndicator>
+            <OnlyIf test={isLogsPage}>
+              <button
+                className="ClearLogs"
+                onClick={this._handleClearLogs}>
+                Clear Logs
+              </button>
+            </OnlyIf>
           </div>
           <div className="Actions">
             <OnlyIf
