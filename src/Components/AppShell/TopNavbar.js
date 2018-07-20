@@ -189,7 +189,7 @@ class TopNavbar extends Component {
             <OnlyIf test={isLogsPage}>
               <button
                 className="ClearLogs"
-                onClick={this._handleClearLogs}>
+                onClick={this._handleClearLogs.bind(this)}>
                 Clear Logs
               </button>
             </OnlyIf>
