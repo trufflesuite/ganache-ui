@@ -126,19 +126,19 @@ class TopNavbar extends Component {
       <nav className="TopNavBar">
         <main className="Main">
           <div className="Menu">
-            <Link to="accounts" activeClassName="Active">
+            <Link to="/accounts" activeClassName="Active">
               <AccountIcon />
               Accounts
             </Link>
-            <Link to="blocks" activeClassName="Active">
+            <Link to="/blocks" activeClassName="Active">
               <BlockIcon />
               Blocks
             </Link>
-            <Link to="transactions" activeClassName="Active">
+            <Link to="/transactions" activeClassName="Active">
               <TxIcon />
               Transactions
             </Link>
-            <Link to="logs" activeClassName="Active">
+            <Link to="/logs" activeClassName="Active">
               <LogsIcon />
               Logs
             </Link>
@@ -157,7 +157,7 @@ class TopNavbar extends Component {
             <SearchIcon />
           </div>
           <div className="Menu">
-            <Link to="config" activeClassName="Active">
+            <Link to="/config" activeClassName="Active">
               <SettingsIcon />
             </Link>
           </div>
@@ -186,15 +186,13 @@ class TopNavbar extends Component {
                 <Spinner />
               </OnlyIf>
             </StatusIndicator>
+          </div>
+          <div className="Actions">
             <OnlyIf test={isLogsPage}>
-              <button
-                className="ClearLogs"
-                onClick={this._handleClearLogs.bind(this)}>
+              <button onClick={this._handleClearLogs.bind(this)}>
                 Clear Logs
               </button>
             </OnlyIf>
-          </div>
-          <div className="Actions">
             <OnlyIf
               test={
                 showControls
