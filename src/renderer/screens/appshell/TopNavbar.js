@@ -6,6 +6,7 @@ import * as Search from '../../../redux/search/actions'
 import { setSystemError } from '../../../redux/core/actions'
 import { setUpdateAvailable } from '../../../redux/auto-update/actions'
 import { closeWorkspace, saveWorkspace } from '../../../redux/workspaces/actions'
+import { clearLogLines } from '../../../redux/logs/actions'
  
 import Spinner from '../../components/spinner/Spinner'
 import OnlyIf from '../../components/only-if/OnlyIf'
