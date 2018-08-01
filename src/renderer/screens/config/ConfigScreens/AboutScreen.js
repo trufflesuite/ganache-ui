@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import * as pkg from '../../../../package.json'
+import * as pkg from '../../../../../package.json'
 
 class AccountsScreen extends Component {
   render () {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { hashHistory } from 'react-router'
 
-import * as pkg from '../../../package.json'
+import * as pkg from '../../../../package.json'
 
 import connect from '../helpers/connect'
 
