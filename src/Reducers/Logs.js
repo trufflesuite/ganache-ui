@@ -16,6 +16,11 @@ export default function (state = initialState, action) {
         lines: state.lines.concat(newLines)
       })
 
+    case Logs.CLEAR_LOG_LINES:
+      return Object.assign({}, state, {
+        lines: []
+      })
+
     default:
       return state
   }
