@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import connect from '../Helpers/connect'
+import connect from '../helpers/connect'
 
 import MnemonicAndHdPath from './MnemonicAndHdPath'
 import AccountList from './AccountList'

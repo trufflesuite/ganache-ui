@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 
-import connect from '../Helpers/connect'
+import connect from '../helpers/connect'
 
 import Modal from '../../Elements/Modal'
 
 import BugIcon from '../../Elements/icons/errorant.svg'
 
-import { sanitizeError, sanitizePaths } from '../Helpers/sanitize.js'
+import { sanitizeError, sanitizePaths } from '../helpers/sanitize.js'
 
 import * as Core from '../../../redux/core/actions'
 

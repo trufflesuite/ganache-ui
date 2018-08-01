@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars';
-import connect from '../Helpers/connect'
+import connect from '../helpers/connect'
 
 class LogContainer extends Component {
   shouldComponentUpdate (nextProps, nextState) {

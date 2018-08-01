@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 import { hashHistory } from 'react-router'
 import cloneDeep from 'lodash.clonedeep'
 import isEqual from 'lodash.isequal'
-import connect from '../Helpers/connect'
+import connect from '../helpers/connect'
 
 import * as Core from '../../../redux/core/actions'
 import * as Config from '../../../redux/config/actions'

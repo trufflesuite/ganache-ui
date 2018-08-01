@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import connect from '../Helpers/connect'
+import connect from '../helpers/connect'
 
 import ChecksumAddress from '../../Elements/ChecksumAddress'
 import OnlyIf from '../../Elements/OnlyIf'

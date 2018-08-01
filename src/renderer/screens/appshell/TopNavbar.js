@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link, hashHistory } from 'react-router'
-import connect from '../Helpers/connect'
+import connect from '../helpers/connect'
 import * as Search from '../../../redux/search/actions'
 import { setSystemError } from '../../../redux/core/actions'
 import { setUpdateAvailable, showUpdateModal } from '../../../redux/auto-update/actions'

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { push } from 'react-router-redux'
 import _ from 'lodash'
 
-import connect from '../Helpers/connect'
+import connect from '../helpers/connect'
 
 import * as Config from '../../../redux/config/actions'
 

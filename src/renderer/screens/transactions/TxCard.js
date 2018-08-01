@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { hashHistory } from 'react-router'
-import connect from '../Helpers/connect'
+import connect from '../helpers/connect'
 import * as Transactions from '../../../redux/transactions/actions'
 
 import Moment from 'react-moment'

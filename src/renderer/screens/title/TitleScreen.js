@@ -4,7 +4,7 @@ const { app } = require('electron').remote
 import { hashHistory } from 'react-router'
 import * as pkg from '../../../package.json'
 
-import connect from '../Helpers/connect'
+import connect from '../helpers/connect'
 
 import OnlyIf from '../../Elements/OnlyIf'
 import BugModal from '../AppShell/BugModal'

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars';
 
-import connect from '../Helpers/connect'
+import connect from '../helpers/connect'
 import * as AppShellActions from '../../../redux/appshell/actions'
 
 import TopNavbar from './TopNavbar'
