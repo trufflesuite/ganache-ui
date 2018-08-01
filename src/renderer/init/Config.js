@@ -11,7 +11,7 @@ import {
   clearSettingError,
   clearAllSettingErrors,
   setSettings
-} from '../../Actions/Config'
+} from '../../redux/config/actions'
 
 export function initConfig(store) {
   ipcRenderer.on(SHOW_CONFIG_SCREEN, (event) => {

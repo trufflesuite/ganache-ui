@@ -52,7 +52,7 @@ class Workspace {
     }
   }
 
-  bootstrapProjects() {
+  async bootstrapProjects() {
     const projects = await this.settings.get("projects")
 
     this.projects = projects.map(async (project) => {

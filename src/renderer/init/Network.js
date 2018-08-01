@@ -3,7 +3,7 @@ import { ipcRenderer } from 'electron'
 import {
   SET_INTERFACES,
   setInterfaces
-} from '../../Actions/Network'
+} from '../../redux/network/actions'
 
 export function initNetwork(store) {
   ipcRenderer.on(SET_INTERFACES, (event, interfaces) => {

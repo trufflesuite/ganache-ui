@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 
 import connect from '../Helpers/connect'
-import { showUpdateModal } from '../../Actions/AutoUpdate'
+import { showUpdateModal } from '../../../redux/auto-update/actions'
 
 import UpdateIcon from '../../Elements/icons/chevron-up-o.svg'
 

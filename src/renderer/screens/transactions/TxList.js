@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import connect from '../Helpers/connect'
-import * as Transactions from '../../Actions/Transactions'
 
 import MiniTxCard from './MiniTxCard'
 

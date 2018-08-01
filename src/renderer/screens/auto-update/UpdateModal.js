@@ -10,7 +10,7 @@ import OnlyIf from '../../Elements/OnlyIf'
 
 import ProgressBar from '../../Elements/ProgressBar'
 
-import * as AutoUpdate from '../../Actions/AutoUpdate'
+import * as AutoUpdate from '../../../redux/auto-update/actions'
 
 import UpdateIcon from '../../Elements/icons/modal-update.svg'
 

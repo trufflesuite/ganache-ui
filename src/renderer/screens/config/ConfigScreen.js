@@ -4,8 +4,8 @@ import cloneDeep from 'lodash.clonedeep'
 import isEqual from 'lodash.isequal'
 import connect from '../Helpers/connect'
 
-import * as Core from '../../Actions/Core'
-import * as Config from '../../Actions/Config'
+import * as Core from '../../../redux/core/actions'
+import * as Config from '../../../redux/config/actions'
 
 import ServerScreen from './ConfigScreens/ServerScreen'
 import AccountsScreen from './ConfigScreens/AccountsScreen'

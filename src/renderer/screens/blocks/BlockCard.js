@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import connect from '../Helpers/connect'
-import * as Blocks from '../../Actions/Blocks'
-import * as Transactions from '../../Actions/Transactions'
+import * as Blocks from '../../../redux/blocks/actions'
+import * as Transactions from '../../../redux/transactions/actions'
 
 import Moment from 'react-moment'
 

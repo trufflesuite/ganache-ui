@@ -5,7 +5,6 @@ import { hashHistory } from 'react-router'
 import * as pkg from '../../../package.json'
 
 import connect from '../Helpers/connect'
-import * as Core from '../../Actions/Core'
 
 import OnlyIf from '../../Elements/OnlyIf'
 import BugModal from '../AppShell/BugModal'

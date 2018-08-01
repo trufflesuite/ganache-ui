@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import connect from '../Helpers/connect'
-import * as Blocks from '../../Actions/Blocks'
+import * as Blocks from '../../../redux/blocks/actions'
 import BlockList from './BlockList'
 import BlockCard from './BlockCard'
 

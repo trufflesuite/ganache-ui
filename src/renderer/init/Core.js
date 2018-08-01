@@ -1,7 +1,7 @@
 import { ipcRenderer } from 'electron'
 import { push } from 'react-router-redux'
 
-import { setRPCProviderUrl } from '../../Actions/Web3'
+import { setRPCProviderUrl } from '../../redux/web3/actions'
 
 import {
   SET_SERVER_STARTED,
@@ -14,11 +14,11 @@ import {
   setServerStarted,
   setBlockNumber,
   setKeyData
-} from '../../Actions/Core'
+} from '../../redux/core/actions'
 
-import { getAccounts } from '../../Actions/Accounts'
+import { getAccounts } from '../../redux/accounts/actions'
 
-import { setSettings } from '../../Actions/Config'
+import { setSettings } from '../../redux/config/actions'
 
 import { handleError } from './ErrorHandler'
 

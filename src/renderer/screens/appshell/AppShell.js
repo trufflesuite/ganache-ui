@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars';
 
 import connect from '../Helpers/connect'
-import * as AppShellActions from '../../Actions/AppShell'
+import * as AppShellActions from '../../../redux/appshell/actions'
 
 import TopNavbar from './TopNavbar'
 import OnlyIf from '../../Elements/OnlyIf'

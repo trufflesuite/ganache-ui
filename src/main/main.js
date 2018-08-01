@@ -38,13 +38,13 @@ import {
   SET_INTERFACES
 } from '../redux/network/actions'
 
-import { ADD_LOG_LINES } from './Actions/Logs'
+import { ADD_LOG_LINES } from '../redux/logs/actions'
 
 import ChainService from '../services/ChainService'
 import GlobalSettings from './types/settings/GlobalSettings'
 import Workspace from './types/workspaces/Workspace'
 import WorkspaceManager from './types/workspaces/WorkspaceManager'
-import GoogleAnalyticsService from '../services/GoogleAnalytics'
+import GoogleAnalyticsService from '../services/GoogleAnalyticsService'
 
 let menu
 let template

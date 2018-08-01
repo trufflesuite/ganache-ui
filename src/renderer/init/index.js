@@ -1,4 +1,4 @@
-import { showTitleScreen } from '../../Actions/Core'
+import { showTitleScreen } from '../../redux/core/actions'
 
 import { initAutoUpdates } from './AutoUpdate'
 import { initCore } from './Core'

@@ -8,7 +8,7 @@ import BugIcon from '../../Elements/icons/errorant.svg'
 
 import { sanitizeError, sanitizePaths } from '../Helpers/sanitize.js'
 
-import * as Core from '../../Actions/Core'
+import * as Core from '../../../redux/core/actions'
 
 import { shell } from 'electron'
 

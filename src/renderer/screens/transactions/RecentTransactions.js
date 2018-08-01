@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import connect from '../Helpers/connect'
-import * as Transactions from '../../Actions/Transactions'
+import * as Transactions from '../../../redux/transactions/actions'
 
 import TxList from './TxList'
 

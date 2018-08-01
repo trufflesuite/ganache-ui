@@ -7,7 +7,7 @@
 //
 ////
 import { combineReducers } from 'redux'
-import { REQUEST_SERVER_RESTART } from '../Actions/Core'
+import { REQUEST_SERVER_RESTART } from './core/actions'
 
 import AppShellReducer from './appshell/reducers'
 import ConfigReducer from './config/reducers'
