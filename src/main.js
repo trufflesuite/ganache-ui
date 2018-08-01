@@ -411,7 +411,7 @@ app.on('ready', () => {
             {
               label: 'Learn More',
               click () {
-                shell.openExternal('http://truffleframework.com/suite/ganache')
+                shell.openExternal('https://truffleframework.com/ganache')
               }
             },
             {
@@ -505,7 +505,7 @@ app.on('ready', () => {
             {
               label: 'Learn More',
               click () {
-                shell.openExternal('http://truffleframework.com/suite/ganache')
+                shell.openExternal('https://truffleframework.com/ganache')
               }
             },
             {
