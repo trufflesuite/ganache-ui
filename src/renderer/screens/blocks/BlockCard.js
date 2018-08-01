@@ -5,13 +5,13 @@ import * as Transactions from '../../../redux/transactions/actions'
 
 import Moment from 'react-moment'
 
-import { Link, hashHistory } from 'react-router'
+import { hashHistory } from 'react-router'
 
-import TxList from '../Transactions/TxList'
+import TxList from '../transactions/TxList'
 
 class BlockCard extends Component {
   constructor(props) {
-    super()
+    super(props)
   }
 
   componentDidMount () {
