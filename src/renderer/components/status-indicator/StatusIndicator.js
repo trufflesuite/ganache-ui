@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import OnlyIf from './OnlyIf'
+import OnlyIf from '../only-if/OnlyIf'
 
 export default class StatusIndicator extends Component {
   render () {

@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
+
 import connect from '../helpers/connect'
 
 import MiniTxCard from './MiniTxCard'
-
-import MiningIcon from '../../Elements/icons/force_mine.svg'
 
 class TxList extends Component {
   render () {

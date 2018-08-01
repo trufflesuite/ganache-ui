@@ -1,12 +1,11 @@
 import React, { Component } from 'react'
-import Moment from 'react-moment'
 
 import { Link } from 'react-router'
 
 import TransactionTypeBadge from './TransactionTypeBadge'
 import DestinationAddress from './DestinationAddress'
 
-import OnlyIf from '../../Elements/OnlyIf'
+import OnlyIf from '../../components/only-if/OnlyIf'
 
 export default class MiniTxCard extends Component {
 

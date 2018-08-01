@@ -5,9 +5,6 @@ import connect from '../helpers/connect'
 import MnemonicAndHdPath from './MnemonicAndHdPath'
 import AccountList from './AccountList'
 
-import WithEmptyState from '../../Elements/WithEmptyState'
-import Spinner from '../../Elements/Spinner'
-
 class AccountsScreen extends Component {
   constructor (props) {
     super(props)

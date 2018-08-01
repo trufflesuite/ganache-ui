@@ -3,7 +3,7 @@ import Moment from 'react-moment'
 import Pluralize from 'pluralize'
 import { Link } from 'react-router'
 
-import OnlyIf from '../../Elements/OnlyIf'
+import OnlyIf from '../../components/only-if/OnlyIf'
 
 export default class MiniBlockCard extends PureComponent {
   render () {

@@ -1,18 +1,15 @@
 import React, { Component } from 'react'
+import { shell } from 'electron'
+const { app } = require('electron').remote
 
 import connect from '../helpers/connect'
-
-import Modal from '../../Elements/Modal'
-
-import BugIcon from '../../Elements/icons/errorant.svg'
-
 import { sanitizeError, sanitizePaths } from '../helpers/sanitize.js'
 
 import * as Core from '../../../redux/core/actions'
 
-import { shell } from 'electron'
+import Modal from '../../components/modal/Modal'
 
-const { app } = require('electron').remote
+import BugIcon from '../../icons/errorant.svg'
 
 class BugModal extends Component {
   constructor () {

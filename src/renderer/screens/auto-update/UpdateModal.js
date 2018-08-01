@@ -1,24 +1,17 @@
 import { shell } from 'electron'
-
 import React, { Component } from 'react'
-
-import connect from '../helpers/connect'
-
-import Modal from '../../Elements/Modal'
-
-import OnlyIf from '../../Elements/OnlyIf'
-
-import ProgressBar from '../../Elements/ProgressBar'
-
-import * as AutoUpdate from '../../../redux/auto-update/actions'
-
-import UpdateIcon from '../../Elements/icons/modal-update.svg'
-
 import renderHtml from 'react-render-html'
 
 import * as os from 'os'
-
 import * as filesize from 'filesize'
+
+import connect from '../helpers/connect'
+
+import * as AutoUpdate from '../../../redux/auto-update/actions'
+
+import Modal from '../../components/modal/Modal'
+import ProgressBar from '../../components/progress-bar/ProgressBar'
+import UpdateIcon from '../../icons/modal-update.svg'
 
 const sizeFormatter = filesize.partial({standard: 'jedec'})
 

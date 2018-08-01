@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 
-import OnlyIf from '../../../Elements/OnlyIf'
-
-import StyledSelect from '../../../Elements/StyledSelect';
+import OnlyIf from '../../../components/only-if/OnlyIf'
+import StyledSelect from '../../../components/styled-select/StyledSelect';
 
 const VALIDATIONS = {
   "server.hostname": {

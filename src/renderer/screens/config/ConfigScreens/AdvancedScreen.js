@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import connect from '../../helpers/connect'
-import OnlyIf from '../../../Elements/OnlyIf'
-import FilePicker from '../../../Elements/FilePicker'
+
+import OnlyIf from '../../../components/only-if/OnlyIf'
+import FilePicker from '../../../components/file-picker/FilePicker'
 
 const VALIDATIONS = {
   "logDirectory": {

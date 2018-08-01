@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
+
 import connect from '../helpers/connect'
+
 import * as Transactions from '../../../redux/transactions/actions'
 
 import TxList from './TxList'
 
-import MiningIcon from '../../Elements/icons/force_mine.svg'
 
 class RecentTransactions extends Component {
   componentWillReceiveProps(nextProps) {

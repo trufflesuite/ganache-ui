@@ -1,8 +1,6 @@
 import React, { PureComponent } from 'react'
 
-import ChecksumAddress from '../../Elements/ChecksumAddress'
-import KeyIcon from '../../Elements/icons/key.svg'
-import Modal from '../../Elements/Modal'
+import Modal from '../../components/modal/Modal'
 
 export default class MnemonicInfoModal extends PureComponent {
   render () {

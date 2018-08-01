@@ -1,14 +1,16 @@
 import React, { Component } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars';
+import ElectronCookies from '@exponent/electron-cookies'
 
 import connect from '../helpers/connect'
+
 import * as AppShellActions from '../../../redux/appshell/actions'
 
 import TopNavbar from './TopNavbar'
-import OnlyIf from '../../Elements/OnlyIf'
 import BugModal from './BugModal'
-import UpdateModal from '../AutoUpdate/UpdateModal'
-import ElectronCookies from '@exponent/electron-cookies'
+import UpdateModal from '../auto-update/UpdateModal'
+
+import OnlyIf from '../../components/only-if/OnlyIf'
 
 ElectronCookies.enable({
   origin: 'http://truffleframework.com/ganache'

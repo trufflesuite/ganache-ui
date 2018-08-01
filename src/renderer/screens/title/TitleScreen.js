@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
-const { app } = require('electron').remote
-
 import { hashHistory } from 'react-router'
+
 import * as pkg from '../../../package.json'
 
 import connect from '../helpers/connect'
 
-import OnlyIf from '../../Elements/OnlyIf'
-import BugModal from '../AppShell/BugModal'
+import OnlyIf from '../../components/only-if/OnlyIf'
+import BugModal from '../appshell/BugModal'
 
 class TitleScreen extends Component {
   constructor (props) {

@@ -1,15 +1,14 @@
 import React, { Component } from 'react'
 import { hashHistory } from 'react-router'
+
 import connect from '../helpers/connect'
+
 import * as Transactions from '../../../redux/transactions/actions'
-
-import Moment from 'react-moment'
-
-import { Link } from 'react-router'
 
 import DestinationAddress from './DestinationAddress'
 import TransactionTypeBadge from './TransactionTypeBadge'
-import FormattedEtherValue from '../../Elements/FormattedEtherValue'
+
+import FormattedEtherValue from '../../components/formatted-ether-value/FormattedEtherValue'
 
 class TxCard extends Component {
   componentDidMount () {

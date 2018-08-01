@@ -1,8 +1,9 @@
 import React, { PureComponent } from 'react'
 
-import ChecksumAddress from '../../Elements/ChecksumAddress'
-import KeyIcon from '../../Elements/icons/key.svg'
-import Modal from '../../Elements/Modal'
+import ChecksumAddress from '../../components/checksum-addresses/ChecksumAddress'
+import Modal from '../../components/modal/Modal'
+
+import KeyIcon from '../../icons/key.svg'
 
 export default class KeyModal extends PureComponent {
   render () {

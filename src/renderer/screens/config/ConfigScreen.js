@@ -13,8 +13,8 @@ import ChainScreen from './ConfigScreens/ChainScreen'
 import AdvancedScreen from './ConfigScreens/AdvancedScreen'
 import AboutScreen from './ConfigScreens/AboutScreen'
 
-import RestartIcon from '../../Elements/icons/restart.svg'
-import EjectIcon from '../../Elements/icons/eject.svg';
+import RestartIcon from '../../icons/restart.svg'
+import EjectIcon from '../../icons/eject.svg';
 
 const TABS = [
   {name: 'Server', subRoute: 'server', component: ServerScreen},

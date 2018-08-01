@@ -1,6 +1,8 @@
 import React, { PureComponent } from 'react'
+
 import MnemonicInfoModal from './MnemonicInfoModal'
-import OnlyIf from '../../Elements/OnlyIf'
+
+import OnlyIf from '../../components/only-if/OnlyIf'
 
 export default class MnemonicAndHdPath extends PureComponent {
   constructor (props) {

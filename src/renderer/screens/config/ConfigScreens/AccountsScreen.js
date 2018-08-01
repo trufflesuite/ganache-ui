@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import OnlyIf from '../../../Elements/OnlyIf'
+import OnlyIf from '../../../components/only-if/OnlyIf'
 
 const VALIDATIONS = {
   "server.total_accounts": {

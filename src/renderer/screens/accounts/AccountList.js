@@ -1,13 +1,11 @@
 import React, { Component } from 'react'
-import connect from '../helpers/connect'
-
-import ChecksumAddress from '../../Elements/ChecksumAddress'
-import OnlyIf from '../../Elements/OnlyIf'
-import FormattedEtherValue from '../../Elements/FormattedEtherValue'
-
-import KeyIcon from '../../Elements/icons/key.svg'
 
 import KeyModal from './KeyModal'
+
+import ChecksumAddress from '../../components/checksum-addresses/ChecksumAddress'
+import OnlyIf from '../../components/only-if/OnlyIf'
+import FormattedEtherValue from '../../components/formatted-ether-value/FormattedEtherValue'
+import KeyIcon from '../../icons/key.svg'
 
 class AccountList extends Component {
   constructor (props) {

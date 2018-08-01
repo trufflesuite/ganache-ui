@@ -1,6 +1,4 @@
 import React, { Component } from 'react'
-import connect from '../../helpers/connect'
-import OnlyIf from '../../../Elements/OnlyIf'
 
 const VALIDATIONS = {
   "server.gasPrice": {
