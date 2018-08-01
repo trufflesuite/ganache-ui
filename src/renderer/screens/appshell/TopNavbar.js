@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
-import { Link, hashHistory } from 'react-router'
+import { Link } from 'react-router'
+
 import connect from '../helpers/connect'
 import * as Search from '../../../redux/search/actions'
 import { setSystemError } from '../../../redux/core/actions'
-import { setUpdateAvailable, showUpdateModal } from '../../../redux/auto-update/actions'
+import { setUpdateAvailable } from '../../../redux/auto-update/actions'
 import { closeWorkspace, saveWorkspace } from '../../../redux/workspaces/actions'
  
 import Spinner from '../../components/spinner/Spinner'
@@ -19,8 +20,6 @@ import SettingsIcon from '../../icons/settings.svg'
 import SearchIcon from '../../icons/search.svg'
 import ForceMineIcon from '../../icons/force_mine.svg'
 import SnapshotIcon from '../../icons/snapshot.svg'
-import StartMiningIcon from '../../icons/start.svg'
-import StopMiningIcon from '../../icons/stop.svg'
 import RevertIcon from '../../icons/revert.svg'
 
 class TopNavbar extends Component {
@@ -50,6 +49,10 @@ class TopNavbar extends Component {
 
   _handleRevertSnapshot(e) {
     this.props.appRevertSnapshot(this.props.core.snapshots.length)
+  }
+
+  _handleClearLogs(e) {
+    this.props.dispatch(clearLogLines())
   }
 
   handleSearchChange(e) {
@@ -119,8 +122,8 @@ class TopNavbar extends Component {
     const gasLimit = this.props.core.gasLimit
     const snapshots = this.props.core.snapshots
     const isMining = this.props.core.isMining
+    const isLogsPage = this.props.location.pathname === '/logs'
     const isNewVersionAvailable = this.props.autoUpdate.isNewVersionAvailable
-
     const miningPaused = !isMining
     const currentSnapshotId = snapshots.length
     const showControls = false
@@ -129,19 +132,19 @@ class TopNavbar extends Component {
       <nav className="TopNavBar">
         <main className="Main">
           <div className="Menu">
-            <Link to="accounts" activeClassName="Active">
+            <Link to="/accounts" activeClassName="Active">
               <AccountIcon />
               Accounts
             </Link>
-            <Link to="blocks" activeClassName="Active">
+            <Link to="/blocks" activeClassName="Active">
               <BlockIcon />
               Blocks
             </Link>
-            <Link to="transactions" activeClassName="Active">
+            <Link to="/transactions" activeClassName="Active">
               <TxIcon />
               Transactions
             </Link>
-            <Link to="logs" activeClassName="Active">
+            <Link to="/logs" activeClassName="Active">
               <LogsIcon />
               Logs
             </Link>
@@ -168,7 +171,7 @@ class TopNavbar extends Component {
             <SearchIcon />
           </div>
           <div className="Menu">
-            <Link to="config" activeClassName="Active">
+            <Link to="/config" activeClassName="Active">
               <SettingsIcon />
             </Link>
           </div>
@@ -199,6 +202,11 @@ class TopNavbar extends Component {
             </StatusIndicator>
           </div>
           <div className="Actions">
+            <OnlyIf test={isLogsPage}>
+              <button onClick={this._handleClearLogs.bind(this)}>
+                Clear Logs
+              </button>
+            </OnlyIf>
             <OnlyIf
               test={
                 showControls
