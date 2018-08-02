@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import { openWorkspace, openDefaultWorkspace } from '../../../redux/workspaces/actions'
+import { openWorkspace, openDefaultWorkspace } from '../../../common/redux/workspaces/actions'
 import connect from '../helpers/connect'
 
 class WorkspacesScreen extends Component {

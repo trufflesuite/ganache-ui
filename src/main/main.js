@@ -20,31 +20,31 @@ import {
   SET_SERVER_STOPPED,
   SET_KEY_DATA,
   SET_SYSTEM_ERROR
-} from '../redux/core/actions'
+} from '../common/redux/core/actions'
 
 import { 
   SET_WORKSPACES,
   OPEN_WORKSPACE,
   CLOSE_WORKSPACE,
   SAVE_WORKSPACE
-} from '../redux/workspaces/actions'
+} from '../common/redux/workspaces/actions'
 
 import {
   SET_SETTINGS,
   REQUEST_SAVE_SETTINGS
-} from '../redux/config/actions'
+} from '../common/redux/config/actions'
 
 import {
   SET_INTERFACES
-} from '../redux/network/actions'
+} from '../common/redux/network/actions'
 
-import { ADD_LOG_LINES } from '../redux/logs/actions'
+import { ADD_LOG_LINES } from '../common/redux/logs/actions'
 
-import ChainService from '../services/ChainService'
+import ChainService from '../common/services/ChainService'
 import GlobalSettings from './types/settings/GlobalSettings'
 import Workspace from './types/workspaces/Workspace'
 import WorkspaceManager from './types/workspaces/WorkspaceManager'
-import GoogleAnalyticsService from '../services/GoogleAnalyticsService'
+import GoogleAnalyticsService from '../common/services/GoogleAnalyticsService'
 
 let menu
 let template

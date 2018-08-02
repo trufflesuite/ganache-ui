@@ -4,7 +4,7 @@ import ElectronCookies from '@exponent/electron-cookies'
 
 import connect from '../helpers/connect'
 
-import * as AppShellActions from '../../../redux/appshell/actions'
+import * as AppShellActions from '../../../common/redux/appshell/actions'
 
 import TopNavbar from './TopNavbar'
 import BugModal from './BugModal'

@@ -26,7 +26,7 @@ export default class AutoUpdateService extends EventEmitter {
     autoUpdater.currentVersion = isDevMode ? '1.0.0' : app.getVersion()
 
     if (isDevMode) {
-      autoUpdater.updateConfigPath = path.join(__dirname, '..', '..', 'dev-app-update.yml')
+      autoUpdater.updateConfigPath = path.join(__dirname, '..', '..', '..', 'dev-app-update.yml')
     }
 
     this._cancelToken = null

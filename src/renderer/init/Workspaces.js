@@ -3,7 +3,7 @@ import { ipcRenderer } from 'electron'
 import {
   SET_WORKSPACES,
   setWorkspaces
-} from '../../redux/workspaces/actions'
+} from '../../common/redux/workspaces/actions'
 
 export function initWorkspaces(store) {
   ipcRenderer.on(SET_WORKSPACES, (event, workspaceNames) => {

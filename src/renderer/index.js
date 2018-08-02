@@ -7,7 +7,7 @@ import { Provider } from 'react-redux'
 import { Router, Route, IndexRoute, hashHistory } from 'react-router'
 
 
-import RootReducer from '../redux/reducer'
+import RootReducer from '../common/redux/reducer'
 
 import createStore from './init/store/createStore'
 import syncStore from './init/store/syncStore'

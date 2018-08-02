@@ -3,7 +3,7 @@ import { hashHistory } from 'react-router'
 
 import connect from '../helpers/connect'
 
-import * as Transactions from '../../../redux/transactions/actions'
+import * as Transactions from '../../../common/redux/transactions/actions'
 
 import DestinationAddress from './DestinationAddress'
 import TransactionTypeBadge from './TransactionTypeBadge'

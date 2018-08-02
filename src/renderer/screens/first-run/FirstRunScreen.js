@@ -4,7 +4,7 @@ import _ from 'lodash'
 
 import connect from '../helpers/connect'
 
-import * as Config from '../../../redux/config/actions'
+import * as Config from '../../../common/redux/config/actions'
 
 class FirstRunScreen extends Component {
   constructor (props) {

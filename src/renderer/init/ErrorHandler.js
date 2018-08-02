@@ -1,10 +1,10 @@
 
-import { setSystemError } from '../../redux/core/actions'
+import { setSystemError } from '../../common/redux/core/actions'
 
 import {
   setSettingError,
   showConfigScreen
-} from '../../redux/config/actions'
+} from '../../common/redux/config/actions'
 
 export function handleError(store, error) {
   let showBugModal = false

@@ -1,4 +1,4 @@
-import GoogleAnalyticsService from '../../../../services/GoogleAnalyticsService'
+import GoogleAnalyticsService from '../../../services/GoogleAnalyticsService'
 
 import {
   SET_SYSTEM_ERROR

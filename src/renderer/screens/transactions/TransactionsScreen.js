@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import connect from '../helpers/connect'
-import * as Transactions from '../../../redux/transactions/actions'
+import * as Transactions from '../../../common/redux/transactions/actions'
 import RecentTransactions from './RecentTransactions'
 import TxCard from './TxCard'
 

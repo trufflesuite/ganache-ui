@@ -5,7 +5,7 @@ const { app } = require('electron').remote
 import connect from '../helpers/connect'
 import { sanitizeError, sanitizePaths } from '../helpers/sanitize.js'
 
-import * as Core from '../../../redux/core/actions'
+import * as Core from '../../../common/redux/core/actions'
 
 import Modal from '../../components/modal/Modal'
 

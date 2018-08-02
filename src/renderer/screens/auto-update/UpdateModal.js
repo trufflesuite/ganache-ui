@@ -7,7 +7,7 @@ import * as filesize from 'filesize'
 
 import connect from '../helpers/connect'
 
-import * as AutoUpdate from '../../../redux/auto-update/actions'
+import * as AutoUpdate from '../../../common/redux/auto-update/actions'
 
 import Modal from '../../components/modal/Modal'
 import ProgressBar from '../../components/progress-bar/ProgressBar'

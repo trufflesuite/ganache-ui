@@ -2,7 +2,7 @@ import {ipcRenderer } from 'electron'
 
 import { web3CleanUpHelper } from '../web3/helpers/Web3ActionCreator'
 import { REQUEST_SERVER_RESTART, showTitleScreen } from '../core/actions'
-import { DEFAULT_WORKSPACE_NAME } from '../../main/types/settings/WorkspaceSettings'
+import { DEFAULT_WORKSPACE_NAME } from '../../../main/types/settings/WorkspaceSettings'
 
 const prefix = 'WORKSPACES'
 

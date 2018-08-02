@@ -1,7 +1,7 @@
 import { ipcMain } from 'electron'
-import * as AutoUpdate from '../../redux/auto-update/actions'
+import * as AutoUpdate from '../../common/redux/auto-update/actions'
 
-import AutoUpdateService from '../../services/AutoUpdateService'
+import AutoUpdateService from '../../common/services/AutoUpdateService'
 
 let autoUpdateService = null
 

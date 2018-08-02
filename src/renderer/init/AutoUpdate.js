@@ -9,7 +9,7 @@ import {
   setDownloadProgress,
   setUpdateDownloaded,
   setDownloadError
-} from '../../redux/auto-update/actions'
+} from '../../common/redux/auto-update/actions'
 
 export function initAutoUpdates(store) {
   ipcRenderer.on(UPDATE_AVAILABLE, (event, updateInfo) => {
