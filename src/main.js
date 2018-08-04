@@ -96,7 +96,7 @@ app.on('ready', () => {
   // see https://github.com/electron/electron/issues/9179 for more info
 
   setTimeout(async () => {
-    const {width, height, x, y} = screen.getPrimaryDisplay().bounds
+    const width = screen.getPrimaryDisplay().bounds.width
     const chain = new ChainService(app)
     const Settings = new SettingsService()
     const GoogleAnalytics = new GoogleAnalyticsService()
