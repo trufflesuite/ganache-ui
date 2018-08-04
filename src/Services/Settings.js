@@ -1,5 +1,5 @@
 import uuid from 'uuid'
-import _ from 'lodash'
+import merge from 'lodash.merge'
 
 const settings = require('electron-settings');
 
@@ -60,7 +60,7 @@ class Settings {
   setAll (obj) {
     // The loop over Object.keys(obj) below doesn't prevent overwriting stored
     // null values in nested objects, so we make sure to preserve them here.
-    obj = _.merge({}, this._getAllRaw(), obj)
+    obj = merge({}, this._getAllRaw(), obj)
 
     // Translate old setAll to electron-settings setAll
     Object.keys(obj).forEach((key) => {
@@ -93,7 +93,7 @@ class Settings {
     // handles the settings change in question.
     currentSettings = this.migrateMnemonicSettings(currentSettings);
 
-    currentSettings = _.merge({}, initialSettings, currentSettings);
+    currentSettings = merge({}, initialSettings, currentSettings);
 
     // Apply the merged settings
     this.setAll(currentSettings);

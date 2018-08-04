@@ -2,6 +2,7 @@ import { app, BrowserWindow, Menu, shell, ipcMain, screen } from 'electron'
 import { enableLiveReload } from 'electron-compile';
 import { initAutoUpdates, getAutoUpdateService } from './Init/Main/AutoUpdate.js'
 import path from 'path'
+import * as os from 'os'
 
 const isDevMode = process.execPath.match(/[\\/]electron/);
 
@@ -15,17 +16,26 @@ if (isDevMode) {
 
 import { 
   REQUEST_SERVER_RESTART,
-  SET_SERVER_STARTED, 
+  SET_SERVER_STARTED,
   SET_SERVER_STOPPED,
-  SET_KEY_DATA, 
+  SET_KEY_DATA,
   SET_SYSTEM_ERROR
 } from './Actions/Core'
 
-import { REQUEST_SAVE_SETTINGS } from './Actions/Settings'
+import {
+  SET_SETTINGS,
+  REQUEST_SAVE_SETTINGS
+} from './Actions/Config'
+
+import {
+  SET_INTERFACES
+} from './Actions/Network'
+
 import { ADD_LOG_LINES } from './Actions/Logs'
 
 import ChainService from './Services/Chain'
 import SettingsService from './Services/Settings'
+import GoogleAnalyticsService from './Services/GoogleAnalytics'
 
 let menu
 let template
@@ -49,6 +59,18 @@ process.on('unhandledRejection', err => {
     mainWindow.webContents.send(SET_SYSTEM_ERROR, err.stack || err)
   }
 })
+
+var shouldQuit = app.makeSingleInstance(function(commandLine, workingDirectory) {
+  // Someone tried to run a second instance, we should focus our window.
+  if (mainWindow) {
+    if (mainWindow.isMinimized()) mainWindow.restore();
+    mainWindow.focus();
+  }
+});
+
+if (shouldQuit) {
+  app.quit();
+}
 
 app.on('window-all-closed', () => {
   // don't quit the app before the updater can do its thing
@@ -76,13 +98,19 @@ app.on('ready', () => {
   setTimeout(async () => {
     const {width, height, x, y} = screen.getPrimaryDisplay().bounds
     const chain = new ChainService(app)
-    const Settings = new SettingsService() 
+    const Settings = new SettingsService()
+    const GoogleAnalytics = new GoogleAnalyticsService()
+    const inProduction = process.env.NODE_ENV === 'production'
 
     app.on('will-quit', function () {
       chain.stopProcess();
     });
 
     Settings.bootstrap();
+
+    var settings = Settings.getAll()
+    GoogleAnalytics.setup(settings.googleAnalyticsTracking && inProduction, settings.uuid)
+    GoogleAnalytics.reportSettings(settings)
 
     const standardWidth = 1200;
     const standardHeight = 800;
@@ -106,6 +134,7 @@ app.on('ready', () => {
       //installExtension(REACT_DEVELOPER_TOOLS);
       mainWindow.webContents.openDevTools();
     }
+
     // if a user clicks a link to an external webpage, open it in the user's browser, not our app
     mainWindow.webContents.on('new-window', ensureExternalLinksAreOpenedInBrowser);
     mainWindow.webContents.on('will-navigate', ensureExternalLinksAreOpenedInBrowser);
@@ -120,6 +149,9 @@ app.on('ready', () => {
 
       // Remove the menu bar
       mainWindow.setMenu(null);
+
+      // make sure the store registers the settings ASAP in the event of a startup crash
+      mainWindow.webContents.send(SET_SETTINGS, Settings.getAll())
 
       chain.on("start", () => {
         chain.startServer(Settings.getAll())
@@ -142,23 +174,38 @@ app.on('ready', () => {
       })
 
       chain.on("stderr", (data) => {
-        mainWindow.webContents.send(ADD_LOG_LINES, data.split(/\n/g))
+        const lines = data.split(/\n/g)
+        mainWindow.webContents.send(ADD_LOG_LINES, lines)
       })
 
       chain.on("error", (error) => {
-        console.log(error)
         mainWindow.webContents.send(SET_SYSTEM_ERROR, error)
+
+        if (chain.isServerStarted()) {
+          // Something wrong happened in the chain, let's try to stop it
+          chain.stopServer()
+        }
       })
 
       chain.start()
+
+      // this sends the network interfaces to the renderer process for
+      //  enumering in the config screen. it sends repeatedly
+      continuouslySendNetworkInterfaces()
     })
 
     // If the frontend asks to start the server, start the server.
     // This will trigger then chain event handlers above once the server stops.
     ipcMain.on(REQUEST_SERVER_RESTART, () => {
+      // make sure the store registers the settings ASAP in the event of a startup crash
+      mainWindow.webContents.send(SET_SETTINGS, Settings.getAll())
+
       if (chain.isServerStarted()) {
         chain.once("server-stopped", () => {
           chain.startServer(Settings.getAll())
+
+          // send the interfaces again once on restart
+          sendNetworkInterfaces()
         })
         chain.stopServer()
       } else {
@@ -168,6 +215,7 @@ app.on('ready', () => {
 
     ipcMain.on(REQUEST_SAVE_SETTINGS, (event, settings) => {
       Settings.setAll(settings)
+      GoogleAnalytics.reportSettings(settings)
     })
 
     mainWindow.on('closed', () => {
@@ -372,7 +420,7 @@ app.on('ready', () => {
             {
               label: 'Learn More',
               click () {
-                shell.openExternal('http://truffleframework.com/suite/ganache')
+                shell.openExternal('https://truffleframework.com/ganache')
               }
             },
             {
@@ -466,7 +514,7 @@ app.on('ready', () => {
             {
               label: 'Learn More',
               click () {
-                shell.openExternal('http://truffleframework.com/suite/ganache')
+                shell.openExternal('https://truffleframework.com/ganache')
               }
             },
             {
@@ -502,11 +550,30 @@ app.on('ready', () => {
   }, 0)
 })
 
-function ensureExternalLinksAreOpenedInBrowser(event, url) {
-    // we're a one-window application, and we only ever want to load external
-    // resources in the user's browser, not via a new browser window
-    if (url.startsWith('http:') || url.startsWith('https:')) {
-      shell.openExternal(url)
-      event.preventDefault()
-    }
+  // Do this every 2 minutes to keep it up to date without
+  //   being unreasonable since it shouldn't change frequently
+function continuouslySendNetworkInterfaces() {
+  sendNetworkInterfaces()
+
+  setInterval(() => {
+    sendNetworkInterfaces()
+  }, 2 * 60 * 1000)
+}
+
+function sendNetworkInterfaces() {
+  // Send the network interfaces to the renderer process
+  const interfaces = os.networkInterfaces()
+
+  if (mainWindow) {
+    mainWindow.webContents.send(SET_INTERFACES, interfaces)
   }
+}
+
+function ensureExternalLinksAreOpenedInBrowser(event, url) {
+  // we're a one-window application, and we only ever want to load external
+  // resources in the user's browser, not via a new browser window
+  if (url.startsWith('http:') || url.startsWith('https:')) {
+    shell.openExternal(url)
+    event.preventDefault()
+  }
+}

@@ -29,7 +29,7 @@ class ChainScreen extends Component {
     super(props)
 
     this.state = {
-      forking: this.props.settings.server.fork != null
+      forking: this.props.config.settings.server.fork != null
     }
   }
 
@@ -42,7 +42,7 @@ class ChainScreen extends Component {
 
      // Remove fork if we turn forking off
      if (toggleValue == false) {
-      delete this.props.settings.server.fork
+      delete this.props.config.settings.server.fork
 
       // Rerun validations now that value has been deleted
       this.validateChange({
@@ -69,7 +69,7 @@ class ChainScreen extends Component {
               <input
                 name="server.gasLimit"
                 type="number"
-                value={this.props.settings.server.gasLimit}
+                value={this.props.config.settings.server.gasLimit}
                 onChange={this.validateChange}
               />
               {this.props.validationErrors["server.gasLimit"] &&
@@ -89,7 +89,7 @@ class ChainScreen extends Component {
               <input
                 name="server.gasPrice"
                 type="number"
-                value={this.props.settings.server.gasPrice}
+                value={this.props.config.settings.server.gasPrice}
                 onChange={this.validateChange}
               />
               {this.props.validationErrors["server.gasPrice"] &&
@@ -132,7 +132,7 @@ class ChainScreen extends Component {
                     <input type="radio" 
                       value={FORK_URLS.mainnet} 
                       name="server.fork"
-                      checked={this.props.settings.server.fork == FORK_URLS.mainnet} 
+                      checked={this.props.config.settings.server.fork == FORK_URLS.mainnet} 
                       onChange={this.validateChange} 
                     />
                     Main Ethereum Network
@@ -143,7 +143,7 @@ class ChainScreen extends Component {
                     <input type="radio" 
                       value={FORK_URLS.ropsten}
                       name="server.fork"
-                      checked={this.props.settings.server.fork == FORK_URLS.ropsten} 
+                      checked={this.props.config.settings.server.fork == FORK_URLS.ropsten} 
                       onChange={this.validateChange} 
                     />
                     Ropsten
@@ -154,7 +154,7 @@ class ChainScreen extends Component {
                     <input type="radio" 
                       value={FORK_URLS.kovan} 
                       name="server.fork"
-                      checked={this.props.settings.server.fork == FORK_URLS.kovan} 
+                      checked={this.props.config.settings.server.fork == FORK_URLS.kovan} 
                       onChange={this.validateChange} 
                     />
                     Kovan
@@ -165,7 +165,7 @@ class ChainScreen extends Component {
                     <input type="radio" 
                       value={FORK_URLS.rinkeby} 
                       name="server.fork"
-                      checked={this.props.settings.server.fork == FORK_URLS.rinkeby} 
+                      checked={this.props.config.settings.server.fork == FORK_URLS.rinkeby} 
                       onChange={this.validateChange} 
                     />
                     Rinkeby
@@ -182,7 +182,7 @@ class ChainScreen extends Component {
                 <input
                   name="server.fork"
                   type="text"
-                  value={hasCustomURL == true ? this.props.settings.server.fork : ""}
+                  value={hasCustomURL == true ? this.props.config.settings.server.fork : ""}
                   onChange={this.validateChange}
                 />
               </div>

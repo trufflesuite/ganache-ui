@@ -2,9 +2,10 @@ import React, { Component } from 'react'
 import { Link, hashHistory } from 'react-router'
 import connect from '../Helpers/connect'
 import * as Search from '../../Actions/Search'
+import { clearLogLines } from '../../Actions/Logs'
 import { setSystemError } from '../../Actions/Core'
 import { setUpdateAvailable, showUpdateModal } from '../../Actions/AutoUpdate'
- 
+
 import Spinner from '../../Elements/Spinner'
 import OnlyIf from '../../Elements/OnlyIf'
 import StatusIndicator from '../../Elements/StatusIndicator'
@@ -49,6 +50,10 @@ class TopNavbar extends Component {
 
   _handleRevertSnapshot(e) {
     this.props.appRevertSnapshot(this.props.core.snapshots.length)
+  }
+
+  _handleClearLogs(e) {
+    this.props.dispatch(clearLogLines())
   }
 
   handleSearchChange(e) {
@@ -98,8 +103,8 @@ class TopNavbar extends Component {
   }
 
   _renderMiningTime() {
-    if (this.props.settings.server.blocktime) {
-      return `${this.props.settings.server.blocktime} SEC block time`
+    if (this.props.config.settings.server.blockTime) {
+      return `${this.props.config.settings.server.blockTime} SEC block time`
     } else {
       return 'Automining'
     }
@@ -111,8 +116,8 @@ class TopNavbar extends Component {
     const gasLimit = this.props.core.gasLimit
     const snapshots = this.props.core.snapshots
     const isMining = this.props.core.isMining
+    const isLogsPage = this.props.location.pathname === '/logs'
     const isNewVersionAvailable = this.props.autoUpdate.isNewVersionAvailable
-
     const miningPaused = !isMining
     const currentSnapshotId = snapshots.length
     const showControls = false
@@ -121,19 +126,19 @@ class TopNavbar extends Component {
       <nav className="TopNavBar">
         <main className="Main">
           <div className="Menu">
-            <Link to="accounts" activeClassName="Active">
+            <Link to="/accounts" activeClassName="Active">
               <AccountIcon />
               Accounts
             </Link>
-            <Link to="blocks" activeClassName="Active">
+            <Link to="/blocks" activeClassName="Active">
               <BlockIcon />
               Blocks
             </Link>
-            <Link to="transactions" activeClassName="Active">
+            <Link to="/transactions" activeClassName="Active">
               <TxIcon />
               Transactions
             </Link>
-            <Link to="logs" activeClassName="Active">
+            <Link to="/logs" activeClassName="Active">
               <LogsIcon />
               Logs
             </Link>
@@ -152,7 +157,7 @@ class TopNavbar extends Component {
             <SearchIcon />
           </div>
           <div className="Menu">
-            <Link to="config" activeClassName="Active">
+            <Link to="/config" activeClassName="Active">
               <SettingsIcon />
             </Link>
           </div>
@@ -167,11 +172,11 @@ class TopNavbar extends Component {
             />
             <StatusIndicator
               title="NETWORK ID"
-              value={this.props.settings.server.network_id}
+              value={this.props.config.settings.server.network_id}
             />
             <StatusIndicator
               title="RPC SERVER"
-              value={`http://${this.props.settings.server.hostname}:${this.props.settings.server.port}`}
+              value={`http://${this.props.config.settings.server.hostname}:${this.props.config.settings.server.port}`}
             />
             <StatusIndicator
               title="MINING STATUS"
@@ -183,6 +188,11 @@ class TopNavbar extends Component {
             </StatusIndicator>
           </div>
           <div className="Actions">
+            <OnlyIf test={isLogsPage}>
+              <button onClick={this._handleClearLogs.bind(this)}>
+                Clear Logs
+              </button>
+            </OnlyIf>
             <OnlyIf
               test={
                 showControls

@@ -15,7 +15,7 @@ class GanacheScreen extends Component {
     super(props)
 
     this.state = {
-      logDirectory: props.settings.logDirectory
+      logDirectory: props.config.settings.logDirectory
     }
   }
 
@@ -118,7 +118,7 @@ class GanacheScreen extends Component {
                   name="server.verbose"
                   id="Verbose"
                   onChange={this.props.handleInputChange}
-                  checked={this.props.settings.server.verbose}
+                  checked={this.props.config.settings.server.verbose}
                 />
                 <label htmlFor="Verbose">Verbose Logs</label>
               </div>
@@ -141,7 +141,7 @@ class GanacheScreen extends Component {
                   name="googleAnalyticsTracking"
                   id="GoogleAnalyticsTracking"
                   onChange={this.props.handleInputChange}
-                  checked={this.props.settings.googleAnalyticsTracking == true}
+                  checked={this.props.config.settings.googleAnalyticsTracking == true}
                 />
                 <label htmlFor="GoogleAnalyticsTracking">
                   GOOGLE ANALYTICS

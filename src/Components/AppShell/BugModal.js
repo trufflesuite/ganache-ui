@@ -8,6 +8,8 @@ import BugIcon from '../../Elements/icons/errorant.svg'
 
 import { sanitizeError, sanitizePaths } from '../Helpers/sanitize.js'
 
+import * as Core from '../../Actions/Core'
+
 import { shell } from 'electron'
 
 const { app } = require('electron').remote
@@ -18,7 +20,7 @@ class BugModal extends Component {
     this.scrollDedupeTimeout = null
   }
 
-  // grabs the last 500 log lines as a string formatted for inclusion as a github issue
+  // grabs the last 175 log lines as a string formatted for inclusion as a github issue
   renderAndSanitizeLogLines () {
     let result = ''
     if (this.props.logs && this.props.logs.lines && this.props.logs.lines.length > 0) {
@@ -97,8 +99,7 @@ class BugModal extends Component {
             </button>
             <button
               onClick={() => {
-                app.relaunch()
-                app.exit()
+                this.props.dispatch(Core.requestServerRestart())
               }}
             >
               RELAUNCH

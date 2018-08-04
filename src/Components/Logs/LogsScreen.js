@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 import InputText from '../../Elements/InputText'
 import LogContainer from './LogContainer'
 
-import connect from '../Helpers/connect'
-
 class Logs extends Component {
   constructor () {
     super()
