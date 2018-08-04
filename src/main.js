@@ -83,17 +83,21 @@ app.on('ready', () => {
     });
 
     Settings.bootstrap();
-    const appWidth = width * 0.9;
-    const appHeight = height * 0.9
-    const xPosition = (width - appWidth) / 2;
-    const yPosition = (height - appHeight) / 2;
+
+    const standardWidth = 1200;
+    const standardHeight = 800;
+    const standardAspectRation = standardWidth / standardHeight;
+    let appWidth = Math.min(standardWidth, width * 0.9);
+    const appHeight = Math.min(800, (1 / standardAspectRation) * appWidth);
+    appWidth = standardAspectRation * appHeight;
+
     mainWindow = new BrowserWindow({
-      minWidth: 1100,
-      minHeight: 680,
-      x: xPosition,
-      y: yPosition,
+      show: false,
+      minWidth: 950,
+      minHeight: 575,
       width: appWidth,
       height: appHeight,
+      frame: true,
       icon: getIconPath()
     })
 
