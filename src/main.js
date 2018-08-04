@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Menu, shell, ipcMain } from 'electron'
+import { app, BrowserWindow, Menu, shell, ipcMain, screen } from 'electron'
 import { enableLiveReload } from 'electron-compile';
 import { initAutoUpdates, getAutoUpdateService } from './Init/Main/AutoUpdate.js'
 import path from 'path'
@@ -94,7 +94,9 @@ if (process.platform === 'darwin') {
 app.on('ready', () => {
   // workaround for electron race condition, causing hang on startup.
   // see https://github.com/electron/electron/issues/9179 for more info
+
   setTimeout(async () => {
+    const width = screen.getPrimaryDisplay().bounds.width
     const chain = new ChainService(app)
     const Settings = new SettingsService()
     const GoogleAnalytics = new GoogleAnalyticsService()
@@ -110,12 +112,19 @@ app.on('ready', () => {
     GoogleAnalytics.setup(settings.googleAnalyticsTracking && inProduction, settings.uuid)
     GoogleAnalytics.reportSettings(settings)
 
+    const standardWidth = 1200;
+    const standardHeight = 800;
+    const standardAspectRation = standardWidth / standardHeight;
+    let appWidth = Math.min(standardWidth, width * 0.9);
+    const appHeight = Math.min(800, (1 / standardAspectRation) * appWidth);
+    appWidth = standardAspectRation * appHeight;
+
     mainWindow = new BrowserWindow({
       show: false,
-      minWidth: 1200,
-      minHeight: 800,
-      width: 1200,
-      height: 930,
+      minWidth: 950,
+      minHeight: 575,
+      width: appWidth,
+      height: appHeight,
       frame: true,
       icon: getIconPath()
     })
