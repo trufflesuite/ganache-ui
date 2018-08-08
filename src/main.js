@@ -110,6 +110,7 @@ app.on('ready', () => {
 
     var settings = Settings.getAll()
     GoogleAnalytics.setup(settings.googleAnalyticsTracking && inProduction, settings.uuid)
+    GoogleAnalytics.reportGenericUserData()
     GoogleAnalytics.reportSettings(settings)
 
     const standardWidth = 1200;
