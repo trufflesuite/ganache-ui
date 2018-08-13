@@ -33,6 +33,28 @@ class AccountList extends Component {
     })
   }
 
+  saveName = (event) => {
+    var id = event.target.id;
+    var val = this.capitalize(event.target.value);
+    localStorage.setItem(id, val);
+    this.setState({inputValue: val});
+  }
+
+  getName = (account_id) => {
+    var val = localStorage.getItem(account_id);
+    if (val) {
+      return val;
+    } else {
+      return "";
+    }
+  }
+
+  capitalize = (str) => {
+    return str.toLowerCase().replace(/\b[a-z]/g, function(letter) {
+      return letter.toUpperCase();
+    });
+  }
+
   _renderAccounts = () => {
     const self = this
     return this.props.accounts.map((account, index) => {
@@ -49,10 +71,14 @@ class AccountList extends Component {
               </div>
             </div>
             <div className="AccountBalance">
-              <div className="Label">BALANCE</div>
+              <div className="Label">BALANCE (ETH)</div>
               <div className="Value">
                 <FormattedEtherValue value={this.props.balances[account].toString()} />
               </div>
+            </div>
+            <div className="AccountName">
+             <div className="Label">NAME (AUTO-SAVE)</div>
+             <input type="text" value={this.getName(`acc-name-${index}`)} onChange={this.saveName} id={`acc-name-${index}`}/>
             </div>
           </div>
           <div className="SecondaryInfo">
