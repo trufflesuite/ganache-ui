@@ -16,6 +16,7 @@ export function handleError(store, error) {
     switch (error.code) {
       case "EADDRINUSE":
       case "EACESS":
+      case "EACCES":
         store.dispatch(setSettingError("server.port", "The port is used by another application; please change it"))
         activeConfigTab = "server"
         category = "network"
