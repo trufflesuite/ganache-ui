@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-var ganacheLib = require("ganache-cli")
+var ganacheLib = require("ganache-core")
 var path = require("path")
 var logging = require("./logging")
 var pkg = require("../../package.json")
