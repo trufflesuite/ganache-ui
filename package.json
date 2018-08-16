@@ -1,21 +1,18 @@
 {
   "name": "ganache",
   "productName": "Ganache",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Personal Blockchain for Ethereum",
   "main": "./src/init.js",
   "private": true,
   "scripts": {
     "start": "electron-forge start",
-    "package": "electron-builder package",
-    "make": "electron-builder build",
-    "publish": "electron-builder publish",
     "lint": "echo \"No linting configured\"",
     "sign-mac": "codesign --deep --force --verbose --sign 'Developer ID Application: Timothy Coulter (58RKXWC272)' ./dist/*.dmg",
     "makeappxassets": "svg2uwptiles -i ./Logo.svg -c ./blank.svg -o ./resources/appx/",
-    "build-linux": "cd ./node_modules/rabin-bindings && node-gyp rebuild && cd ../../ && npm run make",
-    "build-mac": "npm run make",
-    "build-windows": "bash -c \"echo ${CERT_PASS?\\\"Need to set CERT_PASS to build on Windows\\\"} > /dev/null\" && npm run make"
+    "build-linux": "cd ./node_modules/rabin-bindings && node-gyp rebuild && cd ../../ && electron-builder --linux",
+    "build-mac": "electron-builder --mac",
+    "build-windows": "electron-builder --win"
   },
   "browserslist": "chrome 50",
   "build": {
@@ -38,15 +35,13 @@
         {
           "target": "nsis",
           "arch": [
-            "x64",
-            "ia32"
+            "x64"
           ]
         },
         {
           "target": "appx",
           "arch": [
-            "x64",
-            "ia32"
+            "x64"
           ]
         }
       ]
@@ -99,14 +94,7 @@
       "icon": "resources/icons/png/",
       "category": "Development",
       "executableName": "Ganache"
-    },
-    "publish": [
-      {
-        "provider": "github",
-        "owner": "trufflesuite",
-        "repo": "ganache"
-      }
-    ]
+    }
   },
   "config": {
     "forge": {
@@ -163,7 +151,7 @@
     "chai": "^3.5.0",
     "concurrently": "^3.1.0",
     "cross-env": "^3.1.4",
-    "electron-builder": "^20.6.2",
+    "electron-builder": "^20.28.2",
     "electron-compilers": "^5.9.0",
     "electron-debug": "^1.1.0",
     "electron-devtools-installer": "^2.0.1",
@@ -188,7 +176,6 @@
     "benjamincburns-forked-electron-updater": "2.21.6",
     "builder-util-runtime": "^4.2.0",
     "electron-compile": "^6.4.2",
-    "electron-forge-maker-appimage": "^19.30.3",
     "electron-settings": "^3.1.2",
     "electron-squirrel-startup": "^1.0.0",
     "ethereumjs-units": "^0.2.0",
@@ -223,6 +210,10 @@
     "universal-analytics": "^0.4.13",
     "uuid": "^3.1.0",
     "web3": "1.0.0-beta.35"
+  },
+  "optionalDependencies": {
+    "7zip-bin-win": "^2.2.0",
+    "dmg-builder": "^5.3.0"
   },
   "devEngines": {
     "node": ">=6.x",

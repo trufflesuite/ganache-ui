@@ -1,43 +1,47 @@
 image:
   - Visual Studio 2017
+
+platform:
+  - x64
+
 cache:
   - node_modules
+  - '%USERPROFILE%\.electron'
+
 environment:
+  APPVEYOR_SAVE_CACHE_ON_ERROR: true
   CSC_KEY_PASSWORD:
     secure: Cqeajvouxb90cluiDv/iJuLkFHwNERXSxjoXg7FzZZ4=
-  passphrase:
+  CERT_PASSPHRASE:
     secure: ppGahvnNpvjY6+zSIe6QJdMM2OArsgn1qb2RQX4SXMmEamtJM9/fY03rTBxBVFgoRNJftJMD9I6RYLFBzdtwQw==
+  GH_TOKEN:
+    secure: w01ayU0xx5aYR68/rJbAtdtfs+6bXFhYhZkRf4aeY8ca2qikM0UWiC7G5xXeUkz9
   matrix:
-    - nodejs_version: 9.3.0
+    - nodejs_version: 10
+
 install:
+  - ps: $env:package_version = (Get-Content -Raw -Path package.json | ConvertFrom-Json).version 
+  - ps: Update-AppveyorBuild -Version "$env:package_version-$env:APPVEYOR_BUILD_NUMBER"
   - ps: iex ((New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/appveyor/secure-file/master/install.ps1')) # install appveyor decrypt tool
-  - cmd: appveyor-tools\secure-file -decrypt certs/cert.pfx.enc -secret %passphrase% # decrypt certificate
-  - ps: Install-Product node $env:nodejs_version
+  - cmd: appveyor-tools\secure-file -decrypt certs/cert.pfx.enc -secret %CERT_PASSPHRASE% # decrypt certificate
+  - ps: Install-Product node $env:nodejs_version x64
+  - ps: npm install -g windows-build-tools
   - set CI=true
   - npm install -g npm@latest
   - set PATH=%APPDATA%\npm;%PATH%
-  - npm install
+  - npm ci
+
 matrix:
   fast_finish: true
-build: off
-version: '{build}'
+
 shallow_clone: true
 clone_depth: 1
-test_script:
-  - npm run make
-deploy:
-  release: $(tag)
-  description: $(tag) - Release Title Here
-  provider: GitHub
-  auth_token:
-    secure: w01ayU0xx5aYR68/rJbAtdtfs+6bXFhYhZkRf4aeY8ca2qikM0UWiC7G5xXeUkz9 # your encrypted token from GitHub
-  artifact:
-    - dist/Ganache-$(appveyor_build_version).appx
-    - dist/ganache-setup-$(appveyor_build_version).exe
-    - dist/ganache-setup-$(appveyor_build_version).exe.blockmap
-    - dist/latest.yml
-  draft: true
-  prerelease: true
-  on:
-    branch: master                 # release from master branch only
-    appveyor_repo_tag: true        # deploy on tag push only
+
+build_script:
+  - ps: npm run build-windows
+
+artifacts:
+  - path: 'dist/Ganache-*.appx'
+  - path: 'dist/ganache-setup-*.exe'
+  - path: 'dist/ganache-setup-*.exe.blockmap'
+  - path: 'dist/latest.yml'
