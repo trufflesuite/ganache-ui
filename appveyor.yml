@@ -1,0 +1,43 @@
+image:
+  - Visual Studio 2017
+cache:
+  - node_modules
+environment:
+  CSC_KEY_PASSWORD:
+    secure: Cqeajvouxb90cluiDv/iJuLkFHwNERXSxjoXg7FzZZ4=
+  passphrase:
+    secure: ppGahvnNpvjY6+zSIe6QJdMM2OArsgn1qb2RQX4SXMmEamtJM9/fY03rTBxBVFgoRNJftJMD9I6RYLFBzdtwQw==
+  matrix:
+    - nodejs_version: 9.3.0
+install:
+  - ps: iex ((New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/appveyor/secure-file/master/install.ps1')) # install appveyor decrypt tool
+  - cmd: appveyor-tools\secure-file -decrypt certs/cert.pfx.enc -secret %passphrase% # decrypt certificate
+  - ps: Install-Product node $env:nodejs_version
+  - set CI=true
+  - npm install -g npm@latest
+  - set PATH=%APPDATA%\npm;%PATH%
+  - npm install
+matrix:
+  fast_finish: true
+build: off
+version: '{build}'
+shallow_clone: true
+clone_depth: 1
+test_script:
+  - npm run make
+deploy:
+  release: $(tag)
+  description: $(tag) - Release Title Here
+  provider: GitHub
+  auth_token:
+    secure: w01ayU0xx5aYR68/rJbAtdtfs+6bXFhYhZkRf4aeY8ca2qikM0UWiC7G5xXeUkz9 # your encrypted token from GitHub
+  artifact:
+    - dist/Ganache-$(appveyor_build_version).appx
+    - dist/ganache-setup-$(appveyor_build_version).exe
+    - dist/ganache-setup-$(appveyor_build_version).exe.blockmap
+    - dist/latest.yml
+  draft: true
+  prerelease: true
+  on:
+    branch: master                 # release from master branch only
+    appveyor_repo_tag: true        # deploy on tag push only

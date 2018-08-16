@@ -1,4 +1,4 @@
-certs
+certs/cert.pfx
 dist
 out
 node_modules
