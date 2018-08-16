@@ -25,19 +25,19 @@ shallow_clone: true
 clone_depth: 1
 test_script:
   - npm run make
+artifacts:
+  - path: dist/Ganache-$(tag).appx
+  - path: dist/ganache-setup-$(tag).exe
+  - path: dist/ganache-setup-$(tag).exe.blockmap
+  - path: dist/latest.yml
 deploy:
   release: $(tag)
   description: $(tag) - Release Title Here
   provider: GitHub
   auth_token:
-    secure: w01ayU0xx5aYR68/rJbAtdtfs+6bXFhYhZkRf4aeY8ca2qikM0UWiC7G5xXeUkz9 # your encrypted token from GitHub
-  artifact:
-    - dist/Ganache-$(appveyor_build_version).appx
-    - dist/ganache-setup-$(appveyor_build_version).exe
-    - dist/ganache-setup-$(appveyor_build_version).exe.blockmap
-    - dist/latest.yml
-  draft: true
-  prerelease: true
-  on:
-    branch: master                 # release from master branch only
-    appveyor_repo_tag: true        # deploy on tag push only
+    secure: w01ayU0xx5aYR68/rJbAtdtfs+6bXFhYhZkRf4aeY8ca2qikM0UWiC7G5xXeUkz9
+    draft: true
+    prerelease: true
+    on:
+      branch: master
+      appveyor_repo_tag: true
