@@ -9,7 +9,7 @@ class Settings {
   }
 
   setDirectory(directory) {
-    this.settings.directory = directory
+    this.settings.setStorageDirectory(directory)
   }
 
   async get (key, defaultValue = null) {

@@ -1,16 +1,16 @@
 import path from 'path'
 import fs from 'fs'
-import { app } from 'electron'
 import Workspace from './Workspace'
 import WorkspaceSettings, { DEFAULT_WORKSPACE_NAME } from '../settings/WorkspaceSettings'
 
 class WorkspaceManager {
-  constructor() {
+  constructor(directory) {
+    this.directory = directory
     this.workspaces = []
   }
 
   async enumerateWorkspaces() {
-    const workspacesDirectory = path.join(app.getPath('userData'), 'workspaces')
+    const workspacesDirectory = path.join(this.directory, 'workspaces')
     if (fs.existsSync(workspacesDirectory)) {
       this.workspaces = fs.readdirSync(workspacesDirectory).filter((file) => {
         return fs.lstatSync(path.join(workspacesDirectory, file)).isDirectory

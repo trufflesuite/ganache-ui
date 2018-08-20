@@ -1,4 +1,4 @@
-import storage from 'electron-json-storage'
+import LocalStorage from 'node-localstorage'
 
 import JsonWithKeyPaths from './JsonWithKeyPaths'
 
@@ -6,12 +6,17 @@ class JsonStorage {
   constructor(directory, name, obj) {
     this.obj = new JsonWithKeyPaths(obj)
     this.name = name
+    this.setStorageDirectory(directory)
+  }
+
+  setStorageDirectory(directory) {
     this.directory = directory
+    this.storage = new LocalStorage(this.directory)
   }
 
   getFromStorage() {
     return new Promise((resolve, reject) => {
-      storage.get(this.name, {dataPath: this.directory}, (err, data) => {
+      this.storage.getItem(this.name, (err, data) => {
         if (err) {
           console.error(err)
           reject(err)
@@ -55,7 +60,7 @@ class JsonStorage {
 
   setToStorage() {
     return new Promise((resolve, reject) => {
-      storage.set(this.name, this.obj.obj, {dataPath: this.directory}, (error) => {
+      this.storage.setItem(this.name, this.obj.obj, (error) => {
         if (error) {
           reject(error)
         }

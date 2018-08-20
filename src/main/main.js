@@ -109,7 +109,7 @@ app.on('ready', () => {
     const chain = new ChainService(app)
     const global = new GlobalSettings(path.join(app.getPath('userData'), 'global'))
     const GoogleAnalytics = new GoogleAnalyticsService()
-    const workspaceManager = new WorkspaceManager()
+    const workspaceManager = new WorkspaceManager(app.getPath('userData'))
     let workspace
 
     app.on('will-quit', function () {
