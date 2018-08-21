@@ -15,7 +15,9 @@
     "makeappxassets": "svg2uwptiles -i ./Logo.svg -c ./blank.svg -o ./resources/appx/",
     "build-linux": "cd ./node_modules/rabin-bindings && node-gyp rebuild && cd ../../ && npm run make",
     "build-mac": "npm run make",
-    "build-windows": "bash -c \"echo ${CERT_PASS?\\\"Need to set CERT_PASS to build on Windows\\\"} > /dev/null\" && npm run make"
+    "build-windows": "bash -c \"echo ${CERT_PASS?\\\"Need to set CERT_PASS to build on Windows\\\"} > /dev/null\" && npm run make",
+    "test": "npm run test-mocha",
+    "test-mocha": "mocha --compilers js:babel-register --check-leaks 'test/**/*.test.js'"
   },
   "browserslist": "chrome 50",
   "build": {
@@ -173,7 +175,7 @@
     "electron-prebuilt-compile": "1.8.4",
     "jsdom": "^9.9.1",
     "minimist": "^1.2.0",
-    "mocha": "^3.2.0",
+    "mocha": "^3.5.3",
     "node-sass": "^4.5.3",
     "prop-types": "^15.5.10",
     "rcedit": "^0.9.0",
