@@ -69,18 +69,6 @@ process.on('unhandledRejection', err => {
   }
 })
 
-var shouldQuit = app.makeSingleInstance(function(commandLine, workingDirectory) {
-  // Someone tried to run a second instance, we should focus our window.
-  if (mainWindow) {
-    if (mainWindow.isMinimized()) mainWindow.restore();
-    mainWindow.focus();
-  }
-});
-
-if (shouldQuit) {
-  app.quit();
-}
-
 app.on('window-all-closed', () => {
   // don't quit the app before the updater can do its thing
   const service = getAutoUpdateService()
