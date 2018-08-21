@@ -1,34 +1,33 @@
 import path from 'path'
 import fse from 'fs-extra'
-import { app } from 'electron'
 
 import WorkspaceSettings, { DEFAULT_WORKSPACE_NAME } from '../settings/WorkspaceSettings'
 import TruffleProject from './TruffleProject'
 
 class Workspace {
-  constructor(name) {
+  constructor(name, configDirectory) {
     this.name = name
     this.projects = []
-    this.init()
+    this.init(configDirectory)
 
     // This doesn't go in the init() function because the init is used for initializing
     //   the other parameters (and when the workspaced is "Saved As" something else)
     this.settings = new WorkspaceSettings(this.workspaceDirectory, this.chaindataDirectory)
   }
 
-  init() {
-    this.workspaceDirectory = Workspace.generateDirectoryPath(this.name)
+  init(configDirectory) {
+    this.workspaceDirectory = Workspace.generateDirectoryPath(this.name, configDirectory)
     this.basename = path.basename(this.workspaceDirectory)
     this.chaindataDirectory = this.generateChaindataDirectory()
   }
 
-  static generateDirectoryPath(name) {
+  static generateDirectoryPath(name, configDirectory) {
     if (name === DEFAULT_WORKSPACE_NAME) {
-      return path.join(app.getPath('userData'), 'default')
+      return path.join(configDirectory, 'default')
     }
     else {
       const sanitizedName = name.replace(/\s/g, '-').replace(/[^a-zA-Z0-9\-\_\.]/g, '')
-      return path.join(app.getPath('userData'), 'workspaces', sanitizedName)
+      return path.join(configDirectory, 'workspaces', sanitizedName)
     }
   }
 

@@ -18,11 +18,11 @@ class WorkspaceManager {
         let settings = new WorkspaceSettings(path.join(workspacesDirectory, file), path.join(workspacesDirectory, file, "chaindata"))
         settings.bootstrap()
         const name = settings.get("name")
-        return new Workspace(name)
+        return new Workspace(name, this.directory)
       })
     }
 
-    this.workspaces.push(new Workspace(DEFAULT_WORKSPACE_NAME))
+    this.workspaces.push(new Workspace(DEFAULT_WORKSPACE_NAME, this.directory))
   }
 
   bootstrap() {
