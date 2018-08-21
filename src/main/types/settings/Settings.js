@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import merge from 'lodash.merge'
 import JsonStorage from '../json/JsonStorage'
 import UUID from 'uuid'
 
@@ -49,7 +49,7 @@ class Settings {
     // The loop over Object.keys(obj) below doesn't prevent overwriting stored
     // null values in nested objects, so we make sure to preserve them here.
     const currentSettings = this._getAllRaw()
-    obj = _.merge({}, currentSettings, obj)
+    obj = merge({}, currentSettings, obj)
 
     this.settings.setAll(obj)
   }
@@ -72,7 +72,7 @@ class Settings {
     // where the current values take precedence. 
     let currentSettings = this._getAllRaw()
 
-    currentSettings = _.merge({}, this.initialSettings, currentSettings)
+    currentSettings = merge({}, this.initialSettings, currentSettings)
 
     // Add any non-additive settings changes here by creating a function which
     // handles the settings change in question.

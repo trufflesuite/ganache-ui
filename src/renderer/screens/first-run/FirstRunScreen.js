@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { push } from 'react-router-redux'
-import _ from 'lodash'
 
 import connect from '../helpers/connect'
 
