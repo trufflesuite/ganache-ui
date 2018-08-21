@@ -9,28 +9,26 @@ class WorkspaceManager {
     this.workspaces = []
   }
 
-  async enumerateWorkspaces() {
+  enumerateWorkspaces() {
     const workspacesDirectory = path.join(this.directory, 'workspaces')
     if (fs.existsSync(workspacesDirectory)) {
       this.workspaces = fs.readdirSync(workspacesDirectory).filter((file) => {
         return fs.lstatSync(path.join(workspacesDirectory, file)).isDirectory
-      }).map(async (file) => {
+      }).map((file) => {
         let settings = new WorkspaceSettings(path.join(workspacesDirectory, file), path.join(workspacesDirectory, file, "chaindata"))
-        await settings.bootstrap()
-        const name = await settings.get("name")
+        settings.bootstrap()
+        const name = settings.get("name")
         return new Workspace(name)
       })
-
-      this.workspaces = await Promise.all(this.workspaces)
     }
 
     this.workspaces.push(new Workspace(DEFAULT_WORKSPACE_NAME))
   }
 
-  async bootstrap() {
-    await this.enumerateWorkspaces()
+  bootstrap() {
+    this.enumerateWorkspaces()
     for (let i = 0; i < this.workspaces.length; i++) {
-      await this.workspaces[i].bootstrap()
+      this.workspaces[i].bootstrap()
     }
   }
 

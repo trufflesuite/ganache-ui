@@ -1,4 +1,4 @@
-import LocalStorage from 'node-localstorage'
+import { LocalStorage } from 'node-localstorage'
 
 import JsonWithKeyPaths from './JsonWithKeyPaths'
 
@@ -15,70 +15,50 @@ class JsonStorage {
   }
 
   getFromStorage() {
-    return new Promise((resolve, reject) => {
-      this.storage.getItem(this.name, (err, data) => {
-        if (err) {
-          console.error(err)
-          reject(err)
-        }
-        else {
-          this.obj.setAll(data)
-          resolve(data)
-        }
-      })
-    })
+    const data = JSON.parse(this.storage.getItem(this.name))
+    this.obj.setAll(data)
+    return data
   }
 
   // if defaultValue is set, and neither the cache nor storage has the key
   //   the cache and storage will be set to the defaultValue
   get(key, defaultValue = null) {
-    return new Promise(async (resolve, reject) => {
+    if (this.obj.has(key)) {
+      return this.obj.get(key)
+    }
+    else {
+      // check storage
+      this.getFromStorage()
+      // we use this.obj again because getFromStorage refreshes the cache
       if (this.obj.has(key)) {
-        resolve(this.obj.get(key))
+        return this.obj.get(key)
+      }
+      else if (defaultValue !== null) {
+        this.set(key, defaultValue)
+        return defaultValue
       }
       else {
-        // check storage
-        await this.getFromStorage()
-        // we use this.obj again because getFromStorage refreshes the cache
-        if (this.obj.has(key)) {
-          resolve(this.obj.get(key))
-        }
-        else if (defaultValue !== null) {
-          await this.set(key, defaultValue)
-          resolve(defaultValue)
-        }
-        else {
-          resolve(undefined)
-        }
+        return undefined
       }
-    })
+    }
   }
 
-  async getAll() {
-    return await this.getFromStorage()
+  getAll() {
+    return this.getFromStorage()
   }
 
   setToStorage() {
-    return new Promise((resolve, reject) => {
-      this.storage.setItem(this.name, this.obj.obj, (error) => {
-        if (error) {
-          reject(error)
-        }
-        else {
-          resolve()
-        }
-      })
-    })
+    this.storage.setItem(this.name, JSON.stringify(this.obj.obj))
   }
 
-  async set(key, value) {
+  set(key, value) {
     this.obj.set(key, value)
-    await this.setToStorage()
+    this.setToStorage()
   }
 
-  async setAll(value) {
+  setAll(value) {
     this.obj.setAll(value)
-    await this.setToStorage()
+    this.setToStorage()
   }
 }
 

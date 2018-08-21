@@ -47,9 +47,9 @@ class WorkspaceSettings extends Settings {
    * persist this new mnemonic if it differs from the one stored and if
    * randomizeMnemonicOnStart is false.
    */
-  async handleNewMnemonic(mnemonic) {
+  handleNewMnemonic(mnemonic) {
     if (!this._getRaw("randomizeMnemonicOnStart", true)) {
-      await this.set('server.mnemonic', mnemonic)
+      this.set('server.mnemonic', mnemonic)
     }
   }
 

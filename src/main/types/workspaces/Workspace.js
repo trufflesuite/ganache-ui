@@ -53,7 +53,7 @@ class Workspace {
   }
 
   async bootstrapProjects() {
-    const projects = await this.settings.get("projects")
+    const projects = this.settings.get("projects")
 
     this.projects = projects.map(async (project) => {
       const truffleProject = new TruffleProject(project)
@@ -66,17 +66,17 @@ class Workspace {
 
   async bootstrap() {
     this.bootstrapDirectory()
-    await this.settings.bootstrap()
+    this.settings.bootstrap()
     await this.bootstrapProjects()
   }
 
-  async saveAs(name, chaindataDirectory) {
+  saveAs(name, chaindataDirectory) {
     this.name = name
     this.init()
     this.bootstrapDirectory()
 
     this.settings.setDirectory(this.workspaceDirectory)
-    await this.settings.set("name", name)
+    this.settings.set("name", name)
 
     if (chaindataDirectory && chaindataDirectory !== this.chaindataDirectory) {
       fse.copySync(chaindataDirectory, this.chaindataDirectory)

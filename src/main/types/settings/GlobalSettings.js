@@ -11,8 +11,8 @@ class GlobalSettings extends Settings {
     super(directory, initialSettings)
   }
 
-  async bootstrap() {
-    await super.bootstrap()
+  bootstrap() {
+    super.bootstrap()
   }
 }
 

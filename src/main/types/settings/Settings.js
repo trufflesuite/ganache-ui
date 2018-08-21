@@ -12,21 +12,21 @@ class Settings {
     this.settings.setStorageDirectory(directory)
   }
 
-  async get (key, defaultValue = null) {
-    const obj = await this._getRaw(key, defaultValue)
+  get (key, defaultValue = null) {
+    const obj = this._getRaw(key, defaultValue)
     return removeNullSettings(obj)
   }
 
-  async _getRaw (key, defaultValue = null) {
-    return await this.settings.get(key, defaultValue)
+  _getRaw (key, defaultValue = null) {
+    return this.settings.get(key, defaultValue)
   }
 
-  async getAll () {
-    const obj = await this._getAllRaw()
+  getAll () {
+    const obj = this._getAllRaw()
     return removeNullSettings(obj)
   }
 
-  async _getAllRaw () {
+  _getAllRaw () {
     // We used to delete some keys to toggle certain settings off, or to imply
     // default behavior. However if we do that then the settings migration logic in
     // the bootstrap method won't be able to tell that we're aware of this
@@ -37,7 +37,7 @@ class Settings {
     // Further, we strip out nulls in Settings.getAll just to be certain that
     // nothing can surprise us by interpreting a key with a null value
     // differently from a missing key.
-    return await this.settings.getAll()
+    return this.settings.getAll()
   }
 
   // TODO: do we want to use the watching ability? it would need to be added
@@ -45,17 +45,17 @@ class Settings {
   //   settings.watch(key, fn);
   // }
 
-  async setAll (obj) {
+  setAll (obj) {
     // The loop over Object.keys(obj) below doesn't prevent overwriting stored
     // null values in nested objects, so we make sure to preserve them here.
-    const currentSettings = await this._getAllRaw()
+    const currentSettings = this._getAllRaw()
     obj = _.merge({}, currentSettings, obj)
 
-    await this.settings.setAll(obj)
+    this.settings.setAll(obj)
   }
 
-  async set (key, value) {
-    await this.settings.set(key, value);
+  set (key, value) {
+    this.settings.set(key, value);
   }
 
   destroy () {
@@ -67,10 +67,10 @@ class Settings {
     return settings
   }
 
-  async bootstrap () {
+  bootstrap () {
     // Ensure new settings variables get added by merging all the settings,
     // where the current values take precedence. 
-    let currentSettings = await this._getAllRaw()
+    let currentSettings = this._getAllRaw()
 
     currentSettings = _.merge({}, this.initialSettings, currentSettings)
 
@@ -83,7 +83,7 @@ class Settings {
     }
 
     // Apply the merged settings
-    await this.setAll(currentSettings)
+    this.setAll(currentSettings)
   }
 }
 

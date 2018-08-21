@@ -104,8 +104,8 @@ app.on('ready', () => {
       chain.stopProcess();
     });
 
-    await global.bootstrap()
-    await workspaceManager.bootstrap()
+    global.bootstrap()
+    workspaceManager.bootstrap()
 
     mainWindow = new BrowserWindow({
       show: false,
@@ -137,19 +137,19 @@ app.on('ready', () => {
       mainWindow.setMenu(null);
 
       // make sure the store registers the settings ASAP in the event of a startup crash
-      const globalSettings = await global.getAll()
+      const globalSettings = global.getAll()
       mainWindow.webContents.send(SET_SETTINGS, globalSettings, {})
 
       mainWindow.webContents.send(SET_WORKSPACES, workspaceManager.getNonDefaultNames())
 
       chain.on("start", async () => {
         if (workspace) {
-          const workspaceSettings = await workspace.settings.getAll()
+          const workspaceSettings = workspace.settings.getAll()
           chain.startServer(workspaceSettings)
         }
       })
 
-      chain.on("server-started", async (data) => {
+      chain.on("server-started", (data) => {
         if (workspace) {
           mainWindow.webContents.send(SET_KEY_DATA, { 
             privateKeys: data.privateKeys,
@@ -157,10 +157,10 @@ app.on('ready', () => {
             hdPath: data.hdPath
           })
 
-          await workspace.settings.handleNewMnemonic(data.mnemonic)
+          workspace.settings.handleNewMnemonic(data.mnemonic)
 
-          const globalSettings = await global.getAll()
-          const workspaceSettings = await workspace.settings.getAll()
+          const globalSettings = global.getAll()
+          const workspaceSettings = workspace.settings.getAll()
           mainWindow.webContents.send(SET_SERVER_STARTED, globalSettings, workspaceSettings)
         }
       })
@@ -197,9 +197,9 @@ app.on('ready', () => {
         workspace.saveAs(name, chaindataLocation)
       }
 
-      await workspaceManager.bootstrap()
+      workspaceManager.bootstrap()
 
-      const globalSettings = await global.getAll()
+      const globalSettings = global.getAll()
       mainWindow.webContents.send(SET_SETTINGS, globalSettings, {})
 
       mainWindow.webContents.send(SET_WORKSPACES, workspaceManager.getNonDefaultNames())
@@ -212,9 +212,9 @@ app.on('ready', () => {
         }
       }
 
-      await workspaceManager.bootstrap()
+      workspaceManager.bootstrap()
 
-      const globalSettings = await global.getAll()
+      const globalSettings = global.getAll()
       mainWindow.webContents.send(SET_SETTINGS, globalSettings, {})
 
       mainWindow.webContents.send(SET_WORKSPACES, workspaceManager.getNonDefaultNames())
@@ -233,8 +233,8 @@ app.on('ready', () => {
         // couldn't find the workspace in the manager?
       }
       else {
-        const workspaceSettings = await workspace.settings.getAll()
-        GoogleAnalytics.setup(await global.get("googleAnalyticsTracking") && inProduction, workspaceSettings.uuid)
+        const workspaceSettings = workspace.settings.getAll()
+        GoogleAnalytics.setup(global.get("googleAnalyticsTracking") && inProduction, workspaceSettings.uuid)
         GoogleAnalytics.reportWorkspaceSettings(workspaceSettings)
 
         chain.start()
@@ -249,7 +249,7 @@ app.on('ready', () => {
     // This will trigger then chain event handlers above once the server stops.
     ipcMain.on(REQUEST_SERVER_RESTART, async () => {
       // make sure the store registers the settings ASAP in the event of a startup crash
-      const globalSettings = await global.getAll()
+      const globalSettings = global.getAll()
       mainWindow.webContents.send(SET_SETTINGS, globalSettings, {})
 
       if (workspace) {
@@ -257,7 +257,7 @@ app.on('ready', () => {
           await chain.stopServer()
         }
 
-        const workspaceSettings = await workspace.settings.getAll()
+        const workspaceSettings = workspace.settings.getAll()
         chain.startServer(workspaceSettings)
 
         // send the interfaces again once on restart
@@ -266,10 +266,10 @@ app.on('ready', () => {
     })
 
     ipcMain.on(REQUEST_SAVE_SETTINGS, async (event, globalSettings, workspaceSettings) => {
-      await global.setAll(globalSettings)
+      global.setAll(globalSettings)
 
       if (workspace) {
-        await workspace.settings.setAll(workspaceSettings)
+        workspace.settings.setAll(workspaceSettings)
       }
 
       GoogleAnalytics.reportWorkspaceSettings(workspaceSettings)
