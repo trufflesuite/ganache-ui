@@ -17,7 +17,7 @@
     "build-mac": "npm run make",
     "build-windows": "bash -c \"echo ${CERT_PASS?\\\"Need to set CERT_PASS to build on Windows\\\"} > /dev/null\" && npm run make",
     "test": "npm run test-mocha",
-    "test-mocha": "mocha --compilers js:babel-register --check-leaks 'test/**/*.test.js'"
+    "test-mocha": "mocha --compilers js:babel-register --check-leaks --recursive"
   },
   "browserslist": "chrome 50",
   "build": {
