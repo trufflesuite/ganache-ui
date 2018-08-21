@@ -51,22 +51,22 @@ class Workspace {
     }
   }
 
-  async bootstrapProjects() {
+  bootstrapProjects() {
     const projects = this.settings.get("projects")
 
     this.projects = projects.map(async (project) => {
       const truffleProject = new TruffleProject(project)
-      await truffleProject.bootstrap()
+      truffleProject.bootstrap()
       return truffleProject
     })
 
     this.projects = Promise.all(this.projects)
   }
 
-  async bootstrap() {
+  bootstrap() {
     this.bootstrapDirectory()
     this.settings.bootstrap()
-    await this.bootstrapProjects()
+    this.bootstrapProjects()
   }
 
   saveAs(name, chaindataDirectory) {

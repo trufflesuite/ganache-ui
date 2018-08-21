@@ -1,6 +1,3 @@
-import path from 'path'
-import fse from 'fs-extra'
-
 class TruffleProject {
   constructor(directory) {
     this.init()
@@ -9,7 +6,7 @@ class TruffleProject {
   init() {
   }
 
-  async bootstrap() {
+  bootstrap() {
   }
 }
 
