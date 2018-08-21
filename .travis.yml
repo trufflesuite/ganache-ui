@@ -12,4 +12,4 @@ addons:
 before_install:
   - nvm --version
   - node --version
-  - npm --version
+  - npm --version 
