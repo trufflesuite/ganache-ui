@@ -1,8 +1,8 @@
 import path from "path";
 import assert from "assert";
 
-import WorkspaceManager from "../../src/main/types/workspaces/WorkspaceManager";
-import { DEFAULT_WORKSPACE_NAME } from "../../src/main/types/settings/WorkspaceSettings";
+import WorkspaceManager from "../../../src/main/types/workspaces/WorkspaceManager";
+import { DEFAULT_WORKSPACE_NAME } from "../../../src/main/types/settings/WorkspaceSettings";
 
 describe("Workspace Manager", () => {
   let workspaceManager = null;
