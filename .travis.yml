@@ -1,0 +1,15 @@
+language: node_js
+node_js:
+  - "node"
+  - "lts/carbon"
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+
+before_install:
+  - nvm --version
+  - node --version
+  - npm --version
