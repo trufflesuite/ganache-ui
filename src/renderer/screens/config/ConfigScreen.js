@@ -54,7 +54,7 @@ class ConfigScreen extends PureComponent {
     this.state.config.validationErrors = {}
 
     if (this.isDirty()) {
-      this.props.dispatch(Config.requestSaveSettings(this.state.config.settings))
+      this.props.dispatch(Config.requestSaveSettings(this.state.config.settings.global, this.state.config.settings.workspace))
     }
     this.props.dispatch(Core.requestServerRestart())
   }
