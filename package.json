@@ -182,6 +182,7 @@
     "redux-logger": "^2.7.4",
     "source-map-support": "^0.4.8",
     "svg2uwptiles": "0.0.4",
+    "temp": "^0.8.3",
     "webpack": "^3.11.0"
   },
   "dependencies": {
