@@ -14,7 +14,6 @@ describe("New Workspace", () => {
     temp.track();
     configDirectory = temp.mkdirSync("ganache-temp-workspaces");
     fs.mkdirSync(path.join(configDirectory, "workspaces"));
-    console.log(configDirectory);
   });
 
   it("successfully creates and bootsraps new workspace", async () => {
