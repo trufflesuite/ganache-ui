@@ -36,12 +36,23 @@ class GoogleAnalyticsService {
 
     if (this.isEnabled && this.uuid) {
       this.user = ua(ganacheAnalyticsId, this.uuid)
-      this.user.set('location', ganacheUrl)
-      this.user.set('checkProtocolTask', null)
-      this.user.set('an', ganacheName)
-      this.user.set('av', appVersion)
 
       this.isSetup = true
+    }
+  }
+
+  reportGenericUserData() {
+    if (this.isEnabled) {
+      if (!this.isSetup || this.user === null) {
+        this.setup()
+      }
+
+      if (this.canSend()) {
+        this.user.set('location', ganacheUrl)
+        this.user.set('checkProtocolTask', null)
+        this.user.set('an', ganacheName)
+        this.user.set('av', appVersion)
+      }
     }
   }
 
