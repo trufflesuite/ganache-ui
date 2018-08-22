@@ -11,11 +11,11 @@ describe("Workspace Manager", () => {
     workspaceManager = new WorkspaceManager(path.resolve(__dirname, "test-workspaces"));
   });
 
-  it("boostraps without error", async () => {
+  it("boostrapped without error", async () => {
     workspaceManager.bootstrap();
   });
 
-  it("loads expected worksapces", async () => {
+  it("loaded expected worksapces", async () => {
     let expectedWorkspaces = {
       "Test 1": false,
       "Test 2": false

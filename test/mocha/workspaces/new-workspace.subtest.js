@@ -16,7 +16,7 @@ describe("New Workspace", () => {
     fs.mkdirSync(path.join(configDirectory, "workspaces"));
   });
 
-  it("successfully creates and bootsraps new workspace", async () => {
+  it("created and bootstrapped new workspace", async () => {
     workspace = new Workspace("Temp Workspace", configDirectory);
     workspace.bootstrap();
   });
