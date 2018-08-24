@@ -45,3 +45,4 @@ artifacts:
   - path: 'dist/ganache-setup-*.exe'
   - path: 'dist/ganache-setup-*.exe.blockmap'
   - path: 'dist/latest.yml'
+
