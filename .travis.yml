@@ -40,7 +40,7 @@ before_install:
 - if [ "$TRAVIS_OS_NAME" = "osx" ]; then
     export CSC_IDENTITY_AUTO_DISCOVERY=false;
     if [ "${TRAVIS_PULL_REQUEST}" = "false" -a "$TRAVIS_BRANCH" = "master" ]; then
-      then export CSC_LINK=certs/osx.p12;
+      export CSC_LINK=certs/osx.p12;
       openssl aes-256-cbc -K $encrypted_7777a4e0a460_key -iv $encrypted_7777a4e0a460_iv -in certs/osx.p12.enc -out certs/osx.p12 -d;
     fi
   fi
