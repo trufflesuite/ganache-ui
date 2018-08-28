@@ -31,8 +31,6 @@ env:
     - secure: "MrkHZgU2aXfvHJY55gXFoB/diVP/GMoZfrftJeJqBU0L6t4GIWC01xrQGuS/nNNWL9ixwxSkjg1rWVr63uel905vbeP/05bNLJ8HypPPkKJs7Sd6h/2/ZDd5zAe+63J3yrpuXJj6y4tlIEPZExyHnpPZHu2fAQV0pyvkGefyyaJY9awAlCOfoCquHE9Y98EAXCxqOSdbSStSOoX6dAPdjN8CZ/Bq0gSlqZYdMBwzHee0VC4ftgGMVeXcAdJ9NNAwi70PIHryCW0YvmzLkDwJtG7GYQ7hAOgLreruu9ifmOYmRWAI4Ko8WPgD5fv46VLrsJ2Zmn5MgEg5IVR1b9oWfdo4BlC20XS2EtAWcizzCSIYza10rJJ10gyPQ32WlXwPtpohaJeyTIaEx8dTvfPe4pqRTck2UrkF215FFNgTN0tUWsrIFbYNCXVhCBSOER5ZH9uiZxmyh44rSk4Svro42hJCWquFEZAdyxld7LUJVeFNtb9SWU/5W06uExHJ0+d9MFUf0XJK6OHWol19ZTSYayLaZ2Tm2C2wrAHcUvHlsl9tUySVSVbX9+EZyhVpRn6O2ZmW2fAnKmGsOwbCljEwfFBGxReI56v7iI4RsySAS9z/pzl7+8CfjJ/tnVA6JlfGOpLhprwrc0xEH8dJKMDw51kt3yGMGFQwPo+Eq5EQ34Q="
 
 before_install:
-- openssl aes-256-cbc -K $encrypted_7777a4e0a460_key -iv $encrypted_7777a4e0a460_iv
-  -in certs/osx.p12.enc -out certs/osx.p12 -d
 - if [ "$TRAVIS_OS_NAME" = "linux" ]; then
     export CC="gcc-5";
     export CXX="g++-5";
@@ -41,9 +39,9 @@ before_install:
   fi
 - if [ "$TRAVIS_OS_NAME" = "osx" ]; then
     export CSC_IDENTITY_AUTO_DISCOVERY=false;
-    export CSC_LINK='';
-    if [ "${TRAVIS_PULL_REQUEST}" = "false" ];
+    if [ "${TRAVIS_PULL_REQUEST}" = "false" -a "$TRAVIS_BRANCH" = "master" ]; then
       then export CSC_LINK=certs/osx.p12;
+      openssl aes-256-cbc -K $encrypted_7777a4e0a460_key -iv $encrypted_7777a4e0a460_iv -in certs/osx.p12.enc -out certs/osx.p12 -d;
     fi
   fi
 - nvm --version

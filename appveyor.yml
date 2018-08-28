@@ -22,8 +22,10 @@ environment:
 install:
   - ps: $env:package_version = (Get-Content -Raw -Path package.json | ConvertFrom-Json).version 
   - ps: Update-AppveyorBuild -Version "$env:package_version-$env:APPVEYOR_BUILD_NUMBER"
-  - ps: iex ((New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/appveyor/secure-file/master/install.ps1')) # install appveyor decrypt tool
-  - cmd: appveyor-tools\secure-file -decrypt certs/cert.pfx.enc -secret %CERT_PASSPHRASE% # decrypt certificate
+  - ps: if(-not $env:APPVEYOR_PULL_REQUEST_NUMBER) {
+          iex ((New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/appveyor/secure-file/master/install.ps1'));
+          appveyor-tools\secure-file -decrypt certs/cert.pfx.enc -secret $env:CERT_PASSPHRASE;
+        }
   - ps: Install-Product node $env:nodejs_version x64
   - ps: npm install -g windows-build-tools
   - set CI=true
