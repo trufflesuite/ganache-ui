@@ -22,9 +22,16 @@ const initialSettings = {
     locked: false,
     vmErrorsOnRPCResponse: true,
     logger: null,
-    verbose: false
+    verbose: false,
+    gasLimit: 6721975,
+    gasPrice: 20000000000
   }
 }
+
+const defaultSettings = {
+  'server.gasLimit': initialSettings.server.gasLimit,
+  'server.gasPrice': initialSettings.server.gasPrice
+};
 
 class Settings {
   get (key, defaultValue = null) {
@@ -65,6 +72,13 @@ class Settings {
     // Translate old setAll to electron-settings setAll
     Object.keys(obj).forEach((key) => {
       this.set(key, obj[key]);
+    });
+
+    //Set default values
+    Object.keys(defaultSettings).forEach((key) => {
+      if(!settings.get(key)) {
+        this.set(key, defaultSettings[key]);
+      }
     });
   }
 
