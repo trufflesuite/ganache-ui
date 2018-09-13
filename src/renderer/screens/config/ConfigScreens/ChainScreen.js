@@ -66,7 +66,7 @@ class ChainScreen extends Component {
             <div className="RowItem">
               <input
                 name="workspace.server.gasLimit"
-                type="number"
+                type="text"
                 value={this.props.config.settings.workspace.server.gasLimit}
                 onChange={this.validateChange}
               />
@@ -86,7 +86,7 @@ class ChainScreen extends Component {
             <div className="RowItem">
               <input
                 name="workspace.server.gasPrice"
-                type="number"
+                type="text"
                 value={this.props.config.settings.workspace.server.gasPrice}
                 onChange={this.validateChange}
               />

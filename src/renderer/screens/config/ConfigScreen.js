@@ -191,10 +191,10 @@ class ConfigScreen extends PureComponent {
 
         // If we at least have a value, check to see if it has a min/max
         if (value != "") {
-          value = parseInt(value, 10)
+          value = parseFloat(value, 10)
 
           if (validation.min && (value < validation.min || isNaN(value))) {
-            isValid = false     
+            isValid = false
           }
 
           if (validation.max && value > validation.max) {

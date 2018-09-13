@@ -6,6 +6,7 @@ class Settings {
   constructor(directory, initialSettings) {
     this.initialSettings = initialSettings
     this.settings = new JsonStorage(directory, 'Settings')
+    this.defaultSettings = {};
   }
 
   setDirectory(directory) {
@@ -48,8 +49,8 @@ class Settings {
   setAll (obj) {
     // The loop over Object.keys(obj) below doesn't prevent overwriting stored
     // null values in nested objects, so we make sure to preserve them here.
-    const currentSettings = this._getAllRaw()
-    obj = merge({}, currentSettings, obj)
+    const currentSettings = this.getAll()
+    obj = merge({}, this.defaultSettings, currentSettings, obj)
 
     this.settings.setAll(obj)
   }

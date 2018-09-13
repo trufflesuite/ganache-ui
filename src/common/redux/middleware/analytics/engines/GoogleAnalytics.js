@@ -29,19 +29,19 @@ export function process(action, state) {
       break;
     }
     case RPC_REQUEST_STARTED: {
-      GoogleAnalytics.reportEvent(RPCRequestStartedEvent(action.payload))
+      // GoogleAnalytics.reportEvent(RPCRequestStartedEvent(action.payload))
       break;
     }
     case RPC_REQUEST_SUCCEEDED: {
-      GoogleAnalytics.reportEvent(RPCRequestSucceededEvent(action.payload))
+      // GoogleAnalytics.reportEvent(RPCRequestSucceededEvent(action.payload))
 
-      if (action.result.status === '0x0' || action.result.status == 0) {
-        GoogleAnalytics.reportEvent(RPCRequestStatusFailureEvent(action.payload))
-      }
+      // if (action.result.status === '0x0' || action.result.status == 0) {
+      //   GoogleAnalytics.reportEvent(RPCRequestStatusFailureEvent(action.payload))
+      // }
       break;
     }
     case RPC_REQUEST_FAILED: {
-      GoogleAnalytics.reportEvent(RPCRequestFailedEvent(action.payload))
+      // GoogleAnalytics.reportEvent(RPCRequestFailedEvent(action.payload))
       break;
     }
   }

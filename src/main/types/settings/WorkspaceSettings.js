@@ -20,7 +20,9 @@ const initialSettings = {
     locked: false,
     vmErrorsOnRPCResponse: true,
     logger: null,
-    verbose: false
+    verbose: false,
+    gasLimit: 6721975,
+    gasPrice: 20000000000
   },
   projects: []
 }
@@ -30,6 +32,13 @@ class WorkspaceSettings extends Settings {
     super(directory, initialSettings)
 
     this.chaindataDirectory = chaindataDirectory
+
+    this.defaultSettings = {
+      server: {
+        gasLimit: initialSettings.server.gasLimit,
+        gasPrice: initialSettings.server.gasPrice
+      }
+    };
   }
 
   bootstrapModification(currentSettings) {
