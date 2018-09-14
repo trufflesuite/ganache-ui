@@ -1,31 +1,8 @@
 import React, { Component } from "react"
-
-const VALIDATIONS = {
-  "server.total_accounts": {
-    allowedChars: /^\d*$/,
-    min: 1,
-    max: 100
-  },
-  "server.default_balance_ether": {
-    allowedChars: /^[0-9]*\.?[0-9]*$/,
-    min: 0
-  }
-}
-
-const TEMP_PROJECTS = [
-  `C:\\truffle-projects\\project1`,
-  `C:\\truffle-projects\\project2`,
-  `C:\\truffle-projects\\project3`,
-  `C:\\truffle-projects\\project4`,
-  `C:\\truffle-projects\\project5`
-]
+import { remote } from "electron"
 
 class WorkspaceScreen extends Component {
-  state = {
-    // projects: this.props.config.settings.workspace.projects
-    projects: TEMP_PROJECTS,
-    selectedIdx: null
-  }
+  state = { selectedIdx: null }
 
   validateChange = e => {
     this.props.validateChange(e, VALIDATIONS)
@@ -38,13 +15,23 @@ class WorkspaceScreen extends Component {
   }
 
   handleAddProjectClick = () => {
-    console.log("add project")
+    const pathArray = remote.dialog.showOpenDialog({
+      properties: ["openDirectory"]
+    })
+    this.props.addWorkspaceProject(pathArray[0])
+    this.setState({ selectedIdx: null })
+  }
+
+  handleRemoveProject = () => {
+    const path = this.props.config.settings.workspace.projects[
+      this.state.selectedIdx
+    ]
+    this.props.removeWorkspaceProject(path)
+    this.setState({ selectedIdx: null })
   }
 
   render() {
     const { name, projects } = this.props.config.settings.workspace
-    console.log("projects", projects)
-    console.log(this.state.projects)
     return (
       <div>
         <h2>WORKSPACE</h2>
@@ -58,12 +45,6 @@ class WorkspaceScreen extends Component {
                 value={name}
                 onChange={this.validateChange}
               />
-              {this.props.validationErrors["server.default_balance_ether"] && (
-                <p className="ValidationError">
-                  Must be a valid number that is at least{" "}
-                  {VALIDATIONS["server.default_balance_ether"].min}
-                </p>
-              )}
             </div>
             <div className="RowItem">
               <p>A friendly name for this workspace.</p>
@@ -75,7 +56,7 @@ class WorkspaceScreen extends Component {
           <div className="Row">
             <div className="RowItem">
               <div className="WorkspaceProjects">
-                {this.state.projects.map((x, idx) => {
+                {projects.map((x, idx) => {
                   const selected = this.state.selectedIdx === idx
                   return (
                     <div
@@ -88,12 +69,6 @@ class WorkspaceScreen extends Component {
                   )
                 })}
               </div>
-              {this.props.validationErrors["server.default_balance_ether"] && (
-                <p className="ValidationError">
-                  Must be a valid number that is at least{" "}
-                  {VALIDATIONS["server.default_balance_ether"].min}
-                </p>
-              )}
               <div className="WorkspaceButtons">
                 <button
                   className="btn btn-primary"
@@ -104,6 +79,7 @@ class WorkspaceScreen extends Component {
                 <button
                   className="btn btn-primary"
                   disabled={this.state.selectedIdx === null}
+                  onClick={this.handleRemoveProject}
                 >
                   REMOVE PROJECT
                 </button>

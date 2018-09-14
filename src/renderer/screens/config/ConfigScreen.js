@@ -94,6 +94,20 @@ class ConfigScreen extends PureComponent {
     })
   }
 
+  addWorkspaceProject = path => {
+    const alreadyExists = this.state.config.settings.workspace.projects.includes(path)
+    if (!alreadyExists) {
+      this.state.config.settings.workspace.projects.push(path)
+    }
+    this.forceUpdate()
+  }
+
+  removeWorkspaceProject = path => {
+    const newProjects = this.state.config.settings.workspace.projects.filter(x => x !== path)
+    this.state.config.settings.workspace.projects = newProjects
+    this.forceUpdate()
+  }
+
   handleInputChange = event => {
     const target = event.target
     const name = target.name
@@ -230,9 +244,10 @@ class ConfigScreen extends PureComponent {
       network: this.props.network,
       handleInputChange: this.handleInputChange,
       validateChange: this.validateChange,
-      validationErrors: this.state.validationErrors
+      validationErrors: this.state.validationErrors,
+      addWorkspaceProject: this.addWorkspaceProject,
+      removeWorkspaceProject: this.removeWorkspaceProject
     })
-    console.log(this.props.config)
 
     return (
       <main className="ConfigScreen">
