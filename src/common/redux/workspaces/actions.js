@@ -2,7 +2,6 @@ import {ipcRenderer } from 'electron'
 
 import { web3CleanUpHelper } from '../web3/helpers/Web3ActionCreator'
 import { REQUEST_SERVER_RESTART, showTitleScreen } from '../core/actions'
-import { DEFAULT_WORKSPACE_NAME } from '../../../main/types/settings/WorkspaceSettings'
 
 const prefix = 'WORKSPACES'
 
@@ -41,8 +40,8 @@ export const openWorkspace = function(name) {
 
 export const openDefaultWorkspace = function() {
   return function(dispatch, getState) {
-    dispatch({type: OPEN_WORKSPACE, DEFAULT_WORKSPACE_NAME})
-    ipcRenderer.send(OPEN_WORKSPACE, DEFAULT_WORKSPACE_NAME)
+    dispatch({type: OPEN_WORKSPACE, name: null})
+    ipcRenderer.send(OPEN_WORKSPACE, null)
   }
 }
 

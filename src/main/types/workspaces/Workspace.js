@@ -1,12 +1,12 @@
 import path from 'path'
 import fse from 'fs-extra'
 
-import WorkspaceSettings, { DEFAULT_WORKSPACE_NAME } from '../settings/WorkspaceSettings'
+import WorkspaceSettings from '../settings/WorkspaceSettings'
 import TruffleProject from './TruffleProject'
 
 class Workspace {
   constructor(name, configDirectory) {
-    this.name = name
+    this.name = name // null for quickstart/default workspace
     this.projects = []
     this.init(configDirectory)
 
@@ -22,7 +22,7 @@ class Workspace {
   }
 
   static generateDirectoryPath(name, configDirectory) {
-    if (name === DEFAULT_WORKSPACE_NAME) {
+    if (name === null) {
       return path.join(configDirectory, 'default')
     }
     else {
@@ -32,7 +32,7 @@ class Workspace {
   }
 
   generateChaindataDirectory() {
-    if (this.name === DEFAULT_WORKSPACE_NAME) {
+    if (this.name === null) {
       return null
     }
     else {
@@ -76,6 +76,7 @@ class Workspace {
 
     this.settings.setDirectory(this.workspaceDirectory)
     this.settings.set("name", name)
+    this.settings.set("isDefault", false)
 
     if (chaindataDirectory && chaindataDirectory !== this.chaindataDirectory) {
       fse.copySync(chaindataDirectory, this.chaindataDirectory)
