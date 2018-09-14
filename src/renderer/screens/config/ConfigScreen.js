@@ -7,6 +7,7 @@ import connect from '../helpers/connect'
 import * as Core from '../../../common/redux/core/actions'
 import * as Config from '../../../common/redux/config/actions'
 
+import WorkspaceScreen from './ConfigScreens/WorkspaceScreen'
 import ServerScreen from './ConfigScreens/ServerScreen'
 import AccountsScreen from './ConfigScreens/AccountsScreen'
 import ChainScreen from './ConfigScreens/ChainScreen'
@@ -17,6 +18,7 @@ import RestartIcon from '../../icons/restart.svg'
 import EjectIcon from '../../icons/eject.svg';
 
 const TABS = [
+  {name: 'Workspace', subRoute: 'workspace', component: WorkspaceScreen},
   {name: 'Server', subRoute: 'server', component: ServerScreen},
   {name: 'Accounts & Keys', subRoute: 'accounts-keys', component: AccountsScreen},
   {name: 'Chain', subRoute: 'chain', component: ChainScreen},
@@ -230,6 +232,7 @@ class ConfigScreen extends PureComponent {
       validateChange: this.validateChange,
       validationErrors: this.state.validationErrors
     })
+    console.log(this.props.config)
 
     return (
       <main className="ConfigScreen">
