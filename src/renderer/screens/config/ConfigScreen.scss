@@ -233,6 +233,10 @@
       margin: .25rem;
       cursor: pointer;
 
+      &:hover {
+        background: #EEE;
+      }
+
       &.active {
         background: var(--primary-color);
       }

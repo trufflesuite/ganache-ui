@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component } from "react"
 
 const VALIDATIONS = {
   "server.total_accounts": {
@@ -12,21 +12,25 @@ const VALIDATIONS = {
   }
 }
 
-class WorkspaceScreen extends Component {
-  constructor (props) {
-    super(props)
+const TEMP_PROJECTS = [
+  `C:\\truffle-projects\project1`,
+  `C:\\truffle-projects\project2`,
+  `C:\\truffle-projects\project3`,
+  `C:\\truffle-projects\project4`,
+  `C:\\truffle-projects\project5`
+]
 
-    this.state = {
-      accountsLocked: !!props.config.settings.workspace.server.unlocked_accounts,
-      automnemonic: props.config.settings.workspace.randomizeMnemonicOnStart
-    }
-  }
+class WorkspaceScreen extends Component {
+  state = { projects: this.props.config.settings.workspace.projects }
 
   validateChange = e => {
     this.props.validateChange(e, VALIDATIONS)
   }
 
-  render () {
+  render() {
+    const { name, projects } = this.props.config.settings.workspace
+    console.log("projects", projects)
+    console.log(this.state.projects)
     return (
       <div>
         <h2>WORKSPACE</h2>
@@ -35,13 +39,17 @@ class WorkspaceScreen extends Component {
           <div className="Row">
             <div className="RowItem">
               <input
-                name="workspace.server.default_balance_ether"
+                name="workspace.name"
                 type="text"
-                value={this.props.config.settings.workspace.server.default_balance_ether}
+                value={name}
                 onChange={this.validateChange}
               />
-              {this.props.validationErrors["server.default_balance_ether"] &&
-                <p className="ValidationError">Must be a valid number that is at least {VALIDATIONS["server.default_balance_ether"].min}</p>}
+              {this.props.validationErrors["server.default_balance_ether"] && (
+                <p className="ValidationError">
+                  Must be a valid number that is at least{" "}
+                  {VALIDATIONS["server.default_balance_ether"].min}
+                </p>
+              )}
             </div>
             <div className="RowItem">
               <p>A friendly name for this workspace.</p>
@@ -53,18 +61,18 @@ class WorkspaceScreen extends Component {
           <div className="Row">
             <div className="RowItem">
               <div className="WorkspaceProjects">
-                <div className="projectItem active">C:\truffle-projects\project1</div>
-                <div className="projectItem">C:\truffle-projects\project2</div>
-                <div className="projectItem">C:\truffle-projects\project3</div>
-                <div className="projectItem">C:\truffle-projects\project4</div>
-                <div className="projectItem">C:\truffle-projects\project5</div>
+                {TEMP_PROJECTS.map(x => (
+                  <div className="projectItem" key={x}>{x}</div>
+                ))}
               </div>
-              {this.props.validationErrors["server.default_balance_ether"] &&
-                <p className="ValidationError">Must be a valid number that is at least {VALIDATIONS["server.default_balance_ether"].min}</p>}
+              {this.props.validationErrors["server.default_balance_ether"] && (
+                <p className="ValidationError">
+                  Must be a valid number that is at least{" "}
+                  {VALIDATIONS["server.default_balance_ether"].min}
+                </p>
+              )}
               <div className="WorkspaceButtons">
-                <button className="btn btn-primary">
-                  ADD PROJECT
-                </button>
+                <button className="btn btn-primary">ADD PROJECT</button>
                 <button className="btn btn-primary" disabled>
                   REMOVE PROJECT
                 </button>
