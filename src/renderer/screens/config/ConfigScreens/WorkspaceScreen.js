@@ -21,18 +21,24 @@ const TEMP_PROJECTS = [
 ]
 
 class WorkspaceScreen extends Component {
-  // state = { projects: this.props.config.settings.workspace.projects }
-  state = { projects: TEMP_PROJECTS, selectedIdx: null }
+  state = {
+    // projects: this.props.config.settings.workspace.projects
+    projects: TEMP_PROJECTS,
+    selectedIdx: null
+  }
 
   validateChange = e => {
     this.props.validateChange(e, VALIDATIONS)
   }
 
   handleProjectClick = idx => () => {
-    const path = this.state.projects[idx]
-    this.setState({selectedIdx: idx})
-    console.log("idx", idx)
-    console.log("path", path)
+    this.setState({
+      selectedIdx: this.state.selectedIdx === idx ? null : idx
+    })
+  }
+
+  handleAddProjectClick = () => {
+    console.log("add project")
   }
 
   render() {
@@ -73,7 +79,7 @@ class WorkspaceScreen extends Component {
                   const selected = this.state.selectedIdx === idx
                   return (
                     <div
-                      className={`projectItem ${selected && 'active'}`}
+                      className={`projectItem ${selected && "active"}`}
                       key={x}
                       onClick={this.handleProjectClick(idx)}
                     >
@@ -89,8 +95,16 @@ class WorkspaceScreen extends Component {
                 </p>
               )}
               <div className="WorkspaceButtons">
-                <button className="btn btn-primary">ADD PROJECT</button>
-                <button className="btn btn-primary" disabled={this.state.selectedIdx !== null}>
+                <button
+                  className="btn btn-primary"
+                  onClick={this.handleAddProjectClick}
+                >
+                  ADD PROJECT
+                </button>
+                <button
+                  className="btn btn-primary"
+                  disabled={this.state.selectedIdx === null}
+                >
                   REMOVE PROJECT
                 </button>
               </div>
