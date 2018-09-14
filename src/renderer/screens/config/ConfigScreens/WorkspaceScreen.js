@@ -13,18 +13,26 @@ const VALIDATIONS = {
 }
 
 const TEMP_PROJECTS = [
-  `C:\\truffle-projects\project1`,
-  `C:\\truffle-projects\project2`,
-  `C:\\truffle-projects\project3`,
-  `C:\\truffle-projects\project4`,
-  `C:\\truffle-projects\project5`
+  `C:\\truffle-projects\\project1`,
+  `C:\\truffle-projects\\project2`,
+  `C:\\truffle-projects\\project3`,
+  `C:\\truffle-projects\\project4`,
+  `C:\\truffle-projects\\project5`
 ]
 
 class WorkspaceScreen extends Component {
-  state = { projects: this.props.config.settings.workspace.projects }
+  // state = { projects: this.props.config.settings.workspace.projects }
+  state = { projects: TEMP_PROJECTS, selectedIdx: null }
 
   validateChange = e => {
     this.props.validateChange(e, VALIDATIONS)
+  }
+
+  handleProjectClick = idx => () => {
+    const path = this.state.projects[idx]
+    this.setState({selectedIdx: idx})
+    console.log("idx", idx)
+    console.log("path", path)
   }
 
   render() {
@@ -61,9 +69,18 @@ class WorkspaceScreen extends Component {
           <div className="Row">
             <div className="RowItem">
               <div className="WorkspaceProjects">
-                {TEMP_PROJECTS.map(x => (
-                  <div className="projectItem" key={x}>{x}</div>
-                ))}
+                {this.state.projects.map((x, idx) => {
+                  const selected = this.state.selectedIdx === idx
+                  return (
+                    <div
+                      className={`projectItem ${selected && 'active'}`}
+                      key={x}
+                      onClick={this.handleProjectClick(idx)}
+                    >
+                      {x}
+                    </div>
+                  )
+                })}
               </div>
               {this.props.validationErrors["server.default_balance_ether"] && (
                 <p className="ValidationError">
@@ -73,7 +90,7 @@ class WorkspaceScreen extends Component {
               )}
               <div className="WorkspaceButtons">
                 <button className="btn btn-primary">ADD PROJECT</button>
-                <button className="btn btn-primary" disabled>
+                <button className="btn btn-primary" disabled={this.state.selectedIdx !== null}>
                   REMOVE PROJECT
                 </button>
               </div>
