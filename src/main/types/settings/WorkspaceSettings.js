@@ -3,10 +3,9 @@ import merge from 'lodash.merge'
 
 const oldDefaultMnemonic = "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat";
 
-export const DEFAULT_WORKSPACE_NAME = "Default"
-
 const initialSettings = {
-  name: DEFAULT_WORKSPACE_NAME,
+  name: "Quickstart Workspace",
+  isDefault: true,
   verboseLogging: false,
   randomizeMnemonicOnStart: false,
   logsDirectory: null,

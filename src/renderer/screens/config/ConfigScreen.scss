@@ -213,6 +213,36 @@
     }
   }
 
+  .WorkspaceButtons {
+    margin-top: 1rem;
+
+    button {
+      margin-right: .5rem;
+    }
+  }
+
+  .WorkspaceProjects {
+    border: 1px solid var(--app-navbar-text);
+    height: 12rem;
+    width: 100%;
+    padding: .5rem .25rem;
+    overflow: auto;
+
+    .projectItem {
+      padding: .25rem;
+      margin: .25rem;
+      cursor: pointer;
+
+      &:hover {
+        background: #EEE;
+      }
+
+      &.active {
+        background: var(--primary-color);
+      }
+    }
+  }
+
   .AboutScreen {
     margin-top: 10rem;
     align-items: center;

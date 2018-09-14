@@ -1,7 +1,7 @@
 import path from 'path'
 import fs from 'fs'
 import Workspace from './Workspace'
-import WorkspaceSettings, { DEFAULT_WORKSPACE_NAME } from '../settings/WorkspaceSettings'
+import WorkspaceSettings from '../settings/WorkspaceSettings'
 
 class WorkspaceManager {
   constructor(directory) {
@@ -22,7 +22,7 @@ class WorkspaceManager {
       })
     }
 
-    this.workspaces.push(new Workspace(DEFAULT_WORKSPACE_NAME, this.directory))
+    this.workspaces.push(new Workspace(null, this.directory))
   }
 
   bootstrap() {
@@ -34,7 +34,7 @@ class WorkspaceManager {
 
   getNonDefaultNames() {
     return this.workspaces
-      .filter((workspace) => workspace.name !== DEFAULT_WORKSPACE_NAME)
+      .filter((workspace) => workspace.name !== null)
       .map((workspace) => workspace.name)
   }
 

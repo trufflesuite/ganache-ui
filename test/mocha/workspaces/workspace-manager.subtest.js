@@ -2,7 +2,6 @@ import path from "path";
 import assert from "assert";
 
 import WorkspaceManager from "../../../src/main/types/workspaces/WorkspaceManager";
-import { DEFAULT_WORKSPACE_NAME } from "../../../src/main/types/settings/WorkspaceSettings";
 
 describe("Workspace Manager", () => {
   let workspaceManager = null;
@@ -20,7 +19,7 @@ describe("Workspace Manager", () => {
       "Test 1": false,
       "Test 2": false
     };
-    expectedWorkspaces[DEFAULT_WORKSPACE_NAME] = false;
+    expectedWorkspaces[null] = false; // default workspace
     const expectedWorkspaceNames = Object.keys(expectedWorkspaces);
     const numExpectedWorkspaces = expectedWorkspaceNames.length;
 
