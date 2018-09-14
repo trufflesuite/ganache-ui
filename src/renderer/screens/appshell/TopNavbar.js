@@ -149,14 +149,22 @@ class TopNavbar extends Component {
               <LogsIcon />
               Logs
             </Link>
-            <Link onClick={this.handleWorkspacesPress.bind(this)}>
+            <Link to="/logs" activeClassName="Active">
+              <LogsIcon />
+              Contracts
+            </Link>
+            <Link to="/logs" activeClassName="Active">
+              <LogsIcon />
+              Events
+            </Link>
+            {/* <Link onClick={this.handleWorkspacesPress.bind(this)}>
               <BlockIcon />
               Workspaces
             </Link>
             <Link onClick={this.handleSaveWorkspacePress.bind(this)}>
               <BlockIcon />
               Save
-            </Link>
+            </Link>*/}
           </div>
           <div className="NotificationAndSearchBar">
             <OnlyIf test={isNewVersionAvailable}>
@@ -201,6 +209,10 @@ class TopNavbar extends Component {
                 <Spinner />
               </OnlyIf>
             </StatusIndicator>
+            <StatusIndicator
+              title="WORKSPACE"
+              value={this.props.config.settings.workspace.name}
+            />
           </div>
           <div className="Actions">
             <OnlyIf test={isLogsPage}>
