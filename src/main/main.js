@@ -203,7 +203,7 @@ app.on('ready', () => {
 
         const chaindataLocation = workspace.chaindataDirectory || await chain.getDbLocation()
 
-        workspace.saveAs(name, chaindataLocation)
+        workspace.saveAs(name, chaindataLocation, workspaceManager.directory)
       }
 
       workspaceManager.bootstrap()
@@ -278,7 +278,7 @@ app.on('ready', () => {
     ipcMain.on(REQUEST_SAVE_SETTINGS, async (event, globalSettings, workspaceSettings) => {
       global.setAll(globalSettings)
 
-      if (workspace) {
+      if (workspace && workspaceSettings) {
         workspace.settings.setAll(workspaceSettings)
       }
 

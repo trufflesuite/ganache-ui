@@ -49,8 +49,7 @@ class Settings {
   setAll (obj) {
     // The loop over Object.keys(obj) below doesn't prevent overwriting stored
     // null values in nested objects, so we make sure to preserve them here.
-    const currentSettings = this.getAll()
-    obj = merge({}, this.defaultSettings, currentSettings, obj)
+    obj = merge({}, this.defaultSettings, obj)
 
     this.settings.setAll(obj)
   }

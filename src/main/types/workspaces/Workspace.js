@@ -69,9 +69,9 @@ class Workspace {
     this.bootstrapProjects()
   }
 
-  saveAs(name, chaindataDirectory) {
+  saveAs(name, chaindataDirectory, configDirectory) {
     this.name = name
-    this.init()
+    this.init(configDirectory)
     this.bootstrapDirectory()
 
     this.settings.setDirectory(this.workspaceDirectory)
