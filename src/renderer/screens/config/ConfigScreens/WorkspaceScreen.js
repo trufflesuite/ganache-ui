@@ -5,7 +5,7 @@ class WorkspaceScreen extends Component {
   state = { selectedIdx: null }
 
   validateChange = e => {
-    this.props.validateChange(e, VALIDATIONS)
+    this.props.validateChange(e, {})
   }
 
   handleProjectClick = idx => () => {
@@ -56,15 +56,15 @@ class WorkspaceScreen extends Component {
           <div className="Row">
             <div className="RowItem">
               <div className="WorkspaceProjects">
-                {projects.map((x, idx) => {
+                {projects.map((path, idx) => {
                   const selected = this.state.selectedIdx === idx
                   return (
                     <div
                       className={`projectItem ${selected && "active"}`}
-                      key={x}
+                      key={path}
                       onClick={this.handleProjectClick(idx)}
                     >
-                      {x}
+                      {path}
                     </div>
                   )
                 })}
