@@ -160,14 +160,6 @@ class TopNavbar extends Component {
               <EventsIcon />
               Events
             </Link>
-            {/* <Link onClick={this.handleWorkspacesPress.bind(this)}>
-              <BlockIcon />
-              Workspaces
-            </Link>
-            <Link onClick={this.handleSaveWorkspacePress.bind(this)}>
-              <BlockIcon />
-              Save
-            </Link>*/}
           </div>
           <div className="NotificationAndSearchBar">
             <OnlyIf test={isNewVersionAvailable}>
@@ -182,11 +174,6 @@ class TopNavbar extends Component {
             />
             <SearchIcon />
           </div>
-          {/*<div className="Menu">
-            <Link to="/config" activeClassName="Active">
-              <SettingsIcon />
-            </Link>
-          </div>*/}
         </main>
         <section className="StatusAndControls">
           <div className="Status">
