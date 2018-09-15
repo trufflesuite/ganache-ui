@@ -17,6 +17,9 @@ import AccountIcon from '../../icons/account.svg'
 import BlockIcon from '../../icons/blocks.svg'
 import TxIcon from '../../icons/transactions.svg'
 import LogsIcon from '../../icons/console.svg'
+import ContractsIcon from '../../icons/contract-icon.svg'
+import EventsIcon from '../../icons/events.svg'
+
 import SettingsIcon from '../../icons/settings.svg'
 import SearchIcon from '../../icons/search.svg'
 import ForceMineIcon from '../../icons/force_mine.svg'
@@ -149,12 +152,12 @@ class TopNavbar extends Component {
               <LogsIcon />
               Logs
             </Link>
-            <Link to="/logs" activeClassName="Active">
-              <LogsIcon />
+            <Link to="/contracts" activeClassName="Active">
+              <ContractsIcon />
               Contracts
             </Link>
-            <Link to="/logs" activeClassName="Active">
-              <LogsIcon />
+            <Link to="/Events" activeClassName="Active">
+              <EventsIcon />
               Events
             </Link>
             {/* <Link onClick={this.handleWorkspacesPress.bind(this)}>
