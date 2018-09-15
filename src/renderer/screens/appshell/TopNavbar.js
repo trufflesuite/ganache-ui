@@ -20,7 +20,7 @@ import LogsIcon from '../../icons/console.svg'
 import ContractsIcon from '../../icons/contract-icon.svg'
 import EventsIcon from '../../icons/events-icon.svg'
 
-import SettingsIcon from '../../icons/settings.svg'
+import SettingsIcon from '../../icons/settings-icon.svg'
 import SearchIcon from '../../icons/search.svg'
 import ForceMineIcon from '../../icons/force_mine.svg'
 import SnapshotIcon from '../../icons/snapshot.svg'
@@ -218,9 +218,15 @@ class TopNavbar extends Component {
             />
           </div>
           <div className="Actions">
-            <button className="MiningBtn">Save</button>
-            <button className="MiningBtn">Load</button>
-            <button className="MiningBtn">Settings</button>
+            <Link onClick={this.handleSaveWorkspacePress.bind(this)}>
+              <button className="MiningBtn">Save</button>
+            </Link>
+            <Link onClick={this.handleWorkspacesPress.bind(this)}>
+              <button className="MiningBtn">Load</button>
+            </Link>
+            <Link to="/config">
+              <button className="MiningBtn">Settings</button>
+            </Link>
             <OnlyIf test={isLogsPage}>
               <button onClick={this._handleClearLogs.bind(this)}>
                 Clear Logs
