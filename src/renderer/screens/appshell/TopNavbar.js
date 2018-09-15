@@ -182,11 +182,11 @@ class TopNavbar extends Component {
             />
             <SearchIcon />
           </div>
-          <div className="Menu">
+          {/*<div className="Menu">
             <Link to="/config" activeClassName="Active">
               <SettingsIcon />
             </Link>
-          </div>
+          </div>*/}
         </main>
         <section className="StatusAndControls">
           <div className="Status">
@@ -218,6 +218,9 @@ class TopNavbar extends Component {
             />
           </div>
           <div className="Actions">
+            <button className="MiningBtn">Save</button>
+            <button className="MiningBtn">Load</button>
+            <button className="MiningBtn">Settings</button>
             <OnlyIf test={isLogsPage}>
               <button onClick={this._handleClearLogs.bind(this)}>
                 Clear Logs

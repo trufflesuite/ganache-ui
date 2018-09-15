@@ -78,6 +78,7 @@
     position: relative;
 
     input {
+      margin-right: 24px;
       justify-content: flex-end;
       outline: none;
       border: 1px solid var(--app-navbar-icon-color);
@@ -103,7 +104,7 @@
 
     > svg {
       position: absolute;
-      right: 10px;
+      right: 36px;
       height: 16px;
       width: 16px;
       color: var(--app-navbar-icon-color);
