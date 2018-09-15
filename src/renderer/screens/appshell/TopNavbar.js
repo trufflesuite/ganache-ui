@@ -18,7 +18,7 @@ import BlockIcon from '../../icons/blocks.svg'
 import TxIcon from '../../icons/transactions.svg'
 import LogsIcon from '../../icons/console.svg'
 import ContractsIcon from '../../icons/contract-icon.svg'
-import EventsIcon from '../../icons/events.svg'
+import EventsIcon from '../../icons/events-icon.svg'
 
 import SettingsIcon from '../../icons/settings.svg'
 import SearchIcon from '../../icons/search.svg'
