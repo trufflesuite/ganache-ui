@@ -219,13 +219,13 @@ class TopNavbar extends Component {
           </div>
           <div className="Actions">
             <Link onClick={this.handleSaveWorkspacePress.bind(this)}>
-              <button className="MiningBtn">Save</button>
+              <button>Save</button>
             </Link>
             <Link onClick={this.handleWorkspacesPress.bind(this)}>
-              <button className="MiningBtn">Load</button>
+              <button>Load</button>
             </Link>
             <Link to="/config">
-              <button className="MiningBtn">Settings</button>
+              <button><div className="settingsIconWrapper"><SettingsIcon /></div></button>
             </Link>
             <OnlyIf test={isLogsPage}>
               <button onClick={this._handleClearLogs.bind(this)}>

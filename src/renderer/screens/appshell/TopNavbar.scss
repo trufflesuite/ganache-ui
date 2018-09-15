@@ -142,8 +142,18 @@
         transform: scale(.98);
       }
 
+      &:hover {
+        color: var(--app-button-primary-background-color);
+        background: var(--app-statusbar-btn-text);
+      }
+
       > div {
         margin-right: .5rem;
+      }
+
+      .settingsIconWrapper {
+        width: 18px;
+        margin: 6px 0 0;
       }
 
       svg > * {
