@@ -19,6 +19,8 @@ import AccountsScreen from './screens/accounts/AccountsScreen'
 import BlocksScreen from './screens/blocks/BlocksScreen'
 import TransactionsScreen from './screens/transactions/TransactionsScreen'
 import LogsScreen from './screens/logs/LogsScreen'
+import EventsScreen from './screens/events/EventsScreen'
+
 import NotFoundScreen from './screens/not-found/NotFoundScreen'
 import TitleScreen from './screens/title/TitleScreen'
 import WorkspacesScreen from './screens/startup/WorkspacesScreen'
@@ -41,6 +43,7 @@ const routes = <Route>
     <Route path="/blocks(/:blockNumber)" component={BlocksScreen} />
     <Route path="/transactions(/:transactionHash)" component={TransactionsScreen} />
     <Route path="/logs" component={LogsScreen} />
+    <Route path='/events' component={EventsScreen} />
     <Route path="/notfound" component={NotFoundScreen} />
     <Route path='/config(/:activeTab)' component={ConfigScreen} /> 
   </Route>

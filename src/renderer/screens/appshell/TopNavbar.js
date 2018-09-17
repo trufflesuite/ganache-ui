@@ -156,7 +156,7 @@ class TopNavbar extends Component {
               <ContractsIcon />
               Contracts
             </Link>
-            <Link to="/Events" activeClassName="Active">
+            <Link to="/events" activeClassName="Active">
               <EventsIcon />
               Events
             </Link>
