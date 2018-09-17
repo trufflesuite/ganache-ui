@@ -32,15 +32,19 @@
 
     .name {
       margin-bottom: 1rem;
+
+      > .label {
+        font-size: 1.125rem;
+      }
     }
 
     .data {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
+      display: grid;
+      grid-template-columns: 1fr 1fr 240px;
     }
 
-    .dataItem {
+    .blockTime {
+      margin-left: auto;
     }
 
     .label {
@@ -52,7 +56,7 @@
     }
 
     .value {
-      font-size: 1.125rem;
+      font-size: .875rem;
       font-family: "Fira Code Regular";
       color: var(--app-card-value);
       word-break: break-all;
