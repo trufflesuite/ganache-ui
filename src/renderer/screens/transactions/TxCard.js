@@ -31,6 +31,7 @@ class TxCard extends Component {
     const contractInfo = {
       name: "ComplexTokenSent",
       address: "0x_PLACEHOLDER_ADDRESS_HERE",
+      functionName: "sendToken()",
       inputs: ["5", "Jim"],
       stateChanges: [
         { name: "ID", prev: 3, next: 5 },
@@ -133,8 +134,12 @@ class TxCard extends Component {
 
           <section>
             <div>
-              <div className="Label">NAME</div>
+              <div className="Label">CONTRACT</div>
               <div className="Value">{contractInfo.name}</div>
+            </div>
+            <div>
+              <div className="Label">FUNCTION</div>
+              <div className="Value">{contractInfo.functionName}</div>
             </div>
             <div>
               <div className="Label">ADDRESS</div>
@@ -150,8 +155,8 @@ class TxCard extends Component {
             <div>
               <div className="Label">STATE CHANGES</div>
               <div className="Value">
-                {contractInfo.stateChanges.map(state => (
-                  <div>{`${state.name}: ${state.prev} >> ${state.next}`}</div>
+                {contractInfo.stateChanges.map((state, index) => (
+                  <div key={index}>{`${state.name}: ${state.prev} >> ${state.next}`}</div>
                 ))}
               </div>
             </div>
@@ -165,8 +170,8 @@ class TxCard extends Component {
             </div>
           </header>
 
-          {events.map(event => (
-            <div className="EventItem">
+          {events.map((event, index) => (
+            <div className="EventItem" key={index}>
               <section>
                 <div>
                   <div className="Label">NAME</div>
