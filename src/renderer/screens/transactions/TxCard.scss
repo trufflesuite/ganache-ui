@@ -104,12 +104,15 @@
     border-color: var(--primary-color);
   }
 
-  .ContractInfo {
-    > section {
-      display: flex;
-      flex-direction: row;
-      padding: 1rem;
-      justify-content: space-between;
-    }
+  .EventItem {
+    border-bottom: 1px solid #aaa;
+  }
+
+  .ContractInfo > section,
+  .EventItem > section {
+    display: flex;
+    flex-direction: row;
+    padding: 1rem;
+    justify-content: space-between;
   }
 }

@@ -27,6 +27,31 @@ class TxCard extends Component {
       return <div />
     }
 
+    // TODO - replace placeholder data
+    const contractInfo = {
+      name: "ComplexTokenSent",
+      address: "0x_PLACEHOLDER_ADDRESS_HERE",
+      inputs: ["5", "Jim"],
+      stateChanges: [
+        { name: "ID", prev: 3, next: 5 },
+        { name: "Name", prev: "Jimothy", next: "Jim" }
+      ]
+    }
+
+    // TODO - replace placeholder data
+    const events = [
+      {
+        name: "ComplexTokenSent",
+        txHash: "0x_PLACEHOLDER_HASH_HERE",
+        blockTime: "2018-08-31 20:33:23"
+      },
+      {
+        name: "ComplexTokenSent",
+        txHash: "0x_PLACEHOLDER_HASH_HERE",
+        blockTime: "2018-08-31 20:33:23"
+      }
+    ]
+
     return (
       <section className="TxCard">
         <div className="TxInfo">
@@ -109,27 +134,59 @@ class TxCard extends Component {
           <section>
             <div>
               <div className="Label">NAME</div>
-              <div className="Value">ComplexTokenSent</div>
+              <div className="Value">{contractInfo.name}</div>
             </div>
             <div>
               <div className="Label">ADDRESS</div>
-              <div className="Value">0xPLACEHOLDER_ADDRESS_HERE</div>
+              <div className="Value">{contractInfo.address}</div>
             </div>
           </section>
 
           <section>
             <div>
               <div className="Label">INPUTS</div>
-              <div className="Value">5, "Jim"</div>
+              <div className="Value">{contractInfo.inputs.join(", ")}</div>
             </div>
             <div>
               <div className="Label">STATE CHANGES</div>
               <div className="Value">
-                <div>ID: 3 >> 5</div>
-                <div>Name: "Jimothy" >> "Jim"</div>
+                {contractInfo.stateChanges.map(state => (
+                  <div>{`${state.name}: ${state.prev} >> ${state.next}`}</div>
+                ))}
               </div>
             </div>
           </section>
+        </div>
+
+        <div className="EventsInfo">
+          <header>
+            <div className="Title">
+              <h1>EVENTS</h1>
+            </div>
+          </header>
+
+          {events.map(event => (
+            <div className="EventItem">
+              <section>
+                <div>
+                  <div className="Label">NAME</div>
+                  <div className="Value">{event.name}</div>
+                </div>
+              </section>
+              <section>
+                <div>
+                  <div className="Label">TX HASH</div>
+                  <div className="Value">{event.txHash}</div>
+                </div>
+                <div>
+                  <div className="Label">BLOCK TIME</div>
+                  <div className="Value">
+                    <div>{event.blockTime}</div>
+                  </div>
+                </div>
+              </section>
+            </div>
+          ))}
         </div>
       </section>
     )
