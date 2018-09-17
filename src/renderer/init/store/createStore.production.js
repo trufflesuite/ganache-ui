@@ -2,7 +2,7 @@ import { createStore, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
 import { hashHistory } from 'react-router'
 import { routerMiddleware } from 'react-router-redux'
-import { processAction, processPage } from '../../../Middlewares/Analytics/index'
+import { processAction, processPage } from '../../../common/redux/middleware/analytics/index'
 
 const router = routerMiddleware(hashHistory)
 
