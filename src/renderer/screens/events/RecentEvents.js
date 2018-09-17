@@ -50,7 +50,7 @@ class RecentEvents extends Component {
   render() {
     return (
       <div className="RecentEvents">
-        <EventList events={[]} />
+        <EventList events={events} />
       </div>
     )
   }
