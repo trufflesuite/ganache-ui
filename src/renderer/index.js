@@ -92,7 +92,10 @@ const stylesheets = [
   "./screens/logs/LogsScreen.scss",
   "./screens/logs/LogContainer.scss",
   "./screens/config/ConfigScreen.scss",
-  "./screens/not-found/NotFoundScreen.scss"
+  "./screens/not-found/NotFoundScreen.scss",
+  "./screens/events/EventList.scss",
+  "./screens/events/EventsScreen.scss",
+  "./screens/events/RecentEvents.scss"
 ] 
 
 const render = () => {

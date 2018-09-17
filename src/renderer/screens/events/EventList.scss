@@ -1,0 +1,22 @@
+.EventList {
+  width: 100%;
+  height: 100%;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+
+  .Waiting {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    font-family: RobotoCondensed-Bold;
+    text-transform: uppercase;
+    font-size: 1.3rem;
+    color: var(--app-page-intentionally-left-blank);
+  }
+}
