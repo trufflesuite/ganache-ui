@@ -17,7 +17,10 @@ import AccountIcon from '../../icons/account.svg'
 import BlockIcon from '../../icons/blocks.svg'
 import TxIcon from '../../icons/transactions.svg'
 import LogsIcon from '../../icons/console.svg'
-import SettingsIcon from '../../icons/settings.svg'
+import ContractsIcon from '../../icons/contract-icon.svg'
+import EventsIcon from '../../icons/events-icon.svg'
+
+import SettingsIcon from '../../icons/settings-icon.svg'
 import SearchIcon from '../../icons/search.svg'
 import ForceMineIcon from '../../icons/force_mine.svg'
 import SnapshotIcon from '../../icons/snapshot.svg'
@@ -149,13 +152,13 @@ class TopNavbar extends Component {
               <LogsIcon />
               Logs
             </Link>
-            <Link onClick={this.handleWorkspacesPress.bind(this)}>
-              <BlockIcon />
-              Workspaces
+            <Link to="/contracts" activeClassName="Active">
+              <ContractsIcon />
+              Contracts
             </Link>
-            <Link onClick={this.handleSaveWorkspacePress.bind(this)}>
-              <BlockIcon />
-              Save
+            <Link to="/Events" activeClassName="Active">
+              <EventsIcon />
+              Events
             </Link>
           </div>
           <div className="NotificationAndSearchBar">
@@ -170,11 +173,6 @@ class TopNavbar extends Component {
               onKeyPress={this.handleSearchKeyPress.bind(this)}
             />
             <SearchIcon />
-          </div>
-          <div className="Menu">
-            <Link to="/config" activeClassName="Active">
-              <SettingsIcon />
-            </Link>
           </div>
         </main>
         <section className="StatusAndControls">
@@ -201,8 +199,21 @@ class TopNavbar extends Component {
                 <Spinner />
               </OnlyIf>
             </StatusIndicator>
+            <StatusIndicator
+              title="WORKSPACE"
+              value={this.props.config.settings.workspace.name}
+            />
           </div>
           <div className="Actions">
+            <Link onClick={this.handleSaveWorkspacePress.bind(this)}>
+              <button>Save</button>
+            </Link>
+            <Link onClick={this.handleWorkspacesPress.bind(this)}>
+              <button>Load</button>
+            </Link>
+            <Link to="/config">
+              <button><div className="settingsIconWrapper"><SettingsIcon /></div></button>
+            </Link>
             <OnlyIf test={isLogsPage}>
               <button onClick={this._handleClearLogs.bind(this)}>
                 Clear Logs

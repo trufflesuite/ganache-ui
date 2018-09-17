@@ -78,6 +78,7 @@
     position: relative;
 
     input {
+      margin-right: 1rem;
       justify-content: flex-end;
       outline: none;
       border: 1px solid var(--app-navbar-icon-color);
@@ -103,7 +104,7 @@
 
     > svg {
       position: absolute;
-      right: 10px;
+      right: 36px;
       height: 16px;
       width: 16px;
       color: var(--app-navbar-icon-color);
@@ -141,8 +142,18 @@
         transform: scale(.98);
       }
 
+      &:hover {
+        color: var(--app-button-primary-background-color);
+        background: var(--app-statusbar-btn-text);
+      }
+
       > div {
         margin-right: .5rem;
+      }
+
+      .settingsIconWrapper {
+        width: 18px;
+        margin: 6px 0 0;
       }
 
       svg > * {
