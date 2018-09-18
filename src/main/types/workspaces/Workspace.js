@@ -54,13 +54,12 @@ class Workspace {
   bootstrapProjects() {
     const projects = this.settings.get("projects")
 
-    this.projects = projects.map(async (project) => {
+    this.projects = projects.map((project) => {
       const truffleProject = new TruffleProject(project)
-      truffleProject.bootstrap()
-      return truffleProject
+      if (truffleProject.bootstrap()) {
+        return truffleProject
+      }
     })
-
-    this.projects = Promise.all(this.projects)
   }
 
   bootstrap() {
