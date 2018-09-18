@@ -4,8 +4,7 @@
   margin: 0;
   background: var(--app-card-default-background);
   word-wrap: break-word;
-  display: flex;
-  flex-direction: column;
+  display: block;
   word-wrap: break-word;
 
   .Button {
@@ -61,6 +60,11 @@
     }
   }
 
+  .TxInfo,
+  .ContractInfo {
+    border-bottom: 1px solid #aaa;
+  }
+
   .Title,
   .Type {
     align-items: flex-start;
@@ -98,5 +102,17 @@
 
   .CreatedContract {
     border-color: var(--primary-color);
+  }
+
+  .EventItem {
+    border-bottom: 1px solid #aaa;
+  }
+
+  .ContractInfo > section,
+  .EventItem > section {
+    display: flex;
+    flex-direction: row;
+    padding: 1rem;
+    justify-content: space-between;
   }
 }
