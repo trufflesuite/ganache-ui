@@ -11,7 +11,9 @@ class TruffleProject {
 
   bootstrap() {
     if (TruffleProject.checkValidProject(this.configPath)) {
-      this.config = new TruffleConfig(path.dirname(this.configPath), path.dirname(this.configPath))
+      const configFileDirectory = path.dirname(this.configPath)
+      this.name = path.basename(configFileDirectory)
+      this.config = new TruffleConfig(configFileDirectory, configFileDirectory)
       const relativePath = path.relative(__dirname, this.configPath)
       const output = require(relativePath)
       this.config.merge(output)
