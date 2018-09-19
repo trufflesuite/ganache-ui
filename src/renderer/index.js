@@ -91,7 +91,8 @@ const stylesheets = [
   "./screens/logs/LogsScreen.scss",
   "./screens/logs/LogContainer.scss",
   "./screens/config/ConfigScreen.scss",
-  "./screens/not-found/NotFoundScreen.scss"
+  "./screens/not-found/NotFoundScreen.scss",
+  "./screens/contracts/ContractsScreen.scss"
 ] 
 
 const render = () => {

@@ -1,0 +1,62 @@
+.ContractCard {
+  font-family: "Fira Code Regular", monospaced;
+  width: 100%;
+  cursor: pointer;
+  margin: .5rem 0;
+  background: var(--app-card-default-background);
+  padding: 1.3rem .8rem;
+  word-wrap: break-word;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  transition: all .3s;
+  border-bottom: 1px solid #aaa;
+
+  .Row {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    margin-bottom: 1rem;
+    justify-content: space-between;
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
+
+  .RowItem {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    cursor: pointer;
+  }
+
+  .Label {
+    font-size: .75rem;
+    font-family: "RobotoCondensed-Regular";
+    font-weight: 800;
+    color: var(--app-card-label);
+    margin-bottom: .25rem;
+  }
+
+  .Value {
+    font-size: 1.125rem;
+    font-family: "Fira Code Regular";
+    color: var(--app-card-value);
+    word-break: break-all;
+  }
+
+  .Name,
+  .TxCount {
+    .Label {
+      font-size: .625rem;
+      letter-spacing: 1.2px;
+    }
+
+    .Value {
+      font-size: .825rem;
+    }
+  }
+
+}
