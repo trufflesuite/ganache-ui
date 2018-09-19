@@ -26,7 +26,8 @@ import {
   SET_WORKSPACES,
   OPEN_WORKSPACE,
   CLOSE_WORKSPACE,
-  SAVE_WORKSPACE
+  SAVE_WORKSPACE,
+  SET_CURRENT_WORKSPACE,
 } from '../common/redux/workspaces/actions'
 
 import {
@@ -246,6 +247,8 @@ app.on('ready', () => {
         GoogleAnalytics.setup(global.get("googleAnalyticsTracking") && inProduction, workspaceSettings.uuid)
         GoogleAnalytics.reportGenericUserData()
         GoogleAnalytics.reportWorkspaceSettings(workspaceSettings)
+
+        mainWindow.webContents.send(SET_CURRENT_WORKSPACE, workspace)
 
         chain.start()
 

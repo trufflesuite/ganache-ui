@@ -54,3 +54,8 @@ export const saveWorkspace = function(name) {
     ipcRenderer.send(SAVE_WORKSPACE, name)
   }
 }
+
+export const SET_CURRENT_WORKSPACE = `${prefix}/SET_CURRENT_WORKSPACE`
+export const setCurrentWorkspace = function(workspace) {
+  return {type: SET_CURRENT_WORKSPACE, workspace}
+}

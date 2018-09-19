@@ -1,10 +1,12 @@
 import {
-  SET_WORKSPACES
+  SET_WORKSPACES,
+  SET_CURRENT_WORKSPACE
 } from './actions'
 import cloneDeep from 'lodash.clonedeep'
 
 const initialState = {
-  names: []
+  names: [],
+  current: {}
 }
 
 export default function (state = initialState, action) {
@@ -13,6 +15,9 @@ export default function (state = initialState, action) {
   switch (action.type) {
     case SET_WORKSPACES:
       nextState.names = cloneDeep(action.workspaces)
+      break
+    case SET_CURRENT_WORKSPACE:
+      nextState.current = cloneDeep(action.workspace)
       break
     default:
       break
