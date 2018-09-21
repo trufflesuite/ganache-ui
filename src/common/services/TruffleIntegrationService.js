@@ -31,12 +31,12 @@ class TruffleIntegrationService extends EventEmitter {
     this.child.stdout.on('data', (data) => {
       console.log(data.toString());
       // Remove all \r's and the final line ending
-      this.emit("stdout", data.toString().replace(/\r/g, "").replace(/\n$/, ""));
+      //this.emit("stdout", data.toString().replace(/\r/g, "").replace(/\n$/, ""));
     });
     this.child.stderr.on('data', (data) => {
       console.log(data.toString());
       // Remove all \r's and the final line ending
-      this.emit("stderr", data.toString().replace(/\r/g, "").replace(/\n$/, ""));
+      //this.emit("stderr", data.toString().replace(/\r/g, "").replace(/\n$/, ""));
     });
   }
 
@@ -72,6 +72,13 @@ class TruffleIntegrationService extends EventEmitter {
         type: "project-details-request",
         data: projectConfigFile
       });
+    });
+  }
+
+  setWeb3(url) {
+    this.child.send({
+      type: "web3-provider",
+      data: url
     });
   }
 }

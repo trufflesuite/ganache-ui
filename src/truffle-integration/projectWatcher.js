@@ -3,9 +3,11 @@ const HttpProvider = require("web3-providers-http");
 const WsProvider = require("web3-providers-ws");
 const EventEmitter = require("events");
 const path = require("path");
+const { URL } = require("url");
 
 class ProjectWatcher extends EventEmitter {
   constructor() {
+    super();
     this.projects = [];
     this.contractsByAddress = {};
   }
@@ -32,9 +34,16 @@ class ProjectWatcher extends EventEmitter {
     }
 
     this.blockHeaderSubscription = this.web3.eth.subscribe("newBlockHeaders");
-    this.blockHeaderSubscription.on("data", this.handleBlock);
-    this.logsSubscription = this.web3.eth.subscribe("logs");
-    this.logsSubscription.on("data", this.handleLog);
+    this.blockHeaderSubscription.on("data", async (block) => {
+      await this.handleBlock(block);
+    });
+    this.logsSubscription = this.web3.eth.subscribe("logs", {
+      fromBlock: null,
+      topics: null
+    });
+    this.logsSubscription.on("data", async (log) => {
+      await this.handleLog(log);
+    });
   }
 
   add(project) {
@@ -62,10 +71,11 @@ class ProjectWatcher extends EventEmitter {
     }
   }
 
-  handleBlock(block) {
+  async handleBlock(block) {
     const blockDetails = await this.web3.eth.getBlock(block.number, true);
 
-    blockDetails.transactions.forEach((transaction) => {
+    for (let k = 0; k < blockDetails.transactions.length; k++) {
+      const transaction = blockDetails.transactions[k];
       for (let i = 0; i < this.projects.length; i++) {
         const project = this.projects[i];
         for (let j = 0; j < project.contracts.length; j++) {
@@ -88,13 +98,14 @@ class ProjectWatcher extends EventEmitter {
           if (contract.address && transaction.to === contract.address) {
             // this contract had a transaction on it
             this.emit("contract-transaction", {
+              truffleDirectory: project.truffle_directory,
               contractAddress: contract.address,
               transactionHash: transaction.hash
             });
           }
         }
       }
-    });
+    }
   }
 
   handleLog(log) {

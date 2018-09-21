@@ -29,7 +29,9 @@ export function initCore(store) {
     store.dispatch(setSettings(globalSettings, workspaceSettings))
 
     // Ensure web3 is set
-    store.dispatch(setRPCProviderUrl(`ws://${workspaceSettings.server.hostname}:${workspaceSettings.server.port}`))
+    const url = `ws://${workspaceSettings.server.hostname}:${workspaceSettings.server.port}`
+    ipcRenderer.send("web3-provider", url)
+    store.dispatch(setRPCProviderUrl(url))
   
     store.dispatch(getAccounts())
     store.dispatch(getGasPrice())

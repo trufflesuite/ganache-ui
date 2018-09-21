@@ -59,3 +59,18 @@ export const SET_CURRENT_WORKSPACE = `${prefix}/SET_CURRENT_WORKSPACE`
 export const setCurrentWorkspace = function(workspace) {
   return {type: SET_CURRENT_WORKSPACE, workspace}
 }
+
+export const CONTRACT_DEPLOYED = `${prefix}/CONTRACT_DEPLOYED`
+export const contractDeployed = function(data) {
+  return {type: CONTRACT_DEPLOYED, data}
+}
+
+export const CONTRACT_TRANSACTION = `${prefix}/CONTRACT_TRANSACTION`
+export const contractTransaction = function(data) {
+  return {type: CONTRACT_TRANSACTION, data}
+}
+
+export const CONTRACT_EVENT = `${prefix}/CONTRACT_EVENT`
+export const contractEvent = function(data) {
+  return {type: CONTRACT_EVENT, data}
+}

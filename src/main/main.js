@@ -29,6 +29,9 @@ import {
   CLOSE_WORKSPACE,
   SAVE_WORKSPACE,
   SET_CURRENT_WORKSPACE,
+  CONTRACT_DEPLOYED,
+  CONTRACT_TRANSACTION,
+  CONTRACT_EVENT
 } from '../common/redux/workspaces/actions'
 
 import {
@@ -105,6 +108,22 @@ app.on('ready', () => {
     const GoogleAnalytics = new GoogleAnalyticsService()
     const workspaceManager = new WorkspaceManager(app.getPath('userData'))
     let workspace
+
+    truffleIntegration.on("contract-deployed", (data) => {
+      mainWindow.webContents.send(CONTRACT_DEPLOYED, data)
+    })
+
+    truffleIntegration.on("contract-transaction", (data) => {
+      mainWindow.webContents.send(CONTRACT_TRANSACTION, data)
+    })
+
+    truffleIntegration.on("contract-event", (data) => {
+      mainWindow.webContents.send(CONTRACT_EVENT, data)
+    })
+
+    ipcMain.on("web3-provider", (event, url) => {
+      truffleIntegration.setWeb3(url)
+    })
 
     truffleIntegration.start()
 
