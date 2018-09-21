@@ -53,6 +53,12 @@ process.on("message", function(message) {
     case "project-unwatch":
       watcher.remove(message.data);
       break;
+    case "transaction-decode-request":
+      break;
+    case "contract-state-request":
+      break;
+    case "event-decode-request":
+      break;
   }
 });
 

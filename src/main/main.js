@@ -47,7 +47,7 @@ import GlobalSettings from './types/settings/GlobalSettings'
 import Workspace from './types/workspaces/Workspace'
 import WorkspaceManager from './types/workspaces/WorkspaceManager'
 import GoogleAnalyticsService from '../common/services/GoogleAnalyticsService'
-import DecoderService from '../common/services/DecoderService.js'
+import TruffleIntegrationService from '../common/services/TruffleIntegrationService.js'
 
 let menu
 let template
@@ -100,13 +100,13 @@ app.on('ready', () => {
     const inProduction = process.env.NODE_ENV === 'production'
     const width = screen.getPrimaryDisplay().bounds.width
     const chain = new ChainService(app)
-    const decoder = new DecoderService()
+    const truffleIntegration = new TruffleIntegrationService()
     const global = new GlobalSettings(path.join(app.getPath('userData'), 'global'))
     const GoogleAnalytics = new GoogleAnalyticsService()
     const workspaceManager = new WorkspaceManager(app.getPath('userData'))
     let workspace
 
-    decoder.start()
+    truffleIntegration.start()
 
     app.on('will-quit', function () {
       chain.stopProcess();
@@ -255,7 +255,7 @@ app.on('ready', () => {
 
         let projects = []
         for (let i = 0; i < workspaceSettings.projects.length; i++) {
-          projects.push(await decoder.getProjectDetails(workspaceSettings.projects[i]))
+          projects.push(await truffleIntegration.getProjectDetails(workspaceSettings.projects[i]))
         }
 
         let tempWorkspace = {}

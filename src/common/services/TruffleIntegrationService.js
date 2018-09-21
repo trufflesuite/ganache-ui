@@ -1,11 +1,10 @@
 import EventEmitter from 'events'
 import { fork } from 'child_process'
 import path from 'path'
-import cloneDeep from 'lodash.clonedeep'
 
 // https://github.com/electron/electron/blob/cd0aa4a956cb7a13cbe0e12029e6156c3e892924/docs/api/process.md#process-object
 
-class DecoderService extends EventEmitter {
+class TruffleIntegrationService extends EventEmitter {
   constructor() {
     super()
     this.child = null;
@@ -13,7 +12,7 @@ class DecoderService extends EventEmitter {
   }
 
   start() {
-    let chainPath = path.join(__dirname, "../../decoder/", "index.js");
+    let chainPath = path.join(__dirname, "../../truffle-integration/", "index.js");
     const options = {
       stdio: [ 'pipe', 'pipe', 'pipe', 'ipc' ]
     };
@@ -77,4 +76,4 @@ class DecoderService extends EventEmitter {
   }
 }
 
-export default DecoderService;
+export default TruffleIntegrationService;
