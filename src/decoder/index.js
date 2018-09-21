@@ -1,4 +1,7 @@
 const getProjectDetails = require("./projectDetails").get;
+const ProjectWatcher = require("./projectWatcher");
+
+watcher = new ProjectWatcher();
 
 if (!process.send) {
   console.log("Not running as child process. Throwing.");
@@ -17,12 +20,23 @@ process.on("uncaughtException", (err) => {
 
 process.on("message", function(message) {
   switch(message.type) {
+    case "web3-provider":
+      watcher.setWeb3(message.data);
+      break;
     case "project-details-request":
       const response = getProjectDetails(message.data);
+
       process.send({
         type: "project-details-response",
         data: response
       });
+
+      if (typeof response === "object") {
+        watcher.add(response);
+      }
+      break;
+    case "project-unwatch":
+      watcher.remove(message.data);
       break;
   }
 });
