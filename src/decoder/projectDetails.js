@@ -14,13 +14,13 @@ function get(projectFile) {
     const name = path.basename(configFileDirectory);
     let config = new TruffleConfig(configFileDirectory, configFileDirectory, "ganache");
     const output = require(projectFile);
-    console.log(output);
     config.merge(output);
-    console.log(config);
 
     const contracts = fs.readdirSync(config.contracts_build_directory)
       .filter((file) => file.endsWith(".json"))
       .map((file) => JSON.parse(fs.readFileSync(path.join(config.contracts_build_directory, file), "utf8")));
+
+    // TODO: watch contracts on the FS for changes and send the project-details-update message
 
     return { name, config, contracts };
   }
