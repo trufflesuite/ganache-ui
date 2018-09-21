@@ -79,6 +79,7 @@ class ProjectWatcher extends EventEmitter {
             this.contractsByAddress[contract.address] = contract;
             this.emit("contract-deployed", {
               truffleDirectory: project.truffle_directory,
+              transactionHash: transaction.hash,
               contractName: contract.contractName,
               contractAddress: contract.address
             });
