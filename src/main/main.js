@@ -3,6 +3,7 @@ import { enableLiveReload } from 'electron-compile';
 import { initAutoUpdates, getAutoUpdateService } from './init/AutoUpdate.js'
 import path from 'path'
 import * as os from 'os'
+import merge from "lodash.merge"
 
 const isDevMode = process.execPath.match(/[\\/]electron/);
 
@@ -46,6 +47,7 @@ import GlobalSettings from './types/settings/GlobalSettings'
 import Workspace from './types/workspaces/Workspace'
 import WorkspaceManager from './types/workspaces/WorkspaceManager'
 import GoogleAnalyticsService from '../common/services/GoogleAnalyticsService'
+import DecoderService from '../common/services/DecoderService.js'
 
 let menu
 let template
@@ -98,10 +100,13 @@ app.on('ready', () => {
     const inProduction = process.env.NODE_ENV === 'production'
     const width = screen.getPrimaryDisplay().bounds.width
     const chain = new ChainService(app)
+    const decoder = new DecoderService()
     const global = new GlobalSettings(path.join(app.getPath('userData'), 'global'))
     const GoogleAnalytics = new GoogleAnalyticsService()
     const workspaceManager = new WorkspaceManager(app.getPath('userData'))
     let workspace
+
+    decoder.start()
 
     app.on('will-quit', function () {
       chain.stopProcess();
@@ -248,7 +253,15 @@ app.on('ready', () => {
         GoogleAnalytics.reportGenericUserData()
         GoogleAnalytics.reportWorkspaceSettings(workspaceSettings)
 
-        mainWindow.webContents.send(SET_CURRENT_WORKSPACE, workspace)
+        let projects = []
+        for (let i = 0; i < workspaceSettings.projects.length; i++) {
+          projects.push(await decoder.getProjectDetails(workspaceSettings.projects[i]))
+        }
+
+        let tempWorkspace = {}
+        merge(tempWorkspace, { projects }, workspace)
+
+        mainWindow.webContents.send(SET_CURRENT_WORKSPACE, tempWorkspace)
 
         chain.start()
 

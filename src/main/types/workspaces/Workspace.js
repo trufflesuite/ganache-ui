@@ -2,7 +2,6 @@ import path from 'path'
 import fse from 'fs-extra'
 
 import WorkspaceSettings from '../settings/WorkspaceSettings'
-import TruffleProject from './TruffleProject'
 
 class Workspace {
   constructor(name, configDirectory) {
@@ -55,21 +54,9 @@ class Workspace {
     }
   }
 
-  bootstrapProjects() {
-    const projects = this.settings.get("projects")
-
-    this.projects = projects.map((project) => {
-      const truffleProject = new TruffleProject(project)
-      if (truffleProject.bootstrap()) {
-        return truffleProject
-      }
-    })
-  }
-
   bootstrap() {
     this.bootstrapDirectory()
     this.settings.bootstrap()
-    this.bootstrapProjects()
   }
 
   saveAs(name, chaindataDirectory, configDirectory) {

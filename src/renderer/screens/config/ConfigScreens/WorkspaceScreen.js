@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import { remote } from "electron"
-import TruffleProject from "../../../../main/types/workspaces/TruffleProject";
+import path from "path"
 
 class WorkspaceScreen extends Component {
   state = { selectedIdx: null }
@@ -23,7 +23,7 @@ class WorkspaceScreen extends Component {
       ]
     })
 
-    if (pathArray.length > 0 && TruffleProject.checkValidProject(pathArray[0])) {
+    if (pathArray.length > 0 && path.basename(pathArray[0]).match(/^truffle(-config)?.js$/)) {
       this.props.addWorkspaceProject(pathArray[0])
       this.setState({ selectedIdx: null })
     }
