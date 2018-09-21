@@ -18,6 +18,21 @@ process.on("uncaughtException", (err) => {
   process.send({type: "error", data: copyErrorFields(err)});
 });
 
+// Subscribe and forward watcher events
+const watcherEvents = [
+  "contract-deployed",
+  "contract-transaction",
+  "contract-event"
+];
+watcherEvents.forEach((eventName) => {
+  watcher.on(eventName, (data) => {
+    process.send({
+      type: eventName,
+      data: data
+    });
+  });
+});
+
 process.on("message", function(message) {
   switch(message.type) {
     case "web3-provider":
