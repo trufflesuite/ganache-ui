@@ -20,6 +20,7 @@ import BlocksScreen from './screens/blocks/BlocksScreen'
 import TransactionsScreen from './screens/transactions/TransactionsScreen'
 import LogsScreen from './screens/logs/LogsScreen'
 import EventsScreen from './screens/events/EventsScreen'
+import ContractDetails from './screens/contracts/ContractDetails'
 
 import NotFoundScreen from './screens/not-found/NotFoundScreen'
 import TitleScreen from './screens/title/TitleScreen'
@@ -46,6 +47,7 @@ const routes = <Route>
     <Route path='/events' component={EventsScreen} />
     <Route path="/notfound" component={NotFoundScreen} />
     <Route path='/config(/:activeTab)' component={ConfigScreen} /> 
+    <Route path='/contractDetails' component={ContractDetails} /> 
   </Route>
 </Route>
 
@@ -95,6 +97,7 @@ const stylesheets = [
   "./screens/not-found/NotFoundScreen.scss",
   "./screens/events/EventList.scss",
   "./screens/events/EventsScreen.scss",
+  "./screens/contracts/ContractDetailsScreen.scss",
   "./screens/events/RecentEvents.scss"
 ] 
 
