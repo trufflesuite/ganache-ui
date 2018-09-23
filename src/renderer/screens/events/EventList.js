@@ -1,14 +1,17 @@
 import React, { Component } from "react"
+import { push } from "react-router-redux"
 
 import connect from "../helpers/connect"
 
 // import EventItem from "./EventItem"
 
 // TODO - refactor this out into its own file if it gets too big
-const EventItem = ({ event }) => {
-  const { name, contract, txHash, blockTime } = event
+const EventItem = ({ event, dispatch }) => {
+  const { name, contract, txHash, blockTime, logIndex } = event
+  const goToEventDetails = () =>
+    dispatch(push(`/event_details/${txHash}/${logIndex}`))
   return (
-    <div className="EventItem">
+    <div className="EventItem" onClick={goToEventDetails}>
       <div className="name">
         <div className="label">NAME</div>
         <div className="value">{name}</div>
@@ -31,7 +34,7 @@ const EventItem = ({ event }) => {
   )
 }
 
-const EventList = ({ events }) => {
+const EventList = ({ events, dispatch }) => {
   if (events.length === 0) {
     return (
       <div className="EventList">
@@ -43,7 +46,7 @@ const EventList = ({ events }) => {
   return (
     <div className="EventList">
       {events.map((event, index) => (
-        <EventItem event={event} key={index} />
+        <EventItem event={event} key={index} dispatch={dispatch} />
       ))}
     </div>
   )
