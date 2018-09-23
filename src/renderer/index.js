@@ -97,7 +97,9 @@ const stylesheets = [
   "./screens/not-found/NotFoundScreen.scss",
   "./screens/events/EventList.scss",
   "./screens/events/EventsScreen.scss",
-  "./screens/event-details/EventDetailsScreen.scss"
+  "./screens/event-details/EventDetailsScreen.scss",
+  "./screens/event-details/EncodedEventDetails.scss",
+  "./screens/event-details/DecodedEventDetails.scss"
 ] 
 
 const render = () => {

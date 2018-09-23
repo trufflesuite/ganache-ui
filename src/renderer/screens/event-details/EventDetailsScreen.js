@@ -1,44 +1,30 @@
 import React from "react"
+import connect from "../helpers/connect"
 import { hashHistory } from "react-router"
 
-const EncodedEventDetails = ({ event }) => {
-  const { txHash, blockTime, contractName } = event
-  return (
-    <div className="EncodedEventDetails">
-      <div className="Notice">
-        <span className="Warning">⚠</span>{" "}
-        <strong>To see rich event data</strong> link a Truffle Project
-        containing the contract that emits this event.
-      </div>
-      <div className="DataRow">
-        <div className="DataPoint">
-          <div className="Label">TX HASH</div>
-          <div className="Value">{txHash}</div>
-        </div>
-        <div className="DataPoint">
-          <div className="Label">BLOCK TIME</div>
-          <div className="Value">{blockTime}</div>
-        </div>
-      </div>
-      <div className="DataRow">
-        <div className="DataPoint">
-          <div className="Label">CONTRACT</div>
-          <div className="Value">{contractName}</div>
-        </div>
-      </div>
-    </div>
-  )
-}
+import EncodedEventDetails from "./EncodedEventDetails"
+import DecodedEventDetails from "./DecodedEventDetails"
 
-export default props => {
+const EventDetailsScreen = props => {
   const { logIndex, transactionHash } = props.routeParams
   console.log(logIndex, transactionHash)
 
+  // TODO - wire up real event
   const PLACEHOLDER_EVENT = {
-    txHash: "PLACEHOLDER_EVENT_TX_HASH",
-    blockTime: "PLACEHOLDER_BLOCKTIME",
-    contractName: "PLACEHOLDER_CONTRACT_NAME"
+    contractName: "ComplexToken",
+    contractAddress: "0x123456781234567812345678123456781234567812345678",
+    signature: "ComplexTokenSent(uint256, uint32[], bytes10, bytes)",
+    txHash: "0x123456781234567812345678123456781234567812345678",
+    blockTime: "2018-08-31 20:31:35",
+    returnValues: [
+      { name: "MyIndexedParam", value: "20" },
+      { name: "myNonIndexedParam", value: "This is a string" }
+    ]
   }
+
+  // TODO - use this flag only for dev, otherwise actually check if the event is decoded or not
+  const decoded = true
+
   return (
     <div className="EventDetails">
       <div className="TitleBar">
@@ -47,7 +33,13 @@ export default props => {
         </button>
         <h1 className="Title">{transactionHash}</h1>
       </div>
-      <EncodedEventDetails event={PLACEHOLDER_EVENT} />
+      {decoded ? (
+        <DecodedEventDetails event={PLACEHOLDER_EVENT} />
+      ) : (
+        <EncodedEventDetails event={PLACEHOLDER_EVENT} />
+      )}
     </div>
   )
 }
+
+export default connect(EventDetailsScreen)

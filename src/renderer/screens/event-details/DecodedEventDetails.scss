@@ -1,0 +1,43 @@
+.DecodedEventDetails {
+  background: var(--app-card-default-background);
+  margin: 0;
+
+  .DataRow {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+
+  .DataSection {
+    padding: 1rem;
+    border-bottom: 1px solid #aaa;
+  }
+
+  .SectionHeading {
+    background: #fff;
+    padding: 1rem;
+    border-bottom: 1px solid #aaa;
+
+    h1 {
+      font-size: 1.25rem;
+      margin: 0;
+    }
+  }
+
+  .DataPoint {
+    .Label {
+      font-size: 0.75rem;
+      font-family: "RobotoCondensed-Regular";
+      font-weight: 800;
+      color: var(--app-card-label);
+      margin-bottom: 0.25rem;
+    }
+
+    .Value {
+      font-size: 1.125rem;
+      font-family: "Fira Code Regular";
+      color: var(--app-card-value);
+      word-break: break-all;
+    }
+  }
+}
