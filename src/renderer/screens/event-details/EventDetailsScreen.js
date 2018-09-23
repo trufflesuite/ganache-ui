@@ -1,4 +1,5 @@
 import React from "react"
+import { hashHistory } from "react-router"
 
 const EncodedEventDetails = ({ txHash, blockTime, contractName }) => (
   <div className="EncodedEventDetails">
@@ -30,7 +31,12 @@ export default props => {
   console.log(logIndex, transactionHash)
   return (
     <div className="EventDetails">
-      <div className="TitleBar">Title and Back Button goes here</div>
+      <div className="TitleBar">
+        <button className="BackButton" onClick={hashHistory.goBack}>
+          &larr; Back
+        </button>
+        <h1 className="Title">{transactionHash}</h1>
+      </div>
       <EncodedEventDetails />
     </div>
   )
