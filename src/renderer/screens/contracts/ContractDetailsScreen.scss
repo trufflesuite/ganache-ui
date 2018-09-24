@@ -1,18 +1,24 @@
 .ContractDetailsScreen {
-  
-  // TODO-DAVID:
-  // This header needs to be in it's own component. I tried using the existing HeaderBar component, but kept getting
-  // a compiler error and just left it in here for you, dear reader, to deal with.
-  .Header {
-    display:grid;
-    grid-template-columns: auto 1fr;
+
+  .TitleBar {
+    font-family: "Fira Code Regular", monospaced;
+    background: var(--app-card-default-background);
+    word-wrap: break-word;
+
+    display: flex;
     align-items: center;
-    border-bottom: 1px solid var(--app-card-default-border);
-    .Button {
-      padding: 0 1.5rem;
-      margin: 0 1.5rem 0 0;
-      height:100%;
-      border-radius:0;
+    height: 64px;
+    background: #fff;
+    border-bottom: 1px solid #aaa;
+
+    .BackButton {
+      height: 100%;
+      border-radius: 0;
+    }
+
+    .Title {
+      font-size: 1.5rem;
+      padding: 1.25rem;
     }
   }
 
