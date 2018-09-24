@@ -47,11 +47,11 @@ const routes = <Route>
     <Route path="/transactions(/:transactionHash)" component={TransactionsScreen} />
     <Route path="/logs" component={LogsScreen} />
     <Route path="/contracts" component={ContractsScreen} />
+    <Route path="/contracts/:projectIndex/:contractAddress" component={ContractDetails} />
     <Route path='/events' component={EventsScreen} />
     <Route path='/event_details/:transactionHash/:logIndex' component={EventDetailsScreen} />
     <Route path="/notfound" component={NotFoundScreen} />
-    <Route path='/config(/:activeTab)' component={ConfigScreen} /> 
-    <Route path='/contractDetails' component={ContractDetails} /> 
+    <Route path='/config(/:activeTab)' component={ConfigScreen} />
   </Route>
 </Route>
 
@@ -100,16 +100,12 @@ const stylesheets = [
   "./screens/config/ConfigScreen.scss",
   "./screens/not-found/NotFoundScreen.scss",
   "./screens/contracts/ContractsScreen.scss",
+  "./screens/contracts/ContractDetailsScreen.scss",
   "./screens/events/EventList.scss",
   "./screens/events/EventsScreen.scss",
-<<<<<<< HEAD
-  "./screens/contracts/ContractDetailsScreen.scss",
-  "./screens/events/RecentEvents.scss"
-=======
   "./screens/event-details/EventDetailsScreen.scss",
   "./screens/event-details/EncodedEventDetails.scss",
   "./screens/event-details/DecodedEventDetails.scss"
->>>>>>> next
 ] 
 
 const render = () => {
