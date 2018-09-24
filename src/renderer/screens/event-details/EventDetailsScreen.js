@@ -16,6 +16,7 @@ const EventDetailsScreen = props => {
     signature: "ComplexTokenSent(uint256, uint32[], bytes10, bytes)",
     txHash: "0x123456781234567812345678123456781234567812345678",
     blockTime: "2018-08-31 20:31:35",
+    logIndex: "1",
     returnValues: [
       { name: "MyIndexedParam", value: "20" },
       { name: "myNonIndexedParam", value: "This is a string" }
@@ -31,7 +32,9 @@ const EventDetailsScreen = props => {
         <button className="BackButton" onClick={hashHistory.goBack}>
           &larr; Back
         </button>
-        <h1 className="Title">{transactionHash}</h1>
+        <h1 className="Title">
+          {transactionHash} ({logIndex})
+        </h1>
       </div>
       {decoded ? (
         <DecodedEventDetails event={PLACEHOLDER_EVENT} />

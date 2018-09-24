@@ -39,8 +39,8 @@
     }
 
     .data {
-      display: grid;
-      grid-template-columns: 1fr 1fr 240px;
+      display: flex;
+      justify-content: space-between;
     }
 
     .blockTime {
@@ -56,7 +56,7 @@
     }
 
     .value {
-      font-size: .875rem;
+      font-size: 0.875rem;
       font-family: "Fira Code Regular";
       color: var(--app-card-value);
       word-break: break-all;

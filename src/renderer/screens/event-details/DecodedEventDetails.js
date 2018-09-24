@@ -1,7 +1,14 @@
 import React from "react"
 
 const DecodedEventDetails = ({ event }) => {
-  const { txHash, blockTime, contractName, contractAddress, signature } = event
+  const {
+    txHash,
+    blockTime,
+    contractName,
+    contractAddress,
+    signature,
+    logIndex
+  } = event
   return (
     <div className="DecodedEventDetails">
       <div className="DataSection">
@@ -27,6 +34,10 @@ const DecodedEventDetails = ({ event }) => {
           <div className="DataPoint">
             <div className="Label">TX HASH</div>
             <div className="Value">{txHash}</div>
+          </div>
+          <div className="DataPoint">
+            <div className="Label">LOG INDEX</div>
+            <div className="Value">{logIndex}</div>
           </div>
           <div className="DataPoint">
             <div className="Label">BLOCK TIME</div>

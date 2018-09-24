@@ -26,6 +26,10 @@ const EventItem = ({ event, dispatch }) => {
           <div className="value">{txHash}</div>
         </div>
         <div className="dataItem">
+          <div className="label">LOG INDEX</div>
+          <div className="value">{logIndex}</div>
+        </div>
+        <div className="dataItem">
           <div className="label">BLOCK TIME</div>
           <div className="value">{blockTime}</div>
         </div>
