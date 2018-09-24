@@ -20,6 +20,7 @@ import BlocksScreen from './screens/blocks/BlocksScreen'
 import TransactionsScreen from './screens/transactions/TransactionsScreen'
 import LogsScreen from './screens/logs/LogsScreen'
 import EventsScreen from './screens/events/EventsScreen'
+import EventDetailsScreen from './screens/event-details/EventDetailsScreen'
 
 import NotFoundScreen from './screens/not-found/NotFoundScreen'
 import TitleScreen from './screens/title/TitleScreen'
@@ -44,6 +45,7 @@ const routes = <Route>
     <Route path="/transactions(/:transactionHash)" component={TransactionsScreen} />
     <Route path="/logs" component={LogsScreen} />
     <Route path='/events' component={EventsScreen} />
+    <Route path='/event_details/:transactionHash/:logIndex' component={EventDetailsScreen} />
     <Route path="/notfound" component={NotFoundScreen} />
     <Route path='/config(/:activeTab)' component={ConfigScreen} /> 
   </Route>
@@ -95,7 +97,9 @@ const stylesheets = [
   "./screens/not-found/NotFoundScreen.scss",
   "./screens/events/EventList.scss",
   "./screens/events/EventsScreen.scss",
-  "./screens/events/RecentEvents.scss"
+  "./screens/event-details/EventDetailsScreen.scss",
+  "./screens/event-details/EncodedEventDetails.scss",
+  "./screens/event-details/DecodedEventDetails.scss"
 ] 
 
 const render = () => {

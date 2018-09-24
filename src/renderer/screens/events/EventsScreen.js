@@ -1,33 +1,62 @@
 import React, { Component } from "react"
 import connect from "../helpers/connect"
-// import * as Events from "../../../common/redux/events/actions"
-import EventDetails from "./EventDetails"
-import RecentEvents from "./RecentEvents"
+import EventList from "./EventList"
+
+const events = [
+  {
+    name: "ComplexTokenSent",
+    contract: "ComplexToken",
+    txHash: "0x_PLACEHOLDER_TX_HASH",
+    blockTime: "2018-08-13 20:33:35",
+    logIndex: 1
+  },
+  {
+    name: "ComplexTokenSent",
+    contract: "ComplexToken",
+    txHash: "0x_PLACEHOLDER_TX_HASH",
+    blockTime: "2018-08-13 20:33:35",
+    logIndex: 2
+  },
+  {
+    name: "ENCODED EVENT",
+    contract: "0x_PLACEHOLDER_CONTRACT_ADDR",
+    txHash: "0x_PLACEHOLDER_TX_HASH",
+    blockTime: "2018-08-13 20:33:35",
+    logIndex: 3
+  }
+]
 
 class EventsScreen extends Component {
-  componentDidMount() {
-    // this.props.dispatch(Events.requestPage())
-  }
+  // componentWillReceiveProps(nextProps) {
+  //   // If the scroll position changed...
+  //   if (nextProps.appshell.scrollPosition != this.props.appshell.scrollPosition) {
+  //     if (nextProps.appshell.scrollPosition == "top") {
+  //       this.props.dispatch(Transactions.requestPreviousPage())
+  //     } else if (nextProps.appshell.scrollPosition == "bottom") {
+  //       this.props.dispatch(Transactions.requestNextPage())
+  //     }
+  //     return
+  //   }
 
-  componentWillUnmount() {
-    // this.props.dispatch(Events.clearTransactionsInView())
-  }
+  //   // No change in scroll position?
+  //   var blocksRequested = Object.keys(nextProps.transactions.blocksRequested)
+  //   var latestBlockRequested = Math.max.apply(Math, blocksRequested.concat(-1))
+  //   if (nextProps.appshell.scrollPosition == "top" && nextProps.core.latestBlock > latestBlockRequested) {
+  //     this.props.dispatch(Transactions.requestPreviousPage())
+  //   }
+  // }
 
   render() {
-    if (this.props.params.transactionHash != null) {
-      return (
-        <div className="EventsScreen">
-          <EventDetails transactionHash={this.props.params.transactionHash} />
-        </div>
-      )
-    }
-
     return (
       <div className="EventsScreen">
-        <RecentEvents scrollPosition={this.props.scrollPosition} />
+        <EventList events={events} />
       </div>
     )
   }
 }
 
-export default connect(EventsScreen)
+export default connect(
+  EventsScreen,
+  "core",
+  "appshell"
+)
