@@ -13,6 +13,7 @@ class ProjectContracts extends Component {
           name={contract.contractName}
           address={contract.address || ""}
           txCount={contract.transactions ? contract.transactions.length : 0}
+          projectIndex={this.props.projectIndex}
           key={"contract-" + contract.contractName}
         />
       })

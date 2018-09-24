@@ -3,10 +3,11 @@ import connect from '../helpers/connect'
 import ProjectContracts from './ProjectContracts';
 
 class ContractsScreen extends Component {
+
   render () {
     let content
     if (this.props.workspaces.current.projects.length > 0) {
-      content = this.props.workspaces.current.projects.map((project) => {
+      content = this.props.workspaces.current.projects.map((project, index) => {
         return (
           <div
             className="Project"
@@ -17,6 +18,7 @@ class ContractsScreen extends Component {
             </div>
             <ProjectContracts
               contracts={project.contracts}
+              projectIndex={index}
             />
           </div>
         )
