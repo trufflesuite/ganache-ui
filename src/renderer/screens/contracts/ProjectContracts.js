@@ -11,8 +11,8 @@ class ProjectContracts extends Component {
       content = this.props.contracts.map((contract) => {
         return <ContractCard
           name={contract.contractName}
-          address={""} //TODO:
-          txCount={0}
+          address={contract.address || ""}
+          txCount={contract.transactions ? contract.transactions.length : 0}
           key={"contract-" + contract.contractName}
         />
       })
