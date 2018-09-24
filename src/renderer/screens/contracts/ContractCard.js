@@ -8,7 +8,7 @@ export default class ContractCard extends Component {
   render () {
     return (
       <Link
-        to={`/contracts/${this.props.address || "undeployed"}`}
+        to={`/contracts/${this.props.projectIndex}/${this.props.address || "undeployed"}`}
         className="Link"
       >
         <div className="ContractCard">
