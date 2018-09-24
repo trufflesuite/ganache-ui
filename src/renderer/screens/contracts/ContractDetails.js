@@ -1,5 +1,5 @@
 // Contract Details to dos
-// 0. Search for `TODO-DAVID:` in other files and see if you want to do those.
+// 0. Search for `TODO:` in other files and see if you want to do those.
 // 1. hook into the store
 // 2. replace the mocked props with real data from @seese's AwesomeSauce he just cooked for us.
 // 3. Have Josh look at the ReactJson styles and update them as he sees fit. I've commented the styles in the code below with what I've learned
@@ -15,87 +15,38 @@ import connect from '../helpers/connect'
 import TxList from '../transactions/TxList'
 import FormattedEtherValue from '../../components/formatted-ether-value/FormattedEtherValue'
 import ChecksumAddress from '../../components/checksum-addresses/ChecksumAddress'
-import RecentEvents from "../events/RecentEvents"
+import EventsList from "../events/EventList"
 import { hashHistory } from 'react-router'
+import { getContractTransactions, clearShownContract } from "../../../common/redux/workspaces/actions"
 
 class ContractDetails extends Component {
-  render() {
-    // TODO-DAVID: Mock props so I don't have hook into the store
-    // you'll probably just pass in a `contract` a prop then read
-    //    balances
+  constructor(props) {
+    super(props)
 
-    //  this.props.contract
-    const contract = {
-      name: "ComplexToken",
-      address: "0x5c",
-      creationTx: "0xc5"
+    const project = this.props.workspaces.current.projects[this.props.params.projectIndex]
+    const filteredContracts = project.contracts.filter((c) => c.address === this.props.params.contractAddress)
+    if (filteredContracts.length === 0) {
+      // TODO: error
     }
+    const contract = filteredContracts[0]
+
+    this.state = { contract }
+  }
+
+  componentWillMount () {
+    const shownTransactions = this.state.contract.transactions.slice(-Math.min(5, this.state.contract.transactions.length))
+    this.props.dispatch(getContractTransactions(shownTransactions))
+  }
+
+  componentWillUnmount () {
+    this.props.dispatch(clearShownContract())
+  }
+
+  render() {
     // `balances` as an object is just copy pasted from somewhere else, it probably doesn't needs to be a property of the this.props.contract
     const balances = {
-      [contract.address]: 123
+      [this.state.contract.address]: 123
     };
-
-    // this.props.contract.transactions ? all of them? if not all, how many? if not all, how do we get to all of them?
-    const transactions = [
-      {
-        to: "0x10",
-        from: "0x1234",
-        hash: "0x4321",
-        value: 123
-      },
-      {
-        to: "0x20",
-        from: "0x1234",
-        hash: "0x5432",
-        value: 234
-      },
-      {
-        to: "0x30",
-        from: "0x4234",
-        hash: "0x6432",
-        value: 734
-      },
-      {
-        to: "0x31",
-        from: "0x5234",
-        hash: "0x7432",
-        value: 834
-      },
-      {
-        to: "0x22",
-        from: "0x1237",
-        hash: "0x5436",
-        value: 234
-      },
-      {
-        to: "0x33",
-        from: "0x4235",
-        hash: "0x6433",
-        value: 734
-      },
-      {
-        to: "0x34",
-        from: "0x5232",
-        hash: "0x7431",
-        value: 834
-      }
-    ];
-    // you'll have to marry transactions and props
-    const receipts = {};
-
-    // TODO-DAVID: THIS IS JUST SOME MOCK AUTOMATION. THROW ME AWAY
-    // create some receipts from the transactions above
-    transactions.forEach((tx, i)=>{
-       // mixing in some contract creations
-      const contractAddress = i % 3 ? "0x123" : null;
-      receipts[tx.hash] = {
-        gasUsed: "123",
-        contractAddress,
-
-         // this is very fizzbuzz of me, isn't it. note: adding `input` doesn't currently trigger the "CONTRACT CALL" label because it's currently broken
-        input: i % 2 ? "0x123" : null
-      }
-    });
 
     // this.props.contract.events
     // events isn't actually used yet. see RecentEvents.js for actual implmementation
@@ -142,18 +93,15 @@ class ContractDetails extends Component {
 
 
     return (
-      <section className="ContractDetailsScreen">
-        {/* TODO-DAVID: this header needs to be a shared component with a props of "title" */}
-        <header className="Header">
-          <button className="Button" onClick={hashHistory.goBack}>
+      <div className="ContractDetailsScreen">
+        <div className="TitleBar">
+          <button className="BackButton" onClick={hashHistory.goBack}>
             &larr; Back
           </button>
-          <div className="Title">
-            <h1>
-              { contract.name }
-            </h1>
-          </div>
-        </header>
+          <h1 className="Title">
+            { this.state.contract.contractName }
+          </h1>
+        </div>
 
         <div className="ContractDetailsBody">
           <div className="ContractInfoBody">
@@ -161,19 +109,19 @@ class ContractDetails extends Component {
               <div className="dataItem">
                 <div className="label">ADDRESS</div>
                 <div className="value">
-                  <ChecksumAddress address={contract.address} />
+                  <ChecksumAddress address={this.state.contract.address} />
                 </div>
               </div>
               <div className="dataItem">
                 <div className="label">BALANCE</div>
                 <div className="value">
-                  <FormattedEtherValue value={balances[contract.address].toString()} />
+                  <FormattedEtherValue value={balances[this.state.contract.address].toString()} />
                 </div>
               </div>
               <div className="dataItem">
                 <div className="label">CREATION TX</div>
                 <div className="value">
-                  <ChecksumAddress address={contract.creationTx} />
+                  <ChecksumAddress address={this.state.contract.creationTxHash} />
                 </div>
               </div>
             </div>
@@ -183,7 +131,7 @@ class ContractDetails extends Component {
             <div className="Title">
               <h2>TRANSACTIONS</h2>
             </div>
-            <TxList transactions={transactions} receipts={receipts} />
+            <TxList transactions={this.props.workspaces.current.shownContract.shownTransactions} receipts={this.props.workspaces.current.shownContract.shownReceipts} />
           </div>
 
           <div>
@@ -222,12 +170,12 @@ class ContractDetails extends Component {
             {/* at the time of writing this comment, `events` isn't used in 
               RecentEvents yet, so you'll need to hook things up there first!
             */}
-            <RecentEvents events={events} />
+            <EventsList events={events} />
           </div>
         </div>
-      </section>
+      </div>
     );
   }
 };
 
-export default ContractDetails
+export default connect(ContractDetails, "workspaces")
