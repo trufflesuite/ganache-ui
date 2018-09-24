@@ -156,10 +156,6 @@ class TopNavbar extends Component {
               <ContractsIcon />
               Contracts
             </Link>
-            {/* TODO-DAVID: remove this! */}
-            <Link to="/contractDetails" activeClassName="Active">
-              Temporary Contract Details
-            </Link>
             <Link to="/events" activeClassName="Active">
               <EventsIcon />
               Events
