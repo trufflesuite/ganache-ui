@@ -1,0 +1,21 @@
+.EventDetails .TitleBar {
+  font-family: "Fira Code Regular", monospaced;
+  background: var(--app-card-default-background);
+  word-wrap: break-word;
+
+  display: flex;
+  align-items: center;
+  height: 64px;
+  background: #fff;
+  border-bottom: 1px solid #aaa;
+
+  .BackButton {
+    height: 100%;
+    border-radius: 0;
+  }
+
+  .Title {
+    font-size: 1.5rem;
+    padding: 1.25rem;
+  }
+}
