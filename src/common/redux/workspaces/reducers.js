@@ -3,7 +3,9 @@ import {
   SET_CURRENT_WORKSPACE,
   CONTRACT_DEPLOYED,
   CONTRACT_TRANSACTION,
-  CONTRACT_EVENT
+  CONTRACT_EVENT,
+  GET_CONTRACT_TRANSACTIONS,
+  CLEAR_SHOWN_CONTRACT
 } from './actions'
 import cloneDeep from 'lodash.clonedeep'
 
@@ -21,6 +23,10 @@ export default function (state = initialState, action) {
       break
     case SET_CURRENT_WORKSPACE:
       nextState.current = cloneDeep(action.workspace)
+      nextState.current.shownContract = {
+        shownTransactions: [],
+        shownReceipts: {}
+      }
       break
     case CONTRACT_DEPLOYED:
       if (typeof nextState.current.projects !== "undefined") {
@@ -31,7 +37,8 @@ export default function (state = initialState, action) {
               const contract = project.contracts[j]
               if (contract.contractName === action.data.contractName) {
                 contract.address = action.data.contractAddress
-                contract.creationHash = action.data.transactionHash
+                contract.creationTxHash = action.data.transactionHash
+                contract.transactions = []
                 break
               }
             }
@@ -64,6 +71,16 @@ export default function (state = initialState, action) {
       break
     case CONTRACT_EVENT:
       nextState.current = cloneDeep(action.workspace)
+      break
+    case GET_CONTRACT_TRANSACTIONS:
+      nextState.current.shownContract.shownTransactions = cloneDeep(action.shownTransactions)
+      nextState.current.shownContract.shownReceipts = cloneDeep(action.shownReceipts)
+      break
+    case CLEAR_SHOWN_CONTRACT:
+      nextState.current.shownContract = {
+        shownTransactions: [],
+        shownReceipts: {}
+      }
       break
     default:
       break

@@ -1,6 +1,6 @@
 import {ipcRenderer } from 'electron'
 
-import { web3CleanUpHelper } from '../web3/helpers/Web3ActionCreator'
+import { web3CleanUpHelper, web3ActionCreator } from '../web3/helpers/Web3ActionCreator'
 import { REQUEST_SERVER_RESTART, showTitleScreen } from '../core/actions'
 
 const prefix = 'WORKSPACES'
@@ -73,4 +73,25 @@ export const contractTransaction = function(data) {
 export const CONTRACT_EVENT = `${prefix}/CONTRACT_EVENT`
 export const contractEvent = function(data) {
   return {type: CONTRACT_EVENT, data}
+}
+
+export const GET_CONTRACT_TRANSACTIONS = `${prefix}/GET_CONTRACT_TRANSACTIONS`
+export const getContractTransactions = function(transactions) {
+  return async function(dispatch, getState) {
+    let shownTransactions = []
+    let shownReceipts = {}
+    for (let i = 0; i < transactions.length; i++) {
+      const transaction = await web3ActionCreator(dispatch, getState, "getTransaction", [transactions[i]])
+      shownTransactions.push(transaction)
+      const receipt = await web3ActionCreator(dispatch, getState, "getTransactionReceipt", [transactions[i]])
+      shownReceipts[transactions[i]] = receipt
+    }
+
+    dispatch({ type: GET_CONTRACT_TRANSACTIONS, shownTransactions, shownReceipts })
+  }
+}
+
+export const CLEAR_SHOWN_CONTRACT = `${prefix}/CLEAR_SHOWN_CONTRACT`
+export const clearShownContract = function() {
+  return { type: CLEAR_SHOWN_CONTRACT }
 }
