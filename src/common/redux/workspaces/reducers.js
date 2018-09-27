@@ -28,7 +28,7 @@ export default function (state = initialState, action) {
         shownReceipts: {},
         shownEvents: [],
         state: {},
-        balance: 0
+        balance: "0"
       }
       break
     case CONTRACT_DEPLOYED:

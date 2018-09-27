@@ -51,17 +51,15 @@ class ContractDetails extends Component {
   }
 
   render() {
-    // this.props.contract.events
-    // events isn't actually used yet. see RecentEvents.js for actual implmementation
-    // once events are implemented there.
-    const events = [
-      {
-        name: "ComplexTokenSent",
-        contract: "ComplexToken",
-        txHash: "0x_PLACEHOLDER_TX_HASH",
-        blockTime: "2018-08-13 20:33:35"
+    const events = this.props.workspaces.current.shownContract.shownEvents.map((event) => {
+      return {
+        name: event.decodedLog.name,
+        contract: this.state.contract.contractName,
+        txHash: event.transactionHash,
+        logIndex: event.logIndex,
+        blockTime: "TBD"
       }
-    ]
+    })
 
     return (
       <div className="ContractDetailsScreen">

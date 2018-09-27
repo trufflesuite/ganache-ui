@@ -38,11 +38,12 @@ watcherEvents.forEach((eventName) => {
 
 process.on("message", async function(message) {
   switch(message.type) {
-    case "web3-provider":
+    case "web3-provider": {
       web3Host = message.data;
       watcher.setWeb3(web3Host);
       break;
-    case "project-details-request":
+    }
+    case "project-details-request": {
       const response = getProjectDetails(message.data);
 
       process.send({
@@ -54,24 +55,33 @@ process.on("message", async function(message) {
         watcher.add(response);
       }
       break;
-    case "project-unwatch":
+    }
+    case "project-unwatch": {
       watcher.remove(message.data);
       break;
-    case "transaction-decode-request":
+    }
+    case "transaction-decode-request": {
       break;
-    case "decode-contract-request":
+    }
+    case "decode-contract-request": {
       const { contract, contracts, block } = message.data;
       let state = web3Host ? await DecodeHelpers.getContractState(contract, contracts, web3Host, block) : {};
-      console.log(JSON.stringify(state));
-      //state = DecodeHelpers.toJSON(state.variables);
       state = state.variables;
       process.send({
         type: "decode-contract-response",
         data: state
       });
       break;
-    case "decode-events-request":
+    }
+    case "decode-event-request": {
+      const { contract, contracts, block, log } = message.data;
+      let decodedLog = web3Host ? await DecodeHelpers.getDecodedEvent(contract, contracts, web3Host, block, log) : {};
+      process.send({
+        type: "decode-event-response",
+        data: decodedLog
+      });
       break;
+    }
   }
 });
 

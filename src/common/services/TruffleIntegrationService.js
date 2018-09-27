@@ -99,6 +99,25 @@ class TruffleIntegrationService extends EventEmitter {
       });
     });
   }
+
+  async getDecodedEvent(contract, contracts, block, log) {
+    return new Promise((resolve, reject) => {
+      this.once("decode-event-response", (data) => {
+        if (typeof data === "object") {
+          resolve(data);
+        }
+        else {
+          console.log(log);
+          reject(data);
+        }
+      });
+
+      this.child.send({
+        type: "decode-event-request",
+        data: { contract, contracts, block, log }
+      });
+    });
+  }
 }
 
 export default TruffleIntegrationService;

@@ -32,7 +32,8 @@ import {
   CONTRACT_DEPLOYED,
   CONTRACT_TRANSACTION,
   CONTRACT_EVENT,
-  GET_CONTRACT_DETAILS
+  GET_CONTRACT_DETAILS,
+  GET_DECODED_EVENT
 } from '../common/redux/workspaces/actions'
 
 import {
@@ -129,6 +130,11 @@ app.on('ready', () => {
     ipcMain.on(GET_CONTRACT_DETAILS, async (event, contract, contracts, block) => {
       const state = await truffleIntegration.getContractState(contract, contracts, block)
       mainWindow.webContents.send(GET_CONTRACT_DETAILS, state)
+    })
+
+    ipcMain.on(GET_DECODED_EVENT, async (event, contract, contracts, block, log) => {
+      const decodedLog = await truffleIntegration.getDecodedEvent(contract, contracts, block, log)
+      mainWindow.webContents.send(GET_DECODED_EVENT, decodedLog)
     })
 
     ipcMain.on("web3-provider", (event, url) => {

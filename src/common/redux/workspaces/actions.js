@@ -75,6 +75,7 @@ export const contractEvent = function(data) {
   return {type: CONTRACT_EVENT, data}
 }
 
+export const GET_DECODED_EVENT = `${prefix}/GET_DECODED_EVENT`
 export const GET_CONTRACT_DETAILS = `${prefix}/GET_CONTRACT_DETAILS`
 export const getContractDetails = function(data) {
   const { transactions, events, contract, contracts, block } = data
@@ -97,9 +98,17 @@ export const getContractDetails = function(data) {
       const receipt = await web3ActionCreator(dispatch, getState, "getTransactionReceipt", [events[i].transactionHash])
       for (let j = 0; j < receipt.logs.length; j++) {
         if (receipt.logs[j].logIndex === events[i].logIndex) {
+          const decodedLog = await new Promise((resolve, reject) => {
+            // TODO: there's a better way to do this to not have to send `contract` and `contracts` every time
+            ipcRenderer.once(GET_DECODED_EVENT, (event, decodedLog) => {
+              resolve(decodedLog)
+            })
+            ipcRenderer.send(GET_DECODED_EVENT, contract, contracts, block, receipt.logs[j])
+          })
           shownEvents.push({
             ...events[i],
-            log: receipt.logs[j]
+            log: receipt.logs[j],
+            decodedLog
           })
           break
         }
