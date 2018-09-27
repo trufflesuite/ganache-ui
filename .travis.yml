@@ -12,10 +12,10 @@ matrix:
 addons:
   apt:
     sources:
-    - ubuntu-toolchain-r-test
+      - ubuntu-toolchain-r-test
     packages:
-    - gcc-5
-    - g++-5
+      - gcc-5
+      - g++-5
 
 cache:
   directories:
@@ -30,6 +30,16 @@ env:
     - secure: "LAIosKgHsPTW1INSFQbk6tzwiZvFANSpd7URnArzZU4ewhWI9efTqP8lKu9GeaSYTZGWY5VDOlbn7styAbVeoF+5HPNADTJBvPnBsM/XDudvWaVSTGrvEfvjitEtbXHVMsr+4o5St/jSoUABnC7DYJjzmifdXNhLx0MN93RlgauHamktpoATPlFpARjl2fvh+t/LGSv4VCEQkJ8HSlsOYpOPcMS2qSXZOHM43GeAKCQ09U3VGFfBzShBGjoCB4xzb1TNneew5BnJm9HLpO7CfmYvMbQoCFYCWtjAaTIGdlGaRjNkBHI3dKWprGsB15y7nILIjW56JWlCeW9PoRqcrLR6wAOLd6lzvro+w8L4oE4l5eFw/Pdvu8qUR8fmHFZGAtg77EevjAWcv0uxmGataFKszH55YPVHQCHzPkB0VC+m+GPwm7dRGMQttoeVG8X3/QYDO7N+35/AY4vTdjdqePp0FwKrah1tXGhnUkC/e0XSi8kSYQeMOn9crzFXY+pBuciUx4WA7fXJoxazYYsTAbHqsEyNKCMtUG/X0f+IOUCdnN4DSnDXTOtw22N4qYSyv2RDuu2UMgygmecj2J/A8s0YYc/a4EIlIYsGUuUILP22dxpXO9yqOziAFuzfUNpi2NCbrjvfiqkgYzC7LtVAJAOTqxPbTBtjQhVq4SfE9nM="
     - secure: "MrkHZgU2aXfvHJY55gXFoB/diVP/GMoZfrftJeJqBU0L6t4GIWC01xrQGuS/nNNWL9ixwxSkjg1rWVr63uel905vbeP/05bNLJ8HypPPkKJs7Sd6h/2/ZDd5zAe+63J3yrpuXJj6y4tlIEPZExyHnpPZHu2fAQV0pyvkGefyyaJY9awAlCOfoCquHE9Y98EAXCxqOSdbSStSOoX6dAPdjN8CZ/Bq0gSlqZYdMBwzHee0VC4ftgGMVeXcAdJ9NNAwi70PIHryCW0YvmzLkDwJtG7GYQ7hAOgLreruu9ifmOYmRWAI4Ko8WPgD5fv46VLrsJ2Zmn5MgEg5IVR1b9oWfdo4BlC20XS2EtAWcizzCSIYza10rJJ10gyPQ32WlXwPtpohaJeyTIaEx8dTvfPe4pqRTck2UrkF215FFNgTN0tUWsrIFbYNCXVhCBSOER5ZH9uiZxmyh44rSk4Svro42hJCWquFEZAdyxld7LUJVeFNtb9SWU/5W06uExHJ0+d9MFUf0XJK6OHWol19ZTSYayLaZ2Tm2C2wrAHcUvHlsl9tUySVSVbX9+EZyhVpRn6O2ZmW2fAnKmGsOwbCljEwfFBGxReI56v7iI4RsySAS9z/pzl7+8CfjJ/tnVA6JlfGOpLhprwrc0xEH8dJKMDw51kt3yGMGFQwPo+Eq5EQ34Q="
 
+before_install:
+  - if [ $TRAVIS_OS_NAME == "linux" ]; then
+      export CC="gcc-5";
+      export CXX="g++-5";
+      export LINK="gcc-5";
+      export LINKXX="g++-5";
+    fi
+  - nvm --version
+  - node --version
+  - npm --version
 before_install:
 - if [ "$TRAVIS_OS_NAME" = "linux" ]; then
     export CC="gcc-5";

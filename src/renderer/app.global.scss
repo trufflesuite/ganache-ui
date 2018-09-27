@@ -1,0 +1,125 @@
+// @import "./Styles/colors.scss";
+// @import "./Styles/normalize.scss";
+// @import "./Styles/buttons.scss";
+// @import "./Styles/forms.scss";
+
+@font-face {
+  font-family: "RobotoCondensed-Regular";
+  font-weight: 300;
+  font-style: bold;
+
+  src: url("../../resources/fonts/RobotoCondensed-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "RobotoCondensed-Bold";
+  font-weight: 700;
+  font-style: bold;
+
+  src: url("../../resources/fonts/RobotoCondensed-Bold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Fira Sans";
+  font-weight: 300;
+  font-style: normal;
+
+  src: url("../../resources/fonts/FiraSans-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Fira Sans Bold";
+  font-weight: 300;
+  font-style: normal;
+
+  src: url("../../resources/fonts/FiraSans-Bold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Fira Sans SemiBold";
+  font-weight: 300;
+  font-style: normal;
+
+  src: url("../../resources/fonts/FiraSans-SemiBold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Fira Code Regular";
+  font-weight: 300;
+  font-style: normal;
+
+  src: url("../../resources/fonts/FiraCode-Regular.ttf") format("truetype");
+}
+
+
+@font-face {
+  font-family: "Grand Hotel";
+  font-weight: 300;
+  font-style: normal;
+
+  src: url("../../resources/fonts/GrandHotel-Regular.ttf") format("truetype");
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+a {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+svg:not([class]) {
+  g,
+  path,
+  circle {
+    stroke: currentColor !important;
+  }
+}
+
+svg[class='fillCurrentColor'] {
+  g,
+  path,
+  circle {
+    fill: currentColor !important;
+  }
+}
+
+
+html,
+body {
+  padding: 0;
+
+  background-color: var(--app-background-color);
+
+  font-family: "Fira Sans", sans-serif;
+  font-weight: 200;
+}
+
+html,
+body,
+#root {
+  height: 100vh;
+  width: 100vw;
+}
+
+a {
+  text-shadow: 1px 1px 1px rgba(0,0,0,.004);
+
+  -webkit-font-smoothing: antialiased;
+}
+
+input[type="submit"],
+input[type="reset"],
+input[type="button"],
+input[type="text"],
+button,
+textarea { 
+	-webkit-app-region: no-drag;
+}
+
+.scroll-light {
+  background-color: rgba(255, 255, 255, 0.2);
+}

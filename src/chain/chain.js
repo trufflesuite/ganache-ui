@@ -28,6 +28,7 @@ var server;
 var provider;
 var blockInterval;
 var lastBlock;
+var dbLocation;
 
 function stopServer(callback) {
   callback = callback || function() {}
@@ -110,6 +111,13 @@ function startServer(options) {
 
       var state = result ? result : server.provider.manager.state;
 
+      try {
+        dbLocation = state.blockchain.data.db.location;
+      }
+      catch (e) {
+        console.error("Couldn't access location of chaindata. You will be unable to create a workspace from this session.");
+      }
+
       if (!state) {
         process.send({type: 'start-error', data: "Couldn't get a reference to TestRPC's StateManager."});
         return
@@ -151,6 +159,15 @@ function startServer(options) {
   })
 }
 
+function getDbLocation() {
+  if (dbLocation) {
+    process.send({type: 'db-location', data: dbLocation});
+  }
+  else {
+    process.send({type: 'db-location', data: null});
+  }
+}
+
 process.on("message", function(message) {
   //console.log("CHILD RECEIVED", message)
   switch(message.type) {
@@ -159,6 +176,9 @@ process.on("message", function(message) {
       break;
     case "stop-server":
       stopServer()
+      break;
+    case "get-db-location":
+      getDbLocation()
       break;
   }
 });
