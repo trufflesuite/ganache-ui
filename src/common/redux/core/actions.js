@@ -92,6 +92,16 @@ export const setSystemError = function(error, showBugModal, category, detail) {
   return {type: SET_SYSTEM_ERROR, error, showBugModal, category, detail}
 }
 
+export const SET_MODAL_ERROR = `${prefix}/SET_MODAL_ERROR`
+export const setModalError = function(error) {
+  return {type: SET_MODAL_ERROR, error}
+}
+
+export const DISMISS_MODAL_ERROR = `${prefix}/DISMISS_MODAL_ERROR`
+export const dismissModalError = function() {
+  return {type: DISMISS_MODAL_ERROR}
+}
+
 export const DISMISS_BUG_MODAL = `${prefix}/DISMISS_BUG_MODAL`
 export const dismissBugModal = function() {
   return {type: DISMISS_BUG_MODAL}

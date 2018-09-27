@@ -8,6 +8,7 @@ import * as AppShellActions from '../../../common/redux/appshell/actions'
 
 import TopNavbar from './TopNavbar'
 import BugModal from './BugModal'
+import ErrorModal from '../../components/modal/ErrorModal'
 import UpdateModal from '../auto-update/UpdateModal'
 
 import OnlyIf from '../../components/only-if/OnlyIf'
@@ -46,6 +47,10 @@ class AppShell extends Component {
     this.refs.shellcontainer.addEventListener('scroll', this._handleScroll);
   }
 
+  onCloseError() {
+    alert("onCloseError");
+  }
+
   onCloseFatalErrorModal = () => {}
 
   render () {
@@ -61,6 +66,9 @@ class AppShell extends Component {
         </div>
         <OnlyIf test={this.props.core.systemError != null && this.props.core.showBugModal}>
           <BugModal systemError={this.props.core.systemError} logs={this.props.logs} />
+        </OnlyIf>
+        <OnlyIf test={this.props.core.modalError != null}>
+          <ErrorModal modalError={this.props.core.modalError}></ErrorModal>
         </OnlyIf>
         <OnlyIf test={!this.props.core.systemError && this.props.autoUpdate.showModal}>
           <UpdateModal />

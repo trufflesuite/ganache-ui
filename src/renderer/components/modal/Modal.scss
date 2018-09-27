@@ -28,13 +28,27 @@
   header {
     background: var(--app-navbar-background);
     width: 600px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
 
-    h4 {
+    button {
+      color:rgba(255,255,255, 1);
+      background-color:transparent;
+      transition: color 0.3s;
+      &:hover {
+        color:var(--app-button-primary-color);
+      }
+    }
+
+    h4, button {
       line-height: 1rem;
       font-size: 1rem;
       font-weight: 500;
       padding: 0 2rem;
       color: #fff;
+      text-transform: uppercase;
     }
   }
 
@@ -51,8 +65,26 @@
 
     animation: shrinkIn .3s forwards ease-in-out;
 
-    h4 {
+    // allow for multiple <section> elements within the modal
+    &:first-of-type:not(:last-child) {
+      padding-bottom:.25rem;
+    }
+    &:last-child:not(:first-of-type) {
+      padding-top:.25rem;
+    }
 
+    &.subTitle {
+      display:block;
+      position:relative;
+      font-family: "RobotoCondensed-Regular";
+      font-weight: 800;
+      color: #605c59;
+      svg {
+        vertical-align: middle;
+        width: 28px;
+        height: 28px;
+        margin-right:.5rem;
+      }
     }
 
     p {

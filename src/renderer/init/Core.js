@@ -7,6 +7,7 @@ import {
   SET_SERVER_STARTED,
   SET_BLOCK_NUMBER,
   SET_SYSTEM_ERROR,
+  SET_MODAL_ERROR,
   SET_KEY_DATA,
   getGasPrice,
   getGasLimit,
@@ -49,6 +50,10 @@ export function initCore(store) {
   })
 
   ipcRenderer.on(SET_SYSTEM_ERROR, (event, error) => {
+    handleError(store, error)
+  })
+
+  ipcRenderer.on(SET_MODAL_ERROR, (event, error) => {
     handleError(store, error)
   })
 
