@@ -202,7 +202,7 @@
     "react-custom-scrollbars": "^4.2.1",
     "react-dom": "^16.3.2",
     "react-hot-loader": "^3.1.1",
-    "react-json-view": "file:../react-json-view",
+    "@seesemichaelj/react-json-view": "^1.20.0",
     "react-marked-markdown": "^1.4.6",
     "react-moment": "^0.2.2",
     "react-redux": "^5.0.2",
