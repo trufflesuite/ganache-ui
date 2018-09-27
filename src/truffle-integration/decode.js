@@ -21,7 +21,6 @@ function toJSON(object) {
   for (let i = 0; i < keys.length; i++) {
     const v = object[keys[i]];
 
-    console.log(v.type);
     switch (v.type) {
       case "string": {
         result[v.name] = v.value;

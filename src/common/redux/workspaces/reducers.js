@@ -27,7 +27,8 @@ export default function (state = initialState, action) {
         shownTransactions: [],
         shownReceipts: {},
         shownEvents: [],
-        state: {}
+        state: {},
+        balance: 0
       }
       break
     case CONTRACT_DEPLOYED:
@@ -103,6 +104,7 @@ export default function (state = initialState, action) {
       nextState.current.shownContract.shownReceipts = cloneDeep(action.shownReceipts)
       nextState.current.shownContract.shownEvents = cloneDeep(action.shownEvents)
       nextState.current.shownContract.state = cloneDeep(action.state)
+      nextState.current.shownContract.balance = action.balance
       break
     case CLEAR_SHOWN_CONTRACT:
       nextState.current.shownContract = {

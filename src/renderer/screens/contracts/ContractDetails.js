@@ -51,11 +51,6 @@ class ContractDetails extends Component {
   }
 
   render() {
-    // `balances` as an object is just copy pasted from somewhere else, it probably doesn't needs to be a property of the this.props.contract
-    const balances = {
-      [this.state.contract.address]: 123
-    };
-
     // this.props.contract.events
     // events isn't actually used yet. see RecentEvents.js for actual implmementation
     // once events are implemented there.
@@ -67,37 +62,6 @@ class ContractDetails extends Component {
         blockTime: "2018-08-13 20:33:35"
       }
     ]
-
-    // this.props.contract.storage
-    const storage = {
-      "Parent A": "Value",
-      "Parent B": {
-        "Child 1": "Grand Child",
-        "Child 2": 123.45,
-        "Child 3": [
-          "mixed",
-          "type",
-          "array",
-          123.45,
-          true,
-          null,
-          undefined,
-          {
-            "foo":" bar"
-          }
-        ],
-        "Child 4": true,
-        "Child 5": false,
-        "Child 5": undefined,
-        "Child 5": null
-      },
-      "Parent C": [
-        ["multi", "dim"],
-        ["arrays", "yo"],
-      ]
-    }
-    // end mocks!!!
-
 
     return (
       <div className="ContractDetailsScreen">
@@ -122,7 +86,7 @@ class ContractDetails extends Component {
               <div className="dataItem">
                 <div className="label">BALANCE</div>
                 <div className="value">
-                  <FormattedEtherValue value={balances[this.state.contract.address].toString()} />
+                  <FormattedEtherValue value={this.props.workspaces.current.shownContract.balance} />
                 </div>
               </div>
               <div className="dataItem">
@@ -159,8 +123,8 @@ class ContractDetails extends Component {
                   base06: '#073642', // dark blue -- not sued?
                   base07: '#000', // JSON keys
                   base08: '#d33682', // pink -- not used?
-                  base09: '#F2AF67', // string types text (ganache orange)
-                  base0A: '#F2AF67', // NULL (ganache orange)
+                  base09: 'rgb(208, 108, 0)', // string types text (ganache orange)
+                  base0A: 'rgb(208, 108, 0)', // NULL (ganache orange)
                   base0B: '#3fe0c5', //aka --truffle-green, for  float types
                   base0C: '#777', // array indexes and item counts
                   base0D: '#000', // arrows
@@ -171,7 +135,7 @@ class ContractDetails extends Component {
               edit={false}
               add={false}
               delete={false}
-              enableClipboard={true}
+              enableClipboard={false}
               displayDataTypes={true}
               displayObjectSize={true}
               indentWidth={2}

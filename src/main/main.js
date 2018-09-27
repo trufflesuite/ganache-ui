@@ -122,6 +122,10 @@ app.on('ready', () => {
       mainWindow.webContents.send(CONTRACT_EVENT, data)
     })
 
+    truffleIntegration.on("error", (data) => {
+      console.log(data)
+    })
+
     ipcMain.on(GET_CONTRACT_DETAILS, async (event, contract, contracts, block) => {
       const state = await truffleIntegration.getContractState(contract, contracts, block)
       mainWindow.webContents.send(GET_CONTRACT_DETAILS, state)

@@ -84,6 +84,8 @@ export const getContractDetails = function(data) {
     let shownReceipts = {}
     let shownEvents = []
 
+    const balance = await web3ActionCreator(dispatch, getState, "getBalance", [contract.address])
+
     for (let i = 0; i < transactions.length; i++) {
       const transaction = await web3ActionCreator(dispatch, getState, "getTransaction", [transactions[i]])
       shownTransactions.push(transaction)
@@ -111,7 +113,7 @@ export const getContractDetails = function(data) {
       ipcRenderer.send(GET_CONTRACT_DETAILS, contract, contracts, block)
     })
 
-    dispatch({ type: GET_CONTRACT_DETAILS, shownTransactions, shownReceipts, shownEvents, state })
+    dispatch({ type: GET_CONTRACT_DETAILS, shownTransactions, shownReceipts, shownEvents, state, balance })
   }
 }
 

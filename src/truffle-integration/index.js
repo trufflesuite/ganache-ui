@@ -61,14 +61,16 @@ process.on("message", async function(message) {
       break;
     case "decode-contract-request":
       const { contract, contracts, block } = message.data;
-      let state = await DecodeHelpers.getContractState(contract, contracts, web3Host, block)
-      state = web3Host ? DecodeHelpers.toJSON(state.variables) : {};
+      let state = web3Host ? await DecodeHelpers.getContractState(contract, contracts, web3Host, block) : {};
+      console.log(JSON.stringify(state));
+      //state = DecodeHelpers.toJSON(state.variables);
+      state = state.variables;
       process.send({
         type: "decode-contract-response",
         data: state
       });
       break;
-    case "event-decode-request":
+    case "decode-events-request":
       break;
   }
 });
