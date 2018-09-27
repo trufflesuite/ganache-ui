@@ -8,6 +8,7 @@ import { setUpdateAvailable } from '../../../common/redux/auto-update/actions'
 import { closeWorkspace, saveWorkspace } from '../../../common/redux/workspaces/actions'
 import { clearLogLines } from '../../../common/redux/logs/actions'
  
+import ModalDetails from '../../components/modal/ModalDetails'
 import Spinner from '../../components/spinner/Spinner'
 import OnlyIf from '../../components/only-if/OnlyIf'
 import StatusIndicator from '../../components/status-indicator/StatusIndicator'
@@ -74,6 +75,24 @@ class TopNavbar extends Component {
         this.props.dispatch(setSystemError(new Error("You found a secret!")))
       } else if (value.toLowerCase() == "test-update") {
         this.props.dispatch(setUpdateAvailable("9.9.9", "Release Name", "This is a release note.\n\n**bold** _italic_ or is this *italic*? [trufflesuite/ganache-cli#417](https://github.com/trufflesuite/ganache-cli/issues/417)\n\nDo we scroll to get here?\n\nHow about here?"))
+      } else if (value.toLowerCase() === "modal_error") {
+        const modalDetails = new ModalDetails(
+          ModalDetails.types.WARNING,
+          [{
+            click: (modal) => {
+              alert("removing...")
+              modal.close()
+            },
+            value: "Remove"
+          },
+          {
+            value: "Cancel"
+          }],
+          "Remove Project?",
+          "This project has contracts deployed; are you sure you want to remove it? Contract data, transactions, and events will no longer be decoded."
+        )
+
+        this.props.dispatch(ModalDetails.actions.setModalError(modalDetails))
       } else {
         this.props.dispatch(Search.query(value))
       }

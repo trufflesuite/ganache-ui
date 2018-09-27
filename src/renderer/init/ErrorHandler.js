@@ -1,5 +1,5 @@
 
-import { setSystemError } from '../../common/redux/core/actions'
+import { setSystemError, setModalError } from '../../common/redux/core/actions'
 
 import {
   setSettingError,
@@ -34,6 +34,9 @@ export function handleError(store, error) {
         category = "custom"
         detail = error.key + " - " + error.value
         break
+      case "MODALERROR":
+        store.dispatch(setModalError(error));
+        return;
       default:
         showBugModal = true
         category = "generic"

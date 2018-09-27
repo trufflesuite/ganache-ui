@@ -16,6 +16,7 @@ const initialState = {
   snapshots: [],
   systemError: null,
   showBugModal: false,
+  modalError: null,
   blocks: [],
   transactions: [],
   updateInfo: {}
@@ -90,6 +91,16 @@ export default function (state = initialState, action) {
       return Object.assign({}, state, {
         systemError: action.error,
         showBugModal: action.showBugModal
+      })
+
+    case Core.SET_MODAL_ERROR:
+      return Object.assign({}, state, {
+        modalError: action.error
+      })
+
+    case Core.DISMISS_MODAL_ERROR:
+      return Object.assign({}, state, {
+        modalError: null
       })
 
     case Core.SET_NEW_VERSION_INFO:
