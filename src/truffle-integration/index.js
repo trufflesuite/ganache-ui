@@ -1,5 +1,8 @@
 const getProjectDetails = require("./projectDetails").get;
 const ProjectWatcher = require("./projectWatcher");
+const DecodeHelpers = require("./decode");
+
+let web3Host;
 
 watcher = new ProjectWatcher();
 
@@ -33,10 +36,11 @@ watcherEvents.forEach((eventName) => {
   });
 });
 
-process.on("message", function(message) {
+process.on("message", async function(message) {
   switch(message.type) {
     case "web3-provider":
-      watcher.setWeb3(message.data);
+      web3Host = message.data;
+      watcher.setWeb3(web3Host);
       break;
     case "project-details-request":
       const response = getProjectDetails(message.data);
@@ -55,7 +59,14 @@ process.on("message", function(message) {
       break;
     case "transaction-decode-request":
       break;
-    case "contract-state-request":
+    case "decode-contract-request":
+      const { contract, contracts, block } = message.data;
+      let state = await DecodeHelpers.getContractState(contract, contracts, web3Host, block)
+      state = web3Host ? DecodeHelpers.toJSON(state.variables) : {};
+      process.send({
+        type: "decode-contract-response",
+        data: state
+      });
       break;
     case "event-decode-request":
       break;

@@ -4,7 +4,7 @@ import {
   CONTRACT_DEPLOYED,
   CONTRACT_TRANSACTION,
   CONTRACT_EVENT,
-  GET_CONTRACT_TRANSACTIONS,
+  GET_CONTRACT_DETAILS,
   CLEAR_SHOWN_CONTRACT
 } from './actions'
 import cloneDeep from 'lodash.clonedeep'
@@ -25,7 +25,9 @@ export default function (state = initialState, action) {
       nextState.current = cloneDeep(action.workspace)
       nextState.current.shownContract = {
         shownTransactions: [],
-        shownReceipts: {}
+        shownReceipts: {},
+        shownEvents: [],
+        state: {}
       }
       break
     case CONTRACT_DEPLOYED:
@@ -39,6 +41,7 @@ export default function (state = initialState, action) {
                 contract.address = action.data.contractAddress
                 contract.creationTxHash = action.data.transactionHash
                 contract.transactions = []
+                contract.events = []
                 break
               }
             }
@@ -70,11 +73,36 @@ export default function (state = initialState, action) {
       }
       break
     case CONTRACT_EVENT:
-      nextState.current = cloneDeep(action.workspace)
+      if (typeof nextState.current.projects !== "undefined") {
+        for (let i = 0; i < nextState.current.projects.length; i++) {
+          const project = nextState.current.projects[i]
+          if (project.truffle_directory === action.data.truffleDirectory) {
+            for (let j = 0; j < project.contracts.length; j++) {
+              const contract = project.contracts[j]
+              if (contract.address === action.data.contractAddress) {
+                const event = {
+                  transactionHash: action.data.transactionHash,
+                  logIndex: action.data.logIndex
+                }
+                if (Array.isArray(contract.events)) {
+                  contract.events.push(event)
+                }
+                else {
+                  contract.events = [ event ]
+                }
+                break
+              }
+            }
+            break
+          }
+        }
+      }
       break
-    case GET_CONTRACT_TRANSACTIONS:
+    case GET_CONTRACT_DETAILS:
       nextState.current.shownContract.shownTransactions = cloneDeep(action.shownTransactions)
       nextState.current.shownContract.shownReceipts = cloneDeep(action.shownReceipts)
+      nextState.current.shownContract.shownEvents = cloneDeep(action.shownEvents)
+      nextState.current.shownContract.state = cloneDeep(action.state)
       break
     case CLEAR_SHOWN_CONTRACT:
       nextState.current.shownContract = {

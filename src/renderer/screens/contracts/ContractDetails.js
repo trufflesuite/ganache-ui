@@ -17,7 +17,7 @@ import FormattedEtherValue from '../../components/formatted-ether-value/Formatte
 import ChecksumAddress from '../../components/checksum-addresses/ChecksumAddress'
 import EventsList from "../events/EventList"
 import { hashHistory } from 'react-router'
-import { getContractTransactions, clearShownContract } from "../../../common/redux/workspaces/actions"
+import { getContractDetails, clearShownContract } from "../../../common/redux/workspaces/actions"
 
 class ContractDetails extends Component {
   constructor(props) {
@@ -30,12 +30,20 @@ class ContractDetails extends Component {
     }
     const contract = filteredContracts[0]
 
-    this.state = { contract }
+    this.state = { project, contract }
   }
 
   componentWillMount () {
-    const shownTransactions = this.state.contract.transactions.slice(-Math.min(5, this.state.contract.transactions.length))
-    this.props.dispatch(getContractTransactions(shownTransactions))
+    const transactions = this.state.contract.transactions.slice(-Math.min(5, this.state.contract.transactions.length))
+    const events = this.state.contract.events.slice(-Math.min(5, this.state.contract.events.length))
+
+    this.props.dispatch(getContractDetails({
+      contract: this.state.contract,
+      contracts: this.state.project.contracts,
+      block: "latest",
+      transactions,
+      events
+    }))
   }
 
   componentWillUnmount () {
@@ -91,7 +99,6 @@ class ContractDetails extends Component {
     // end mocks!!!
 
 
-
     return (
       <div className="ContractDetailsScreen">
         <div className="TitleBar">
@@ -139,28 +146,38 @@ class ContractDetails extends Component {
               <h2>STORAGE</h2>
             </div>
             <ReactJson
-            src={storage} name={false} theme={{
-                scheme: 'ganache',
-                author: 'Ganache',
-                //transparent main background
-                base00: 'rgba(0, 0, 0, 0)',
-                base01: 'rgb(245, 245, 245)',
-                base02: '#000', // lines and background color for: NULL, undefined, and brackets
-                base03: '#93a1a1', // blue grey -- not used?
-                base04: 'rgba(0, 0, 0, 0.3)',
-                base05: '#aaa', // undefined text
-                base06: '#073642', // dark blue -- not sued?
-                base07: '#000', // JSON keys
-                base08: '#d33682', // pink -- not used?
-                base09: '#F2AF67', // string types text (ganache orange)
-                base0A: '#F2AF67', // NULL (ganache orange)
-                base0B: '#3fe0c5', //aka --truffle-green, for  float types
-                base0C: '#777', // array indexes and item counts
-                base0D: '#000', // arrows
-                base0E: '#000', // used for some arrows and bool
-                base0F: '#268bd2' // a bright blue -- not used?
-            }}
-            iconStyle="triangle" edit={false} add={false} delete={false} enableClipboard={false} displayDataTypes={true} displayObjectSize={true} indentWidth={2} collapsed={1} collapseStringsAfterLength={20} />
+              src={this.props.workspaces.current.shownContract.state} name={false} theme={{
+                  scheme: 'ganache',
+                  author: 'Ganache',
+                  //transparent main background
+                  base00: 'rgba(0, 0, 0, 0)',
+                  base01: 'rgb(245, 245, 245)',
+                  base02: '#000', // lines and background color for: NULL, undefined, and brackets
+                  base03: '#93a1a1', // blue grey -- not used?
+                  base04: 'rgba(0, 0, 0, 0.3)',
+                  base05: '#aaa', // undefined text
+                  base06: '#073642', // dark blue -- not sued?
+                  base07: '#000', // JSON keys
+                  base08: '#d33682', // pink -- not used?
+                  base09: '#F2AF67', // string types text (ganache orange)
+                  base0A: '#F2AF67', // NULL (ganache orange)
+                  base0B: '#3fe0c5', //aka --truffle-green, for  float types
+                  base0C: '#777', // array indexes and item counts
+                  base0D: '#000', // arrows
+                  base0E: '#000', // used for some arrows and bool
+                  base0F: '#268bd2' // a bright blue -- not used?
+              }}
+              iconStyle="triangle"
+              edit={false}
+              add={false}
+              delete={false}
+              enableClipboard={true}
+              displayDataTypes={true}
+              displayObjectSize={true}
+              indentWidth={2}
+              collapsed={1}
+              collapseStringsAfterLength={20}
+            />
           </div>
 
           <div>

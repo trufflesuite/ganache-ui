@@ -31,7 +31,8 @@ import {
   SET_CURRENT_WORKSPACE,
   CONTRACT_DEPLOYED,
   CONTRACT_TRANSACTION,
-  CONTRACT_EVENT
+  CONTRACT_EVENT,
+  GET_CONTRACT_DETAILS
 } from '../common/redux/workspaces/actions'
 
 import {
@@ -119,6 +120,11 @@ app.on('ready', () => {
 
     truffleIntegration.on("contract-event", (data) => {
       mainWindow.webContents.send(CONTRACT_EVENT, data)
+    })
+
+    ipcMain.on(GET_CONTRACT_DETAILS, async (event, contract, contracts, block) => {
+      const state = await truffleIntegration.getContractState(contract, contracts, block)
+      mainWindow.webContents.send(GET_CONTRACT_DETAILS, state)
     })
 
     ipcMain.on("web3-provider", (event, url) => {

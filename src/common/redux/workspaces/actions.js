@@ -1,4 +1,4 @@
-import {ipcRenderer } from 'electron'
+import { ipcRenderer } from 'electron'
 
 import { web3CleanUpHelper, web3ActionCreator } from '../web3/helpers/Web3ActionCreator'
 import { REQUEST_SERVER_RESTART, showTitleScreen } from '../core/actions'
@@ -75,11 +75,15 @@ export const contractEvent = function(data) {
   return {type: CONTRACT_EVENT, data}
 }
 
-export const GET_CONTRACT_TRANSACTIONS = `${prefix}/GET_CONTRACT_TRANSACTIONS`
-export const getContractTransactions = function(transactions) {
+export const GET_CONTRACT_DETAILS = `${prefix}/GET_CONTRACT_DETAILS`
+export const getContractDetails = function(data) {
+  const { transactions, events, contract, contracts, block } = data
+
   return async function(dispatch, getState) {
     let shownTransactions = []
     let shownReceipts = {}
+    let shownEvents = []
+
     for (let i = 0; i < transactions.length; i++) {
       const transaction = await web3ActionCreator(dispatch, getState, "getTransaction", [transactions[i]])
       shownTransactions.push(transaction)
@@ -87,7 +91,27 @@ export const getContractTransactions = function(transactions) {
       shownReceipts[transactions[i]] = receipt
     }
 
-    dispatch({ type: GET_CONTRACT_TRANSACTIONS, shownTransactions, shownReceipts })
+    for (let i = 0; i < events.length; i++) {
+      const receipt = await web3ActionCreator(dispatch, getState, "getTransactionReceipt", [events[i].transactionHash])
+      for (let j = 0; j < receipt.logs.length; j++) {
+        if (receipt.logs[j].logIndex === events[i].logIndex) {
+          shownEvents.push({
+            ...events[i],
+            log: receipt.logs[j]
+          })
+          break
+        }
+      }
+    }
+
+    const state = await new Promise((resolve, reject) => {
+      ipcRenderer.once(GET_CONTRACT_DETAILS, (event, state) => {
+        resolve(state)
+      })
+      ipcRenderer.send(GET_CONTRACT_DETAILS, contract, contracts, block)
+    })
+
+    dispatch({ type: GET_CONTRACT_DETAILS, shownTransactions, shownReceipts, shownEvents, state })
   }
 }
 
