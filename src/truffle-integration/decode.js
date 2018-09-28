@@ -13,17 +13,22 @@ async function getContractState(truffleContract, inheritedContracts, web3Host, b
   return contractState;
 }
 
-async function getDecodedEvent(truffleContract, inheritedContracts, web3Host, block, log) {
-  if (typeof block === "undefined") {
-    block = "latest";
-  }
-
+async function getDecodedEvent(truffleContract, inheritedContracts, web3Host, log) {
   const decoder = TruffleDecoder.forContract(truffleContract, inheritedContracts, web3Host);
   decoder.init();
 
   const decodedLog = await decoder.decodeLog(log);
 
   return decodedLog;
+}
+
+async function getDecodedTransaction(truffleContract, inheritedContracts, web3Host, transaction) {
+  const decoder = TruffleDecoder.forContract(truffleContract, inheritedContracts, web3Host);
+  decoder.init();
+
+  const decodedData = await decoder.decodeTransaction(transaction);
+
+  return decodedData;
 }
 
 function toJSON(object) {
@@ -63,5 +68,6 @@ function toJSON(object) {
 module.exports = {
   getContractState,
   getDecodedEvent,
+  getDecodedTransaction,
   toJSON
 };

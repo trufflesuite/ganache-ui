@@ -74,11 +74,20 @@ process.on("message", async function(message) {
       break;
     }
     case "decode-event-request": {
-      const { contract, contracts, block, log } = message.data;
-      let decodedLog = web3Host ? await DecodeHelpers.getDecodedEvent(contract, contracts, web3Host, block, log) : {};
+      const { contract, contracts, log } = message.data;
+      let decodedLog = web3Host ? await DecodeHelpers.getDecodedEvent(contract, contracts, web3Host, log) : {};
       process.send({
         type: "decode-event-response",
         data: decodedLog
+      });
+      break;
+    }
+    case "decode-transaction-request": {
+      const { contract, contracts, transaction } = message.data;
+      let decodedData = web3Host ? await DecodeHelpers.getDecodedTransaction(contract, contracts, web3Host, transaction) : {};
+      process.send({
+        type: "decode-transaction-response",
+        data: decodedData
       });
       break;
     }

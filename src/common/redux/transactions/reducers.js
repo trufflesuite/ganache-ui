@@ -5,7 +5,9 @@ const initialState = {
   blocksRequested: {}, 
   receipts: {},
   currentTransaction: null,
-  currentTransactionReceipt: null
+  currentTransactionReceipt: null,
+  currentTransactionEvents: [],
+  currentTransactionContract: null
 }
 
 // Note: This sorts in reverse; higher blocks first
@@ -63,7 +65,10 @@ export default function (state = initialState, action) {
     case Transactions.SET_CURRENT_TRANSACTION_SHOWN:
       return Object.assign({}, state, {
         currentTransaction: action.transaction,
-        currentTransactionReceipt: action.receipt
+        currentTransactionReceipt: action.receipt,
+        currentTransactionEvents: action.events,
+        currentTransactionData: action.decodedData,
+        currentTransactionContract: action.contract
       })
     default:
       return state
