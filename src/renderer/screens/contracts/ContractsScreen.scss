@@ -1,3 +1,16 @@
+.Project {
+  .ProjectName {
+    h2 {
+      margin: 18px;
+      display: inline-block;
+    }
+
+    span {
+      font-size: .825rem;
+      color: var(--app-card-value);
+    }
+  }
+}
 .ProjectContracts {
   a {
     &:first-child {
@@ -57,7 +70,6 @@
     word-break: break-all;
   }
 
-  .Name,
   .TxCount {
     .Label {
       font-size: .625rem;
