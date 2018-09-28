@@ -9,12 +9,12 @@ export default class TransactionTypeBadge extends Component {
       return <div className="TransactionTypeBadge ContractCreationBadge">CONTRACT CREATION</div>
     }
 
-    if (this.props.tx.to && this.props.tx.value > 0) {
-      return <div className="TransactionTypeBadge ValueTransferBadge">VALUE TRANSFER</div>
-    }
-
     if (this.props.tx.to && this.props.tx.input) {
       return <div className="TransactionTypeBadge ContractCallBadge">CONTRACT CALL</div>
+    }
+
+    if (this.props.tx.to && this.props.tx.value > 0) {
+      return <div className="TransactionTypeBadge ValueTransferBadge">VALUE TRANSFER</div>
     }
   }
 }
