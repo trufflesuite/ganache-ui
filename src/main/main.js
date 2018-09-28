@@ -37,6 +37,10 @@ import {
 } from '../common/redux/workspaces/actions'
 
 import {
+  GET_DECODED_TRANSACTION_INPUT
+} from '../common/redux/transactions/actions'
+
+import {
   SET_SETTINGS,
   REQUEST_SAVE_SETTINGS
 } from '../common/redux/config/actions'
@@ -132,9 +136,14 @@ app.on('ready', () => {
       mainWindow.webContents.send(GET_CONTRACT_DETAILS, state)
     })
 
-    ipcMain.on(GET_DECODED_EVENT, async (event, contract, contracts, block, log) => {
-      const decodedLog = await truffleIntegration.getDecodedEvent(contract, contracts, block, log)
+    ipcMain.on(GET_DECODED_EVENT, async (event, contract, contracts, log) => {
+      const decodedLog = await truffleIntegration.getDecodedEvent(contract, contracts, log)
       mainWindow.webContents.send(GET_DECODED_EVENT, decodedLog)
+    })
+
+    ipcMain.on(GET_DECODED_TRANSACTION_INPUT, async (event, contract, contracts, transaction) => {
+      const decodedData = await truffleIntegration.getDecodedTransaction(contract, contracts, transaction)
+      mainWindow.webContents.send(GET_DECODED_TRANSACTION_INPUT, decodedData)
     })
 
     ipcMain.on("web3-provider", (event, url) => {

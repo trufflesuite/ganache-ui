@@ -10,6 +10,10 @@ import TransactionTypeBadge from "./TransactionTypeBadge"
 
 import FormattedEtherValue from "../../components/formatted-ether-value/FormattedEtherValue"
 
+import EventsList from "../events/EventList"
+
+import OnlyIf from "../../components/only-if/OnlyIf"
+
 class TxCard extends Component {
   componentDidMount() {
     this.props.dispatch(
@@ -20,38 +24,36 @@ class TxCard extends Component {
   render() {
     const {
       currentTransaction: tx,
-      currentTransactionReceipt: receipt
+      currentTransactionReceipt: receipt,
+      currentTransactionData: decodedData,
+      currentTransactionContract: contract
     } = this.props.transactions
+
+    let events = this.props.transactions.currentTransactionEvents.map((event) => {
+      return {
+        name: event.decodedLog.name,
+        contract: contract ? contract.contractName : event.log.address,
+        txHash: event.transactionHash,
+        logIndex: event.logIndex,
+        blockTime: "TBD"
+      }
+    })
 
     if (!tx || !receipt) {
       return <div />
     }
 
     // TODO - replace placeholder data
-    const contractInfo = {
-      name: "ComplexTokenSent",
-      address: "0x_PLACEHOLDER_ADDRESS_HERE",
-      functionName: "sendToken()",
-      inputs: ["5", "Jim"],
-      stateChanges: [
-        { name: "ID", prev: 3, next: 5 },
-        { name: "Name", prev: "Jimothy", next: "Jim" }
-      ]
-    }
-
-    // TODO - replace placeholder data
-    const events = [
-      {
-        name: "ComplexTokenSent",
-        txHash: "0x_PLACEHOLDER_HASH_HERE",
-        blockTime: "2018-08-31 20:33:23"
-      },
-      {
-        name: "ComplexTokenSent",
-        txHash: "0x_PLACEHOLDER_HASH_HERE",
-        blockTime: "2018-08-31 20:33:23"
+    let contractInfo = null
+    if (contract && decodedData) {
+      contractInfo = {
+        name: contract.contractName,
+        address: contract.address,
+        functionName: decodedData.name + "(" + decodedData.params.map((param) => param.name + ": " + param.type).join(", ") + ")",
+        inputs: decodedData.params.map((param) => param.value),
+        stateChanges: []
       }
-    ]
+    }
 
     return (
       <section className="TxCard">
@@ -125,43 +127,45 @@ class TxCard extends Component {
           </main>
         </div>
 
-        <div className="ContractInfo">
-          <header>
-            <div className="Title">
-              <h1>CONTRACT INFO</h1>
-            </div>
-          </header>
-
-          <section>
-            <div>
-              <div className="Label">CONTRACT</div>
-              <div className="Value">{contractInfo.name}</div>
-            </div>
-            <div>
-              <div className="Label">FUNCTION</div>
-              <div className="Value">{contractInfo.functionName}</div>
-            </div>
-            <div>
-              <div className="Label">ADDRESS</div>
-              <div className="Value">{contractInfo.address}</div>
-            </div>
-          </section>
-
-          <section>
-            <div>
-              <div className="Label">INPUTS</div>
-              <div className="Value">{contractInfo.inputs.join(", ")}</div>
-            </div>
-            <div>
-              <div className="Label">STATE CHANGES</div>
-              <div className="Value">
-                {contractInfo.stateChanges.map((state, index) => (
-                  <div key={index}>{`${state.name}: ${state.prev} >> ${state.next}`}</div>
-                ))}
+        <OnlyIf test={contractInfo != null}>
+          <div className="ContractInfo">
+            <header>
+              <div className="Title">
+                <h1>CONTRACT INFO</h1>
               </div>
-            </div>
-          </section>
-        </div>
+            </header>
+
+            <section>
+              <div>
+                <div className="Label">CONTRACT</div>
+                <div className="Value">{contractInfo.name}</div>
+              </div>
+              <div>
+                <div className="Label">FUNCTION</div>
+                <div className="Value">{contractInfo.functionName}</div>
+              </div>
+              <div>
+                <div className="Label">ADDRESS</div>
+                <div className="Value">{contractInfo.address}</div>
+              </div>
+            </section>
+
+            <section>
+              <div>
+                <div className="Label">INPUTS</div>
+                <div className="Value">{contractInfo.inputs.join(", ")}</div>
+              </div>
+              {/*<div> // TODO: implement state changes
+                <div className="Label">STATE CHANGES</div>
+                <div className="Value">
+                  {contractInfo.stateChanges.map((state, index) => (
+                    <div key={index}>{`${state.name}: ${state.prev} >> ${state.next}`}</div>
+                  ))}
+                </div>
+              </div>*/}
+            </section>
+          </div>
+        </OnlyIf>
 
         <div className="EventsInfo">
           <header>
@@ -170,28 +174,7 @@ class TxCard extends Component {
             </div>
           </header>
 
-          {events.map((event, index) => (
-            <div className="EventItem" key={index}>
-              <section>
-                <div>
-                  <div className="Label">NAME</div>
-                  <div className="Value">{event.name}</div>
-                </div>
-              </section>
-              <section>
-                <div>
-                  <div className="Label">TX HASH</div>
-                  <div className="Value">{event.txHash}</div>
-                </div>
-                <div>
-                  <div className="Label">BLOCK TIME</div>
-                  <div className="Value">
-                    <div>{event.blockTime}</div>
-                  </div>
-                </div>
-              </section>
-            </div>
-          ))}
+          <EventsList events={events} />
         </div>
       </section>
     )

@@ -94,6 +94,7 @@ export const getContractDetails = function(data) {
       shownReceipts[transactions[i]] = receipt
     }
 
+    // TODO: This is shared code in redux/transactions/actions.js
     for (let i = 0; i < events.length; i++) {
       const receipt = await web3ActionCreator(dispatch, getState, "getTransactionReceipt", [events[i].transactionHash])
       for (let j = 0; j < receipt.logs.length; j++) {
@@ -103,7 +104,7 @@ export const getContractDetails = function(data) {
             ipcRenderer.once(GET_DECODED_EVENT, (event, decodedLog) => {
               resolve(decodedLog)
             })
-            ipcRenderer.send(GET_DECODED_EVENT, contract, contracts, block, receipt.logs[j])
+            ipcRenderer.send(GET_DECODED_EVENT, contract, contracts, receipt.logs[j])
           })
           shownEvents.push({
             ...events[i],
