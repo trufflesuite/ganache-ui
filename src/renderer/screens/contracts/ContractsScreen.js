@@ -14,7 +14,8 @@ class ContractsScreen extends Component {
             key={"project-" + project.sanitizedName}
           >
             <div className="ProjectName">
-              <div className="Label">{project.name}</div>
+              <h2>{project.name}</h2>
+              <span>{project.config.truffle_directory}</span>
             </div>
             <ProjectContracts
               contracts={project.contracts}

@@ -54,7 +54,7 @@ const DecodedEventDetails = ({ event }) => {
           <div className="DataRow" key={index}>
             <div className="DataPoint">
               <div className="Label">{returnVal.name}</div>
-              <div className="Value">{returnVal.value}</div>
+              <div className="Value">{Array.isArray(returnVal.value) ? returnVal.value.join(", ") : returnVal.value}</div>
             </div>
           </div>
         ))}
