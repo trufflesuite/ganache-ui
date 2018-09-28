@@ -141,15 +141,16 @@ class TxCard extends Component {
                 <div className="Value">{contractInfo.name}</div>
               </div>
               <div>
-                <div className="Label">FUNCTION</div>
-                <div className="Value">{contractInfo.functionName}</div>
-              </div>
-              <div>
                 <div className="Label">ADDRESS</div>
                 <div className="Value">{contractInfo.address}</div>
               </div>
             </section>
-
+            <section>
+              <div>
+                <div className="Label">FUNCTION</div>
+                <div className="Value">{contractInfo.functionName}</div>
+              </div>
+            </section>
             <section>
               <div>
                 <div className="Label">INPUTS</div>
