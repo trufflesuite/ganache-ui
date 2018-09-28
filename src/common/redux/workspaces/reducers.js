@@ -14,6 +14,14 @@ const initialState = {
   current: {}
 }
 
+const initialShownContract = {
+  shownTransactions: [],
+  shownReceipts: {},
+  shownEvents: [],
+  state: {},
+  balance: "0"
+}
+
 export default function (state = initialState, action) {
   let nextState = cloneDeep(state)
 
@@ -23,13 +31,7 @@ export default function (state = initialState, action) {
       break
     case SET_CURRENT_WORKSPACE:
       nextState.current = cloneDeep(action.workspace)
-      nextState.current.shownContract = {
-        shownTransactions: [],
-        shownReceipts: {},
-        shownEvents: [],
-        state: {},
-        balance: "0"
-      }
+      nextState.current.shownContract = cloneDeep(initialShownContract)
       break
     case CONTRACT_DEPLOYED:
       if (typeof nextState.current.projects !== "undefined") {
@@ -107,10 +109,7 @@ export default function (state = initialState, action) {
       nextState.current.shownContract.balance = action.balance
       break
     case CLEAR_SHOWN_CONTRACT:
-      nextState.current.shownContract = {
-        shownTransactions: [],
-        shownReceipts: {}
-      }
+      nextState.current.shownContract = cloneDeep(initialShownContract)
       break
     default:
       break
