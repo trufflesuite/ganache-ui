@@ -28,8 +28,6 @@ async function getDecodedTransaction(truffleContract, inheritedContracts, web3Ho
 
   const decodedData = await decoder.decodeTransaction(transaction);
 
-  console.log(decodedData);
-
   return decodedData;
 }
 
