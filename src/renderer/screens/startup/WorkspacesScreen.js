@@ -1,10 +1,19 @@
 import React, { Component } from 'react'
 
+import { initAutoUpdates, getAutoUpdateService } from '../../init/AutoUpdate'
+import * as pkg from '../../../../package.json'
+
+import OnlyIf from '../../../renderer/components/only-if/OnlyIf'
 import { openWorkspace, openDefaultWorkspace } from '../../../common/redux/workspaces/actions'
+import UpdateNotification from '../auto-update/UpdateNotification'
 import connect from '../helpers/connect'
 
+import Spinner from '../../components/spinner/Spinner'
+
+import Logo from '../../../../Logo.svg'
 import ChainIcon from '../../icons/key.svg'
 import MenuIcon from '../../icons/key.svg'
+import PlayIcon from '../../icons/key.svg'
 
 class WorkspacesScreen extends Component {
   constructor (props) {
@@ -28,13 +37,12 @@ class WorkspacesScreen extends Component {
   }
 
   render () {
-    const workSpaces = this.props.workspaces.names
-    let workspaces;
-    const hasWorkspaces = this.props.workspaces.names.length;
+    let workspaces
+    const hasWorkspaces = this.props.workspaces.names.length
     
     if(hasWorkspaces) {
       workspaces = this.props.workspaces.names.map((workspaceName) => {
-        return <li key={workspaceName}><a onClick={this.selectWorkspace.bind(this)}>{workspaceName}</a></li>
+        return <li key={workspaceName}><a onClick={this.selectWorkspace.bind(this)}>{workspaceName}<PlayIcon /></a></li>
       })
     } else  {
       workspaces = <li>
@@ -43,40 +51,46 @@ class WorkspacesScreen extends Component {
       </li>
     }
 
-    let updateMessage = "UPDATE SPINNINGS";
+    const title = hasWorkspaces ? <h1 className="title">Recent</h1> : <h1 className="title">Welcome to Ganache!</h1>
+    const subTitle = hasWorkspaces ? <p className="subTitle">Click the name of an existing workspace to launch.</p> : null
+    const isNewVersionAvailable = this.props.autoUpdate.isNewVersionAvailable
+    const isCheckingForUpdate = this.props.autoUpdate.updateCheckInProgress
 
     return (
       <div className="WorkspacesScreenContainer">
         <div className="WorkspacesScreen">
 
           <header>
-            <div class="logo">
-              <img src="logo.svg" />
-              <span class="version">version</span>
+            <div className="logo">
+              <Logo/>Ganache
+              <span className="version">v{pkg.version}</span>
             </div>
-            <div class="updates">{updateMessage}</div>
+            <div className="updates">
+              <OnlyIf test={isCheckingForUpdate && !isNewVersionAvailable}>
+                <Spinner/>Checking for Updates&hellip;
+              </OnlyIf>
+              <OnlyIf test={isNewVersionAvailable}>
+                <UpdateNotification />
+              </OnlyIf>
+            </div>
           </header>
+          {title}
+          {subTitle}
           <section>
-            <div>
+            <div className="left">
               <ul>
                 {workspaces}
               </ul>
             </div>
-            <div>
+            <div className="right">
               <button onClick={this.createNewBlockchain.bind(this)}><ChainIcon />NEW BLOCKCHAIN</button>
               <button onClick={this.customizeBlockchain.bind(this)}><MenuIcon />CUSTOMIZE</button>
             </div>
           </section>
-
-          {/* <button
-            onClick={this.openDefaultWorkspace.bind(this)}
-          >
-            Instachain
-          </button> */}
         </div>
       </div>
     )
   }
 }
 
-export default connect(WorkspacesScreen, "workspaces")
+export default connect(WorkspacesScreen, "workspaces", "autoUpdate")

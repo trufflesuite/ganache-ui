@@ -16,6 +16,20 @@ export const cancelUpdate = function() {
   }
 }
 
+export const UPDATE_CHECK_IN_PROGRESS = `${prefix}/UPDATE_CHECK_IN_PROGRESS`
+export const setUpdateCheckInProgress = function() {
+  return function(dispatch) {
+    dispatch({ type: UPDATE_CHECK_IN_PROGRESS })
+  }
+}
+
+export const UPDATE_CHECK_COMPLETE = `${prefix}/UPDATE_CHECK_COMPLETE`
+export const setUpdateCheckComplete = function() {
+  return function(dispatch) {
+    dispatch({ type: UPDATE_CHECK_COMPLETE })
+  }
+}
+
 export const UPDATE_AVAILABLE = `${prefix}/UPDATE_AVAILABLE`
 export const setUpdateAvailable = function(newVersion, releaseName, releaseNotes) {
   if (releaseName === undefined && releaseNotes === undefined) {
