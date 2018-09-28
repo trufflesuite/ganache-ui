@@ -105,7 +105,8 @@ const stylesheets = [
   "./screens/events/EventsScreen.scss",
   "./screens/event-details/EventDetailsScreen.scss",
   "./screens/event-details/EncodedEventDetails.scss",
-  "./screens/event-details/DecodedEventDetails.scss"
+  "./screens/event-details/DecodedEventDetails.scss",
+  "./screens/startup/WorkspacesScreen.scss",
 ] 
 
 const render = () => {
