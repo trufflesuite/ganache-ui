@@ -9,7 +9,7 @@
 // 5. The Header below should be it's own module and used all over the place in the new UI.
 
 
-import ReactJson from 'react-json-view'
+import ReactJson from '@seesemichaelj/react-json-view'
 import React, { Component } from 'react'
 import connect from '../helpers/connect'
 import TxList from '../transactions/TxList'
