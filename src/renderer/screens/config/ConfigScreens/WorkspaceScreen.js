@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 import { remote } from "electron"
+import path from "path"
 
 class WorkspaceScreen extends Component {
   state = { selectedIdx: null }
@@ -16,10 +17,16 @@ class WorkspaceScreen extends Component {
 
   handleAddProjectClick = () => {
     const pathArray = remote.dialog.showOpenDialog({
-      properties: ["openDirectory"]
+      properties: ["openFile"],
+      filters: [
+        { name: "Truffle Config File", extensions: ["js"] }
+      ]
     })
-    this.props.addWorkspaceProject(pathArray[0])
-    this.setState({ selectedIdx: null })
+
+    if (pathArray.length > 0 && path.basename(pathArray[0]).match(/^truffle(-config)?.js$/)) {
+      this.props.addWorkspaceProject(pathArray[0])
+      this.setState({ selectedIdx: null })
+    }
   }
 
   handleRemoveProject = () => {

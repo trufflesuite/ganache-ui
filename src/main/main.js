@@ -3,6 +3,7 @@ import { enableLiveReload } from 'electron-compile';
 import { initAutoUpdates, getAutoUpdateService } from './init/AutoUpdate.js'
 import path from 'path'
 import * as os from 'os'
+import merge from "lodash.merge"
 
 const isDevMode = process.execPath.match(/[\\/]electron/);
 
@@ -26,7 +27,13 @@ import {
   SET_WORKSPACES,
   OPEN_WORKSPACE,
   CLOSE_WORKSPACE,
-  SAVE_WORKSPACE
+  SAVE_WORKSPACE,
+  SET_CURRENT_WORKSPACE,
+  CONTRACT_DEPLOYED,
+  CONTRACT_TRANSACTION,
+  CONTRACT_EVENT,
+  GET_CONTRACT_DETAILS,
+  GET_DECODED_EVENT
 } from '../common/redux/workspaces/actions'
 
 import {
@@ -45,6 +52,7 @@ import GlobalSettings from './types/settings/GlobalSettings'
 import Workspace from './types/workspaces/Workspace'
 import WorkspaceManager from './types/workspaces/WorkspaceManager'
 import GoogleAnalyticsService from '../common/services/GoogleAnalyticsService'
+import TruffleIntegrationService from '../common/services/TruffleIntegrationService.js'
 
 let menu
 let template
@@ -97,10 +105,43 @@ app.on('ready', () => {
     const inProduction = process.env.NODE_ENV === 'production'
     const width = screen.getPrimaryDisplay().bounds.width
     const chain = new ChainService(app)
+    const truffleIntegration = new TruffleIntegrationService()
     const global = new GlobalSettings(path.join(app.getPath('userData'), 'global'))
     const GoogleAnalytics = new GoogleAnalyticsService()
     const workspaceManager = new WorkspaceManager(app.getPath('userData'))
     let workspace
+
+    truffleIntegration.on("contract-deployed", (data) => {
+      mainWindow.webContents.send(CONTRACT_DEPLOYED, data)
+    })
+
+    truffleIntegration.on("contract-transaction", (data) => {
+      mainWindow.webContents.send(CONTRACT_TRANSACTION, data)
+    })
+
+    truffleIntegration.on("contract-event", (data) => {
+      mainWindow.webContents.send(CONTRACT_EVENT, data)
+    })
+
+    truffleIntegration.on("error", (data) => {
+      console.log(data)
+    })
+
+    ipcMain.on(GET_CONTRACT_DETAILS, async (event, contract, contracts, block) => {
+      const state = await truffleIntegration.getContractState(contract, contracts, block)
+      mainWindow.webContents.send(GET_CONTRACT_DETAILS, state)
+    })
+
+    ipcMain.on(GET_DECODED_EVENT, async (event, contract, contracts, block, log) => {
+      const decodedLog = await truffleIntegration.getDecodedEvent(contract, contracts, block, log)
+      mainWindow.webContents.send(GET_DECODED_EVENT, decodedLog)
+    })
+
+    ipcMain.on("web3-provider", (event, url) => {
+      truffleIntegration.setWeb3(url)
+    })
+
+    truffleIntegration.start()
 
     app.on('will-quit', function () {
       chain.stopProcess();
@@ -246,6 +287,16 @@ app.on('ready', () => {
         GoogleAnalytics.setup(global.get("googleAnalyticsTracking") && inProduction, workspaceSettings.uuid)
         GoogleAnalytics.reportGenericUserData()
         GoogleAnalytics.reportWorkspaceSettings(workspaceSettings)
+
+        let projects = []
+        for (let i = 0; i < workspaceSettings.projects.length; i++) {
+          projects.push(await truffleIntegration.getProjectDetails(workspaceSettings.projects[i]))
+        }
+
+        let tempWorkspace = {}
+        merge(tempWorkspace, { projects }, workspace)
+
+        mainWindow.webContents.send(SET_CURRENT_WORKSPACE, tempWorkspace)
 
         chain.start()
 

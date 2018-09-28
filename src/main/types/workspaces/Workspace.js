@@ -2,7 +2,6 @@ import path from 'path'
 import fse from 'fs-extra'
 
 import WorkspaceSettings from '../settings/WorkspaceSettings'
-import TruffleProject from './TruffleProject'
 
 class Workspace {
   constructor(name, configDirectory) {
@@ -16,17 +15,21 @@ class Workspace {
   }
 
   init(configDirectory) {
-    this.workspaceDirectory = Workspace.generateDirectoryPath(this.name, configDirectory)
+    this.sanitizedName = this.getSanitizedName()
+    this.workspaceDirectory = Workspace.generateDirectoryPath(this.sanitizedName, configDirectory)
     this.basename = path.basename(this.workspaceDirectory)
     this.chaindataDirectory = this.generateChaindataDirectory()
   }
 
-  static generateDirectoryPath(name, configDirectory) {
-    if (name === null) {
+  getSanitizedName() {
+    return this.name === null ? null : this.name.replace(/\s/g, '-').replace(/[^a-zA-Z0-9\-\_\.]/g, '')
+  }
+
+  static generateDirectoryPath(sanitizedName, configDirectory) {
+    if (sanitizedName === null) {
       return path.join(configDirectory, 'default')
     }
     else {
-      const sanitizedName = name.replace(/\s/g, '-').replace(/[^a-zA-Z0-9\-\_\.]/g, '')
       return path.join(configDirectory, 'workspaces', sanitizedName)
     }
   }
@@ -51,22 +54,9 @@ class Workspace {
     }
   }
 
-  bootstrapProjects() {
-    const projects = this.settings.get("projects")
-
-    this.projects = projects.map(async (project) => {
-      const truffleProject = new TruffleProject(project)
-      truffleProject.bootstrap()
-      return truffleProject
-    })
-
-    this.projects = Promise.all(this.projects)
-  }
-
   bootstrap() {
     this.bootstrapDirectory()
     this.settings.bootstrap()
-    this.bootstrapProjects()
   }
 
   saveAs(name, chaindataDirectory, configDirectory) {

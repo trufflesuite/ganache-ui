@@ -21,12 +21,10 @@
     font-family: "Fira Code Regular", monospaced;
     width: 100%;
     cursor: pointer;
-    margin: 0.5rem 0;
-    background: var(--app-card-default-background);
-    padding: 1.3rem 0.8rem;
-    word-wrap: break-word;
-    cursor: pointer;
     margin: 0;
+    background: var(--app-card-default-background);
+    padding: 28px 18px;
+    word-wrap: break-word;
     transition: all 0.3s;
     border-bottom: 1px solid #aaa;
 

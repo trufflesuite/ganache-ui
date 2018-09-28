@@ -20,12 +20,14 @@ import BlocksScreen from './screens/blocks/BlocksScreen'
 import TransactionsScreen from './screens/transactions/TransactionsScreen'
 import LogsScreen from './screens/logs/LogsScreen'
 import EventsScreen from './screens/events/EventsScreen'
+import ContractDetails from './screens/contracts/ContractDetails'
 import EventDetailsScreen from './screens/event-details/EventDetailsScreen'
 
 import NotFoundScreen from './screens/not-found/NotFoundScreen'
 import TitleScreen from './screens/title/TitleScreen'
 import WorkspacesScreen from './screens/startup/WorkspacesScreen'
 import FirstRunScreen from './screens/first-run/FirstRunScreen'
+import ContractsScreen from './screens/contracts/ContractsScreen'
 
 import {ipcRenderer} from 'electron'
 
@@ -44,10 +46,12 @@ const routes = <Route>
     <Route path="/blocks(/:blockNumber)" component={BlocksScreen} />
     <Route path="/transactions(/:transactionHash)" component={TransactionsScreen} />
     <Route path="/logs" component={LogsScreen} />
+    <Route path="/contracts" component={ContractsScreen} />
+    <Route path="/contracts/:projectIndex/:contractAddress" component={ContractDetails} />
     <Route path='/events' component={EventsScreen} />
     <Route path='/event_details/:transactionHash/:logIndex' component={EventDetailsScreen} />
     <Route path="/notfound" component={NotFoundScreen} />
-    <Route path='/config(/:activeTab)' component={ConfigScreen} /> 
+    <Route path='/config(/:activeTab)' component={ConfigScreen} />
   </Route>
 </Route>
 
@@ -95,6 +99,8 @@ const stylesheets = [
   "./screens/logs/LogContainer.scss",
   "./screens/config/ConfigScreen.scss",
   "./screens/not-found/NotFoundScreen.scss",
+  "./screens/contracts/ContractsScreen.scss",
+  "./screens/contracts/ContractDetailsScreen.scss",
   "./screens/events/EventList.scss",
   "./screens/events/EventsScreen.scss",
   "./screens/event-details/EventDetailsScreen.scss",
