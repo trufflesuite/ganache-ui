@@ -2,7 +2,7 @@ import { ipcRenderer } from 'electron'
 
 import { web3Request } from '../web3/helpers/Web3ActionCreator'
 
-import { GET_DECODED_EVENT } from "../workspaces/actions"
+import { GET_DECODED_EVENT } from "../events/actions"
 
 const prefix = 'TRANSACTIONS'
 const PAGE_SIZE = 10
