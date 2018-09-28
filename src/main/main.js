@@ -32,9 +32,12 @@ import {
   CONTRACT_DEPLOYED,
   CONTRACT_TRANSACTION,
   CONTRACT_EVENT,
-  GET_CONTRACT_DETAILS,
-  GET_DECODED_EVENT
+  GET_CONTRACT_DETAILS
 } from '../common/redux/workspaces/actions'
+
+import {
+  GET_DECODED_EVENT
+} from '../common/redux/events/actions'
 
 import {
   GET_DECODED_TRANSACTION_INPUT

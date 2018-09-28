@@ -2,6 +2,7 @@ import { ipcRenderer } from 'electron'
 
 import { web3CleanUpHelper, web3ActionCreator } from '../web3/helpers/Web3ActionCreator'
 import { REQUEST_SERVER_RESTART, showTitleScreen } from '../core/actions'
+import { GET_DECODED_EVENT } from '../events/actions'
 
 const prefix = 'WORKSPACES'
 
@@ -75,7 +76,6 @@ export const contractEvent = function(data) {
   return {type: CONTRACT_EVENT, data}
 }
 
-export const GET_DECODED_EVENT = `${prefix}/GET_DECODED_EVENT`
 export const GET_CONTRACT_DETAILS = `${prefix}/GET_CONTRACT_DETAILS`
 export const getContractDetails = function(data) {
   const { transactions, events, contract, contracts, block } = data
