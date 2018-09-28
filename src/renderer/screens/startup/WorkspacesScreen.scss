@@ -1,4 +1,5 @@
 .WorkspacesScreenContainer {
+  overflow: auto;
   background-color: var(--app-statusbar-background);
   width: 100%;
   height: 100%;
@@ -10,7 +11,7 @@
     header {
       display: flex;
       justify-content: space-between;
-      padding-bottom: 4rem;
+      padding-bottom: 8rem;
       align-items: center;
 
       .logo {
@@ -25,9 +26,9 @@
         }
         .version {
           font-family: 'RobotoCondensed-Regular';
-          font-size: .25rem;
+          font-size: 1rem;
           position: absolute;
-          right: 1rem;
+          right: .25rem;
           bottom: 0;
           opacity: .15;
         }
@@ -57,6 +58,7 @@
       font-family: "Fira Code Regular";
     }
     section {
+      margin-top: 1.5rem;
       color: var(--app-navbar-text);
       display: flex;
       & > * {
@@ -78,7 +80,7 @@
           background: transparent;
           margin-bottom: 1rem;
           display: block;
-          border-radius: .3rem;
+          border-radius: .5rem;
           padding: 1.25rem 1rem;
           border: solid 2px var(--app-button-primary-background-color);
           color: #fff;
@@ -101,7 +103,7 @@
           }
         }
         p {
-          background: green;
+          // TODO: style the WELCOME TO GANACHE list
         }
       }
       button {
@@ -114,13 +116,14 @@
         padding: 2.5rem .5rem;
         font-size: 2em;
         border-radius: .5rem;
+        color: var(--app-statusbar-background);
 
         &:last-child {
           margin-bottom: 0;
         }
 
         &:hover {
-          color: var(--app-button-primary-background-color);
+          color: var(--app-statusbar-background);
         }
 
         svg {
