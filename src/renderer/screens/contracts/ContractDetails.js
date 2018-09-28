@@ -1,14 +1,3 @@
-// Contract Details to dos
-// 0. Search for `TODO:` in other files and see if you want to do those.
-// 1. hook into the store
-// 2. replace the mocked props with real data from @seese's AwesomeSauce he just cooked for us.
-// 3. Have Josh look at the ReactJson styles and update them as he sees fit. I've commented the styles in the code below with what I've learned
-//    a. I don't know of we can easily replace the JS types and formatting with Solidity types and custom formatting. Maybe though? I haven't checked. link: https://github.com/mac-s-g/react-json-view
-//    b. you can disable types by setting `displayDataTypes={false}`
-// 4. don't forget that RecentEvents isn't wired up yet to read from the passed prop, so even if you get that hooked up here, it won't render unless that's been fixed.
-// 5. The Header below should be it's own module and used all over the place in the new UI.
-
-
 import ReactJson from '@seesemichaelj/react-json-view'
 import React, { Component } from 'react'
 import connect from '../helpers/connect'
