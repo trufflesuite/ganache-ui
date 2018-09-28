@@ -1,0 +1,26 @@
+.WorkspacesScreenContainer {
+  .WorkspacesScreen {
+    header {
+      display:flex;
+      flex-direction: column;
+      background: blue;
+    }
+    section {
+      display:flex;
+      flex-direction: column;
+      background: pink;
+      ul {
+        background: red;
+        a {
+          background: purple;
+        }
+        p {
+          background: green;
+        }
+      }
+      button {
+        background: orange;
+      }
+    }
+  }
+}
