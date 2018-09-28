@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Scrollbars } from 'react-custom-scrollbars';
 
 import { initAutoUpdates, getAutoUpdateService } from '../../init/AutoUpdate'
 import * as pkg from '../../../../package.json'
@@ -58,36 +59,38 @@ class WorkspacesScreen extends Component {
 
     return (
       <div className="WorkspacesScreenContainer">
-        <div className="WorkspacesScreen">
+        <Scrollbars>
+          <div className="WorkspacesScreen">
 
-          <header>
-            <div className="logo">
-              <Logo/>Ganache
-              <span className="version">v{pkg.version}</span>
-            </div>
-            <div className="updates">
-              <OnlyIf test={isCheckingForUpdate && !isNewVersionAvailable}>
-                <Spinner/>Checking for Updates&hellip;
-              </OnlyIf>
-              <OnlyIf test={isNewVersionAvailable}>
-                <UpdateNotification />
-              </OnlyIf>
-            </div>
-          </header>
-          {title}
-          {subTitle}
-          <section>
-            <div className="left">
-              <ul>
-                {workspaces}
-              </ul>
-            </div>
-            <div className="right">
-              <button onClick={this.createNewBlockchain.bind(this)}><ChainIcon />NEW BLOCKCHAIN</button>
-              <button onClick={this.customizeBlockchain.bind(this)}><MenuIcon />CUSTOMIZE</button>
-            </div>
-          </section>
-        </div>
+            <header>
+              <div className="logo">
+                <Logo/>Ganache
+                <span className="version">v{pkg.version}</span>
+              </div>
+              <div className="updates">
+                <OnlyIf test={isCheckingForUpdate && !isNewVersionAvailable}>
+                  <Spinner/>Checking for Updates&hellip;
+                </OnlyIf>
+                <OnlyIf test={isNewVersionAvailable}>
+                  <UpdateNotification />
+                </OnlyIf>
+              </div>
+            </header>
+            {title}
+            {subTitle}
+            <section>
+              <div className="left">
+                <ul>
+                  {workspaces}
+                </ul>
+              </div>
+              <div className="right">
+                <button onClick={this.createNewBlockchain.bind(this)}><ChainIcon />NEW BLOCKCHAIN</button>
+                <button onClick={this.customizeBlockchain.bind(this)}><MenuIcon />CUSTOMIZE</button>
+              </div>
+            </section>
+          </div>
+        </Scrollbars>
       </div>
     )
   }
