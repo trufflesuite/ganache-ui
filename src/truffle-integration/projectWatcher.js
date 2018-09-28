@@ -33,14 +33,25 @@ class ProjectWatcher extends EventEmitter {
       this.web3 = new Web3(new HttpProvider(url));
     }
 
-    this.blockHeaderSubscription = this.web3.eth.subscribe("newBlockHeaders");
+    this.blockHeaderSubscription = this.web3.eth.subscribe("newBlockHeaders", (error, result) => {
+      if (error) {
+        throw error;
+      }
+    });
+
     this.blockHeaderSubscription.on("data", async (block) => {
       await this.handleBlock(block);
     });
+
     this.logsSubscription = this.web3.eth.subscribe("logs", {
       fromBlock: null,
       topics: null
+    }, (error, result) => {
+      if (error) {
+        throw error;
+      }
     });
+
     this.logsSubscription.on("data", async (log) => {
       await this.handleLog(log);
     });
