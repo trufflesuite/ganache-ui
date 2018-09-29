@@ -43,8 +43,8 @@ class WorkspacesScreen extends Component {
     const hasWorkspaces = this.props.workspaces.names.length
     
     if(hasWorkspaces) {
-      workspaces = this.props.workspaces.names.map((workspaceName) => {
-        return <li key={workspaceName}><a href="#" onClick={this.selectWorkspace.bind(this)}>{workspaceName}<PlayIcon /></a></li>
+      workspaces = this.props.workspaces.names.map((workspaceName, i) => {
+        return <li key={workspaceName}><button autofocus={i === 0 ? "autofocus": "false"} onClick={this.selectWorkspace.bind(this)}>{workspaceName}<PlayIcon /></button></li>
       })
     } else  {
       workspaces = <li>
