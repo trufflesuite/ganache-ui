@@ -49,7 +49,7 @@ class WorkspacesScreen extends Component {
     } else  {
       workspaces = <li>
         <p>Create a NEW BLOCKCHAIN to quickly get started with sensible default options.</p>
-        <p>CUSTOMIZE a new blockchain workspace to your liking with options for Truffle projects, ports, gas, and more!.</p>
+        <p>CUSTOMIZE a new blockchain workspace to your liking with options for Truffle projects, ports, gas, and more!</p>
       </li>
     }
 
