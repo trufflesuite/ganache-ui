@@ -54,7 +54,7 @@ class WorkspacesScreen extends Component {
     }
 
     const title = hasWorkspaces ? <h1 className="title">Recent</h1> : <h1 className="title">Welcome to Ganache!</h1>
-    const subTitle = hasWorkspaces ? <p className="subTitle">Click the name of an existing workspace to launch.</p> : null
+    const subTitle = hasWorkspaces ? <p className="subTitle">Click the name of an existing workspace to launch.</p> : <p>&nbsp;</p>
     const isNewVersionAvailable = this.props.autoUpdate.isNewVersionAvailable
     const isCheckingForUpdate = this.props.autoUpdate.updateCheckInProgress
 
