@@ -81,7 +81,7 @@
           margin-bottom: 1rem;
           display: block;
           border-radius: .5rem;
-          padding: 1.25rem 1rem;
+          padding: 1.25rem calc(1.5rem + 26px) 1.25rem 1rem;
           border: solid 2px var(--app-button-primary-background-color);
           color: #fff;
           position: relative;
@@ -113,7 +113,7 @@
         margin-bottom: 2rem;
         display: block;
         height: auto;
-        padding: 2.5rem .5rem;
+        padding: 2.5rem 1rem;
         font-size: 2em;
         border-radius: .5rem;
         color: var(--app-statusbar-background);
@@ -122,8 +122,9 @@
           margin-bottom: 0;
         }
 
-        &:hover {
+        &:hover, &:focus, &:focus {
           color: var(--app-statusbar-background);
+          filter: brightness(120%);
         }
 
         svg {
