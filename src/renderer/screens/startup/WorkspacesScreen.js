@@ -44,7 +44,7 @@ class WorkspacesScreen extends Component {
     
     if(hasWorkspaces) {
       workspaces = this.props.workspaces.names.map((workspaceName, i) => {
-        return <li key={workspaceName}><button autofocus={i === 0 ? "autofocus": "false"} onClick={this.selectWorkspace.bind(this)}>{workspaceName}<PlayIcon /></button></li>
+        return <li key={workspaceName}><button autoFocus={i === 0 ? "autofocus": false} onClick={this.selectWorkspace.bind(this)}>{workspaceName}<PlayIcon /></button></li>
       })
     } else  {
       workspaces = <li>
@@ -67,7 +67,7 @@ class WorkspacesScreen extends Component {
               <header>
                 <div className="logo">
                   <Logo/>Ganache
-                  <span className="version">v{pkg.version}</span>
+                  <span className="version"> v{pkg.version}</span>
                 </div>
                 <div className="updates">
                   <OnlyIf test={isCheckingForUpdate && !isNewVersionAvailable}>
