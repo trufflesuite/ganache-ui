@@ -7,6 +7,7 @@ import * as pkg from '../../../../package.json'
 import OnlyIf from '../../../renderer/components/only-if/OnlyIf'
 import { openWorkspace, openDefaultWorkspace } from '../../../common/redux/workspaces/actions'
 import UpdateNotification from '../auto-update/UpdateNotification'
+import UpdateModal from '../auto-update/UpdateModal'
 import connect from '../helpers/connect'
 
 import Spinner from '../../components/spinner/Spinner'
@@ -43,7 +44,7 @@ class WorkspacesScreen extends Component {
     
     if(hasWorkspaces) {
       workspaces = this.props.workspaces.names.map((workspaceName) => {
-        return <li key={workspaceName}><a onClick={this.selectWorkspace.bind(this)}>{workspaceName}<PlayIcon /></a></li>
+        return <li key={workspaceName}><a href="#" onClick={this.selectWorkspace.bind(this)}>{workspaceName}<PlayIcon /></a></li>
       })
     } else  {
       workspaces = <li>
@@ -58,42 +59,47 @@ class WorkspacesScreen extends Component {
     const isCheckingForUpdate = this.props.autoUpdate.updateCheckInProgress
 
     return (
-      <div className="WorkspacesScreenContainer">
-        <Scrollbars>
-          <div className="WorkspacesScreen">
+      <React.Fragment>
+        <div className="WorkspacesScreenContainer">
+          <Scrollbars>
+            <div className="WorkspacesScreen">
 
-            <header>
-              <div className="logo">
-                <Logo/>Ganache
-                <span className="version">v{pkg.version}</span>
-              </div>
-              <div className="updates">
-                <OnlyIf test={isCheckingForUpdate && !isNewVersionAvailable}>
-                  <Spinner/>Checking for Updates&hellip;
-                </OnlyIf>
-                <OnlyIf test={isNewVersionAvailable}>
-                  <UpdateNotification />
-                </OnlyIf>
-              </div>
-            </header>
-            {title}
-            {subTitle}
-            <section>
-              <div className="left">
-                <ul>
-                  {workspaces}
-                </ul>
-              </div>
-              <div className="right">
-                <button onClick={this.createNewBlockchain.bind(this)}><ChainIcon />NEW BLOCKCHAIN</button>
-                <button onClick={this.customizeBlockchain.bind(this)}><MenuIcon />CUSTOMIZE</button>
-              </div>
-            </section>
-          </div>
-        </Scrollbars>
-      </div>
+              <header>
+                <div className="logo">
+                  <Logo/>Ganache
+                  <span className="version">v{pkg.version}</span>
+                </div>
+                <div className="updates">
+                  <OnlyIf test={isCheckingForUpdate && !isNewVersionAvailable}>
+                    <Spinner/>Checking for Updates&hellip;
+                  </OnlyIf>
+                  <OnlyIf test={isNewVersionAvailable}>
+                    <UpdateNotification />
+                  </OnlyIf>
+                </div>
+              </header>
+              {title}
+              {subTitle}
+              <section>
+                <div className="left">
+                  <ul>
+                    {workspaces}
+                  </ul>
+                </div>
+                <div className="right">
+                  <button onClick={this.createNewBlockchain.bind(this)}><ChainIcon />NEW BLOCKCHAIN</button>
+                  <button onClick={this.customizeBlockchain.bind(this)}><MenuIcon />CUSTOMIZE</button>
+                </div>
+              </section>
+            </div>
+          </Scrollbars>
+        </div>
+        <OnlyIf test={!this.props.core.systemError && this.props.autoUpdate.showModal}>
+          <UpdateModal />
+        </OnlyIf>
+      </React.Fragment>
     )
   }
 }
 
-export default connect(WorkspacesScreen, "workspaces", "autoUpdate")
+export default connect(WorkspacesScreen, "workspaces", "core", "autoUpdate")
