@@ -1,0 +1,151 @@
+.WorkspacesScreenContainer {
+  overflow: auto;
+  background-color: var(--app-statusbar-background);
+  width: 100%;
+  height: 100%;
+  color: #fff;
+
+  .WorkspacesScreen {
+    padding: 2rem;
+    
+    header {
+      display: flex;
+      justify-content: space-between;
+      padding-bottom: 8rem;
+      align-items: center;
+
+      .logo {
+        position: relative;
+        height: 100px;
+        font-family: "Grand Hotel";
+        font-size: 4rem;
+        svg {
+          height: 100%;
+          vertical-align: middle;
+          margin-right: 1rem;
+        }
+        .version {
+          font-family: 'RobotoCondensed-Regular';
+          font-size: 1rem;
+          position: absolute;
+          right: .25rem;
+          bottom: 0;
+          opacity: .15;
+        }
+      }
+
+      .updates {
+        margin-right:.5rem;
+        text-transform: uppercase;
+        vertical-align: middle;
+        font-family: 'RobotoCondensed-Bold';
+        .Spinner {
+          display: inline-block;
+          vertical-align: middle;
+          margin: 0 1rem 0 0;
+        }
+      }
+    }
+    .title {
+      text-transform: uppercase;
+      color: #fff;
+      font-size: 2rem;
+      margin: 0 0 .5rem;
+    }
+    .subTitle {
+      opacity: .5;
+      margin: 0 0 .5rem;
+      font-family: "Fira Code Regular";
+      font-weight: bold;
+    }
+    section {
+      margin-top: 1.75rem;
+      color: var(--app-navbar-text);
+      display: flex;
+      & > * {
+        &:first-child {
+          margin-right: 1rem;
+        }
+        &:last-child {
+          margin-left: 1rem;
+        }
+
+        flex-grow: 1;
+        flex-basis: 0;
+      }
+      ul {
+        margin: 0;
+        list-style: none;
+        padding: 0;
+        button {
+          background: transparent;
+          margin-bottom: 1rem;
+          display: block;
+          border-radius: .4rem;
+          padding: 1.25rem calc(1.5rem + 26px) 1.25rem 1.2rem;
+          border: solid 2px var(--app-button-primary-background-color);
+          color: #fff;
+          position: relative;
+          height: auto;
+          line-height: initial;
+          width: 100%;
+          text-align: left;
+          text-transform: none;
+          font-size: 1.1rem;
+          font-family: "Fira Sans";
+          font-weight: normal;
+          svg {
+            position: absolute;
+            margin: 0;
+            padding: 0;
+            width: 26px;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0;
+            transition: opacity .3s;
+          }
+          &:hover, &:focus, &:active {
+            background: var(--app-button-primary-background-color);
+            svg {
+              opacity: 1;
+            }
+          }
+        }
+        p {
+          font-family: "Fira Code Regular";
+          font-weight: bold;
+          margin: 0;
+          height: 8rem;
+          min-width: 325px;
+        }
+      }
+      .right button {
+        font-family: "Fira Sans SemiBold";
+        background: var(--app-button-primary-color);
+        width: 100%;
+        margin-bottom: 2rem;
+        display: block;
+        height: auto;
+        padding: 2.5rem 1.75rem;
+        font-size: 2em;
+        border-radius: .4rem;
+        color: var(--app-statusbar-background);
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        &:hover, &:focus, &:focus {
+          color: var(--app-statusbar-background);
+          filter: brightness(120%);
+        }
+
+        svg {
+          vertical-align: top;
+          height: 32px;
+        }
+      }
+    }
+  }
+}

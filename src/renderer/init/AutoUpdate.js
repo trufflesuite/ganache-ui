@@ -1,10 +1,14 @@
 import { ipcRenderer } from 'electron'
 
 import {
+  UPDATE_CHECK_IN_PROGRESS,
+  UPDATE_CHECK_COMPLETE,
   UPDATE_AVAILABLE,
   DOWNLOAD_PROGRESS,
   UPDATE_DOWNLOADED,
   DOWNLOAD_ERROR,
+  setUpdateCheckInProgress,
+  setUpdateCheckComplete,
   setUpdateAvailable,
   setDownloadProgress,
   setUpdateDownloaded,

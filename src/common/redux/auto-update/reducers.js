@@ -4,6 +4,7 @@ const initialState = {
   downloadComplete: false,
   downloadInProgress: false,
   isRestartingForUpdate: false,
+  updateCheckInProgress: false,
   isNewVersionAvailable: false,
   versionInfo: {
     newVersion: '',
@@ -22,6 +23,14 @@ const initialState = {
 export default function (state = initialState, action) {
 
   switch (action.type) {
+    case AutoUpdate.UPDATE_CHECK_IN_PROGRESS:
+      return Object.assign({}, initialState, state, {
+        updateCheckInProgress: true
+      })
+    case AutoUpdate.UPDATE_CHECK_COMPLETE:
+      return Object.assign({}, initialState, state, {
+        updateCheckInProgress: false
+      })
     case AutoUpdate.UPDATE_AVAILABLE:
       return Object.assign({}, initialState, state, {
         isNewVersionAvailable: true,
