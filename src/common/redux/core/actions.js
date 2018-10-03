@@ -16,6 +16,9 @@ export const REQUEST_SERVER_RESTART = `${prefix}/REQUEST_SERVER_RESTART`
 export function requestServerRestart() {
   return function(dispatch, getState) {
     dispatch(closeWorkspace())
+
+    // Fire off the restart request.
+    ipcRenderer.send(REQUEST_SERVER_RESTART)
   }
 }
 

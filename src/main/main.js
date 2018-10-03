@@ -349,6 +349,26 @@ app.on('ready', () => {
       mainWindow.webContents.send(SET_WORKSPACES, workspaceManager.getNonDefaultNames())
     })
 
+    // If the frontend asks to start the server, start the server.
+    // This will trigger then chain event handlers above once the server stops.
+    ipcMain.on(REQUEST_SERVER_RESTART, async () => {
+      // make sure the store registers the settings ASAP in the event of a startup crash
+      const globalSettings = global.getAll()
+      mainWindow.webContents.send(SET_SETTINGS, globalSettings, {})
+
+      if (workspace) {
+        if (chain.isServerStarted()) {
+          await chain.stopServer()
+        }
+
+        const workspaceSettings = workspace.settings.getAll()
+        chain.startServer(workspaceSettings)
+
+        // send the interfaces again once on restart
+        sendNetworkInterfaces()
+      }
+    })
+
     ipcMain.on(REQUEST_SAVE_SETTINGS, async (event, globalSettings, workspaceSettings) => {
       global.setAll(globalSettings)
 
