@@ -25,7 +25,7 @@ import { handleError } from './ErrorHandler'
 
 export function initCore(store) {
   // Wait for the server to start...
-  ipcRenderer.on(SET_SERVER_STARTED, (sender, globalSettings, workspaceSettings) => {
+  ipcRenderer.on(SET_SERVER_STARTED, (sender, globalSettings, workspaceSettings, openConfigScreenOnStart) => {
     // Get current settings into the store
     store.dispatch(setSettings(globalSettings, workspaceSettings))
 
@@ -42,7 +42,12 @@ export function initCore(store) {
 
     store.dispatch(setServerStarted())
 
-    store.dispatch(push("/accounts"))
+    if (openConfigScreenOnStart) {
+      store.dispatch(push("/config"))
+    }
+    else {
+      store.dispatch(push("/accounts"))
+    }
   })
 
   // Block polling happens in the chain process, and is passed through

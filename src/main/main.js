@@ -32,7 +32,8 @@ import {
   CONTRACT_DEPLOYED,
   CONTRACT_TRANSACTION,
   CONTRACT_EVENT,
-  GET_CONTRACT_DETAILS
+  GET_CONTRACT_DETAILS,
+  OPEN_NEW_WORKSPACE_CONFIG
 } from '../common/redux/workspaces/actions'
 
 import {
@@ -117,6 +118,7 @@ app.on('ready', () => {
     const GoogleAnalytics = new GoogleAnalyticsService()
     const workspaceManager = new WorkspaceManager(app.getPath('userData'))
     let workspace
+    let openConfigScreenOnStart = false
 
     truffleIntegration.on("contract-deployed", (data) => {
       mainWindow.webContents.send(CONTRACT_DEPLOYED, data)
@@ -223,7 +225,7 @@ app.on('ready', () => {
 
           const globalSettings = global.getAll()
           const workspaceSettings = workspace.settings.getAll()
-          mainWindow.webContents.send(SET_SERVER_STARTED, globalSettings, workspaceSettings)
+          mainWindow.webContents.send(SET_SERVER_STARTED, globalSettings, workspaceSettings, openConfigScreenOnStart)
         }
       })
 
@@ -310,12 +312,41 @@ app.on('ready', () => {
 
         mainWindow.webContents.send(SET_CURRENT_WORKSPACE, tempWorkspace)
 
+        openConfigScreenOnStart = false
         chain.start()
 
         // this sends the network interfaces to the renderer process for
         //  enumering in the config screen. it sends repeatedly
         continuouslySendNetworkInterfaces()
       }
+    })
+
+    ipcMain.on(OPEN_NEW_WORKSPACE_CONFIG, async (event, name) => {
+      if (chain.isServerStarted()) {
+        await chain.stopServer()
+      }
+
+      const defaultWorkspace = workspaceManager.get(null)
+      const workspaceName = Date.now().toString()
+      defaultWorkspace.saveAs(workspaceName, null, workspaceManager.directory)
+
+      workspaceManager.bootstrap()
+
+      workspace = workspaceManager.get(workspaceName)
+
+      mainWindow.webContents.send(SET_CURRENT_WORKSPACE, workspace)
+
+      openConfigScreenOnStart = true
+      chain.start()
+
+      // this sends the network interfaces to the renderer process for
+      //  enumering in the config screen. it sends repeatedly
+      continuouslySendNetworkInterfaces()
+
+      const globalSettings = global.getAll()
+      mainWindow.webContents.send(SET_SETTINGS, globalSettings, {})
+
+      mainWindow.webContents.send(SET_WORKSPACES, workspaceManager.getNonDefaultNames())
     })
 
     ipcMain.on(REQUEST_SAVE_SETTINGS, async (event, globalSettings, workspaceSettings) => {

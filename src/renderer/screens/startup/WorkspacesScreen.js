@@ -5,7 +5,7 @@ import { initAutoUpdates, getAutoUpdateService } from '../../init/AutoUpdate'
 import * as pkg from '../../../../package.json'
 
 import OnlyIf from '../../../renderer/components/only-if/OnlyIf'
-import { openWorkspace, openDefaultWorkspace } from '../../../common/redux/workspaces/actions'
+import { openWorkspace, openDefaultWorkspace, openNewWorkspaceConfig } from '../../../common/redux/workspaces/actions'
 import UpdateNotification from '../auto-update/UpdateNotification'
 import UpdateModal from '../auto-update/UpdateModal'
 import connect from '../helpers/connect'
@@ -31,7 +31,7 @@ class WorkspacesScreen extends Component {
   }
 
   customizeBlockchain() {
-    this.props.dispatch(openDefaultWorkspace())
+    this.props.dispatch(openNewWorkspaceConfig())
   }
 
   render () {

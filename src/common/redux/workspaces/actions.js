@@ -46,6 +46,13 @@ export const openDefaultWorkspace = function() {
   }
 }
 
+export const OPEN_NEW_WORKSPACE_CONFIG = `${prefix}/OPEN_NEW_WORKSPACE_CONFIG`
+export const openNewWorkspaceConfig = function() {
+  return function(dispatch, getState) {
+    ipcRenderer.send(OPEN_NEW_WORKSPACE_CONFIG)
+  }
+}
+
 export const SAVE_WORKSPACE = `${prefix}/SAVE_WORKSPACE`
 export const saveWorkspace = function(name) {
   return function(dispatch, getState) {
