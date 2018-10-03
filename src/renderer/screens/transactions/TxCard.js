@@ -31,7 +31,7 @@ class TxCard extends Component {
 
     let events = this.props.transactions.currentTransactionEvents.map((event) => {
       return {
-        name: event.decodedLog.name,
+        name: event.decodedLog ? event.decodedLog.name : null,
         contract: contract ? contract.contractName : event.log.address,
         txHash: event.transactionHash,
         logIndex: event.logIndex,

@@ -14,7 +14,7 @@ const EventItem = ({ event, dispatch }) => {
     <div className="EventItem" onClick={goToEventDetails}>
       <div className="name">
         <div className="label">NAME</div>
-        <div className="value">{name}</div>
+        <div className="value">{name || "ENCODED EVENT"}</div>
       </div>
       <div className="data">
         <div className="dataItem">
