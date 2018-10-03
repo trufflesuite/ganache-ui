@@ -22,10 +22,6 @@ class WorkspacesScreen extends Component {
     super(props)
   }
 
-  openDefaultWorkspace() {
-    this.props.dispatch(openDefaultWorkspace())
-  }
-
   selectWorkspace(e) {
     this.props.dispatch(openWorkspace(e.target.innerText))
   }
