@@ -59,7 +59,7 @@ class Workspace {
     this.settings.bootstrap()
   }
 
-  saveAs(name, chaindataDirectory, configDirectory) {
+  saveAs(name, chaindataDirectory, configDirectory, mnemonic) {
     this.name = name
     this.init(configDirectory)
     this.bootstrapDirectory()
@@ -67,6 +67,8 @@ class Workspace {
     this.settings.setDirectory(this.workspaceDirectory)
     this.settings.set("name", name)
     this.settings.set("isDefault", false)
+    this.settings.set("randomizeMnemonicOnStart", false)
+    this.settings.set("server.mnemonic", mnemonic)
 
     if (chaindataDirectory && chaindataDirectory !== this.chaindataDirectory) {
       fse.copySync(chaindataDirectory, this.chaindataDirectory)

@@ -4,6 +4,7 @@ import { initAutoUpdates, getAutoUpdateService } from './init/AutoUpdate.js'
 import path from 'path'
 import * as os from 'os'
 import merge from "lodash.merge"
+import ethagen from "ethagen"
 
 const isDevMode = process.execPath.match(/[\\/]electron/);
 
@@ -250,7 +251,7 @@ app.on('ready', () => {
       initAutoUpdates(globalSettings, mainWindow)
     })
 
-    ipcMain.on(SAVE_WORKSPACE, async (event, name) => {
+    ipcMain.on(SAVE_WORKSPACE, async (event, name, mnemonic) => {
       if (workspace) {
         if (chain.isServerStarted()) {
           await chain.stopServer()
@@ -258,7 +259,7 @@ app.on('ready', () => {
 
         const chaindataLocation = workspace.chaindataDirectory || await chain.getDbLocation()
 
-        workspace.saveAs(name, chaindataLocation, workspaceManager.directory)
+        workspace.saveAs(name, chaindataLocation, workspaceManager.directory, mnemonic)
       }
 
       workspaceManager.bootstrap()
@@ -328,7 +329,8 @@ app.on('ready', () => {
 
       const defaultWorkspace = workspaceManager.get(null)
       const workspaceName = Date.now().toString()
-      defaultWorkspace.saveAs(workspaceName, null, workspaceManager.directory)
+      const wallet = new ethagen({})
+      defaultWorkspace.saveAs(workspaceName, null, workspaceManager.directory, wallet.mnemonic)
 
       workspaceManager.bootstrap()
 

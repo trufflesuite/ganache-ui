@@ -40,7 +40,7 @@ class JsonWithKeyPaths {
       tempObj = tempObj[key]
     }
 
-    tempObj[keys.shift()] = value
+    tempObj[keys.pop()] = value
   }
 
   setAll(value) {
@@ -67,7 +67,7 @@ class JsonWithKeyPaths {
       tempObj = tempObj[key]
     }
 
-    const lastKey = keys.shift()
+    const lastKey = keys.pop()
     if (tempObj !== null && typeof tempObj !== "undefined" && typeof tempObj[lastKey] !== "undefined") {
       delete tempObj[lastKey]
     }
