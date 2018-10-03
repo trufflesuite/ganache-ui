@@ -131,7 +131,7 @@ class TxCard extends Component {
           <div className="ContractInfo">
             <header>
               <div className="Title">
-                <h1>CONTRACT INFO</h1>
+                <h1>CONTRACT</h1>
               </div>
             </header>
 

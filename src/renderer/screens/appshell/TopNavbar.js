@@ -167,10 +167,6 @@ class TopNavbar extends Component {
               <TxIcon />
               Transactions
             </Link>
-            <Link to="/logs" activeClassName="Active">
-              <LogsIcon />
-              Logs
-            </Link>
             <Link to="/contracts" activeClassName="Active">
               <ContractsIcon />
               Contracts
@@ -178,6 +174,10 @@ class TopNavbar extends Component {
             <Link to="/events" activeClassName="Active">
               <EventsIcon />
               Events
+            </Link>
+            <Link to="/logs" activeClassName="Active">
+              <LogsIcon />
+              Logs
             </Link>
           </div>
           <div className="NotificationAndSearchBar">

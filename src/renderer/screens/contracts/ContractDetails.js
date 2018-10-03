@@ -84,13 +84,6 @@ class ContractDetails extends Component {
               </div>
             </div>
           </div>
-          
-          <div>
-            <div className="Title">
-              <h2>TRANSACTIONS</h2>
-            </div>
-            <TxList transactions={this.props.workspaces.current.shownContract.shownTransactions} receipts={this.props.workspaces.current.shownContract.shownReceipts} />
-          </div>
 
           <div>
             <div className="Title">
@@ -129,6 +122,13 @@ class ContractDetails extends Component {
               collapsed={1}
               collapseStringsAfterLength={20}
             />
+          </div>
+          
+          <div>
+            <div className="Title">
+              <h2>TRANSACTIONS</h2>
+            </div>
+            <TxList transactions={this.props.workspaces.current.shownContract.shownTransactions} receipts={this.props.workspaces.current.shownContract.shownReceipts} />
           </div>
 
           <div>
