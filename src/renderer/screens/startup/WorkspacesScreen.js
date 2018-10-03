@@ -13,8 +13,8 @@ import connect from '../helpers/connect'
 import Spinner from '../../components/spinner/Spinner'
 
 import Logo from '../../../../Logo.svg'
-import ChainIcon from '../../icons/key.svg'
-import MenuIcon from '../../icons/key.svg'
+import ChainIcon from '../../icons/chain.svg'
+import MenuIcon from '../../icons/list.svg'
 import PlayIcon from '../../icons/key.svg'
 
 class WorkspacesScreen extends Component {

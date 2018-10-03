@@ -5,6 +5,14 @@
   height: 100%;
   color: #fff;
 
+  svg {
+    g,
+    path,
+    circle {
+      stroke: none !important;
+    }
+  }
+
   .WorkspacesScreen {
     padding: 2rem;
     display: flex;
@@ -148,6 +156,8 @@
           svg {
             vertical-align: top;
             height: 32px;
+            margin-right: .75rem;
+            fill:  var(--app-statusbar-background);
           }
         }
       }
