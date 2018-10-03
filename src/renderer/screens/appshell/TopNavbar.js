@@ -224,11 +224,13 @@ class TopNavbar extends Component {
             />
           </div>
           <div className="Actions">
-            <Link onClick={this.handleSaveWorkspacePress.bind(this)}>
-              <button>Save</button>
-            </Link>
+            <OnlyIf test={this.props.workspaces.current.name === null}>
+              <Link onClick={this.handleSaveWorkspacePress.bind(this)}>
+                <button>Save</button>
+              </Link>
+            </OnlyIf>
             <Link onClick={this.handleWorkspacesPress.bind(this)}>
-              <button>Load</button>
+              <button>Switch</button>
             </Link>
             <Link to="/config">
               <button><div className="settingsIconWrapper"><SettingsIcon /></div></button>
@@ -268,4 +270,4 @@ class TopNavbar extends Component {
   }
 }
 
-export default connect(TopNavbar)
+export default connect(TopNavbar, "workspaces")

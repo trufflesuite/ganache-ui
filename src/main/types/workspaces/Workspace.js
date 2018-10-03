@@ -15,14 +15,14 @@ class Workspace {
   }
 
   init(configDirectory) {
-    this.sanitizedName = this.getSanitizedName()
+    this.sanitizedName = Workspace.getSanitizedName(this.name)
     this.workspaceDirectory = Workspace.generateDirectoryPath(this.sanitizedName, configDirectory)
     this.basename = path.basename(this.workspaceDirectory)
     this.chaindataDirectory = this.generateChaindataDirectory()
   }
 
-  getSanitizedName() {
-    return this.name === null ? null : this.name.replace(/\s/g, '-').replace(/[^a-zA-Z0-9\-\_\.]/g, '')
+  static getSanitizedName(name) {
+    return name === null ? null : name.replace(/\s/g, '-').replace(/[^a-zA-Z0-9\-\_\.]/g, '')
   }
 
   static generateDirectoryPath(sanitizedName, configDirectory) {

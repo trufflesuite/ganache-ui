@@ -12,7 +12,7 @@ class JsonWithKeyPaths {
     for (let i = 0; i < keys.length; i++) {
       const key = keys[i]
 
-      if (key in tempObj) {
+      if (tempObj !== null && typeof tempObj !== "undefined" && typeof tempObj[key] !== "undefined") {
         tempObj = tempObj[key]
       } else {
         return undefined
@@ -33,7 +33,7 @@ class JsonWithKeyPaths {
     for (let i = 0; i < keys.length - 1; i++) {
       const key = keys[i]
 
-      if (!(key in tempObj)) {
+      if (tempObj !== null && typeof tempObj !== "undefined" && typeof tempObj[key] === "undefined") {
         tempObj[key] = {}
       }
 
@@ -60,7 +60,7 @@ class JsonWithKeyPaths {
     for (let i = 0; i < keys.length - 1; i++) {
       const key = keys[i]
 
-      if (!(key in tempObj)) {
+      if (tempObj !== null && typeof tempObj !== "undefined" && typeof tempObj[key] === "undefined") {
         return
       }
 
@@ -68,7 +68,7 @@ class JsonWithKeyPaths {
     }
 
     const lastKey = keys.shift()
-    if (lastKey in tempObj) {
+    if (tempObj !== null && typeof tempObj !== "undefined" && typeof tempObj[lastKey] !== "undefined") {
       delete tempObj[lastKey]
     }
   }
