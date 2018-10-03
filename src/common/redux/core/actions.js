@@ -1,11 +1,20 @@
 import { push } from 'react-router-redux'
 import { ipcRenderer } from 'electron'
 
-import { web3ActionCreator } from '../web3/helpers/Web3ActionCreator'
+import { web3CleanUpHelper, web3ActionCreator } from '../web3/helpers/Web3ActionCreator'
 import { getAccounts } from '../accounts/actions'
-import { closeWorkspace } from '../workspaces/actions'
 
 const prefix = 'CORE'
+
+const cleanupWorkspace = function(dispatch, getState) {
+  web3CleanUpHelper(dispatch, getState)
+
+  dispatch(showTitleScreen())
+
+  // Dispatch REQUEST_SERVER_RESTART to the store
+  // This will clear all state.
+  dispatch({type: REQUEST_SERVER_RESTART})
+}
 
 export const SET_SERVER_STARTED = `${prefix}/SET_SERVER_STARTED`
 export function setServerStarted() {
@@ -15,9 +24,8 @@ export function setServerStarted() {
 export const REQUEST_SERVER_RESTART = `${prefix}/REQUEST_SERVER_RESTART`
 export function requestServerRestart() {
   return function(dispatch, getState) {
-    dispatch(closeWorkspace())
-
     // Fire off the restart request.
+    cleanupWorkspace(dispatch, getState)
     ipcRenderer.send(REQUEST_SERVER_RESTART)
   }
 }

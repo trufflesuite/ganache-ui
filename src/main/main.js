@@ -362,7 +362,21 @@ app.on('ready', () => {
         }
 
         const workspaceSettings = workspace.settings.getAll()
-        chain.startServer(workspaceSettings)
+
+        let projects = []
+        for (let i = 0; i < workspaceSettings.projects.length; i++) {
+          projects.push(await truffleIntegration.getProjectDetails(workspaceSettings.projects[i]))
+        }
+
+        let tempWorkspace = {}
+        merge(tempWorkspace, { projects }, workspace)
+
+        mainWindow.webContents.send(SET_WORKSPACES, workspaceManager.getNonDefaultNames())
+        mainWindow.webContents.send(SET_CURRENT_WORKSPACE, tempWorkspace)
+
+        openConfigScreenOnStart = false
+
+        chain.start()
 
         // send the interfaces again once on restart
         sendNetworkInterfaces()
