@@ -42,7 +42,7 @@ class WorkspacesScreen extends Component {
       workspaces = this.props.workspaces.names.map((workspaceName, i) => {
         return <li key={workspaceName}><button autoFocus={i === 0 ? "autofocus": false} onClick={this.selectWorkspace.bind(this)}>{workspaceName}<PlayIcon /></button></li>
       })
-    } else  {
+    } else {
       workspaces = <li>
         <p>Create a NEW BLOCKCHAIN to quickly get started with sensible default options.</p>
         <p>CUSTOMIZE a new blockchain workspace to your liking with options for Truffle projects, ports, gas, and more!</p>
@@ -74,19 +74,21 @@ class WorkspacesScreen extends Component {
                   </OnlyIf>
                 </div>
               </header>
-              {title}
-              {subTitle}
-              <section>
-                <div className="left">
-                  <ul>
-                    {workspaces}
-                  </ul>
-                </div>
-                <div className="right">
-                  <button onClick={this.createNewBlockchain.bind(this)}><ChainIcon />NEW BLOCKCHAIN</button>
-                  <button onClick={this.customizeBlockchain.bind(this)}><MenuIcon />CUSTOMIZE</button>
-                </div>
-              </section>
+              <div className="WorkspacesBody">
+                {title}
+                {subTitle}
+                <section>
+                  <div className="left">
+                    <ul>
+                      {workspaces}
+                    </ul>
+                  </div>
+                  <div className="right">
+                    <button onClick={this.createNewBlockchain.bind(this)}><ChainIcon />NEW BLOCKCHAIN</button>
+                    <button onClick={this.customizeBlockchain.bind(this)}><MenuIcon />CUSTOMIZE</button>
+                  </div>
+                </section>
+              </div>
             </div>
           </Scrollbars>
         </div>
