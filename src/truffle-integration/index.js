@@ -60,9 +60,6 @@ process.on("message", async function(message) {
       watcher.remove(message.data);
       break;
     }
-    case "transaction-decode-request": {
-      break;
-    }
     case "decode-contract-request": {
       const { contract, contracts, block } = message.data;
       let state = web3Host ? await DecodeHelpers.getContractState(contract, contracts, web3Host, block) : {};
