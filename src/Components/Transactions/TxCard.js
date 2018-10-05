@@ -16,42 +16,36 @@ import FormattedEtherValue from '../../Elements/FormattedEtherValue'
 class TxCard extends Component {
   constructor(props) {
     super(props)
-    const Settings = new SettingsService()
-    this.abi_decode = JSON.parse(Settings.get("abi.decode_abi"))
   }
 
-  componentDidMount () {
-    this.props.dispatch(Transactions.showTransaction(this.props.transactionHash))
+  componentDidMount() {
+    const settings = new SettingsService()
+    this.props.dispatch(Transactions.showTransaction(settings, this.props.transactionHash))
   }
 
   render () {
     const tx = this.props.transactions.currentTransaction
     const receipt = this.props.transactions.currentTransactionReceipt
+    const decodedTxInput = this.props.transactions.currentDecodedTransactionInput
 
     if (!tx || !receipt) {
       return <div />
     }
 
-    let decodedTxInput = <div />
-    if (this.abi_decode && this.abi_decode !== '') {
-      abiDecoder.addABI(this.abi_decode)
-      try {
-        const decodedJson = abiDecoder.decodeMethod(tx.input)
-        decodedTxInput = (
+    let decodedTxInputDiv = <div />
+    if (decodedTxInput && decodedTxInput !== '') {
+      decodedTxInputDiv = (
           <main>
             <div>
               <div className="Label">Decoded TX DATA</div>
               <div className="Value">
                 <pre>
-                  {JSON.stringify(decodedJson, null, 2)}
+                  {decodedTxInput}
                 </pre>
               </div>
             </div>
           </main>
-        )
-      } catch (error) {
-        console.log('ABI decoder failed with: ' + error)
-      }
+      )
     }
 
     return (
@@ -140,7 +134,7 @@ class TxCard extends Component {
             </div>
           </div>
         </main>
-        { decodedTxInput }
+        { decodedTxInputDiv }
       </section>
     )
   }

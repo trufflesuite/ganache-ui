@@ -1,4 +1,5 @@
 import { web3Request } from './helpers/Web3ActionCreator'
+import abiDecoder from 'abi-decoder'
 
 const prefix = 'TRANSACTIONS'
 const PAGE_SIZE = 10
@@ -97,12 +98,24 @@ export const getTransactionsForBlock = function(number) {
 }
 
 export const SET_CURRENT_TRANSACTION_SHOWN = `${prefix}/SET_CURRENT_TRANSACTION_SHOWN`
-export const showTransaction = function(hash) {
+export const showTransaction = function(settings, hash) {
   return async function(dispatch, getState) {
     let web3Instance = getState().web3.web3Instance
     let transaction = await web3Request("getTransaction", [hash], web3Instance)
     let receipt = await web3Request("getTransactionReceipt", [hash], web3Instance)
-    dispatch({type: SET_CURRENT_TRANSACTION_SHOWN, transaction, receipt})
+    let decodedTxInput = null
+    try {
+      const abi = JSON.parse(settings.get("abi.decode_abi"))
+      if (abi && abi !== '') {
+        // Try to add the ABI to our decoder
+        abiDecoder.addABI(abi)
+        // Decode and prettify the decoded transaction
+        decodedTxInput = JSON.stringify(abiDecoder.decodeMethod(transaction.input), null, 2)
+      }
+    } catch (error) {
+      // If the ABI is not valid or if it can't be decoded
+    }
+    dispatch({type: SET_CURRENT_TRANSACTION_SHOWN, transaction, receipt, decodedTxInput})
   }
 }
 export const clearTransactionShown = function() {
