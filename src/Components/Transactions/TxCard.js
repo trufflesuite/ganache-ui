@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { hashHistory } from 'react-router'
+import abiDecoder from 'abi-decoder'
 import connect from '../Helpers/connect'
 import * as Transactions from '../../Actions/Transactions'
+import SettingsService from '../../Services/Settings'
 
 import Moment from 'react-moment'
 
@@ -12,16 +14,38 @@ import TransactionTypeBadge from './TransactionTypeBadge'
 import FormattedEtherValue from '../../Elements/FormattedEtherValue'
 
 class TxCard extends Component {
-  componentDidMount () {
-    this.props.dispatch(Transactions.showTransaction(this.props.transactionHash))
+  constructor(props) {
+    super(props)
+  }
+
+  componentDidMount() {
+    const settings = new SettingsService()
+    this.props.dispatch(Transactions.showTransaction(settings, this.props.transactionHash))
   }
 
   render () {
     const tx = this.props.transactions.currentTransaction
     const receipt = this.props.transactions.currentTransactionReceipt
+    const decodedTxInput = this.props.transactions.currentDecodedTransactionInput
 
     if (!tx || !receipt) {
       return <div />
+    }
+
+    let decodedTxInputDiv = <div />
+    if (decodedTxInput && decodedTxInput !== '') {
+      decodedTxInputDiv = (
+          <main>
+            <div>
+              <div className="Label">Decoded TX DATA</div>
+              <div className="Value">
+                <pre>
+                  {decodedTxInput}
+                </pre>
+              </div>
+            </div>
+          </main>
+      )
     }
 
     return (
@@ -110,6 +134,7 @@ class TxCard extends Component {
             </div>
           </div>
         </main>
+        { decodedTxInputDiv }
       </section>
     )
   }

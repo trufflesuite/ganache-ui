@@ -172,6 +172,7 @@
   },
   "dependencies": {
     "@exponent/electron-cookies": "^2.0.0",
+    "abi-decoder": "^1.2.0",
     "async": "^2.5.0",
     "benjamincburns-forked-electron-updater": "2.21.6",
     "builder-util-runtime": "^4.2.0",

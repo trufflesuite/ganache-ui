@@ -209,7 +209,20 @@
 
   .Radio {
     input {
-      margin: .5rem;
+      margin: 0.5rem;
+    }
+  }
+
+  .ABIScreen {
+    display: flex;
+    flex-direction: column;
+
+    .ABIInput {
+      margin-top: 1rem;
+      padding: 0.4rem;
+      font-family: monospace;
+      height: 70vh;
+      width: auto;
     }
   }
 
