@@ -14,11 +14,18 @@
   border-bottom: 1px solid #aaa;
 
   .Row {
-    display: flex;
-    align-items: center;
-    flex-direction: row;
+    // display: flex;
+    // align-items: center;
+    // flex-direction: row;
     margin-bottom: 1rem;
-    justify-content: space-between;
+    // justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr 1fr 120px 200px;
+
+    &.Top {
+      display: flex;
+      justify-content: space-between;
+    }
 
     &:last-of-type {
       margin-bottom: 0;

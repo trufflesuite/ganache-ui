@@ -37,11 +37,13 @@
   border-bottom: 1px solid #aaa;
 
   .Row {
-    display: flex;
-    align-items: center;
-    flex-direction: row;
+    // display: flex;
+    // align-items: center;
+    // flex-direction: row;
     margin-bottom: 1rem;
-    justify-content: space-between;
+    // justify-content: space-between;
+    display: grid;
+    grid-template-columns: 4fr 7fr 120px 120px;
 
     &:last-of-type {
       margin-bottom: 0;
@@ -53,6 +55,10 @@
     flex-direction: row;
     justify-content: space-between;
     cursor: pointer;
+
+    &.StatusBadge {
+      align-self: center;
+    }
   }
 
   .Label {

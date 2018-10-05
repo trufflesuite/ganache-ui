@@ -40,13 +40,11 @@ export default class ContractCard extends Component {
               </div>
             </div>
 
-            <OnlyIf test={this.props.address !== ""}>
-              <div className="RowItem">
-                <div className="Badge">
-                  <div className="Label">DEPLOYED</div>
-                </div>
+            <div className="RowItem StatusBadge">
+              <div className="Badge">
+                <div className="Label">{this.props.address !== "" && "DEPLOYED"}</div>
               </div>
-            </OnlyIf>
+            </div>
           </div>
         </div>
       </Link>

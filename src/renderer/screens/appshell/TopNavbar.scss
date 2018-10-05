@@ -21,7 +21,7 @@
   .Menu {
     display: flex;
     flex-direction: row;
-
+    font-size: calc(.65rem + 0.5vw);
     a {
       padding: .5rem;
       margin: .3rem;
@@ -32,19 +32,19 @@
       text-transform: uppercase;
       display: flex;
       align-items: center;
-      font-size: 0.89rem;
-      line-height: 0.89rem;
+      font-size: 0.89em;
+      line-height: 0.89em;
       transition: all .25s;
 
       > div {
-        margin-right: .5rem;
+        margin-right: .5em;
       }
 
       svg {
         width: 36px;
         height: 36px;
         stroke: var(--app-navbar-icon-color);
-        margin-right: 0.5rem;
+        margin-right: 0.5em;
       }
 
       &.Active {
@@ -76,9 +76,11 @@
     flex-grow: 1;
     align-items: center;
     position: relative;
+    margin-right: 1rem;
 
     input {
-      margin-right: 1rem;
+      right: 0;
+      position:relative;
       justify-content: flex-end;
       outline: none;
       border: 1px solid var(--app-navbar-icon-color);
@@ -89,8 +91,17 @@
       line-height: 1;
       padding-right: 1.8rem;
       font-family: "Fira Code Regular";
-      width: 370px;
+      width:100%;
+      max-width:374px;
+      min-width: 80px;
+      transition: none;
+      background: var(--app-navbar-background);
+      &:focus {
+        min-width: 374px;
+        position: absolute;
+        
       transition: all .25s;
+      }
 
       &::-webkit-input-placeholder {
         color: var(--app-navbar-icon-color);
@@ -104,7 +115,7 @@
 
     > svg {
       position: absolute;
-      right: 36px;
+      right: 16px;
       height: 16px;
       width: 16px;
       color: var(--app-navbar-icon-color);
