@@ -26,7 +26,7 @@ export default class MiniTxCard extends Component {
         className="Link"
       >
         <div className="MiniTxCard">
-          <div className="Row">
+          <div className="Row Top">
             <div className="RowItem">
               <div className="TxHash">
                 <div className="Label">TX HASH</div>
