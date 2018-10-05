@@ -4,13 +4,18 @@ import OnlyIf from '../../../Elements/OnlyIf'
 
 const VALIDATIONS = {
   'abi.decode_abi': {
-    specificValidation: function(e) {
+    canBeBlank: true,
+    specificValidation: function (e) {
       try {
-        JSON.parse(e)
+        // The empty string is valid
+        if (!e) {
+          return true
+        }
+        // Must be a valid JSON string and an Array
+        return Array.isArray(JSON.parse(e))
       } catch (error) {
         return false
       }
-      return true
     }
   }
 }
@@ -35,10 +40,10 @@ class ABIScreen extends Component {
           <textarea
             className="ABIInput"
             name="abi.decode_abi"
-            value={this.props.config.settings.abi.decode_abi}
+            value={this.props.config.settings.abi.decode_abi == null ? "" : this.props.config.settings.abi.decode_abi }
             onChange={this.validateChange}/>
           {this.props.validationErrors['abi.decode_abi'] && (
-            <p className="ValidationError">Must be a valid JSON</p>
+            <p className="ValidationError">Must be a valid JSON array</p>
           )}
         </section>
       </div>

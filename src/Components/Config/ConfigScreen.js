@@ -12,6 +12,7 @@ import AccountsScreen from './ConfigScreens/AccountsScreen'
 import ChainScreen from './ConfigScreens/ChainScreen'
 import AdvancedScreen from './ConfigScreens/AdvancedScreen'
 import AboutScreen from './ConfigScreens/AboutScreen'
+import ABIScreen from './ConfigScreens/ABIScreen'
 
 import RestartIcon from '../../Elements/icons/restart.svg'
 import EjectIcon from '../../Elements/icons/eject.svg';
@@ -21,6 +22,7 @@ const TABS = [
   {name: 'Accounts & Keys', subRoute: 'accounts-keys', component: AccountsScreen},
   {name: 'Chain', subRoute: 'chain', component: ChainScreen},
   {name: 'Advanced', subRoute: 'advanced', component: AdvancedScreen},
+  {name: 'ABI', subRoute: 'abi', component: ABIScreen},
   {name: 'About', subRoute: 'about', component: AboutScreen}
 ]
 

@@ -13,7 +13,7 @@ const initialSettings = {
   randomizeMnemonicOnStart: false,
   logsDirectory: null,
   abi: {
-    decode_abi: ''
+    decode_abi: undefined
   },
   server: {
     hostname: "127.0.0.1",
