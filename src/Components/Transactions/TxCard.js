@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { hashHistory } from 'react-router'
+import abiDecoder from 'abi-decoder'
 import connect from '../Helpers/connect'
 import * as Transactions from '../../Actions/Transactions'
+import SettingsService from '../../Services/Settings'
 
 import Moment from 'react-moment'
 
@@ -12,6 +14,12 @@ import TransactionTypeBadge from './TransactionTypeBadge'
 import FormattedEtherValue from '../../Elements/FormattedEtherValue'
 
 class TxCard extends Component {
+  constructor(props) {
+    super(props)
+    const Settings = new SettingsService()
+    this.abi_decode = JSON.parse(Settings.get("abi.decode_abi"))
+  }
+
   componentDidMount () {
     this.props.dispatch(Transactions.showTransaction(this.props.transactionHash))
   }
@@ -22,6 +30,28 @@ class TxCard extends Component {
 
     if (!tx || !receipt) {
       return <div />
+    }
+
+    let decodedTxInput = <div />
+    if (this.abi_decode && this.abi_decode !== '') {
+      abiDecoder.addABI(this.abi_decode)
+      try {
+        const decodedJson = abiDecoder.decodeMethod(tx.input)
+        decodedTxInput = (
+          <main>
+            <div>
+              <div className="Label">Decoded TX DATA</div>
+              <div className="Value">
+                <pre>
+                  {JSON.stringify(decodedJson, null, 2)}
+                </pre>
+              </div>
+            </div>
+          </main>
+        )
+      } catch (error) {
+        console.log('ABI decoder failed with: ' + error)
+      }
     }
 
     return (
@@ -110,6 +140,7 @@ class TxCard extends Component {
             </div>
           </div>
         </main>
+        { decodedTxInput }
       </section>
     )
   }

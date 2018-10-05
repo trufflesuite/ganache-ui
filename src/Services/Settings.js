@@ -12,6 +12,9 @@ const initialSettings = {
   firstRun: true,
   randomizeMnemonicOnStart: false,
   logsDirectory: null,
+  abi: {
+    decode_abi: ''
+  },
   server: {
     hostname: "127.0.0.1",
     port: 7545,

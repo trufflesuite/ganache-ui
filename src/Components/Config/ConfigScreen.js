@@ -177,6 +177,10 @@ class ConfigScreen extends PureComponent {
       let isValid = true
     
       if (value != null) {
+        if (validation.specificValidation) {
+          isValid = validation.specificValidation(value);
+        }
+
         if (!validation.canBeBlank && value === '') {
           isValid = false
         }
