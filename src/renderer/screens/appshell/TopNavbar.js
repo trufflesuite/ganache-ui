@@ -187,6 +187,7 @@ class TopNavbar extends Component {
             <input
               type="text"
               placeholder="SEARCH FOR BLOCK NUMBERS OR TX HASHES"
+              title="SEARCH FOR BLOCK NUMBERS OR TX HASHES"
               value={this.state.searchInput}
               onChange={this.handleSearchChange.bind(this)}
               onKeyPress={this.handleSearchKeyPress.bind(this)}
