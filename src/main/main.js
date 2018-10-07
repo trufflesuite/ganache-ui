@@ -329,7 +329,7 @@ app.on('ready', () => {
 
       const defaultWorkspace = workspaceManager.get(null)
       const workspaceName = Date.now().toString()
-      const wallet = new ethagen({})
+      const wallet = new ethagen({entropyBits: 128})
       defaultWorkspace.saveAs(workspaceName, null, workspaceManager.directory, wallet.mnemonic)
 
       workspaceManager.bootstrap()
