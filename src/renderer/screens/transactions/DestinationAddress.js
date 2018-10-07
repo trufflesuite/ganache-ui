@@ -26,7 +26,7 @@ export default class DestinationAddress extends Component {
                 </span>
               </div>
             : <div>
-                {this.props.tx.to}
+                {this.props.contractName || this.props.tx.to}
               </div>}
         </div>
       </div>

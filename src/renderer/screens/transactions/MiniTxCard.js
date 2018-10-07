@@ -10,7 +10,7 @@ import OnlyIf from '../../components/only-if/OnlyIf'
 export default class MiniTxCard extends Component {
 
   render () {
-    let { tx, receipt } = this.props
+    let { tx, receipt, contractName } = this.props
 
     let hasReceipt = !!receipt
 
@@ -56,7 +56,7 @@ export default class MiniTxCard extends Component {
 
               <div className="RowItem">
                 <OnlyIf test={hasReceipt} >
-                  <DestinationAddress tx={tx} receipt={receipt} />
+                  <DestinationAddress tx={tx} contractName={contractName} receipt={receipt} />
                 </OnlyIf>
               </div>
 

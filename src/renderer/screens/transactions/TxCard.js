@@ -43,7 +43,6 @@ class TxCard extends Component {
       return <div />
     }
 
-    // TODO - replace placeholder data
     let contractInfo = null
     if (contract && decodedData) {
       contractInfo = {
@@ -153,7 +152,7 @@ class TxCard extends Component {
             </section>
             <section>
               <div>
-                <div className="Label">INPUTS</div>
+                <div className="Label">{contractInfo.inputs.length > 0 && "INPUTS"}</div>
                 <div className="Value">{contractInfo.inputs.join(", ")}</div>
               </div>
               {/*<div> // TODO: implement state changes
