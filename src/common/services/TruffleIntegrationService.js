@@ -16,7 +16,8 @@ class TruffleIntegrationService extends EventEmitter {
     const options = {
       stdio: [ 'pipe', 'pipe', 'pipe', 'ipc' ]
     };
-    this.child = fork(chainPath, [], options);
+    const args = process.env.NODE_ENV === "production" ? [] : ["--inspect=5858"];
+    this.child = fork(chainPath, args, options);
     this.child.on('message', (message) => {
       if (message.type == "process-started") {
         this.emit("start");
@@ -29,7 +30,7 @@ class TruffleIntegrationService extends EventEmitter {
     })
     this.child.on('exit', this._exitHandler);
     this.child.stdout.on('data', (data) => {
-      console.log(data.toString());
+      //console.log(data.toString());
       // Remove all \r's and the final line ending
       //this.emit("stdout", data.toString().replace(/\r/g, "").replace(/\n$/, ""));
     });
