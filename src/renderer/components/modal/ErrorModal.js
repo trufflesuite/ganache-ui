@@ -23,12 +23,12 @@ class ErrorModal extends PureComponent {
     let icon
     switch (data.type){
       case ModalDetails.types.WARNING:
-        subTitle = "ICON - WARNING"
+        subTitle = "WARNING"
         icon = <WarningIcon />;
       break
       case ModalDetails.types.ERROR:
         console.error(this.props.modalError)
-        subTitle = "ICON - ERROR"
+        subTitle = "ERROR"
         icon = <ErrorIcon />;
       break
     }

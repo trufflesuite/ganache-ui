@@ -1,6 +1,8 @@
 import React, { Component } from "react"
 import { remote } from "electron"
 import path from "path"
+import connect from "../../helpers/connect"
+import ModalDetails from "../../../components/modal/ModalDetails"
 
 class WorkspaceScreen extends Component {
   state = { selectedIdx: null }
@@ -29,12 +31,56 @@ class WorkspaceScreen extends Component {
     }
   }
 
+  removeProject = (projectPath) => {
+    this.props.removeWorkspaceProject(projectPath)
+    this.setState({ selectedIdx: null })
+  }
+
+  verifyRemoveProject = (projectPath) => {
+    const modalDetails = new ModalDetails(
+      ModalDetails.types.WARNING,
+      [{
+        click: (modal) => {
+          this.removeProject(projectPath)
+          modal.close()
+        },
+        value: "Remove"
+      },
+      {
+        value: "Cancel"
+      }],
+      "Remove Project?",
+      "This project has contracts deployed; are you sure you want to remove it? Contract data, transactions, and events will no longer be decoded."
+    )
+
+    this.props.dispatch(ModalDetails.actions.setModalError(modalDetails))
+  }
+
   handleRemoveProject = () => {
-    const path = this.props.config.settings.workspace.projects[
+    const projectPath = this.props.config.settings.workspace.projects[
       this.state.selectedIdx
     ]
-    this.props.removeWorkspaceProject(path)
-    this.setState({ selectedIdx: null })
+
+    let projectHasDeployedContracts = false
+    
+    let project = this.props.workspaces.current.projects.filter((project) => {
+      return path.dirname(projectPath) === project.config.truffle_directory
+    })
+
+    if (project.length > 0) {
+      project = project[0]
+
+      projectHasDeployedContracts = project.contracts.reduce((accumulator, contract) => {
+        return accumulator || (typeof contract.address === "string" && contract.address.length > 0)
+      }, false)
+    }
+
+    if (projectHasDeployedContracts) {
+      this.verifyRemoveProject(projectPath)
+    }
+    else {
+      this.removeProject(projectPath)
+    }
   }
 
   render() {
@@ -103,4 +149,4 @@ class WorkspaceScreen extends Component {
   }
 }
 
-export default WorkspaceScreen
+export default connect(WorkspaceScreen, "workspaces")
