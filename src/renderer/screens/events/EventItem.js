@@ -1,6 +1,7 @@
 import React, { Component } from "react"
 
 import Moment from 'react-moment'
+import { push } from 'react-router-redux'
 
 import connect from "../helpers/connect"
 
