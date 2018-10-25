@@ -105,6 +105,8 @@ export const getDecodedEvent = function(transactionHash, logIndex) {
     const transaction = await web3ActionCreator(dispatch, getState, "getTransaction", [transactionHash])
     const receipt = await web3ActionCreator(dispatch, getState, "getTransactionReceipt", [transactionHash])
 
+    const block = await web3ActionCreator(dispatch, getState, "getBlock", [transaction.blockNumber, false])
+
     let contract
     let contractName
     let contractAddress = transaction.to
@@ -127,28 +129,31 @@ export const getDecodedEvent = function(transactionHash, logIndex) {
       }
     }
 
-    if (contract) {
-      // TODO: This is shared code in redux/workspaces/actions.js
-      for (let j = 0; j < receipt.logs.length; j++) {
-        if (receipt.logs[j].logIndex === logIndex) {
-          const decodedLog = await new Promise((resolve, reject) => {
-            // TODO: there's a better way to do this to not have to send `contract` and `contracts` every time
-            ipcRenderer.once(GET_DECODED_EVENT, (event, decodedLog) => {
-              resolve(decodedLog)
-            })
-            ipcRenderer.send(GET_DECODED_EVENT, contract, state.workspaces.current.projects[projectIndex].contracts, receipt.logs[j])
-          })
-
-          event = {
-            transactionHash,
-            logIndex,
-            log: receipt.logs[j],
-            decodedLog
-          }
-
-          break
+    // TODO: This is shared code in redux/workspaces/actions.js
+    for (let j = 0; j < receipt.logs.length; j++) {
+      if (receipt.logs[j].logIndex === logIndex) {
+        event = {
+          transactionHash,
+          logIndex,
+          log: {
+            ...receipt.logs[j],
+            timestamp: block.timestamp
+          },
+          decodedLog: null
         }
+
+        break
       }
+    }
+
+    if (contract) {
+      event.decodedLog = await new Promise((resolve, reject) => {
+        // TODO: there's a better way to do this to not have to send `contract` and `contracts` every time
+        ipcRenderer.once(GET_DECODED_EVENT, (event, decodedLog) => {
+          resolve(decodedLog)
+        })
+        ipcRenderer.send(GET_DECODED_EVENT, contract, state.workspaces.current.projects[projectIndex].contracts, event.log)
+      })
     }
 
     dispatch({ type: GET_DECODED_EVENT, event, contractName, contractAddress })

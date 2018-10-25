@@ -16,17 +16,31 @@ class EventDetailsScreen extends Component {
   render () {
     const { logIndex, transactionHash } = this.props.params
 
+    const shownEvent = this.props.events.shown
+
     let event = {
-      contractAddress: this.props.events.shown.contract.address,
-      txHash: transactionHash,
-      blockTime: "TBD",
-      logIndex: logIndex
+      contractAddress: "",
+      transactionHash,
+      timestamp: null,
+      logIndex
     }
 
-    if (this.props.events.shown.contract.name) {
-      event.contractName = this.props.events.shown.contract.name
-      event.signature = this.props.events.shown.decodedLog.name + "(" + this.props.events.shown.decodedLog.events.map((param) => param.name + ": " + param.type).join(", ") + ")"
-      event.returnValues = this.props.events.shown.decodedLog.events
+    if (shownEvent) {
+      if (shownEvent.log) {
+        event.timestamp = shownEvent.log.timestamp
+      }
+
+      if (shownEvent.contract) {
+        event.contractAddress = shownEvent.contract.address
+        if (shownEvent.contract.name) {
+          event.contractName = shownEvent.contract.name
+        }
+      }
+
+      if (shownEvent.decodedLog) {
+        event.signature = shownEvent.decodedLog.name + "(" + shownEvent.decodedLog.events.map((param) => param.name + ": " + param.type).join(", ") + ")"
+        event.returnValues = shownEvent.decodedLog.events
+      }
     }
 
     return (

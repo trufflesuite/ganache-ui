@@ -1,7 +1,8 @@
 import React from "react"
+import Moment from 'react-moment'
 
 const EncodedEventDetails = ({ event }) => {
-  const { txHash, blockTime, contractAddress, logIndex } = event
+  const { transactionHash, timestamp, contractAddress, logIndex } = event
   return (
     <div className="EncodedEventDetails">
       <div className="Notice">
@@ -12,7 +13,7 @@ const EncodedEventDetails = ({ event }) => {
       <div className="DataRow">
         <div className="DataPoint">
           <div className="Label">TX HASH</div>
-          <div className="Value">{txHash}</div>
+          <div className="Value">{transactionHash}</div>
         </div>
         <div className="DataPoint">
           <div className="Label">LOG INDEX</div>
@@ -20,7 +21,11 @@ const EncodedEventDetails = ({ event }) => {
         </div>
         <div className="DataPoint">
           <div className="Label">BLOCK TIME</div>
-          <div className="Value">{blockTime}</div>
+          <div className="Value">
+            <Moment unix format="YYYY-MM-DD HH:mm:ss">
+              {timestamp}
+            </Moment>
+          </div>
         </div>
       </div>
       <div className="DataRow">
