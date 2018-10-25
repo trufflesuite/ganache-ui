@@ -44,9 +44,9 @@ class ContractDetails extends Component {
       return {
         name: event.decodedLog.name,
         contract: this.state.contract.contractName,
-        txHash: event.transactionHash,
+        transactionHash: event.transactionHash,
         logIndex: event.logIndex,
-        blockTime: "TBD"
+        timestamp: event.log.timestamp
       }
     })
 

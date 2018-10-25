@@ -101,21 +101,34 @@ export const getContractDetails = function(data) {
       shownReceipts[transactions[i]] = receipt
     }
 
+    // I was going to use the blocks inView here by just dispatching `requestPage`
+    //   from the blocks redux, but that gets cleared and doesnt work well, so I'm
+    //   doing it the dirty and brute force way
+    let blockTimestamps = {}
+
     // TODO: This is shared code in redux/transactions/actions.js
     for (let i = 0; i < events.length; i++) {
       const receipt = await web3ActionCreator(dispatch, getState, "getTransactionReceipt", [events[i].transactionHash])
       for (let j = 0; j < receipt.logs.length; j++) {
         if (receipt.logs[j].logIndex === events[i].logIndex) {
+          const log = receipt.logs[j]
+          if (typeof blockTimestamps[log.blockNumber] === "undefined") {
+            const block = await web3ActionCreator(dispatch, getState, "getBlock", [i, false])
+            blockTimestamps[log.blockNumber] = block ? block.timestamp : null
+          }
+          log.timestamp = blockTimestamps[log.blockNumber]
+
           const decodedLog = await new Promise((resolve, reject) => {
             // TODO: there's a better way to do this to not have to send `contract` and `contracts` every time
             ipcRenderer.once(GET_DECODED_EVENT, (event, decodedLog) => {
               resolve(decodedLog)
             })
-            ipcRenderer.send(GET_DECODED_EVENT, contract, contracts, receipt.logs[j])
+            ipcRenderer.send(GET_DECODED_EVENT, contract, contracts, log)
           })
+
           shownEvents.push({
             ...events[i],
-            log: receipt.logs[j],
+            log: log,
             decodedLog
           })
           break
