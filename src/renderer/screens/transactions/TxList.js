@@ -16,7 +16,6 @@ class TxList extends Component {
             for (let j = 0; j < project.contracts.length; j++) {
               const contract = project.contracts[j]
               if (contract.address && contract.address.toLowerCase() === tx.to.toLowerCase()) {
-                console.log(contract.contractName)
                 contractName = contract.contractName
               }
             }
