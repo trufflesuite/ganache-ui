@@ -33,9 +33,9 @@ class TxCard extends Component {
       return {
         name: event.decodedLog ? event.decodedLog.name : null,
         contract: contract ? contract.contractName : event.log.address,
-        txHash: event.transactionHash,
+        transactionHash: event.transactionHash,
         logIndex: event.logIndex,
-        blockTime: "TBD"
+        timestamp: event.log.timestamp
       }
     })
 

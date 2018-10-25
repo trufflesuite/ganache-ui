@@ -1,6 +1,6 @@
 import { ipcRenderer } from 'electron'
 
-import { web3Request } from '../web3/helpers/Web3ActionCreator'
+import { web3Request, web3ActionCreator } from '../web3/helpers/Web3ActionCreator'
 
 import { GET_DECODED_EVENT } from "../events/actions"
 
@@ -108,7 +108,7 @@ export const showTransaction = function(hash) {
     let transaction = await web3Request("getTransaction", [hash], web3Instance)
     let receipt = await web3Request("getTransactionReceipt", [hash], web3Instance)
     let events = []
-    let decodedData
+    let decodedData = null
 
     let contract
     let projectIndex
@@ -129,25 +129,39 @@ export const showTransaction = function(hash) {
       }
     }
 
+    // I was going to use the blocks inView here by just dispatching `requestPage`
+    //   from the blocks redux, but that gets cleared and doesnt work well, so I'm
+    //   doing it the dirty and brute force way
+    let blockTimestamps = {}
+
+    // TODO: This is shared code in redux/workspaces/actions.js
+    for (let j = 0; j < receipt.logs.length; j++) {
+      const log = receipt.logs[j]
+
+      if (typeof blockTimestamps[log.blockNumber] === "undefined") {
+        const block = await web3ActionCreator(dispatch, getState, "getBlock", [log.blockNumber, false])
+        blockTimestamps[log.blockNumber] = block ? block.timestamp : null
+      }
+      log.timestamp = blockTimestamps[log.blockNumber]
+
+      events.push({
+        transactionHash: transaction.hash,
+        logIndex: log.logIndex,
+        log: log,
+        decodedLog: null
+      })
+    }
+
     if (contract) {
-      // TODO: This is shared code in redux/workspaces/actions.js
-      for (let j = 0; j < receipt.logs.length; j++) {
-        const decodedLog = await new Promise((resolve, reject) => {
+      for (let j = 0; j < events.length; j++) {
+        events[j].decodedLog = await new Promise((resolve, reject) => {
           // TODO: there's a better way to do this to not have to send `contract` and `contracts` every time
           ipcRenderer.once(GET_DECODED_EVENT, (event, decodedLog) => {
             resolve(decodedLog)
           })
-          ipcRenderer.send(GET_DECODED_EVENT, contract, state.workspaces.current.projects[projectIndex].contracts, receipt.logs[j])
-        })
-
-        events.push({
-          transactionHash: transaction.hash,
-          logIndex: receipt.logs[j].logIndex,
-          log: receipt.logs[j],
-          decodedLog
+          ipcRenderer.send(GET_DECODED_EVENT, contract, state.workspaces.current.projects[projectIndex].contracts, events[j].log)
         })
       }
-
 
       decodedData = await new Promise((resolve, reject) => {
         // TODO: there's a better way to do this to not have to send `contract` and `contracts` every time
@@ -156,19 +170,6 @@ export const showTransaction = function(hash) {
         })
         ipcRenderer.send(GET_DECODED_TRANSACTION_INPUT, contract, state.workspaces.current.projects[projectIndex].contracts, transaction)
       })
-    }
-    else {
-      // we should still populate events even if we cant decode them
-      for (let j = 0; j < receipt.logs.length; j++) {
-        events.push({
-          transactionHash: transaction.hash,
-          logIndex: receipt.logs[j].logIndex,
-          log: receipt.logs[j],
-          decodedLog: null
-        })
-      }
-
-      decodedData = null
     }
 
     dispatch({type: SET_CURRENT_TRANSACTION_SHOWN, transaction, receipt, events, decodedData, contract})

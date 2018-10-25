@@ -112,8 +112,9 @@ export const getContractDetails = function(data) {
       for (let j = 0; j < receipt.logs.length; j++) {
         if (receipt.logs[j].logIndex === events[i].logIndex) {
           const log = receipt.logs[j]
+
           if (typeof blockTimestamps[log.blockNumber] === "undefined") {
-            const block = await web3ActionCreator(dispatch, getState, "getBlock", [i, false])
+            const block = await web3ActionCreator(dispatch, getState, "getBlock", [log.blockNumber, false])
             blockTimestamps[log.blockNumber] = block ? block.timestamp : null
           }
           log.timestamp = blockTimestamps[log.blockNumber]
