@@ -4,7 +4,7 @@ import connect from "../helpers/connect"
 
 class EventItem extends Component {
   render() {
-    const { name, contract, transactionHash, blockTime, logIndex } = this.props
+    const { name, contract, transactionHash, blockTime, logIndex } = this.props.event
     const goToEventDetails = () =>
       this.props.dispatch(push(`/event_details/${transactionHash}/${logIndex}`))
     return (

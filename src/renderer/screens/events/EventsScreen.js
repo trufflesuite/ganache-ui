@@ -4,8 +4,6 @@ import EventList from "./EventList"
 
 import * as Events from '../../../common/redux/events/actions'
 
-const events = []
-
 class EventsScreen extends Component {
   componentDidMount() {
     this.props.dispatch(Events.requestPage())
@@ -18,7 +16,7 @@ class EventsScreen extends Component {
   render() {
     return (
       <div className="EventsScreen">
-        <EventList events={this.props.events.inView} />
+        <EventList eventList={this.props.events.inView} />
       </div>
     )
   }

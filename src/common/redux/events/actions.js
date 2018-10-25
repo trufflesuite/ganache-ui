@@ -7,6 +7,7 @@ const PAGE_SIZE = 10
 
 export const ADD_EVENTS_TO_VIEW = `${prefix}/ADD_EVENTS_TO_VIEW`
 export const CLEAR_EVENTS_IN_VIEW = `${prefix}/CLEAR_EVENTS_IN_VIEW`
+export const SET_BLOCKS_REQUESTED = `${prefix}/SET_BLOCKS_REQUESTED`
 export const clearEventsInView = function() {
   return { type: CLEAR_EVENTS_IN_VIEW, events: [] }
 }
@@ -19,7 +20,12 @@ export const requestPage = function(startBlockNumber, endBlockNumber) {
     }
 
     let earliestBlockToRequest = Math.max(startBlockNumber - PAGE_SIZE, endBlockNumber)
-    let currentBlock = startBlockNumber
+
+    dispatch({
+      type: SET_BLOCKS_REQUESTED,
+      start: earliestBlockToRequest,
+      end: startBlockNumber
+    })
 
     const logs = await web3ActionCreator(dispatch, getState, "getPastLogs", [{
       fromBlock: earliestBlockToRequest,
@@ -50,12 +56,7 @@ export const requestPage = function(startBlockNumber, endBlockNumber) {
     }
 
     dispatch({type: ADD_EVENTS_TO_VIEW, events: logs })
-
-    //while (currentBlock >= earliestBlockToRequest) {
-    //  dispatch(getEventsForBlock(currentBlock))
-    //  currentBlock -= 1
-    //}
-  }  
+  }
 }
 
 // The "next" page is the next set of blocks, from the last requested down to 0

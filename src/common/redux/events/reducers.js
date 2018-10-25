@@ -1,7 +1,8 @@
 import {
   GET_DECODED_EVENT,
   CLEAR_EVENTS_IN_VIEW,
-  ADD_EVENTS_TO_VIEW
+  ADD_EVENTS_TO_VIEW,
+  SET_BLOCKS_REQUESTED
 } from './actions'
 import cloneDeep from 'lodash.clonedeep'
 
@@ -59,16 +60,17 @@ export default function (state = initialState, action) {
       }
       break
     case CLEAR_EVENTS_IN_VIEW:
-      return Object.assign({}, state, {
-        inView: [],
-        blocksRequested: {}
-      })
+      nextState.inView = []
+      nextState.blocksRequested = {}
+      break
+    case SET_BLOCKS_REQUESTED:
+      for (let i = action.start; i <= action.end; i++) {
+        nextState.blocksRequested[i] = true
+      }
+      break
     case ADD_EVENTS_TO_VIEW:
-      let inView = state.inView.concat(action.events)
-
-      return Object.assign({}, state, {
-        inView: sort(inView)
-      })
+      nextState.inView = sort(state.inView.concat(action.events))
+      break
     default:
       break
   }
