@@ -32,6 +32,7 @@ export default function (state = initialState, action) {
     case SET_CURRENT_WORKSPACE:
       nextState.current = cloneDeep(action.workspace)
       nextState.current.shownContract = cloneDeep(initialShownContract)
+      nextState.current.contracts = {}
       break
     case CONTRACT_DEPLOYED:
       if (typeof nextState.current.projects !== "undefined") {
@@ -45,6 +46,8 @@ export default function (state = initialState, action) {
                 contract.creationTxHash = action.data.transactionHash
                 contract.transactions = []
                 contract.events = []
+                contract.projectIndex = i
+                nextState.current.contracts[contract.address] = contract
                 break
               }
             }

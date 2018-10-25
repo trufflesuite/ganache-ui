@@ -1,16 +1,48 @@
 import {
-  GET_DECODED_EVENT
+  GET_DECODED_EVENT,
+  CLEAR_EVENTS_IN_VIEW,
+  ADD_EVENTS_TO_VIEW
 } from './actions'
 import cloneDeep from 'lodash.clonedeep'
 
 const initialState = {
-  list: [],
+  inView: [],
+  blocksRequested: {},
   shown: {
     contract: {
       name: "",
       address: ""
     }
   }
+}
+
+// Note: This sorts in reverse; higher blocks first
+function sort(events) {
+  return events.sort(function(a, b) {
+    if (a.blockNumber > b.blockNumber) {
+      return -1;
+    }
+    if (a.blockNumber < b.blockNumber) {
+      return 1;
+    }
+    // blockNumbers must be equal
+    // Let's sort by transaction index
+    if (a.transactionIndex > b.transactionIndex) {
+      return -1; 
+    } 
+    if (b.transactionIndex < b.transactionIndex) {
+      return 1;
+    }
+    // transactionIndex must be equal
+    // Let's sort by log index
+    if (a.logIndex > b.logIndex) {
+      return -1; 
+    } 
+    if (b.logIndex < b.logIndex) {
+      return 1;
+    }
+    return 0;
+  })
 }
 
 export default function (state = initialState, action) {
@@ -26,6 +58,17 @@ export default function (state = initialState, action) {
         }
       }
       break
+    case CLEAR_EVENTS_IN_VIEW:
+      return Object.assign({}, state, {
+        inView: [],
+        blocksRequested: {}
+      })
+    case ADD_EVENTS_TO_VIEW:
+      let inView = state.inView.concat(action.events)
+
+      return Object.assign({}, state, {
+        inView: sort(inView)
+      })
     default:
       break
   }

@@ -7,9 +7,9 @@ import connect from "../helpers/connect"
 
 // TODO - refactor this out into its own file if it gets too big
 const EventItem = ({ event, dispatch }) => {
-  const { name, contract, txHash, blockTime, logIndex } = event
+  const { name, contract, transactionHash, blockTime, logIndex } = event
   const goToEventDetails = () =>
-    dispatch(push(`/event_details/${txHash}/${logIndex}`))
+    dispatch(push(`/event_details/${transactionHash}/${logIndex}`))
   return (
     <div className="EventItem" onClick={goToEventDetails}>
       <div className="name">
@@ -23,7 +23,7 @@ const EventItem = ({ event, dispatch }) => {
         </div>
         <div className="dataItem">
           <div className="label">TX HASH</div>
-          <div className="value">{txHash}</div>
+          <div className="value">{transactionHash}</div>
         </div>
         <div className="dataItem">
           <div className="label">LOG INDEX</div>
