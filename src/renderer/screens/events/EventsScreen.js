@@ -15,25 +15,6 @@ class EventsScreen extends Component {
     this.props.dispatch(Events.clearEventsInView())
   }
 
-  componentWillReceiveProps(nextProps) {
-    // If the scroll position changed...
-    /*if (nextProps.appshell.scrollPosition != this.props.appshell.scrollPosition) {
-      if (nextProps.appshell.scrollPosition == "top") {
-        this.props.dispatch(Events.requestPreviousPage())
-      } else if (nextProps.appshell.scrollPosition == "bottom") {
-        this.props.dispatch(Events.requestNextPage())
-      }
-      return
-    }
-
-    // No change in scroll position? 
-    const blocksRequested = Object.keys(nextProps.events.blocksRequested)
-    const latestBlockRequested = Math.max.apply(Math, blocksRequested.concat(-1))
-    if (nextProps.appshell.scrollPosition == "top" && nextProps.core.latestBlock > latestBlockRequested) {
-      this.props.dispatch(Events.requestPreviousPage())
-    }*/
-  }
-
   render() {
     return (
       <div className="EventsScreen">

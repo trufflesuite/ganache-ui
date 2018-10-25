@@ -16,7 +16,6 @@ class EventDetailsScreen extends Component {
   render () {
     const { logIndex, transactionHash } = this.props.params
 
-    // TODO - wire up real event
     let event = {
       contractAddress: this.props.events.shown.contract.address,
       txHash: transactionHash,
