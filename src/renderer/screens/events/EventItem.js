@@ -1,10 +1,12 @@
 import React, { Component } from "react"
 
+import Moment from 'react-moment'
+
 import connect from "../helpers/connect"
 
 class EventItem extends Component {
   render() {
-    const { name, contract, transactionHash, blockTime, logIndex } = this.props.event
+    const { name, contract, transactionHash, timestamp, logIndex } = this.props.event
     const goToEventDetails = () =>
       this.props.dispatch(push(`/event_details/${transactionHash}/${logIndex}`))
     return (
@@ -28,7 +30,11 @@ class EventItem extends Component {
           </div>
           <div className="dataItem">
             <div className="label">BLOCK TIME</div>
-            <div className="value">{blockTime}</div>
+            <div className="value">
+              <Moment unix format="YYYY-MM-DD HH:mm:ss">
+                {timestamp}
+              </Moment>
+            </div>
           </div>
         </div>
       </div>

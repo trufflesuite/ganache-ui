@@ -27,6 +27,15 @@ export const requestPage = function(startBlockNumber, endBlockNumber) {
       end: startBlockNumber
     })
 
+    // I was going to use the blocks inView here by just dispatching `requestPage`
+    //   from the blocks redux, but that gets cleared and doesnt work well, so I'm
+    //   doing it the dirty and brute force way
+    let blockTimestamps = {}
+    for (let i = earliestBlockToRequest; i <= startBlockNumber; i++) {
+      const block = await web3ActionCreator(dispatch, getState, "getBlock", [i, false])
+      blockTimestamps[i] = block ? block.timestamp : null
+    }
+
     const logs = await web3ActionCreator(dispatch, getState, "getPastLogs", [{
       fromBlock: earliestBlockToRequest,
       toBlock: startBlockNumber
@@ -37,6 +46,7 @@ export const requestPage = function(startBlockNumber, endBlockNumber) {
     for (let i = 0; i < logs.length; i++) {
       const log = logs[i]
       const contract = contracts[log.address]
+      log.timestamp = blockTimestamps[log.blockNumber]
 
       if (contract) {
         const projectContracts = projects[contract.projectIndex].contracts
