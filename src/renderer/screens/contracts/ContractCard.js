@@ -8,7 +8,7 @@ import ModalDetails from "../../components/modal/ModalDetails"
 class ContractCard extends Component {
   handleClick() {
     if (this.props.address) {
-      push(`/contracts/${this.props.projectIndex}/${this.props.address}`);
+      this.props.dispatch(push(`/contracts/${this.props.projectIndex}/${this.props.address}`));
     }
     else {
       const modalDetails = new ModalDetails(

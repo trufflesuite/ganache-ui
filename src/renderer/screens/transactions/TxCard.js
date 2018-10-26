@@ -10,7 +10,7 @@ import TransactionTypeBadge from "./TransactionTypeBadge"
 
 import FormattedEtherValue from "../../components/formatted-ether-value/FormattedEtherValue"
 
-import EventsList from "../events/EventList"
+import EventList from "../events/EventList"
 
 import OnlyIf from "../../components/only-if/OnlyIf"
 
@@ -174,7 +174,7 @@ class TxCard extends Component {
             </div>
           </header>
 
-          <EventsList events={events} />
+          <EventList eventList={events} />
         </div>
       </section>
     )

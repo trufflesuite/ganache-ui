@@ -1,59 +1,48 @@
 import React, { Component } from "react"
-import { push } from "react-router-redux"
 
 import connect from "../helpers/connect"
 
-// import EventItem from "./EventItem"
+import EventItem from "./EventItem"
 
-// TODO - refactor this out into its own file if it gets too big
-const EventItem = ({ event, dispatch }) => {
-  const { name, contract, txHash, blockTime, logIndex } = event
-  const goToEventDetails = () =>
-    dispatch(push(`/event_details/${txHash}/${logIndex}`))
-  return (
-    <div className="EventItem" onClick={goToEventDetails}>
-      <div className="name">
-        <div className="label">NAME</div>
-        <div className="value">{name || "ENCODED EVENT"}</div>
-      </div>
-      <div className="data">
-        <div className="dataItem">
-          <div className="label">CONTRACT</div>
-          <div className="value">{contract}</div>
-        </div>
-        <div className="dataItem">
-          <div className="label">TX HASH</div>
-          <div className="value">{txHash}</div>
-        </div>
-        <div className="dataItem">
-          <div className="label">LOG INDEX</div>
-          <div className="value">{logIndex}</div>
-        </div>
-        <div className="dataItem">
-          <div className="label">BLOCK TIME</div>
-          <div className="value">{blockTime}</div>
-        </div>
-      </div>
-    </div>
-  )
-}
+import * as Events from '../../../common/redux/events/actions'
 
-const EventList = ({ events, dispatch }) => {
-  if (events.length === 0) {
+class EventList extends Component {
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    // If the scroll position changed...
+    if (this.props.appshell.scrollPosition != prevProps.appshell.scrollPosition) {
+      if (this.props.appshell.scrollPosition == "top") {
+        this.props.dispatch(Events.requestPreviousPage())
+      } else if (this.props.appshell.scrollPosition == "bottom") {
+        this.props.dispatch(Events.requestNextPage())
+      }
+      return
+    }
+
+    // No change in scroll position? 
+    const blocksRequested = Object.keys(this.props.events.blocksRequested)
+    const latestBlockRequested = Math.max.apply(Math, blocksRequested.concat(-1))
+    if (this.props.appshell.scrollPosition == "top" && this.props.core.latestBlock > latestBlockRequested) {
+      this.props.dispatch(Events.requestPreviousPage())
+    }
+  }
+
+  render() {
+    if (this.props.eventList.length === 0) {
+      return (
+        <div className="EventList">
+          <div className="Waiting">No events</div>
+        </div>
+      )
+    }
+
     return (
       <div className="EventList">
-        <div className="Waiting">No events</div>
+        {this.props.eventList.map((event, index) => (
+          <EventItem event={event} key={index} />
+        ))}
       </div>
     )
   }
-
-  return (
-    <div className="EventList">
-      {events.map((event, index) => (
-        <EventItem event={event} key={index} dispatch={dispatch} />
-      ))}
-    </div>
-  )
 }
 
-export default connect(EventList)
+export default connect(EventList, "appshell", "core", "events")

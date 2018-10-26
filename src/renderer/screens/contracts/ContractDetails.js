@@ -4,7 +4,7 @@ import connect from '../helpers/connect'
 import TxList from '../transactions/TxList'
 import FormattedEtherValue from '../../components/formatted-ether-value/FormattedEtherValue'
 import ChecksumAddress from '../../components/checksum-addresses/ChecksumAddress'
-import EventsList from "../events/EventList"
+import EventList from "../events/EventList"
 import { hashHistory } from 'react-router'
 import { getContractDetails, clearShownContract } from "../../../common/redux/workspaces/actions"
 
@@ -136,10 +136,7 @@ class ContractDetails extends Component {
             <div className="Title">
               <h2>EVENTS</h2>
             </div>
-            {/* at the time of writing this comment, `events` isn't used in 
-              RecentEvents yet, so you'll need to hook things up there first!
-            */}
-            <EventsList events={events} />
+            <EventList eventList={events} />
           </div>
         </div>
       </div>
