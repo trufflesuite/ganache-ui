@@ -175,7 +175,7 @@
   },
   "dependencies": {
     "@exponent/electron-cookies": "^2.0.0",
-    "@seesemichaelj/react-json-view": "^1.20.0",
+    "@seesemichaelj/react-json-view": "^1.20.1",
     "async": "^2.5.0",
     "benjamincburns-forked-electron-updater": "2.21.6",
     "builder-util-runtime": "^4.2.0",
@@ -215,7 +215,7 @@
     "reselect": "^2.5.4",
     "scrypt": "^6.0.3",
     "truffle-config": "^1.1.0-beta.0",
-    "truffle-decoder": "^1.0.0-beta.6",
+    "truffle-decoder": "^1.0.0-beta.9",
     "universal-analytics": "^0.4.13",
     "uuid": "^3.1.0",
     "web3": "1.0.0-beta.35"
