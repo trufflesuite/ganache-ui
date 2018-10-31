@@ -27,6 +27,15 @@ export const requestPage = function(startBlockNumber, endBlockNumber) {
       end: startBlockNumber
     })
 
+    // I was going to use the blocks inView here by just dispatching `requestPage`
+    //   from the blocks redux, but that gets cleared and doesnt work well, so I'm
+    //   doing it the dirty and brute force way
+    let blockTimestamps = {}
+    for (let i = earliestBlockToRequest; i <= startBlockNumber; i++) {
+      const block = await web3ActionCreator(dispatch, getState, "getBlock", [i, false])
+      blockTimestamps[i] = block ? block.timestamp : null
+    }
+
     const logs = await web3ActionCreator(dispatch, getState, "getPastLogs", [{
       fromBlock: earliestBlockToRequest,
       toBlock: startBlockNumber
@@ -37,6 +46,7 @@ export const requestPage = function(startBlockNumber, endBlockNumber) {
     for (let i = 0; i < logs.length; i++) {
       const log = logs[i]
       const contract = contracts[log.address]
+      log.timestamp = blockTimestamps[log.blockNumber]
 
       if (contract) {
         const projectContracts = projects[contract.projectIndex].contracts
@@ -95,6 +105,8 @@ export const getDecodedEvent = function(transactionHash, logIndex) {
     const transaction = await web3ActionCreator(dispatch, getState, "getTransaction", [transactionHash])
     const receipt = await web3ActionCreator(dispatch, getState, "getTransactionReceipt", [transactionHash])
 
+    const block = await web3ActionCreator(dispatch, getState, "getBlock", [transaction.blockNumber, false])
+
     let contract
     let contractName
     let contractAddress = transaction.to
@@ -117,28 +129,31 @@ export const getDecodedEvent = function(transactionHash, logIndex) {
       }
     }
 
-    if (contract) {
-      // TODO: This is shared code in redux/workspaces/actions.js
-      for (let j = 0; j < receipt.logs.length; j++) {
-        if (receipt.logs[j].logIndex === logIndex) {
-          const decodedLog = await new Promise((resolve, reject) => {
-            // TODO: there's a better way to do this to not have to send `contract` and `contracts` every time
-            ipcRenderer.once(GET_DECODED_EVENT, (event, decodedLog) => {
-              resolve(decodedLog)
-            })
-            ipcRenderer.send(GET_DECODED_EVENT, contract, state.workspaces.current.projects[projectIndex].contracts, receipt.logs[j])
-          })
-
-          event = {
-            transactionHash,
-            logIndex,
-            log: receipt.logs[j],
-            decodedLog
-          }
-
-          break
+    // TODO: This is shared code in redux/workspaces/actions.js
+    for (let j = 0; j < receipt.logs.length; j++) {
+      if (receipt.logs[j].logIndex === logIndex) {
+        event = {
+          transactionHash,
+          logIndex,
+          log: {
+            ...receipt.logs[j],
+            timestamp: block.timestamp
+          },
+          decodedLog: null
         }
+
+        break
       }
+    }
+
+    if (contract) {
+      event.decodedLog = await new Promise((resolve, reject) => {
+        // TODO: there's a better way to do this to not have to send `contract` and `contracts` every time
+        ipcRenderer.once(GET_DECODED_EVENT, (event, decodedLog) => {
+          resolve(decodedLog)
+        })
+        ipcRenderer.send(GET_DECODED_EVENT, contract, state.workspaces.current.projects[projectIndex].contracts, event.log)
+      })
     }
 
     dispatch({ type: GET_DECODED_EVENT, event, contractName, contractAddress })
