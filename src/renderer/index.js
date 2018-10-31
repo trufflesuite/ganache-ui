@@ -28,6 +28,7 @@ import TitleScreen from './screens/title/TitleScreen'
 import WorkspacesScreen from './screens/startup/WorkspacesScreen'
 import FirstRunScreen from './screens/first-run/FirstRunScreen'
 import ContractsScreen from './screens/contracts/ContractsScreen'
+import LoaderScreen from './screens/loader/LoaderScreen'
 
 import {ipcRenderer} from 'electron'
 
@@ -41,6 +42,7 @@ const routes = <Route>
   <Route path='/title' component={TitleScreen} />
   <Route path='/workspaces' component={WorkspacesScreen} />
   <Route path="/first_run" component={FirstRunScreen} />
+  <Route path="/loader" component={LoaderScreen} />
   <Route path="/" component={AppShell}>
     <Route path='/accounts' component={AccountsScreen} />
     <Route path="/blocks(/:blockNumber)" component={BlocksScreen} />
@@ -107,6 +109,7 @@ const stylesheets = [
   "./screens/event-details/EncodedEventDetails.scss",
   "./screens/event-details/DecodedEventDetails.scss",
   "./screens/startup/WorkspacesScreen.scss",
+  "./screens/loader/LoaderScreen.scss",
 ] 
 
 const render = () => {
