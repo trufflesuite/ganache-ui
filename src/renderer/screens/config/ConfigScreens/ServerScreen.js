@@ -20,8 +20,7 @@ const VALIDATIONS = {
   "workspace.server.blockTime": {
     allowedChars: /^\d*$/,
     min: 1,
-    max: 200,
-    canBeBlank: true
+    max: 200
   }
 }
 
@@ -53,6 +52,13 @@ class ServerScreen extends Component {
     this.setState({
       automine: !this.state.automine
     })
+  }
+
+  withDefaultValueZero = (value) => {
+    if (value === null || value === undefined) {
+      return 0
+    }
+    return value
   }
 
   validateChange = (e) => {
@@ -186,7 +192,7 @@ class ServerScreen extends Component {
                 <input
                   name="workspace.server.blockTime"
                   type="number"
-                  value={this.props.config.settings.workspace.server.blockTime || 0}
+                  value={this.withDefaultValueZero(this.props.config.settings.server.blockTime)}
                   onChange={this.validateChange}
                 />
                 {this.props.validationErrors["workspace.server.blockTime"] &&
