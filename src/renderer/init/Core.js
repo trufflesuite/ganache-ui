@@ -1,5 +1,5 @@
 import { ipcRenderer } from 'electron'
-import { push } from 'react-router-redux'
+import { replace } from 'react-router-redux'
 
 import { setRPCProviderUrl } from '../../common/redux/web3/actions'
 
@@ -43,10 +43,10 @@ export function initCore(store) {
     store.dispatch(setServerStarted())
 
     if (openConfigScreenOnStart) {
-      store.dispatch(push("/config"))
+      store.dispatch(replace("/config"))
     }
     else {
-      store.dispatch(push("/accounts"))
+      store.dispatch(replace("/accounts"))
     }
   })
 

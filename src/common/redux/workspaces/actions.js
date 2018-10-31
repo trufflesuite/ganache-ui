@@ -1,4 +1,5 @@
 import { ipcRenderer } from 'electron'
+import { push } from 'react-router-redux'
 
 import { web3CleanUpHelper, web3ActionCreator } from '../web3/helpers/Web3ActionCreator'
 import { REQUEST_SERVER_RESTART, showTitleScreen } from '../core/actions'
@@ -34,6 +35,7 @@ export const closeWorkspace = function() {
 export const OPEN_WORKSPACE = `${prefix}/OPEN_WORKSPACE`
 export const openWorkspace = function(name) {
   return function(dispatch, getState) {
+    dispatch(push("/loader"))
     dispatch({type: OPEN_WORKSPACE, name})
     ipcRenderer.send(OPEN_WORKSPACE, name)
   }
@@ -41,6 +43,7 @@ export const openWorkspace = function(name) {
 
 export const openDefaultWorkspace = function() {
   return function(dispatch, getState) {
+    dispatch(push("/loader"))
     dispatch({type: OPEN_WORKSPACE, name: null})
     ipcRenderer.send(OPEN_WORKSPACE, null)
   }
@@ -49,6 +52,7 @@ export const openDefaultWorkspace = function() {
 export const OPEN_NEW_WORKSPACE_CONFIG = `${prefix}/OPEN_NEW_WORKSPACE_CONFIG`
 export const openNewWorkspaceConfig = function() {
   return function(dispatch, getState) {
+    dispatch(push("/loader"))
     ipcRenderer.send(OPEN_NEW_WORKSPACE_CONFIG)
   }
 }

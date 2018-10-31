@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 
 import connect from '../helpers/connect'
 
+import * as pkg from '../../../../package.json'
+
 class LoaderScreen extends Component {
   render () {
     return (
@@ -15,7 +17,7 @@ class LoaderScreen extends Component {
               Ganache
             </strong>
             <div className="GanacheVersion">
-              v{this.state.version}
+              v{pkg.version}
             </div>
           </h4>
         </div>
