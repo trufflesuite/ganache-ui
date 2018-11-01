@@ -69,6 +69,15 @@ export const getGasLimit = function() {
   }
 }
 
+export const setBlockNumberToLatest = function(number) {
+  return async function(dispatch, getState) {
+    const blockNumber = await web3ActionCreator(dispatch, getState, "getBlockNumber", []);
+    
+    // Refresh our accounts if the block changed.
+    dispatch(setBlockNumber(blockNumber))
+  }
+}
+
 export const SET_BLOCK_NUMBER = `${prefix}/SET_BLOCK_NUMBER`
 export const setBlockNumber = function(number) {
   return function(dispatch, getState) {

@@ -14,7 +14,8 @@ import {
   getBlockSubscription,
   setServerStarted,
   setBlockNumber,
-  setKeyData
+  setKeyData,
+  setBlockNumberToLatest
 } from '../../common/redux/core/actions'
 
 import { getAccounts } from '../../common/redux/accounts/actions'
@@ -34,6 +35,7 @@ export function initCore(store) {
     ipcRenderer.send("web3-provider", url)
     store.dispatch(setRPCProviderUrl(url))
   
+    store.dispatch(setBlockNumberToLatest())
     store.dispatch(getAccounts())
     store.dispatch(getGasPrice())
     store.dispatch(getGasLimit())
