@@ -9,7 +9,7 @@ const prefix = 'CORE'
 const cleanupWorkspace = function(dispatch, getState) {
   web3CleanUpHelper(dispatch, getState)
 
-  dispatch(showTitleScreen())
+  dispatch(push("/loader"))
 
   // Dispatch REQUEST_SERVER_RESTART to the store
   // This will clear all state.
