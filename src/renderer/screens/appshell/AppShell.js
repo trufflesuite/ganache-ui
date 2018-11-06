@@ -23,28 +23,26 @@ class AppShell extends Component {
     this.scrollDedupeTimeout = null
   }
 
-  _handleScroll = () => {
-    let container = this.refs.shellcontainer
+  _handleScroll = (values) => {
     let scrollPosition = "top";
-    const pixelBuffer = 100
 
-    if (container.scrollTop < pixelBuffer) {
-      scrollPosition = "top"
-    } else if (container.scrollTop + container.clientHeight >= container.scrollHeight - pixelBuffer) {
+    if (values.top === 1) {
       scrollPosition = "bottom"
-    } else {
+    }
+    else if (values.top > 0) {
       scrollPosition = "middle"
     }
+    else {
+      scrollPosition = "top"
+    }
 
-    this.props.dispatch(AppShellActions.setScrollPosition(scrollPosition))
+    if (this.props.appshell.scrollPosition !== scrollPosition) {
+      this.props.dispatch(AppShellActions.setScrollPosition(scrollPosition))
+    }
   }
 
   setScrollTop = (scrollTop) => {
     this.refs.shellcontainer.scrollTop = scrollTop
-  }
-
-  componentDidMount() {
-    this.refs.shellcontainer.addEventListener('scroll', this._handleScroll);
   }
 
   onCloseError() {
@@ -60,7 +58,8 @@ class AppShell extends Component {
 
         <div className="ShellContainer" ref="shellcontainer">
           <Scrollbars
-            className="scrollBar">
+            className="scrollBar"
+            onScrollFrame={this._handleScroll.bind(this)}>
             {this.props.children}
           </Scrollbars>
         </div>
@@ -78,4 +77,4 @@ class AppShell extends Component {
   }
 }
 
-export default connect(AppShell, "core", "config", "logs", "autoUpdate");
+export default connect(AppShell, "appshell", "core", "config", "logs", "autoUpdate");

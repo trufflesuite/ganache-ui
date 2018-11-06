@@ -13,6 +13,10 @@ import {
   ADD_LOG_LINES
 } from "../../../common/redux/logs/actions"
 
+import {
+  SET_SCROLL_POSITION
+} from "../../../common/redux/appshell/actions";
+
 const actionCreators = {
   push
 }
@@ -25,7 +29,8 @@ const actionsToIgnoreInConsoleLogger = [
   "APP/REPLSTATE",
   RPC_REQUEST_STARTED,
   RPC_REQUEST_SUCCEEDED,
-  ADD_LOG_LINES
+  ADD_LOG_LINES,
+  SET_SCROLL_POSITION
 ]
 
 const logger = createLogger({
