@@ -12,10 +12,6 @@ class BlockContainer extends Component {
   componentDidMount() {
     this.props.dispatch(Blocks.requestPage())
   }
-
-  componentWillUnmount() {
-    this.props.dispatch(Blocks.clearBlocksInView())
-  }
   
   render () {
     var content

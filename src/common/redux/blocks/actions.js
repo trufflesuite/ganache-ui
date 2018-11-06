@@ -17,12 +17,8 @@ export const requestPage = function(startBlockNumber, endBlockNumber) {
     }
 
     let earliestBlockToRequest = Math.max(startBlockNumber - PAGE_SIZE, endBlockNumber)
-    let currentBlock = startBlockNumber
-    while (currentBlock >= earliestBlockToRequest) {
-      dispatch(getBlock(currentBlock))
-      currentBlock -= 1
-    }
-  }  
+    dispatch(addBlocksToView(earliestBlockToRequest, startBlockNumber))
+  }
 }
 
 // The "next" page is the next set of blocks, from the last requested down to 0
@@ -53,27 +49,64 @@ export const requestPreviousPage = function() {
 }
 
 export const SET_BLOCK_REQUESTED = `${prefix}/SET_BLOCK_REQUESTED`
+export const SET_BLOCKS_REQUESTED = `${prefix}/SET_BLOCKS_REQUESTED`
 export const ADD_BLOCK_TO_VIEW = `${prefix}/ADD_BLOCK_TO_VIEW`
-export const getBlock = function(number) {
+export const ADD_BLOCKS_TO_VIEW = `${prefix}/ADD_BLOCKS_TO_VIEW`
+
+export const addBlockToView = function(number) {
   return async function(dispatch, getState) {
     let requested = getState().blocks.requested
+    let web3Instance = getState().web3.web3Instance
 
     // If it's already requested, bail
     if (requested[number] === true) {
       return
     }
 
-    let web3Instance = getState().web3.web3Instance
-
     // It's not requested? Let's get the drop on it so 
     // no other process requests it
     dispatch({type: SET_BLOCK_REQUESTED, number })
 
-    // Now actually request it
-    let block = await web3Request("getBlock", [number, false], web3Instance)
-    let transactionCount = await web3Request("getBlockTransactionCount", [block.number], web3Instance)
-    dispatch({type: ADD_BLOCK_TO_VIEW, block, transactionCount })
+    const blockDetails = await getBlock(i, web3Instance)
+    dispatch({type: ADD_BLOCK_TO_VIEW, ...blockDetails })
   }
+}
+
+export const addBlocksToView = function(startBlockNumber, endBlockNumber) {
+  return async function(dispatch, getState) {
+    const state = getState()
+    const requested = state.blocks.requested
+    const web3Instance = state.web3.web3Instance
+
+    // we already have a copy of the blocks that haven't been
+    // requested yet; let's make sure no one requests any of
+    // the blocks in this range, regardles if they've already
+    // been requested
+    dispatch({ type: SET_BLOCKS_REQUESTED, startBlockNumber, endBlockNumber })
+
+    let blocks = []
+    for (let i = startBlockNumber; i <= endBlockNumber; i++) {
+      if (requested[i] === true) {
+        // skip already requested blocks
+        continue;
+      }
+
+      const blockDetails = await getBlock(i, web3Instance)
+      if (blockDetails.block) {
+        blocks.push(blockDetails)
+      }
+    }
+
+    dispatch({type: ADD_BLOCKS_TO_VIEW, blocks })
+  }
+}
+
+const getBlock = async function(number, web3Instance) {
+  // Now actually request it
+  let block = await web3Request("getBlock", [number, false], web3Instance)
+  let transactionCount = await web3Request("getBlockTransactionCount", [block.number], web3Instance)
+
+  return { block, transactionCount }
 }
 
 export const SET_CURRENT_BLOCK_SHOWN = `${prefix}/SET_CURRENT_BLOCK_SHOWN`
