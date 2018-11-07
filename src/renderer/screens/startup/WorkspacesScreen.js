@@ -15,7 +15,7 @@ import Spinner from '../../components/spinner/Spinner'
 import Logo from '../../../../Logo.svg'
 import ChainIcon from '../../icons/chain.svg'
 import MenuIcon from '../../icons/list.svg'
-import PlayIcon from '../../icons/key.svg'
+// import PlayIcon from '../../icons/play.svg' // TODO: waiting on icon from josh
 
 class WorkspacesScreen extends Component {
   constructor (props) {
@@ -40,7 +40,7 @@ class WorkspacesScreen extends Component {
     
     if(hasWorkspaces) {
       workspaces = this.props.workspaces.names.map((workspaceName, i) => {
-        return <li key={workspaceName}><button autoFocus={i === 0 ? "autofocus": false} onClick={this.selectWorkspace.bind(this)}>{workspaceName}<PlayIcon /></button></li>
+        return <li key={workspaceName}><button autoFocus={i === 0 ? "autofocus": false} onClick={this.selectWorkspace.bind(this)}>{workspaceName}{/*<PlayIcon />*/}</button></li>
       })
     } else {
       workspaces = <li>
