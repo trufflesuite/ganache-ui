@@ -239,12 +239,16 @@ app.on('ready', () => {
         mainWindow.webContents.send(ADD_LOG_LINES, lines)
       })
 
-      chain.on("error", (error) => {
+      chain.on("error", async (error) => {
         mainWindow.webContents.send(SET_SYSTEM_ERROR, error)
 
         if (chain.isServerStarted()) {
           // Something wrong happened in the chain, let's try to stop it
-          chain.stopServer()
+          await chain.stopServer()
+        }
+
+        if (truffleIntegration) {
+          await truffleIntegration.stopWatching()
         }
       })
 
@@ -255,6 +259,10 @@ app.on('ready', () => {
       if (workspace) {
         if (chain.isServerStarted()) {
           await chain.stopServer()
+        }
+
+        if (truffleIntegration) {
+          await truffleIntegration.stopWatching()
         }
 
         const chaindataLocation = workspace.chaindataDirectory || await chain.getDbLocation()
@@ -275,6 +283,10 @@ app.on('ready', () => {
         if (chain.isServerStarted()) {
           await chain.stopServer()
         }
+
+        if (truffleIntegration) {
+          await truffleIntegration.stopWatching()
+        }
       }
 
       workspaceManager.bootstrap()
@@ -289,6 +301,10 @@ app.on('ready', () => {
       if (workspace) {
         if (chain.isServerStarted()) {
           await chain.stopServer()
+        }
+
+        if (truffleIntegration) {
+          await truffleIntegration.stopWatching()
         }
       }
 
@@ -330,6 +346,10 @@ app.on('ready', () => {
         await chain.stopServer()
       }
 
+      if (truffleIntegration) {
+        await truffleIntegration.stopWatching()
+      }
+
       const defaultWorkspace = workspaceManager.get(null)
       const workspaceName = Date.now().toString()
       const wallet = new ethagen({entropyBits: 128})
@@ -365,6 +385,10 @@ app.on('ready', () => {
       if (workspace) {
         if (chain.isServerStarted()) {
           await chain.stopServer()
+        }
+
+        if (truffleIntegration) {
+          await truffleIntegration.stopWatching()
         }
 
         const workspaceSettings = workspace.settings.getAll()

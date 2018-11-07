@@ -43,6 +43,16 @@ process.on("message", async function(message) {
       watcher.setWeb3(web3Host);
       break;
     }
+    case "watcher-stop": {
+      watcher.close();
+
+      process.send({
+        type: "watcher-stopped",
+        data: null
+      });
+
+      break;
+    }
     case "project-details-request": {
       const response = getProjectDetails(message.data);
 

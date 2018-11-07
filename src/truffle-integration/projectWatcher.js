@@ -10,17 +10,22 @@ class ProjectWatcher extends EventEmitter {
     super();
     this.projects = [];
     this.contractsByAddress = {};
+    this.blocksReceived = [];
   }
 
   close() {
     if (this.blockHeaderSubscription) {
       this.blockHeaderSubscription.unsubscribe();
-      this.blockHeaderSubscription = undefined;
+      delete this.blockHeaderSubscription;
     }
     if (this.logsSubscription) {
       this.logsSubscription.unsubscribe();
-      this.logsSubscription = undefined;
+      delete this.logsSubscription;
     }
+
+    this.projects = [];
+    this.contractsByAddress = {};
+    this.blocksReceived = [];
   }
 
   setWeb3(url) {
@@ -40,7 +45,10 @@ class ProjectWatcher extends EventEmitter {
     });
 
     this.blockHeaderSubscription.on("data", async (block) => {
-      await this.handleBlock(block);
+      if (this.blocksReceived.indexOf(block.number) === -1) {
+        this.blocksReceived.push(block.number);
+        await this.handleBlock(block);
+      }
     });
 
     this.logsSubscription = this.web3.eth.subscribe("logs", {

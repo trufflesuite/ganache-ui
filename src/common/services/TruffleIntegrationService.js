@@ -50,6 +50,19 @@ class TruffleIntegrationService extends EventEmitter {
     }
   }
 
+  async stopWatching() {
+    return new Promise((resolve, reject) => {
+      this.once("watcher-stopped", () => {
+        resolve();
+      });
+
+      this.child.send({
+        type: "watcher-stop",
+        data: null
+      });
+    })
+  }
+
   _exitHandler(code, signal) {
     if (code != null) {
       this.emit("error", `Blockchain process exited prematurely with code '${code}', due to signal '${signal}'.`);
