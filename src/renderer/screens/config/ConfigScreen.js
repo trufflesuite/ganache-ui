@@ -246,7 +246,8 @@ class ConfigScreen extends PureComponent {
       validateChange: this.validateChange,
       validationErrors: this.state.validationErrors,
       addWorkspaceProject: this.addWorkspaceProject,
-      removeWorkspaceProject: this.removeWorkspaceProject
+      removeWorkspaceProject: this.removeWorkspaceProject,
+      workspaces: this.props.workspaces
     })
 
     return (
@@ -280,4 +281,4 @@ class ConfigScreen extends PureComponent {
   }
 }
 
-export default connect(ConfigScreen, "config", "network")
+export default connect(ConfigScreen, "config", "network", "workspaces")

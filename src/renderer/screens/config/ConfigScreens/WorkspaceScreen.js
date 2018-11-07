@@ -1,7 +1,6 @@
 import React, { Component } from "react"
 import { remote } from "electron"
 import path from "path"
-import connect from "../../helpers/connect"
 import ModalDetails from "../../../components/modal/ModalDetails"
 
 class WorkspaceScreen extends Component {
@@ -149,4 +148,4 @@ class WorkspaceScreen extends Component {
   }
 }
 
-export default connect(WorkspaceScreen, "workspaces")
+export default WorkspaceScreen
