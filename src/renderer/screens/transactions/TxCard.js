@@ -15,6 +15,13 @@ import EventList from "../events/EventList"
 import OnlyIf from "../../components/only-if/OnlyIf"
 
 class TxCard extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      hasDecodedInfo: typeof props.currentTransactionContract !== "undefined" && typeof props.currentTransactionData !== "undefined"
+    }
+  }
   componentDidMount() {
     this.props.dispatch(
       Transactions.showTransaction(this.props.transactionHash)
@@ -44,7 +51,7 @@ class TxCard extends Component {
     }
 
     let contractInfo = null
-    if (contract && decodedData) {
+    if (this.state.hasDecodedInfo) {
       contractInfo = {
         name: contract.contractName,
         address: contract.address,
@@ -126,7 +133,7 @@ class TxCard extends Component {
           </main>
         </div>
 
-        <OnlyIf test={contractInfo != null}>
+        <OnlyIf test={this.state.hasDecodedInfo}>
           <div className="ContractInfo">
             <header>
               <div className="Title">
@@ -137,28 +144,28 @@ class TxCard extends Component {
             <section>
               <div>
                 <div className="Label">CONTRACT</div>
-                <div className="Value">{contractInfo.name}</div>
+                <div className="Value">{contractInfo && contractInfo.name}</div>
               </div>
               <div>
                 <div className="Label">ADDRESS</div>
-                <div className="Value">{contractInfo.address}</div>
+                <div className="Value">{contractInfo && contractInfo.address}</div>
               </div>
             </section>
             <section>
               <div>
                 <div className="Label">FUNCTION</div>
-                <div className="Value">{contractInfo.functionName}</div>
+                <div className="Value">{contractInfo && contractInfo.functionName}</div>
               </div>
             </section>
             <section>
               <div>
-                <div className="Label">{contractInfo.inputs.length > 0 && "INPUTS"}</div>
-                <div className="Value">{contractInfo.inputs.join(", ")}</div>
+                <div className="Label">{contractInfo && contractInfo.inputs.length > 0 && "INPUTS"}</div>
+                <div className="Value">{contractInfo && contractInfo.inputs.join(", ")}</div>
               </div>
               {/*<div> // TODO: implement state changes
                 <div className="Label">STATE CHANGES</div>
                 <div className="Value">
-                  {contractInfo.stateChanges.map((state, index) => (
+                  {contractInfo && contractInfo.stateChanges.map((state, index) => (
                     <div key={index}>{`${state.name}: ${state.prev} >> ${state.next}`}</div>
                   ))}
                 </div>
