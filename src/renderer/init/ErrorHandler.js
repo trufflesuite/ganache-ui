@@ -17,13 +17,13 @@ export function handleError(store, error) {
       case "EADDRINUSE":
       case "EACESS":
       case "EACCES":
-        store.dispatch(setSettingError("server.port", "The port is used by another application; please change it"))
+        store.dispatch(setSettingError("workspace.server.port", "The port is used by another application; please change it"))
         activeConfigTab = "server"
         category = "network"
         detail = error.code
         break
       case "EADDRNOTAVAIL":
-        store.dispatch(setSettingError("server.hostname", "The hostname is not local address; only use hostnames/IPs associated with this machine"))
+        store.dispatch(setSettingError("workspace.server.hostname", "The hostname is not local address; only use hostnames/IPs associated with this machine"))
         activeConfigTab = "server"
         category = "network"
         detail = error.code

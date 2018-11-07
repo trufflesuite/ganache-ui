@@ -3,12 +3,12 @@ import React, { Component } from 'react'
 import OnlyIf from '../../../components/only-if/OnlyIf'
 
 const VALIDATIONS = {
-  "server.total_accounts": {
+  "workspace.server.total_accounts": {
     allowedChars: /^\d*$/,
     min: 1,
     max: 100
   },
-  "server.default_balance_ether": {
+  "workspace.server.default_balance_ether": {
     allowedChars: /^[0-9]*\.?[0-9]*$/,
     min: 0
   }
@@ -80,8 +80,8 @@ class AccountsScreen extends Component {
                 value={this.props.config.settings.workspace.server.default_balance_ether}
                 onChange={this.validateChange}
               />
-              {this.props.validationErrors["server.default_balance_ether"] &&
-                <p className="ValidationError">Must be a valid number that is at least {VALIDATIONS["server.default_balance_ether"].min}</p>}
+              {this.props.validationErrors["workspace.server.default_balance_ether"] &&
+                <p className="ValidationError">Must be a valid number that is at least {VALIDATIONS["workspace.server.default_balance_ether"].min}</p>}
             </div>
             <div className="RowItem">
               <p>The starting balance for accounts, in Ether.</p>
@@ -98,8 +98,8 @@ class AccountsScreen extends Component {
                 value={this.props.config.settings.workspace.server.total_accounts}
                 onChange={this.validateChange}
               />
-              {this.props.validationErrors["server.total_accounts"] &&
-                <p className="ValidationError">Must be &gt; {VALIDATIONS["server.total_accounts"].min} and &lt; {VALIDATIONS["server.total_accounts"].max}</p>}
+              {this.props.validationErrors["workspace.server.total_accounts"] &&
+                <p className="ValidationError">Must be &gt; {VALIDATIONS["workspace.server.total_accounts"].min} and &lt; {VALIDATIONS["workspace.server.total_accounts"].max}</p>}
             </div>
             <div className="RowItem">
               <p>Total number of Accounts to create and pre-fund.</p>
@@ -138,7 +138,7 @@ class AccountsScreen extends Component {
                   value={this.props.config.settings.workspace.server.mnemonic || ""}
                   onChange={this.validateChange}
                 />
-                {this.props.validationErrors["server.mnemonic"] &&
+                {this.props.validationErrors["workspace.server.mnemonic"] &&
                   <p>Must be at least 12 words long and only contain letters</p>}
               </div>
               <div className="RowItem">

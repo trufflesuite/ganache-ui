@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 
 const VALIDATIONS = {
-  "server.gasPrice": {
+  "workspace.server.gasPrice": {
     allowedChars: /^\d*$/,
     min: 1,
     max: Number.MAX_SAFE_INTEGER,
     canBeBlank: true
   },
-  "server.gasLimit": {
+  "workspace.server.gasLimit": {
     allowedChars: /^\d*$/,
     min: 1,
     max: Number.MAX_SAFE_INTEGER,
@@ -45,7 +45,7 @@ class ChainScreen extends Component {
       // Rerun validations now that value has been deleted
       this.validateChange({
         target: {
-          name: "server.fork",
+          name: "workspace.server.fork",
           value: ""
         }
       })
@@ -70,7 +70,7 @@ class ChainScreen extends Component {
                 value={this.props.config.settings.workspace.server.gasLimit}
                 onChange={this.validateChange}
               />
-              {this.props.validationErrors["server.gasLimit"] &&
+              {this.props.validationErrors["workspace.server.gasLimit"] &&
                 <p className="ValidationError">
                   Must be &ge; 1
                 </p>}
@@ -90,7 +90,7 @@ class ChainScreen extends Component {
                 value={this.props.config.settings.workspace.server.gasPrice}
                 onChange={this.validateChange}
               />
-              {this.props.validationErrors["server.gasPrice"] &&
+              {this.props.validationErrors["workspace.server.gasPrice"] &&
                 <p className="ValidationError">
                   Must be &ge; 1
                 </p>}

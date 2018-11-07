@@ -4,20 +4,20 @@ import OnlyIf from '../../../components/only-if/OnlyIf'
 import StyledSelect from '../../../components/styled-select/StyledSelect';
 
 const VALIDATIONS = {
-  "server.hostname": {
+  "workspace.server.hostname": {
     format: /(^localhost$)|(^\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b$)/,
   },
-  "server.port": {
+  "workspace.server.port": {
     allowedChars: /^\d*$/,
     min: 1025,
     max: 65535
   },
-  "server.network_id": {
+  "workspace.server.network_id": {
     allowedChars: /^\d*$/,
     min: 1,
     max: Number.MAX_SAFE_INTEGER
   },
-  "server.blockTime": {
+  "workspace.server.blockTime": {
     allowedChars: /^\d*$/,
     min: 1,
     max: 200,
@@ -44,7 +44,7 @@ class ServerScreen extends Component {
       // Rerun validations now that value has been deleted
       this.validateChange({
         target: {
-          name: "server.blockTime",
+          name: "workspace.server.blockTime",
           value: undefined
         }
       })
@@ -92,10 +92,10 @@ class ServerScreen extends Component {
                   })
                 })}
               </StyledSelect>
-              {this.props.validationErrors["server.hostname"] &&
+              {this.props.validationErrors["workspace.server.hostname"] &&
                 <p className="ValidationError">Must be a valid IP address or "localhost"</p>}
-              {!("server.hostname" in this.props.validationErrors) && this.props.config.validationErrors["server.hostname"] &&
-                <p className="ValidationError">{this.props.config.validationErrors["server.hostname"]}</p>}
+              {!("workspace.server.hostname" in this.props.validationErrors) && this.props.config.validationErrors["workspace.server.hostname"] &&
+                <p className="ValidationError">{this.props.config.validationErrors["workspace.server.hostname"]}</p>}
             </div>
             <div className="RowItem">
               <p>
@@ -119,10 +119,10 @@ class ServerScreen extends Component {
                 }}
               />
 
-              {this.props.validationErrors["server.port"] &&
+              {this.props.validationErrors["workspace.server.port"] &&
                 <p className="ValidationError">Must be &gt; 1000 and &lt; 65535.</p>}
-              {this.props.config.validationErrors["server.port"] &&
-                <p className="ValidationError">{this.props.config.validationErrors["server.port"]}</p>}
+              {this.props.config.validationErrors["workspace.server.port"] &&
+                <p className="ValidationError">{this.props.config.validationErrors["workspace.server.port"]}</p>}
             </div>
             <div className="RowItem">
               <p>
@@ -142,7 +142,7 @@ class ServerScreen extends Component {
                 value={this.props.config.settings.workspace.server.network_id}
                 onChange={this.validateChange}
               />
-              {this.props.validationErrors["server.network_id"] &&
+              {this.props.validationErrors["workspace.server.network_id"] &&
                 <p className="ValidationError">
                   Must be &gt; 1
                 </p>}
@@ -189,7 +189,7 @@ class ServerScreen extends Component {
                   value={this.props.config.settings.workspace.server.blockTime || 0}
                   onChange={this.validateChange}
                 />
-                {this.props.validationErrors["server.blockTime"] &&
+                {this.props.validationErrors["workspace.server.blockTime"] &&
                   <p className="ValidationError">Must be &gt; 1 and &lt; 200</p>}
               </div>
               <div className="RowItem">
@@ -211,11 +211,11 @@ class ServerScreen extends Component {
                   <input
                     type="checkbox"
                     name="workspace.server.vmErrorsOnRPCResponse"
-                    id="server.vmErrorsOnRPCResponse"
+                    id="workspace.server.vmErrorsOnRPCResponse"
                     defaultChecked={this.props.config.settings.workspace.server.vmErrorsOnRPCResponse}
                     onChange={this.props.handleInputChange}
                   />
-                  <label htmlFor="server.vmErrorsOnRPCResponse">ENABLED</label>
+                  <label htmlFor="workspace.server.vmErrorsOnRPCResponse">ENABLED</label>
                 </div>
               </div>
               <div className="RowItem">
