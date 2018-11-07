@@ -11,7 +11,7 @@ export function showConfigScreen(tab) {
 export const SET_SETTINGS = `${prefix}/SET_SETTINGS`
 export const setSettings = function(globalSettings, workspaceSettings) {
   return function(dispatch, getState) {
-    // Save settinsg to the store
+    // Save settings to the store
     dispatch({
       type: SET_SETTINGS,
       global: globalSettings,
