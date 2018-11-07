@@ -53,8 +53,15 @@
     justify-content: space-between;
     cursor: pointer;
 
-    &.StatusBadge {
+    .StatusBadge {
       align-self: center;
+      font-size: .75rem;
+      padding: 8px;
+      height: 28px;
+      border-radius: 25px;
+      background-color: var(--complimentary1);
+      color: white;
+      margin: auto;
     }
   }
 

@@ -58,9 +58,9 @@ class ContractCard extends Component {
             </div>
           </div>
 
-          <div className="RowItem StatusBadge">
-            <div className="Badge">
-              <div className="Label">{this.props.address !== "" && "DEPLOYED"}</div>
+          <div className="RowItem">
+            <div className="StatusBadge">
+              {this.props.address !== "" && "DEPLOYED"}
             </div>
           </div>
         </div>
