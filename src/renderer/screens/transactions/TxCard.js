@@ -19,7 +19,7 @@ class TxCard extends Component {
     super(props)
 
     this.state = {
-      hasDecodedInfo: typeof props.currentTransactionContract !== "undefined" && typeof props.currentTransactionData !== "undefined"
+      hasDecodedInfo: typeof props.transactions.currentTransactionContract !== "undefined" && typeof props.transactions.currentTransactionData !== "undefined"
     }
   }
   componentDidMount() {
