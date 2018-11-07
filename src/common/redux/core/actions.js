@@ -94,7 +94,6 @@ export const getBlockSubscription = function() {
     let subscription = await web3ActionCreator(dispatch, getState, "subscribe", ['newBlockHeaders'])
 
     subscription.on('data', blockHeader => {
-      console.log(`new block header for block ${blockHeader.number}`)
       let currentBlockNumber = getState().core.latestBlock
 
       if (blockHeader.number != currentBlockNumber) {
