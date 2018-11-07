@@ -4,6 +4,8 @@ const WsProvider = require("web3-providers-ws");
 const EventEmitter = require("events");
 const path = require("path");
 const { URL } = require("url");
+const keccak = require("keccak");
+const rlp = require("rlp");
 
 class ProjectWatcher extends EventEmitter {
   constructor() {
@@ -103,8 +105,7 @@ class ProjectWatcher extends EventEmitter {
           // check if one of our watched projects was deployed
           if (transaction.to === null && transaction.input === contract.bytecode) {
             // this contract was deployed in this contract
-            const receipt = await this.web3.eth.getTransactionReceipt(transaction.hash);
-            contract.address = receipt.contractAddress;
+            contract.address = this.web3.utils.toChecksumAddress("0x" + keccak('keccak256').update(rlp.encode([transaction.from, transaction.nonce])).digest('hex').substring(24));
             this.contractsByAddress[contract.address] = contract;
             this.emit("contract-deployed", {
               truffleDirectory: project.truffle_directory,
