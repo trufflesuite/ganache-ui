@@ -336,7 +336,7 @@ app.on('ready', () => {
 
         let projects = []
         for (let i = 0; i < workspaceSettings.projects.length; i++) {
-          projects.push(await truffleIntegration.getProjectDetails(workspaceSettings.projects[i]))
+          projects.push(await truffleIntegration.getProjectDetails(workspaceSettings.projects[i], workspaceSettings.server.network_id))
         }
 
         let tempWorkspace = {}
@@ -410,7 +410,7 @@ app.on('ready', () => {
 
         let projects = []
         for (let i = 0; i < workspaceSettings.projects.length; i++) {
-          projects.push(await truffleIntegration.getProjectDetails(workspaceSettings.projects[i]))
+          projects.push(await truffleIntegration.getProjectDetails(workspaceSettings.projects[i], workspaceSettings.server.network_id))
         }
 
         let tempWorkspace = {}

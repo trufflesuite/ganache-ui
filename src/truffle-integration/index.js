@@ -54,7 +54,7 @@ process.on("message", async function(message) {
       break;
     }
     case "project-details-request": {
-      const response = getProjectDetails(message.data);
+      const response = getProjectDetails(message.data.file, message.data.networkId);
 
       process.send({
         type: "project-details-response",

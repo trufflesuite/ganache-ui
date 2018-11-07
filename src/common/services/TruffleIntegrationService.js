@@ -30,7 +30,7 @@ class TruffleIntegrationService extends EventEmitter {
     })
     this.child.on('exit', this._exitHandler);
     this.child.stdout.on('data', (data) => {
-      //console.log(data.toString());
+      console.log(data.toString());
       // Remove all \r's and the final line ending
       //this.emit("stdout", data.toString().replace(/\r/g, "").replace(/\n$/, ""));
     });
@@ -71,7 +71,7 @@ class TruffleIntegrationService extends EventEmitter {
     }
   }
 
-  async getProjectDetails(projectConfigFile) {
+  async getProjectDetails(projectConfigFile, networkId) {
     return new Promise((resolve, reject) => {
       this.once("project-details-response", (details) => {
         if (typeof details === "object") {
@@ -84,7 +84,10 @@ class TruffleIntegrationService extends EventEmitter {
 
       this.child.send({
         type: "project-details-request",
-        data: projectConfigFile
+        data: {
+          file: projectConfigFile,
+          networkId
+        }
       });
     });
   }
