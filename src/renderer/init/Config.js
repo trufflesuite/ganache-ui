@@ -30,7 +30,7 @@ export function initConfig(store) {
     store.dispatch(clearAllSettingErrors())
   })
 
-  ipcRenderer.on(SET_SETTINGS, (event, settings) => {
-    store.dispatch(setSettings(settings))
+  ipcRenderer.on(SET_SETTINGS, (event, globalSettings, workspaceSettings) => {
+    store.dispatch(setSettings(globalSettings, workspaceSettings))
   })
 }
