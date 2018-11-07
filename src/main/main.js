@@ -313,6 +313,9 @@ app.on('ready', () => {
 
         mainWindow.webContents.send(SET_CURRENT_WORKSPACE, tempWorkspace)
 
+        const globalSettings = global.getAll()
+        mainWindow.webContents.send(SET_SETTINGS, globalSettings, tempWorkspace.settings.getAll())
+
         openConfigScreenOnStart = false
         chain.start()
 
@@ -346,7 +349,8 @@ app.on('ready', () => {
       continuouslySendNetworkInterfaces()
 
       const globalSettings = global.getAll()
-      mainWindow.webContents.send(SET_SETTINGS, globalSettings, {})
+      const workspaceSettings = workspace.settings.getAll()
+      mainWindow.webContents.send(SET_SETTINGS, globalSettings, workspaceSettings)
 
       mainWindow.webContents.send(SET_WORKSPACES, workspaceManager.getNonDefaultNames())
     })
@@ -375,6 +379,9 @@ app.on('ready', () => {
 
         mainWindow.webContents.send(SET_WORKSPACES, workspaceManager.getNonDefaultNames())
         mainWindow.webContents.send(SET_CURRENT_WORKSPACE, tempWorkspace)
+
+        const globalSettings = global.getAll()
+        mainWindow.webContents.send(SET_SETTINGS, globalSettings, workspaceSettings)
 
         openConfigScreenOnStart = false
 

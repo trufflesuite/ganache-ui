@@ -17,9 +17,6 @@ export const setSettings = function(globalSettings, workspaceSettings) {
       global: globalSettings,
       workspace: workspaceSettings
     })
-
-    // Then save them to to the settings file
-    dispatch(requestSaveSettings(globalSettings, workspaceSettings))
   }
 }
 

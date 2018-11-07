@@ -30,7 +30,8 @@ class FirstRunScreen extends Component {
       googleAnalyticsTracking: this.state.enableAnalytics
     })
 
-    this.props.dispatch(Config.setSettings(newGlobalSettings, this.props.config.settings.global))
+    this.props.dispatch(Config.setSettings(newGlobalSettings, this.props.config.settings.workspace))
+    this.props.dispatch(Config.requestSaveSettings(newGlobalSettings, this.props.config.settings.workspace))
     this.props.dispatch(push('/workspaces'))
   }
 
