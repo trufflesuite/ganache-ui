@@ -13,12 +13,8 @@
 }
 
 .ProjectContracts {
-  a {
-    &:first-child {
-      .ContractCard {
-        border-top: 1px solid #aaa;
-      }
-    }
+  .ContractCard:first-child {
+    border-top: 1px solid #aaa;
   }
 }
 
