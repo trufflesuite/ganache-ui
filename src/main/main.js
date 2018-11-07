@@ -341,8 +341,9 @@ app.on('ready', () => {
 
         let tempWorkspace = {}
         merge(tempWorkspace, { projects }, workspace)
+        delete tempWorkspace.contractCache
 
-        mainWindow.webContents.send(SET_CURRENT_WORKSPACE, tempWorkspace)
+        mainWindow.webContents.send(SET_CURRENT_WORKSPACE, tempWorkspace, workspace.contractCache.getAll())
 
         const globalSettings = global.getAll()
         mainWindow.webContents.send(SET_SETTINGS, globalSettings, tempWorkspace.settings.getAll())
@@ -374,7 +375,11 @@ app.on('ready', () => {
 
       workspace = workspaceManager.get(workspaceName)
 
-      mainWindow.webContents.send(SET_CURRENT_WORKSPACE, workspace)
+      let tempWorkspace = {}
+      merge(tempWorkspace, {}, workspace)
+      delete tempWorkspace.contractCache
+
+      mainWindow.webContents.send(SET_CURRENT_WORKSPACE, tempWorkspace, workspace.contractCache.getAll())
 
       openConfigScreenOnStart = true
       chain.start()
@@ -415,9 +420,10 @@ app.on('ready', () => {
 
         let tempWorkspace = {}
         merge(tempWorkspace, { projects }, workspace)
+        delete tempWorkspace.contractCache
 
         mainWindow.webContents.send(SET_WORKSPACES, workspaceManager.getNonDefaultNames())
-        mainWindow.webContents.send(SET_CURRENT_WORKSPACE, tempWorkspace)
+        mainWindow.webContents.send(SET_CURRENT_WORKSPACE, tempWorkspace, workspace.contractCache.getAll())
 
         const globalSettings = global.getAll()
         mainWindow.webContents.send(SET_SETTINGS, globalSettings, workspaceSettings)

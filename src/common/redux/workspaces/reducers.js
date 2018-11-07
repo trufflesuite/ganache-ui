@@ -42,8 +42,16 @@ export default function (state = initialState, action) {
           if (contract.networks && typeof contract.networks[networkId] !== "undefined") {
             contract.address = contract.networks[networkId].address
             contract.creationTxHash = contract.networks[networkId].transactionHash
-            contract.transactions = [] // TODO:
-            contract.events = [] // TODO:
+
+            if (action.contractCache[contract.address]) {
+              contract.transactions = action.contractCache[contract.address].transactions
+              contract.events = action.contractCache[contract.address].events
+            }
+            else {
+              contract.transactions = []
+              contract.events = []
+            }
+
             contract.projectIndex = i
             nextState.current.contracts[contract.address] = contract
           }

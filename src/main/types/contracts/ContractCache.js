@@ -3,10 +3,15 @@ import JsonStorage from '../json/JsonStorage'
 class ContractCache {
   constructor(directory) {
     this.storage = new JsonStorage(directory, 'ContractCache')
+
+    let obj = this.storage.getAll()
+    if (typeof obj !== "object") {
+      this.storage.setAll({})
+    }
   }
 
   setDirectory(directory) {
-    this.settings.setStorageDirectory(directory)
+    this.storage.setStorageDirectory(directory)
   }
 
   get(address) {
@@ -44,9 +49,11 @@ class ContractCache {
       obj = []
     }
 
-    obj.push(transactionHash)
+    if (obj.indexOf(transactionHash) === -1) {
+      obj.push(transactionHash)
 
-    this.storage.set(address + ".transactions", obj)
+      this.storage.set(address + ".transactions", obj)
+    }
   }
 
   addEvent(address, event) {
@@ -61,8 +68,12 @@ class ContractCache {
     this.storage.set(address + ".events", obj)
   }
 
-  getAll () {
-    return this.storage.getAll()
+  getAll() {
+    return this.storage.getAll() || {}
+  }
+
+  setAll(obj) {
+    return this.storage.setAll(obj)
   }
 }
 

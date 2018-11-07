@@ -18,8 +18,8 @@ export function initWorkspaces(store) {
     store.dispatch(setWorkspaces(workspaceNames))
   })
 
-  ipcRenderer.on(SET_CURRENT_WORKSPACE, (event, workspace) => {
-    store.dispatch(setCurrentWorkspace(workspace))
+  ipcRenderer.on(SET_CURRENT_WORKSPACE, (event, workspace, contractCache) => {
+    store.dispatch(setCurrentWorkspace(workspace, contractCache))
   })
 
   ipcRenderer.on(CONTRACT_DEPLOYED, (event, data) => {

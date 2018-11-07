@@ -73,6 +73,9 @@ class Workspace {
     this.settings.set("randomizeMnemonicOnStart", false)
     this.settings.set("server.mnemonic", mnemonic)
 
+    this.contractCache.setDirectory(this.workspaceDirectory)
+    this.contractCache.setAll(this.contractCache.getAll())
+
     if (chaindataDirectory && chaindataDirectory !== this.chaindataDirectory) {
       fse.copySync(chaindataDirectory, this.chaindataDirectory)
     }

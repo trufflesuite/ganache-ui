@@ -68,8 +68,8 @@ export const saveWorkspace = function(name) {
 }
 
 export const SET_CURRENT_WORKSPACE = `${prefix}/SET_CURRENT_WORKSPACE`
-export const setCurrentWorkspace = function(workspace) {
-  return {type: SET_CURRENT_WORKSPACE, workspace}
+export const setCurrentWorkspace = function(workspace, contractCache) {
+  return {type: SET_CURRENT_WORKSPACE, workspace, contractCache}
 }
 
 export const CONTRACT_DEPLOYED = `${prefix}/CONTRACT_DEPLOYED`
