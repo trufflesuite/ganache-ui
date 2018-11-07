@@ -123,14 +123,29 @@ app.on('ready', () => {
 
     truffleIntegration.on("contract-deployed", (data) => {
       mainWindow.webContents.send(CONTRACT_DEPLOYED, data)
+
+      if (workspace && workspace.contractCache) {
+        workspace.contractCache.addContract(data.contractAddress)
+      }
     })
 
     truffleIntegration.on("contract-transaction", (data) => {
       mainWindow.webContents.send(CONTRACT_TRANSACTION, data)
+
+      if (workspace && workspace.contractCache) {
+        workspace.contractCache.addTransaction(data.contractAddress, data.transactionHash)
+      }
     })
 
     truffleIntegration.on("contract-event", (data) => {
       mainWindow.webContents.send(CONTRACT_EVENT, data)
+
+      if (workspace && workspace.contractCache) {
+        workspace.contractCache.addEvent(data.contractAddress, {
+          transactionHash: data.transactionHash,
+          logIndex: data.logIndex
+        })
+      }
     })
 
     truffleIntegration.on("error", (data) => {

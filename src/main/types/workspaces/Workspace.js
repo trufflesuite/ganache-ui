@@ -2,6 +2,7 @@ import path from 'path'
 import fse from 'fs-extra'
 
 import WorkspaceSettings from '../settings/WorkspaceSettings'
+import ContractCache from "../contracts/ContractCache"
 
 class Workspace {
   constructor(name, configDirectory) {
@@ -12,6 +13,8 @@ class Workspace {
     // This doesn't go in the init() function because the init is used for initializing
     //   the other parameters (and when the workspaced is "Saved As" something else)
     this.settings = new WorkspaceSettings(this.workspaceDirectory, this.chaindataDirectory)
+
+    this.contractCache = new ContractCache(this.workspaceDirectory)
   }
 
   init(configDirectory) {
