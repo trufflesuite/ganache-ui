@@ -378,7 +378,7 @@ app.on('ready', () => {
 
         openConfigScreenOnStart = false
 
-        chain.start()
+        chain.startServer(workspaceSettings)
 
         // send the interfaces again once on restart
         sendNetworkInterfaces()
