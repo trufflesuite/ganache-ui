@@ -33,6 +33,22 @@ export default function (state = initialState, action) {
       nextState.current = cloneDeep(action.workspace)
       nextState.current.shownContract = cloneDeep(initialShownContract)
       nextState.current.contracts = {}
+
+      for (let i = 0; i < nextState.current.projects.length; i++) {
+        const project = nextState.current.projects[i]
+        for (let j = 0; j < project.contracts.length; j++) {
+          const contract = project.contracts[j]
+          const networkId = nextState.current.settings.settings.obj.obj.server.network_id
+          if (contract.networks && typeof contract.networks[networkId] !== "undefined") {
+            contract.address = contract.networks[networkId].address
+            contract.creationTxHash = contract.networks[networkId].transactionHash
+            contract.transactions = [] // TODO:
+            contract.events = [] // TODO:
+            contract.projectIndex = i
+            nextState.current.contracts[contract.address] = contract
+          }
+        }
+      }
       break
     case CONTRACT_DEPLOYED:
       if (typeof nextState.current.projects !== "undefined") {
