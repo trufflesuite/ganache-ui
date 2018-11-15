@@ -1,5 +1,5 @@
 image:
-  - Visual Studio 2017
+  - Visual Studio 2015
 
 platform:
   - x64
@@ -27,7 +27,6 @@ install:
           appveyor-tools\secure-file -decrypt certs/cert.pfx.enc -secret $env:CERT_PASSPHRASE;
         }
   - ps: Install-Product node $env:nodejs_version x64
-  - ps: npm install -g windows-build-tools
   - set CI=true
   - npm install -g npm@latest
   - set PATH=%APPDATA%\npm;%PATH%
