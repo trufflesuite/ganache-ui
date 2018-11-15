@@ -11,9 +11,9 @@ cache:
 environment:
   APPVEYOR_SAVE_CACHE_ON_ERROR: true
   CSC_KEY_PASSWORD:
-    secure: Cqeajvouxb90cluiDv/iJuLkFHwNERXSxjoXg7FzZZ4=
+    secure: jl/2OtSWSLCWuJKJwAkSIf2ilBDiLYd1RMKaBmyUuBQ=
   CERT_PASSPHRASE:
-    secure: ppGahvnNpvjY6+zSIe6QJdMM2OArsgn1qb2RQX4SXMmEamtJM9/fY03rTBxBVFgoRNJftJMD9I6RYLFBzdtwQw==
+    secure: kMG4K6eKtrVcehlpLDdxX8DAe1gvzaKcdn0HR2IdtgG4+eFqczuddRdkq18ZSzqeDTA8/CxaY8p13NwRLP0EGNztobwSwE/WKq7Aa+MeRFc=
   GH_TOKEN:
     secure: w01ayU0xx5aYR68/rJbAtdtfs+6bXFhYhZkRf4aeY8ca2qikM0UWiC7G5xXeUkz9
   matrix:
