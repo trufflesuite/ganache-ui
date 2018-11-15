@@ -5,11 +5,11 @@ platform:
   - x64
 
 cache:
-  - node_modules
-  - '%USERPROFILE%\.electron'
+  #- node_modules
+  #- '%USERPROFILE%\.electron'
 
 environment:
-  APPVEYOR_SAVE_CACHE_ON_ERROR: true
+  #APPVEYOR_SAVE_CACHE_ON_ERROR: true
   CSC_KEY_PASSWORD:
     secure: jl/2OtSWSLCWuJKJwAkSIf2ilBDiLYd1RMKaBmyUuBQ=
   CERT_PASSPHRASE:
