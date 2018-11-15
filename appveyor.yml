@@ -10,7 +10,7 @@ cache:
 
 environment:
   CSC_KEY_PASSWORD:
-    secure: jl/2OtSWSLCWuJKJwAkSIf2ilBDiLYd1RMKaBmyUuBQ=
+    secure: 6HPJFbG4UcVgagENR42Pc1bshVrRsoMxt0xDKrR1eCs=
   CERT_PASSPHRASE:
     secure: kMG4K6eKtrVcehlpLDdxX8DAe1gvzaKcdn0HR2IdtgG4+eFqczuddRdkq18ZSzqeDTA8/CxaY8p13NwRLP0EGNztobwSwE/WKq7Aa+MeRFc=
   GH_TOKEN:

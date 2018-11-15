@@ -151,7 +151,7 @@
     "chai": "^3.5.0",
     "concurrently": "^3.1.0",
     "cross-env": "^3.1.4",
-    "electron-builder": "^20.28.2",
+    "electron-builder": "20.28.2",
     "electron-compilers": "^5.9.0",
     "electron-debug": "^1.1.0",
     "electron-devtools-installer": "^2.0.1",
