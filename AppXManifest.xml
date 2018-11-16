@@ -6,7 +6,7 @@
   <Identity Name="Ganache"
     ProcessorArchitecture="x64"
     Publisher="CN=Consensys Inc, O=Consensys Inc, L=New York, S=New York, C=US"
-    Version="1.1.0.0" />
+    Version="1.2.3.0" />
   <Properties>
     <DisplayName>Ganache</DisplayName>
     <PublisherDisplayName>Truffle</PublisherDisplayName>
