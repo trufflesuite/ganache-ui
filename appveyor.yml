@@ -5,7 +5,8 @@ platform:
   - x64
 
 cache:
-  - node_modules
+  - node_modules -> package-lock.json
+  - '%APPDATA%\npm-cache'
   - '%USERPROFILE%\.electron'
 
 environment:
