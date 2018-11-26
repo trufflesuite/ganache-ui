@@ -56,10 +56,15 @@ class TruffleIntegrationService extends EventEmitter {
         resolve();
       });
 
-      this.child.send({
-        type: "watcher-stop",
-        data: null
-      });
+      if (this.child !== null) {
+        this.child.send({
+          type: "watcher-stop",
+          data: null
+        });
+      }
+      else {
+        resolve();
+      }
     })
   }
 
@@ -82,21 +87,28 @@ class TruffleIntegrationService extends EventEmitter {
         }
       })
 
-      this.child.send({
-        type: "project-details-request",
-        data: {
-          file: projectConfigFile,
-          networkId
-        }
-      });
+      if (this.child !== null) {
+        this.child.send({
+          type: "project-details-request",
+          data: {
+            file: projectConfigFile,
+            networkId
+          }
+        });
+      }
+      else {
+        reject("Not connected to child process");
+      }
     });
   }
 
   setWeb3(url) {
-    this.child.send({
-      type: "web3-provider",
-      data: url
-    });
+    if (this.child !== null) {
+      this.child.send({
+        type: "web3-provider",
+        data: url
+      });
+    }
   }
 
   async getContractState(contract, contracts, block) {
@@ -110,10 +122,15 @@ class TruffleIntegrationService extends EventEmitter {
         }
       });
 
-      this.child.send({
-        type: "decode-contract-request",
-        data: { contract, contracts, block }
-      });
+      if (this.child !== null) {
+        this.child.send({
+          type: "decode-contract-request",
+          data: { contract, contracts, block }
+        });
+      }
+      else {
+        reject("Not connected to child process");
+      }
     });
   }
 
@@ -128,10 +145,15 @@ class TruffleIntegrationService extends EventEmitter {
         }
       });
 
-      this.child.send({
-        type: "decode-event-request",
-        data: { contract, contracts, log }
-      });
+      if (this.child !== null) {
+        this.child.send({
+          type: "decode-event-request",
+          data: { contract, contracts, log }
+        });
+      }
+      else {
+        reject("Not connected to child process");
+      }
     });
   }
 
@@ -146,10 +168,15 @@ class TruffleIntegrationService extends EventEmitter {
         }
       });
 
-      this.child.send({
-        type: "decode-transaction-request",
-        data: { contract, contracts, transaction }
-      });
+      if (this.child !== null) {
+        this.child.send({
+          type: "decode-transaction-request",
+          data: { contract, contracts, transaction }
+        });
+      }
+      else {
+        reject("Not connected to child process");
+      }
     });
   }
 }
