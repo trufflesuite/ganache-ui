@@ -335,8 +335,18 @@ app.on('ready', () => {
         GoogleAnalytics.reportWorkspaceSettings(workspaceSettings)
 
         let projects = []
-        for (let i = 0; i < workspaceSettings.projects.length; i++) {
-          projects.push(await truffleIntegration.getProjectDetails(workspaceSettings.projects[i], workspaceSettings.server.network_id))
+        if (workspace.name === null) {
+          // default workspace shouldn't have pre-existing projects
+          // this logic only should get called when the user presses
+          // the default workspace button. the restart after loading
+          // the projects should trigger the REQUEST_SERVER_RESTART
+          // logic
+          workspace.settings.set("projects", [])
+        }
+        else {
+          for (let i = 0; i < workspaceSettings.projects.length; i++) {
+            projects.push(await truffleIntegration.getProjectDetails(workspaceSettings.projects[i], workspaceSettings.server.network_id))
+          }
         }
 
         let tempWorkspace = {}
