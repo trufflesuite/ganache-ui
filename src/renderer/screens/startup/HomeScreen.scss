@@ -1,4 +1,4 @@
-.WorkspacesScreenContainer {
+.HomeScreenContainer {
   overflow: auto;
   background-color: var(--app-statusbar-background);
   width: 100%;
@@ -13,7 +13,7 @@
     }
   }
 
-  .WorkspacesScreen {
+  .HomeScreen {
     padding: 4rem;
     display: flex;
     flex-direction: column;
@@ -56,74 +56,98 @@
         }
       }
     }
+
     .WorkspacesBody {
       margin: auto 0;
+      text-align: center;
+
+      .WelcomeImage {
+        width: 20rem;
+        max-width: 35%;
+        margin-bottom: 1.3rem;
+      }
+
       .title {
         text-transform: uppercase;
         color: #fff;
         font-size: 2rem;
-        margin: 0 0 .5rem;
-      }
-      .subTitle {
-        opacity: .5;
-        margin: 0 0 .5rem;
-        font-family: "Fira Code Regular";
-        font-weight: bold;
-      }
-      section {
-        margin-top: 1.75rem;
-        color: var(--app-navbar-text);
-        display: flex;
-        & > * {
-          &:first-child {
-            margin-right: 1rem;
-          }
-          &:last-child {
-            margin-left: 1rem;
-          }
 
-          flex-grow: 1;
-          flex-basis: 0;
+        &.left {
+          text-align: left;
         }
+      }
+
+      .subTitle {
+        color: #fff;
+        font-size: 1.3rem;
+        font-family: "Fira Code Regular";
+        margin-top: 0.8rem;
+      }
+
+      section {
+        margin-top: 1.3rem;
+        color: var(--app-navbar-text);
+        & > * {
+          max-width: 37rem;
+          margin: auto;
+        }
+
         ul {
-          margin: 0;
+          margin: 0 0 1.5rem 0;
           list-style: none;
-          padding: 0;
+          padding: 1rem;
+          background-color: #fbf1ec;
+          border-radius: .3rem;
+
           button {
-            background: transparent;
+            background-color: transparent;
             margin-bottom: 1rem;
             display: block;
-            border-radius: .4rem;
+            border-radius: .3rem;
             padding: 1.25rem calc(1.5rem + 26px) 1.25rem 1.2rem;
-            border: solid 2px var(--app-button-primary-background-color);
-            color: #fff;
+            color: var(--app-button-primary-background-color);
             position: relative;
             height: auto;
             line-height: initial;
             width: 100%;
             text-align: left;
             text-transform: none;
-            font-size: 1.1rem;
+            font-size: 1.35rem;
             font-family: "Fira Sans";
             font-weight: normal;
-            svg {
-              position: absolute;
-              margin: 0;
-              padding: 0;
-              width: 26px;
-              right: 1rem;
-              top: 50%;
-              transform: translateY(-50%);
-              opacity: 0;
-              transition: opacity .3s;
+
+            & > * {
+              display: inline-block;
             }
+
+            &:last-child {
+              margin-bottom: 0;
+            }
+
+            .DeleteWorkspace {
+              opacity: 0;
+              width: 1.3rem;
+              vertical-align: middle;
+              transition: all .3s;
+              position: absolute;
+              right: 1rem;
+            }
+
             &:hover, &:focus, &:active {
-              background: var(--app-button-primary-background-color);
-              svg {
+              color: #fbf1ec;
+              background: #5f474e;
+
+              .DeleteWorkspace {
                 opacity: 1;
+
+                &:hover, &:focus {
+                  color: var(--app-statusbar-background);
+                  filter: brightness(120%);
+                }
               }
             }
           }
+
           p {
             font-family: "Fira Code Regular";
             font-weight: bold;
@@ -132,32 +156,51 @@
             min-width: 325px;
           }
         }
-        .right button {
-          font-family: "Fira Sans SemiBold";
-          background: var(--app-button-primary-color);
-          width: 100%;
-          margin-bottom: 2rem;
-          display: block;
-          height: auto;
-          padding: 2.5rem 1.75rem;
-          font-size: 2em;
-          border-radius: .4rem;
-          color: var(--app-statusbar-background);
 
-          &:last-child {
-            margin-bottom: 0;
+        .bottom {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+
+          span {
+            flex-grow: 0.075;
+            flex-basis: 0;
           }
 
-          &:hover, &:focus, &:focus {
+          button {
+            font-family: "Fira Sans SemiBold";
+            background: var(--app-button-primary-color);
+            display: block;
+            height: auto;
+            padding: 1.3rem 1.75rem;
+            font-size: 1.5em;
+            border-radius: .4rem;
             color: var(--app-statusbar-background);
-            filter: brightness(120%);
-          }
+            flex-grow: 1;
+            flex-basis: 0;
+            max-width: 20rem;
+            margin-bottom: 1rem;
+            flex-shrink: 0;
 
-          svg {
-            vertical-align: top;
-            height: 32px;
-            margin-right: .75rem;
-            fill:  var(--app-statusbar-background);
+            &:first-child {
+              margin-right: 0.5rem;
+            }
+
+            &:last-child {
+              margin-left: 0.5rem;
+            }
+
+            &:hover, &:focus, &:active {
+              color: var(--app-statusbar-background);
+              filter: brightness(120%);
+            }
+
+            svg {
+              vertical-align: top;
+              height: 32px;
+              margin-right: .75rem;
+              fill:  var(--app-statusbar-background);
+            }
           }
         }
       }

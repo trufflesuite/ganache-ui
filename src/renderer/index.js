@@ -25,7 +25,7 @@ import EventDetailsScreen from './screens/event-details/EventDetailsScreen'
 
 import NotFoundScreen from './screens/not-found/NotFoundScreen'
 import TitleScreen from './screens/title/TitleScreen'
-import WorkspacesScreen from './screens/startup/WorkspacesScreen'
+import HomeScreen from './screens/startup/HomeScreen'
 import FirstRunScreen from './screens/first-run/FirstRunScreen'
 import ContractsScreen from './screens/contracts/ContractsScreen'
 import LoaderScreen from './screens/loader/LoaderScreen'
@@ -40,7 +40,7 @@ initRenderer(store)
 // function, so that hot module reloading doesn't cause issues with react-router.
 const routes = <Route>
   <Route path='/title' component={TitleScreen} />
-  <Route path='/workspaces' component={WorkspacesScreen} />
+  <Route path='/workspaces' component={HomeScreen} />
   <Route path="/first_run" component={FirstRunScreen} />
   <Route path="/loader" component={LoaderScreen} />
   <Route path="/" component={AppShell}>
@@ -108,7 +108,7 @@ const stylesheets = [
   "./screens/event-details/EventDetailsScreen.scss",
   "./screens/event-details/EncodedEventDetails.scss",
   "./screens/event-details/DecodedEventDetails.scss",
-  "./screens/startup/WorkspacesScreen.scss",
+  "./screens/startup/HomeScreen.scss",
   "./screens/loader/LoaderScreen.scss",
 ] 
 

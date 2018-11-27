@@ -67,6 +67,15 @@ export const saveWorkspace = function(name) {
   }
 }
 
+export const DELETE_WORKSPACE = `${prefix}/DELETE_WORKSPACE`
+export const deleteWorkspace = function(name) {
+  return function(dispatch, getState) {
+    dispatch({type: DELETE_WORKSPACE, name})
+
+    ipcRenderer.send(DELETE_WORKSPACE, name)
+  }
+}
+
 export const SET_CURRENT_WORKSPACE = `${prefix}/SET_CURRENT_WORKSPACE`
 export const setCurrentWorkspace = function(workspace, contractCache) {
   return {type: SET_CURRENT_WORKSPACE, workspace, contractCache}
