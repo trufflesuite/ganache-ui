@@ -77,6 +77,7 @@ class AccountsScreen extends Component {
               <input
                 name="workspace.server.default_balance_ether"
                 type="text"
+                data-type="number"
                 value={this.props.config.settings.workspace.server.default_balance_ether}
                 onChange={this.validateChange}
               />

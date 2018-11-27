@@ -129,6 +129,15 @@ class ConfigScreen extends PureComponent {
         break;
     }
 
+    if (target.attributes["data-type"]) {
+      switch (target.attributes["data-type"].value) {
+        case "number": {
+          value = parseFloat(target.value)
+          break
+        }
+      }
+    }
+
     var keys = name.split(".")
     var parent = this.state.config.settings
 
