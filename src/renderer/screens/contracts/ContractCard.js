@@ -18,7 +18,7 @@ class ContractCard extends Component {
           value: "OK"
         }],
         "Contract Not Deployed",
-        "This contract is not deployed yet. Please deploy this contract to see more info"
+        "This contract is not deployed yet. Deploy this contract to see more info."
       )
 
       this.props.dispatch(ModalDetails.actions.setModalError(modalDetails))

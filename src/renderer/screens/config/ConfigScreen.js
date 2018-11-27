@@ -247,7 +247,8 @@ class ConfigScreen extends PureComponent {
       validationErrors: this.state.validationErrors,
       addWorkspaceProject: this.addWorkspaceProject,
       removeWorkspaceProject: this.removeWorkspaceProject,
-      workspaces: this.props.workspaces
+      workspaces: this.props.workspaces,
+      dispatch: this.props.dispatch
     })
 
     return (
