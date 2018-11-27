@@ -129,7 +129,7 @@ class ConfigScreen extends PureComponent {
         break;
     }
 
-    if (target.attributes["data-type"]) {
+    if (typeof target.attributes !== "undefined" && target.attributes["data-type"]) {
       switch (target.attributes["data-type"].value) {
         case "number": {
           value = parseFloat(target.value)
