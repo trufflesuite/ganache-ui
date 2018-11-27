@@ -5,6 +5,7 @@ import path from 'path'
 import * as os from 'os'
 import merge from "lodash.merge"
 import ethagen from "ethagen"
+import moniker from "moniker"
 
 const isDevMode = process.execPath.match(/[\\/]electron/);
 
@@ -385,7 +386,7 @@ app.on('ready', () => {
       }
 
       const defaultWorkspace = workspaceManager.get(null)
-      const workspaceName = Date.now().toString()
+      const workspaceName = moniker.choose()
       const wallet = new ethagen({entropyBits: 128})
       defaultWorkspace.saveAs(workspaceName, null, workspaceManager.directory, wallet.mnemonic)
 

@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router'
 
+import moniker from "moniker"
+
 import connect from '../helpers/connect'
 import * as Search from '../../../common/redux/search/actions'
 import { setSystemError } from '../../../common/redux/core/actions'
@@ -108,7 +110,7 @@ class TopNavbar extends Component {
   }
 
   handleSaveWorkspacePress(e) {
-    this.props.dispatch(saveWorkspace(Date.now().toString()))
+    this.props.dispatch(saveWorkspace(moniker.choose()))
   }
 
   _renderSnapshotControls() {
