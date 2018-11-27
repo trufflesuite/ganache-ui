@@ -20,35 +20,40 @@ class ChainService extends EventEmitter {
   }
 
   start() {
-    let chainPath = path.join(__dirname, "../../chain/", "chain.js")
-    const options = {
-      stdio: [ 'pipe', 'pipe', 'pipe', 'ipc' ]
-    };
-    this.child = fork(chainPath, [], options)
-    this.child.on('message', (message) => {
-      if (message.type == "process-started") {
-        this.emit("start")
-      }
-      if (message.type == "server-started") {
-        this.serverStarted = true
-      }
-      if (message.type == "server-stopped") {
-        this.serverStarted = false
-      }
-      this.emit(message.type, message.data)
-    })
-    this.child.on('error', (error) => {
-      this.emit("error", error)
-    })
-    this.child.on('exit', this._exitHandler);
-    this.child.stdout.on('data', (data) => {
-      // Remove all \r's and the final line ending
-      this.emit("stdout", data.toString().replace(/\r/g, "").replace(/\n$/, ""))
-    });
-    this.child.stderr.on('data', (data) => {
-      // Remove all \r's and the final line ending
-      this.emit("stderr", data.toString().replace(/\r/g, "").replace(/\n$/, ""))
-    });
+    if (this.child === null) {
+      let chainPath = path.join(__dirname, "../../chain/", "chain.js")
+      const options = {
+        stdio: [ 'pipe', 'pipe', 'pipe', 'ipc' ]
+      };
+      this.child = fork(chainPath, [], options)
+      this.child.on('message', (message) => {
+        if (message.type == "process-started") {
+          this.emit("start")
+        }
+        if (message.type == "server-started") {
+          this.serverStarted = true
+        }
+        if (message.type == "server-stopped") {
+          this.serverStarted = false
+        }
+        this.emit(message.type, message.data)
+      })
+      this.child.on('error', (error) => {
+        this.emit("error", error)
+      })
+      this.child.on('exit', this._exitHandler);
+      this.child.stdout.on('data', (data) => {
+        // Remove all \r's and the final line ending
+        this.emit("stdout", data.toString().replace(/\r/g, "").replace(/\n$/, ""))
+      });
+      this.child.stderr.on('data', (data) => {
+        // Remove all \r's and the final line ending
+        this.emit("stderr", data.toString().replace(/\r/g, "").replace(/\n$/, ""))
+      });
+    }
+    else {
+      this.emit("start")
+    }
   }
   
   startServer(settings) {

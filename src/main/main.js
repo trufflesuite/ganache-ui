@@ -86,14 +86,6 @@ process.on('unhandledRejection', err => {
   }
 })
 
-app.on('window-all-closed', () => {
-  // don't quit the app before the updater can do its thing
-  const service = getAutoUpdateService()
-  if (service == null || !service.isRestartingForUpdate) {
-    app.quit()
-  }
-})
-
 app.setName('Ganache')
 
 const getIconPath = () => {
@@ -120,6 +112,26 @@ app.on('ready', () => {
     const workspaceManager = new WorkspaceManager(app.getPath('userData'))
     let workspace
     let openConfigScreenOnStart = false
+
+    app.on('window-all-closed', async () => {
+      // don't quit the app before the updater can do its thing
+      const service = getAutoUpdateService()
+      if (service == null || !service.isRestartingForUpdate) {
+        mainWindow = null
+  
+        if (chain && chain.isServerStarted()) {
+          await chain.stopServer()
+        }
+  
+        if (truffleIntegration) {
+          await truffleIntegration.stopWatching()
+        }
+  
+        chain.stopProcess()
+        truffleIntegration.stopProcess()
+        app.quit()
+      }
+    })
 
     truffleIntegration.on("contract-deployed", (data) => {
       mainWindow.webContents.send(CONTRACT_DEPLOYED, data)
@@ -172,10 +184,6 @@ app.on('ready', () => {
     })
 
     truffleIntegration.start()
-
-    app.on('will-quit', function () {
-      chain.stopProcess();
-    });
 
     global.bootstrap()
     workspaceManager.bootstrap()
