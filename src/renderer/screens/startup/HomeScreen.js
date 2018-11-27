@@ -42,13 +42,13 @@ class HomeScreen extends Component {
           this.props.dispatch(deleteWorkspace(workspaceName))
           modal.close()
         },
-        value: "Delete"
+        value: "Remove"
       },
       {
         value: "Cancel"
       }],
-      "Delete Workspace?",
-      `Are you sure you want to delete the '${workspaceName}' workspace? Your project sources will not be deleted, but you will lose any chaindata and workspace configuration.`
+      `"Remove ${workspaceName} Workspace?`,
+      `Removing the ${workspaceName} workspace will delete its associated chain, including any deployment, transactions, and event history. Your project source code will not be deleted.`
     )
 
     this.props.dispatch(ModalDetails.actions.setModalError(modalDetails))
