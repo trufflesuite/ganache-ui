@@ -279,25 +279,46 @@ app.on('ready', () => {
       initAutoUpdates(globalSettings, mainWindow)
     })
 
-    ipcMain.on(SAVE_WORKSPACE, async (event, name, mnemonic) => {
+    ipcMain.on(SAVE_WORKSPACE, async (event, workspaceName, mnemonic) => {
+      if (chain.isServerStarted()) {
+        await chain.stopServer()
+      }
+
+      if (truffleIntegration) {
+        await truffleIntegration.stopWatching()
+      }
+
       if (workspace) {
-        if (chain.isServerStarted()) {
-          await chain.stopServer()
-        }
-
-        if (truffleIntegration) {
-          await truffleIntegration.stopWatching()
-        }
-
         const chaindataLocation = workspace.chaindataDirectory || await chain.getDbLocation()
 
-        workspace.saveAs(name, chaindataLocation, workspaceManager.directory, mnemonic)
+        workspace.saveAs(workspaceName, chaindataLocation, workspaceManager.directory, mnemonic)
+      }
+      else {
+        const defaultWorkspace = workspaceManager.get(null)
+
+        defaultWorkspace.saveAs(workspaceName, null, workspaceManager.directory, mnemonic)
       }
 
       workspaceManager.bootstrap()
 
+      workspace = workspaceManager.get(workspaceName)
+      const workspaceSettings = workspace.settings.getAll()
+
+      let tempWorkspace = {}
+      merge(tempWorkspace, {}, workspace)
+      delete tempWorkspace.contractCache
+
+      mainWindow.webContents.send(SET_CURRENT_WORKSPACE, tempWorkspace, workspace.contractCache.getAll())
+
+      openConfigScreenOnStart = true
+      chain.startServer(workspaceSettings)
+
+      // this sends the network interfaces to the renderer process for
+      //  enumering in the config screen. it sends repeatedly
+      continuouslySendNetworkInterfaces()
+
       const globalSettings = global.getAll()
-      mainWindow.webContents.send(SET_SETTINGS, globalSettings, {})
+      mainWindow.webContents.send(SET_SETTINGS, globalSettings, workspaceSettings)
 
       mainWindow.webContents.send(SET_WORKSPACES, workspaceManager.getNonDefaultNames())
     })
