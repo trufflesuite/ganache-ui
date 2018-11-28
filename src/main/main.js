@@ -461,6 +461,12 @@ app.on('ready', () => {
           await truffleIntegration.stopWatching()
         }
 
+        if (openConfigScreenOnStart) {
+          // we just made a new workspace. we need to reset the chaindata since we initialized it
+          // when started the configuration process
+          workspace.resetChaindata();
+        }
+
         const workspaceSettings = workspace.settings.getAll()
 
         let projects = []
