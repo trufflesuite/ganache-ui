@@ -69,7 +69,7 @@ class HomeScreen extends Component {
       workspaces = this.props.workspaces.names.map((workspaceName, i) => {
         return (
           <li key={workspaceName}>
-            <button autoFocus={i === 0 ? "autofocus": false} onClick={this.selectWorkspace.bind(this)}>
+            <button onClick={this.selectWorkspace.bind(this)}>
               <span>{workspaceName}</span>
               <div className="DeleteWorkspace" onClick={this.handleDeleteWorkspace.bind(this)}>
                 <TrashIcon />
