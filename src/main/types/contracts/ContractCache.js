@@ -5,7 +5,7 @@ class ContractCache {
     this.storage = new JsonStorage(directory, 'ContractCache')
 
     let obj = this.storage.getAll()
-    if (typeof obj !== "object") {
+    if (obj === null || typeof obj !== "object") {
       this.storage.setAll({})
     }
   }
