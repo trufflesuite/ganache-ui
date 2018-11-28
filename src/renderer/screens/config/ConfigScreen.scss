@@ -324,4 +324,17 @@
       top: -0.5em;
     }
   }
+
+  .Notice {
+    background: #ddd;
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .Warning {
+    font-size: 24px;
+    vertical-align: middle;
+  }
 }
