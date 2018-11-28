@@ -62,7 +62,7 @@ class ContractCard extends Component {
           <div className="RowItem">
             <OnlyIf test={this.props.address !== ""}>
               <div className="StatusBadge">
-                "DEPLOYED"
+                DEPLOYED
               </div>
             </OnlyIf>
           </div>
