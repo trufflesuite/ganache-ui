@@ -17,7 +17,6 @@ import Spinner from '../../components/spinner/Spinner'
 import Logo from '../../../../Logo.svg'
 import ChainIcon from '../../icons/chain.svg'
 import MenuIcon from '../../icons/list.svg'
-import WelcomeImage from '../../icons/welcome-crane.svg'
 import TrashIcon from '../../icons/trash.svg'
 
 class HomeScreen extends Component {
@@ -110,9 +109,6 @@ class HomeScreen extends Component {
               <div className="WorkspacesBody">
                 <OnlyIf test={!hasWorkspaces}>
                   <section>
-                    <div className="WelcomeImage">
-                      <WelcomeImage />
-                    </div>
                     {title}
                     {subTitle}
                   </section>
