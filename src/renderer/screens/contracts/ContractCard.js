@@ -4,6 +4,7 @@ import { push } from 'react-router-redux'
 
 import connect from '../helpers/connect'
 import ModalDetails from "../../components/modal/ModalDetails"
+import OnlyIf from "../../components/only-if/OnlyIf";
 
 class ContractCard extends Component {
   handleClick() {
@@ -17,7 +18,7 @@ class ContractCard extends Component {
           value: "OK"
         }],
         "Contract Not Deployed",
-        "This contract is not deployed yet. Please deploy this contract to see more info"
+        "This contract is not deployed yet. Deploy this contract to see more info."
       )
 
       this.props.dispatch(ModalDetails.actions.setModalError(modalDetails))
@@ -59,9 +60,11 @@ class ContractCard extends Component {
           </div>
 
           <div className="RowItem">
-            <div className="StatusBadge">
-              {this.props.address !== "" && "DEPLOYED"}
-            </div>
+            <OnlyIf test={this.props.address !== ""}>
+              <div className="StatusBadge">
+                DEPLOYED
+              </div>
+            </OnlyIf>
           </div>
         </div>
       </div>

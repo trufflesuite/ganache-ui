@@ -5,6 +5,7 @@ import path from 'path'
 import * as os from 'os'
 import merge from "lodash.merge"
 import ethagen from "ethagen"
+import moniker from "moniker"
 
 const isDevMode = process.execPath.match(/[\\/]electron/);
 
@@ -87,14 +88,6 @@ process.on('unhandledRejection', err => {
   }
 })
 
-app.on('window-all-closed', () => {
-  // don't quit the app before the updater can do its thing
-  const service = getAutoUpdateService()
-  if (service == null || !service.isRestartingForUpdate) {
-    app.quit()
-  }
-})
-
 app.setName('Ganache')
 
 const getIconPath = () => {
@@ -121,6 +114,26 @@ app.on('ready', () => {
     const workspaceManager = new WorkspaceManager(app.getPath('userData'))
     let workspace
     let openConfigScreenOnStart = false
+
+    app.on('window-all-closed', async () => {
+      // don't quit the app before the updater can do its thing
+      const service = getAutoUpdateService()
+      if (service == null || !service.isRestartingForUpdate) {
+        mainWindow = null
+  
+        if (chain && chain.isServerStarted()) {
+          await chain.stopServer()
+        }
+  
+        if (truffleIntegration) {
+          await truffleIntegration.stopWatching()
+        }
+  
+        chain.stopProcess()
+        truffleIntegration.stopProcess()
+        app.quit()
+      }
+    })
 
     truffleIntegration.on("contract-deployed", (data) => {
       mainWindow.webContents.send(CONTRACT_DEPLOYED, data)
@@ -173,10 +186,6 @@ app.on('ready', () => {
     })
 
     truffleIntegration.start()
-
-    app.on('will-quit', function () {
-      chain.stopProcess();
-    });
 
     global.bootstrap()
     workspaceManager.bootstrap()
@@ -271,25 +280,46 @@ app.on('ready', () => {
       initAutoUpdates(globalSettings, mainWindow)
     })
 
-    ipcMain.on(SAVE_WORKSPACE, async (event, name, mnemonic) => {
+    ipcMain.on(SAVE_WORKSPACE, async (event, workspaceName, mnemonic) => {
+      if (chain.isServerStarted()) {
+        await chain.stopServer()
+      }
+
+      if (truffleIntegration) {
+        await truffleIntegration.stopWatching()
+      }
+
       if (workspace) {
-        if (chain.isServerStarted()) {
-          await chain.stopServer()
-        }
-
-        if (truffleIntegration) {
-          await truffleIntegration.stopWatching()
-        }
-
         const chaindataLocation = workspace.chaindataDirectory || await chain.getDbLocation()
 
-        workspace.saveAs(name, chaindataLocation, workspaceManager.directory, mnemonic)
+        workspace.saveAs(workspaceName, chaindataLocation, workspaceManager.directory, mnemonic)
+      }
+      else {
+        const defaultWorkspace = workspaceManager.get(null)
+
+        defaultWorkspace.saveAs(workspaceName, null, workspaceManager.directory, mnemonic)
       }
 
       workspaceManager.bootstrap()
 
+      workspace = workspaceManager.get(workspaceName)
+      const workspaceSettings = workspace.settings.getAll()
+
+      let tempWorkspace = {}
+      merge(tempWorkspace, {}, workspace)
+      delete tempWorkspace.contractCache
+
+      mainWindow.webContents.send(SET_CURRENT_WORKSPACE, tempWorkspace, workspace.contractCache.getAll())
+
+      openConfigScreenOnStart = true
+      chain.startServer(workspaceSettings)
+
+      // this sends the network interfaces to the renderer process for
+      //  enumering in the config screen. it sends repeatedly
+      continuouslySendNetworkInterfaces()
+
       const globalSettings = global.getAll()
-      mainWindow.webContents.send(SET_SETTINGS, globalSettings, {})
+      mainWindow.webContents.send(SET_SETTINGS, globalSettings, workspaceSettings)
 
       mainWindow.webContents.send(SET_WORKSPACES, workspaceManager.getNonDefaultNames())
     })
@@ -387,7 +417,7 @@ app.on('ready', () => {
       }
 
       const defaultWorkspace = workspaceManager.get(null)
-      const workspaceName = Date.now().toString()
+      const workspaceName = moniker.choose()
       const wallet = new ethagen({entropyBits: 128})
       defaultWorkspace.saveAs(workspaceName, null, workspaceManager.directory, wallet.mnemonic)
 

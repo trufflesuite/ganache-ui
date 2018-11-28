@@ -129,6 +129,15 @@ class ConfigScreen extends PureComponent {
         break;
     }
 
+    if (typeof target.attributes !== "undefined" && target.attributes["data-type"]) {
+      switch (target.attributes["data-type"].value) {
+        case "number": {
+          value = parseFloat(target.value)
+          break
+        }
+      }
+    }
+
     var keys = name.split(".")
     var parent = this.state.config.settings
 
@@ -247,7 +256,8 @@ class ConfigScreen extends PureComponent {
       validationErrors: this.state.validationErrors,
       addWorkspaceProject: this.addWorkspaceProject,
       removeWorkspaceProject: this.removeWorkspaceProject,
-      workspaces: this.props.workspaces
+      workspaces: this.props.workspaces,
+      dispatch: this.props.dispatch
     })
 
     return (

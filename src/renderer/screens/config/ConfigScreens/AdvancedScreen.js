@@ -4,13 +4,13 @@ import OnlyIf from '../../../components/only-if/OnlyIf'
 import FilePicker from '../../../components/file-picker/FilePicker'
 
 const VALIDATIONS = {
-  "logDirectory": {
+  "workspace.logDirectory": {
     canBeBlank: false,
     allowedChars: /^(?!.*Select a Directory).+$/
   }
 }
 
-class GanacheScreen extends Component {
+class AdvancedScreen extends Component {
   constructor (props) {
     super(props)
 
@@ -39,11 +39,11 @@ class GanacheScreen extends Component {
   }
 
   validateChange = e => {
-    if (e.target.name === "logDirectory") {
+    if (e.target.name === "workspace.logDirectory") {
       // the value to validate isn't the value of the HTML element
       e = {
         "target": {
-          "name": "logDirectory",
+          "name": "workspace.logDirectory",
           "value": this.state.logDirectory
         }
       };
@@ -51,7 +51,7 @@ class GanacheScreen extends Component {
 
     let tempValidations = JSON.parse(JSON.stringify(VALIDATIONS));
 
-    if (this.state.logDirectory === null && "logDirectory" in tempValidations) {
+    if (this.state.logDirectory === null && "workspace.logDirectory" in tempValidations) {
       // if the switch is off for logging to file, then don't validate
       tempValidations.logDirectory = null;
     }
@@ -70,7 +70,7 @@ class GanacheScreen extends Component {
               <div className="Switch">
                 <input
                   type="checkbox"
-                  name="logDirectory"
+                  name="workspace.logDirectory"
                   id="OutputToLogs"
                   checked={this.state.logDirectory != null}
                   onChange={this.toggleOutputToLogs}
@@ -92,7 +92,7 @@ class GanacheScreen extends Component {
               <div className="RowItem">
                 <FilePicker
                   id="Logdirectory"
-                  name="logDirectory"
+                  name="workspace.logDirectory"
                   defaultValue="Select a Directory"
                   buttonValue="Pick a Folder"
                   directoriesOnly={true}
@@ -186,4 +186,4 @@ class GanacheScreen extends Component {
   }
 }
 
-export default GanacheScreen
+export default AdvancedScreen

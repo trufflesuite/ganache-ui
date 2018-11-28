@@ -42,7 +42,7 @@ class TruffleIntegrationService extends EventEmitter {
   }
 
   stopProcess() {
-    if (this.child !== null) {
+    if (this.child !== null && this.child.connected) {
       this.child.removeListener('exit', this._exitHandler);
       if (this.child) {
         this.child.kill('SIGHUP');
@@ -56,7 +56,7 @@ class TruffleIntegrationService extends EventEmitter {
         resolve();
       });
 
-      if (this.child !== null) {
+      if (this.child !== null && this.child.connected) {
         this.child.send({
           type: "watcher-stop",
           data: null
@@ -87,7 +87,7 @@ class TruffleIntegrationService extends EventEmitter {
         }
       })
 
-      if (this.child !== null) {
+      if (this.child !== null && this.child.connected) {
         this.child.send({
           type: "project-details-request",
           data: {
@@ -103,7 +103,7 @@ class TruffleIntegrationService extends EventEmitter {
   }
 
   setWeb3(url) {
-    if (this.child !== null) {
+    if (this.child !== null && this.child.connected) {
       this.child.send({
         type: "web3-provider",
         data: url
@@ -122,7 +122,7 @@ class TruffleIntegrationService extends EventEmitter {
         }
       });
 
-      if (this.child !== null) {
+      if (this.child !== null && this.child.connected) {
         this.child.send({
           type: "decode-contract-request",
           data: { contract, contracts, block }
@@ -145,7 +145,7 @@ class TruffleIntegrationService extends EventEmitter {
         }
       });
 
-      if (this.child !== null) {
+      if (this.child !== null && this.child.connected) {
         this.child.send({
           type: "decode-event-request",
           data: { contract, contracts, log }
@@ -168,7 +168,7 @@ class TruffleIntegrationService extends EventEmitter {
         }
       });
 
-      if (this.child !== null) {
+      if (this.child !== null && this.child.connected) {
         this.child.send({
           type: "decode-transaction-request",
           data: { contract, contracts, transaction }
