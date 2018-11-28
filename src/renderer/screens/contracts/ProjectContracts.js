@@ -20,8 +20,10 @@ class ProjectContracts extends Component {
     }
     else {
       content =
-        <div className="Waiting">
-          No Contracts
+        <div className="Notice">
+          <span className="Warning">⚠</span>{" "}
+          <strong>To see rich contract data</strong> compile the contracts
+          within your Truffle Project.
         </div>
     }
 

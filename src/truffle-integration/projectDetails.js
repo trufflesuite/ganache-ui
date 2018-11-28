@@ -16,16 +16,19 @@ function get(projectFile, networkId) {
     const output = require(projectFile);
     config.merge(output);
 
-    const contracts = fs.readdirSync(config.contracts_build_directory)
-      .filter((file) => file.endsWith(".json"))
-      .map((file) => JSON.parse(fs.readFileSync(path.join(config.contracts_build_directory, file), "utf8")))
-      .map((contract) => {
-        if (contract.networks[networkId]) {
-          contract.address = contract.networks[networkId].address
-        }
+    let contracts = [];
+    if (fs.existsSync(config.contracts_build_directory)) {
+      contracts = fs.readdirSync(config.contracts_build_directory)
+        .filter((file) => file.endsWith(".json"))
+        .map((file) => JSON.parse(fs.readFileSync(path.join(config.contracts_build_directory, file), "utf8")))
+        .map((contract) => {
+          if (contract.networks[networkId]) {
+            contract.address = contract.networks[networkId].address
+          }
 
-        return contract
-      });
+          return contract
+        });
+    }
 
     // TODO: watch contracts on the FS for changes and send the project-details-update message
 
