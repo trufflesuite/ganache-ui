@@ -46,7 +46,7 @@ class HomeScreen extends Component {
       {
         value: "Cancel"
       }],
-      `"Remove ${workspaceName} Workspace?`,
+      `Remove ${workspaceName} Workspace?`,
       `Removing the ${workspaceName} workspace will delete its associated chain, including any deployment, transactions, and event history. Your project source code will not be deleted.`
     )
 
