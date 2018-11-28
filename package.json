@@ -95,7 +95,8 @@
       ],
       "icon": "resources/icons/png/",
       "category": "Development",
-      "executableName": "Ganache"
+      "executableName": "Ganache",
+      "artifactName": "Ganache-${version}.${ext}"
     }
   },
   "config": {
