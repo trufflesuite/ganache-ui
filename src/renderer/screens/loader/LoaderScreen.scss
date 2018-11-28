@@ -55,6 +55,10 @@
   letter-spacing:4px;
   will-change: opacity, transform;
 
+  .spinner {
+    position: absolute !important;
+  }
+
   .LogoWrapper {
     display: flex;
     align-items: center;

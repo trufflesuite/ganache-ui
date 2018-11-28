@@ -208,6 +208,7 @@
     "react-dom": "^16.3.2",
     "react-hot-loader": "^3.1.1",
     "react-marked-markdown": "^1.4.6",
+    "react-md-spinner": "^0.3.0",
     "react-moment": "^0.2.2",
     "react-redux": "^5.0.2",
     "react-render-html": "^0.6.0",
