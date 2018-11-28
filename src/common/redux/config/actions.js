@@ -41,3 +41,8 @@ export const CLEAR_ALL_SETTING_ERRORS = `${prefix}/CLEAR_ALL_SETTING_ERRORS`
 export const clearAllSettingErrors = function() {
   return {type: CLEAR_ALL_SETTING_ERRORS}
 }
+
+export const SET_CONFIG_SCREEN_ONLY = `${prefix}/SET_CONFIG_SCREEN_ONLY`
+export const setConfigScreenOnly = function() {
+  return {type: SET_CONFIG_SCREEN_ONLY}
+}

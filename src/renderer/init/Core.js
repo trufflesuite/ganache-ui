@@ -20,7 +20,7 @@ import {
 
 import { getAccounts } from '../../common/redux/accounts/actions'
 
-import { setSettings } from '../../common/redux/config/actions'
+import { setSettings, setConfigScreenOnly } from '../../common/redux/config/actions'
 
 import { handleError } from './ErrorHandler'
 
@@ -45,6 +45,7 @@ export function initCore(store) {
     store.dispatch(setServerStarted())
 
     if (openConfigScreenOnStart) {
+      store.dispatch(setConfigScreenOnly())
       store.dispatch(replace("/config"))
     }
     else {
