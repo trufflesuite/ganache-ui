@@ -221,15 +221,6 @@ class TopNavbar extends Component {
               title="MINING STATUS"
               value={miningPaused ? 'STOPPED' : this._renderMiningTime()}
             >
-              <OnlyIf test={isMining}>
-                <MDSpinner
-                  singleColor="var(--primary-color)"
-                  size={28}
-                  borderSize={3}
-                  className="spinner"
-                  duration={2666}
-                />
-              </OnlyIf>
             </StatusIndicator>
             <StatusIndicator
               title="WORKSPACE"
