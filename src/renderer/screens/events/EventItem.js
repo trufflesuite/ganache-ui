@@ -12,32 +12,60 @@ class EventItem extends Component {
       this.props.dispatch(push(`/event_details/${transactionHash}/${logIndex}`))
     return (
       <div className="EventItem" onClick={goToEventDetails}>
-        <div className="name">
-          <div className="label">NAME</div>
-          <div className="value">{name || "ENCODED EVENT"}</div>
-        </div>
-        <div className="data">
-          <div className="dataItem">
-            <div className="label">CONTRACT</div>
-            <div className="value">{contract}</div>
-          </div>
-          <div className="dataItem">
-            <div className="label">TX HASH</div>
-            <div className="value">{transactionHash}</div>
-          </div>
-          <div className="dataItem">
-            <div className="label">LOG INDEX</div>
-            <div className="value">{logIndex}</div>
-          </div>
-          <div className="dataItem">
-            <div className="label">BLOCK TIME</div>
-            <div className="value">
-              <Moment unix format="YYYY-MM-DD HH:mm:ss">
-                {timestamp}
-              </Moment>
+        <div className="Row Top">
+          <div className="RowItem">
+            <div className="Name">
+              <div className="Label">EVENT NAME</div>
+              <div className="Value">
+                {name || "Encoded Event"}
+              </div>
             </div>
           </div>
         </div>
+
+        <div className="SecondaryItems">
+          <div className="Row">
+            <div className="RowItem">
+              <div className="Contract">
+                <div className="Label">CONTRACT</div>
+                <div className="Value">
+                  {contract || "Unknown (no recognized contract)"}
+                </div>
+              </div>
+            </div>
+
+            <div className="RowItem">
+              <div className="TransactionHash">
+                <div className="Label">TX HASH</div>
+                <div className="Value">
+                  {transactionHash}
+                </div>
+              </div>
+            </div>
+
+            <div className="RowItem">
+              <div className="LogIndex">
+                <div className="Label">LOG INDEX</div>
+                <div className="Value">
+                  {logIndex}
+                </div>
+              </div>
+            </div>
+
+            <div className="RowItem">
+              <div className="BlockTime">
+                <div className="Label">BLOCK TIME</div>
+                <div className="Value">
+                  <Moment unix format="YYYY-MM-DD HH:mm:ss">
+                    {timestamp}
+                  </Moment>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
       </div>
     )
   }
