@@ -17,6 +17,7 @@ import AboutScreen from './ConfigScreens/AboutScreen'
 
 import RestartIcon from '../../icons/restart.svg'
 import EjectIcon from '../../icons/eject.svg';
+import SaveIcon from '../../icons/save-icon.svg';
 import OnlyIf from "../../components/only-if/OnlyIf";
 
 const TABS = [
@@ -283,7 +284,7 @@ class ConfigScreen extends PureComponent {
                   disabled={this.invalidConfig()}
                 >
                   <OnlyIf test={this.props.config.configScreenOnly}>
-                    <RestartIcon /*size={18}*/ />
+                    <SaveIcon className="save-icon" /*size={18}*/ />
                     SAVE WORKSPACE
                   </OnlyIf>
                   <OnlyIf test={!this.props.config.configScreenOnly}>

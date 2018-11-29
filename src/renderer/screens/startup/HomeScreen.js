@@ -17,7 +17,7 @@ import Spinner from '../../components/spinner/Spinner'
 import Logo from '../../../../Logo.svg'
 import ChainIcon from '../../icons/chain.svg'
 import MenuIcon from '../../icons/list.svg'
-import TrashIcon from '../../icons/trash.svg'
+import TrashIcon from '../../icons/trash-icon.svg'
 
 class HomeScreen extends Component {
   constructor (props) {
