@@ -7,7 +7,7 @@ import connect from "../helpers/connect"
 
 class EventItem extends Component {
   render() {
-    const { name, contract, transactionHash, timestamp, logIndex } = this.props.event
+    const { name, contract, address, transactionHash, timestamp, logIndex } = this.props.event
     const goToEventDetails = () =>
       this.props.dispatch(push(`/event_details/${transactionHash}/${logIndex}`))
     return (
@@ -29,7 +29,7 @@ class EventItem extends Component {
               <div className="Contract">
                 <div className="Label">CONTRACT</div>
                 <div className="Value">
-                  {contract || "Unknown (no recognized contract)"}
+                  {contract || address}
                 </div>
               </div>
             </div>
