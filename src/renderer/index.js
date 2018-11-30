@@ -105,6 +105,7 @@ const stylesheets = [
   "./screens/contracts/ContractDetailsScreen.scss",
   "./screens/events/EventList.scss",
   "./screens/events/EventsScreen.scss",
+  "./screens/events/EventItem.scss",
   "./screens/event-details/EventDetailsScreen.scss",
   "./screens/event-details/EncodedEventDetails.scss",
   "./screens/event-details/DecodedEventDetails.scss",
