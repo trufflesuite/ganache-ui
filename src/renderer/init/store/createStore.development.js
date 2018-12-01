@@ -17,6 +17,10 @@ import {
   SET_SCROLL_POSITION
 } from "../../../common/redux/appshell/actions";
 
+import {
+  CACHE_REQUEST
+} from "../../../common/redux/request-cache/actions";
+
 const actionCreators = {
   push
 }
@@ -30,7 +34,8 @@ const actionsToIgnoreInConsoleLogger = [
   RPC_REQUEST_STARTED,
   RPC_REQUEST_SUCCEEDED,
   ADD_LOG_LINES,
-  SET_SCROLL_POSITION
+  SET_SCROLL_POSITION,
+  CACHE_REQUEST
 ]
 
 const logger = createLogger({
