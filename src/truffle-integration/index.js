@@ -1,10 +1,10 @@
 const getProjectDetails = require("./projectDetails").get;
-const ProjectWatcher = require("./projectWatcher");
+const ProjectsWatcher = require("./projectsWatcher");
 const DecodeHelpers = require("./decode");
 
 let web3Host;
 
-watcher = new ProjectWatcher();
+watcher = new ProjectsWatcher();
 
 if (!process.send) {
   console.log("Not running as child process. Throwing.");
@@ -25,7 +25,8 @@ process.on("uncaughtException", (err) => {
 const watcherEvents = [
   "contract-deployed",
   "contract-transaction",
-  "contract-event"
+  "contract-event",
+  "project-details-update"
 ];
 watcherEvents.forEach((eventName) => {
   watcher.on(eventName, (data) => {
@@ -54,16 +55,17 @@ process.on("message", async function(message) {
       break;
     }
     case "project-details-request": {
-      const response = getProjectDetails(message.data.file, message.data.networkId);
+      let response = getProjectDetails(message.data.file);
+
+      if (typeof response === "object") {
+        response = watcher.add(response, message.data.networkId);
+      }
 
       process.send({
         type: "project-details-response",
         data: response
       });
 
-      if (typeof response === "object") {
-        watcher.add(response);
-      }
       break;
     }
     case "project-unwatch": {

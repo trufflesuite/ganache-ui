@@ -5,7 +5,8 @@ import {
   CONTRACT_TRANSACTION,
   CONTRACT_EVENT,
   GET_CONTRACT_DETAILS,
-  CLEAR_SHOWN_CONTRACT
+  CLEAR_SHOWN_CONTRACT,
+  PROJECT_UPDATED
 } from './actions'
 import cloneDeep from 'lodash.clonedeep'
 
@@ -138,6 +139,16 @@ export default function (state = initialState, action) {
     case CLEAR_SHOWN_CONTRACT:
       nextState.current.shownContract = cloneDeep(initialShownContract)
       break
+    case PROJECT_UPDATED: {
+      for (let i = 0; i < nextState.current.projects.length; i++) {
+        if (nextState.current.projects[i].configFile === action.project.configFile) {
+          // found the project we'd like to update
+          nextState.current.projects[i] = action.project;
+          break;
+        }
+      }
+      break;
+    }
     default:
       break
   }

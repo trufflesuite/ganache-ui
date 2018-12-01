@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const TruffleConfig = require("truffle-config");
 
-function get(projectFile, networkId) {
+function get(projectFile) {
   if (!fs.existsSync(projectFile)) {
     return "Truffle project config file '" + projectFile + "' does not exist";
   }
@@ -17,22 +17,8 @@ function get(projectFile, networkId) {
     config.merge(output);
 
     let contracts = [];
-    if (fs.existsSync(config.contracts_build_directory)) {
-      contracts = fs.readdirSync(config.contracts_build_directory)
-        .filter((file) => file.endsWith(".json"))
-        .map((file) => JSON.parse(fs.readFileSync(path.join(config.contracts_build_directory, file), "utf8")))
-        .map((contract) => {
-          if (contract.networks[networkId]) {
-            contract.address = contract.networks[networkId].address
-          }
 
-          return contract
-        });
-    }
-
-    // TODO: watch contracts on the FS for changes and send the project-details-update message
-
-    return { name, config, contracts };
+    return { name, configFile: projectFile, config, contracts };
   }
 }
 

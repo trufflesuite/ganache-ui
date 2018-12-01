@@ -36,7 +36,8 @@ import {
   CONTRACT_TRANSACTION,
   CONTRACT_EVENT,
   GET_CONTRACT_DETAILS,
-  OPEN_NEW_WORKSPACE_CONFIG
+  OPEN_NEW_WORKSPACE_CONFIG,
+  PROJECT_UPDATED
 } from '../common/redux/workspaces/actions'
 
 import {
@@ -132,6 +133,12 @@ app.on('ready', () => {
         chain.stopProcess()
         truffleIntegration.stopProcess()
         app.quit()
+      }
+    })
+
+    truffleIntegration.on("project-details-update", (project) => {
+      if (workspace) {
+        mainWindow.webContents.send(PROJECT_UPDATED, project);
       }
     })
 

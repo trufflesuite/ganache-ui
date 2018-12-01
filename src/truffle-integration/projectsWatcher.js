@@ -7,7 +7,9 @@ const { URL } = require("url");
 const keccak = require("keccak");
 const rlp = require("rlp");
 
-class ProjectWatcher extends EventEmitter {
+const ProjectFsWatcher = require("./projectFsWatcher");
+
+class ProjectsWatcher extends EventEmitter {
   constructor() {
     super();
     this.projects = [];
@@ -68,24 +70,33 @@ class ProjectWatcher extends EventEmitter {
   }
 
   add(project) {
-    this.projects.push(project);
+    const fsWatcher = new ProjectFsWatcher(project);
+    fsWatcher.on("project-details-update", (data) => {
+      this.emit("project-details-update", data);
+    });
+
+    this.projects.push(fsWatcher);
+
+    return fsWatcher.project;
   }
 
-  remove(projectPath) {
+  remove(projectPath) { // TODO: might be an easier way now
     let truffleDirectory = projectPath;
     if (path.basename(truffleDirectory).match(/truffle(-config)?.js/) !== null) {
       truffleDirectory = path.dirname(truffleDirectory);
     }
 
     for (let i = 0; i < this.projects.length; i++) {
-      const project = this.projects[i];
-      if (project.truffle_directory === truffleDirectory) {
-        for (let j = 0; j < project.contracts.length; j++) {
-          const contract = project.contracts[j];
+      const fsWatcher = this.projects[i];
+      if (fsWatcher.project.truffle_directory === truffleDirectory) {
+        for (let j = 0; j < fsWatcher.project.contracts.length; j++) {
+          const contract = fsWatcher.project.contracts[j];
           if (contract.address && typeof this.contractsByAddress[contract.address] !== "undefined") {
             delete this.contractsByAddress[contract.address];
           }
         }
+        this.projects[i].removeAllListeners();
+        this.projects[i].stop();
         this.projects.splice(i);
         break;
       }
@@ -140,4 +151,4 @@ class ProjectWatcher extends EventEmitter {
   }
 }
 
-module.exports = ProjectWatcher;
+module.exports = ProjectsWatcher;

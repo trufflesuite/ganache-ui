@@ -6,11 +6,13 @@ import {
   CONTRACT_DEPLOYED,
   CONTRACT_TRANSACTION,
   CONTRACT_EVENT,
+  PROJECT_UPDATED,
   setWorkspaces,
   setCurrentWorkspace,
   contractDeployed,
   contractTransaction,
-  contractEvent
+  contractEvent,
+  projectUpdated
 } from '../../common/redux/workspaces/actions'
 
 export function initWorkspaces(store) {
@@ -32,5 +34,9 @@ export function initWorkspaces(store) {
 
   ipcRenderer.on(CONTRACT_EVENT, (event, data) => {
     store.dispatch(contractEvent(data))
+  })
+
+  ipcRenderer.on(PROJECT_UPDATED, (event, data) => {
+    store.dispatch(projectUpdated(data))
   })
 }
