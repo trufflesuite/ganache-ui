@@ -6,6 +6,7 @@ const path = require("path");
 const { URL } = require("url");
 const keccak = require("keccak");
 const rlp = require("rlp");
+const clonedeep = require("lodash.clonedeep");
 
 const ProjectFsWatcher = require("./projectFsWatcher");
 
@@ -32,7 +33,7 @@ class ProjectsWatcher extends EventEmitter {
     this.blocksReceived = [];
   }
 
-  setWeb3(url) {
+  async setWeb3(url) {
     let parsedURL = new URL(url)
     let scheme = parsedURL.protocol.toLowerCase()
 
@@ -67,6 +68,32 @@ class ProjectsWatcher extends EventEmitter {
     this.logsSubscription.on("data", async (log) => {
       await this.handleLog(log);
     });
+
+    await this.validateContractsOnChain();
+  }
+
+  async validateContractsOnChain() {
+    for (let projectIndex = 0; projectIndex < this.projects.length; projectIndex++) {
+      let tempProject = this.projects[projectIndex].getProject();
+      let contracts = [];
+      for (let j = 0; j < tempProject.contracts.length; j++) {
+        const contract = tempProject.contracts[j];
+
+        const bytecode = await this.web3.eth.getCode(contract.address);
+        let newContract = clonedeep(contract);
+        if (contract.deployedBytecode !== bytecode) {
+          delete newContract.address;
+          delete newContract.creationTxHash;
+        }
+        contracts.push(newContract);
+      }
+      this.projects[projectIndex].setContracts(contracts);
+      tempProject = this.projects[projectIndex].getProject();
+      for (let j = 0; j < tempProject.contracts.length; j++) {
+        tempProject.contracts[j].projectIndex = projectIndex;
+      }
+      this.emit("project-details-update", tempProject);
+    }
   }
 
   add(project, networkId) {
