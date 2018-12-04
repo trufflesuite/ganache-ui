@@ -84,6 +84,20 @@ class Workspace {
   addProject(project) {
     this.projects.push(project)
   }
+
+  delete() {
+    try {
+      fse.removeSync(this.workspaceDirectory)
+    }
+    catch (e) {
+      // TODO: couldn't delete teh directory; probably don't have
+      // permissions or some file is open somewhere. we probably
+      // want to handle this better (i.e. return false, then send
+      // a message to renderer process, display toast saying there
+      // were issues, etc.). Don't really have time right now for
+      // a solution here
+    }
+  }
 }
 
 export default Workspace

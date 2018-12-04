@@ -30,6 +30,7 @@ import {
   OPEN_WORKSPACE,
   CLOSE_WORKSPACE,
   SAVE_WORKSPACE,
+  DELETE_WORKSPACE,
   SET_CURRENT_WORKSPACE,
   CONTRACT_DEPLOYED,
   CONTRACT_TRANSACTION,
@@ -319,6 +320,15 @@ app.on('ready', () => {
 
       const globalSettings = global.getAll()
       mainWindow.webContents.send(SET_SETTINGS, globalSettings, workspaceSettings)
+
+      mainWindow.webContents.send(SET_WORKSPACES, workspaceManager.getNonDefaultNames())
+    })
+
+    ipcMain.on(DELETE_WORKSPACE, async (event, name) => {
+      const tempWorkspace = workspaceManager.get(name)
+      tempWorkspace.delete()
+
+      workspaceManager.bootstrap()
 
       mainWindow.webContents.send(SET_WORKSPACES, workspaceManager.getNonDefaultNames())
     })
