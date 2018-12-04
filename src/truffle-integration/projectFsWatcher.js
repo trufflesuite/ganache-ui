@@ -22,6 +22,13 @@ class ProjectFsWatcher extends EventEmitter {
     this.start();
   }
 
+  getProject() {
+    const tempProject = merge({}, this.project, {
+      contracts: this.contracts.filter(contract => contract !== null)
+    });
+    return tempProject;
+  }
+
   start() {
     this.configWatcher = fs.watch(this.project.configFile, { encoding: "utf8" }, (eventType, filename) => {
       // the config file was either removed or changed, we may want to reload it
@@ -84,7 +91,8 @@ class ProjectFsWatcher extends EventEmitter {
       const contract = JSON.parse(fs.readFileSync(path.join(this.project.config.contracts_build_directory, file), "utf8"));
 
       if (contract.networks[this.networkId]) {
-        contract.address = contract.networks[this.networkId].address
+        contract.address = contract.networks[this.networkId].address;
+        contract.creationTxHash = contract.networks[this.networkId].transactionHash;
       }
 
       return contract;
@@ -99,7 +107,7 @@ class ProjectFsWatcher extends EventEmitter {
     for (let i = 0; i < files.length; i++) {
       const extension = path.extname(files[i]);
       if (extension === ".json") {
-        this.fileToContractIdx[filename] = this.contracts.length;
+        this.fileToContractIdx[files[i]] = this.contracts.length;
         const contract = this.readContract(files[i]);
         this.contracts.push(contract);
       }
@@ -138,17 +146,11 @@ class ProjectFsWatcher extends EventEmitter {
 
       this.contractBuildDirectoryWatcher = fs.watch(this.project.config.contracts_build_directory, { encoding: "utf8" }, (eventType, filename) => {
         this.handleContractFileEvent(eventType, filename);
-        const tempProject = merge({}, this.project, {
-          contracts: this.contracts.filter(contract => contract !== null)
-        });
-        this.emit("project-details-update", tempProject);
+        this.emit("project-details-update", this.getProject());
       });
     }
 
-    const tempProject = merge({}, this.project, {
-      contracts: this.contracts.filter(contract => contract !== null)
-    });
-    this.emit("project-details-update", tempProject);
+    this.emit("project-details-update", this.getProject());
   }
 
   stopWatchingContracts() {

@@ -19,6 +19,7 @@ class ContractsScreen extends Component {
             </div>
             <ProjectContracts
               contracts={project.contracts}
+              contractCache={this.props.workspaces.current.contractCache}
               projectIndex={index}
             />
           </div>

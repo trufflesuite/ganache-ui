@@ -142,14 +142,6 @@ app.on('ready', () => {
       }
     })
 
-    truffleIntegration.on("contract-deployed", (data) => {
-      mainWindow.webContents.send(CONTRACT_DEPLOYED, data)
-
-      if (workspace && workspace.contractCache) {
-        workspace.contractCache.addContract(data.contractAddress)
-      }
-    })
-
     truffleIntegration.on("contract-transaction", (data) => {
       mainWindow.webContents.send(CONTRACT_TRANSACTION, data)
 

@@ -36,13 +36,29 @@ class ContractCache {
   }
 
   addContract(address) {
-    this.storage.set(address, {
-      transactions: [],
-      events: []
-    });
+    let obj = this.get(address);
+
+    let changeObj = false;
+    if (typeof obj === "undefined") {
+      obj = {};
+      changeObj = true;
+    }
+    if (typeof obj.transactions === "undefined") {
+      obj.transactions = [];
+      changeObj = true;
+    }
+    if (typeof obj.events === "undefined") {
+      obj.events = [];
+      changeObj = true;
+    }
+
+    if (changeObj) {
+      this.storage.set(address, obj);
+    }
   }
 
   addTransaction(address, transactionHash) {
+    this.addContract(address);
     let obj = this.getTransactions(address);
 
     if (typeof obj === "undefined") {
@@ -57,6 +73,7 @@ class ContractCache {
   }
 
   addEvent(address, event) {
+    this.addContract(address);
     let obj = this.getEvents(address)
 
     if (typeof obj === "undefined") {

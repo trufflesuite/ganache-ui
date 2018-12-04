@@ -23,7 +23,6 @@ process.on("uncaughtException", (err) => {
 
 // Subscribe and forward watcher events
 const watcherEvents = [
-  "contract-deployed",
   "contract-transaction",
   "contract-event",
   "project-details-update"
