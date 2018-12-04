@@ -295,7 +295,13 @@ class ConfigScreen extends PureComponent {
             </div>
           </div>
           <div className="ConfigCard">
-            { activeTab } 
+            <OnlyIf test={this.props.config.settings.workspace.isDefault}>
+              <div className="Notice">
+                <span className="Warning">⚠</span>{" "}
+                <strong>Restarting the Quickstart workspace resets the blockchain.</strong> All transactions and contract states will be reset.
+              </div>
+            </OnlyIf>
+            { activeTab }
           </div>
         </div>
       </main>
