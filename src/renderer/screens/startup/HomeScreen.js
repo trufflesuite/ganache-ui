@@ -83,6 +83,11 @@ class HomeScreen extends Component {
 
     const title = hasWorkspaces ? <h1 className="title left">Workspaces</h1> : <h1 className="title">Create a Workspace</h1>
     const subTitle = <p className="subTitle">Quickstart for a one-click blockchain or create a new workspace for advanced setup options.</p>
+    const learnMore = (
+      <p className="learnMore">
+        You can also learn more about how to use Ganache 2 by <a href="https://truffleframework.com/ganache">clicking here!</a>
+      </p>
+    )
     const isNewVersionAvailable = this.props.autoUpdate.isNewVersionAvailable
     const isCheckingForUpdate = this.props.autoUpdate.updateCheckInProgress
 
@@ -111,6 +116,7 @@ class HomeScreen extends Component {
                   <section>
                     {title}
                     {subTitle}
+                    {learnMore}
                   </section>
                 </OnlyIf>
                 <OnlyIf test={hasWorkspaces}>

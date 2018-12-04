@@ -77,11 +77,15 @@
         }
       }
 
-      .subTitle {
+      .subTitle, .learnMore {
         color: #fff;
         font-size: 1.3rem;
         font-family: "Fira Code Regular";
         margin-top: 0.8rem;
+      }
+
+      .learnMore a {
+        color: var(--app-button-primary-color)
       }
 
       section {
