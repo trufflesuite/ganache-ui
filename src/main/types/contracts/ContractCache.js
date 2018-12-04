@@ -2,78 +2,95 @@ import JsonStorage from '../json/JsonStorage'
 
 class ContractCache {
   constructor(directory) {
-    this.storage = new JsonStorage(directory, 'ContractCache')
+    this.storage = new JsonStorage(directory, 'ContractCache');
 
-    let obj = this.storage.getAll()
-    if (typeof obj !== "object") {
-      this.storage.setAll({})
+    let obj = this.storage.getAll();
+    if (obj === null || typeof obj !== "object") {
+      this.storage.setAll({});
     }
   }
 
   setDirectory(directory) {
-    this.storage.setStorageDirectory(directory)
+    this.storage.setStorageDirectory(directory);
   }
 
   get(address) {
-    return this.storage.get(address)
+    return this.storage.get(address);
   }
 
   getTransactions(address) {
-    return this.storage.get(address + ".transactions")
+    return this.storage.get(address + ".transactions");
   }
 
   getEvents(address) {
-    return this.storage.get(address + ".events")
+    return this.storage.get(address + ".events");
   }
 
   clear(address) {
-    let obj = this.storage.getAll()
+    let obj = this.storage.getAll();
 
     if (obj[address]) {
-      delete obj[address]
-      this.storage.setAll(obj)
+      delete obj[address];
+      this.storage.setAll(obj);
     }
   }
 
   addContract(address) {
-    this.storage.set(address, {
-      transactions: [],
-      events: []
-    })
+    let obj = this.get(address);
+
+    let changeObj = false;
+    if (typeof obj === "undefined") {
+      obj = {};
+      changeObj = true;
+    }
+    if (typeof obj.transactions === "undefined") {
+      obj.transactions = [];
+      changeObj = true;
+    }
+    if (typeof obj.events === "undefined") {
+      obj.events = [];
+      changeObj = true;
+    }
+
+    if (changeObj) {
+      this.storage.set(address, obj);
+    }
   }
 
   addTransaction(address, transactionHash) {
-    let obj = this.getTransactions(address)
+    this.addContract(address);
+    let obj = this.getTransactions(address);
 
     if (typeof obj === "undefined") {
-      obj = []
+      obj = [];
     }
 
     if (obj.indexOf(transactionHash) === -1) {
-      obj.push(transactionHash)
+      obj.push(transactionHash);
 
-      this.storage.set(address + ".transactions", obj)
+      this.storage.set(address + ".transactions", obj);
     }
   }
 
   addEvent(address, event) {
+    this.addContract(address);
     let obj = this.getEvents(address)
 
     if (typeof obj === "undefined") {
-      obj = []
+      obj = [];
     }
 
-    obj.push(event)
+    obj.push(event);
 
-    this.storage.set(address + ".events", obj)
+    this.storage.set(address + ".events", obj);
   }
 
   getAll() {
-    return this.storage.getAll() || {}
+    return this.storage.getAll() || {};
   }
 
   setAll(obj) {
-    return this.storage.setAll(obj)
+    return this.storage.setAll(obj);
   }
 }
 

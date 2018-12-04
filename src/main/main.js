@@ -36,7 +36,8 @@ import {
   CONTRACT_TRANSACTION,
   CONTRACT_EVENT,
   GET_CONTRACT_DETAILS,
-  OPEN_NEW_WORKSPACE_CONFIG
+  OPEN_NEW_WORKSPACE_CONFIG,
+  PROJECT_UPDATED
 } from '../common/redux/workspaces/actions'
 
 import {
@@ -135,11 +136,9 @@ app.on('ready', () => {
       }
     })
 
-    truffleIntegration.on("contract-deployed", (data) => {
-      mainWindow.webContents.send(CONTRACT_DEPLOYED, data)
-
-      if (workspace && workspace.contractCache) {
-        workspace.contractCache.addContract(data.contractAddress)
+    truffleIntegration.on("project-details-update", (project) => {
+      if (workspace) {
+        mainWindow.webContents.send(PROJECT_UPDATED, project);
       }
     })
 
@@ -459,6 +458,12 @@ app.on('ready', () => {
 
         if (truffleIntegration) {
           await truffleIntegration.stopWatching()
+        }
+
+        if (openConfigScreenOnStart) {
+          // we just made a new workspace. we need to reset the chaindata since we initialized it
+          // when started the configuration process
+          workspace.resetChaindata();
         }
 
         const workspaceSettings = workspace.settings.getAll()

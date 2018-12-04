@@ -5,7 +5,8 @@ import {
   CONTRACT_TRANSACTION,
   CONTRACT_EVENT,
   GET_CONTRACT_DETAILS,
-  CLEAR_SHOWN_CONTRACT
+  CLEAR_SHOWN_CONTRACT,
+  PROJECT_UPDATED
 } from './actions'
 import cloneDeep from 'lodash.clonedeep'
 
@@ -22,6 +23,20 @@ const initialShownContract = {
   balance: "0"
 }
 
+function linkContractCacheToProject(contractCache, project) {
+  for (let j = 0; j < project.contracts.length; j++) {
+    const contract = project.contracts[j]
+
+    if (typeof contractCache[contract.address] === "undefined") {
+      contractCache[contract.address] = {
+        transactions: [],
+        events: []
+      }
+    }
+    contractCache[contract.address].contract = contract
+  }
+}
+
 export default function (state = initialState, action) {
   let nextState = cloneDeep(state)
 
@@ -32,102 +47,39 @@ export default function (state = initialState, action) {
     case SET_CURRENT_WORKSPACE:
       nextState.current = cloneDeep(action.workspace)
       nextState.current.shownContract = cloneDeep(initialShownContract)
-      nextState.current.contracts = {}
+      nextState.current.contractCache = cloneDeep(action.contractCache)
 
       for (let i = 0; i < nextState.current.projects.length; i++) {
         const project = nextState.current.projects[i]
-        for (let j = 0; j < project.contracts.length; j++) {
-          const contract = project.contracts[j]
-          const networkId = nextState.current.settings.settings.obj.obj.server.network_id
-          if (contract.networks && typeof contract.networks[networkId] !== "undefined") {
-            contract.address = contract.networks[networkId].address
-            contract.creationTxHash = contract.networks[networkId].transactionHash
-
-            if (action.contractCache[contract.address]) {
-              contract.transactions = action.contractCache[contract.address].transactions
-              contract.events = action.contractCache[contract.address].events
-            }
-            else {
-              contract.transactions = []
-              contract.events = []
-            }
-
-            contract.projectIndex = i
-            nextState.current.contracts[contract.address] = contract
-          }
-        }
+        linkContractCacheToProject(nextState.current.contractCache, project)
       }
       break
-    case CONTRACT_DEPLOYED:
-      if (typeof nextState.current.projects !== "undefined") {
-        for (let i = 0; i < nextState.current.projects.length; i++) {
-          const project = nextState.current.projects[i]
-          if (project.truffle_directory === action.data.truffleDirectory) {
-            for (let j = 0; j < project.contracts.length; j++) {
-              const contract = project.contracts[j]
-              if (contract.contractName === action.data.contractName) {
-                contract.address = action.data.contractAddress
-                contract.creationTxHash = action.data.transactionHash
-                contract.transactions = []
-                contract.events = []
-                contract.projectIndex = i
-                nextState.current.contracts[contract.address] = contract
-                break
-              }
-            }
-            break
-          }
+    case CONTRACT_TRANSACTION: {
+      if (typeof nextState.current.contractCache[action.data.contractAddress] === "undefined") {
+        nextState.current.contractCache[action.data.contractAddress] = {
+          transactions: [],
+          events: []
         }
       }
+      const contract = nextState.current.contractCache[action.data.contractAddress]
+      contract.transactions.push(action.data.transactionHash)
       break
-    case CONTRACT_TRANSACTION:
-      if (typeof nextState.current.projects !== "undefined") {
-        for (let i = 0; i < nextState.current.projects.length; i++) {
-          const project = nextState.current.projects[i]
-          if (project.truffle_directory === action.data.truffleDirectory) {
-            for (let j = 0; j < project.contracts.length; j++) {
-              const contract = project.contracts[j]
-              if (contract.address === action.data.contractAddress) {
-                if (Array.isArray(contract.transactions)) {
-                  contract.transactions.push(action.data.transactionHash)
-                }
-                else {
-                  contract.transactions = [ action.data.transactionHash ]
-                }
-                break
-              }
-            }
-            break
-          }
+    }
+    case CONTRACT_EVENT: {
+      if (typeof nextState.current.contractCache[action.data.contractAddress] === "undefined") {
+        nextState.current.contractCache[action.data.contractAddress] = {
+          transactions: [],
+          events: []
         }
       }
-      break
-    case CONTRACT_EVENT:
-      if (typeof nextState.current.projects !== "undefined") {
-        for (let i = 0; i < nextState.current.projects.length; i++) {
-          const project = nextState.current.projects[i]
-          if (project.truffle_directory === action.data.truffleDirectory) {
-            for (let j = 0; j < project.contracts.length; j++) {
-              const contract = project.contracts[j]
-              if (contract.address === action.data.contractAddress) {
-                const event = {
-                  transactionHash: action.data.transactionHash,
-                  logIndex: action.data.logIndex
-                }
-                if (Array.isArray(contract.events)) {
-                  contract.events.push(event)
-                }
-                else {
-                  contract.events = [ event ]
-                }
-                break
-              }
-            }
-            break
-          }
-        }
+      const contract = nextState.current.contractCache[action.data.contractAddress]
+      const event = {
+        transactionHash: action.data.transactionHash,
+        logIndex: action.data.logIndex
       }
+      contract.events.push(event)
       break
+    }
     case GET_CONTRACT_DETAILS:
       nextState.current.shownContract.shownTransactions = cloneDeep(action.shownTransactions)
       nextState.current.shownContract.shownReceipts = cloneDeep(action.shownReceipts)
@@ -138,6 +90,17 @@ export default function (state = initialState, action) {
     case CLEAR_SHOWN_CONTRACT:
       nextState.current.shownContract = cloneDeep(initialShownContract)
       break
+    case PROJECT_UPDATED: {
+      for (let i = 0; i < nextState.current.projects.length; i++) {
+        if (nextState.current.projects[i].configFile === action.project.configFile) {
+          // found the project we'd like to update
+          nextState.current.projects[i] = action.project;
+          linkContractCacheToProject(nextState.current.contractCache, nextState.current.projects[i])
+          break;
+        }
+      }
+      break;
+    }
     default:
       break
   }

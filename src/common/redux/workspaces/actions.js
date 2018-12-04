@@ -173,3 +173,8 @@ export const CLEAR_SHOWN_CONTRACT = `${prefix}/CLEAR_SHOWN_CONTRACT`
 export const clearShownContract = function() {
   return { type: CLEAR_SHOWN_CONTRACT }
 }
+
+export const PROJECT_UPDATED = `${prefix}/PROJECT_UPDATED`
+export const projectUpdated = function(project) {
+  return {type: PROJECT_UPDATED, project}
+}

@@ -7,7 +7,9 @@ const { URL } = require("url");
 const keccak = require("keccak");
 const rlp = require("rlp");
 
-class ProjectWatcher extends EventEmitter {
+const ProjectFsWatcher = require("./projectFsWatcher");
+
+class ProjectsWatcher extends EventEmitter {
   constructor() {
     super();
     this.projects = [];
@@ -67,25 +69,44 @@ class ProjectWatcher extends EventEmitter {
     });
   }
 
-  add(project) {
-    this.projects.push(project);
+  add(project, networkId) {
+    const fsWatcher = new ProjectFsWatcher(project, networkId);
+
+    const projectIndex = this.projects.length;
+    fsWatcher.on("project-details-update", (data) => {
+      for (let i = 0; i < data.contracts.length; i++) {
+        data.contracts[i].projectIndex = projectIndex;
+      }
+      this.emit("project-details-update", data);
+    });
+
+    this.projects.push(fsWatcher);
+
+    const tempProject = fsWatcher.getProject();
+    for (let i = 0; i < tempProject.contracts.length; i++) {
+      tempProject.contracts[i].projectIndex = projectIndex;
+    }
+
+    return tempProject;
   }
 
-  remove(projectPath) {
+  remove(projectPath) { // TODO: might be an easier way now
     let truffleDirectory = projectPath;
     if (path.basename(truffleDirectory).match(/truffle(-config)?.js/) !== null) {
       truffleDirectory = path.dirname(truffleDirectory);
     }
 
     for (let i = 0; i < this.projects.length; i++) {
-      const project = this.projects[i];
-      if (project.truffle_directory === truffleDirectory) {
-        for (let j = 0; j < project.contracts.length; j++) {
-          const contract = project.contracts[j];
+      const fsWatcher = this.projects[i];
+      if (fsWatcher.project.truffle_directory === truffleDirectory) {
+        for (let j = 0; j < fsWatcher.project.contracts.length; j++) {
+          const contract = fsWatcher.project.contracts[j];
           if (contract.address && typeof this.contractsByAddress[contract.address] !== "undefined") {
             delete this.contractsByAddress[contract.address];
           }
         }
+        this.projects[i].removeAllListeners();
+        this.projects[i].stop();
         this.projects.splice(i);
         break;
       }
@@ -102,18 +123,26 @@ class ProjectWatcher extends EventEmitter {
         for (let j = 0; j < project.contracts.length; j++) {
           const contract = project.contracts[j];
 
-          // check if one of our watched projects was deployed
-          if (transaction.to === null && transaction.input === contract.bytecode) {
-            // this contract was deployed in this contract
-            contract.address = this.web3.utils.toChecksumAddress("0x" + keccak('keccak256').update(rlp.encode([transaction.from, transaction.nonce])).digest('hex').substring(24));
-            this.contractsByAddress[contract.address] = contract;
-            this.emit("contract-deployed", {
-              truffleDirectory: project.truffle_directory,
-              transactionHash: transaction.hash,
-              contractName: contract.contractName,
-              contractAddress: contract.address
-            });
-          }
+          // TODO: I switched to `project-details-update` event instead
+          //       of `contract-deployed` as the whole project got pushed
+          //       which allowed for some better linking. Below is the old
+          //       code which looked at block headers, which will be necessary
+          //       for non-truffle-migrated contracts (i.e. factory pattern).
+          //       my suggestion is to change `contract.address` to `contract.addresses`
+          //       which has has one address if `this.projects[i].contracts[j].address is valid,
+          //       otherwise we'll need to keep an internal list of deployed contracts for this instance?
+          // // check if one of our watched projects was deployed
+          // if (transaction.to === null && transaction.input === contract.bytecode) {
+          //   // this contract was deployed in this contract
+          //   contract.address = this.web3.utils.toChecksumAddress("0x" + keccak('keccak256').update(rlp.encode([transaction.from, transaction.nonce])).digest('hex').substring(24));
+          //   this.contractsByAddress[contract.address] = contract;
+          //   this.emit("contract-deployed", {
+          //     truffleDirectory: project.truffle_directory,
+          //     transactionHash: transaction.hash,
+          //     contractName: contract.contractName,
+          //     contractAddress: contract.address
+          //   });
+          // }
 
           if (contract.address && transaction.to === contract.address) {
             // this contract had a transaction on it
@@ -140,4 +169,4 @@ class ProjectWatcher extends EventEmitter {
   }
 }
 
-module.exports = ProjectWatcher;
+module.exports = ProjectsWatcher;

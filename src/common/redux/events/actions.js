@@ -41,14 +41,15 @@ export const requestPage = function(startBlockNumber, endBlockNumber) {
       toBlock: startBlockNumber
     }])
 
-    const contracts = getState().workspaces.current.contracts
+    const contractCache = getState().workspaces.current.contractCache
     const projects = getState().workspaces.current.projects
     for (let i = 0; i < logs.length; i++) {
       const log = logs[i]
-      const contract = contracts[log.address]
+      const cache = contractCache[log.address]
       log.timestamp = blockTimestamps[log.blockNumber]
 
-      if (contract) {
+      if (cache && cache.contract) {
+        const contract = cache.contract
         const projectContracts = projects[contract.projectIndex].contracts
         const decodedLog = await new Promise((resolve, reject) => {
           // TODO: there's a better way to do this to not have to send `contract` and `contracts` every time

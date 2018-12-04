@@ -6,6 +6,7 @@ import connect from '../helpers/connect'
 
 import * as Core from '../../../common/redux/core/actions'
 import * as Config from '../../../common/redux/config/actions'
+import { deleteWorkspace } from '../../../common/redux/workspaces/actions'
 
 import WorkspaceScreen from './ConfigScreens/WorkspaceScreen'
 import ServerScreen from './ConfigScreens/ServerScreen'
@@ -16,6 +17,8 @@ import AboutScreen from './ConfigScreens/AboutScreen'
 
 import RestartIcon from '../../icons/restart.svg'
 import EjectIcon from '../../icons/eject.svg';
+import SaveIcon from '../../icons/save-icon.svg';
+import OnlyIf from "../../components/only-if/OnlyIf";
 
 const TABS = [
   {name: 'Workspace', subRoute: 'workspace', component: WorkspaceScreen},
@@ -72,6 +75,9 @@ class ConfigScreen extends PureComponent {
       this.props.dispatch(Core.requestServerRestart())
     }
     else {
+      if (this.props.config.configScreenOnly) {
+        this.props.dispatch(deleteWorkspace(this.props.workspaces.current.name))
+      }
       hashHistory.goBack();
     }
   }
@@ -272,14 +278,20 @@ class ConfigScreen extends PureComponent {
                 <EjectIcon /*size={18}*/ />
                 CANCEL
               </button>
-              <button
-                className="btn btn-primary"
-                onClick={this.restartServer}
-                disabled={this.invalidConfig()}
-              >
-                <RestartIcon /*size={18}*/ />
-                { this.isDirty() ? 'SAVE AND RESTART' : 'RESTART' }
-              </button>
+                <button
+                  className="btn btn-primary"
+                  onClick={this.restartServer}
+                  disabled={this.invalidConfig()}
+                >
+                  <OnlyIf test={this.props.config.configScreenOnly}>
+                    <SaveIcon className="save-icon" /*size={18}*/ />
+                    SAVE WORKSPACE
+                  </OnlyIf>
+                  <OnlyIf test={!this.props.config.configScreenOnly}>
+                    <RestartIcon /*size={18}*/ />
+                    { this.isDirty() ? 'SAVE AND RESTART' : 'RESTART' }
+                  </OnlyIf>
+                </button>
             </div>
           </div>
           <div className="ConfigCard">

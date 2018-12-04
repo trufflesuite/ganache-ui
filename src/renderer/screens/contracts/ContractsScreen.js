@@ -11,7 +11,7 @@ class ContractsScreen extends Component {
         return (
           <div
             className="Project"
-            key={"project-" + project.sanitizedName}
+            key={"project-" + project.name}
           >
             <div className="ProjectName">
               <h2>{project.name}</h2>
@@ -19,6 +19,7 @@ class ContractsScreen extends Component {
             </div>
             <ProjectContracts
               contracts={project.contracts}
+              contractCache={this.props.workspaces.current.contractCache}
               projectIndex={index}
             />
           </div>

@@ -23,8 +23,10 @@ class ContractDetails extends Component {
   }
 
   componentWillMount () {
-    const transactions = this.state.contract.transactions.slice(-Math.min(5, this.state.contract.transactions.length))
-    const events = this.state.contract.events.slice(-Math.min(5, this.state.contract.events.length))
+    const contractCache = this.props.workspaces.current.contractCache
+    const cache = contractCache[this.state.contract.address]
+    const transactions = cache.transactions.slice(-Math.min(5, cache.transactions.length))
+    const events = cache.events.slice(-Math.min(5, cache.events.length))
 
     this.props.dispatch(getContractDetails({
       contract: this.state.contract,

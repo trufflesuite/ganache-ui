@@ -17,11 +17,8 @@ import OnlyIf from "../../components/only-if/OnlyIf"
 class TxCard extends Component {
   constructor(props) {
     super(props)
-
-    this.state = {
-      hasDecodedInfo: typeof props.transactions.currentTransactionContract !== "undefined" && typeof props.transactions.currentTransactionData !== "undefined"
-    }
   }
+
   componentDidMount() {
     this.props.dispatch(
       Transactions.showTransaction(this.props.transactionHash)
@@ -35,6 +32,8 @@ class TxCard extends Component {
       currentTransactionData: decodedData,
       currentTransactionContract: contract
     } = this.props.transactions
+
+    const hasDecodedInfo = typeof this.props.transactions.currentTransactionContract !== "undefined" && typeof this.props.transactions.currentTransactionData !== "undefined"
 
     let events = this.props.transactions.currentTransactionEvents.map((event) => {
       return {
@@ -51,7 +50,7 @@ class TxCard extends Component {
     }
 
     let contractInfo = null
-    if (this.state.hasDecodedInfo) {
+    if (hasDecodedInfo) {
       contractInfo = {
         name: contract.contractName,
         address: contract.address,
@@ -133,7 +132,7 @@ class TxCard extends Component {
           </main>
         </div>
 
-        <OnlyIf test={this.state.hasDecodedInfo}>
+        <OnlyIf test={hasDecodedInfo}>
           <div className="ContractInfo">
             <header>
               <div className="Title">

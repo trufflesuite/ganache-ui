@@ -4,7 +4,7 @@ import merge from 'lodash.merge'
 const oldDefaultMnemonic = "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat";
 
 const initialSettings = {
-  name: "Quickstart Workspace",
+  name: "Quickstart",
   isDefault: true,
   verboseLogging: false,
   randomizeMnemonicOnStart: false,

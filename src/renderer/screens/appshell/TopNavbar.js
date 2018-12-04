@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router'
+import { push } from 'react-router-redux'
 
 import moniker from "moniker"
 
@@ -12,6 +13,7 @@ import { clearLogLines } from '../../../common/redux/logs/actions'
  
 import ModalDetails from '../../components/modal/ModalDetails'
 import Spinner from '../../components/spinner/Spinner'
+import MDSpinner from "react-md-spinner";
 import OnlyIf from '../../components/only-if/OnlyIf'
 import StatusIndicator from '../../components/status-indicator/StatusIndicator'
 import UpdateNotification from '../auto-update/UpdateNotification'
@@ -95,6 +97,8 @@ class TopNavbar extends Component {
         )
 
         this.props.dispatch(ModalDetails.actions.setModalError(modalDetails))
+      } else if (value.toLowerCase() === "loader") {
+        this.props.dispatch(push("/loader"))
       } else {
         this.props.dispatch(Search.query(value))
       }
@@ -217,9 +221,6 @@ class TopNavbar extends Component {
               title="MINING STATUS"
               value={miningPaused ? 'STOPPED' : this._renderMiningTime()}
             >
-              <OnlyIf test={isMining}>
-                <Spinner />
-              </OnlyIf>
             </StatusIndicator>
             <StatusIndicator
               title="WORKSPACE"
