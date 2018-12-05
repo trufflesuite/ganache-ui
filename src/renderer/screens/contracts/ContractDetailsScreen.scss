@@ -36,11 +36,21 @@
     }
   }
 
+  .DecodeError {
+    padding: 28px 18px;
+    background: var(--app-card-default-background);
+    text-align: center;
+
+    div {
+      margin-top: 10px;
+    }
+  }
+
   .react-json-view .pretty-json-container {
     // TODO-DAVID: there are now a couple of `padding: 28px 18px;` in this file and other places too, maybe
     // this should be abstracted out as a global class?
     padding: 28px 18px;
-    background: var(--app-card-default-background)
+    background: var(--app-card-default-background);
   }
 
   .TxList > a.Link:last-child > .MiniTxCard{
