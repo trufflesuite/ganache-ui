@@ -1,0 +1,139 @@
+.Modal {
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 100;
+    }
+  }
+
+  position: fixed;
+  opacity: 0;
+  animation: fadeIn .2s forwards;
+  transform: translate3d(0, 0, 0);
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 2;
+  background-color: rgba(117, 127, 134, 0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  header {
+    background: var(--app-navbar-background);
+    width: 600px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    button {
+      color:rgba(255,255,255, 1);
+      background-color:transparent;
+      transition: color 0.3s;
+      &:hover {
+        color:var(--app-button-primary-color);
+      }
+    }
+
+    h4, button {
+      line-height: 1rem;
+      font-size: 1rem;
+      font-weight: 500;
+      padding: 0 2rem;
+      color: #fff;
+      text-transform: uppercase;
+    }
+  }
+
+  section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    text-align: left;
+
+    padding: 2rem;
+    background: white;
+    width: 600px;
+
+    animation: shrinkIn .3s forwards ease-in-out;
+
+    // allow for multiple <section> elements within the modal
+    &:first-of-type:not(:last-child) {
+      padding-bottom:.25rem;
+    }
+    &:last-child:not(:first-of-type) {
+      padding-top:.25rem;
+    }
+
+    &.subTitle {
+      display:block;
+      position:relative;
+      font-family: "RobotoCondensed-Regular";
+      font-weight: 800;
+      color: #605c59;
+      svg {
+        vertical-align: middle;
+        width: 28px;
+        height: 28px;
+        margin-right:.5rem;
+      }
+    }
+
+    p {
+      font-size: 1rem;
+      width: 100%;
+      margin-top: 0;
+    }
+
+    dl {
+      margin: 0;
+
+      dt,
+      dd {
+        margin: 0;
+      }
+
+      dt {
+        font-family: "RobotoCondensed-Regular";
+        font-weight: 800;
+        color: #605c59;
+        margin-bottom: .5rem;
+
+        svg {
+          vertical-align: middle;
+        }
+      }
+
+      dd {
+        word-wrap: break-word;
+        word-break: break-all;
+        margin-bottom: 1rem;
+        font-family: "Fira Code Regular";
+      }
+    }
+
+    header {
+      margin-bottom: 2rem;
+    }
+
+    footer {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      button + button {
+        margin-left: 1rem;
+      }
+    }
+  }
+}
+
+

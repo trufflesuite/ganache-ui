@@ -1,0 +1,340 @@
+
+.ConfigScreen {
+  color: var(--text-color);
+  background: white;
+  position: fixed;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  width: 100%;
+
+  main {
+    width: 100%;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    position: relative;
+  }
+  
+  img {
+    margin-top: 2rem;
+  }
+
+  > svg {
+    margin: 2rem auto;
+  }
+
+
+  h3 {
+    padding: 0;
+    margin: 0;
+  }
+
+  h4 {
+    font-family: "Fira Code Regular";
+    font-size: .8rem;
+    letter-spacing: 1px;
+    font-weight: normal;
+  }
+
+  footer {
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+
+    button {
+      box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.20);
+    }
+  }
+
+  .Tabs {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    width: 100%;
+  }
+  
+  .Header {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    width: 100%;
+    margin-top: 1.5rem;
+
+    .TabItems {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+
+      .TabItem {
+        cursor: pointer;
+        text-align: center;
+        margin: 0 2rem 0 0;
+        font-size: .8rem;
+        text-transform: uppercase;
+        transition: color .3s;
+        height: 1rem;
+      
+        &:first-of-type {
+          margin-left: 4rem;
+        }
+      
+        &:last-of-type {
+          margin-right: 4rem;
+        }
+      
+        &.active {
+          border-bottom: 2px solid var(--app-config-tab-active-text-color);
+        }
+      
+        &.active,
+        &:hover {
+          color: var(--app-config-tab-active-text-color);
+          font-weight: bold;
+        }
+      }
+    }
+
+    .Actions {
+      flex-grow: 1;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-right: 3rem;
+  
+      > button {
+        display: flex;
+        align-items: center;
+        -webkit-app-region: no-drag;
+        padding-left: 1rem;
+        margin: 0.75rem 0.5rem 0.75rem 0;
+
+        &:active {
+          transform: scale(.98);
+        }
+
+        &:hover {
+          background: white;
+        }
+  
+        svg {
+          height: 18px;
+          width: 18px;
+          margin-right: 0.5rem;
+        }
+      }
+    }
+  }
+   
+  .ActiveTab {
+    color: var(--app-config-tab-active-text-color);
+    border-bottom: 2px solid var(--app-config-tab-active-text-color);
+  }
+  
+  .ConfigCard {
+    background: white;
+    padding: 2rem;
+    width: 100%;
+
+    box-shadow: 0 -40px 40px -40px rgba(0,0,0,0.15);
+
+    p {
+      margin: 0;
+    }
+
+    h4 {
+      margin: 0 0 .25rem 0;
+    }
+
+    p {
+      color: var(--app-navbar-text);
+      font-family: "Fira Code Regular";
+      font-size: .875rem;
+    }
+
+    h2 {
+      color: var(--app-window-control-background);
+      font-family: "RobotoCondensed-Bold";
+      font-weight: bold;
+      margin-top: 0;
+    }
+
+    section {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .Row {
+      display: flex;
+      align-items: flex-start;
+      flex-direction: row;
+      margin-bottom: 2rem;
+    }
+
+    .RowItem {
+      width: 50%;
+      align-items: center;
+      margin-right: 1rem;
+    }
+
+    .RowItem + .RowItem {
+      margin-right: 0;
+      margin-left: 1rem;
+    }
+
+    input[type='text'], input[type='number'], input[type='file'], select {
+      border-color: var(--app-navbar-text);
+      width: 100%;
+    }
+
+    .ValidationError {
+      background-color: var(--primary-color);
+      color: white;
+      display: block;
+      padding: .5rem;
+      font-size: 14px;
+      border-bottom: 1px solid;
+      border-bottom-color: rgba(0, 0, 0, 0.2);
+
+      &:last-child {
+        border-bottom: 0;
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+      }
+    }
+  }
+
+  .Radio {
+    input {
+      margin: .5rem;
+    }
+  }
+
+  .WorkspaceButtons {
+    margin-top: 1rem;
+
+    button {
+      margin-right: .5rem;
+    }
+  }
+
+  .WorkspaceProjects {
+    border: 1px solid var(--app-navbar-text);
+    height: 12rem;
+    width: 100%;
+    padding: .5rem .25rem;
+    overflow: auto;
+
+    .projectItem {
+      padding: .25rem;
+      margin: .25rem;
+      cursor: pointer;
+
+      &:hover {
+        background: #EEE;
+      }
+
+      &.active {
+        background: var(--primary-color);
+      }
+    }
+  }
+
+  .AboutScreen {
+    margin-top: 10rem;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    font-family: "RobotoCondensed-Bold", Helvetica, Arial, sans-serif;
+    font-size: 20px;
+    letter-spacing:4px;
+
+    .LogoWrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      font-size: 20px;
+
+      font-weight: 700;
+      line-height: 3.2;
+
+      .Logo {
+        height: 128px;
+        width: 128px;
+        background-image: url(../../../resources/icons/png/256x256.png);
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: 128px 128px;
+      }
+    }
+
+    h4 {
+      margin: 2rem 0 0 0;
+      height: 42px;
+    }
+
+    .GanacheVersion {
+      margin: 0;
+      font-size: 14px;
+      letter-spacing: initial;
+      color: #525456;
+    }
+
+    .GanacheDescription {
+      margin-top: 3rem;
+      font-size: 14px;
+      font-family: Arial;
+      letter-spacing: initial;
+      line-height: 1.35rem;
+      color: #525456;
+
+      .heart {
+        color: rgb(228, 37, 37);
+        font-size: 1.4em;
+      }
+
+      a {
+        color: var(--primary-color);
+        font-weight: bold;
+      }
+    }
+
+    h4 strong {
+      color: #525456;
+      font-weight: 300;
+      line-height: 1.2;
+      font-size: 2.5rem;
+      font-family: "Grand Hotel", cursive;
+      letter-spacing: normal;
+    }
+
+    h4 strong sup {
+      font-family: Arial;
+      color: rgba(157, 174, 189, 0.47);
+      margin-left: 4px;
+      font-size: 75%;
+      line-height: 0;
+      position: relative;
+      vertical-align: baseline;
+      top: -0.5em;
+    }
+  }
+
+  .Notice {
+    background: #ddd;
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .Warning {
+    font-size: 24px;
+    vertical-align: middle;
+  }
+}
