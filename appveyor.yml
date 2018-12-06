@@ -5,15 +5,15 @@ platform:
   - x64
 
 cache:
-  - node_modules
+  - node_modules -> package-lock.json
+  - '%APPDATA%\npm-cache'
   - '%USERPROFILE%\.electron'
 
 environment:
-  APPVEYOR_SAVE_CACHE_ON_ERROR: true
   CSC_KEY_PASSWORD:
-    secure: Cqeajvouxb90cluiDv/iJuLkFHwNERXSxjoXg7FzZZ4=
+    secure: 6HPJFbG4UcVgagENR42Pc1bshVrRsoMxt0xDKrR1eCs=
   CERT_PASSPHRASE:
-    secure: ppGahvnNpvjY6+zSIe6QJdMM2OArsgn1qb2RQX4SXMmEamtJM9/fY03rTBxBVFgoRNJftJMD9I6RYLFBzdtwQw==
+    secure: kMG4K6eKtrVcehlpLDdxX8DAe1gvzaKcdn0HR2IdtgG4+eFqczuddRdkq18ZSzqeDTA8/CxaY8p13NwRLP0EGNztobwSwE/WKq7Aa+MeRFc=
   GH_TOKEN:
     secure: w01ayU0xx5aYR68/rJbAtdtfs+6bXFhYhZkRf4aeY8ca2qikM0UWiC7G5xXeUkz9
   matrix:
@@ -27,7 +27,6 @@ install:
           appveyor-tools\secure-file -decrypt certs/cert.pfx.enc -secret $env:CERT_PASSPHRASE;
         }
   - ps: Install-Product node $env:nodejs_version x64
-  - ps: npm install -g windows-build-tools
   - set CI=true
   - npm install -g npm@latest
   - set PATH=%APPDATA%\npm;%PATH%
