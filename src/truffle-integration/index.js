@@ -73,8 +73,7 @@ process.on("message", async function(message) {
     }
     case "decode-contract-request": {
       const { contract, contracts, block } = message.data;
-      let state = web3Host ? await DecodeHelpers.getContractState(contract, contracts, web3Host, block) : {};
-      state = state.variables;
+      const state = web3Host ? await DecodeHelpers.getContractState(contract, contracts, web3Host, block) : {};
       process.send({
         type: "decode-contract-response",
         data: state

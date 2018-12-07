@@ -8,7 +8,14 @@ async function getContractState(truffleContract, inheritedContracts, web3Host, b
   const decoder = TruffleDecoder.forContract(truffleContract, inheritedContracts, web3Host);
   decoder.init();
 
-  const contractState = await decoder.state(block);
+  let contractState;
+  try {
+    contractState = await decoder.state(block);
+  }
+  catch (e) {
+    contractState = {};
+    contractState.error = e.stack || e.toString();
+  }
 
   return contractState;
 }

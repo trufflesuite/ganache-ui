@@ -1,3 +1,6 @@
+import { shell } from 'electron'
+const { app } = require('electron').remote
+
 import ReactJson from '@seesemichaelj/react-json-view'
 import React, { Component } from 'react'
 import connect from '../helpers/connect'
@@ -7,6 +10,8 @@ import ChecksumAddress from '../../components/checksum-addresses/ChecksumAddress
 import EventList from "../events/EventList"
 import { hashHistory } from 'react-router'
 import { getContractDetails, clearShownContract } from "../../../common/redux/workspaces/actions"
+import OnlyIf from "../../components/only-if/OnlyIf"
+import { sanitizeError } from "../helpers/sanitize"
 
 class ContractDetails extends Component {
   constructor(props) {
@@ -39,6 +44,34 @@ class ContractDetails extends Component {
 
   componentWillUnmount () {
     this.props.dispatch(clearShownContract())
+  }
+
+  renderIssueBody(sanitizedSystemError) {
+    let issueBody =
+      "<!-- Please give us as much detail as you can about what you were doing at the time of the error, and any other relevant information -->\n" +
+      "\n" +
+      "\n" +
+      `PLATFORM: ${process.platform}\n` +
+      `GANACHE VERSION: ${app.getVersion()}\n` +
+      "\n" +
+      "EXCEPTION:\n" +
+      "```\n" +
+      `${sanitizedSystemError}\n` +
+      "```"
+
+    return encodeURIComponent(issueBody).replace(/%09/g, '')
+  }
+
+  reportDecodingError() {
+    const title = encodeURIComponent(
+      `Decoding Error when running Ganache ${app.getVersion()} on ${process.platform}`
+    )
+
+    const body = this.renderIssueBody(sanitizeError(this.props.workspaces.current.shownContract.state.error))
+
+    shell.openExternal(
+      `https://github.com/trufflesuite/ganache/issues/new?title=${title}&body=${body}`
+    )
   }
 
   render() {
@@ -91,40 +124,50 @@ class ContractDetails extends Component {
             <div className="Title">
               <h2>STORAGE</h2>
             </div>
-            <ReactJson
-              src={this.props.workspaces.current.shownContract.state} name={false} theme={{
-                  scheme: 'ganache',
-                  author: 'Ganache',
-                  //transparent main background
-                  base00: 'rgba(0, 0, 0, 0)',
-                  base01: 'rgb(245, 245, 245)',
-                  base02: '#000', // lines and background color for: NULL, undefined, and brackets
-                  base03: 'rgb(26, 185, 70)', // blue grey -- not used?
-                  base04: 'rgba(0, 0, 0, 0.3)',
-                  base05: '#aaa', // undefined text
-                  base06: '#073642', // dark blue -- not sued?
-                  base07: '#000', // JSON keys
-                  base08: '#d33682', // pink -- not used?
-                  base09: 'rgb(208, 108, 0)', // string types text (ganache orange)
-                  base0A: 'rgb(208, 108, 0)', // NULL (ganache orange)
-                  base0B: '#3fe0c5', //aka --truffle-green, for  float types
-                  base0C: '#777', // array indexes and item counts
-                  base0D: '#000', // arrows
-                  base0E: '#000', // used for some arrows and bool
-                  base0F: '#268bd2', // a bright blue -- not used?
-                  base10: 'rgb(26, 185, 70)' // a bright blue -- not used?
-              }}
-              iconStyle="triangle"
-              edit={false}
-              add={false}
-              delete={false}
-              enableClipboard={false}
-              displayDataTypes={true}
-              displayObjectSize={true}
-              indentWidth={2}
-              collapsed={1}
-              collapseStringsAfterLength={20}
-            />
+            <OnlyIf test={typeof this.props.workspaces.current.shownContract.state.variables !== "undefined"}>
+              <ReactJson
+                src={this.props.workspaces.current.shownContract.state.variables} name={false} theme={{
+                    scheme: 'ganache',
+                    author: 'Ganache',
+                    //transparent main background
+                    base00: 'rgba(0, 0, 0, 0)',
+                    base01: 'rgb(245, 245, 245)',
+                    base02: '#000', // lines and background color for: NULL, undefined, and brackets
+                    base03: 'rgb(26, 185, 70)', // blue grey -- not used?
+                    base04: 'rgba(0, 0, 0, 0.3)',
+                    base05: '#aaa', // undefined text
+                    base06: '#073642', // dark blue -- not sued?
+                    base07: '#000', // JSON keys
+                    base08: '#d33682', // pink -- not used?
+                    base09: 'rgb(208, 108, 0)', // string types text (ganache orange)
+                    base0A: 'rgb(208, 108, 0)', // NULL (ganache orange)
+                    base0B: '#3fe0c5', //aka --truffle-green, for  float types
+                    base0C: '#777', // array indexes and item counts
+                    base0D: '#000', // arrows
+                    base0E: '#000', // used for some arrows and bool
+                    base0F: '#268bd2', // a bright blue -- not used?
+                    base10: 'rgb(26, 185, 70)' // a bright blue -- not used?
+                }}
+                iconStyle="triangle"
+                edit={false}
+                add={false}
+                delete={false}
+                enableClipboard={false}
+                displayDataTypes={true}
+                displayObjectSize={true}
+                indentWidth={2}
+                collapsed={1}
+                collapseStringsAfterLength={20}
+              />
+            </OnlyIf>
+            <OnlyIf test={typeof this.props.workspaces.current.shownContract.state.error !== "undefined"}>
+              <div className="DecodeError">
+                There was an issue decoding your contract. Please file a GitHub Issue by clicking on the button below.
+                <div onClick={this.reportDecodingError.bind(this)}>
+                  <button>Raise Github Issue</button>
+                </div>
+              </div>
+            </OnlyIf>
           </div>
           
           <div>
