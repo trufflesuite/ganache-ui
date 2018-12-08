@@ -51,7 +51,9 @@ export default function (state = initialState, action) {
 
       for (let i = 0; i < nextState.current.projects.length; i++) {
         const project = nextState.current.projects[i]
-        linkContractCacheToProject(nextState.current.contractCache, project)
+        if (typeof project.error === "undefined") {
+          linkContractCacheToProject(nextState.current.contractCache, project)
+        }
       }
       break
     case CONTRACT_TRANSACTION: {

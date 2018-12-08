@@ -79,12 +79,7 @@ class TruffleIntegrationService extends EventEmitter {
   async getProjectDetails(projectConfigFile, networkId) {
     return new Promise((resolve, reject) => {
       this.once("project-details-response", (details) => {
-        if (typeof details === "object") {
-          resolve(details);
-        }
-        else {
-          reject(details);
-        }
+        resolve(details);
       })
 
       if (this.child !== null && this.child.connected) {

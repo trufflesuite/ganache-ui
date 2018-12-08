@@ -3,15 +3,23 @@ const path = require("path");
 const TruffleConfig = require("truffle-config");
 
 function get(projectFile) {
+  const configFileDirectory = path.dirname(projectFile);
+  const name = path.basename(configFileDirectory);
   if (!fs.existsSync(projectFile)) {
-    return "Truffle project config file '" + projectFile + "' does not exist";
+    return {
+      name,
+      configFile: projectFile,
+      error: "project-does-not-exist"
+    };
   }
   else if (path.basename(projectFile).match(/^truffle(-config)?.js$/) === null) {
-    return "Truffle project config file '" + projectFile + "' is not a valid config file (must point to a file with the name 'truffle.js' or 'truffle-config.js'";
+    return {
+      name,
+      configFile: projectFile,
+      error: "invalid-project-file"
+    };
   }
   else {
-    const configFileDirectory = path.dirname(projectFile);
-    const name = path.basename(configFileDirectory);
     let config = new TruffleConfig(configFileDirectory, configFileDirectory, "ganache");
     const output = require(projectFile);
     config.merge(output);
