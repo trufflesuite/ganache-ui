@@ -5,7 +5,7 @@ const { app } = require('electron').remote
 import connect from '../helpers/connect'
 import { sanitizeError, sanitizePaths } from '../helpers/sanitize.js'
 
-import * as Core from '../../../common/redux/core/actions'
+import * as Workspaces from "../../../common/redux/workspaces/actions"
 
 import Modal from '../../components/modal/Modal'
 
@@ -99,7 +99,7 @@ class BugModal extends Component {
             </button>
             <button
               onClick={() => {
-                this.props.dispatch(Core.requestServerRestart())
+                this.props.dispatch(Workspaces.closeWorkspace())
               }}
             >
               RELAUNCH
