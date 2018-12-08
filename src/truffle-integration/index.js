@@ -56,7 +56,7 @@ process.on("message", async function(message) {
     case "project-details-request": {
       let response = getProjectDetails(message.data.file);
 
-      if (typeof response === "object") {
+      if (typeof response.error === "undefined") {
         response = watcher.add(response, message.data.networkId);
       }
 

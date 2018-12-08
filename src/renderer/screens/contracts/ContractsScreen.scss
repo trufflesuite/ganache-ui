@@ -10,6 +10,19 @@
       color: var(--app-card-value);
     }
   }
+
+  .Notice {
+    background: #ddd;
+    padding: 1rem;
+    border-radius: 6px;
+    margin: 1rem;
+    text-align: center;
+  }
+
+  .Warning {
+    font-size: 24px;
+    vertical-align: middle;
+  }
 }
 
 .ProjectContracts {
