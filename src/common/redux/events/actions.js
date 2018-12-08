@@ -109,26 +109,7 @@ export const getDecodedEvent = function(transactionHash, logIndex) {
     const block = await web3ActionCreator(dispatch, getState, "getBlock", [transaction.blockNumber, false])
 
     let contract
-    let contractName
-    let contractAddress = transaction.to
-    let projectIndex
     const state = getState()
-    for (let i = 0; i < state.workspaces.current.projects.length; i++) {
-      const project = state.workspaces.current.projects[i]
-      for (let j = 0; j < project.contracts.length; j++) {
-        const tempContract = project.contracts[j]
-        if (tempContract.address && tempContract.address === transaction.to) {
-          contract = tempContract
-          projectIndex = i
-          break
-        }
-      }
-
-      if (contract) {
-        contractName = contract.contractName
-        break
-      }
-    }
 
     // TODO: This is shared code in redux/workspaces/actions.js
     for (let j = 0; j < receipt.logs.length; j++) {
@@ -147,16 +128,21 @@ export const getDecodedEvent = function(transactionHash, logIndex) {
       }
     }
 
+    const contractCache = state.workspaces.current.contractCache[event.log.address]
+    if (contractCache) {
+      contract = contractCache.contract
+    }
+
     if (contract) {
       event.decodedLog = await new Promise((resolve, reject) => {
         // TODO: there's a better way to do this to not have to send `contract` and `contracts` every time
         ipcRenderer.once(GET_DECODED_EVENT, (event, decodedLog) => {
           resolve(decodedLog)
         })
-        ipcRenderer.send(GET_DECODED_EVENT, contract, state.workspaces.current.projects[projectIndex].contracts, event.log)
+        ipcRenderer.send(GET_DECODED_EVENT, contract, state.workspaces.current.projects[contract.projectIndex].contracts, event.log)
       })
     }
 
-    dispatch({ type: GET_DECODED_EVENT, event, contractName, contractAddress })
+    dispatch({ type: GET_DECODED_EVENT, event, contractName: contract.contractName, contractAddress: event.log.address })
   }
 }
