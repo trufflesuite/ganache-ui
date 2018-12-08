@@ -18,20 +18,29 @@ class BugModal extends Component {
   }
 
   // grabs the last 175 log lines as a string formatted for inclusion as a github issue
-  renderAndSanitizeLogLines () {
+  renderAndSanitizeLogLines (existingBody) {
     let result = ''
+    let logs = ''
+    
     if (this.props.logs && this.props.logs.lines && this.props.logs.lines.length > 0) {
       let maxLines = -175 // negative because Array.slice -- we want the last 175 lines, not the first 175
 
       // GitHub has a max URL length of ~8KiB, so we truncate logs to fit within that
-      while (encodeURIComponent(result = _getLastNLogLines(maxLines, this.props.logs)).length > 7500) {
+      do {
+        logs = _getLastNLogLines(maxLines, this.props.logs)
+        result = "\n" +
+          "\n" +
+          "APPLICATION LOG:\n" +
+          "```\n" +
+          `${sanitizePaths(logs)}\n` +
+          "```"
         maxLines++ // reduces number of lines we get next time
-      }
+      } while (encodeURIComponent(existingBody + result).length > 7500)
     }
-    return sanitizePaths(result)
+    return result
   }
 
-  renderIssueBody(sanitizedSystemError, sanitizedLogLines) {
+  renderIssueBody(sanitizedSystemError) {
     let issueBody =
       "<!-- Please give us as much detail as you can about what you were doing at the time of the error, and any other relevant information -->\n" +
       "\n" +
@@ -44,13 +53,9 @@ class BugModal extends Component {
       `${sanitizedSystemError}\n` +
       "```"
 
+    const sanitizedLogLines = this.renderAndSanitizeLogLines(issueBody)
     if (sanitizedLogLines) {
-      issueBody += "\n" +
-        "\n" +
-        "APPLICATION LOG:\n" +
-        "```\n" +
-        `${sanitizedLogLines}\n` +
-        "```"
+      issueBody += sanitizedLogLines
     }
     return encodeURIComponent(issueBody).replace(/%09/g, '')
   }
@@ -62,11 +67,9 @@ class BugModal extends Component {
 
     let unsanitizedSystemError = this.props.systemError.stack || this.props.systemError
     let sanitizedSystemError = ''
-    let sanitizedLogLines = ''
 
     if (unsanitizedSystemError) {
       sanitizedSystemError = sanitizeError(unsanitizedSystemError)
-      sanitizedLogLines = this.renderAndSanitizeLogLines()
     }
 
     return (
@@ -85,7 +88,7 @@ class BugModal extends Component {
                   `System Error when running Ganache ${app.getVersion()} on ${process.platform}`
                 )
 
-                const body = this.renderIssueBody(sanitizedSystemError, sanitizedLogLines)
+                const body = this.renderIssueBody(sanitizedSystemError)
 
                 shell.openExternal(
                   `https://github.com/trufflesuite/ganache/issues/new?title=${title}&body=${body}`
