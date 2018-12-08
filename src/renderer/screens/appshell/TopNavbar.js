@@ -76,7 +76,7 @@ class TopNavbar extends Component {
 
       // Secret to show the error screen when we need it.
       if (value.toLowerCase() == "error") {
-        this.props.dispatch(setSystemError(new Error("You found a secret!")))
+        this.props.dispatch(setSystemError(new Error("You found a secret!"), true))
       } else if (value.toLowerCase() == "test-update") {
         this.props.dispatch(setUpdateAvailable("9.9.9", "Release Name", "This is a release note.\n\n**bold** _italic_ or is this *italic*? [trufflesuite/ganache-cli#417](https://github.com/trufflesuite/ganache-cli/issues/417)\n\nDo we scroll to get here?\n\nHow about here?"))
       } else if (value.toLowerCase() === "modal_error") {
