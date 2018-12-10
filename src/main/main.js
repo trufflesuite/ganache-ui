@@ -121,13 +121,13 @@ app.on('ready', () => {
       const service = getAutoUpdateService()
       if (service == null || !service.isRestartingForUpdate) {
         mainWindow = null
-  
-        if (chain && chain.isServerStarted()) {
-          await chain.stopServer()
-        }
-  
+
         if (truffleIntegration) {
           await truffleIntegration.stopWatching()
+        }
+
+        if (chain.isServerStarted()) {
+          await chain.stopServer()
         }
   
         chain.stopProcess()
@@ -266,13 +266,13 @@ app.on('ready', () => {
       chain.on("error", async (error) => {
         mainWindow.webContents.send(SET_SYSTEM_ERROR, error)
 
+        if (truffleIntegration) {
+          await truffleIntegration.stopWatching()
+        }
+
         if (chain.isServerStarted()) {
           // Something wrong happened in the chain, let's try to stop it
           await chain.stopServer()
-        }
-
-        if (truffleIntegration) {
-          await truffleIntegration.stopWatching()
         }
       })
 
@@ -280,12 +280,12 @@ app.on('ready', () => {
     })
 
     ipcMain.on(SAVE_WORKSPACE, async (event, workspaceName, mnemonic) => {
-      if (chain.isServerStarted()) {
-        await chain.stopServer()
-      }
-
       if (truffleIntegration) {
         await truffleIntegration.stopWatching()
+      }
+
+      if (chain.isServerStarted()) {
+        await chain.stopServer()
       }
 
       if (workspace) {
@@ -334,12 +334,12 @@ app.on('ready', () => {
 
     ipcMain.on(CLOSE_WORKSPACE, async (event) => {
       if (workspace) {
-        if (chain.isServerStarted()) {
-          await chain.stopServer()
-        }
-
         if (truffleIntegration) {
           await truffleIntegration.stopWatching()
+        }
+
+        if (chain.isServerStarted()) {
+          await chain.stopServer()
         }
       }
 
@@ -353,12 +353,12 @@ app.on('ready', () => {
 
     ipcMain.on(OPEN_WORKSPACE, async (event, name) => {
       if (workspace) {
-        if (chain.isServerStarted()) {
-          await chain.stopServer()
-        }
-
         if (truffleIntegration) {
           await truffleIntegration.stopWatching()
+        }
+
+        if (chain.isServerStarted()) {
+          await chain.stopServer()
         }
       }
 
@@ -407,12 +407,12 @@ app.on('ready', () => {
     })
 
     ipcMain.on(OPEN_NEW_WORKSPACE_CONFIG, async (event, name) => {
-      if (chain.isServerStarted()) {
-        await chain.stopServer()
-      }
-
       if (truffleIntegration) {
         await truffleIntegration.stopWatching()
+      }
+
+      if (chain.isServerStarted()) {
+        await chain.stopServer()
       }
 
       const defaultWorkspace = workspaceManager.get(null)
@@ -452,12 +452,12 @@ app.on('ready', () => {
       mainWindow.webContents.send(SET_SETTINGS, globalSettings, {})
 
       if (workspace) {
-        if (chain.isServerStarted()) {
-          await chain.stopServer()
-        }
-
         if (truffleIntegration) {
           await truffleIntegration.stopWatching()
+        }
+
+        if (chain.isServerStarted()) {
+          await chain.stopServer()
         }
 
         if (openConfigScreenOnStart) {
