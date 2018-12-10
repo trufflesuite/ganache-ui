@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router'
 import path from "path"
 import connect from '../helpers/connect'
 import ProjectContracts from './ProjectContracts';
@@ -15,13 +16,13 @@ class ContractsScreen extends Component {
           switch (project.error) {
             case "project-does-not-exist": {
               errorMessage = (
-                <span><strong>Your Truffle Project can no longer be found.</strong> Did you delete or move it? Update the location in the settings screen or restart Ganache.</span>
+                <span><strong>Your Truffle Project can no longer be found.</strong> Did you delete or move it? Update the location in the <Link className="settingsLink" to="/config">settings screen</Link> or restart Ganache.</span>
               )
               break;
             }
             case "invalid-project-file": {
               errorMessage = (
-                <span><strong>Your Truffle Project config is invalid.</strong> The file should either be 'truffle.js' or 'truffle-config.js'. Update the file in the settings screen.</span>
+                <span><strong>Your Truffle Project config is invalid.</strong> The file should either be 'truffle.js' or 'truffle-config.js'. Update the file in the <Link className="settingsLink" to="/config">settings screen</Link>.</span>
               )
               break;
             }
