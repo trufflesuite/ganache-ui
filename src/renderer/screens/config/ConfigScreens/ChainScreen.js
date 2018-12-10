@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 
+import OnlyIf from '../../../components/only-if/OnlyIf'
+
 const VALIDATIONS = {
   "workspace.server.gasPrice": {
     allowedChars: /^\d*$/,
@@ -57,30 +59,39 @@ class ChainScreen extends Component {
   }
 
   render () {
+    const enabled = this.props.config.settings.workspace.isDefault || this.props.config.configScreenOnly
     return (
       <div>
         <h2>GAS</h2>
-        <section>
-          <h4>GAS LIMIT</h4>
-          <div className="Row">
-            <div className="RowItem">
-              <input
-                name="workspace.server.gasLimit"
-                type="text"
-                data-type="number"
-                value={this.props.config.settings.workspace.server.gasLimit}
-                onChange={this.validateChange}
-              />
-              {this.props.validationErrors["workspace.server.gasLimit"] &&
-                <p className="ValidationError">
-                  Must be &ge; 1
-                </p>}
-            </div>
-            <div className="RowItem">
-              <p>Maximum amount of gas available to each block and transaction. Leave blank for default.</p>
-            </div>
+        <OnlyIf test={!enabled}>
+          <div className="Notice">
+            <span className="Warning">⚠</span>{" "}
+            The block gas limit cannot be updated unless you create a new workspace.
           </div>
-        </section>
+        </OnlyIf>
+        <OnlyIf test={enabled}>
+          <section>
+            <h4>GAS LIMIT</h4>
+            <div className="Row">
+              <div className="RowItem">
+                <input
+                  name="workspace.server.gasLimit"
+                  type="text"
+                  data-type="number"
+                  value={this.props.config.settings.workspace.server.gasLimit}
+                  onChange={this.validateChange}
+                />
+                {this.props.validationErrors["workspace.server.gasLimit"] &&
+                  <p className="ValidationError">
+                    Must be &ge; 1
+                  </p>}
+              </div>
+              <div className="RowItem">
+                <p>Maximum amount of gas available to each block and transaction. Leave blank for default.</p>
+              </div>
+            </div>
+          </section>
+        </OnlyIf>
         <section>
           <h4>GAS PRICE</h4>
           <div className="Row">
