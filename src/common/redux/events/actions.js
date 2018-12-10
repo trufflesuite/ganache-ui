@@ -143,6 +143,6 @@ export const getDecodedEvent = function(transactionHash, logIndex) {
       })
     }
 
-    dispatch({ type: GET_DECODED_EVENT, event, contractName: contract.contractName, contractAddress: event.log.address })
+    dispatch({ type: GET_DECODED_EVENT, event, contractName: contract ? contract.contractName : null, contractAddress: event.log.address })
   }
 }
