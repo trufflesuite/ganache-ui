@@ -36,9 +36,14 @@ class TxCard extends Component {
     const hasDecodedInfo = typeof this.props.transactions.currentTransactionContract !== "undefined" && typeof this.props.transactions.currentTransactionData !== "undefined"
 
     let events = this.props.transactions.currentTransactionEvents.map((event) => {
+      let eventContractLabel = event.log.address
+      const eventContractCache = this.props.workspaces.current.contractCache[event.log.address]
+      if (eventContractCache && eventContractCache.contract && eventContractCache.contract.contractName) {
+        eventContractLabel = eventContractCache.contract.contractName
+      }
       return {
         name: event.decodedLog ? event.decodedLog.name : null,
-        contract: contract ? contract.contractName : event.log.address,
+        contract: eventContractLabel,
         transactionHash: event.transactionHash,
         logIndex: event.logIndex,
         timestamp: event.log.timestamp
@@ -189,5 +194,6 @@ class TxCard extends Component {
 
 export default connect(
   TxCard,
-  "transactions"
+  "transactions",
+  "workspaces"
 )
