@@ -58,7 +58,7 @@
       "oneClick": false,
       "allowToChangeInstallationDirectory": "true",
       "deleteAppDataOnUninstall": "true",
-      "artifactName": "ganache-setup-${version}.${ext}"
+      "artifactName": "Ganache-${version}-setup.${ext}"
     },
     "mac": {
       "icon": "resources/icons/icon.icns",

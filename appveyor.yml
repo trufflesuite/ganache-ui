@@ -43,7 +43,7 @@ build_script:
 
 artifacts:
   - path: 'dist/Ganache-*.appx'
-  - path: 'dist/ganache-setup-*.exe'
-  - path: 'dist/ganache-setup-*.exe.blockmap'
+  - path: 'dist/Ganache-*-setup.exe'
+  - path: 'dist/Ganache-*-setup.exe.blockmap'
   - path: 'dist/latest.yml'
 
