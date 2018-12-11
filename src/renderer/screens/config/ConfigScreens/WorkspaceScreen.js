@@ -63,15 +63,17 @@ class WorkspaceScreen extends Component {
     let projectHasDeployedContracts = false
     
     let project = this.props.workspaces.current.projects.filter((project) => {
-      return path.dirname(projectPath) === project.config.truffle_directory
+      return path.dirname(projectPath) === project.configFile
     })
 
     if (project.length > 0) {
       project = project[0]
 
-      projectHasDeployedContracts = project.contracts.reduce((accumulator, contract) => {
-        return accumulator || (typeof contract.address === "string" && contract.address.length > 0)
-      }, false)
+      if (typeof project.error === "undefined") {
+        projectHasDeployedContracts = project.contracts.reduce((accumulator, contract) => {
+          return accumulator || (typeof contract.address === "string" && contract.address.length > 0)
+        }, false)
+      }
     }
 
     if (projectHasDeployedContracts) {
