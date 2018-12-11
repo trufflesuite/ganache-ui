@@ -2,7 +2,8 @@ import {
   GET_DECODED_EVENT,
   CLEAR_EVENTS_IN_VIEW,
   ADD_EVENTS_TO_VIEW,
-  SET_BLOCKS_REQUESTED
+  SET_BLOCKS_REQUESTED,
+  SET_SUBSCRIBED_TOPICS
 } from './actions'
 import cloneDeep from 'lodash.clonedeep'
 
@@ -14,7 +15,8 @@ const initialState = {
       name: "",
       address: ""
     }
-  }
+  },
+  subscribedTopics: []
 }
 
 // Note: This sorts in reverse; higher blocks first
@@ -70,6 +72,9 @@ export default function (state = initialState, action) {
       break
     case ADD_EVENTS_TO_VIEW:
       nextState.inView = sort(state.inView.concat(action.events))
+      break
+    case SET_SUBSCRIBED_TOPICS:
+      nextState.subscribedTopics = cloneDeep(action.topics)
       break
     default:
       break

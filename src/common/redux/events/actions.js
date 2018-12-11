@@ -12,6 +12,11 @@ export const clearEventsInView = function() {
   return { type: CLEAR_EVENTS_IN_VIEW, events: [] }
 }
 
+export const SET_SUBSCRIBED_TOPICS = `${prefix}/SET_SUBSCRIBED_TOPICS`
+export const setSubscribedTopics = function(topics) {
+  return { type: SET_SUBSCRIBED_TOPICS, topics }
+}
+
 export const requestPage = function(startBlockNumber, endBlockNumber) {
   endBlockNumber = endBlockNumber || 0
   return async function(dispatch, getState) {
@@ -36,10 +41,21 @@ export const requestPage = function(startBlockNumber, endBlockNumber) {
       blockTimestamps[i] = block ? block.timestamp : null
     }
 
-    const logs = await web3ActionCreator(dispatch, getState, "getPastLogs", [{
+    let logs = await web3ActionCreator(dispatch, getState, "getPastLogs", [{
       fromBlock: earliestBlockToRequest,
       toBlock: startBlockNumber
     }])
+
+    const subscribedTopics = getState().events.subscribedTopics
+
+    logs = logs.filter((log) => {
+      for (let i = 0; i < log.topics.length; i++) {
+        if(subscribedTopics.indexOf(log.topics[i]) >= 0) {
+          return true
+        }
+      }
+      return false
+    })
 
     const contractCache = getState().workspaces.current.contractCache
     const projects = getState().workspaces.current.projects
@@ -128,12 +144,20 @@ export const getDecodedEvent = function(transactionHash, logIndex) {
       }
     }
 
+    let isSubscribedTopic = false
+    for (let k = 0; k < receipt.logs[j].topics.length; k++) {
+      if (state.events.subscribedTopics.indexOf(receipt.logs[j].topics[k]) >= 0) {
+        isSubscribedTopic = true
+        break
+      }
+    }
+
     const contractCache = state.workspaces.current.contractCache[event.log.address]
     if (contractCache) {
       contract = contractCache.contract
     }
 
-    if (contract) {
+    if (contract && isSubscribedTopic) {
       event.decodedLog = await new Promise((resolve, reject) => {
         // TODO: there's a better way to do this to not have to send `contract` and `contracts` every time
         ipcRenderer.once(GET_DECODED_EVENT, (event, decodedLog) => {

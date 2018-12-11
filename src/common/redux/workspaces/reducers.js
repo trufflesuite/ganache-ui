@@ -64,7 +64,11 @@ export default function (state = initialState, action) {
         }
       }
       const contract = nextState.current.contractCache[action.data.contractAddress]
-      contract.transactions.push(action.data.transactionHash)
+
+      if (contract.transactions.indexOf(action.data.transactionHash) === -1) {
+        contract.transactions.push(action.data.transactionHash)
+      }
+
       break
     }
     case CONTRACT_EVENT: {
@@ -74,12 +78,21 @@ export default function (state = initialState, action) {
           events: []
         }
       }
+
       const contract = nextState.current.contractCache[action.data.contractAddress]
       const event = {
         transactionHash: action.data.transactionHash,
         logIndex: action.data.logIndex
       }
-      contract.events.push(event)
+
+      const existingEventsInCache = contract.events.filter((e) => {
+        return e.transactionHash === event.transactionHash && e.logIndex === event.logIndex
+      })
+
+      if (existingEventsInCache.length === 0) {
+        contract.events.push(event)
+      }
+
       break
     }
     case GET_CONTRACT_DETAILS:

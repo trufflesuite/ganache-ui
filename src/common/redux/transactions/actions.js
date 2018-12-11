@@ -144,12 +144,22 @@ export const showTransaction = function(hash) {
       }
       log.timestamp = blockTimestamps[log.blockNumber]
 
-      events.push({
-        transactionHash: transaction.hash,
-        logIndex: log.logIndex,
-        log: log,
-        decodedLog: null
-      })
+      let isSubscribedTopic = false
+      for (let k = 0; k < log.topics.length; k++) {
+        if (state.events.subscribedTopics.indexOf(log.topics[k]) >= 0) {
+          isSubscribedTopic = true
+          break
+        }
+      }
+
+      if (isSubscribedTopic) {
+        events.push({
+          transactionHash: transaction.hash,
+          logIndex: log.logIndex,
+          log: log,
+          decodedLog: null
+        })
+      }
     }
 
     if (contract) {

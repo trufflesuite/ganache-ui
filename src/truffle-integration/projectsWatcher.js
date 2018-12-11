@@ -4,8 +4,6 @@ const WsProvider = require("web3-providers-ws");
 const EventEmitter = require("events");
 const path = require("path");
 const { URL } = require("url");
-const keccak = require("keccak");
-const rlp = require("rlp");
 const clonedeep = require("lodash.clonedeep");
 
 const ProjectFsWatcher = require("./projectFsWatcher");
@@ -14,8 +12,8 @@ class ProjectsWatcher extends EventEmitter {
   constructor() {
     super();
     this.projects = [];
-    this.contractsByAddress = {};
     this.blocksReceived = [];
+    this.subscribedTopics = [];
   }
 
   close() {
@@ -92,27 +90,43 @@ class ProjectsWatcher extends EventEmitter {
       for (let j = 0; j < tempProject.contracts.length; j++) {
         tempProject.contracts[j].projectIndex = projectIndex;
       }
-      this.emit("project-details-update", tempProject);
+      this.emit("project-details-update", { project: tempProject, subscribedTopics: this.subscribedTopics });
     }
   }
 
-  add(project, networkId) {
+  async subscribeToEvents(project) {
+    let topics = [];
+    for (let i = 0; i < project.contracts.length; i++) {
+      const contract = project.contracts[i];
+      const abiEvents = contract.abi.filter((entry) => {
+        return entry.type === "event" && this.subscribedTopics.indexOf(entry.signature) === -1
+      });
+      topics = topics.concat(abiEvents.map((event) => event.signature));
+    }
+    this.subscribedTopics = this.subscribedTopics.concat(topics);
+  }
+
+  async add(project, networkId) {
     const fsWatcher = new ProjectFsWatcher(project, networkId);
 
     const projectIndex = this.projects.length;
-    fsWatcher.on("project-details-update", (data) => {
+    fsWatcher.on("project-details-update", async (data) => {
+      await this.subscribeToEvents(data);
       for (let i = 0; i < data.contracts.length; i++) {
         data.contracts[i].projectIndex = projectIndex;
       }
-      this.emit("project-details-update", data);
+      this.emit("project-details-update", { project: tempProject, subscribedTopics: this.subscribedTopics });
     });
 
     this.projects.push(fsWatcher);
 
     const tempProject = fsWatcher.getProject();
+
     for (let i = 0; i < tempProject.contracts.length; i++) {
       tempProject.contracts[i].projectIndex = projectIndex;
     }
+
+    await this.subscribeToEvents(tempProject);
 
     return tempProject;
   }
@@ -126,12 +140,6 @@ class ProjectsWatcher extends EventEmitter {
     for (let i = 0; i < this.projects.length; i++) {
       const fsWatcher = this.projects[i];
       if (fsWatcher.project.truffle_directory === truffleDirectory) {
-        for (let j = 0; j < fsWatcher.project.contracts.length; j++) {
-          const contract = fsWatcher.project.contracts[j];
-          if (contract.address && typeof this.contractsByAddress[contract.address] !== "undefined") {
-            delete this.contractsByAddress[contract.address];
-          }
-        }
         this.projects[i].removeAllListeners();
         this.projects[i].stop();
         this.projects.splice(i);
@@ -185,13 +193,14 @@ class ProjectsWatcher extends EventEmitter {
   }
 
   handleLog(log) {
-    if (typeof this.contractsByAddress[log.address] !== "undefined") {
-      // TODO: filter by actual events, not logs in general
-      this.emit("contract-event", {
-        contractAddress: log.address,
-        transactionHash: log.transactionHash,
-        logIndex: log.logIndex
-      });
+    for (let i = 0; i < log.topics.length; i++) {
+      if (this.subscribedTopics.indexOf(log.topics[i]) >= 0) {
+        this.emit("contract-event", {
+          contractAddress: log.address,
+          transactionHash: log.transactionHash,
+          logIndex: log.logIndex
+        });
+      }
     }
   }
 }

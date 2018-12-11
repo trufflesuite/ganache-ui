@@ -41,7 +41,8 @@ import {
 } from '../common/redux/workspaces/actions'
 
 import {
-  GET_DECODED_EVENT
+  GET_DECODED_EVENT,
+  SET_SUBSCRIBED_TOPICS
 } from '../common/redux/events/actions'
 
 import {
@@ -136,9 +137,10 @@ app.on('ready', () => {
       }
     })
 
-    truffleIntegration.on("project-details-update", (project) => {
+    truffleIntegration.on("project-details-update", async (data) => {
       if (workspace) {
-        mainWindow.webContents.send(PROJECT_UPDATED, project);
+        mainWindow.webContents.send(PROJECT_UPDATED, data.project);
+        mainWindow.webContents.send(SET_SUBSCRIBED_TOPICS, data.subscribedTopics);
       }
     })
 

@@ -57,7 +57,7 @@ process.on("message", async function(message) {
       let response = getProjectDetails(message.data.file);
 
       if (typeof response.error === "undefined") {
-        response = watcher.add(response, message.data.networkId);
+        response = await watcher.add(response, message.data.networkId);
       }
 
       process.send({

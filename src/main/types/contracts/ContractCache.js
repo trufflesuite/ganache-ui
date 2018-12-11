@@ -74,15 +74,21 @@ class ContractCache {
 
   addEvent(address, event) {
     this.addContract(address);
-    let obj = this.getEvents(address)
+    let obj = this.getEvents(address);
 
     if (typeof obj === "undefined") {
       obj = [];
     }
 
-    obj.push(event);
+    const existingEventsInCache = obj.filter((e) => {
+      return e.transactionHash === event.transactionHash && e.logIndex === event.logIndex;
+    });
 
-    this.storage.set(address + ".events", obj);
+    if (existingEventsInCache.length === 0) {
+      obj.push(event);
+
+      this.storage.set(address + ".events", obj);
+    }
   }
 
   getAll() {
