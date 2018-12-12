@@ -1,5 +1,6 @@
 import React from "react"
 import Moment from 'react-moment'
+import { Link } from 'react-router'
 
 const EncodedEventDetails = ({ event }) => {
   const { transactionHash, timestamp, contractAddress, logIndex } = event
@@ -7,7 +8,7 @@ const EncodedEventDetails = ({ event }) => {
     <div className="EncodedEventDetails">
       <div className="Notice">
         <span className="Warning">⚠</span>{" "}
-        <strong>To see rich event data</strong> link a Truffle Project
+        <strong>To see rich event data</strong> <Link className="settingsLink" to="/config">link a Truffle Project</Link>
         containing the contract that emits this event.
       </div>
       <div className="DataRow">

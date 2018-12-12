@@ -16,13 +16,13 @@ class ContractsScreen extends Component {
           switch (project.error) {
             case "project-does-not-exist": {
               errorMessage = (
-                <span><strong>Your Truffle Project can no longer be found.</strong> Did you delete or move it? Update the location in the <Link className="settingsLink" to="/config">settings screen</Link> or restart Ganache.</span>
+                <span><strong>Your Truffle Project can no longer be found.</strong> Did you delete or move it? <Link className="settingsLink" to="/config">Update the location</Link> or restart Ganache.</span>
               )
               break;
             }
             case "invalid-project-file": {
               errorMessage = (
-                <span><strong>Your Truffle Project config is invalid.</strong> The file should either be 'truffle.js' or 'truffle-config.js'. Update the file in the <Link className="settingsLink" to="/config">settings screen</Link>.</span>
+                <span><strong>Your Truffle Project config is invalid.</strong> The file should be named either 'truffle.js' or 'truffle-config.js'. <Link className="settingsLink" to="/config">Choose a valid configuration file.</Link></span>
               )
               break;
             }
@@ -62,8 +62,15 @@ class ContractsScreen extends Component {
     }
     else {
       content =
-        <div className="Waiting">
-          No Projects
+        <div className="NoProjects">
+          <span className="title">No Projects in Workspace</span>
+          <span className="description">
+            This page allows you to access details about your Truffle projects. By
+            linking your projects to a workspace, Ganache will keep track of the contract
+            addresses, associated transactions/events, and even decode the contract state
+            for you. Get started by clicking the button below to add your Truffle project.
+          </span>
+          <Link className="button" to="/config"><button>Link Truffle Projects</button></Link>
         </div>
     }
 
