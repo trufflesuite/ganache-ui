@@ -31,7 +31,7 @@ export default function (state = initialState, action) {
       nextState.validationErrors = {}
       break
     case Config.SET_CONFIG_SCREEN_ONLY: {
-      nextState.configScreenOnly = true
+      nextState.configScreenOnly = action.state
     }
     default:
       break

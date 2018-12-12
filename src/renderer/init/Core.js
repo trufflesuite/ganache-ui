@@ -45,10 +45,11 @@ export function initCore(store) {
     store.dispatch(setServerStarted())
 
     if (openConfigScreenOnStart) {
-      store.dispatch(setConfigScreenOnly())
+      store.dispatch(setConfigScreenOnly(true))
       store.dispatch(replace("/config"))
     }
     else {
+      store.dispatch(setConfigScreenOnly(false))
       store.dispatch(replace("/accounts"))
     }
   })

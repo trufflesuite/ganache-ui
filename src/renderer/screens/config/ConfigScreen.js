@@ -6,7 +6,7 @@ import connect from '../helpers/connect'
 
 import * as Core from '../../../common/redux/core/actions'
 import * as Config from '../../../common/redux/config/actions'
-import { deleteWorkspace } from '../../../common/redux/workspaces/actions'
+import { deleteWorkspace, closeWorkspace } from '../../../common/redux/workspaces/actions'
 
 import WorkspaceScreen from './ConfigScreens/WorkspaceScreen'
 import ServerScreen from './ConfigScreens/ServerScreen'
@@ -75,10 +75,11 @@ class ConfigScreen extends PureComponent {
       this.props.dispatch(Core.requestServerRestart())
     }
     else {
+      hashHistory.goBack();
       if (this.props.config.configScreenOnly) {
+        this.props.dispatch(closeWorkspace())
         this.props.dispatch(deleteWorkspace(this.props.workspaces.current.name))
       }
-      hashHistory.goBack();
     }
   }
 

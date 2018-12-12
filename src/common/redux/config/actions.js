@@ -43,6 +43,6 @@ export const clearAllSettingErrors = function() {
 }
 
 export const SET_CONFIG_SCREEN_ONLY = `${prefix}/SET_CONFIG_SCREEN_ONLY`
-export const setConfigScreenOnly = function() {
-  return {type: SET_CONFIG_SCREEN_ONLY}
+export const setConfigScreenOnly = function(state) {
+  return {type: SET_CONFIG_SCREEN_ONLY, state}
 }
