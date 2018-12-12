@@ -1,7 +1,7 @@
 const EventEmitter = require("events");
 const path = require("path");
 const fs = require("fs");
-const getProjectDetails = require("./projectDetails");
+const getProjectDetails = require("./projectDetails").get;
 const merge = require("lodash.merge");
 
 class ProjectFsWatcher extends EventEmitter {
@@ -167,6 +167,7 @@ class ProjectFsWatcher extends EventEmitter {
 
   stop() {
     if (this.configWatcher) this.configWatcher.close();
+    this.stopWatchingParentDirectory();
     this.stopWatchingBuildDirectory();
     this.stopWatchingContracts();
   }

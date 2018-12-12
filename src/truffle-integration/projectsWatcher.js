@@ -76,13 +76,16 @@ class ProjectsWatcher extends EventEmitter {
       let contracts = [];
       for (let j = 0; j < tempProject.contracts.length; j++) {
         const contract = tempProject.contracts[j];
-
-        const bytecode = await this.web3.eth.getCode(contract.address);
         let newContract = clonedeep(contract);
-        if (contract.deployedBytecode !== bytecode) {
-          delete newContract.address;
-          delete newContract.creationTxHash;
+
+        if (contract.address) {
+          const bytecode = await this.web3.eth.getCode(contract.address);
+          if (contract.deployedBytecode !== bytecode) {
+            delete newContract.address;
+            delete newContract.creationTxHash;
+          }
         }
+
         contracts.push(newContract);
       }
       this.projects[projectIndex].setContracts(contracts);
@@ -115,7 +118,7 @@ class ProjectsWatcher extends EventEmitter {
       for (let i = 0; i < data.contracts.length; i++) {
         data.contracts[i].projectIndex = projectIndex;
       }
-      this.emit("project-details-update", { project: tempProject, subscribedTopics: this.subscribedTopics });
+      this.emit("project-details-update", { project: data, subscribedTopics: this.subscribedTopics });
     });
 
     this.projects.push(fsWatcher);

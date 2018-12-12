@@ -14,10 +14,12 @@ if (!process.send) {
 process.removeAllListeners("uncaughtException");
 
 process.on("unhandledRejection", (err) => {
+  console.log(err);
   process.send({type: "error", data: copyErrorFields(err)});
 });
 
 process.on("uncaughtException", (err) => {
+  console.log(err);
   process.send({type: "error", data: copyErrorFields(err)});
 });
 
