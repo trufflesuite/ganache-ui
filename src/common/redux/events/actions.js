@@ -17,6 +17,7 @@ export const setSubscribedTopics = function(topics) {
   return { type: SET_SUBSCRIBED_TOPICS, topics }
 }
 
+export const SET_LOADING = `${prefix}/SET_LOADING`
 export const requestPage = function(startBlockNumber, endBlockNumber) {
   endBlockNumber = endBlockNumber || 0
   return async function(dispatch, getState) {
@@ -30,6 +31,11 @@ export const requestPage = function(startBlockNumber, endBlockNumber) {
       type: SET_BLOCKS_REQUESTED,
       start: earliestBlockToRequest,
       end: startBlockNumber
+    })
+
+    dispatch({
+      type: SET_LOADING,
+      loading: true
     })
 
     // I was going to use the blocks inView here by just dispatching `requestPage`
@@ -83,6 +89,11 @@ export const requestPage = function(startBlockNumber, endBlockNumber) {
     }
 
     dispatch({type: ADD_EVENTS_TO_VIEW, events: logs })
+
+    dispatch({
+      type: SET_LOADING,
+      loading: false
+    })
   }
 }
 

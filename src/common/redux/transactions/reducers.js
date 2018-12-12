@@ -7,7 +7,8 @@ const initialState = {
   currentTransaction: null,
   currentTransactionReceipt: null,
   currentTransactionEvents: [],
-  currentTransactionContract: null
+  currentTransactionContract: null,
+  loading: false
 }
 
 // Note: This sorts in reverse; higher blocks first
@@ -70,6 +71,9 @@ export default function (state = initialState, action) {
         currentTransactionData: action.decodedData,
         currentTransactionContract: action.contract
       })
+    case Transactions.SET_LOADING:
+      return Object.assign({}, state, { loading: action.loading })
+      break
     default:
       return state
   }

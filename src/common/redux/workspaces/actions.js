@@ -105,6 +105,7 @@ export const contractEvent = function(data) {
 }
 
 export const GET_CONTRACT_DETAILS = `${prefix}/GET_CONTRACT_DETAILS`
+export const SET_LOADING_CONTRACT_DETAILS = `${prefix}/SET_LOADING_CONTRACT_DETAILS`
 export const getContractDetails = function(data) {
   const { transactions, events, contract, contracts, block } = data
 
@@ -112,6 +113,11 @@ export const getContractDetails = function(data) {
     let shownTransactions = []
     let shownReceipts = {}
     let shownEvents = []
+
+    dispatch({
+      type: SET_LOADING_CONTRACT_DETAILS,
+      loading: true
+    })
 
     const balance = await web3ActionCreator(dispatch, getState, "getBalance", [contract.address])
 
@@ -166,6 +172,11 @@ export const getContractDetails = function(data) {
     })
 
     dispatch({ type: GET_CONTRACT_DETAILS, shownTransactions, shownReceipts, shownEvents, state, balance })
+
+    dispatch({
+      type: SET_LOADING_CONTRACT_DETAILS,
+      loading: false
+    })
   }
 }
 

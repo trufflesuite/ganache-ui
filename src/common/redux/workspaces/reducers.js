@@ -1,12 +1,12 @@
 import {
   SET_WORKSPACES,
   SET_CURRENT_WORKSPACE,
-  CONTRACT_DEPLOYED,
   CONTRACT_TRANSACTION,
   CONTRACT_EVENT,
   GET_CONTRACT_DETAILS,
   CLEAR_SHOWN_CONTRACT,
-  PROJECT_UPDATED
+  PROJECT_UPDATED,
+  SET_LOADING_CONTRACT_DETAILS
 } from './actions'
 import cloneDeep from 'lodash.clonedeep'
 
@@ -20,7 +20,8 @@ const initialShownContract = {
   shownReceipts: {},
   shownEvents: [],
   state: {},
-  balance: "0"
+  balance: "0",
+  loading: false
 }
 
 function linkContractCacheToProject(contractCache, project) {
@@ -115,6 +116,9 @@ export default function (state = initialState, action) {
         }
       }
       break;
+    }
+    case SET_LOADING_CONTRACT_DETAILS: {
+      nextState.current.shownContract.loading = action.loading
     }
     default:
       break

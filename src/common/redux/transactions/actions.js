@@ -12,6 +12,7 @@ export const clearTransactionsInView = function() {
   return { type: CLEAR_TRANSACTIONS_IN_VIEW, transactions: [] }
 }
 
+export const SET_LOADING = `${prefix}/SET_LOADING`
 export const requestPage = function(startBlockNumber, endBlockNumber) {
   endBlockNumber = endBlockNumber || 0
   return function(dispatch, getState) {
@@ -19,13 +20,9 @@ export const requestPage = function(startBlockNumber, endBlockNumber) {
       startBlockNumber = getState().core.latestBlock
     }
 
-    let earliestBlockToRequest = Math.max(startBlockNumber - PAGE_SIZE, endBlockNumber)
-    let currentBlock = startBlockNumber
-    while (currentBlock >= earliestBlockToRequest) {
-      dispatch(getTransactionsForBlock(currentBlock))
-      currentBlock -= 1
-    }
-  }  
+    let earliestBlockRequested = Math.max(startBlockNumber - PAGE_SIZE, endBlockNumber)
+    dispatch(getTransactionsForBlocks(earliestBlockRequested, startBlockNumber))
+  }
 }
 
 // The "next" page is the next set of blocks, from the last requested down to 0
@@ -57,46 +54,62 @@ export const requestPreviousPage = function() {
 }
 
 export const ADD_RECEIPTS = `${prefix}/ADD_RECEIPTS`
-export const getReceipts = function(transactions) {
-  return async function(dispatch, getState) {
-    let web3Instance = getState().web3.web3Instance
-
-    return await Promise.all(
-      transactions.map(tx => {
-        return web3Request("getTransactionReceipt", [tx.hash], web3Instance)
-      })
-    ).then(receipts => {
-      dispatch({type: ADD_RECEIPTS, receipts })
+export const getReceipts = async function(transactions, web3Instance) {
+  return await Promise.all(
+    transactions.map(tx => {
+      return web3Request("getTransactionReceipt", [tx.hash], web3Instance)
     })
-  }
+  )
 }
 
 export const SET_BLOCK_REQUESTED = `${prefix}/SET_BLOCK_REQUESTED`
 export const ADD_TRANSACTIONS_TO_VIEW = `${prefix}/ADD_TRANSACTIONS_TO_VIEW`
-export const getTransactionsForBlock = function(number) {
+export const getTransactionsForBlocks = function(startBlockNumber, endBlockNumber) {
   return async function(dispatch, getState) {
-    let requested = getState().transactions.blocksRequested
+    dispatch({
+      type: SET_LOADING,
+      loading: true
+    })
 
-    // If it's already requested, bail
-    if (requested[number] === true) {
-      return
+    const state = getState()
+    let web3Instance = state.web3.web3Instance
+    let receipts = []
+    let transactions = []
+    for (let number = endBlockNumber; number >= startBlockNumber; number--) {
+      let requested = state.transactions.blocksRequested
+
+      // If it's already requested, bail
+      if (requested[number] === true) {
+        continue
+      }
+
+
+      // It's not requested? Let's get the drop on it so 
+      // no other process requests it
+      dispatch({type: SET_BLOCK_REQUESTED, number })
+
+      // Now request the block and receipts for all its transactions
+      let block = await web3Request("getBlock", [number, true], web3Instance)
+
+      if (block.transactions.length == 0) {
+        continue
+      }
+
+      receipts = receipts.concat(await getReceipts(block.transactions, web3Instance))
+      transactions = transactions.concat(block.transactions)
     }
 
-    let web3Instance = getState().web3.web3Instance
-
-    // It's not requested? Let's get the drop on it so 
-    // no other process requests it
-    dispatch({type: SET_BLOCK_REQUESTED, number })
-
-    // Now request the block and receipts for all its transactions
-    let block = await web3Request("getBlock", [number, true], web3Instance)
-
-    if (block.transactions.length == 0) {
-      return
+    if (receipts.length > 0) {
+      dispatch({ type: ADD_RECEIPTS, receipts })
+    }
+    if (transactions.length > 0) {
+      dispatch({ type: ADD_TRANSACTIONS_TO_VIEW, transactions })
     }
 
-    dispatch(getReceipts(block.transactions))
-    dispatch({type: ADD_TRANSACTIONS_TO_VIEW, transactions: block.transactions })
+    dispatch({
+      type: SET_LOADING,
+      loading: false
+    })
   }
 }
 

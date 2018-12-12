@@ -16,7 +16,7 @@ class EventsScreen extends Component {
   render() {
     return (
       <div className="EventsScreen">
-        <EventList eventList={this.props.events.inView} />
+        <EventList loading={this.props.events.loading} eventList={this.props.events.inView} />
       </div>
     )
   }

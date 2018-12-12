@@ -1,4 +1,5 @@
 import React, { Component } from "react"
+import MDSpinner from "react-md-spinner"
 
 import connect from "../helpers/connect"
 
@@ -7,11 +8,29 @@ import EventItem from "./EventItem"
 class EventList extends Component {
   render() {
     if (this.props.eventList.length === 0) {
-      return (
-        <div className="EventList">
-          <div className="Waiting">No events</div>
-        </div>
-      )
+      if (this.props.loading) {
+        return (
+          <div className="EventList">
+            <div className="Waiting">
+              <span>Loading events</span>
+              <MDSpinner
+                singleColor="var(--primary-color)"
+                size={20}
+                borderSize={3}
+                className="spinner"
+                duration={2666}
+              />
+            </div>
+          </div>
+        )
+      }
+      else {
+        return (
+          <div className="EventList">
+            <div className="Waiting">No events</div>
+          </div>
+        )
+      }
     }
 
     return (

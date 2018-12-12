@@ -3,7 +3,8 @@ import {
   CLEAR_EVENTS_IN_VIEW,
   ADD_EVENTS_TO_VIEW,
   SET_BLOCKS_REQUESTED,
-  SET_SUBSCRIBED_TOPICS
+  SET_SUBSCRIBED_TOPICS,
+  SET_LOADING
 } from './actions'
 import cloneDeep from 'lodash.clonedeep'
 
@@ -16,7 +17,8 @@ const initialState = {
       address: ""
     }
   },
-  subscribedTopics: []
+  subscribedTopics: [],
+  loading: false
 }
 
 // Note: This sorts in reverse; higher blocks first
@@ -75,6 +77,9 @@ export default function (state = initialState, action) {
       break
     case SET_SUBSCRIBED_TOPICS:
       nextState.subscribedTopics = cloneDeep(action.topics)
+      break
+    case SET_LOADING:
+      nextState.loading = action.loading
       break
     default:
       break

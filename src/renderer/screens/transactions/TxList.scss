@@ -10,7 +10,7 @@
     width: 100%;
     height: 100%;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
     flex-grow: 1;
@@ -18,5 +18,10 @@
     text-transform: uppercase;
     font-size: 1.3rem;
     color: var(--app-page-intentionally-left-blank);
+
+    .spinner {
+      margin-left: 10px;
+      margin-bottom: 3px;
+    }
   }
 }

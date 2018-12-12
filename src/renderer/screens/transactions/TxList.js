@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import MDSpinner from "react-md-spinner"
 
 import connect from '../helpers/connect'
 
@@ -29,10 +30,29 @@ class TxList extends Component {
         />
       })
     } else {
-      content = 
-        <div className="Waiting">
-          No transactions
-        </div>
+      if (this.props.loading) {
+        content = (
+          <div className="EventList">
+            <div className="Waiting">
+              <span>Loading transactions</span>
+              <MDSpinner
+                singleColor="var(--primary-color)"
+                size={20}
+                borderSize={3}
+                className="spinner"
+                duration={2666}
+              />
+            </div>
+          </div>
+        )
+      }
+      else {
+        content = (
+          <div className="EventList">
+            <div className="Waiting">No transactions</div>
+          </div>
+        )
+      }
     }
 
     return (

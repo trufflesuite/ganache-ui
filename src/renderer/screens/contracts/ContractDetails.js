@@ -174,14 +174,14 @@ class ContractDetails extends Component {
             <div className="Title">
               <h2>TRANSACTIONS</h2>
             </div>
-            <TxList transactions={this.props.workspaces.current.shownContract.shownTransactions} receipts={this.props.workspaces.current.shownContract.shownReceipts} />
+            <TxList loading={this.props.workspaces.current.shownContract.loading} transactions={this.props.workspaces.current.shownContract.shownTransactions} receipts={this.props.workspaces.current.shownContract.shownReceipts} />
           </div>
 
           <div>
             <div className="Title">
               <h2>EVENTS</h2>
             </div>
-            <EventList eventList={events} />
+            <EventList loading={this.props.workspaces.current.shownContract.loading} eventList={events} />
           </div>
         </div>
       </div>

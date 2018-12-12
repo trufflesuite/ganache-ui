@@ -83,7 +83,7 @@ class BlockCard extends Component {
             </div>
           </div>
         </div>
-        <TxList transactions={block.transactions} receipts={this.props.transactions.receipts} />
+        <TxList loading={false} transactions={block.transactions} receipts={this.props.transactions.receipts} />
       </section>
     )
   }

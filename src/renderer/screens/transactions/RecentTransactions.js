@@ -30,7 +30,7 @@ class RecentTransactions extends Component {
   render () {
     return (
       <div className="RecentTransactions">
-        <TxList transactions={this.props.transactions.inView} receipts={this.props.transactions.receipts} />
+        <TxList loading={this.props.transactions.loading} transactions={this.props.transactions.inView} receipts={this.props.transactions.receipts} />
       </div>
     )
   }
