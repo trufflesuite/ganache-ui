@@ -156,8 +156,8 @@ export const getDecodedEvent = function(transactionHash, logIndex) {
     }
 
     let isSubscribedTopic = false
-    for (let k = 0; k < receipt.logs[j].topics.length; k++) {
-      if (state.events.subscribedTopics.indexOf(receipt.logs[j].topics[k]) >= 0) {
+    for (let k = 0; k < event.log.topics.length; k++) {
+      if (state.events.subscribedTopics.indexOf(event.log.topics[k]) >= 0) {
         isSubscribedTopic = true
         break
       }
