@@ -97,6 +97,7 @@ class WorkspaceScreen extends Component {
                 name="workspace.name"
                 type="text"
                 value={name}
+                disabled={this.props.config.settings.workspace.isDefault}
                 onChange={this.validateChange}
               />
             </div>
