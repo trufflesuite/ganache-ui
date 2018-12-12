@@ -74,7 +74,7 @@ class AccountsScreen extends Component {
         <OnlyIf test={!enabled}>
           <div className="Notice">
             <span className="Warning">⚠</span>{" "}
-            Accounts cannot be updated unless you create a new workspace.
+            Accounts can only be updated when creating a new workspace.
           </div>
         </OnlyIf>
         <OnlyIf test={enabled}>

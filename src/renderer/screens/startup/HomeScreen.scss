@@ -77,15 +77,11 @@
         }
       }
 
-      .subTitle, .learnMore {
+      .subTitle {
         color: #fff;
         font-size: 1.3rem;
         font-family: "Fira Code Regular";
         margin-top: 0.8rem;
-      }
-
-      .learnMore a {
-        color: var(--app-button-primary-color);
       }
 
       section {
@@ -206,6 +202,20 @@
               fill:  var(--app-statusbar-background);
             }
           }
+        }
+      }
+    }
+
+    .LearnMore {
+      p {
+        color: #fff;
+        font-size: 1.3rem;
+        font-family: "Fira Code Regular";
+        margin-top: 0.8rem;
+        text-align: center;
+
+        a {
+          color: var(--app-button-primary-color);
         }
       }
     }

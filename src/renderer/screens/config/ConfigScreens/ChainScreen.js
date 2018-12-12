@@ -66,7 +66,7 @@ class ChainScreen extends Component {
         <OnlyIf test={!enabled}>
           <div className="Notice">
             <span className="Warning">⚠</span>{" "}
-            The block gas limit cannot be updated unless you create a new workspace.
+            Gas limits can only be updated when creating a new workspace.
           </div>
         </OnlyIf>
         <OnlyIf test={enabled}>

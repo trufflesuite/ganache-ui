@@ -140,8 +140,7 @@ class WorkspaceScreen extends Component {
               </div>
             </div>
             <div className="RowItem">
-              <p>The Truffle projects linked with this workspace.</p>
-              <p>Linked projects will show decoded contract and event data.</p>
+              <p>Link Truffle projects to this workspace. This will show useful contract and event data to better understand what's going on under the hood.</p>
             </div>
           </div>
         </section>
