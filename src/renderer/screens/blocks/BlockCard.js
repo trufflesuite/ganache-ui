@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import connect from '../helpers/connect'
 import * as Blocks from '../../../common/redux/blocks/actions'
-import * as Transactions from '../../../common/redux/transactions/actions'
 
 import Moment from 'react-moment'
 
@@ -19,10 +18,6 @@ class BlockCard extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (this.props.blocks.currentBlock != nextProps.blocks.currentBlock) {
-      this.props.dispatch(Transactions.getReceipts(nextProps.blocks.currentBlock.transactions))
-    }
-
     if (this.props.blockNumber != nextProps.blockNumber ) {
       this.props.dispatch(Blocks.showBlock(nextProps.blockNumber))
     }
@@ -83,7 +78,7 @@ class BlockCard extends Component {
             </div>
           </div>
         </div>
-        <TxList loading={false} transactions={block.transactions} receipts={this.props.transactions.receipts} />
+        <TxList loading={false} transactions={block.transactions} receipts={block.receipts} />
       </section>
     )
   }

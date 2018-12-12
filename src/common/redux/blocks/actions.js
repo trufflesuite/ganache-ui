@@ -1,5 +1,6 @@
 
 import { web3Request, web3ActionCreator } from '../web3/helpers/Web3ActionCreator'
+import * as Transactions from '../transactions/actions'
 
 const prefix = 'BLOCKS'
 const PAGE_SIZE = 15
@@ -113,6 +114,7 @@ export const SET_CURRENT_BLOCK_SHOWN = `${prefix}/SET_CURRENT_BLOCK_SHOWN`
 export const showBlock = function(number) {
   return async function(dispatch, getState) {
     let block = await web3ActionCreator(dispatch, getState, "getBlock", [number, true])
+    block.receipts = await Transactions.getReceipts(block.transactions, getState().web3.web3Instance)
     dispatch({type: SET_CURRENT_BLOCK_SHOWN, block})
   }
 }

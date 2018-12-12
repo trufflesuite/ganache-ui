@@ -24,7 +24,7 @@ class WorkspaceScreen extends Component {
       ]
     })
 
-    if (pathArray.length > 0 && path.basename(pathArray[0]).match(/^truffle(-config)?.js$/)) {
+    if (pathArray && pathArray.length > 0 && path.basename(pathArray[0]).match(/^truffle(-config)?.js$/)) {
       this.props.addWorkspaceProject(pathArray[0])
       this.setState({ selectedIdx: null })
     }
