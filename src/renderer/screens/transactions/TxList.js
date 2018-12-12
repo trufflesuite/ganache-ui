@@ -34,10 +34,9 @@ class TxList extends Component {
         content = (
           <div className="EventList">
             <div className="Waiting">
-              <span>Loading transactions</span>
               <MDSpinner
                 singleColor="var(--primary-color)"
-                size={20}
+                size={30}
                 borderSize={3}
                 className="spinner"
                 duration={2666}

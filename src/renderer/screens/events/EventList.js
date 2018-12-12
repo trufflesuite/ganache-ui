@@ -12,10 +12,9 @@ class EventList extends Component {
         return (
           <div className="EventList">
             <div className="Waiting">
-              <span>Loading events</span>
               <MDSpinner
                 singleColor="var(--primary-color)"
-                size={20}
+                size={30}
                 borderSize={3}
                 className="spinner"
                 duration={2666}
