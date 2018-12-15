@@ -49,29 +49,8 @@ export const requestPreviousPage = function() {
   }
 }
 
-export const SET_BLOCK_REQUESTED = `${prefix}/SET_BLOCK_REQUESTED`
 export const SET_BLOCKS_REQUESTED = `${prefix}/SET_BLOCKS_REQUESTED`
-export const ADD_BLOCK_TO_VIEW = `${prefix}/ADD_BLOCK_TO_VIEW`
 export const ADD_BLOCKS_TO_VIEW = `${prefix}/ADD_BLOCKS_TO_VIEW`
-
-export const addBlockToView = function(number) {
-  return async function(dispatch, getState) {
-    let requested = getState().blocks.requested
-    let web3Instance = getState().web3.web3Instance
-
-    // If it's already requested, bail
-    if (requested[number] === true) {
-      return
-    }
-
-    // It's not requested? Let's get the drop on it so 
-    // no other process requests it
-    dispatch({type: SET_BLOCK_REQUESTED, number })
-
-    const blockDetails = await getBlock(i, web3Instance)
-    dispatch({type: ADD_BLOCK_TO_VIEW, ...blockDetails })
-  }
-}
 
 export const addBlocksToView = function(startBlockNumber, endBlockNumber) {
   return async function(dispatch, getState) {

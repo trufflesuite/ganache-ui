@@ -30,13 +30,6 @@ export default function (state = initialState, action) {
         inViewTransactionCounts: {},
         requested: {}
       })
-    case Blocks.SET_BLOCK_REQUESTED:
-      var requested = Object.assign({}, state.requested, {
-        [action.number]: true
-      })
-      return Object.assign({}, state, {
-        requested
-      })
     case Blocks.SET_BLOCKS_REQUESTED: {
       let requested = Object.assign({}, state.requested)
 
@@ -48,15 +41,6 @@ export default function (state = initialState, action) {
         requested
       })
     }
-    case Blocks.ADD_BLOCK_TO_VIEW:
-      let blocks = state.inView.concat([action.block])
-      var inViewTransactionCounts = Object.assign({}, state.inViewTransactionCounts, {
-        [action.block.number]: action.transactionCount
-      })
-      return Object.assign({}, state, {
-        inView: sort(blocks),
-        inViewTransactionCounts
-      })
     case Blocks.ADD_BLOCKS_TO_VIEW: {
       let nextState = clonedeep(state)
 

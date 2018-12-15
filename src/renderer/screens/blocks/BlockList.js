@@ -11,10 +11,12 @@ class BlockList extends Component {
 
   componentWillReceiveProps(nextProps) {
     // If the scroll position changed...
+    const latestRequested = nextProps.blocks.requested[nextProps.core.latestBlock]
+    const earliestRequested = nextProps.blocks.requested[0]
     if (nextProps.appshell.scrollPosition != this.props.appshell.scrollPosition) {
-      if (nextProps.appshell.scrollPosition == "top") {
+      if (nextProps.appshell.scrollPosition == "top" && !latestRequested) {
         this.props.dispatch(Blocks.requestPreviousPage())
-      } else if (nextProps.appshell.scrollPosition == "bottom") {
+      } else if (nextProps.appshell.scrollPosition == "bottom" && !earliestRequested) {
         this.props.dispatch(Blocks.requestNextPage())
       }
       return
@@ -27,7 +29,7 @@ class BlockList extends Component {
     }
 
     var latestBlockInView = nextProps.blocks.inView[0].number
-    if (nextProps.appshell.scrollPosition == "top" && nextProps.core.latestBlock > latestBlockInView) {
+    if (nextProps.appshell.scrollPosition == "top" && nextProps.core.latestBlock > latestBlockInView && !latestRequested) {
       this.props.dispatch(Blocks.requestPreviousPage())
     }
   }
