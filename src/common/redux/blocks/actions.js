@@ -114,7 +114,14 @@ export const SET_CURRENT_BLOCK_SHOWN = `${prefix}/SET_CURRENT_BLOCK_SHOWN`
 export const showBlock = function(number) {
   return async function(dispatch, getState) {
     let block = await web3ActionCreator(dispatch, getState, "getBlock", [number, true])
-    block.receipts = await Transactions.getReceipts(block.transactions, getState().web3.web3Instance)
+
+    const receipts = await Transactions.getReceipts(block.transactions, getState().web3.web3Instance)
+    block.receipts = {}
+
+    receipts.forEach((receipt) => {
+      block.receipts[receipt.transactionHash] = receipt
+    })
+
     dispatch({type: SET_CURRENT_BLOCK_SHOWN, block})
   }
 }
