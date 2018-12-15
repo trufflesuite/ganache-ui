@@ -16,7 +16,7 @@ class TruffleIntegrationService extends EventEmitter {
     const options = {
       stdio: [ 'pipe', 'pipe', 'pipe', 'ipc' ]
     };
-    const args = process.env.NODE_ENV === "production" ? [] : ["--inspect=5858"];
+    const args = [];
     this.child = fork(chainPath, args, options);
     this.child.on('message', (message) => {
       if (message.type == "process-started") {
