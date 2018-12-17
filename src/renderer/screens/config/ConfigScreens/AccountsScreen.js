@@ -66,6 +66,15 @@ class AccountsScreen extends Component {
     })
   }
 
+  cleanNumber(value) {
+    if (isNaN(value) || value === null || value === undefined) {
+      return ""
+    }
+    else {
+      return value
+    }
+  }
+
   render () {
     const enabled = this.props.config.settings.workspace.isDefault || this.props.config.configScreenOnly
     return (
@@ -86,7 +95,7 @@ class AccountsScreen extends Component {
                   name="workspace.server.default_balance_ether"
                   type="text"
                   data-type="number"
-                  value={this.props.config.settings.workspace.server.default_balance_ether}
+                  value={this.cleanNumber(this.props.config.settings.workspace.server.default_balance_ether)}
                   onChange={this.validateChange}
                 />
                 {this.props.validationErrors["workspace.server.default_balance_ether"] &&
@@ -103,8 +112,9 @@ class AccountsScreen extends Component {
               <div className="RowItem">
                 <input
                   name="workspace.server.total_accounts"
-                  type="number"
-                  value={this.props.config.settings.workspace.server.total_accounts}
+                  type="text"
+                  data-type="number"
+                  value={this.cleanNumber(this.props.config.settings.workspace.server.total_accounts)}
                   onChange={this.validateChange}
                 />
                 {this.props.validationErrors["workspace.server.total_accounts"] &&
