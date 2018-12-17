@@ -192,7 +192,7 @@ class ServerScreen extends Component {
                 <input
                   name="workspace.server.blockTime"
                   type="number"
-                  value={this.withDefaultValueZero(this.props.config.settings.server.blockTime)}
+                  value={this.withDefaultValueZero(this.props.config.settings.workspace.server.blockTime)}
                   onChange={this.validateChange}
                 />
                 {this.props.validationErrors["workspace.server.blockTime"] &&
