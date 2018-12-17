@@ -58,6 +58,15 @@ class ChainScreen extends Component {
     })
   }
 
+  cleanNumber(value) {
+    if (isNaN(value) || value === null || value === undefined) {
+      return ""
+    }
+    else {
+      return value
+    }
+  }
+
   render () {
     const enabled = this.props.config.settings.workspace.isDefault || this.props.config.configScreenOnly
     return (
@@ -78,7 +87,7 @@ class ChainScreen extends Component {
                   name="workspace.server.gasLimit"
                   type="text"
                   data-type="number"
-                  value={this.props.config.settings.workspace.server.gasLimit}
+                  value={this.cleanNumber(this.props.config.settings.workspace.server.gasLimit)}
                   onChange={this.validateChange}
                 />
                 {this.props.validationErrors["workspace.server.gasLimit"] &&
@@ -100,7 +109,7 @@ class ChainScreen extends Component {
                 name="workspace.server.gasPrice"
                 type="text"
                 data-type="number"
-                value={this.props.config.settings.workspace.server.gasPrice}
+                value={this.cleanNumber(this.props.config.settings.workspace.server.gasPrice)}
                 onChange={this.validateChange}
               />
               {this.props.validationErrors["workspace.server.gasPrice"] &&
