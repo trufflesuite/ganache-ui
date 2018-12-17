@@ -85,7 +85,7 @@ class HomeScreen extends Component {
     const subTitle = <p className="subTitle">Quickstart for a one-click blockchain or create a new workspace for advanced setup options.</p>
     const learnMore = (
       <p className="learnMoreText">
-        <a href="https://truffleframework.com/ganache">Learn more about the latest update!</a>
+        <a href="https://github.com/trufflesuite/ganache/releases/tag/v2.0.0-beta.1">Learn more about the latest update!</a>
       </p>
     )
     const isNewVersionAvailable = this.props.autoUpdate.isNewVersionAvailable
