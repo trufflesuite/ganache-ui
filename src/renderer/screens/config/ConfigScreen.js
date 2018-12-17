@@ -160,7 +160,7 @@ class ConfigScreen extends PureComponent {
     // There should be one key remaining
     // Only save the value if the text box or input value is non-zero/non-blank.
     // Otherwise remove the key.
-    if (value !== null && value !== undefined && value !== "" && value !== 0) {
+    if (value !== null && value !== undefined) {
       parent[keys[0]] = value
     } else {
       // We used to delete the key here, but if we do that then the settings
