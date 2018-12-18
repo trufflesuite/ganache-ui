@@ -65,10 +65,9 @@ class ContractsScreen extends Component {
         <div className="NoProjects">
           <span className="title">No Projects in Workspace</span>
           <span className="description">
-            This page allows you to access details about your Truffle projects. By
-            linking your projects to a workspace, Ganache will keep track of the contract
-            addresses, associated transactions/events, and even decode the contract state
-            for you. Get started by clicking the button below to add your Truffle project.
+            Unlock more information about your smart contracts by linking a Truffle project.<br />
+            View deployed contract addresses, associated transactions, decoded events, and even<br />
+            contract state. Your contract data will update in real time during development.
           </span>
           <Link className="button" to="/config"><button>Link Truffle Projects</button></Link>
         </div>

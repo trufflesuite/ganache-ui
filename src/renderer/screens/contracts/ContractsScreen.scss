@@ -140,13 +140,17 @@
 
     .description {
       font-size: 1.3rem;
-      max-width: 41.5rem;
+      max-width: 46rem;
       margin-top: 2rem;
-      text-align: justify;
+      text-align: center;
     }
 
     .button {
       margin-top: 2rem;
+
+      :hover {
+        color: var(--app-button-primary-background-color);
+      }
     }
   }
 
