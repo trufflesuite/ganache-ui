@@ -3,6 +3,8 @@ import * as AutoUpdate from '../../common/redux/auto-update/actions'
 
 import AutoUpdateService from '../../common/services/AutoUpdateService'
 
+const pkg = require('../../../package.json')
+
 let autoUpdateService = null
 
 export function getAutoUpdateService() {
@@ -52,7 +54,7 @@ export function initAutoUpdates(settings, mainWindow) {
 }
 
 function getAutoUpdateServiceOptions(settings) {
-  let allowPrerelease = !!(settings.updates && settings.updates.allowPrerelease)
+  let allowPrerelease = pkg.version.match(/-beta/) !== null
 
   return {
     autoDownload: false,
