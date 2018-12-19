@@ -163,8 +163,8 @@ class ContractDetails extends Component {
             <OnlyIf test={typeof this.props.workspaces.current.shownContract.state.error !== "undefined"}>
               <div className="DecodeError">
                 There was an issue decoding your contract. Please file a GitHub Issue by clicking the button below.
-                <div onClick={this.reportDecodingError.bind(this)}>
-                  <button>Raise Github Issue</button>
+                <div>
+                  <button onClick={this.reportDecodingError.bind(this)}>Raise Github Issue</button>
                 </div>
               </div>
             </OnlyIf>
