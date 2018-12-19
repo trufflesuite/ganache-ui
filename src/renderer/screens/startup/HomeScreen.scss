@@ -1,5 +1,4 @@
 .HomeScreenContainer {
-  overflow: auto;
   background-color: var(--app-statusbar-background);
   width: 100%;
   height: 100%;
@@ -92,68 +91,81 @@
           margin: auto;
         }
 
-        ul {
-          margin: 0 0 1.5rem 0;
-          list-style: none;
-          padding: 1rem;
+        .top {
           background-color: #fbf1ec;
           border-radius: .3rem;
 
-          button {
-            background-color: transparent;
-            margin-bottom: 1rem;
-            display: block;
-            border-radius: .3rem;
-            padding: 1.25rem calc(1.5rem + 26px) 1.25rem 1.2rem;
-            color: var(--app-button-primary-background-color);
-            position: relative;
-            height: auto;
-            line-height: initial;
-            width: 100%;
-            text-align: left;
-            text-transform: none;
-            font-size: 1.35rem;
-            font-family: "Fira Sans";
-            font-weight: normal;
-
-            & > * {
-              display: inline-block;
+          .scrollBar {
+            height: 22rem !important;
+            @media only screen and (max-height: 56.25rem) {
+              height: 20rem !important;
+            }
+            @media only screen and (max-height: 50rem) {
+              height: 15rem !important;
             }
 
-            &:last-child {
-              margin-bottom: 0;
-            }
-
-            .DeleteWorkspace {
-              opacity: 0;
-              width: 1.3rem;
-              vertical-align: middle;
-              transition: all .3s;
-              position: absolute;
-              right: 1rem;
-            }
-
-            &:hover, &:focus, &:active {
-              color: #fbf1ec;
-              background: #5f474e;
-
-              .DeleteWorkspace {
-                opacity: 1;
-
-                &:hover, &:focus {
-                  color: var(--app-statusbar-background);
-                  filter: brightness(120%);
+            ul {
+              margin: 0 0 1.5rem 0;
+              list-style: none;
+              padding: 1rem;
+    
+              button {
+                background-color: transparent;
+                margin-bottom: 1rem;
+                display: block;
+                border-radius: .3rem;
+                padding: 1.25rem calc(1.5rem + 26px) 1.25rem 1.2rem;
+                color: var(--app-button-primary-background-color);
+                position: relative;
+                height: auto;
+                line-height: initial;
+                width: 100%;
+                text-align: left;
+                text-transform: none;
+                font-size: 1.35rem;
+                font-family: "Fira Sans";
+                font-weight: normal;
+    
+                & > * {
+                  display: inline-block;
+                }
+    
+                &:last-child {
+                  margin-bottom: 0;
+                }
+    
+                .DeleteWorkspace {
+                  opacity: 0;
+                  width: 1.3rem;
+                  vertical-align: middle;
+                  transition: all .3s;
+                  position: absolute;
+                  right: 1rem;
+                }
+    
+                &:hover, &:focus, &:active {
+                  color: #fbf1ec;
+                  background: #5f474e;
+    
+                  .DeleteWorkspace {
+                    opacity: 1;
+    
+                    &:hover, &:focus {
+                      color: var(--app-statusbar-background);
+                      filter: brightness(120%);
+                    }
+                  }
                 }
               }
+    
+              p {
+                font-family: "Fira Code Regular";
+                font-weight: bold;
+                margin: 0;
+                height: 9rem;
+                min-width: 325px;
+              }
             }
-          }
-
-          p {
-            font-family: "Fira Code Regular";
-            font-weight: bold;
-            margin: 0;
-            height: 9rem;
-            min-width: 325px;
           }
         }
 

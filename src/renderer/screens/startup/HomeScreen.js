@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars';
 
-import { initAutoUpdates, getAutoUpdateService } from '../../init/AutoUpdate'
 import * as pkg from '../../../../package.json'
 
 import OnlyIf from '../../../renderer/components/only-if/OnlyIf'
@@ -94,52 +93,51 @@ class HomeScreen extends Component {
     return (
       <React.Fragment>
         <div className="HomeScreenContainer">
-          <Scrollbars>
-            <div className="HomeScreen">
-
-              <header>
-                <div className="logo">
-                  <Logo/>Ganache
-                  <span className="version"> v{pkg.version}</span>
-                </div>
-                <div className="updates">
-                  <OnlyIf test={isCheckingForUpdate && !isNewVersionAvailable}>
-                    <Spinner/>Checking for Updates&hellip;
-                  </OnlyIf>
-                  <OnlyIf test={isNewVersionAvailable}>
-                    <UpdateNotification />
-                  </OnlyIf>
-                </div>
-              </header>
-              <div className="WorkspacesBody">
-                <OnlyIf test={!hasWorkspaces}>
-                  <section>
-                    {title}
-                    {subTitle}
-                  </section>
+          <div className="HomeScreen">
+            <header>
+              <div className="logo">
+                <Logo/>Ganache
+                <span className="version"> v{pkg.version}</span>
+              </div>
+              <div className="updates">
+                <OnlyIf test={isCheckingForUpdate && !isNewVersionAvailable}>
+                  <Spinner/>Checking for Updates&hellip;
                 </OnlyIf>
-                <OnlyIf test={hasWorkspaces}>
-                  <section>
-                    {title}
-                  </section>
-                  <section>
-                    <div className="top">
-                      {workspaces}
-                    </div>
-                  </section>
+                <OnlyIf test={isNewVersionAvailable}>
+                  <UpdateNotification />
                 </OnlyIf>
+              </div>
+            </header>
+            <div className="WorkspacesBody">
+              <OnlyIf test={!hasWorkspaces}>
                 <section>
-                  <div className="bottom">
-                    <button onClick={this.createNewBlockchain.bind(this)}><ChainIcon />Quickstart</button>
-                    <button onClick={this.customizeBlockchain.bind(this)}><MenuIcon />New Workspace</button>
+                  {title}
+                  {subTitle}
+                </section>
+              </OnlyIf>
+              <OnlyIf test={hasWorkspaces}>
+                <section>
+                  {title}
+                </section>
+                <section>
+                  <div className="top">
+                    <Scrollbars className="scrollBar">
+                      {workspaces}
+                    </Scrollbars>
                   </div>
                 </section>
-              </div>
-              <div className="LearnMore">
-                {learnMore}
-              </div>
+              </OnlyIf>
+              <section>
+                <div className="bottom">
+                  <button onClick={this.createNewBlockchain.bind(this)}><ChainIcon />Quickstart</button>
+                  <button onClick={this.customizeBlockchain.bind(this)}><MenuIcon />New Workspace</button>
+                </div>
+              </section>
             </div>
-          </Scrollbars>
+            <div className="LearnMore">
+              {learnMore}
+            </div>
+          </div>
         </div>
         <OnlyIf test={this.props.core.modalError != null}>
           <ErrorModal modalError={this.props.core.modalError}></ErrorModal>
