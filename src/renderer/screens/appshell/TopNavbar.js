@@ -173,7 +173,7 @@ class TopNavbar extends Component {
               <TxIcon />
               Transactions
             </Link>
-            <Link to="/contracts" activeClassName="Active">
+            <Link to="/contracts" className={this.props.location.pathname.startsWith("/contracts") ? "Active" : ""} activeClassName="Active">
               <ContractsIcon />
               Contracts
             </Link>
