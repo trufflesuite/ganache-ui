@@ -26,7 +26,16 @@ function get(projectFile) {
 
     let contracts = [];
 
-    return { name, configFile: projectFile, config, contracts };
+    return {
+      name,
+      configFile: projectFile,
+      config: {
+        truffle_directory: config.truffle_directory,
+        build_directory: config.build_directory,
+        contracts_build_directory: config.contracts_build_directory
+      },
+      contracts
+    };
   }
 }
 
