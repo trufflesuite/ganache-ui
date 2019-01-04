@@ -73,4 +73,10 @@
   .HasTxs {
     border-color: var(--primary-color);
   }
+
+  .TxList {
+    .Waiting {
+      margin-top: 1rem;
+    }
+  }
 }
