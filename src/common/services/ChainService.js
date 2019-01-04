@@ -102,7 +102,7 @@ class ChainService extends EventEmitter {
     if (this.child !== null) {
       this.child.removeListener('exit', this._exitHandler);
       if (this.child) {
-        this.child.kill('SIGHUP');
+        this.child.kill('SIGINT');
       }
     }
   }
