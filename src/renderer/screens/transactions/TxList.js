@@ -32,7 +32,7 @@ class TxList extends Component {
     } else {
       if (this.props.loading) {
         content = (
-          <div className="EventList">
+          <div className="TransactionList">
             <div className="Waiting">
               <MDSpinner
                 singleColor="var(--primary-color)"
@@ -47,7 +47,7 @@ class TxList extends Component {
       }
       else {
         content = (
-          <div className="EventList">
+          <div className="TransactionList">
             <div className="Waiting">No transactions</div>
           </div>
         )
