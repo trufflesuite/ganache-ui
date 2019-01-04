@@ -137,6 +137,21 @@ app.on('ready', () => {
       }
     })
 
+    truffleIntegration.on("error", async (error) => {
+      if (mainWindow) {
+        mainWindow.webContents.send(SET_SYSTEM_ERROR, error)
+      }
+
+      if (truffleIntegration) {
+        await truffleIntegration.stopWatching()
+      }
+
+      if (chain.isServerStarted()) {
+        // Something wrong happened in the chain, let's try to stop it
+        await chain.stopServer()
+      }
+    })
+
     truffleIntegration.on("project-details-update", async (data) => {
       if (workspace) {
         mainWindow.webContents.send(PROJECT_UPDATED, data.project);

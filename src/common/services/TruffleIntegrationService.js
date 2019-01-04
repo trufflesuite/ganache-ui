@@ -32,12 +32,12 @@ class TruffleIntegrationService extends EventEmitter {
     this.child.stdout.on('data', (data) => {
       console.log(data.toString());
       // Remove all \r's and the final line ending
-      //this.emit("stdout", data.toString().replace(/\r/g, "").replace(/\n$/, ""));
+      this.emit("stdout", data.toString().replace(/\r/g, "").replace(/\n$/, ""));
     });
     this.child.stderr.on('data', (data) => {
       console.log(data.toString());
       // Remove all \r's and the final line ending
-      //this.emit("stderr", data.toString().replace(/\r/g, "").replace(/\n$/, ""));
+      this.emit("stderr", data.toString().replace(/\r/g, "").replace(/\n$/, ""));
     });
   }
 
