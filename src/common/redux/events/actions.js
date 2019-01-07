@@ -111,7 +111,7 @@ export const requestPreviousPage = function() {
   return function(dispatch, getState) {
     var blocksRequested = Object.keys(getState().events.blocksRequested)
 
-    if (blocksRequested.length == 0) {
+    if (blocksRequested.length === 0) {
       return dispatch(requestPage(getState().core.latestBlock))
     }
 
