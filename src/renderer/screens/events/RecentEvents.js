@@ -9,10 +9,10 @@ import * as Events from '../../../common/redux/events/actions'
 class RecentEvents extends Component {
   componentDidUpdate(prevProps, prevState, snapshot) {
     // If the scroll position changed...
-    if (this.props.appshell.scrollPosition != prevProps.appshell.scrollPosition) {
-      if (this.props.appshell.scrollPosition == "top") {
+    if (this.props.appshell.scrollPosition !== prevProps.appshell.scrollPosition) {
+      if (this.props.appshell.scrollPosition === "top") {
         this.props.dispatch(Events.requestPreviousPage())
-      } else if (this.props.appshell.scrollPosition == "bottom") {
+      } else if (this.props.appshell.scrollPosition === "bottom") {
         this.props.dispatch(Events.requestNextPage())
       }
       return
@@ -21,7 +21,7 @@ class RecentEvents extends Component {
     // No change in scroll position? 
     const blocksRequested = Object.keys(this.props.events.blocksRequested)
     const latestBlockRequested = Math.max.apply(Math, blocksRequested.concat(-1))
-    if (this.props.appshell.scrollPosition == "top" && this.props.core.latestBlock > latestBlockRequested) {
+    if (this.props.appshell.scrollPosition === "top" && this.props.core.latestBlock > latestBlockRequested) {
       this.props.dispatch(Events.requestPreviousPage())
     }
   }
