@@ -21,8 +21,7 @@ const VALIDATIONS = {
   "server.blockTime": {
     allowedChars: /^\d*$/,
     min: 1,
-    max: 200,
-    canBeBlank: true
+    max: 200
   }
 }
 
@@ -39,7 +38,7 @@ class ServerScreen extends Component {
     var newValue = !this.state.automine
 
     // Remove blockTime value if we turn automine on
-    if (newValue == true) {
+    if (newValue === true) {
       delete this.props.config.settings.server.blockTime
 
       // Rerun validations now that value has been deleted
@@ -50,10 +49,30 @@ class ServerScreen extends Component {
         }
       })
     }
+    else if (newValue === false) {
+      this.validateChange({
+        target: {
+          name: "server.blockTime",
+          value: "30",
+          attributes: {
+            "data-type": "number"
+          }
+        }
+      })
+    }
 
     this.setState({
       automine: !this.state.automine
     })
+  }
+
+  cleanNumber(value) {
+    if (isNaN(value) || value === null || value === undefined) {
+      return ""
+    }
+    else {
+      return value
+    }
   }
 
   validateChange = (e) => {
@@ -111,9 +130,10 @@ class ServerScreen extends Component {
           <div className="Row">
             <div className="RowItem">
               <input
-                type="number"
                 name="server.port"
-                value={this.props.config.settings.server.port}
+                type="text"
+                data-type="number"
+                value={this.cleanNumber(this.props.config.settings.server.port)}
                 onChange={e => {
                  // this.props.appCheckPort(e.target.value)
                   this.validateChange(e)
@@ -138,9 +158,10 @@ class ServerScreen extends Component {
           <div className="Row">
             <div className="RowItem">
               <input
-                type="number"
                 name="server.network_id"
-                value={this.props.config.settings.server.network_id}
+                type="text"
+                data-type="number"
+                value={this.cleanNumber(this.props.config.settings.server.network_id)}
                 onChange={this.validateChange}
               />
               {this.props.validationErrors["server.network_id"] &&
@@ -186,12 +207,13 @@ class ServerScreen extends Component {
               <div className="RowItem">
                 <input
                   name="server.blockTime"
-                  type="number"
-                  value={this.props.config.settings.server.blockTime || 0}
+                  type="text"
+                  data-type="number"
+                  value={this.cleanNumber(this.props.config.settings.server.blockTime)}
                   onChange={this.validateChange}
                 />
                 {this.props.validationErrors["server.blockTime"] &&
-                  <p className="ValidationError">Must be &gt; 1 and &lt; 200</p>}
+                  <p className="ValidationError">Must be an integer &gt; 1 and &lt; 200</p>}
               </div>
               <div className="RowItem">
                 <p>

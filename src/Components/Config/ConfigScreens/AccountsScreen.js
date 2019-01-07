@@ -66,6 +66,15 @@ class AccountsScreen extends Component {
     })
   }
 
+  cleanNumber(value) {
+    if (isNaN(value) || value === null || value === undefined) {
+      return ""
+    }
+    else {
+      return value
+    }
+  }
+
   render () {
     return (
       <div>
@@ -77,7 +86,8 @@ class AccountsScreen extends Component {
               <input
                 name="server.default_balance_ether"
                 type="text"
-                value={this.props.config.settings.server.default_balance_ether}
+                data-type="number"
+                value={this.cleanNumber(this.props.config.settings.server.default_balance_ether)}
                 onChange={this.validateChange}
               />
               {this.props.validationErrors["server.default_balance_ether"] &&
@@ -94,8 +104,9 @@ class AccountsScreen extends Component {
             <div className="RowItem">
               <input
                 name="server.total_accounts"
-                type="number"
-                value={this.props.config.settings.server.total_accounts}
+                type="text"
+                data-type="number"
+                value={this.cleanNumber(this.props.config.settings.server.total_accounts)}
                 onChange={this.validateChange}
               />
               {this.props.validationErrors["server.total_accounts"] &&

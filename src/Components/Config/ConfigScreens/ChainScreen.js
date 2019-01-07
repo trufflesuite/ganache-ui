@@ -58,6 +58,15 @@ class ChainScreen extends Component {
     })
   }
 
+  cleanNumber(value) {
+    if (isNaN(value) || value === null || value === undefined) {
+      return ""
+    }
+    else {
+      return value
+    }
+  }
+
   render () {
     return (
       <div>
@@ -68,8 +77,9 @@ class ChainScreen extends Component {
             <div className="RowItem">
               <input
                 name="server.gasLimit"
-                type="number"
-                value={this.props.config.settings.server.gasLimit}
+                type="text"
+                data-type="number"
+                value={this.cleanNumber(this.props.config.settings.server.gasLimit)}
                 onChange={this.validateChange}
               />
               {this.props.validationErrors["server.gasLimit"] &&
@@ -88,8 +98,9 @@ class ChainScreen extends Component {
             <div className="RowItem">
               <input
                 name="server.gasPrice"
-                type="number"
-                value={this.props.config.settings.server.gasPrice}
+                type="text"
+                data-type="number"
+                value={this.cleanNumber(this.props.config.settings.server.gasPrice)}
                 onChange={this.validateChange}
               />
               {this.props.validationErrors["server.gasPrice"] &&
