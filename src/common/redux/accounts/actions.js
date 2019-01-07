@@ -27,7 +27,7 @@ export const getAccountBalance = function(address) {
     var currentBalance = getState().accounts.balances[address]
 
     // Remember, these are BigNumber objects
-    if (balance.toString(10) != currentBalance.toString(10)) {
+    if (balance.toString(10) !== currentBalance.toString(10)) {
       dispatch({ type: GET_ACCOUNT_BALANCE, address, balance })
     }
   }
@@ -39,7 +39,7 @@ export const getAccountNonce = function(address) {
     let nonce = await web3ActionCreator(dispatch, getState, "getTransactionCount", [address])
     var currentNonce = getState().accounts.nonces[address]
 
-    if (nonce != currentNonce) {
+    if (nonce !== currentNonce) {
       dispatch({ type: GET_ACCOUNT_NONCE, address, nonce })
     }
   }
