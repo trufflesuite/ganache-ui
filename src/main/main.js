@@ -338,11 +338,13 @@ app.on('ready', () => {
 
     ipcMain.on(DELETE_WORKSPACE, async (event, name) => {
       const tempWorkspace = workspaceManager.get(name)
-      tempWorkspace.delete()
+      if (tempWorkspace) {
+        tempWorkspace.delete()
 
-      workspaceManager.bootstrap()
+        workspaceManager.bootstrap()
 
-      mainWindow.webContents.send(SET_WORKSPACES, workspaceManager.getNonDefaultNames())
+        mainWindow.webContents.send(SET_WORKSPACES, workspaceManager.getNonDefaultNames())
+      }
     })
 
     ipcMain.on(CLOSE_WORKSPACE, async (event) => {
