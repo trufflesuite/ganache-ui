@@ -49,7 +49,7 @@ export const getGasPrice = function() {
     var currentPrice = getState().core.gasPrice
     gasPrice = gasPrice.toString(10)
 
-    if (gasPrice != currentPrice) {
+    if (gasPrice !== currentPrice) {
       dispatch({ type: SET_GAS_PRICE, gasPrice })
     }
   }
@@ -63,7 +63,7 @@ export const getGasLimit = function() {
 
     var gasLimit = block.gasLimit.toString()
 
-    if (gasLimit != currentGasLimit) {
+    if (gasLimit !== currentGasLimit) {
       dispatch({ type: SET_GAS_LIMIT, gasLimit })
     }
   }
@@ -96,7 +96,7 @@ export const getBlockSubscription = function() {
     subscription.on('data', blockHeader => {
       let currentBlockNumber = getState().core.latestBlock
 
-      if (blockHeader.number != currentBlockNumber) {
+      if (blockHeader.number !== currentBlockNumber) {
         dispatch(setBlockNumber(blockHeader.number))
       }
     })
