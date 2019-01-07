@@ -39,7 +39,7 @@ export default class MnemonicAndHdPath extends PureComponent {
             {this.props.hdPath}account_index
           </span>
         </div>
-        <OnlyIf test={this.state.showWarning == true}>
+        <OnlyIf test={this.state.showWarning === true}>
           <MnemonicInfoModal onCloseModal={this.hideWarning.bind(this)}/>
         </OnlyIf>
       </section>
