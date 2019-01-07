@@ -1,5 +1,6 @@
 var path = require("path")
 var fs = require("fs")
+var fse = require("fs-extra")
 var padStart = require("lodash.padstart")
 
 var logFile;
@@ -40,32 +41,10 @@ function getLogTimestamp() {
   return currentDateString
 }
 
-function mkDirByPathSync(targetDir, {isRelativeToScript = false} = {}) {
-  const sep = path.sep;
-  const initDir = path.isAbsolute(targetDir) ? sep : '';
-  const baseDir = isRelativeToScript ? __dirname : '.';
-
-  targetDir.split(sep).reduce((parentDir, childDir) => {
-    const curDir = path.resolve(baseDir, parentDir, childDir);
-    try {
-      fs.mkdirSync(curDir);
-      console.log(`Directory ${curDir} created!`);
-    } catch (err) {
-      if (err.code !== 'EEXIST') {
-        throw err;
-      }
-
-      console.log(`Directory ${curDir} already exists!`);
-    }
-
-    return curDir;
-  }, initDir);
-}
-
 module.exports.generateLogFilePath = function(directory) {
-  if (!fs.existsSync(directory)) {
+  if (!fse.existsSync(directory)) {
     console.log("The Log Directory '" + directory + "' doesn't exist; attempting to create it now")
-    fs.mkdirSync(directory)
+    fse.mkdirpSync(directory)
   }
 
   logFile = path.join(directory, "ganache-" + getFileTimestamp() + ".log")
@@ -73,10 +52,16 @@ module.exports.generateLogFilePath = function(directory) {
 
 module.exports.logToFile = function(message) {
   if (logFile) {
+    const directory = path.dirname(logFile)
+    if (!fse.existsSync(directory)) {
+      console.log("The Log Directory '" + directory + "' doesn't exist; attempting to create it now")
+      fse.mkdirpSync(directory)
+    }
+
     message = "[" + getLogTimestamp() + "] - " + message + "\n"
 
     try {
-      fs.appendFileSync(logFile, message)
+      fse.appendFileSync(logFile, message)
     }
     catch(e) {
       console.error("Error: Could not write to file. Details: " + e);
