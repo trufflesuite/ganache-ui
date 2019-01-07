@@ -55,7 +55,7 @@ export default function (state = initialState, action) {
       })
     case AutoUpdate.DOWNLOAD_PROGRESS:
       return Object.assign({}, initialState, state, {
-        downloadComplete: action.percent == 100,
+        downloadComplete: action.percent === 100,
         downloadInProgress: true,
         downloadProgress: {
           bytesPerSecond: action.bytesPerSecond,
