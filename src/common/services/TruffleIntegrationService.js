@@ -19,7 +19,7 @@ class TruffleIntegrationService extends EventEmitter {
     const args = [];
     this.child = fork(chainPath, args, options);
     this.child.on('message', (message) => {
-      if (message.type == "process-started") {
+      if (message.type === "process-started") {
         this.emit("start");
       }
       this.emit(message.type, message.data);
