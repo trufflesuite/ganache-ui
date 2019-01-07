@@ -10,10 +10,10 @@ import TxList from './TxList'
 class RecentTransactions extends Component {
   componentWillReceiveProps(nextProps) {
     // If the scroll position changed...
-    if (nextProps.appshell.scrollPosition != this.props.appshell.scrollPosition) {
-      if (nextProps.appshell.scrollPosition == "top") {
+    if (nextProps.appshell.scrollPosition !== this.props.appshell.scrollPosition) {
+      if (nextProps.appshell.scrollPosition === "top") {
         this.props.dispatch(Transactions.requestPreviousPage())
-      } else if (nextProps.appshell.scrollPosition == "bottom") {
+      } else if (nextProps.appshell.scrollPosition === "bottom") {
         this.props.dispatch(Transactions.requestNextPage())
       }
       return
@@ -22,7 +22,7 @@ class RecentTransactions extends Component {
     // No change in scroll position? 
     var blocksRequested = Object.keys(nextProps.transactions.blocksRequested)
     var latestBlockRequested = Math.max.apply(Math, blocksRequested.concat(-1))
-    if (nextProps.appshell.scrollPosition == "top" && nextProps.core.latestBlock > latestBlockRequested) {
+    if (nextProps.appshell.scrollPosition === "top" && nextProps.core.latestBlock > latestBlockRequested) {
       this.props.dispatch(Transactions.requestPreviousPage())
     }
   }
