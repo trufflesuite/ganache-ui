@@ -70,7 +70,7 @@ function startServer(options) {
 
         options.logger = {
           log: (message) => {
-            if (typeof message === 'string' && (options.verbose || message.indexOf(" ") == 0)) {
+            if (typeof message === 'string' && (options.verbose || message.indexOf(" ") === 0)) {
               console.log(message)
             }
           }
