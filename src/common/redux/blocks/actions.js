@@ -35,7 +35,7 @@ export const requestPreviousPage = function() {
   return function(dispatch, getState) {
     var blocksInView = getState().blocks.inView
 
-    if (blocksInView.length == 0) {
+    if (blocksInView.length === 0) {
       return dispatch(requestPage(getState().core.latestBlock))
     }
 
