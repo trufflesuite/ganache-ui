@@ -39,7 +39,7 @@ export const requestPreviousPage = function() {
   return function(dispatch, getState) {
     var blocksRequested = Object.keys(getState().transactions.blocksRequested)
 
-    if (blocksRequested.length == 0) {
+    if (blocksRequested.length === 0) {
       return dispatch(requestPage(getState().core.latestBlock))
     }
 
@@ -91,7 +91,7 @@ export const getTransactionsForBlocks = function(startBlockNumber, endBlockNumbe
       // Now request the block and receipts for all its transactions
       let block = await web3Request("getBlock", [number, true], web3Instance)
 
-      if (block.transactions.length == 0) {
+      if (block.transactions.length === 0) {
         continue
       }
 
