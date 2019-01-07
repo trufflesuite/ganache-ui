@@ -8,10 +8,10 @@ const HARD_CACHED = {
   "eth_accounts": true,
   "eth_gasPrice": true,
   "eth_getBlockByNumber": (blockNumber, includeTransactions) => {
-    return blockNumber != "latest" && blockNumber != "pending" 
+    return blockNumber !== "latest" && blockNumber !== "pending" 
   },
   "eth_getBlockTransactionCountByNumber": (blockNumber) => {
-    return blockNumber != "latest" && blockNumber != "pending" 
+    return blockNumber !== "latest" && blockNumber !== "pending" 
   },
   "eth_getTransactionByHash": true
 }
@@ -21,11 +21,11 @@ const isHardCached = function(id) {
 
   var hardCachedResult = HARD_CACHED[method]
 
-  if (typeof hardCachedResult == "function") {
+  if (typeof hardCachedResult === "function") {
     var split = id.split(/\(|\)/)
     var params = split[1]
 
-    if (params == '') {
+    if (params === '') {
       params = []
     } else {
       params = params.split(",")
