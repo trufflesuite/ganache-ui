@@ -4,7 +4,7 @@ import cloneDeep from 'lodash.clonedeep'
 const initialState = {
   validationErrors: {}, // of the format {SETTING_NAME (i.e. hosname would be server.hostname): "error text"}
   settings: {},
-  configScreenOnly: false
+  startupMode: Config.STARTUP_MODE.NORMAL
 }
 
 export default function (state = initialState, action) {
@@ -30,8 +30,8 @@ export default function (state = initialState, action) {
     case Config.CLEAR_ALL_SETTING_ERRORS:
       nextState.validationErrors = {}
       break
-    case Config.SET_CONFIG_SCREEN_ONLY: {
-      nextState.configScreenOnly = action.state
+    case Config.SET_STARTUP_MODE: {
+      nextState.startupMode = action.mode
     }
     default:
       break

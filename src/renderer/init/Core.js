@@ -20,13 +20,13 @@ import {
 
 import { getAccounts } from '../../common/redux/accounts/actions'
 
-import { setSettings, setConfigScreenOnly } from '../../common/redux/config/actions'
+import { setSettings, setStartupMode, STARTUP_MODE } from '../../common/redux/config/actions'
 
 import { handleError } from './ErrorHandler'
 
 export function initCore(store) {
   // Wait for the server to start...
-  ipcRenderer.on(SET_SERVER_STARTED, (sender, globalSettings, workspaceSettings, openConfigScreenOnStart) => {
+  ipcRenderer.on(SET_SERVER_STARTED, (sender, globalSettings, workspaceSettings, startupMode) => {
     // Get current settings into the store
     store.dispatch(setSettings(globalSettings, workspaceSettings))
 
@@ -44,13 +44,18 @@ export function initCore(store) {
 
     store.dispatch(setServerStarted())
 
-    if (openConfigScreenOnStart) {
-      store.dispatch(setConfigScreenOnly(true))
-      store.dispatch(replace("/config"))
-    }
-    else {
-      store.dispatch(setConfigScreenOnly(false))
-      store.dispatch(replace("/accounts"))
+    store.dispatch(setStartupMode(startupMode))
+    switch (startupMode) {
+      case STARTUP_MODE.SAVING_WORKSPACE:
+      case STARTUP_MODE.NEW_WORKSPACE: {
+        store.dispatch(replace("/config"))
+        break
+      }
+      case STARTUP_MODE.NORMAL:
+      default: {
+        store.dispatch(replace("/accounts"))
+        break
+      }
     }
   })
 

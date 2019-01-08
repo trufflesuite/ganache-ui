@@ -42,7 +42,13 @@ export const clearAllSettingErrors = function() {
   return {type: CLEAR_ALL_SETTING_ERRORS}
 }
 
-export const SET_CONFIG_SCREEN_ONLY = `${prefix}/SET_CONFIG_SCREEN_ONLY`
-export const setConfigScreenOnly = function(state) {
-  return {type: SET_CONFIG_SCREEN_ONLY, state}
+export const STARTUP_MODE = {
+  NORMAL: 0,
+  NEW_WORKSPACE: 1,
+  SAVING_WORKSPACE: 2
+}
+
+export const SET_STARTUP_MODE = `${prefix}/SET_STARTUP_MODE`
+export const setStartupMode = function(mode) {
+  return {type: SET_STARTUP_MODE, mode}
 }

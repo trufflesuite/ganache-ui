@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 
 import OnlyIf from '../../../components/only-if/OnlyIf'
+import { STARTUP_MODE } from "../../../../common/redux/config/actions";
 
 const VALIDATIONS = {
   "workspace.server.gasPrice": {
@@ -68,7 +69,7 @@ class ChainScreen extends Component {
   }
 
   render () {
-    const enabled = this.props.config.settings.workspace.isDefault || this.props.config.configScreenOnly
+    const enabled = this.props.config.settings.workspace.isDefault || this.props.config.startupMode === STARTUP_MODE.NEW_WORKSPACE
     return (
       <div>
         <h2>GAS</h2>

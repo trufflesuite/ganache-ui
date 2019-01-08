@@ -76,7 +76,7 @@ class ConfigScreen extends PureComponent {
     }
     else {
       hashHistory.goBack();
-      if (this.props.config.configScreenOnly) {
+      if (this.props.config.startupMode !== Config.STARTUP_MODE.NORMAL) {
         this.props.dispatch(closeWorkspace())
         this.props.dispatch(deleteWorkspace(this.props.workspaces.current.name))
       }
@@ -284,11 +284,11 @@ class ConfigScreen extends PureComponent {
                   onClick={this.restartServer}
                   disabled={this.invalidConfig()}
                 >
-                  <OnlyIf test={this.props.config.configScreenOnly}>
+                  <OnlyIf test={this.props.config.startupMode !== Config.STARTUP_MODE.NORMAL}>
                     <SaveIcon className="save-icon" /*size={18}*/ />
                     SAVE WORKSPACE
                   </OnlyIf>
-                  <OnlyIf test={!this.props.config.configScreenOnly}>
+                  <OnlyIf test={this.props.config.startupMode === Config.STARTUP_MODE.NORMAL}>
                     <RestartIcon /*size={18}*/ />
                     { this.isDirty() ? 'SAVE AND RESTART' : 'RESTART' }
                   </OnlyIf>

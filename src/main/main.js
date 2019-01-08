@@ -51,7 +51,8 @@ import {
 
 import {
   SET_SETTINGS,
-  REQUEST_SAVE_SETTINGS
+  REQUEST_SAVE_SETTINGS,
+  STARTUP_MODE
 } from '../common/redux/config/actions'
 
 import {
@@ -115,7 +116,7 @@ app.on('ready', () => {
     const GoogleAnalytics = new GoogleAnalyticsService()
     const workspaceManager = new WorkspaceManager(app.getPath('userData'))
     let workspace
-    let openConfigScreenOnStart = false
+    let startupMode = STARTUP_MODE.NORMAL
 
     app.on('window-all-closed', async () => {
       // don't quit the app before the updater can do its thing
@@ -263,7 +264,7 @@ app.on('ready', () => {
 
           const globalSettings = global.getAll()
           const workspaceSettings = workspace.settings.getAll()
-          mainWindow.webContents.send(SET_SERVER_STARTED, globalSettings, workspaceSettings, openConfigScreenOnStart)
+          mainWindow.webContents.send(SET_SERVER_STARTED, globalSettings, workspaceSettings, startupMode)
         }
       })
 
@@ -323,7 +324,7 @@ app.on('ready', () => {
 
       mainWindow.webContents.send(SET_CURRENT_WORKSPACE, tempWorkspace, workspace.contractCache.getAll())
 
-      openConfigScreenOnStart = true
+      startupMode = STARTUP_MODE.SAVING_WORKSPACE
       chain.startServer(workspaceSettings)
 
       // this sends the network interfaces to the renderer process for
@@ -412,7 +413,7 @@ app.on('ready', () => {
         const globalSettings = global.getAll()
         mainWindow.webContents.send(SET_SETTINGS, globalSettings, tempWorkspace.settings.getAll())
 
-        openConfigScreenOnStart = false
+        startupMode = STARTUP_MODE.NORMAL
         chain.start()
 
         // this sends the network interfaces to the renderer process for
@@ -445,7 +446,7 @@ app.on('ready', () => {
 
       mainWindow.webContents.send(SET_CURRENT_WORKSPACE, tempWorkspace, workspace.contractCache.getAll())
 
-      openConfigScreenOnStart = true
+      startupMode = STARTUP_MODE.NEW_WORKSPACE
       chain.start()
 
       // this sends the network interfaces to the renderer process for
@@ -475,7 +476,7 @@ app.on('ready', () => {
           await chain.stopServer()
         }
 
-        if (openConfigScreenOnStart) {
+        if (startupMode === STARTUP_MODE.NEW_WORKSPACE) {
           // we just made a new workspace. we need to reset the chaindata since we initialized it
           // when started the configuration process
           workspace.resetChaindata();
@@ -498,7 +499,7 @@ app.on('ready', () => {
         const globalSettings = global.getAll()
         mainWindow.webContents.send(SET_SETTINGS, globalSettings, workspaceSettings)
 
-        openConfigScreenOnStart = false
+        startupMode = STARTUP_MODE.NORMAL
 
         chain.startServer(workspaceSettings)
 
