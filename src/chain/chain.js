@@ -112,7 +112,15 @@ function startServer(options) {
       var state = result ? result : server.provider.manager.state;
 
       try {
-        dbLocation = state.blockchain.data.db.location;
+        let db = state.blockchain.data.db;
+        // This is kind of a hack until https://github.com/trufflesuite/ganache-core/pull/271 is released
+        // dbLocation = db.directory
+        do {
+          dbLocation = db.location;
+          if (db.db) {
+            db = db.db;
+          }
+        } while (!dbLocation && db && (db.location || db.db))
       }
       catch (e) {
         console.error("Couldn't access location of chaindata. You will be unable to create a workspace from this session.");
