@@ -20,9 +20,9 @@ if (isDevMode) {
 import { 
   REQUEST_SERVER_RESTART,
   SET_SERVER_STARTED,
-  SET_SERVER_STOPPED,
   SET_KEY_DATA,
-  SET_SYSTEM_ERROR
+  SET_SYSTEM_ERROR,
+  SHOW_HOME_SCREEN
 } from '../common/redux/core/actions'
 
 import { 
@@ -365,6 +365,8 @@ app.on('ready', () => {
       mainWindow.webContents.send(SET_SETTINGS, globalSettings, {})
 
       mainWindow.webContents.send(SET_WORKSPACES, workspaceManager.getNonDefaultNames())
+
+      mainWindow.webContents.send(SHOW_HOME_SCREEN)
     })
 
     ipcMain.on(OPEN_WORKSPACE, async (event, name) => {

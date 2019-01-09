@@ -7,15 +7,10 @@ import { GET_DECODED_EVENT } from '../events/actions'
 
 const prefix = 'WORKSPACES'
 
-const cleanupWorkspace = function(dispatch, getState, goToTitleScreen = true) {
+const cleanupWorkspace = function(dispatch, getState) {
   web3CleanUpHelper(dispatch, getState)
 
-  if (goToTitleScreen) {
-    dispatch(showTitleScreen())
-  }
-  else {
-    dispatch(push("/loader"))
-  }
+  dispatch(push("/loader"))
 
   // Dispatch REQUEST_SERVER_RESTART to the store
   // This will clear all state.
@@ -67,7 +62,7 @@ export const saveWorkspace = function(name) {
   return function(dispatch, getState) {
     const mnemonic = getState().core.mnemonic
 
-    cleanupWorkspace(dispatch, getState, false)
+    cleanupWorkspace(dispatch, getState)
 
     dispatch({type: SAVE_WORKSPACE, name, mnemonic: mnemonic})
 

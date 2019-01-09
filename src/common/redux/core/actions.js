@@ -37,6 +37,13 @@ export function showTitleScreen() {
   }
 }
 
+export const SHOW_HOME_SCREEN = `${prefix}/SHOW_HOME_SCREEN`
+export function showHomeScreen() {
+  return function(dispatch, getState) {
+    dispatch(push("/home"))
+  }
+}
+
 export const SET_KEY_DATA = `${prefix}/SET_KEY_DATA`
 export function setKeyData(mnemonic, hdPath, privateKeys) {
   return { type: SET_KEY_DATA, mnemonic, hdPath, privateKeys }

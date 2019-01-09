@@ -15,7 +15,9 @@ import {
   setServerStarted,
   setBlockNumber,
   setKeyData,
-  setBlockNumberToLatest
+  setBlockNumberToLatest,
+  SHOW_HOME_SCREEN,
+  showHomeScreen
 } from '../../common/redux/core/actions'
 
 import { getAccounts } from '../../common/redux/accounts/actions'
@@ -76,5 +78,9 @@ export function initCore(store) {
   // The server will send a second message that sets the mnemonic and hdpath
   ipcRenderer.on(SET_KEY_DATA, (event, data) => {
     store.dispatch(setKeyData(data.mnemonic, data.hdPath, data.privateKeys))
+  })
+
+  ipcRenderer.on(SHOW_HOME_SCREEN, (event) => {
+    store.dispatch(showHomeScreen())
   })
 }

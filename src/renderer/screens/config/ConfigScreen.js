@@ -75,10 +75,12 @@ class ConfigScreen extends PureComponent {
       this.props.dispatch(Core.requestServerRestart())
     }
     else {
-      hashHistory.goBack();
       if (this.props.config.startupMode !== Config.STARTUP_MODE.NORMAL) {
         this.props.dispatch(closeWorkspace())
         this.props.dispatch(deleteWorkspace(this.props.workspaces.current.name))
+      }
+      else {
+        hashHistory.goBack();
       }
     }
   }
