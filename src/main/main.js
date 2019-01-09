@@ -424,7 +424,7 @@ app.on('ready', () => {
       }
     })
 
-    ipcMain.on(OPEN_NEW_WORKSPACE_CONFIG, async (event, name) => {
+    ipcMain.on(OPEN_NEW_WORKSPACE_CONFIG, async (event) => {
       if (truffleIntegration) {
         await truffleIntegration.stopWatching()
       }
@@ -456,6 +456,10 @@ app.on('ready', () => {
       continuouslySendNetworkInterfaces()
 
       const globalSettings = global.getAll()
+
+      // make sure we don't start with any projects for new workspaces
+      workspace.settings.set("projects", [])
+
       const workspaceSettings = workspace.settings.getAll()
       mainWindow.webContents.send(SET_SETTINGS, globalSettings, workspaceSettings)
 
