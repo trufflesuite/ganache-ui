@@ -54,11 +54,11 @@ class HomeScreen extends Component {
     this.props.dispatch(ModalDetails.actions.setModalError(modalDetails))
   }
 
-  createNewBlockchain() {
+  handleQuickstartPress(e) {
     this.props.dispatch(openDefaultWorkspace())
   }
 
-  customizeBlockchain() {
+  handleNewWorkspacePress(e) {
     this.props.dispatch(openNewWorkspaceConfig())
   }
 
@@ -131,8 +131,8 @@ class HomeScreen extends Component {
               </OnlyIf>
               <section>
                 <div className="bottom">
-                  <button onClick={this.createNewBlockchain.bind(this)}><ChainIcon />Quickstart</button>
-                  <button onClick={this.customizeBlockchain.bind(this)}><MenuIcon />New Workspace</button>
+                  <button onClick={this.handleQuickstartPress.bind(this)}><ChainIcon />Quickstart</button>
+                  <button onClick={this.handleNewWorkspacePress.bind(this)}><MenuIcon />New Workspace</button>
                 </div>
               </section>
             </div>
