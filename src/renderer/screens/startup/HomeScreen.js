@@ -33,6 +33,8 @@ class HomeScreen extends Component {
     e.stopPropagation()
     e.preventDefault()
 
+    document.activeElement.blur()
+
     const modalDetails = new ModalDetails(
       ModalDetails.types.WARNING,
       [{
