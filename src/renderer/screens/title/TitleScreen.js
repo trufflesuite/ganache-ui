@@ -22,7 +22,7 @@ class TitleScreen extends Component {
         clearInterval(intervalId)
       }
       else if (this.state.firstRun === false) {
-        hashHistory.push('/workspaces')
+        hashHistory.push('/home')
         clearInterval(intervalId)
       }
     }, 1000)

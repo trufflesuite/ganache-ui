@@ -40,7 +40,7 @@ initRenderer(store)
 // function, so that hot module reloading doesn't cause issues with react-router.
 const routes = <Route>
   <Route path='/title' component={TitleScreen} />
-  <Route path='/workspaces' component={HomeScreen} />
+  <Route path='/home' component={HomeScreen} />
   <Route path="/first_run" component={FirstRunScreen} />
   <Route path="/loader" component={LoaderScreen} />
   <Route path="/" component={AppShell}>

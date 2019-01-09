@@ -32,7 +32,7 @@ class FirstRunScreen extends Component {
 
     this.props.dispatch(Config.setSettings(newGlobalSettings, this.props.config.settings.workspace))
     this.props.dispatch(Config.requestSaveSettings(newGlobalSettings, this.props.config.settings.workspace))
-    this.props.dispatch(push('/workspaces'))
+    this.props.dispatch(push('/home'))
   }
 
   render () {
