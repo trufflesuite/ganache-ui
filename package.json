@@ -138,7 +138,7 @@
   "devDependencies": {
     "asar": "^0.13.0",
     "babel-core": "^6.21.0",
-    "babel-eslint": "^7.1.1",
+    "babel-eslint": "^10.0.1",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-dev-expression": "^0.2.1",
     "babel-plugin-inline-react-svg": "^0.5.2",
