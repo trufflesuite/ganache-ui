@@ -16,6 +16,17 @@
     "test": "npm run test-mocha",
     "test-mocha": "mocha --compilers js:babel-register --check-leaks --globals _scratch,sanitizedData 'test/mocha/**/*.test.js'"
   },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
   "browserslist": "chrome 50",
   "build": {
     "appId": "org.trufflesuite.ganache",
@@ -165,7 +176,9 @@
     "eslint": "^5.12.0",
     "eslint-config-prettier": "^3.4.0",
     "eslint-plugin-prettier": "^3.0.1",
+    "husky": "^1.3.1",
     "jsdom": "^9.9.1",
+    "lint-staged": "^8.1.0",
     "minimist": "^1.2.0",
     "mocha": "^3.5.3",
     "node-sass": "^4.5.3",
