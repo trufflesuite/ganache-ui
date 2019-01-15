@@ -162,6 +162,7 @@
     "electron-icon-maker": "0.0.3",
     "electron-log": "^2.2.9",
     "electron-prebuilt-compile": "1.8.4",
+    "eslint": "^5.12.0",
     "jsdom": "^9.9.1",
     "minimist": "^1.2.0",
     "mocha": "^3.5.3",
