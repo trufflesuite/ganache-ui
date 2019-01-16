@@ -14,7 +14,9 @@
     "build-mac": "electron-builder --mac",
     "build-windows": "electron-builder --win",
     "test": "npm run test-mocha",
-    "test-mocha": "mocha --compilers js:babel-register --check-leaks --globals _scratch,sanitizedData 'test/mocha/**/*.test.js'"
+    "test-mocha": "mocha --compilers js:babel-register --check-leaks --globals _scratch,sanitizedData 'test/mocha/**/*.test.js'",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "browserslist": "chrome 50",
   "build": {
@@ -172,7 +174,12 @@
     "source-map-support": "^0.4.8",
     "svg2uwptiles": "0.0.4",
     "temp": "^0.8.3",
-    "webpack": "^3.11.0"
+    "webpack": "^3.11.0",
+    "@storybook/react": "^4.1.6",
+    "@storybook/addon-actions": "^4.1.6",
+    "@storybook/addon-links": "^4.1.6",
+    "@storybook/addons": "^4.1.6",
+    "babel-loader": "^7.1.5"
   },
   "dependencies": {
     "@exponent/electron-cookies": "^2.0.0",
