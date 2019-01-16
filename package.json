@@ -138,9 +138,14 @@
   ],
   "homepage": "https://github.com/trufflesuite/ganache#readme",
   "devDependencies": {
+    "@storybook/addon-actions": "^4.1.6",
+    "@storybook/addon-links": "^4.1.6",
+    "@storybook/addons": "^4.1.6",
+    "@storybook/react": "^4.1.6",
     "asar": "^0.13.0",
     "babel-core": "^6.21.0",
     "babel-eslint": "^7.1.1",
+    "babel-loader": "^7.1.5",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-dev-expression": "^0.2.1",
     "babel-plugin-inline-react-svg": "^0.5.2",
@@ -174,12 +179,7 @@
     "source-map-support": "^0.4.8",
     "svg2uwptiles": "0.0.4",
     "temp": "^0.8.3",
-    "webpack": "^3.11.0",
-    "@storybook/react": "^4.1.6",
-    "@storybook/addon-actions": "^4.1.6",
-    "@storybook/addon-links": "^4.1.6",
-    "@storybook/addons": "^4.1.6",
-    "babel-loader": "^7.1.5"
+    "webpack": "^4.28.4"
   },
   "dependencies": {
     "@exponent/electron-cookies": "^2.0.0",
