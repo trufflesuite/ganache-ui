@@ -17,9 +17,15 @@ async function get(projectFile) {
       const options = {
         stdio: ["pipe", "pipe", "pipe", "ipc"],
       };
-      let child = child_process.spawn("node", args, options);
+      const child = child_process.spawn("node", args, options);
       child.on("error", error => {
-        throw new Error(error);
+        if (error.code === "ENOENT") {
+          throw new Error(
+            "Could not find 'node'. NodeJS is required to be installed to link Truffle projects.",
+          );
+        } else {
+          throw new Error(error);
+        }
       });
       child.stderr.on("data", data => {
         throw new Error(data);
