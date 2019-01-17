@@ -1,9 +1,9 @@
-import React, { Component } from "react"
-import MDSpinner from "react-md-spinner"
+import React, { Component } from "react";
+import MDSpinner from "react-md-spinner";
 
-import connect from "../helpers/connect"
+import connect from "../helpers/connect";
 
-import EventItem from "./EventItem"
+import EventItem from "./EventItem";
 
 class EventList extends Component {
   render() {
@@ -21,14 +21,13 @@ class EventList extends Component {
               />
             </div>
           </div>
-        )
-      }
-      else {
+        );
+      } else {
         return (
           <div className="EventList">
             <div className="Waiting">No events</div>
           </div>
-        )
+        );
       }
     }
 
@@ -38,8 +37,8 @@ class EventList extends Component {
           <EventItem event={event} key={index} />
         ))}
       </div>
-    )
+    );
   }
 }
 
-export default connect(EventList)
+export default connect(EventList);

@@ -1,8 +1,8 @@
-import JsonStorage from '../json/JsonStorage'
+import JsonStorage from "../json/JsonStorage";
 
 class ContractCache {
   constructor(directory) {
-    this.storage = new JsonStorage(directory, 'ContractCache');
+    this.storage = new JsonStorage(directory, "ContractCache");
 
     let obj = this.storage.getAll();
     if (obj === null || typeof obj !== "object") {
@@ -80,8 +80,11 @@ class ContractCache {
       obj = [];
     }
 
-    const existingEventsInCache = obj.filter((e) => {
-      return e.transactionHash === event.transactionHash && e.logIndex === event.logIndex;
+    const existingEventsInCache = obj.filter(e => {
+      return (
+        e.transactionHash === event.transactionHash &&
+        e.logIndex === event.logIndex
+      );
     });
 
     if (existingEventsInCache.length === 0) {
@@ -100,4 +103,4 @@ class ContractCache {
   }
 }
 
-export default ContractCache
+export default ContractCache;

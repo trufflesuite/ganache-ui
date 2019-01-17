@@ -1,44 +1,41 @@
-import React, { Component } from 'react'
+import React, { Component } from "react";
 
-import KeyModal from './KeyModal'
+import KeyModal from "./KeyModal";
 
-import ChecksumAddress from '../../components/checksum-addresses/ChecksumAddress'
-import OnlyIf from '../../components/only-if/OnlyIf'
-import FormattedEtherValue from '../../components/formatted-ether-value/FormattedEtherValue'
-import KeyIcon from '../../icons/key.svg'
+import ChecksumAddress from "../../components/checksum-addresses/ChecksumAddress";
+import OnlyIf from "../../components/only-if/OnlyIf";
+import FormattedEtherValue from "../../components/formatted-ether-value/FormattedEtherValue";
+import KeyIcon from "../../icons/key.svg";
 
 class AccountList extends Component {
-  constructor (props) {
-    super(props)
+  constructor(props) {
+    super(props);
     this.state = {
       showKeys: false,
-      privateKey: '',
-      accountAddress: ''
-    }
+      privateKey: "",
+      accountAddress: "",
+    };
   }
 
   showKeys = (accountAddress, privateKey) => {
     this.setState({
       showKeys: true,
       privateKey,
-      accountAddress
-    })
-  }
+      accountAddress,
+    });
+  };
 
   onCloseModal = () => {
     this.setState({
-      showKeys: false
-    })
-  }
+      showKeys: false,
+    });
+  };
 
   _renderAccounts = () => {
-    const self = this
+    const self = this;
     return this.props.accounts.map((account, index) => {
       return (
-        <div
-          className="AccountCard"
-          key={`account-card-${index}`}
-        >
+        <div className="AccountCard" key={`account-card-${index}`}>
           <div className="AddressAndBalance">
             <div className="AccountAddress">
               <div className="Label">ADDRESS</div>
@@ -49,22 +46,20 @@ class AccountList extends Component {
             <div className="AccountBalance">
               <div className="Label">BALANCE</div>
               <div className="Value">
-                <FormattedEtherValue value={this.props.balances[account].toString()} />
+                <FormattedEtherValue
+                  value={this.props.balances[account].toString()}
+                />
               </div>
             </div>
           </div>
           <div className="SecondaryInfo">
             <div className="TransactionCount">
               <div className="Label">TX COUNT</div>
-              <div className="Value">
-                {this.props.nonces[account]}
-              </div>
+              <div className="Value">{this.props.nonces[account]}</div>
             </div>
             <div className="AccountIndex">
               <div className="Label">INDEX</div>
-              <div className="Value">
-                {index}
-              </div>
+              <div className="Value">{index}</div>
             </div>
             <span
               className="ShowKeys"
@@ -73,14 +68,12 @@ class AccountList extends Component {
                   account,
                   // need to pass lower case account here because account is
                   // checksummed address
-                  self.props.privateKeys[account.toLowerCase()]
-                )
+                  self.props.privateKeys[account.toLowerCase()],
+                );
               }}
             >
               <KeyIcon />
-              <span className="popover">
-                Show Keys
-              </span>
+              <span className="popover">Show Keys</span>
             </span>
             {/* <div className={Styles.AccountState}>
               {account.isUnlocked
@@ -89,11 +82,11 @@ class AccountList extends Component {
             </div> */}
           </div>
         </div>
-      )
-    })
-  }
+      );
+    });
+  };
 
-  render () {
+  render() {
     return (
       <div className="AccountList">
         {this._renderAccounts()}
@@ -105,8 +98,8 @@ class AccountList extends Component {
           />
         </OnlyIf>
       </div>
-    )
+    );
   }
 }
 
-export default AccountList
+export default AccountList;

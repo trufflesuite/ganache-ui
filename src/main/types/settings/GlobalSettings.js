@@ -1,19 +1,19 @@
-import Settings from './Settings'
+import Settings from "./Settings";
 
 const initialSettings = {
   googleAnalyticsTracking: true,
   cpuAndMemoryProfiling: false,
-  firstRun: true
-}
+  firstRun: true,
+};
 
 class GlobalSettings extends Settings {
   constructor(directory) {
-    super(directory, initialSettings)
+    super(directory, initialSettings);
   }
 
   bootstrap() {
-    super.bootstrap()
+    super.bootstrap();
   }
 }
 
-export default GlobalSettings
+export default GlobalSettings;

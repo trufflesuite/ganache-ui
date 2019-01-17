@@ -1,43 +1,37 @@
-import React, { Component } from 'react'
+import React, { Component } from "react";
 
-import { Link } from 'react-router'
+import { Link } from "react-router";
 
-import TransactionTypeBadge from './TransactionTypeBadge'
-import DestinationAddress from './DestinationAddress'
+import TransactionTypeBadge from "./TransactionTypeBadge";
+import DestinationAddress from "./DestinationAddress";
 
-import OnlyIf from '../../components/only-if/OnlyIf'
+import OnlyIf from "../../components/only-if/OnlyIf";
 
 export default class MiniTxCard extends Component {
+  render() {
+    let { tx, receipt, contractName } = this.props;
 
-  render () {
-    let { tx, receipt, contractName } = this.props
-
-    let hasReceipt = !!receipt
+    let hasReceipt = !!receipt;
 
     if (!receipt) {
       receipt = {
-        gasUsed: "..."
-      }
+        gasUsed: "...",
+      };
     }
 
     return (
-      <Link
-        to={`/transactions/${tx.hash}`}
-        className="Link"
-      >
+      <Link to={`/transactions/${tx.hash}`} className="Link">
         <div className="MiniTxCard">
           <div className="Row Top">
             <div className="RowItem">
               <div className="TxHash">
                 <div className="Label">TX HASH</div>
-                <div className="Value">
-                  {tx.hash}
-                </div>
+                <div className="Value">{tx.hash}</div>
               </div>
             </div>
 
             <div className="RowItem">
-              <OnlyIf test={hasReceipt} >
+              <OnlyIf test={hasReceipt}>
                 <TransactionTypeBadge tx={tx} receipt={receipt} />
               </OnlyIf>
             </div>
@@ -48,33 +42,31 @@ export default class MiniTxCard extends Component {
               <div className="RowItem">
                 <div className="From">
                   <div className="Label">FROM ADDRESS</div>
-                  <div className="Value">
-                    {tx.from}
-                  </div>
+                  <div className="Value">{tx.from}</div>
                 </div>
               </div>
 
               <div className="RowItem">
-                <OnlyIf test={hasReceipt} >
-                  <DestinationAddress tx={tx} contractName={contractName} receipt={receipt} />
+                <OnlyIf test={hasReceipt}>
+                  <DestinationAddress
+                    tx={tx}
+                    contractName={contractName}
+                    receipt={receipt}
+                  />
                 </OnlyIf>
               </div>
 
               <div className="RowItem">
                 <div className="GasUsed">
                   <div className="Label">GAS USED</div>
-                  <div className="Value">
-                    {receipt.gasUsed}
-                  </div>
+                  <div className="Value">{receipt.gasUsed}</div>
                 </div>
               </div>
 
               <div className="RowItem">
                 <div className="Value">
                   <div className="Label">VALUE</div>
-                  <div className="Value">
-                    {tx.value.toString()}
-                  </div>
+                  <div className="Value">{tx.value.toString()}</div>
                 </div>
               </div>
 
@@ -92,6 +84,6 @@ export default class MiniTxCard extends Component {
           </div>
         </div>
       </Link>
-    )
+    );
   }
 }

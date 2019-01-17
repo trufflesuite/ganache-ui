@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
-import connect from '../helpers/connect'
-import * as Blocks from '../../../common/redux/blocks/actions'
-import BlockList from './BlockList'
-import BlockCard from './BlockCard'
+import React, { Component } from "react";
+import connect from "../helpers/connect";
+import * as Blocks from "../../../common/redux/blocks/actions";
+import BlockList from "./BlockList";
+import BlockCard from "./BlockCard";
 
 class BlockContainer extends Component {
   constructor(props) {
@@ -10,22 +10,21 @@ class BlockContainer extends Component {
   }
 
   componentDidMount() {
-    this.props.dispatch(Blocks.requestPage())
+    this.props.dispatch(Blocks.requestPage());
   }
-  
-  render () {
-    var content
+
+  render() {
+    var content;
     if (this.props.params.blockNumber != null) {
-      content = <BlockCard blockNumber={this.props.params.blockNumber} />
+      content = <BlockCard blockNumber={this.props.params.blockNumber} />;
     } else {
-      content = <BlockList scrollPosition={this.props.scrollPosition} />
+      content = <BlockList scrollPosition={this.props.scrollPosition} />;
     }
-    return (
-      <div className="BlocksScreen">
-        {content}
-      </div>
-    )
+    return <div className="BlocksScreen">{content}</div>;
   }
 }
 
-export default connect(BlockContainer, "blocks")
+export default connect(
+  BlockContainer,
+  "blocks",
+);

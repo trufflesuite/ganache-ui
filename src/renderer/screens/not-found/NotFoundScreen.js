@@ -1,15 +1,13 @@
-import React, { Component } from 'react'
+import React, { Component } from "react";
 
-class NotFoundScreen extends Component {  
-  render () {
+class NotFoundScreen extends Component {
+  render() {
     return (
       <div className="NotFoundScreen">
-        <main>
-          Nothing found
-        </main>
+        <main>Nothing found</main>
       </div>
-    )
+    );
   }
 }
 
-export default NotFoundScreen
+export default NotFoundScreen;

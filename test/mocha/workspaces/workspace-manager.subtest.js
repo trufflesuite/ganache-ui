@@ -7,7 +7,9 @@ describe("Workspace Manager", () => {
   let workspaceManager = null;
 
   before(async () => {
-    workspaceManager = new WorkspaceManager(path.resolve(__dirname, "test-workspaces"));
+    workspaceManager = new WorkspaceManager(
+      path.resolve(__dirname, "test-workspaces"),
+    );
   });
 
   it("boostrapped without error", async () => {
@@ -17,14 +19,20 @@ describe("Workspace Manager", () => {
   it("loaded expected worksapces", async () => {
     let expectedWorkspaces = {
       "Test 1": false,
-      "Test 2": false
+      "Test 2": false,
     };
     expectedWorkspaces[null] = false; // default workspace
     const expectedWorkspaceNames = Object.keys(expectedWorkspaces);
     const numExpectedWorkspaces = expectedWorkspaceNames.length;
 
-    assert(workspaceManager.workspaces.length === numExpectedWorkspaces,
-      "Expected " + numExpectedWorkspaces + " workspaces, found " + workspaceManager.workspaces.length + " instead.");
+    assert(
+      workspaceManager.workspaces.length === numExpectedWorkspaces,
+      "Expected " +
+        numExpectedWorkspaces +
+        " workspaces, found " +
+        workspaceManager.workspaces.length +
+        " instead.",
+    );
 
     for (let i = 0; i < workspaceManager.workspaces.length; i++) {
       const name = workspaceManager.workspaces[i].name;
@@ -34,8 +42,7 @@ describe("Workspace Manager", () => {
         }
 
         expectedWorkspaces[name] = true;
-      }
-      else {
+      } else {
         throw new Error("Found unexpected workspace: " + name);
       }
     }

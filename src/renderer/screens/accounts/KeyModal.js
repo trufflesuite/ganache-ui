@@ -1,12 +1,12 @@
-import React, { PureComponent } from 'react'
+import React, { PureComponent } from "react";
 
-import ChecksumAddress from '../../components/checksum-addresses/ChecksumAddress'
-import Modal from '../../components/modal/Modal'
+import ChecksumAddress from "../../components/checksum-addresses/ChecksumAddress";
+import Modal from "../../components/modal/Modal";
 
-import KeyIcon from '../../icons/key.svg'
+import KeyIcon from "../../icons/key.svg";
 
 export default class KeyModal extends PureComponent {
-  render () {
+  render() {
     return (
       <Modal className="KeyModal">
         <header>
@@ -17,16 +17,16 @@ export default class KeyModal extends PureComponent {
 
         <section>
           <dl>
-            <dt><KeyIcon /> PRIVATE KEY</dt>
-            <dd>
-              {this.props.privateKey}
-            </dd>
+            <dt>
+              <KeyIcon /> PRIVATE KEY
+            </dt>
+            <dd>{this.props.privateKey}</dd>
           </dl>
           <footer>
             <button onClick={this.props.onCloseModal}>DONE</button>
           </footer>
         </section>
       </Modal>
-    )
+    );
   }
 }

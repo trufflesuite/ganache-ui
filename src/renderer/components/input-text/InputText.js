@@ -1,63 +1,63 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import omit from 'lodash.omit'
+import React from "react";
+import PropTypes from "prop-types";
+import omit from "lodash.omit";
 
 class InputSelect extends React.Component {
-  constructor (props) {
-    super(props)
+  constructor(props) {
+    super(props);
     this.state = {
-      value: props.value || ''
-    }
+      value: props.value || "",
+    };
   }
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps(nextProps) {
     this.setState({
-      value: nextProps.value
-    })
+      value: nextProps.value,
+    });
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     if (this.timeout) {
-      clearTimeout(this.timeout)
+      clearTimeout(this.timeout);
     }
-    this.timeout = null
+    this.timeout = null;
   }
 
-  handlePress (e) {
-    if (e.key === 'Enter') {
+  handlePress(e) {
+    if (e.key === "Enter") {
       if (this.timeout) {
-        clearTimeout(this.timeout)
+        clearTimeout(this.timeout);
       }
-      const value = e.target.value
+      const value = e.target.value;
       if (value !== this.props.value) {
-        this.props.onChange(value)
+        this.props.onChange(value);
       }
-      this.props.onEnter(value)
+      this.props.onEnter(value);
     }
   }
 
-  handleChange (e) {
-    const value = e.target.value
-    this.setState({ value })
+  handleChange(e) {
+    const value = e.target.value;
+    this.setState({ value });
     if (this.timeout) {
-      clearTimeout(this.timeout)
+      clearTimeout(this.timeout);
     }
     this.timeout = setTimeout(
-      function () {
-        this.props.onChange(value)
+      function() {
+        this.props.onChange(value);
       }.bind(this),
-      this.props.delay
-    )
+      this.props.delay,
+    );
   }
 
-  render () {
+  render() {
     const extendProps = omit(this.props, [
-      'value',
-      'onKeyPress',
-      'onChange',
-      'delay',
-      'onEnter'
-    ])
+      "value",
+      "onKeyPress",
+      "onChange",
+      "delay",
+      "onEnter",
+    ]);
     return (
       <input
         {...extendProps}
@@ -66,18 +66,18 @@ class InputSelect extends React.Component {
         onKeyDown={this.props.onKeyDown}
         onChange={this.handleChange.bind(this)}
       />
-    )
+    );
   }
 }
 InputSelect.propTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func,
   onEnter: PropTypes.func,
-  delay: PropTypes.number
-}
+  delay: PropTypes.number,
+};
 
 InputSelect.defaultProps = {
-  delay: 300
-}
+  delay: 300,
+};
 
-export default InputSelect
+export default InputSelect;

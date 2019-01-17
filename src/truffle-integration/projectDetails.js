@@ -9,18 +9,22 @@ function get(projectFile) {
     return {
       name,
       configFile: projectFile,
-      error: "project-does-not-exist"
+      error: "project-does-not-exist",
     };
-  }
-  else if (path.basename(projectFile).match(/^truffle(-config)?.js$/) === null) {
+  } else if (
+    path.basename(projectFile).match(/^truffle(-config)?.js$/) === null
+  ) {
     return {
       name,
       configFile: projectFile,
-      error: "invalid-project-file"
+      error: "invalid-project-file",
     };
-  }
-  else {
-    let config = new TruffleConfig(configFileDirectory, configFileDirectory, "ganache");
+  } else {
+    let config = new TruffleConfig(
+      configFileDirectory,
+      configFileDirectory,
+      "ganache",
+    );
     const output = require(projectFile);
     config.merge(output);
 
@@ -32,13 +36,13 @@ function get(projectFile) {
       config: {
         truffle_directory: config.truffle_directory,
         build_directory: config.build_directory,
-        contracts_build_directory: config.contracts_build_directory
+        contracts_build_directory: config.contracts_build_directory,
       },
-      contracts
+      contracts,
     };
   }
 }
 
 module.exports = {
-  get
-}
+  get,
+};

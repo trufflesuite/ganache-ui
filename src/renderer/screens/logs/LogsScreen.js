@@ -1,21 +1,21 @@
-import React, { Component } from 'react'
+import React, { Component } from "react";
 
-import LogContainer from './LogContainer'
+import LogContainer from "./LogContainer";
 
 class Logs extends Component {
-  constructor () {
-    super()
+  constructor() {
+    super();
   }
 
-  render () {
+  render() {
     return (
       <div className="LogsScreen">
         <main>
           <LogContainer />
         </main>
       </div>
-    )
+    );
   }
 }
 
-export default Logs
+export default Logs;

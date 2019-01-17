@@ -1,34 +1,43 @@
-import React, { Component } from 'react'
-import MDSpinner from "react-md-spinner"
+import React, { Component } from "react";
+import MDSpinner from "react-md-spinner";
 
-import connect from '../helpers/connect'
+import connect from "../helpers/connect";
 
-import MiniTxCard from './MiniTxCard'
+import MiniTxCard from "./MiniTxCard";
 
 class TxList extends Component {
-  render () {
-    var content
+  render() {
+    var content;
     if (this.props.transactions.length > 0) {
-      content = this.props.transactions.map((tx) => {
-        let contractName = null
+      content = this.props.transactions.map(tx => {
+        let contractName = null;
         if (tx.to) {
-          for (let i = 0; i < this.props.workspaces.current.projects.length; i++) {
-            const project = this.props.workspaces.current.projects[i]
+          for (
+            let i = 0;
+            i < this.props.workspaces.current.projects.length;
+            i++
+          ) {
+            const project = this.props.workspaces.current.projects[i];
             for (let j = 0; j < project.contracts.length; j++) {
-              const contract = project.contracts[j]
-              if (contract.address && contract.address.toLowerCase() === tx.to.toLowerCase()) {
-                contractName = contract.contractName
+              const contract = project.contracts[j];
+              if (
+                contract.address &&
+                contract.address.toLowerCase() === tx.to.toLowerCase()
+              ) {
+                contractName = contract.contractName;
               }
             }
           }
         }
-        return <MiniTxCard
-          tx={tx}
-          contractName={contractName}
-          receipt={this.props.receipts[tx.hash]}
-          key={`tx-${tx.hash}`}
-        />
-      })
+        return (
+          <MiniTxCard
+            tx={tx}
+            contractName={contractName}
+            receipt={this.props.receipts[tx.hash]}
+            key={`tx-${tx.hash}`}
+          />
+        );
+      });
     } else {
       if (this.props.loading) {
         content = (
@@ -43,23 +52,21 @@ class TxList extends Component {
               />
             </div>
           </div>
-        )
-      }
-      else {
+        );
+      } else {
         content = (
           <div className="TransactionList">
             <div className="Waiting">No transactions</div>
           </div>
-        )
+        );
       }
     }
 
-    return (
-      <div className="TxList">
-        { content }
-      </div>
-    )
+    return <div className="TxList">{content}</div>;
   }
 }
 
-export default connect(TxList, "workspaces")
+export default connect(
+  TxList,
+  "workspaces",
+);

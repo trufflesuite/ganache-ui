@@ -1,28 +1,36 @@
-import React, { Component } from "react"
+import React, { Component } from "react";
 
-import connect from "../helpers/connect"
+import connect from "../helpers/connect";
 
-import EventList from "./EventList"
+import EventList from "./EventList";
 
-import * as Events from '../../../common/redux/events/actions'
+import * as Events from "../../../common/redux/events/actions";
 
 class RecentEvents extends Component {
   componentDidUpdate(prevProps, prevState, snapshot) {
     // If the scroll position changed...
-    if (this.props.appshell.scrollPosition != prevProps.appshell.scrollPosition) {
+    if (
+      this.props.appshell.scrollPosition != prevProps.appshell.scrollPosition
+    ) {
       if (this.props.appshell.scrollPosition == "top") {
-        this.props.dispatch(Events.requestPreviousPage())
+        this.props.dispatch(Events.requestPreviousPage());
       } else if (this.props.appshell.scrollPosition == "bottom") {
-        this.props.dispatch(Events.requestNextPage())
+        this.props.dispatch(Events.requestNextPage());
       }
-      return
+      return;
     }
 
-    // No change in scroll position? 
-    const blocksRequested = Object.keys(this.props.events.blocksRequested)
-    const latestBlockRequested = Math.max.apply(Math, blocksRequested.concat(-1))
-    if (this.props.appshell.scrollPosition == "top" && this.props.core.latestBlock > latestBlockRequested) {
-      this.props.dispatch(Events.requestPreviousPage())
+    // No change in scroll position?
+    const blocksRequested = Object.keys(this.props.events.blocksRequested);
+    const latestBlockRequested = Math.max.apply(
+      Math,
+      blocksRequested.concat(-1),
+    );
+    if (
+      this.props.appshell.scrollPosition == "top" &&
+      this.props.core.latestBlock > latestBlockRequested
+    ) {
+      this.props.dispatch(Events.requestPreviousPage());
     }
   }
 
@@ -31,8 +39,13 @@ class RecentEvents extends Component {
       <div className="RecentEvents">
         <EventList eventList={this.props.eventList} />
       </div>
-    )
+    );
   }
 }
 
-export default connect(RecentEvents, "appshell", "core", "events")
+export default connect(
+  RecentEvents,
+  "appshell",
+  "core",
+  "events",
+);
