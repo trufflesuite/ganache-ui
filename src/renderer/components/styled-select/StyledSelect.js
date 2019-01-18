@@ -1,11 +1,11 @@
-import React, { Component } from 'react'
+import React, { Component } from "react";
 
 class StyledSelect extends Component {
-  render () {
+  render() {
     return (
-      <div className='StyledSelect'>
+      <div className="StyledSelect">
         <select
-          className={this.props.className || ''}
+          className={this.props.className || ""}
           name={this.props.name}
           id={this.props.id}
           defaultValue={this.props.defaultValue}
@@ -14,8 +14,8 @@ class StyledSelect extends Component {
           {this.props.children}
         </select>
       </div>
-    )
+    );
   }
 }
 
-export default StyledSelect
+export default StyledSelect;

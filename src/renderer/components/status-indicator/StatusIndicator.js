@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
+import React, { Component } from "react";
 
-import OnlyIf from '../only-if/OnlyIf'
+import OnlyIf from "../only-if/OnlyIf";
 
 export default class StatusIndicator extends Component {
-  render () {
+  render() {
     return (
       <div className="StatusIndicator">
         <div className="Metric">
@@ -11,11 +11,9 @@ export default class StatusIndicator extends Component {
           <span>{this.props.value}</span>
         </div>
         <OnlyIf test={this.props.children}>
-          <div className="Indicator">
-            {this.props.children}
-          </div>
+          <div className="Indicator">{this.props.children}</div>
         </OnlyIf>
       </div>
-    )
+    );
   }
 }

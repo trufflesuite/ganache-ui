@@ -1,77 +1,91 @@
-
-
 class JsonWithKeyPaths {
   constructor(obj) {
-    this.obj = obj || {}
+    this.obj = obj || {};
   }
 
   get(keyPath) {
-    const keys = keyPath.split(".")
+    const keys = keyPath.split(".");
 
-    let tempObj = this.obj
+    let tempObj = this.obj;
     for (let i = 0; i < keys.length; i++) {
-      const key = keys[i]
+      const key = keys[i];
 
-      if (tempObj !== null && typeof tempObj !== "undefined" && typeof tempObj[key] !== "undefined") {
-        tempObj = tempObj[key]
+      if (
+        tempObj !== null &&
+        typeof tempObj !== "undefined" &&
+        typeof tempObj[key] !== "undefined"
+      ) {
+        tempObj = tempObj[key];
       } else {
-        return undefined
+        return undefined;
       }
     }
 
-    return tempObj
+    return tempObj;
   }
 
   getAll() {
-    return this.obj
+    return this.obj;
   }
 
   set(keyPath, value) {
-    const keys = keyPath.split(".")
+    const keys = keyPath.split(".");
 
-    let tempObj = this.obj
+    let tempObj = this.obj;
     for (let i = 0; i < keys.length - 1; i++) {
-      const key = keys[i]
+      const key = keys[i];
 
-      if (tempObj !== null && typeof tempObj !== "undefined" && typeof tempObj[key] === "undefined") {
-        tempObj[key] = {}
+      if (
+        tempObj !== null &&
+        typeof tempObj !== "undefined" &&
+        typeof tempObj[key] === "undefined"
+      ) {
+        tempObj[key] = {};
       }
 
-      tempObj = tempObj[key]
+      tempObj = tempObj[key];
     }
 
-    tempObj[keys.pop()] = value
+    tempObj[keys.pop()] = value;
   }
 
   setAll(value) {
-    this.obj = value
+    this.obj = value;
   }
 
   has(keyPath) {
-    const keys = keyPath.split(".")
+    const keys = keyPath.split(".");
 
-    return typeof this.get(keyPath) !== "undefined"
+    return typeof this.get(keyPath) !== "undefined";
   }
 
   delete(keyPath) {
-    const keys = keyPath.split(".")
+    const keys = keyPath.split(".");
 
-    let tempObj = this.obj
+    let tempObj = this.obj;
     for (let i = 0; i < keys.length - 1; i++) {
-      const key = keys[i]
+      const key = keys[i];
 
-      if (tempObj !== null && typeof tempObj !== "undefined" && typeof tempObj[key] === "undefined") {
-        return
+      if (
+        tempObj !== null &&
+        typeof tempObj !== "undefined" &&
+        typeof tempObj[key] === "undefined"
+      ) {
+        return;
       }
 
-      tempObj = tempObj[key]
+      tempObj = tempObj[key];
     }
 
-    const lastKey = keys.pop()
-    if (tempObj !== null && typeof tempObj !== "undefined" && typeof tempObj[lastKey] !== "undefined") {
-      delete tempObj[lastKey]
+    const lastKey = keys.pop();
+    if (
+      tempObj !== null &&
+      typeof tempObj !== "undefined" &&
+      typeof tempObj[lastKey] !== "undefined"
+    ) {
+      delete tempObj[lastKey];
     }
   }
 }
 
-export default JsonWithKeyPaths
+export default JsonWithKeyPaths;

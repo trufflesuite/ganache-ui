@@ -1,31 +1,37 @@
-import GoogleAnalyticsService from '../../../../services/GoogleAnalyticsService'
+import GoogleAnalyticsService from "../../../../services/GoogleAnalyticsService";
 
-import {
-  SET_SYSTEM_ERROR
-} from '../../../core/actions'
+import { SET_SYSTEM_ERROR } from "../../../core/actions";
 
 import {
   RPC_REQUEST_STARTED,
   RPC_REQUEST_SUCCEEDED,
-  RPC_REQUEST_FAILED
-} from '../../../web3/helpers/ReduxWeb3Provider'
+  RPC_REQUEST_FAILED,
+} from "../../../web3/helpers/ReduxWeb3Provider";
 
 export function processPage(pathname, state) {
-  const GoogleAnalytics = new GoogleAnalyticsService()
-  GoogleAnalytics.setup(state.config.settings.googleAnalyticsTracking, state.config.settings.uuid)
+  const GoogleAnalytics = new GoogleAnalyticsService();
+  GoogleAnalytics.setup(
+    state.config.settings.googleAnalyticsTracking,
+    state.config.settings.uuid,
+  );
 
-  GoogleAnalytics.reportPageview(pathname)
-  const segment = pathname.split('/')[1] || 'dashboard'
-  GoogleAnalytics.reportScreenview(segment)
+  GoogleAnalytics.reportPageview(pathname);
+  const segment = pathname.split("/")[1] || "dashboard";
+  GoogleAnalytics.reportScreenview(segment);
 }
 
 export function process(action, state) {
-  const GoogleAnalytics = new GoogleAnalyticsService()
-  GoogleAnalytics.setup(state.config.settings.googleAnalyticsTracking, state.config.settings.uuid)
+  const GoogleAnalytics = new GoogleAnalyticsService();
+  GoogleAnalytics.setup(
+    state.config.settings.googleAnalyticsTracking,
+    state.config.settings.uuid,
+  );
 
-  switch(action.type) {
+  switch (action.type) {
     case SET_SYSTEM_ERROR: {
-      GoogleAnalytics.reportEvent(SystemErrorEvent(action.category, action.detail))
+      GoogleAnalytics.reportEvent(
+        SystemErrorEvent(action.category, action.detail),
+      );
       break;
     }
     case RPC_REQUEST_STARTED: {
@@ -50,14 +56,14 @@ export function process(action, state) {
 function SystemErrorEvent(category, detail) {
   let e = {
     category: "error",
-    action: category
-  }
+    action: category,
+  };
 
   if (detail) {
-    e.label = detail
+    e.label = detail;
   }
 
-  return e
+  return e;
 }
 
 function RPCRequestStartedEvent(payload) {
@@ -65,30 +71,30 @@ function RPCRequestStartedEvent(payload) {
     category: "rpc",
     action: "started",
     label: payload.method || "(unknown method)",
-    value: payload.params ? payload.params.length : 0
-  }
+    value: payload.params ? payload.params.length : 0,
+  };
 }
 
 function RPCRequestSucceededEvent(payload) {
   return {
     category: "rpc",
     action: "succeeded",
-    label: payload.method || "(unknown method)"
-  }
+    label: payload.method || "(unknown method)",
+  };
 }
 
 function RPCRequestFailedEvent(payload) {
   return {
     category: "rpc",
     action: "failed",
-    label: payload.method || "(unknown method)"
-  }
+    label: payload.method || "(unknown method)",
+  };
 }
 
 function RPCRequestStatusFailureEvent(payload) {
   return {
     category: "error",
     action: "tx-status-failure",
-    label: payload.method || "(unknown method)"
-  }
+    label: payload.method || "(unknown method)",
+  };
 }

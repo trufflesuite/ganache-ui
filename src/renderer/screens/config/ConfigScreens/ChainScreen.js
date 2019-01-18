@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
+import React, { Component } from "react";
 
-import OnlyIf from '../../../components/only-if/OnlyIf'
+import OnlyIf from "../../../components/only-if/OnlyIf";
 import { STARTUP_MODE } from "../../../../common/redux/config/actions";
 
 const VALIDATIONS = {
@@ -8,75 +8,76 @@ const VALIDATIONS = {
     allowedChars: /^\d*$/,
     min: 1,
     max: Number.MAX_SAFE_INTEGER,
-    canBeBlank: true
+    canBeBlank: true,
   },
   "workspace.server.gasLimit": {
     allowedChars: /^\d*$/,
     min: 1,
     max: Number.MAX_SAFE_INTEGER,
-    canBeBlank: true
-  }
-}
+    canBeBlank: true,
+  },
+};
 
 const FORK_URLS = {
-  mainnet: "https://mainnet.infura.io/ganache", 
-  ropsten: "https://ropsten.infura.io/ganache", 
-  kovan: "https://kovan.infura.io/ganache", 
-  rinkeby: "https://rinkeby.infura.io/ganache"
-}
+  mainnet: "https://mainnet.infura.io/ganache",
+  ropsten: "https://ropsten.infura.io/ganache",
+  kovan: "https://kovan.infura.io/ganache",
+  rinkeby: "https://rinkeby.infura.io/ganache",
+};
 
 class ChainScreen extends Component {
-  constructor (props) {
-    super(props)
+  constructor(props) {
+    super(props);
 
     this.state = {
-      forking: this.props.config.settings.workspace.server.fork != null
-    }
+      forking: this.props.config.settings.workspace.server.fork != null,
+    };
   }
 
   validateChange = e => {
-    this.props.validateChange(e, VALIDATIONS)
-  }
+    this.props.validateChange(e, VALIDATIONS);
+  };
 
   toggleForking = () => {
-    var toggleValue = !this.state.forking
+    var toggleValue = !this.state.forking;
 
-     // Remove fork if we turn forking off
-     if (toggleValue == false) {
-      delete this.props.config.settings.workspace.server.fork
+    // Remove fork if we turn forking off
+    if (toggleValue == false) {
+      delete this.props.config.settings.workspace.server.fork;
 
       // Rerun validations now that value has been deleted
       this.validateChange({
         target: {
           name: "workspace.server.fork",
-          value: ""
-        }
-      })
+          value: "",
+        },
+      });
     }
 
     this.setState({
-      forking: toggleValue
-    })
-  }
+      forking: toggleValue,
+    });
+  };
 
   cleanNumber(value) {
     if (isNaN(value) || value === null || value === undefined) {
-      return ""
-    }
-    else {
-      return value
+      return "";
+    } else {
+      return value;
     }
   }
 
-  render () {
-    const enabled = this.props.config.settings.workspace.isDefault || this.props.config.startupMode === STARTUP_MODE.NEW_WORKSPACE
+  render() {
+    const enabled =
+      this.props.config.settings.workspace.isDefault ||
+      this.props.config.startupMode === STARTUP_MODE.NEW_WORKSPACE;
     return (
       <div>
         <h2>GAS</h2>
         <OnlyIf test={!enabled}>
           <div className="Notice">
-            <span className="Warning">⚠</span>{" "}
-            Gas limits can only be updated when creating a new workspace.
+            <span className="Warning">⚠</span> Gas limits can only be updated
+            when creating a new workspace.
           </div>
         </OnlyIf>
         <OnlyIf test={enabled}>
@@ -88,16 +89,20 @@ class ChainScreen extends Component {
                   name="workspace.server.gasLimit"
                   type="text"
                   data-type="number"
-                  value={this.cleanNumber(this.props.config.settings.workspace.server.gasLimit)}
+                  value={this.cleanNumber(
+                    this.props.config.settings.workspace.server.gasLimit,
+                  )}
                   onChange={this.validateChange}
                 />
-                {this.props.validationErrors["workspace.server.gasLimit"] &&
-                  <p className="ValidationError">
-                    Must be &ge; 1
-                  </p>}
+                {this.props.validationErrors["workspace.server.gasLimit"] && (
+                  <p className="ValidationError">Must be &ge; 1</p>
+                )}
               </div>
               <div className="RowItem">
-                <p>Maximum amount of gas available to each block and transaction. Leave blank for default.</p>
+                <p>
+                  Maximum amount of gas available to each block and transaction.
+                  Leave blank for default.
+                </p>
               </div>
             </div>
           </section>
@@ -110,16 +115,19 @@ class ChainScreen extends Component {
                 name="workspace.server.gasPrice"
                 type="text"
                 data-type="number"
-                value={this.cleanNumber(this.props.config.settings.workspace.server.gasPrice)}
+                value={this.cleanNumber(
+                  this.props.config.settings.workspace.server.gasPrice,
+                )}
                 onChange={this.validateChange}
               />
-              {this.props.validationErrors["workspace.server.gasPrice"] &&
-                <p className="ValidationError">
-                  Must be &ge; 1
-                </p>}
+              {this.props.validationErrors["workspace.server.gasPrice"] && (
+                <p className="ValidationError">Must be &ge; 1</p>
+              )}
             </div>
             <div className="RowItem">
-              <p>The price of each unit of gas, in WEI. Leave blank for default.</p>
+              <p>
+                The price of each unit of gas, in WEI. Leave blank for default.
+              </p>
             </div>
           </div>
         </section>
@@ -214,8 +222,8 @@ class ChainScreen extends Component {
           </section>
         </OnlyIf> */}
       </div>
-    )
+    );
   }
 }
 
-export default ChainScreen
+export default ChainScreen;

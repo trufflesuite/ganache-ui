@@ -1,4 +1,4 @@
-import { ipcRenderer } from 'electron'
+import { ipcRenderer } from "electron";
 
 import {
   SHOW_CONFIG_SCREEN,
@@ -10,27 +10,27 @@ import {
   setSettingError,
   clearSettingError,
   clearAllSettingErrors,
-  setSettings
-} from '../../common/redux/config/actions'
+  setSettings,
+} from "../../common/redux/config/actions";
 
 export function initConfig(store) {
-  ipcRenderer.on(SHOW_CONFIG_SCREEN, (event) => {
-    store.dispatch(showConfigScreen())
-  })
+  ipcRenderer.on(SHOW_CONFIG_SCREEN, event => {
+    store.dispatch(showConfigScreen());
+  });
 
   ipcRenderer.on(SET_SETTING_ERROR, (event, key, value) => {
-    store.dispatch(setSettingError(key, value))
-  })
+    store.dispatch(setSettingError(key, value));
+  });
 
   ipcRenderer.on(CLEAR_SETTING_ERROR, (event, key) => {
-    store.dispatch(clearSettingError(key))
-  })
+    store.dispatch(clearSettingError(key));
+  });
 
-  ipcRenderer.on(CLEAR_ALL_SETTING_ERRORS, (event) => {
-    store.dispatch(clearAllSettingErrors())
-  })
+  ipcRenderer.on(CLEAR_ALL_SETTING_ERRORS, event => {
+    store.dispatch(clearAllSettingErrors());
+  });
 
   ipcRenderer.on(SET_SETTINGS, (event, globalSettings, workspaceSettings) => {
-    store.dispatch(setSettings(globalSettings, workspaceSettings))
-  })
+    store.dispatch(setSettings(globalSettings, workspaceSettings));
+  });
 }

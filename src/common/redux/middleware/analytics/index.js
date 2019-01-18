@@ -1,21 +1,21 @@
-import * as GoogleAnalytics from './engines/GoogleAnalytics'
+import * as GoogleAnalytics from "./engines/GoogleAnalytics";
 
-const engines = [GoogleAnalytics]
+const engines = [GoogleAnalytics];
 
 export function processAction({ getState }) {
   return next => action => {
     engines.forEach((engine, index) => {
-      engine.process(action, getState())
-    })
+      engine.process(action, getState());
+    });
 
-    const returnValue = next(action)
+    const returnValue = next(action);
 
-    return returnValue
-  }
+    return returnValue;
+  };
 }
 
 export function processPage(path, state) {
   engines.forEach((engine, index) => {
-    engine.processPage(path, state)
-  })
+    engine.processPage(path, state);
+  });
 }

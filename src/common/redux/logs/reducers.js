@@ -1,27 +1,27 @@
-import * as Logs from './actions'
+import * as Logs from "./actions";
 
 const initialState = {
-  lines: []
-}
+  lines: [],
+};
 
-export default function (state = initialState, action) {
+export default function(state = initialState, action) {
   switch (action.type) {
     case Logs.ADD_LOG_LINES:
-      var time = new Date()
-      var newLines = action.lines.map((line) => {
-        return {time: time, line: line}
-      })
+      var time = new Date();
+      var newLines = action.lines.map(line => {
+        return { time: time, line: line };
+      });
 
       return Object.assign({}, state, {
-        lines: state.lines.concat(newLines)
-      })
+        lines: state.lines.concat(newLines),
+      });
 
     case Logs.CLEAR_LOG_LINES:
       return Object.assign({}, state, {
-        lines: []
-      })
+        lines: [],
+      });
 
     default:
-      return state
+      return state;
   }
 }
