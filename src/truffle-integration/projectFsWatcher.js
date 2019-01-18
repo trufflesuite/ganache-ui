@@ -37,14 +37,14 @@ class ProjectFsWatcher extends EventEmitter {
     this.configWatcher = fs.watch(
       this.project.configFile,
       { encoding: "utf8" },
-      (eventType, filename) => {
+      async () => {
         // the config file was either removed or changed, we may want to reload it
 
         this.stopWatchingParentDirectory();
         this.stopWatchingBuildDirectory();
         this.stopWatchingContracts();
 
-        this.project = getProjectDetails(this.project.configFile);
+        this.project = await getProjectDetails(this.project.configFile);
         // do we want to emit the project potencially got changed?
 
         this.startWatchingParentDirectory();

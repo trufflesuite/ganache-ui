@@ -4,22 +4,19 @@ const DecodeHelpers = require("./decode");
 
 let web3Host;
 
-watcher = new ProjectsWatcher();
+const watcher = new ProjectsWatcher();
 
 if (!process.send) {
-  console.log("Not running as child process. Throwing.");
   throw new Error("Must be run as a child process!");
 }
 
 process.removeAllListeners("uncaughtException");
 
 process.on("unhandledRejection", err => {
-  console.log(err);
   process.send({ type: "error", data: copyErrorFields(err) });
 });
 
 process.on("uncaughtException", err => {
-  console.log(err);
   process.send({ type: "error", data: copyErrorFields(err) });
 });
 
@@ -56,7 +53,7 @@ process.on("message", async function(message) {
       break;
     }
     case "project-details-request": {
-      let response = getProjectDetails(message.data.file);
+      let response = await getProjectDetails(message.data.file);
 
       if (typeof response.error === "undefined") {
         response = await watcher.add(response, message.data.networkId);
