@@ -77,8 +77,8 @@ class ChainService extends EventEmitter {
     }
   }
 
-  stopServer(options) {
-    return new Promise((resolve, reject) => {
+  stopServer() {
+    return new Promise(resolve => {
       this.once("server-stopped", () => {
         resolve();
       });
@@ -93,7 +93,7 @@ class ChainService extends EventEmitter {
   }
 
   getDbLocation() {
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
       this.once("db-location", location => {
         resolve(location);
       });

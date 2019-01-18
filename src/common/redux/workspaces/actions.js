@@ -5,7 +5,7 @@ import {
   web3CleanUpHelper,
   web3ActionCreator,
 } from "../web3/helpers/Web3ActionCreator";
-import { REQUEST_SERVER_RESTART, showTitleScreen } from "../core/actions";
+import { REQUEST_SERVER_RESTART } from "../core/actions";
 import { GET_DECODED_EVENT } from "../events/actions";
 
 const prefix = "WORKSPACES";
@@ -37,7 +37,7 @@ export const closeWorkspace = function() {
 
 export const OPEN_WORKSPACE = `${prefix}/OPEN_WORKSPACE`;
 export const openWorkspace = function(name) {
-  return function(dispatch, getState) {
+  return function(dispatch) {
     dispatch(push("/loader"));
     dispatch({ type: OPEN_WORKSPACE, name });
     ipcRenderer.send(OPEN_WORKSPACE, name);
@@ -45,7 +45,7 @@ export const openWorkspace = function(name) {
 };
 
 export const openDefaultWorkspace = function() {
-  return function(dispatch, getState) {
+  return function(dispatch) {
     dispatch(push("/loader"));
     dispatch({ type: OPEN_WORKSPACE, name: null });
     ipcRenderer.send(OPEN_WORKSPACE, null);
@@ -54,7 +54,7 @@ export const openDefaultWorkspace = function() {
 
 export const OPEN_NEW_WORKSPACE_CONFIG = `${prefix}/OPEN_NEW_WORKSPACE_CONFIG`;
 export const openNewWorkspaceConfig = function() {
-  return function(dispatch, getState) {
+  return function(dispatch) {
     dispatch(push("/loader"));
     ipcRenderer.send(OPEN_NEW_WORKSPACE_CONFIG);
   };
@@ -75,7 +75,7 @@ export const saveWorkspace = function(name) {
 
 export const DELETE_WORKSPACE = `${prefix}/DELETE_WORKSPACE`;
 export const deleteWorkspace = function(name) {
-  return function(dispatch, getState) {
+  return function(dispatch) {
     dispatch({ type: DELETE_WORKSPACE, name });
 
     ipcRenderer.send(DELETE_WORKSPACE, name);
@@ -166,7 +166,7 @@ export const getContractDetails = function(data) {
           }
           log.timestamp = blockTimestamps[log.blockNumber];
 
-          const decodedLog = await new Promise((resolve, reject) => {
+          const decodedLog = await new Promise(resolve => {
             // TODO: there's a better way to do this to not have to send `contract` and `contracts` every time
             ipcRenderer.once(GET_DECODED_EVENT, (event, decodedLog) => {
               resolve(decodedLog);
@@ -184,7 +184,7 @@ export const getContractDetails = function(data) {
       }
     }
 
-    const state = await new Promise((resolve, reject) => {
+    const state = await new Promise(resolve => {
       ipcRenderer.once(GET_CONTRACT_DETAILS, (event, state) => {
         resolve(state);
       });

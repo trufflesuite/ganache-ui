@@ -4,7 +4,7 @@ const engines = [GoogleAnalytics];
 
 export function processAction({ getState }) {
   return next => action => {
-    engines.forEach((engine, index) => {
+    engines.forEach(engine => {
       engine.process(action, getState());
     });
 
@@ -15,7 +15,7 @@ export function processAction({ getState }) {
 }
 
 export function processPage(path, state) {
-  engines.forEach((engine, index) => {
+  engines.forEach(engine => {
     engine.processPage(path, state);
   });
 }

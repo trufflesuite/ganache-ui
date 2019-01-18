@@ -1,8 +1,5 @@
 import * as Core from "./actions";
 
-const MAX_BLOCKS = 10;
-const MAX_TRANSACTIONS = 10;
-
 const initialState = {
   started: false,
   isMining: true,

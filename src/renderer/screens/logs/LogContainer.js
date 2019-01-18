@@ -3,7 +3,7 @@ import { Scrollbars } from "react-custom-scrollbars";
 import connect from "../helpers/connect";
 
 class LogContainer extends Component {
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps) {
     return nextProps.logs.lines.length !== this.props.logs.lines.length;
   }
 

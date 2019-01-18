@@ -61,11 +61,11 @@ class HomeScreen extends Component {
     this.props.dispatch(ModalDetails.actions.setModalError(modalDetails));
   }
 
-  handleQuickstartPress(e) {
+  handleQuickstartPress() {
     this.props.dispatch(openDefaultWorkspace());
   }
 
-  handleNewWorkspacePress(e) {
+  handleNewWorkspacePress() {
     this.props.dispatch(openNewWorkspaceConfig());
   }
 
@@ -74,7 +74,7 @@ class HomeScreen extends Component {
     const hasWorkspaces = this.props.workspaces.names.length;
 
     if (hasWorkspaces) {
-      workspaces = this.props.workspaces.names.map((workspaceName, i) => {
+      workspaces = this.props.workspaces.names.map(workspaceName => {
         return (
           <li key={workspaceName}>
             <button onClick={this.selectWorkspace.bind(this)}>

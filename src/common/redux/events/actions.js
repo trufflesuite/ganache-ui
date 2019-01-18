@@ -81,7 +81,7 @@ export const requestPage = function(startBlockNumber, endBlockNumber) {
       if (cache && cache.contract) {
         const contract = cache.contract;
         const projectContracts = projects[contract.projectIndex].contracts;
-        const decodedLog = await new Promise((resolve, reject) => {
+        const decodedLog = await new Promise(resolve => {
           // TODO: there's a better way to do this to not have to send `contract` and `contracts` every time
           ipcRenderer.once(GET_DECODED_EVENT, (event, decodedLog) => {
             resolve(decodedLog);
@@ -190,7 +190,7 @@ export const getDecodedEvent = function(transactionHash, logIndex) {
     }
 
     if (contract && isSubscribedTopic) {
-      event.decodedLog = await new Promise((resolve, reject) => {
+      event.decodedLog = await new Promise(resolve => {
         // TODO: there's a better way to do this to not have to send `contract` and `contracts` every time
         ipcRenderer.once(GET_DECODED_EVENT, (event, decodedLog) => {
           resolve(decodedLog);

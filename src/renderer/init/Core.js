@@ -89,7 +89,7 @@ export function initCore(store) {
     store.dispatch(setKeyData(data.mnemonic, data.hdPath, data.privateKeys));
   });
 
-  ipcRenderer.on(SHOW_HOME_SCREEN, event => {
+  ipcRenderer.on(SHOW_HOME_SCREEN, () => {
     store.dispatch(showHomeScreen());
   });
 }

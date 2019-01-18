@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 var ganacheLib = require("ganache-core");
-var path = require("path");
 var logging = require("./logging");
 var pkg = require("../../package.json");
 
@@ -24,9 +23,7 @@ process.on("uncaughtException", err => {
 });
 
 var server;
-var provider;
 var blockInterval;
-var lastBlock;
 var dbLocation;
 
 function stopServer(callback) {
@@ -144,7 +141,7 @@ function startServer(options) {
       var accounts = state.accounts;
       var addresses = Object.keys(accounts);
 
-      addresses.forEach(function(address, index) {
+      addresses.forEach(function(address) {
         privateKeys[address] = accounts[address].secretKey.toString("hex");
       });
 

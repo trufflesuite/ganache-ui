@@ -43,7 +43,7 @@ class ProjectsWatcher extends EventEmitter {
 
     this.blockHeaderSubscription = this.web3.eth.subscribe(
       "newBlockHeaders",
-      (error, result) => {
+      error => {
         if (error) {
           throw error;
         }
@@ -63,7 +63,7 @@ class ProjectsWatcher extends EventEmitter {
         fromBlock: null,
         topics: null,
       },
-      (error, result) => {
+      error => {
         if (error) {
           throw error;
         }

@@ -1,5 +1,4 @@
 var path = require("path");
-var fs = require("fs");
 var fse = require("fs-extra");
 var padStart = require("lodash.padstart");
 

@@ -1,14 +1,10 @@
 import { ipcRenderer } from "electron";
 
 import {
-  UPDATE_CHECK_IN_PROGRESS,
-  UPDATE_CHECK_COMPLETE,
   UPDATE_AVAILABLE,
   DOWNLOAD_PROGRESS,
   UPDATE_DOWNLOADED,
   DOWNLOAD_ERROR,
-  setUpdateCheckInProgress,
-  setUpdateCheckComplete,
   setUpdateAvailable,
   setDownloadProgress,
   setUpdateDownloaded,
@@ -22,7 +18,7 @@ export function initAutoUpdates(store) {
   ipcRenderer.on(DOWNLOAD_PROGRESS, (event, progressInfo) => {
     store.dispatch(setDownloadProgress(progressInfo));
   });
-  ipcRenderer.on(UPDATE_DOWNLOADED, (event, path) => {
+  ipcRenderer.on(UPDATE_DOWNLOADED, () => {
     store.dispatch(setUpdateDownloaded());
   });
   ipcRenderer.on(DOWNLOAD_ERROR, (event, errorInfo) => {

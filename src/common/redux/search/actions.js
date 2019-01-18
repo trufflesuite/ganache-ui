@@ -1,8 +1,6 @@
 import { web3Request } from "../web3/helpers/Web3ActionCreator";
 import { push } from "react-router-redux";
 
-const prefix = "SEARCH";
-
 export const query = function(message) {
   return async function(dispatch, getState) {
     // do nothing if user submits empty search string

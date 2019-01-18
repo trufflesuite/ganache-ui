@@ -2,14 +2,12 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { AppContainer } from "react-hot-loader";
 
-import { applyMiddleware } from "redux";
 import { Provider } from "react-redux";
-import { Router, Route, IndexRoute, hashHistory } from "react-router";
+import { Router, Route, hashHistory } from "react-router";
 
 import RootReducer from "../common/redux/reducer";
 
 import createStore from "./init/store/createStore";
-import syncStore from "./init/store/syncStore";
 import { initRenderer } from "./init/index";
 
 import AppShell from "./screens/appshell/AppShell";

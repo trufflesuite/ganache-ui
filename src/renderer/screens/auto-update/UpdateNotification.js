@@ -12,7 +12,7 @@ class UpdateNotification extends Component {
     this.state = {};
   }
 
-  handleUpdateClick(e) {
+  handleUpdateClick() {
     this.props.dispatch(showUpdateModal());
   }
 

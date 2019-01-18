@@ -35,14 +35,14 @@ export function requestServerRestart() {
 
 export const SHOW_TITLE_SCREEN = `${prefix}/SHOW_TITLE_SCREEN`;
 export function showTitleScreen() {
-  return function(dispatch, getState) {
+  return function(dispatch) {
     dispatch(push("/title"));
   };
 }
 
 export const SHOW_HOME_SCREEN = `${prefix}/SHOW_HOME_SCREEN`;
 export function showHomeScreen() {
-  return function(dispatch, getState) {
+  return function(dispatch) {
     dispatch(push("/home"));
   };
 }
@@ -81,7 +81,7 @@ export const getGasLimit = function() {
   };
 };
 
-export const setBlockNumberToLatest = function(number) {
+export const setBlockNumberToLatest = function() {
   return async function(dispatch, getState) {
     const blockNumber = await web3ActionCreator(
       dispatch,
@@ -97,7 +97,7 @@ export const setBlockNumberToLatest = function(number) {
 
 export const SET_BLOCK_NUMBER = `${prefix}/SET_BLOCK_NUMBER`;
 export const setBlockNumber = function(number) {
-  return function(dispatch, getState) {
+  return function(dispatch) {
     dispatch({ type: SET_BLOCK_NUMBER, number });
 
     // Refresh our accounts if the block changed.
