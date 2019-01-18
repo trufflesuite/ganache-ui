@@ -103,7 +103,6 @@ app.on("ready", () => {
   // see https://github.com/electron/electron/issues/9179 for more info
 
   setTimeout(async () => {
-    const inProduction = process.env.NODE_ENV === "production";
     const width = screen.getPrimaryDisplay().bounds.width;
     const chain = new ChainService(app);
     const truffleIntegration = new TruffleIntegrationService();
@@ -449,7 +448,7 @@ app.on("ready", () => {
       } else {
         const workspaceSettings = workspace.settings.getAll();
         GoogleAnalytics.setup(
-          global.get("googleAnalyticsTracking") && inProduction,
+          global.get("googleAnalyticsTracking") && !isDevMode,
           workspaceSettings.uuid,
         );
         GoogleAnalytics.reportGenericUserData();
