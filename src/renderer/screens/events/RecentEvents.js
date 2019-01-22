@@ -7,7 +7,7 @@ import EventList from "./EventList";
 import * as Events from "../../../common/redux/events/actions";
 
 class RecentEvents extends Component {
-  componentDidUpdate(prevProps, prevState, snapshot) {
+  componentDidUpdate(prevProps) {
     // If the scroll position changed...
     if (
       this.props.appshell.scrollPosition != prevProps.appshell.scrollPosition

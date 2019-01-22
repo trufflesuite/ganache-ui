@@ -1,5 +1,5 @@
 import EventEmitter from "events";
-import { app, protocol, ipcMain } from "electron";
+import { app } from "electron";
 import { autoUpdater } from "benjamincburns-forked-electron-updater";
 import { CancellationToken } from "builder-util-runtime";
 import path from "path";
@@ -88,7 +88,7 @@ export default class AutoUpdateService extends EventEmitter {
       if (promise.catch) {
         // avoid unhandled promise rejection
         // error will be reported from the `error` event handler
-        promise.catch(err => {});
+        promise.catch(() => {});
       }
     }
   }
@@ -104,7 +104,7 @@ export default class AutoUpdateService extends EventEmitter {
       if (promise.catch) {
         // avoid unhandled promise rejection
         // error will be reported from the `error` event handler
-        promise.catch(err => {});
+        promise.catch(() => {});
       }
     }
   }
@@ -124,7 +124,7 @@ export default class AutoUpdateService extends EventEmitter {
       if (promise.catch) {
         // avoid unhandled promise rejection
         // error will be reported from the `error` event handler
-        promise.catch(err => {});
+        promise.catch(() => {});
       }
     }
   }

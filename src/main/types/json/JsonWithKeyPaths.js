@@ -54,8 +54,6 @@ class JsonWithKeyPaths {
   }
 
   has(keyPath) {
-    const keys = keyPath.split(".");
-
     return typeof this.get(keyPath) !== "undefined";
   }
 

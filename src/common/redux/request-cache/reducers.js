@@ -7,7 +7,7 @@ const initialState = {};
 const HARD_CACHED = {
   eth_accounts: true,
   eth_gasPrice: true,
-  eth_getBlockByNumber: (blockNumber, includeTransactions) => {
+  eth_getBlockByNumber: blockNumber => {
     return blockNumber != "latest" && blockNumber != "pending";
   },
   eth_getBlockTransactionCountByNumber: blockNumber => {

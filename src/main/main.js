@@ -31,7 +31,6 @@ import {
   SAVE_WORKSPACE,
   DELETE_WORKSPACE,
   SET_CURRENT_WORKSPACE,
-  CONTRACT_DEPLOYED,
   CONTRACT_TRANSACTION,
   CONTRACT_EVENT,
   GET_CONTRACT_DETAILS,
@@ -58,7 +57,6 @@ import { ADD_LOG_LINES } from "../common/redux/logs/actions";
 
 import ChainService from "../common/services/ChainService";
 import GlobalSettings from "./types/settings/GlobalSettings";
-import Workspace from "./types/workspaces/Workspace";
 import WorkspaceManager from "./types/workspaces/WorkspaceManager";
 import GoogleAnalyticsService from "../common/services/GoogleAnalyticsService";
 import TruffleIntegrationService from "../common/services/TruffleIntegrationService.js";
@@ -66,8 +64,7 @@ import TruffleIntegrationService from "../common/services/TruffleIntegrationServ
 let menu;
 let template;
 let mainWindow = null;
-let testRpcService = null;
-let consoleService = null // eslint-disable-line
+let consoleService = null; // eslint-disable-line
 
 // If you want to test out error handling
 // setTimeout(() => {
@@ -407,7 +404,7 @@ app.on("ready", () => {
       }
     });
 
-    ipcMain.on(CLOSE_WORKSPACE, async event => {
+    ipcMain.on(CLOSE_WORKSPACE, async () => {
       if (workspace) {
         if (truffleIntegration) {
           await truffleIntegration.stopWatching();
@@ -500,7 +497,7 @@ app.on("ready", () => {
       }
     });
 
-    ipcMain.on(OPEN_NEW_WORKSPACE_CONFIG, async event => {
+    ipcMain.on(OPEN_NEW_WORKSPACE_CONFIG, async () => {
       if (truffleIntegration) {
         await truffleIntegration.stopWatching();
       }

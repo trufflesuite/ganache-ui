@@ -67,7 +67,7 @@ class TruffleIntegrationService extends EventEmitter {
   }
 
   async stopWatching() {
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
       this.once("watcher-stopped", () => {
         resolve();
       });

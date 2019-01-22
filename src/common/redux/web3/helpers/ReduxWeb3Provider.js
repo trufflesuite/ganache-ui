@@ -6,7 +6,6 @@ import EventEmitter from "events";
 class ReduxWeb3Provider extends EventEmitter {
   constructor(url, dispatch, getState) {
     super();
-    const self = this;
 
     let parsedURL = new URL(url);
     let scheme = parsedURL.protocol.toLowerCase();
@@ -24,7 +23,6 @@ class ReduxWeb3Provider extends EventEmitter {
   }
 
   send(payload, callback) {
-    var sendMethod = this.provider.sendAsync || this.provider.send;
     var cached = RequestCache.checkCache(payload, this.getState);
 
     if (cached) {

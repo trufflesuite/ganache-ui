@@ -32,8 +32,6 @@ class AccountsScreen extends Component {
 
   toggleAccountsLocked = () => {
     var toggleState = !this.state.accountsLocked;
-    var unlocked_accounts = this.props.config.settings.workspace.server
-      .unlocked_accounts;
     var total_accounts = this.props.config.settings.workspace.server
       .total_accounts;
 

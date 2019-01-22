@@ -79,8 +79,8 @@ class ServerScreen extends Component {
   };
 
   render() {
-    const ganachePortStatus = { status: "clear" };
-    const portIsBlocked = false;
+    // const ganachePortStatus = { status: "clear" };
+    // const portIsBlocked = false;
     // const { ganachePortStatus } = this.props.testRpcState
     // const portIsBlocked =
     //   ganachePortStatus.status === 'blocked' &&

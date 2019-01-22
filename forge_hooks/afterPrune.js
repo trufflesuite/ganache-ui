@@ -14,7 +14,7 @@ function afterPrune(buildPath, electronVersion, platform, arch, callback) {
 
 var deleteFolderRecursive = function(dirPath) {
   if (fs.existsSync(dirPath)) {
-    fs.readdirSync(dirPath).forEach(function(file, index) {
+    fs.readdirSync(dirPath).forEach(function(file) {
       var curdirPath = path.join(dirPath, file);
       if (fs.lstatSync(curdirPath).isDirectory()) {
         // recurse

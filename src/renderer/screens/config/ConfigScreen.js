@@ -82,7 +82,7 @@ class ConfigScreen extends PureComponent {
     );
   }
 
-  handleCancelPressed = e => {
+  handleCancelPressed = () => {
     if (this.state.restartOnCancel) {
       // we are in the config screen because of a system error
       // restart application without saving settings if the user hit cancel
@@ -117,7 +117,7 @@ class ConfigScreen extends PureComponent {
     });
   };
 
-  handleMakeTabActive = (index, event) => {
+  handleMakeTabActive = index => {
     this.setState({
       activeIndex: index,
     });

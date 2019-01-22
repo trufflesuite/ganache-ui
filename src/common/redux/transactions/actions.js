@@ -195,7 +195,7 @@ export const showTransaction = function(hash) {
 
     if (contract) {
       for (let j = 0; j < events.length; j++) {
-        events[j].decodedLog = await new Promise((resolve, reject) => {
+        events[j].decodedLog = await new Promise(resolve => {
           // TODO: there's a better way to do this to not have to send `contract` and `contracts` every time
           ipcRenderer.once(GET_DECODED_EVENT, (event, decodedLog) => {
             resolve(decodedLog);
@@ -209,7 +209,7 @@ export const showTransaction = function(hash) {
         });
       }
 
-      decodedData = await new Promise((resolve, reject) => {
+      decodedData = await new Promise(resolve => {
         // TODO: there's a better way to do this to not have to send `contract` and `contracts` every time
         ipcRenderer.once(
           GET_DECODED_TRANSACTION_INPUT,

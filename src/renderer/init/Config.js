@@ -14,7 +14,7 @@ import {
 } from "../../common/redux/config/actions";
 
 export function initConfig(store) {
-  ipcRenderer.on(SHOW_CONFIG_SCREEN, event => {
+  ipcRenderer.on(SHOW_CONFIG_SCREEN, () => {
     store.dispatch(showConfigScreen());
   });
 
@@ -26,7 +26,7 @@ export function initConfig(store) {
     store.dispatch(clearSettingError(key));
   });
 
-  ipcRenderer.on(CLEAR_ALL_SETTING_ERRORS, event => {
+  ipcRenderer.on(CLEAR_ALL_SETTING_ERRORS, () => {
     store.dispatch(clearAllSettingErrors());
   });
 

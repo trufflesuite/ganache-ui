@@ -15,8 +15,6 @@ import {
 import { clearLogLines } from "../../../common/redux/logs/actions";
 
 import ModalDetails from "../../components/modal/ModalDetails";
-import Spinner from "../../components/spinner/Spinner";
-import MDSpinner from "react-md-spinner";
 import OnlyIf from "../../components/only-if/OnlyIf";
 import StatusIndicator from "../../components/status-indicator/StatusIndicator";
 import UpdateNotification from "../auto-update/UpdateNotification";
@@ -43,27 +41,27 @@ class TopNavbar extends Component {
     };
   }
 
-  _handleStopMining(e) {
+  _handleStopMining() {
     this.props.appStopMining();
   }
 
-  _handleStartMining(e) {
+  _handleStartMining() {
     this.props.appStartMining();
   }
 
-  _handleForceMine(e) {
+  _handleForceMine() {
     this.props.appForceMine();
   }
 
-  _handleMakeSnapshot(e) {
+  _handleMakeSnapshot() {
     this.props.appMakeSnapshot();
   }
 
-  _handleRevertSnapshot(e) {
+  _handleRevertSnapshot() {
     this.props.appRevertSnapshot(this.props.core.snapshots.length);
   }
 
-  _handleClearLogs(e) {
+  _handleClearLogs() {
     this.props.dispatch(clearLogLines());
   }
 
@@ -122,11 +120,11 @@ class TopNavbar extends Component {
     }
   }
 
-  handleWorkspacesPress(e) {
+  handleWorkspacesPress() {
     this.props.dispatch(closeWorkspace());
   }
 
-  handleSaveWorkspacePress(e) {
+  handleSaveWorkspacePress() {
     this.props.dispatch(saveWorkspace(moniker.choose()));
   }
 

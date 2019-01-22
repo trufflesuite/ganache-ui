@@ -18,12 +18,12 @@ const VALIDATIONS = {
   },
 };
 
-const FORK_URLS = {
-  mainnet: "https://mainnet.infura.io/ganache",
-  ropsten: "https://ropsten.infura.io/ganache",
-  kovan: "https://kovan.infura.io/ganache",
-  rinkeby: "https://rinkeby.infura.io/ganache",
-};
+// const FORK_URLS = {
+//   mainnet: "https://mainnet.infura.io/ganache",
+//   ropsten: "https://ropsten.infura.io/ganache",
+//   kovan: "https://kovan.infura.io/ganache",
+//   rinkeby: "https://rinkeby.infura.io/ganache",
+// };
 
 class ChainScreen extends Component {
   constructor(props) {

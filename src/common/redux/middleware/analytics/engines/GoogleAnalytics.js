@@ -66,35 +66,35 @@ function SystemErrorEvent(category, detail) {
   return e;
 }
 
-function RPCRequestStartedEvent(payload) {
-  return {
-    category: "rpc",
-    action: "started",
-    label: payload.method || "(unknown method)",
-    value: payload.params ? payload.params.length : 0,
-  };
-}
+// function RPCRequestStartedEvent(payload) {
+//   return {
+//     category: "rpc",
+//     action: "started",
+//     label: payload.method || "(unknown method)",
+//     value: payload.params ? payload.params.length : 0,
+//   };
+// }
 
-function RPCRequestSucceededEvent(payload) {
-  return {
-    category: "rpc",
-    action: "succeeded",
-    label: payload.method || "(unknown method)",
-  };
-}
+// function RPCRequestSucceededEvent(payload) {
+//   return {
+//     category: "rpc",
+//     action: "succeeded",
+//     label: payload.method || "(unknown method)",
+//   };
+// }
 
-function RPCRequestFailedEvent(payload) {
-  return {
-    category: "rpc",
-    action: "failed",
-    label: payload.method || "(unknown method)",
-  };
-}
+// function RPCRequestFailedEvent(payload) {
+//   return {
+//     category: "rpc",
+//     action: "failed",
+//     label: payload.method || "(unknown method)",
+//   };
+// }
 
-function RPCRequestStatusFailureEvent(payload) {
-  return {
-    category: "error",
-    action: "tx-status-failure",
-    label: payload.method || "(unknown method)",
-  };
-}
+// function RPCRequestStatusFailureEvent(payload) {
+//   return {
+//     category: "error",
+//     action: "tx-status-failure",
+//     label: payload.method || "(unknown method)",
+//   };
+// }

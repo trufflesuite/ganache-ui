@@ -33,7 +33,7 @@ export function initAutoUpdates(settings, mainWindow) {
   autoUpdateService.on("download-progress", progressInfo => {
     mainWindow.webContents.send(AutoUpdate.DOWNLOAD_PROGRESS, progressInfo);
   });
-  autoUpdateService.on("update-downloaded", path => {
+  autoUpdateService.on("update-downloaded", () => {
     mainWindow.webContents.send(AutoUpdate.UPDATE_DOWNLOADED);
     setTimeout(() => {
       autoUpdateService.installAndRelaunch();
@@ -45,20 +45,20 @@ export function initAutoUpdates(settings, mainWindow) {
       stack: errorInfo.stack || null,
     });
   });
-  ipcMain.on(AutoUpdate.CANCEL_UPDATE, event => {
+  ipcMain.on(AutoUpdate.CANCEL_UPDATE, () => {
     autoUpdateService.cancelUpdate();
   });
-  ipcMain.on(AutoUpdate.BEGIN_DOWNLOADING, event => {
+  ipcMain.on(AutoUpdate.BEGIN_DOWNLOADING, () => {
     autoUpdateService.downloadUpdate();
   });
-  ipcMain.on(AutoUpdate.INSTALL_AND_RELAUNCH, event => {
+  ipcMain.on(AutoUpdate.INSTALL_AND_RELAUNCH, () => {
     autoUpdateService.installAndRelaunch();
   });
 
   autoUpdateService.checkForUpdates();
 }
 
-function getAutoUpdateServiceOptions(settings) {
+function getAutoUpdateServiceOptions() {
   let allowPrerelease = pkg.version.match(/-beta/) !== null;
 
   return {
