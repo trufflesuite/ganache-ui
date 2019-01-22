@@ -1,0 +1,15 @@
+{
+  "presets": [
+    ["env", { "targets": { "electron": "1.6.0" } }],
+    "stage-0",
+    "react"
+  ],
+  "plugins": [
+    "inline-react-svg",
+    "transform-class-properties",
+    "transform-async-to-generator",
+    "transform-es2015-classes",
+    "react-hot-loader/babel"
+  ],
+  "sourceMaps": "inline"
+}
