@@ -1,14 +1,17 @@
-import React, { PureComponent } from "react";
+import React, { Component } from "react";
 
 import MnemonicInfoModal from "./MnemonicInfoModal";
+import { requestCopyToClipboard } from "../../../common/redux/core/actions";
 
 import OnlyIf from "../../components/only-if/OnlyIf";
 
-export default class MnemonicAndHdPath extends PureComponent {
+export default class MnemonicAndHdPath extends Component {
   constructor(props) {
     super(props);
+    this.timeout = null;
     this.state = {
       showWarning: false,
+      display: this.props.mnemonic,
     };
   }
 
@@ -24,6 +27,33 @@ export default class MnemonicAndHdPath extends PureComponent {
     });
   }
 
+  copy = () => {
+    requestCopyToClipboard(this.props.mnemonic);
+    this.displayCopyNotice();
+  };
+
+  displayCopyNotice = () => {
+    this.timeout = setTimeout(() => {
+      this.displayMnemonic();
+      this.timeout = null;
+    }, 1000);
+    this.setState({
+      display: "Copied to clipboard!",
+    });
+  };
+
+  displayMnemonic = () => {
+    this.setState({
+      display: this.props.mnemonic,
+    });
+  };
+
+  componentWillUnmount = () => {
+    if (this.timeout) {
+      clearTimeout(this.timeout);
+    }
+  };
+
   render() {
     return (
       <section className="MnemonicAndHdPath">
@@ -37,7 +67,7 @@ export default class MnemonicAndHdPath extends PureComponent {
               ?
             </span>
           </h4>
-          <span>{this.props.mnemonic}</span>
+          <span onClick={this.copy}>{this.state.display}</span>
         </div>
         <div className="HDPath">
           <h4>HD PATH</h4>

@@ -144,3 +144,8 @@ export const DISMISS_BUG_MODAL = `${prefix}/DISMISS_BUG_MODAL`;
 export const dismissBugModal = function() {
   return { type: DISMISS_BUG_MODAL };
 };
+
+export const REQUEST_COPY_TO_CLIPBOARD = `${prefix}/REQUEST_COPY_TO_CLIPBOARD`;
+export const requestCopyToClipboard = function(data) {
+  ipcRenderer.send(REQUEST_COPY_TO_CLIPBOARD, data);
+};

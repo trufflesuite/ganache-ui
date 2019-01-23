@@ -8,6 +8,8 @@
 
   .Mnemonic {
     flex-grow: 1;
+    user-select: none;
+    cursor: copy;
   }
 
   .Mnemonic, .HDPath {

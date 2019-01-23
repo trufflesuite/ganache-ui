@@ -6,4 +6,8 @@
     width: 28px;
     height: 28px;
   }
+  dd {
+    user-select: none;
+    cursor: copy
+  }
 }

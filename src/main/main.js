@@ -1,4 +1,12 @@
-import { app, BrowserWindow, Menu, shell, ipcMain, screen } from "electron";
+import {
+  app,
+  BrowserWindow,
+  Menu,
+  shell,
+  ipcMain,
+  screen,
+  clipboard,
+} from "electron";
 import { enableLiveReload } from "electron-compile";
 import { initAutoUpdates, getAutoUpdateService } from "./init/AutoUpdate.js";
 import path from "path";
@@ -18,6 +26,7 @@ if (isDevMode) {
 
 import {
   REQUEST_SERVER_RESTART,
+  REQUEST_COPY_TO_CLIPBOARD,
   SET_SERVER_STARTED,
   SET_KEY_DATA,
   SET_SYSTEM_ERROR,
@@ -631,6 +640,10 @@ app.on("ready", () => {
         GoogleAnalytics.reportWorkspaceSettings(workspaceSettings);
       },
     );
+
+    ipcMain.on(REQUEST_COPY_TO_CLIPBOARD, (e, props) => {
+      clipboard.writeText(props);
+    });
 
     mainWindow.on("closed", () => {
       mainWindow = null;

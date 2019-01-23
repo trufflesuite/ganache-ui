@@ -77,6 +77,7 @@ const stylesheets = [
   "./styles/cards.scss",
   "./app.global.scss",
   "./components/status-indicator/StatusIndicator.scss",
+  "./components/checksum-addresses/ChecksumAddress.scss",
   "./components/modal/Modal.scss",
   "./components/progress-bar/ProgressBar.scss",
   "./components/spinner/Spinner.css",
