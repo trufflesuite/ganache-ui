@@ -5,6 +5,9 @@ const getProjectDetails = require("./projectDetails").get;
 const merge = require("lodash.merge");
 const { getAncestorDirs } = require("./projectFsWatcherUtils");
 
+/**
+ * Detects when there are new/changed/removed contract artifacts in contracts_build_directory
+ */
 class ProjectFsWatcher extends EventEmitter {
   constructor(project, networkId) {
     super();
