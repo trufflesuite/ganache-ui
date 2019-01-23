@@ -58,7 +58,6 @@ class ProjectFsWatcher extends EventEmitter {
 
       this.startWatchingParentDirectory();
     } else {
-      console.log("start new");
       this.configWatcher = fs.watch(
         this.project.configFile,
         { encoding: "utf8" },
@@ -100,14 +99,7 @@ class ProjectFsWatcher extends EventEmitter {
   }
 
   startWatchingDirs(dirs) {
-    console.log(
-      "startWatchingDirs",
-      path.basename(this.project.config.truffle_directory),
-      dirs,
-      Object.keys(this.dirWatchers),
-    );
     const [head, ...tail] = dirs;
-    console.log(head, tail);
 
     if (head) this.stopWatchingDir(head);
 
@@ -116,7 +108,6 @@ class ProjectFsWatcher extends EventEmitter {
         head,
         { encoding: "utf8" },
         (eventType, filename) => {
-          console.log("startWatchingDirs", eventType, filename);
           if (
             filename ===
             path.basename(this.project.config.contracts_build_directory)
@@ -137,14 +128,12 @@ class ProjectFsWatcher extends EventEmitter {
   }
 
   startWatchingParentDirectory() {
-    console.log(path.dirname(this.project.config.build_directory));
     this.stopWatchingParentDirectory();
 
     this.parentDirectoryWatcher = fs.watch(
       path.dirname(this.project.config.build_directory),
       { encoding: "utf8" },
       (eventType, filename) => {
-        console.log(eventType, filename);
         if (filename === path.basename(this.project.config.build_directory)) {
           this.startWatchingBuildDirectory();
         }
@@ -247,10 +236,6 @@ class ProjectFsWatcher extends EventEmitter {
   }
 
   startWatchingContracts() {
-    console.log(
-      "startWatchingContracts",
-      this.project.config.truffle_directory,
-    );
     this.stopWatchingContracts();
 
     if (fs.existsSync(this.project.config.contracts_build_directory)) {
