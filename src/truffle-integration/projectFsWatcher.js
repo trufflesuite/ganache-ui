@@ -5,8 +5,6 @@ const getProjectDetails = require("./projectDetails").get;
 const merge = require("lodash.merge");
 const { getAncestorDirs } = require("./projectFsWatcherUtils");
 
-const newFeature = true;
-
 class ProjectFsWatcher extends EventEmitter {
   constructor(project, networkId) {
     super();
@@ -15,8 +13,6 @@ class ProjectFsWatcher extends EventEmitter {
     this.networkId = networkId;
 
     this.configWatcher = null;
-    this.parentDirectoryWatcher = null;
-    this.buildDirectoryWatcher = null;
     this.contractBuildDirectoryWatcher = null;
     this.dirWatchers = {};
 
@@ -38,53 +34,32 @@ class ProjectFsWatcher extends EventEmitter {
   }
 
   start() {
-    if (!newFeature) {
-      this.configWatcher = fs.watch(
-        this.project.configFile,
-        { encoding: "utf8" },
-        async () => {
-          // the config file was either removed or changed, we may want to reload it
+    this.configWatcher = fs.watch(
+      this.project.configFile,
+      { encoding: "utf8" },
+      async () => {
+        // the config file was either removed or changed, we may want to reload it
 
-          this.stopWatchingParentDirectory();
-          this.stopWatchingBuildDirectory();
-          this.stopWatchingContracts();
+        this.stopWatchingDirs();
 
-          this.project = await getProjectDetails(this.project.configFile);
-          // do we want to emit the project potencially got changed?
+        this.project = await getProjectDetails(this.project.configFile);
+        // do we want to emit the project potencially got changed?
 
-          this.startWatchingParentDirectory();
-        },
-      );
+        this.startWatchingDirs(
+          getAncestorDirs(
+            this.project.config.truffle_directory,
+            this.project.config.contracts_build_directory,
+          ),
+        );
+      },
+    );
 
-      this.startWatchingParentDirectory();
-    } else {
-      this.configWatcher = fs.watch(
-        this.project.configFile,
-        { encoding: "utf8" },
-        async () => {
-          // the config file was either removed or changed, we may want to reload it
-
-          this.stopWatchingDirs();
-
-          this.project = await getProjectDetails(this.project.configFile);
-          // do we want to emit the project potencially got changed?
-
-          this.startWatchingDirs(
-            getAncestorDirs(
-              this.project.config.truffle_directory,
-              this.project.config.contracts_build_directory,
-            ),
-          );
-        },
-      );
-
-      this.startWatchingDirs(
-        getAncestorDirs(
-          this.project.config.truffle_directory,
-          this.project.config.contracts_build_directory,
-        ),
-      );
-    }
+    this.startWatchingDirs(
+      getAncestorDirs(
+        this.project.config.truffle_directory,
+        this.project.config.contracts_build_directory,
+      ),
+    );
   }
 
   stopWatchingDirs() {
@@ -125,53 +100,6 @@ class ProjectFsWatcher extends EventEmitter {
       // When dirs === [], we assume that we are at the contracts_build_directory, so just start watching it
       this.startWatchingContracts();
     }
-  }
-
-  startWatchingParentDirectory() {
-    this.stopWatchingParentDirectory();
-
-    this.parentDirectoryWatcher = fs.watch(
-      path.dirname(this.project.config.build_directory),
-      { encoding: "utf8" },
-      (eventType, filename) => {
-        if (filename === path.basename(this.project.config.build_directory)) {
-          this.startWatchingBuildDirectory();
-        }
-      },
-    );
-
-    this.startWatchingBuildDirectory();
-  }
-
-  stopWatchingParentDirectory() {
-    if (this.parentDirectoryWatcher) this.parentDirectoryWatcher.close();
-    this.parentDirectoryWatcher = null;
-  }
-
-  startWatchingBuildDirectory() {
-    this.stopWatchingBuildDirectory();
-
-    if (fs.existsSync(this.project.config.build_directory)) {
-      this.buildDirectoryWatcher = fs.watch(
-        this.project.config.build_directory,
-        { encoding: "utf8" },
-        (eventType, filename) => {
-          if (
-            filename ===
-            path.basename(this.project.config.contracts_build_directory)
-          ) {
-            this.startWatchingContracts();
-          }
-        },
-      );
-
-      this.startWatchingContracts();
-    }
-  }
-
-  stopWatchingBuildDirectory() {
-    if (this.buildDirectoryWatcher) this.buildDirectoryWatcher.close();
-    this.buildDirectoryWatcher = null;
   }
 
   contractExists(file) {
@@ -265,8 +193,7 @@ class ProjectFsWatcher extends EventEmitter {
 
   stop() {
     if (this.configWatcher) this.configWatcher.close();
-    this.stopWatchingParentDirectory();
-    this.stopWatchingBuildDirectory();
+    this.stopWatchingDirs();
     this.stopWatchingContracts();
   }
 }
