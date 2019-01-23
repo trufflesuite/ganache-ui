@@ -18,7 +18,7 @@ class ProjectFsWatcher extends EventEmitter {
     this.parentDirectoryWatcher = null;
     this.buildDirectoryWatcher = null;
     this.contractBuildDirectoryWatcher = null;
-    this.dirWatchers = [];
+    this.dirWatchers = {};
 
     this.contracts = [];
     this.fileToContractIdx = {};
@@ -88,9 +88,11 @@ class ProjectFsWatcher extends EventEmitter {
     }
   }
 
-  stopWatchingDirs() {
-    this.dirWatchers.forEach(watcher => watcher.close());
-    this.dirWatchers = [];
+  stopWatchingDir(dir) {
+    if (this.dirWatchers[dir]) {
+      this.dirWatchers[dir].close();
+      this.dirWatchers[dir] = undefined;
+    }
   }
 
   startWatchingDirs(dirs) {
@@ -98,11 +100,13 @@ class ProjectFsWatcher extends EventEmitter {
       "startWatchingDirs",
       path.basename(this.project.config.truffle_directory),
       dirs,
-      this.dirWatchers.length,
+      Object.keys(this.dirWatchers),
     );
-    // this.stopWatchingDirs();
     const [head, ...tail] = dirs;
     console.log(head, tail);
+
+    if (head) this.stopWatchingDir(head);
+
     if (head && fs.existsSync(head)) {
       const watcher = fs.watch(
         head,
@@ -120,7 +124,7 @@ class ProjectFsWatcher extends EventEmitter {
             this.startWatchingDirs(tail);
         },
       );
-      this.dirWatchers = [...this.dirWatchers, watcher];
+      this.dirWatchers[head] = watcher;
       this.startWatchingDirs(tail);
     } else {
       // When dirs === [], we assume that we are at the contracts_build_directory, so just start watching it
