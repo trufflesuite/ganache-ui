@@ -66,13 +66,20 @@ class ProjectFsWatcher extends EventEmitter {
     Object.keys(this.dirWatchers).forEach(dir => this.stopWatchingDir(dir));
   }
 
+  /**
+   * @param {string} dir The directory name
+   */
   stopWatchingDir(dir) {
     if (this.dirWatchers[dir]) {
       this.dirWatchers[dir].close();
+      // There's no object spread, so just delete the key
       delete this.dirWatchers[dir];
     }
   }
 
+  /**
+   * @param {string[]} dirs An array of directory names
+   */
   startWatchingDirs(dirs) {
     const [head, ...tail] = dirs;
 
