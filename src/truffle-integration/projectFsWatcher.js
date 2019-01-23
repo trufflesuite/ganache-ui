@@ -96,12 +96,14 @@ class ProjectFsWatcher extends EventEmitter {
   startWatchingDirs(dirs) {
     console.log(
       "startWatchingDirs",
-      this.project.config.truffle_directory,
+      path.basename(this.project.config.truffle_directory),
       dirs,
+      this.dirWatchers.length,
     );
-    this.stopWatchingDirs();
+    // this.stopWatchingDirs();
     const [head, ...tail] = dirs;
-    if (head) {
+    console.log(head, tail);
+    if (head && fs.existsSync(head)) {
       const watcher = fs.watch(
         head,
         { encoding: "utf8" },
@@ -114,7 +116,8 @@ class ProjectFsWatcher extends EventEmitter {
             this.startWatchingContracts();
           }
 
-          if (filename === path.basename(tail[0])) this.startWatchingDirs(tail);
+          if (tail[0] && filename === path.basename(tail[0]))
+            this.startWatchingDirs(tail);
         },
       );
       this.dirWatchers = [...this.dirWatchers, watcher];
