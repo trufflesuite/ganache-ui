@@ -88,10 +88,14 @@ class ProjectFsWatcher extends EventEmitter {
     }
   }
 
+  stopWatchingDirs() {
+    Object.keys(this.dirWatchers).forEach(dir => this.stopWatchingDir(dir));
+  }
+
   stopWatchingDir(dir) {
     if (this.dirWatchers[dir]) {
       this.dirWatchers[dir].close();
-      this.dirWatchers[dir] = undefined;
+      delete this.dirWatchers[dir];
     }
   }
 
