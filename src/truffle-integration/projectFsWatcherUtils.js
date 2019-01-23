@@ -2,9 +2,9 @@ const path = require("path");
 
 /**
  *
- * @param {*} truffle_directory The directory of your Truffle project
- * @param {*} currDir The current directory
- * @param {*} ancestorDirs The current array of ancestor dirs found
+ * @param {string} truffle_directory The directory of your Truffle project
+ * @param {string} currDir The current directory
+ * @param {string[]} ancestorDirs The current array of ancestor dirs found
  * @returns {string[]} An array of directory names which are ancestors to currDir
  */
 const getAncestorDirs = (truffle_directory, currDir, ancestorDirs = []) => {
