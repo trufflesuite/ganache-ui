@@ -67,7 +67,7 @@ export default class MnemonicAndHdPath extends Component {
               ?
             </span>
           </h4>
-          <span onClick={this.copy}>{this.state.display}</span>
+          <span onDoubleClick={this.copy}>{this.state.display}</span>
         </div>
         <div className="HDPath">
           <h4>HD PATH</h4>

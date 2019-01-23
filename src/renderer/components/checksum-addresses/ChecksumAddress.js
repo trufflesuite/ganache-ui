@@ -59,7 +59,7 @@ export default class ChecksumAddress extends Component {
     return (
       <span
         className={`ChecksumAddress ${this.props.className || ""}`}
-        onClick={this.copy}
+        onDoubleClick={this.copy}
       >
         {this.state.display}
       </span>

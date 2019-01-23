@@ -56,7 +56,7 @@ export default class KeyModal extends Component {
             <dt>
               <KeyIcon /> PRIVATE KEY
             </dt>
-            <dd onClick={this.copy}>{this.state.display}</dd>
+            <dd onDoubleClick={this.copy}>{this.state.display}</dd>
           </dl>
           <footer>
             <button onClick={this.props.onCloseModal}>DONE</button>
