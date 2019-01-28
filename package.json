@@ -13,8 +13,9 @@
     "build-linux": "cd ./node_modules/rabin-bindings && node-gyp rebuild && cd ../../ && electron-builder --linux",
     "build-mac": "electron-builder --mac",
     "build-windows": "electron-builder --win",
-    "test": "npm run test-mocha",
-    "test-mocha": "mocha --compilers js:babel-register --check-leaks --globals _scratch,sanitizedData 'test/mocha/**/*.test.js' 'src/**/*.test.js' ",
+    "test": "npm run test-mocha && npm run test-jest",
+    "test-jest": "jest __tests__/.*.test.js",
+    "test-mocha": "mocha --compilers js:babel-register --check-leaks --globals _scratch,sanitizedData 'test/mocha/**/*.test.js'",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
