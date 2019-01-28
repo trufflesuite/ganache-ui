@@ -153,7 +153,7 @@ class WorkspaceScreen extends Component {
             <div className="RowItem">
               <p>
                 Link Truffle projects to this workspace by adding their
-                truffle-config.js (default) file to this workspace.
+                truffle-config.js or truffle.js file to this workspace.
               </p>
               <br />
               <p>
