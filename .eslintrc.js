@@ -1,6 +1,6 @@
 module.exports = {
   extends: ["prettier", "eslint:recommended", "plugin:react/recommended"],
-  plugins: ["prettier", "react"],
+  plugins: ["prettier", "react", "jest"],
   parser: "babel-eslint",
   rules: {
     "prettier/prettier": [1, { trailingComma: "all" }],
@@ -11,7 +11,8 @@ module.exports = {
     es6: true,
     browser: true,
     node: true,
-    mocha: true
+    mocha: true,
+    "jest/globals": true
   },
   settings: {
     react: {
