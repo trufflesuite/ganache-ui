@@ -24,13 +24,15 @@ const initialSettings = {
     logger: null,
     verbose: false,
     gasLimit: 6721975,
-    gasPrice: 20000000000
+    gasPrice: 20000000000,
+    hardfork: "constantinople"
   }
 }
 
 const defaultSettings = {
   'server.gasLimit': initialSettings.server.gasLimit,
-  'server.gasPrice': initialSettings.server.gasPrice
+  'server.gasPrice': initialSettings.server.gasPrice,
+  'server.hardfork': initialSettings.server.hardfork
 };
 
 class Settings {

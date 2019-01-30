@@ -118,7 +118,8 @@ class GoogleAnalyticsService {
           autoMnemonic: settings.randomizeMnemonicOnStart,
           locked: settings.server.locked,
           gasLimit: settings.server.gasLimit,
-          gasPrice: settings.server.gasPrice
+          gasPrice: settings.server.gasPrice,
+          hardfork: settings.server.hardfork
         }
 
         this.user.set('cd1', config.hostname)
@@ -131,6 +132,7 @@ class GoogleAnalyticsService {
         this.user.set('cd8', config.locked)
         this.user.set('cd9', config.gasLimit)
         this.user.set('cd10', config.gasPrice)
+        this.user.set('cd11', config.hardfork)
       }
     }
   }

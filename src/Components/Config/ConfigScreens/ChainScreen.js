@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import connect from '../../Helpers/connect'
 import OnlyIf from '../../../Elements/OnlyIf'
 
+import StyledSelect from '../../../Elements/StyledSelect';
+
 const VALIDATIONS = {
   "server.gasPrice": {
     allowedChars: /^\d*$/,
@@ -14,6 +16,10 @@ const VALIDATIONS = {
     min: 1,
     max: Number.MAX_SAFE_INTEGER,
     canBeBlank: true
+  },
+  "server.hardfork": {
+    allowedChars: /^(byzantium|constantinople)$/,
+    canBeBlank: false
   }
 }
 
@@ -110,6 +116,25 @@ class ChainScreen extends Component {
             </div>
             <div className="RowItem">
               <p>The price of each unit of gas, in WEI. Leave blank for default.</p>
+            </div>
+          </div>
+        </section>
+        <h2>HARDFORK</h2>
+        <section>
+          <h4>HARDFORK</h4>
+          <div className="Row">
+            <div className="RowItem">
+              <StyledSelect
+                name="server.hardfork"
+                defaultValue={this.props.config.settings.server.hardfork}
+                changeFunction={this.validateChange}
+              >
+                  <option key="constantinople" value="constantinople">Constantinople</option>
+                  <option key="constantinople" value="byzantium">Byzantium</option>
+              </StyledSelect>
+            </div>
+            <div className="RowItem">
+              <p>The hardfork to use. Default is Constantinople.</p>
             </div>
           </div>
         </section>
