@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import connect from '../../Helpers/connect'
 import OnlyIf from '../../../Elements/OnlyIf'
 
+import StyledSelect from '../../../Elements/StyledSelect';
+
 const VALIDATIONS = {
   "server.gasPrice": {
     allowedChars: /^\d*$/,
@@ -122,14 +124,14 @@ class ChainScreen extends Component {
           <h4>HARDFORK</h4>
           <div className="Row">
             <div className="RowItem">
-              <select
+              <StyledSelect
                 name="server.hardfork"
-                value={this.props.config.settings.server.hardfork}
-                onChange={this.validateChange}
+                defaultValue={this.props.config.settings.server.hardfork}
+                changeFunction={this.validateChange}
               >
-                <option value="constantinople">Constantinople</option>
-                <option value="byzantium">Byzantium</option>
-              </select>
+                  <option key="constantinople" value="constantinople">Constantinople</option>
+                  <option key="constantinople" value="byzantium">Byzantium</option>
+              </StyledSelect>
             </div>
             <div className="RowItem">
               <p>The hardfork to use. Default is Constantinople.</p>
