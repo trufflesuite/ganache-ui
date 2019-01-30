@@ -162,6 +162,7 @@ class TopNavbar extends Component {
     const blockNumber = this.props.core.latestBlock;
     const gasPrice = this.props.core.gasPrice;
     const gasLimit = this.props.core.gasLimit;
+    const hardfork = this.props.config.settings.workspace.server.hardfork;
     const snapshots = this.props.core.snapshots;
     const isMining = this.props.core.isMining;
     const isLogsPage = this.props.location.pathname === "/logs";
@@ -227,6 +228,7 @@ class TopNavbar extends Component {
             <StatusIndicator title="CURRENT BLOCK" value={blockNumber} />
             <StatusIndicator title="GAS PRICE" value={gasPrice} />
             <StatusIndicator title="GAS LIMIT" value={gasLimit} />
+            <StatusIndicator title="HARDFORK" value={hardfork} />
             <StatusIndicator
               title="NETWORK ID"
               value={this.props.config.settings.workspace.server.network_id}

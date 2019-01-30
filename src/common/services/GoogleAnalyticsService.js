@@ -121,6 +121,7 @@ class GoogleAnalyticsService {
           locked: workspaceSettings.server.locked,
           gasLimit: workspaceSettings.server.gasLimit,
           gasPrice: workspaceSettings.server.gasPrice,
+          hardfork: workspaceSettings.server.hardfork,
         };
 
         this.user.set("cd1", config.hostname);
@@ -133,6 +134,7 @@ class GoogleAnalyticsService {
         this.user.set("cd8", config.locked);
         this.user.set("cd9", config.gasLimit);
         this.user.set("cd10", config.gasPrice);
+        this.user.set("cd11", config.hardfork);
       }
     }
   }

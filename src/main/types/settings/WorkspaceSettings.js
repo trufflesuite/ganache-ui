@@ -23,6 +23,7 @@ const initialSettings = {
     verbose: false,
     gasLimit: 6721975,
     gasPrice: 20000000000,
+    hardfork: "constantinople",
   },
   projects: [],
 };
@@ -37,6 +38,7 @@ class WorkspaceSettings extends Settings {
       server: {
         gasLimit: initialSettings.server.gasLimit,
         gasPrice: initialSettings.server.gasPrice,
+        hardfork: initialSettings.server.hardfork,
       },
     };
   }
