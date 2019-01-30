@@ -182,7 +182,7 @@
     "filesize": "^3.6.1",
     "find-process": "^1.1.0",
     "fs-extra": "^7.0.1",
-    "ganache-core": "2.3.3",
+    "ganache-core": "2.4.0",
     "lodash.clonedeep": "^4.5.0",
     "lodash.isequal": "^4.5.0",
     "lodash.merge": "^4.6.1",
