@@ -25,6 +25,13 @@ class TxCard extends Component {
     );
   }
 
+  componentDidUpdate(prevProps) {
+    const { transactionHash, dispatch } = this.props;
+    if (transactionHash !== prevProps.transactionHash) {
+      dispatch(Transactions.showTransaction(transactionHash));
+    }
+  }
+
   render() {
     const {
       currentTransaction: tx,
