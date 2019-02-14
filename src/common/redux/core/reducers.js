@@ -10,6 +10,7 @@ const initialState = {
   lastRequestedBlock: -1, // Last block whose data was requested
   gasPrice: "0",
   gasLimit: "0",
+  hardfork: "constantinople",
   snapshots: [],
   systemError: null,
   showBugModal: false,
@@ -20,6 +21,8 @@ const initialState = {
 };
 
 export default function(state = initialState, action) {
+  let accountBalances;
+  let accountNonces;
   switch (action.type) {
     case Core.SET_SERVER_STARTED:
       return Object.assign({}, state, {
@@ -38,8 +41,8 @@ export default function(state = initialState, action) {
 
     case Core.GET_ACCOUNTS:
       var accounts = action.accounts;
-      var accountBalances = Object.assign({}, state.accountBalances);
-      var accountNonces = Object.assign({}, state.accountNonces);
+      accountBalances = Object.assign({}, state.accountBalances);
+      accountNonces = Object.assign({}, state.accountNonces);
 
       // Set default balance to zero if this is a new account
       accounts.forEach(account => {
@@ -54,7 +57,7 @@ export default function(state = initialState, action) {
       });
 
     case Core.GET_ACCOUNT_BALANCE:
-      var accountBalances = Object.assign({}, state.accountBalances, {
+      accountBalances = Object.assign({}, state.accountBalances, {
         [action.account]: action.balance,
       });
       return Object.assign({}, state, {
@@ -62,7 +65,7 @@ export default function(state = initialState, action) {
       });
 
     case Core.GET_ACCOUNT_NONCE:
-      var accountNonces = Object.assign({}, state.accountNonces, {
+      accountNonces = Object.assign({}, state.accountNonces, {
         [action.account]: action.nonce,
       });
       return Object.assign({}, state, {
