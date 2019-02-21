@@ -95,6 +95,26 @@ if (process.platform === "darwin") {
   app.dock.setIcon(getIconPath());
 }
 
+const performShutdownTasks = async ({ truffleIntegration, chain }) => {
+  // don't quit the app before the updater can do its thing
+  const service = getAutoUpdateService();
+  if (service == null || !service.isRestartingForUpdate) {
+    mainWindow = null;
+
+    if (truffleIntegration) {
+      await truffleIntegration.stopWatching();
+    }
+
+    if (chain.isServerStarted()) {
+      await chain.stopServer();
+    }
+
+    chain.stopProcess();
+    truffleIntegration.stopProcess();
+    app.quit();
+  }
+};
+
 app.on("ready", () => {
   // workaround for electron race condition, causing hang on startup.
   // see https://github.com/electron/electron/issues/9179 for more info
@@ -111,25 +131,16 @@ app.on("ready", () => {
     let workspace;
     let startupMode = STARTUP_MODE.NORMAL;
 
-    app.on("window-all-closed", async () => {
-      // don't quit the app before the updater can do its thing
-      const service = getAutoUpdateService();
-      if (service == null || !service.isRestartingForUpdate) {
-        mainWindow = null;
+    app.on(
+      "window-all-closed",
+      async () => await performShutdownTasks({ truffleIntegration, chain }),
+    );
 
-        if (truffleIntegration) {
-          await truffleIntegration.stopWatching();
-        }
-
-        if (chain.isServerStarted()) {
-          await chain.stopServer();
-        }
-
-        chain.stopProcess();
-        truffleIntegration.stopProcess();
-        app.quit();
-      }
-    });
+    // Mac: event emitted by closing app from dock
+    app.on(
+      "will-quit",
+      async () => await performShutdownTasks({ truffleIntegration, chain }),
+    );
 
     truffleIntegration.on("error", async error => {
       if (mainWindow) {
