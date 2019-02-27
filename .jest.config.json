@@ -1,0 +1,6 @@
+{
+  "setupFiles": ["./jestSetup.js"],
+  "transform": {
+    "^.+\\.js$": "./jestProcess"
+  }
+}
