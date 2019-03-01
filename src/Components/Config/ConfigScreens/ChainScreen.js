@@ -18,7 +18,7 @@ const VALIDATIONS = {
     canBeBlank: true
   },
   "server.hardfork": {
-    allowedChars: /^(byzantium|constantinople)$/,
+    allowedChars: /^(byzantium|constantinople|petersburg)$/,
     canBeBlank: false
   }
 }
@@ -129,12 +129,13 @@ class ChainScreen extends Component {
                 defaultValue={this.props.config.settings.server.hardfork}
                 changeFunction={this.validateChange}
               >
+                  <option key="petersburg" value="petersburg">Petersburg</option>
                   <option key="constantinople" value="constantinople">Constantinople</option>
-                  <option key="constantinople" value="byzantium">Byzantium</option>
+                  <option key="byzantium" value="byzantium">Byzantium</option>
               </StyledSelect>
             </div>
             <div className="RowItem">
-              <p>The hardfork to use. Default is Constantinople.</p>
+              <p>The hardfork to use. Default is Petersburg.</p>
             </div>
           </div>
         </section>

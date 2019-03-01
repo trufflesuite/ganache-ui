@@ -25,7 +25,7 @@ const initialSettings = {
     verbose: false,
     gasLimit: 6721975,
     gasPrice: 20000000000,
-    hardfork: "constantinople"
+    hardfork: "petersburg"
   }
 }
 

@@ -13,7 +13,7 @@ const initialState = {
   lastRequestedBlock: -1, // Last block whose data was requested
   gasPrice: "0",
   gasLimit: "0",
-  hardfork: "constantinople",
+  hardfork: "petersburg",
   snapshots: [],
   systemError: null,
   showBugModal: false,
