@@ -54,11 +54,7 @@ class TxList extends Component {
           </div>
         );
       } else {
-        content = (
-          <div className="TransactionList">
-            <div className="Waiting">No transactions</div>
-          </div>
-        );
+        content = <div className="Waiting">No transactions</div>;
       }
     }
 
