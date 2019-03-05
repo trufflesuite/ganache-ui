@@ -3,7 +3,11 @@ const path = require("path");
 const fs = require("fs");
 const getProjectDetails = require("./projectDetails").get;
 const merge = require("lodash.merge");
+const { getAncestorDirs } = require("./projectFsWatcherUtils");
 
+/**
+ * Detects when there are new/changed/removed contract artifacts in contracts_build_directory
+ */
 class ProjectFsWatcher extends EventEmitter {
   constructor(project, networkId) {
     super();
@@ -12,9 +16,8 @@ class ProjectFsWatcher extends EventEmitter {
     this.networkId = networkId;
 
     this.configWatcher = null;
-    this.parentDirectoryWatcher = null;
-    this.buildDirectoryWatcher = null;
     this.contractBuildDirectoryWatcher = null;
+    this.dirWatchers = {};
 
     this.contracts = [];
     this.fileToContractIdx = {};
@@ -24,7 +27,7 @@ class ProjectFsWatcher extends EventEmitter {
 
   getProject() {
     const tempProject = merge({}, this.project, {
-      contracts: this.contracts.filter(contract => contract !== null)
+      contracts: this.contracts.filter(contract => contract !== null),
     });
     return tempProject;
   }
@@ -34,74 +37,104 @@ class ProjectFsWatcher extends EventEmitter {
   }
 
   start() {
-    this.configWatcher = fs.watch(this.project.configFile, { encoding: "utf8" }, (eventType, filename) => {
-      // the config file was either removed or changed, we may want to reload it
+    this.configWatcher = fs.watch(
+      this.project.configFile,
+      { encoding: "utf8" },
+      async () => {
+        // the config file was either removed or changed, we may want to reload it
 
-      this.stopWatchingParentDirectory();
-      this.stopWatchingBuildDirectory();
-      this.stopWatchingContracts();
+        this.stopWatchingDirs();
 
-      this.project = getProjectDetails(this.project.configFile);
-      // do we want to emit the project potencially got changed?
+        this.project = await getProjectDetails(this.project.configFile);
+        // do we want to emit the project potencially got changed?
 
-      this.startWatchingParentDirectory();
-    });
+        this.startWatchingDirs(
+          getAncestorDirs(
+            this.project.config.truffle_directory,
+            this.project.config.contracts_build_directory,
+          ),
+        );
+      },
+    );
 
-    this.startWatchingParentDirectory();
+    this.startWatchingDirs(
+      getAncestorDirs(
+        this.project.config.truffle_directory,
+        this.project.config.contracts_build_directory,
+      ),
+    );
   }
 
-  startWatchingParentDirectory() {
-    this.stopWatchingParentDirectory();
-
-    this.parentDirectoryWatcher = fs.watch(path.dirname(this.project.config.build_directory), { encoding: "utf8" }, (eventType, filename) => {
-      if (filename === path.basename(this.project.config.build_directory)) {
-        this.startWatchingBuildDirectory();
-      }
-    });
-
-    this.startWatchingBuildDirectory();
+  stopWatchingDirs() {
+    Object.keys(this.dirWatchers).forEach(dir => this.stopWatchingDir(dir));
   }
 
-  stopWatchingParentDirectory() {
-    if (this.parentDirectoryWatcher) this.parentDirectoryWatcher.close();
-    this.parentDirectoryWatcher = null;
+  /**
+   * @param {string} dir The directory name
+   */
+  stopWatchingDir(dir) {
+    if (this.dirWatchers[dir]) {
+      this.dirWatchers[dir].close();
+      // There's no object spread, so just delete the key
+      delete this.dirWatchers[dir];
+    }
   }
 
-  startWatchingBuildDirectory() {
-    this.stopWatchingBuildDirectory();
+  /**
+   * @param {string[]} dirs An array of directory names
+   */
+  startWatchingDirs(dirs) {
+    const [head, ...tail] = dirs;
 
-    if (fs.existsSync(this.project.config.build_directory)) {
-      this.buildDirectoryWatcher = fs.watch(this.project.config.build_directory, { encoding: "utf8" }, (eventType, filename) => {
-        if (filename === path.basename(this.project.config.contracts_build_directory)) {
-          this.startWatchingContracts();
-        }
-      });
+    if (head) this.stopWatchingDir(head);
 
+    if (head && fs.existsSync(head)) {
+      const watcher = fs.watch(
+        head,
+        { encoding: "utf8" },
+        (eventType, filename) => {
+          if (
+            filename ===
+            path.basename(this.project.config.contracts_build_directory)
+          ) {
+            this.startWatchingContracts();
+          }
+
+          if (tail[0] && filename === path.basename(tail[0]))
+            this.startWatchingDirs(tail);
+        },
+      );
+      this.dirWatchers[head] = watcher;
+      this.startWatchingDirs(tail);
+    } else {
+      // When dirs === [], we assume that we are at the contracts_build_directory, so just start watching it
       this.startWatchingContracts();
     }
   }
 
-  stopWatchingBuildDirectory() {
-    if (this.buildDirectoryWatcher) this.buildDirectoryWatcher.close();
-    this.buildDirectoryWatcher = null;
-  }
-
   contractExists(file) {
-    return fs.existsSync(path.join(this.project.config.contracts_build_directory, file));
+    return fs.existsSync(
+      path.join(this.project.config.contracts_build_directory, file),
+    );
   }
 
   readContract(file) {
     try {
-      const contract = JSON.parse(fs.readFileSync(path.join(this.project.config.contracts_build_directory, file), "utf8"));
+      const contract = JSON.parse(
+        fs.readFileSync(
+          path.join(this.project.config.contracts_build_directory, file),
+          "utf8",
+        ),
+      );
 
       if (contract.networks[this.networkId]) {
         contract.address = contract.networks[this.networkId].address;
-        contract.creationTxHash = contract.networks[this.networkId].transactionHash;
+        contract.creationTxHash =
+          contract.networks[this.networkId].transactionHash;
       }
 
       return contract;
-    }
-    catch (e) {
+    } catch (e) {
       return null;
     }
   }
@@ -127,14 +160,12 @@ class ProjectFsWatcher extends EventEmitter {
           this.fileToContractIdx[filename] = this.contracts.length;
           const contract = this.readContract(filename);
           this.contracts.push(contract);
-        }
-        else {
+        } else {
           // deleted
           this.contracts.splice(this.fileToContractIdx[filename]);
           delete this.fileToContractIdx[filename];
         }
-      }
-      else if (eventType === "change") {
+      } else if (eventType === "change") {
         // modified
         const contract = this.readContract(filename);
         this.contracts[this.fileToContractIdx[filename]] = contract;
@@ -148,17 +179,22 @@ class ProjectFsWatcher extends EventEmitter {
     if (fs.existsSync(this.project.config.contracts_build_directory)) {
       this.readContracts();
 
-      this.contractBuildDirectoryWatcher = fs.watch(this.project.config.contracts_build_directory, { encoding: "utf8" }, (eventType, filename) => {
-        this.handleContractFileEvent(eventType, filename);
-        this.emit("project-details-update", this.getProject());
-      });
+      this.contractBuildDirectoryWatcher = fs.watch(
+        this.project.config.contracts_build_directory,
+        { encoding: "utf8" },
+        (eventType, filename) => {
+          this.handleContractFileEvent(eventType, filename);
+          this.emit("project-details-update", this.getProject());
+        },
+      );
     }
 
     this.emit("project-details-update", this.getProject());
   }
 
   stopWatchingContracts() {
-    if (this.contractBuildDirectoryWatcher) this.contractBuildDirectoryWatcher.close();
+    if (this.contractBuildDirectoryWatcher)
+      this.contractBuildDirectoryWatcher.close();
     this.contractBuildDirectoryWatcher = null;
 
     this.contracts = [];
@@ -167,8 +203,7 @@ class ProjectFsWatcher extends EventEmitter {
 
   stop() {
     if (this.configWatcher) this.configWatcher.close();
-    this.stopWatchingParentDirectory();
-    this.stopWatchingBuildDirectory();
+    this.stopWatchingDirs();
     this.stopWatchingContracts();
   }
 }

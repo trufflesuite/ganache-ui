@@ -1,65 +1,67 @@
-import React, { Component } from 'react'
+import React, { Component } from "react";
 
-import OnlyIf from '../../../components/only-if/OnlyIf'
-import FilePicker from '../../../components/file-picker/FilePicker'
+import OnlyIf from "../../../components/only-if/OnlyIf";
+import FilePicker from "../../../components/file-picker/FilePicker";
 
 const VALIDATIONS = {
   "workspace.logDirectory": {
     canBeBlank: false,
-    allowedChars: /^(?!.*Select a Directory).+$/
-  }
-}
+    allowedChars: /^(?!.*Select a Directory).+$/,
+  },
+};
 
 class AdvancedScreen extends Component {
-  constructor (props) {
-    super(props)
+  constructor(props) {
+    super(props);
 
     this.state = {
-      logDirectory: props.config.settings.workspace.logDirectory
-    }
+      logDirectory: props.config.settings.workspace.logDirectory,
+    };
   }
 
   toggleOutputToLogs = e => {
     if (this.state.logDirectory == null) {
       // this setting was turned off, turn it on
-      this.state.logDirectory = "Select a Directory"
-    }
-    else {
+      this.state.logDirectory = "Select a Directory";
+    } else {
       // this setting was turned on and set, turn it off by setting to null
-      this.state.logDirectory = null
+      this.state.logDirectory = null;
     }
 
-    this.validateChange(e)
-  }
+    this.validateChange(e);
+  };
 
   changeLogDirectory = (value, e) => {
-    this.state.logDirectory = value
+    this.state.logDirectory = value;
 
-    this.validateChange(e)
-  }
+    this.validateChange(e);
+  };
 
   validateChange = e => {
     if (e.target.name === "workspace.logDirectory") {
       // the value to validate isn't the value of the HTML element
       e = {
-        "target": {
-          "name": "workspace.logDirectory",
-          "value": this.state.logDirectory
-        }
+        target: {
+          name: "workspace.logDirectory",
+          value: this.state.logDirectory,
+        },
       };
     }
 
     let tempValidations = JSON.parse(JSON.stringify(VALIDATIONS));
 
-    if (this.state.logDirectory === null && "workspace.logDirectory" in tempValidations) {
+    if (
+      this.state.logDirectory === null &&
+      "workspace.logDirectory" in tempValidations
+    ) {
       // if the switch is off for logging to file, then don't validate
       tempValidations.logDirectory = null;
     }
 
-    this.props.validateChange(e, VALIDATIONS)
-  }
+    this.props.validateChange(e, VALIDATIONS);
+  };
 
-  render () {
+  render() {
     return (
       <div>
         <h2>LOGGING</h2>
@@ -79,9 +81,7 @@ class AdvancedScreen extends Component {
               </div>
             </div>
             <div className="RowItem">
-              <p>
-                Save logs to file.
-              </p>
+              <p>Save logs to file.</p>
             </div>
           </div>
         </section>
@@ -97,13 +97,22 @@ class AdvancedScreen extends Component {
                   buttonValue="Pick a Folder"
                   directoriesOnly={true}
                   value={this.state.logDirectory}
-                  onChangeFunction={(value, e) => this.changeLogDirectory(value, e)}
+                  onChangeFunction={(value, e) =>
+                    this.changeLogDirectory(value, e)
+                  }
                 />
-                {this.props.validationErrors["logDirectory"] &&
-                  <p className="ValidationError">Must select a directory or disable "Output Logs To File"</p>}
+                {this.props.validationErrors["logDirectory"] && (
+                  <p className="ValidationError">
+                    Must select a directory or disable "Output Logs To File"
+                  </p>
+                )}
               </div>
               <div className="RowItem">
-                <p>Path to a directory to save the timestamped log files. A separate file will be generated everytime you restart Ganache. It is recommended to create a directory just for these logs.</p>
+                <p>
+                  Path to a directory to save the timestamped log files. A
+                  separate file will be generated everytime you restart Ganache.
+                  It is recommended to create a directory just for these logs.
+                </p>
               </div>
             </div>
           </section>
@@ -124,9 +133,7 @@ class AdvancedScreen extends Component {
               </div>
             </div>
             <div className="RowItem">
-              <p>
-                Increase the log output.
-              </p>
+              <p>Increase the log output.</p>
             </div>
           </div>
         </section>
@@ -141,7 +148,10 @@ class AdvancedScreen extends Component {
                   name="global.googleAnalyticsTracking"
                   id="GoogleAnalyticsTracking"
                   onChange={this.props.handleInputChange}
-                  checked={this.props.config.settings.global.googleAnalyticsTracking == true}
+                  checked={
+                    this.props.config.settings.global.googleAnalyticsTracking ==
+                    true
+                  }
                 />
                 <label htmlFor="GoogleAnalyticsTracking">
                   GOOGLE ANALYTICS
@@ -150,8 +160,13 @@ class AdvancedScreen extends Component {
             </div>
             <div className="RowItem">
               <p>
-                We use Google Analytics to track Ganache usage. This information helps us gain more insight into how Ganache is used. This tracking is anonymous. We do not track personally identifiable information, account data or private keys.<br/>
-                Note: This setting is global and will persist between workspaces.
+                We use Google Analytics to track Ganache usage. This information
+                helps us gain more insight into how Ganache is used. This
+                tracking is anonymous. We do not track personally identifiable
+                information, account data or private keys.
+                <br />
+                Note: This setting is global and will persist between
+                workspaces.
               </p>
             </div>
           </div>
@@ -182,8 +197,8 @@ class AdvancedScreen extends Component {
           </div>
         </section> */}
       </div>
-    )
+    );
   }
 }
 
-export default AdvancedScreen
+export default AdvancedScreen;

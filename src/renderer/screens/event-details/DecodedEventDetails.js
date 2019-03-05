@@ -1,5 +1,5 @@
-import React from "react"
-import Moment from 'react-moment'
+import React from "react";
+import Moment from "react-moment";
 
 const DecodedEventDetails = ({ event }) => {
   const {
@@ -8,8 +8,8 @@ const DecodedEventDetails = ({ event }) => {
     contractName,
     contractAddress,
     signature,
-    logIndex
-  } = event
+    logIndex,
+  } = event;
   return (
     <div className="DecodedEventDetails">
       <div className="DataSection">
@@ -59,13 +59,17 @@ const DecodedEventDetails = ({ event }) => {
           <div className="DataRow" key={index}>
             <div className="DataPoint">
               <div className="Label">{returnVal.name}</div>
-              <div className="Value">{Array.isArray(returnVal.value) ? returnVal.value.join(", ") : returnVal.value}</div>
+              <div className="Value">
+                {Array.isArray(returnVal.value)
+                  ? returnVal.value.join(", ")
+                  : returnVal.value}
+              </div>
             </div>
           </div>
         ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default DecodedEventDetails
+export default DecodedEventDetails;

@@ -4,9 +4,9 @@ import {
   ADD_EVENTS_TO_VIEW,
   SET_BLOCKS_REQUESTED,
   SET_SUBSCRIBED_TOPICS,
-  SET_LOADING
-} from './actions'
-import cloneDeep from 'lodash.clonedeep'
+  SET_LOADING,
+} from "./actions";
+import cloneDeep from "lodash.clonedeep";
 
 const initialState = {
   inView: [],
@@ -14,12 +14,12 @@ const initialState = {
   shown: {
     contract: {
       name: "",
-      address: ""
-    }
+      address: "",
+    },
   },
   subscribedTopics: [],
-  loading: false
-}
+  loading: false,
+};
 
 // Note: This sorts in reverse; higher blocks first
 function sort(events) {
@@ -33,25 +33,25 @@ function sort(events) {
     // blockNumbers must be equal
     // Let's sort by transaction index
     if (a.transactionIndex > b.transactionIndex) {
-      return -1; 
-    } 
+      return -1;
+    }
     if (b.transactionIndex < b.transactionIndex) {
       return 1;
     }
     // transactionIndex must be equal
     // Let's sort by log index
     if (a.logIndex > b.logIndex) {
-      return -1; 
-    } 
+      return -1;
+    }
     if (b.logIndex < b.logIndex) {
       return 1;
     }
     return 0;
-  })
+  });
 }
 
-export default function (state = initialState, action) {
-  let nextState = cloneDeep(state)
+export default function(state = initialState, action) {
+  let nextState = cloneDeep(state);
 
   switch (action.type) {
     case GET_DECODED_EVENT:
@@ -59,31 +59,31 @@ export default function (state = initialState, action) {
         ...cloneDeep(action.event),
         contract: {
           name: action.contractName,
-          address: action.contractAddress
-        }
-      }
-      break
+          address: action.contractAddress,
+        },
+      };
+      break;
     case CLEAR_EVENTS_IN_VIEW:
-      nextState.inView = []
-      nextState.blocksRequested = {}
-      break
+      nextState.inView = [];
+      nextState.blocksRequested = {};
+      break;
     case SET_BLOCKS_REQUESTED:
       for (let i = action.start; i <= action.end; i++) {
-        nextState.blocksRequested[i] = true
+        nextState.blocksRequested[i] = true;
       }
-      break
+      break;
     case ADD_EVENTS_TO_VIEW:
-      nextState.inView = sort(state.inView.concat(action.events))
-      break
+      nextState.inView = sort(state.inView.concat(action.events));
+      break;
     case SET_SUBSCRIBED_TOPICS:
-      nextState.subscribedTopics = cloneDeep(action.topics)
-      break
+      nextState.subscribedTopics = cloneDeep(action.topics);
+      break;
     case SET_LOADING:
-      nextState.loading = action.loading
-      break
+      nextState.loading = action.loading;
+      break;
     default:
-      break
+      break;
   }
 
-  return nextState
+  return nextState;
 }

@@ -1,7 +1,8 @@
-import Settings from './Settings'
-import merge from 'lodash.merge'
+import Settings from "./Settings";
+import merge from "lodash.merge";
 
-const oldDefaultMnemonic = "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat";
+const oldDefaultMnemonic =
+  "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat";
 
 const initialSettings = {
   name: "Quickstart",
@@ -21,22 +22,24 @@ const initialSettings = {
     logger: null,
     verbose: false,
     gasLimit: 6721975,
-    gasPrice: 20000000000
+    gasPrice: 20000000000,
+    hardfork: "constantinople",
   },
-  projects: []
-}
+  projects: [],
+};
 
 class WorkspaceSettings extends Settings {
   constructor(directory, chaindataDirectory) {
-    super(directory, initialSettings)
+    super(directory, initialSettings);
 
-    this.chaindataDirectory = chaindataDirectory
+    this.chaindataDirectory = chaindataDirectory;
 
     this.defaultSettings = {
       server: {
         gasLimit: initialSettings.server.gasLimit,
-        gasPrice: initialSettings.server.gasPrice
-      }
+        gasPrice: initialSettings.server.gasPrice,
+        hardfork: initialSettings.server.hardfork,
+      },
     };
   }
 
@@ -44,10 +47,10 @@ class WorkspaceSettings extends Settings {
     // Add any settings changes here by creating a function which
     // handles the settings change in question.
 
-    currentSettings = migrateMnemonicSettings(currentSettings)
-    currentSettings = this.insertDbPath(currentSettings)
+    currentSettings = migrateMnemonicSettings(currentSettings);
+    currentSettings = this.insertDbPath(currentSettings);
 
-    return currentSettings
+    return currentSettings;
   }
 
   /**
@@ -57,7 +60,7 @@ class WorkspaceSettings extends Settings {
    */
   handleNewMnemonic(mnemonic) {
     if (!this._getRaw("randomizeMnemonicOnStart", true)) {
-      this.set('server.mnemonic', mnemonic)
+      this.set("server.mnemonic", mnemonic);
     }
   }
 
@@ -65,12 +68,11 @@ class WorkspaceSettings extends Settings {
     if (this.chaindataDirectory) {
       return merge({}, currentSettings, {
         server: {
-          db_path: this.chaindataDirectory
-        }
-      })
-    }
-    else {
-      return currentSettings
+          db_path: this.chaindataDirectory,
+        },
+      });
+    } else {
+      return currentSettings;
     }
   }
 }
@@ -80,14 +82,15 @@ const migrateMnemonicSettings = function(currentSettings) {
   // randomly generated mnemonic by default, randomizeMnemonic on start will
   // be undefined.
   if (currentSettings.randomizeMnemonicOnStart === undefined) {
-
     // Before we added the randomizeMnemonicOnStart flag, the absence of a
     // mnemonic meant that we wanted a random one one each run. We want to
     // preserve this preference.
     if (currentSettings.server.mnemonic === "") {
       currentSettings.randomizeMnemonicOnStart = true;
-    } else if (currentSettings.server.mnemonic === oldDefaultMnemonic || !currentSettings.server.mnemonic) {
-
+    } else if (
+      currentSettings.server.mnemonic === oldDefaultMnemonic ||
+      !currentSettings.server.mnemonic
+    ) {
       // This will cause a new mnemonic to be generated and persisted only in
       // the case when the old default mnemonic was being used.
       currentSettings.server.mnemonic = null;
@@ -95,6 +98,6 @@ const migrateMnemonicSettings = function(currentSettings) {
   }
 
   return currentSettings;
-}
+};
 
-export default WorkspaceSettings
+export default WorkspaceSettings;

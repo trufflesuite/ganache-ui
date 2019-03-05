@@ -1,33 +1,33 @@
-import React, { Component } from 'react'
-import connect from '../helpers/connect'
-import * as Blocks from '../../../common/redux/blocks/actions'
+import React, { Component } from "react";
+import connect from "../helpers/connect";
+import * as Blocks from "../../../common/redux/blocks/actions";
 
-import Moment from 'react-moment'
+import Moment from "react-moment";
 
-import { hashHistory } from 'react-router'
+import { hashHistory } from "react-router";
 
-import TxList from '../transactions/TxList'
+import TxList from "../transactions/TxList";
 
 class BlockCard extends Component {
   constructor(props) {
-    super(props)
+    super(props);
   }
 
-  componentDidMount () {
-    this.props.dispatch(Blocks.showBlock(this.props.blockNumber))
+  componentDidMount() {
+    this.props.dispatch(Blocks.showBlock(this.props.blockNumber));
   }
 
-  componentWillReceiveProps (nextProps) {
-    if (this.props.blockNumber !== nextProps.blockNumber ) {
-      this.props.dispatch(Blocks.showBlock(nextProps.blockNumber))
+  componentWillReceiveProps(nextProps) {
+    if (this.props.blockNumber !== nextProps.blockNumber) {
+      this.props.dispatch(Blocks.showBlock(nextProps.blockNumber));
     }
   }
 
-  render () {
-    const block = this.props.blocks.currentBlock
+  render() {
+    const block = this.props.blocks.currentBlock;
 
     if (!block) {
-      return <div />
+      return <div />;
     }
 
     return (
@@ -38,27 +38,20 @@ class BlockCard extends Component {
           </button>
 
           <div className="BlockNumber">
-            <h1>
-              BLOCK {block.number}
-            </h1>
+            <h1>BLOCK {block.number}</h1>
           </div>
         </header>
-
 
         <div className="BlockBody">
           <div className="HeaderSecondaryInfo">
             <div>
               <div className="Label">GAS USED</div>
-              <div className="Value">
-                {block.gasUsed}
-              </div>
+              <div className="Value">{block.gasUsed}</div>
             </div>
 
             <div>
               <div className="Label">GAS LIMIT</div>
-              <div className="Value">
-                {block.gasLimit}
-              </div>
+              <div className="Value">{block.gasLimit}</div>
             </div>
 
             <div>
@@ -72,16 +65,22 @@ class BlockCard extends Component {
 
             <div className="BlockHash">
               <div className="Label">BLOCK HASH</div>
-              <div className="Value">
-                {block.hash}
-              </div>
+              <div className="Value">{block.hash}</div>
             </div>
           </div>
         </div>
-        <TxList loading={false} transactions={block.transactions} receipts={block.receipts} />
+        <TxList
+          loading={false}
+          transactions={block.transactions}
+          receipts={block.receipts}
+        />
       </section>
-    )
+    );
   }
 }
 
-export default connect(BlockCard, "blocks", "transactions")
+export default connect(
+  BlockCard,
+  "blocks",
+  "transactions",
+);

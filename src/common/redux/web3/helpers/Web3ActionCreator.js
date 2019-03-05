@@ -15,27 +15,27 @@
 // }
 
 export async function web3Request(name, args, web3Instance) {
-  let fn = web3Instance.eth[name]
+  let fn = web3Instance.eth[name];
 
-  return await fn.apply(web3Instance.eth, args)
+  return await fn.apply(web3Instance.eth, args);
 }
 
 export async function web3ActionCreator(dispatch, getState, name, args) {
   // This specifically pulls state from the web3 reducer. Smell?
-  let web3Instance = getState().web3.web3Instance
-  return await web3Request(name, args, web3Instance)
+  let web3Instance = getState().web3.web3Instance;
+  return await web3Request(name, args, web3Instance);
 }
 
 export function web3CleanUpHelper(dispatch, getState) {
-  let web3Instance = getState().web3.web3Instance
+  let web3Instance = getState().web3.web3Instance;
   if (web3Instance) {
-    let provider = web3Instance.currentProvider
+    let provider = web3Instance.currentProvider;
 
     // clear out current provider to stop active subscription monitoring
-    web3Instance.setProvider(null)
+    web3Instance.setProvider(null);
 
     if (provider && provider.connection && provider.connection.close) {
-      provider.connection.close()
+      provider.connection.close();
     }
   }
 }
