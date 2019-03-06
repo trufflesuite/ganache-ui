@@ -26,14 +26,13 @@ class LogContainer extends Component {
     return isLineLengthDiff || isListHeightDiff;
   }
 
-  renderRow = ({ index }) => (
-    <Row index={index} log={this.props.logs.lines[index]} />
+  renderRow = ({ index, style }) => (
+    <Row index={index} style={style} log={this.props.logs.lines[index]} />
   );
 
   render() {
     const { logs } = this.props;
     const { listHeight } = this.state;
-    console.log("listHeight", listHeight);
 
     return (
       <div className="LogContainer" ref={this.LogContainer}>

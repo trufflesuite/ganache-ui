@@ -1,7 +1,7 @@
 import React from "react";
 
-const Row = ({ index, log }) => (
-  <li key={index} className="plain">
+const Row = ({ index, style, log }) => (
+  <li key={index} className="plain" style={style}>
     {`[${new Date(log.time).toLocaleTimeString()}]`} {log.line}
   </li>
 );
