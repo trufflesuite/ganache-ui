@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { List, AutoSizer } from "react-virtualized";
 import Row from "./Row";
 
@@ -37,5 +38,17 @@ class LogsLazy extends Component {
     );
   }
 }
+
+LogsLazy.defaultProps = {
+  logs: {
+    lines: [],
+  },
+};
+
+LogsLazy.propTypes = {
+  logs: PropTypes.shape({
+    lines: PropTypes.arrayOf(PropTypes.object),
+  }),
+};
 
 export default LogsLazy;
