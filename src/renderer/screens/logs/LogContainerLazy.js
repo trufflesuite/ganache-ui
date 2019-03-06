@@ -18,6 +18,7 @@ class LogContainer extends Component {
     return (
       <div className="LogContainer">
         <FixedSizeList
+          className="LazyList"
           height={150}
           itemSize={35}
           width={300}

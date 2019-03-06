@@ -5,6 +5,27 @@
   height: 100%;
   width: 100%;
 
+  .LazyList {
+    list-style:none;
+    font-size: 13px;
+    color: #eff1f5;
+    border-radius: 0;
+    background: #333;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    box-sizing: border-box;
+    margin: 0;
+    /* Not sure why these 2 will cause jitter
+    padding: 1rem;
+    font-family: "Fira Code Regular", monospace;
+    */
+    position: absolute;
+    top: 0em;
+    left: 0em;
+    right: 0em;
+    bottom: 0em;
+  }
+
   ul {
     list-style:none;
     font-size: 13px;
