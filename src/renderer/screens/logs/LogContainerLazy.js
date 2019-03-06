@@ -39,8 +39,8 @@ class LogContainer extends Component {
         <ul>
           <FixedSizeList
             className="LazyList"
-            height={listHeight}
-            itemSize={35}
+            height={listHeight} // TODO listen to window resize
+            itemSize={35} // TODO needs to fit text, use variable size list?
             width="100%"
             itemCount={logs.lines.length}
           >
