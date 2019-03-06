@@ -8,14 +8,24 @@ async function get(projectFile) {
 
   return new Promise((resolve, reject) => {
     try {
-      const projectLoaderPath = path.join(
-        process.env.ELECTRON_APP_PATH,
-        "..",
-        "..",
-        "src",
-        "truffle-project-loader",
-        "index.js",
-      );
+      let projectLoaderPath;
+      if (process.env.GANACHE_DEV_MODE === "true") {
+        projectLoaderPath = path.join(
+          process.env.ELECTRON_APP_PATH,
+          "src",
+          "truffle-project-loader",
+          "index.js",
+        );
+      } else {
+        projectLoaderPath = path.join(
+          process.env.ELECTRON_APP_PATH,
+          "..",
+          "..",
+          "src",
+          "truffle-project-loader",
+          "index.js",
+        );
+      }
       const args = [projectLoaderPath, projectFile];
       const options = {
         stdio: ["pipe", "pipe", "pipe", "ipc"],
