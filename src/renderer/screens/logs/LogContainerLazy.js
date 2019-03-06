@@ -1,23 +1,9 @@
 import React, { Component } from "react";
-import { FixedSizeList } from "react-window";
+import { List } from "react-virtualized";
 import connect from "../helpers/connect";
 import Row from "./Row";
 
 class LogContainer extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      listHeight: 0,
-    };
-
-    this.LogContainer = React.createRef();
-  }
-
-  componentDidMount() {
-    this.setState({ listHeight: this.LogContainer.current.clientHeight });
-  }
-
   shouldComponentUpdate(nextProps, nextState) {
     const isLineLengthDiff =
       nextProps.logs.lines.length !== this.props.logs.lines.length;
@@ -32,20 +18,17 @@ class LogContainer extends Component {
 
   render() {
     const { logs } = this.props;
-    const { listHeight } = this.state;
 
     return (
       <div className="LogContainer" ref={this.LogContainer}>
         <ul>
-          <FixedSizeList
-            className="LazyList"
-            height={listHeight} // TODO listen to window resize
-            itemSize={35} // TODO needs to fit text, use variable size list?
-            width="100%"
-            itemCount={logs.lines.length}
-          >
-            {this.renderRow}
-          </FixedSizeList>
+          <List
+            width={300}
+            height={300} // TODO listen to window resize
+            rowCount={logs.lines.length}
+            rowHeight={35} // TODO needs to fit text, use variable size list?
+            rowRenderer={this.renderRow}
+          />
         </ul>
       </div>
     );
