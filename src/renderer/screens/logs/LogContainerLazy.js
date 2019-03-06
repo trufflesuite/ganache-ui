@@ -36,15 +36,17 @@ class LogContainer extends Component {
 
     return (
       <div className="LogContainer" ref={this.LogContainer}>
-        <FixedSizeList
-          className="LazyList"
-          height={listHeight}
-          itemSize={35}
-          width="100%"
-          itemCount={logs.lines.length}
-        >
-          {this.renderRow}
-        </FixedSizeList>
+        <ul>
+          <FixedSizeList
+            className="LazyList"
+            height={listHeight}
+            itemSize={35}
+            width="100%"
+            itemCount={logs.lines.length}
+          >
+            {this.renderRow}
+          </FixedSizeList>
+        </ul>
       </div>
     );
   }
