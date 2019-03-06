@@ -40,6 +40,9 @@
       "resources/icons/**/*",
       "package.json"
     ],
+    "extraFiles": [
+      "src/truffle-project-loader/index.js"
+    ],
     "directories": {
       "buildResources": "resources",
       "output": "dist"

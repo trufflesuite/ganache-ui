@@ -9,8 +9,11 @@ async function get(projectFile) {
   return new Promise((resolve, reject) => {
     try {
       const projectLoaderPath = path.join(
-        __dirname,
-        "../truffle-project-loader",
+        process.env.ELECTRON_APP_PATH,
+        "..",
+        "..",
+        "src",
+        "truffle-project-loader",
         "index.js",
       );
       const args = [projectLoaderPath, projectFile];
