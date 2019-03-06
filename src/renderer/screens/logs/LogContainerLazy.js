@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { List } from "react-virtualized";
+import { List, AutoSizer } from "react-virtualized";
 import connect from "../helpers/connect";
 import Row from "./Row";
 
@@ -22,13 +22,17 @@ class LogContainer extends Component {
     return (
       <div className="LogContainer" ref={this.LogContainer}>
         <ul>
-          <List
-            width={300}
-            height={300} // TODO listen to window resize
-            rowCount={logs.lines.length}
-            rowHeight={35} // TODO needs to fit text, use variable size list?
-            rowRenderer={this.renderRow}
-          />
+          <AutoSizer>
+            {({ height, width }) => (
+              <List
+                width={width}
+                height={height}
+                rowCount={logs.lines.length}
+                rowHeight={35} // TODO needs to fit text, use variable size list?
+                rowRenderer={this.renderRow}
+              />
+            )}
+          </AutoSizer>
         </ul>
       </div>
     );
