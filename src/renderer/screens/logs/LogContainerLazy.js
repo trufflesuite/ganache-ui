@@ -4,8 +4,26 @@ import connect from "../helpers/connect";
 import Row from "./Row";
 
 class LogContainer extends Component {
-  shouldComponentUpdate(nextProps) {
-    return nextProps.logs.lines.length !== this.props.logs.lines.length;
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      listHeight: 0,
+    };
+
+    this.LogContainer = React.createRef();
+  }
+
+  componentDidMount() {
+    this.setState({ listHeight: this.LogContainer.current.clientHeight });
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    const isLineLengthDiff =
+      nextProps.logs.lines.length !== this.props.logs.lines.length;
+    const isListHeightDiff = nextState.listHeight !== this.state.listHeight;
+
+    return isLineLengthDiff || isListHeightDiff;
   }
 
   renderRow = ({ index }) => (
@@ -14,12 +32,14 @@ class LogContainer extends Component {
 
   render() {
     const { logs } = this.props;
+    const { listHeight } = this.state;
+    console.log("listHeight", listHeight);
 
     return (
-      <div className="LogContainer">
+      <div className="LogContainer" ref={this.LogContainer}>
         <FixedSizeList
           className="LazyList"
-          height={150}
+          height={listHeight}
           itemSize={35}
           width="100%"
           itemCount={logs.lines.length}
