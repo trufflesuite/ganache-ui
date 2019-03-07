@@ -14,12 +14,11 @@ const cache = new CellMeasurerCache({
 });
 
 class LogsLazy extends Component {
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps) {
     const isLineLengthDiff =
       nextProps.logs.lines.length !== this.props.logs.lines.length;
-    const isListHeightDiff = nextState.listHeight !== this.state.listHeight;
 
-    return isLineLengthDiff || isListHeightDiff;
+    return isLineLengthDiff;
   }
 
   renderRow = ({ index, style, parent }) => (
