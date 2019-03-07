@@ -37,7 +37,7 @@ class LogsLazy extends Component {
     const { logs } = this.props;
 
     return (
-      <div className="LogContainer" ref={this.LogContainer}>
+      <div className="LogContainer">
         <ul>
           <AutoSizer onResize={() => cache.clearAll()}>
             {({ height, width }) => (
