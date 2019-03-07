@@ -39,13 +39,13 @@ class LogsLazy extends Component {
     return (
       <div className="LogContainer" ref={this.LogContainer}>
         <ul>
-          <AutoSizer>
+          <AutoSizer onResize={() => cache.clearAll()}>
             {({ height, width }) => (
               <List
                 width={width}
                 height={height}
                 rowCount={logs.lines.length}
-                rowHeight={cache.rowHeight} // TODO: this will not fit text on window resize
+                rowHeight={cache.rowHeight}
                 rowRenderer={this.renderRow}
               />
             )}
