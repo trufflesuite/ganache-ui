@@ -10,7 +10,7 @@ const Row = ({ index, log, style }) => (
 Row.propTypes = {
   index: PropTypes.number,
   log: PropTypes.shape({
-    time: PropTypes.Date.isRequired,
+    time: PropTypes.instanceOf(Date).isRequired,
     line: PropTypes.string.isRequired,
   }).isRequired,
   style: PropTypes.object, // required by react-virtualized
