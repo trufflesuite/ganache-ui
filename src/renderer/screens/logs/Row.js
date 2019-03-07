@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
+// react-virtualized doesn't respect the margin-bottom from LogContainer.scss, so do it here
 const myStyle = {
   padding: "0 0 0.3rem 0",
 };
