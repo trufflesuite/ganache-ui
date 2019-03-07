@@ -1,7 +1,17 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { List, AutoSizer } from "react-virtualized";
+import {
+  List,
+  AutoSizer,
+  CellMeasurer,
+  CellMeasurerCache,
+} from "react-virtualized";
 import Row from "./Row";
+
+const cache = new CellMeasurerCache({
+  defaultHeight: 50,
+  fixedWidth: true,
+});
 
 class LogsLazy extends Component {
   shouldComponentUpdate(nextProps, nextState) {
@@ -12,8 +22,16 @@ class LogsLazy extends Component {
     return isLineLengthDiff || isListHeightDiff;
   }
 
-  renderRow = ({ index, style }) => (
-    <Row index={index} style={style} log={this.props.logs.lines[index]} />
+  renderRow = ({ index, style, parent }) => (
+    <CellMeasurer
+      cache={cache}
+      columnIndex={0} // 0 for Lists
+      key={index}
+      rowIndex={index}
+      parent={parent}
+    >
+      <Row index={index} style={style} log={this.props.logs.lines[index]} />
+    </CellMeasurer>
   );
 
   render() {
@@ -28,7 +46,7 @@ class LogsLazy extends Component {
                 width={width}
                 height={height}
                 rowCount={logs.lines.length}
-                rowHeight={35} // TODO needs to fit text, use variable size list?
+                rowHeight={cache.rowHeight} // TODO: this will not fit text on window resize
                 rowRenderer={this.renderRow}
               />
             )}
