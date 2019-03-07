@@ -33,13 +33,15 @@ class LogsLazy extends Component {
     </CellMeasurer>
   );
 
+  clearCache = () => cache.clearAll();
+
   render() {
     const { logs } = this.props;
 
     return (
       <div className="LogContainer">
         <ul>
-          <AutoSizer onResize={() => cache.clearAll()}>
+          <AutoSizer onResize={this.clearCache}>
             {({ height, width }) => (
               <List
                 width={width}
