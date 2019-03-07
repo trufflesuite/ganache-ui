@@ -7,7 +7,7 @@ import merge from "lodash.merge";
 import ethagen from "ethagen";
 import moniker from "moniker";
 
-const isDevMode = process.execPath.match(/[\\/]electron/);
+const isDevMode = process.execPath.match(/[\\/]electron/) !== null;
 
 if (isDevMode) {
   enableLiveReload({ strategy: "react-hmr" });
@@ -122,7 +122,7 @@ app.on("ready", () => {
   setTimeout(async () => {
     const width = screen.getPrimaryDisplay().bounds.width;
     const chain = new ChainService(app);
-    const truffleIntegration = new TruffleIntegrationService();
+    const truffleIntegration = new TruffleIntegrationService(isDevMode);
     const global = new GlobalSettings(
       path.join(app.getPath("userData"), "global"),
     );
