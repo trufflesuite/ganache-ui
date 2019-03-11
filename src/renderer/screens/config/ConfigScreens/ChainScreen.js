@@ -7,7 +7,7 @@ import StyledSelect from "../../../components/styled-select/StyledSelect";
 const VALIDATIONS = {
   "workspace.server.gasPrice": {
     allowedChars: /^\d*$/,
-    min: 1,
+    min: 0,
     max: Number.MAX_SAFE_INTEGER,
     canBeBlank: true,
   },
