@@ -126,7 +126,7 @@ class ChainScreen extends Component {
                 onChange={this.validateChange}
               />
               {this.props.validationErrors["workspace.server.gasPrice"] && (
-                <p className="ValidationError">Must be &ge; 1</p>
+                <p className="ValidationError">Must be &ge; 0</p>
               )}
             </div>
             <div className="RowItem">
