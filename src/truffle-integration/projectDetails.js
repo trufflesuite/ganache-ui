@@ -1,32 +1,43 @@
+const fs = require("fs");
 const path = require("path");
 const child_process = require("child_process");
 const TruffleConfig = require("truffle-config");
+const temp = require("temp");
 
 async function get(projectFile) {
+  temp.track();
+
+  const tempDir = temp.mkdirSync();
+
+  let oldProjectLoaderLocation;
+  if (process.env.GANACHE_DEV_MODE === "true") {
+    oldProjectLoaderLocation = path.join(
+      process.env.ELECTRON_APP_PATH,
+      "src",
+      "truffle-project-loader",
+      "index.js",
+    );
+  } else {
+    oldProjectLoaderLocation = path.join(
+      process.env.ELECTRON_APP_PATH,
+      "..",
+      "..",
+      "src",
+      "truffle-project-loader",
+      "index.js",
+    );
+  }
+
+  const projectLoaderFile = fs.readFileSync(oldProjectLoaderLocation);
+  const newProjectLoaderLocation = path.join(tempDir, "index.js");
+  fs.writeFileSync(newProjectLoaderLocation, projectLoaderFile);
+
   const configFileDirectory = path.dirname(projectFile);
   const name = path.basename(configFileDirectory);
 
   return new Promise((resolve, reject) => {
     try {
-      let projectLoaderPath;
-      if (process.env.GANACHE_DEV_MODE === "true") {
-        projectLoaderPath = path.join(
-          process.env.ELECTRON_APP_PATH,
-          "src",
-          "truffle-project-loader",
-          "index.js",
-        );
-      } else {
-        projectLoaderPath = path.join(
-          process.env.ELECTRON_APP_PATH,
-          "..",
-          "..",
-          "src",
-          "truffle-project-loader",
-          "index.js",
-        );
-      }
-      const args = [projectLoaderPath, projectFile];
+      const args = [newProjectLoaderLocation, projectFile];
       const options = {
         stdio: ["pipe", "pipe", "pipe", "ipc"],
       };
