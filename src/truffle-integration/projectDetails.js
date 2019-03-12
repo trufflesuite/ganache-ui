@@ -1,23 +1,34 @@
+const fs = require("fs");
 const path = require("path");
 const child_process = require("child_process");
 const TruffleConfig = require("truffle-config");
+const temp = require("temp");
 
 async function get(projectFile) {
-  const configFileDirectory = path.dirname(projectFile);
-  const name = path.basename(configFileDirectory);
-
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
-      let projectLoaderPath;
+      const configFileDirectory = path.dirname(projectFile);
+      const name = path.basename(configFileDirectory);
+
+      temp.track();
+      const tempDir = await new Promise((resolve, reject) => {
+        temp.mkdir("ganache", (err, tempDir) => {
+          if (err) reject(err);
+
+          resolve(tempDir);
+        });
+      });
+
+      let oldProjectLoaderLocation;
       if (process.env.GANACHE_DEV_MODE === "true") {
-        projectLoaderPath = path.join(
+        oldProjectLoaderLocation = path.join(
           process.env.ELECTRON_APP_PATH,
           "src",
           "truffle-project-loader",
           "index.js",
         );
       } else {
-        projectLoaderPath = path.join(
+        oldProjectLoaderLocation = path.join(
           process.env.ELECTRON_APP_PATH,
           "..",
           "..",
@@ -26,7 +37,25 @@ async function get(projectFile) {
           "index.js",
         );
       }
-      const args = [projectLoaderPath, projectFile];
+
+      const projectLoaderFile = await new Promise((resolve, reject) => {
+        fs.readFile(oldProjectLoaderLocation, null, (err, data) => {
+          if (err) reject(err);
+
+          resolve(data);
+        });
+      });
+
+      const newProjectLoaderLocation = path.join(tempDir, "index.js");
+      await new Promise((resolve, reject) => {
+        fs.writeFile(newProjectLoaderLocation, projectLoaderFile, err => {
+          if (err) reject(err);
+
+          resolve();
+        });
+      });
+
+      const args = [newProjectLoaderLocation, projectFile];
       const options = {
         stdio: ["pipe", "pipe", "pipe", "ipc"],
       };

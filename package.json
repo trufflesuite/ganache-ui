@@ -202,7 +202,6 @@
     "redux-logger": "^2.7.4",
     "source-map-support": "^0.4.8",
     "svg2uwptiles": "0.0.4",
-    "temp": "^0.8.3",
     "webpack": "^4.28.4"
   },
   "dependencies": {
@@ -251,6 +250,7 @@
     "reselect": "^2.5.4",
     "rlp": "^2.1.0",
     "scrypt": "^6.0.3",
+    "temp": "^0.8.3",
     "truffle-config": "^1.1.0-next.1",
     "truffle-decoder": "^1.0.1",
     "universal-analytics": "^0.4.13",
