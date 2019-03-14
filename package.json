@@ -1,7 +1,7 @@
 {
   "name": "ganache",
   "productName": "Ganache",
-  "version": "2.0.0-rc.1",
+  "version": "2.0.0-rc.3",
   "description": "Personal Blockchain for Ethereum",
   "main": "./src/init.js",
   "private": true,
@@ -39,6 +39,9 @@
       "resources/fonts/*",
       "resources/icons/**/*",
       "package.json"
+    ],
+    "extraFiles": [
+      "src/truffle-project-loader/index.js"
     ],
     "directories": {
       "buildResources": "resources",
@@ -199,7 +202,6 @@
     "redux-logger": "^2.7.4",
     "source-map-support": "^0.4.8",
     "svg2uwptiles": "0.0.4",
-    "temp": "^0.8.3",
     "webpack": "^4.28.4"
   },
   "dependencies": {
@@ -216,7 +218,7 @@
     "filesize": "^3.6.1",
     "find-process": "^1.1.0",
     "fs-extra": "^7.0.0",
-    "ganache-core": "2.4.0",
+    "ganache-core": "2.5.3",
     "keccak": "^1.4.0",
     "lodash.clonedeep": "^4.5.0",
     "lodash.isequal": "^4.5.0",
@@ -242,11 +244,13 @@
     "react-render-html": "^0.6.0",
     "react-router": "^3.0.1",
     "react-router-redux": "^4.0.7",
+    "react-virtualized": "^9.21.0",
     "redux": "^3.6.0",
     "redux-thunk": "^2.2.0",
     "reselect": "^2.5.4",
     "rlp": "^2.1.0",
     "scrypt": "^6.0.3",
+    "temp": "^0.8.3",
     "truffle-config": "^1.1.0-next.1",
     "truffle-decoder": "^1.0.1",
     "universal-analytics": "^0.4.13",

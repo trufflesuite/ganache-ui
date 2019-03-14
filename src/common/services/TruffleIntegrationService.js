@@ -1,13 +1,15 @@
 import EventEmitter from "events";
 import { fork } from "child_process";
 import path from "path";
+import { app } from "electron";
 
 // https://github.com/electron/electron/blob/cd0aa4a956cb7a13cbe0e12029e6156c3e892924/docs/api/process.md#process-object
 
 class TruffleIntegrationService extends EventEmitter {
-  constructor() {
+  constructor(isDevMode) {
     super();
     this.child = null;
+    this.isDevMode = isDevMode;
     this.setMaxListeners(1);
   }
 
@@ -19,6 +21,11 @@ class TruffleIntegrationService extends EventEmitter {
     );
     const options = {
       stdio: ["pipe", "pipe", "pipe", "ipc"],
+      env: {
+        ...process.env,
+        ELECTRON_APP_PATH: app.getAppPath(),
+        GANACHE_DEV_MODE: this.isDevMode,
+      },
     };
     const args = [];
     this.child = fork(chainPath, args, options);
