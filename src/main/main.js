@@ -87,7 +87,7 @@ process.on("unhandledRejection", err => {
 app.setName("Ganache");
 
 // https://github.com/sindresorhus/fix-path
-// GUI apps on macOS don't inherit the $PATH defined in your dotfiles
+// GUI apps on macOS don't inherit the $PATH defined in your dotfiles (.bashrc/.bash_profile/.zshrc/etc)
 // i.e. opening app by clicking on icon in Finder, applications list screen
 // $PATH will be defined if you run from terminal (even in production) e.g: . /Applications/Ganache.app/Contents/MacOS/Ganache
 if (process.platform === "darwin") {
