@@ -6,6 +6,7 @@ import * as os from "os";
 import merge from "lodash.merge";
 import ethagen from "ethagen";
 import moniker from "moniker";
+import fixPath from "fix-path";
 
 const isDevMode = process.execPath.match(/[\\/]electron/) !== null;
 
@@ -84,6 +85,14 @@ process.on("unhandledRejection", err => {
 });
 
 app.setName("Ganache");
+
+// https://github.com/sindresorhus/fix-path
+// GUI apps on macOS don't inherit the $PATH defined in your dotfiles
+// i.e. opening app by clicking on icon in Finder, applications list screen
+// $PATH will be defined if you run from terminal (even in production) e.g: . /Applications/Ganache.app/Contents/MacOS/Ganache
+if (process.platform === "darwin") {
+  fixPath();
+}
 
 const getIconPath = () => {
   return process.platform === "win32"
