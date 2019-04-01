@@ -228,6 +228,9 @@
     padding: .5rem .25rem;
     overflow: auto;
 
+    .projectItemContainer {
+      display: inline-block;
+    }
     .projectItem {
       padding: .25rem;
       margin: .25rem;
