@@ -13,6 +13,7 @@ class ContractsScreen extends Component {
         let errorMessage;
         if (typeof project.error !== "undefined") {
           switch (project.error) {
+            case "project-directory-does-not-exist":
             case "project-does-not-exist": {
               errorMessage = (
                 <span>
@@ -30,8 +31,8 @@ class ContractsScreen extends Component {
               errorMessage = (
                 <span>
                   <strong>Your Truffle Project config is invalid.</strong> The
-                  file should be named either 'truffle.js' or
-                  'truffle-config.js'.{" "}
+                  file should be named either &quot;truffle.js&quot; or
+                  &quot;truffle-config.js&quot;.{" "}
                   <Link className="settingsLink" to="/config">
                     Choose a valid configuration file.
                   </Link>

@@ -9,6 +9,28 @@ async function get(projectFile) {
     try {
       const configFileDirectory = path.dirname(projectFile);
       const name = path.basename(configFileDirectory);
+      const exists = await new Promise(resolve => {
+        fs.access(configFileDirectory, fs.constants.R_OK, err => {
+          resolve(!err);
+        });
+      });
+
+      // if the directory doesn't exist _at least_ in read
+      // mode we can't launch the node process to load the
+      // truffle config file (since it needs to be launched)
+      // with it's parent directory as the `cwd`.
+      if (!exists) {
+        const response = {
+          error: "project-directory-does-not-exist",
+          name: name,
+          configFile: projectFile,
+          config: {},
+          contracts: [],
+        };
+
+        resolve(response);
+        return;
+      }
 
       temp.track();
       const tempDir = await new Promise((resolve, reject) => {
@@ -58,6 +80,7 @@ async function get(projectFile) {
       const args = [newProjectLoaderLocation, projectFile];
       const options = {
         stdio: ["pipe", "pipe", "pipe", "ipc"],
+        cwd: configFileDirectory,
       };
       const child = child_process.spawn("node", args, options);
       child.on("error", error => {
