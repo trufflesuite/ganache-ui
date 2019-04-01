@@ -22,9 +22,14 @@ describe("Project Loader", () => {
   });
 
   it("shouldn't crash when loading a truffle config doesn't exist", async () => {
-    const err = await ProjectDetailsFile.get(
-      path.join(__dirname, "./not-truffle.js"),
-    ).catch(e => e);
-    assert.equal(err.message, "project-does-not-exist");
+    const configPath = path.join(__dirname, "./not-truffle.js");
+    const config = await ProjectDetailsFile.get(configPath);
+    assert.equal(config.error, "project-does-not-exist");
+    assert.equal(config.configFile, configPath);
+    assert.ok(Array.isArray(config.contracts));
+    assert.equal(config.contracts.length, 0);
+    const configFileDirectory = path.dirname(configPath);
+    const name = path.basename(configFileDirectory);
+    assert.equal(config.name, name);
   });
 });

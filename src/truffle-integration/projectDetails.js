@@ -74,7 +74,13 @@ async function get(projectFile) {
       });
       child.on("message", async output => {
         if (output.error) {
-          return reject(new Error(output.error));
+          return resolve({
+            name: name,
+            configFile: projectFile,
+            error: output.error,
+            config: {},
+            contracts: [],
+          });
         }
 
         let config = new TruffleConfig(
