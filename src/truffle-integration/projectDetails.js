@@ -13,7 +13,7 @@ async function getNodeVersionFromShell(shell, nvmDir) {
   try {
     const nvmPath = path.join(nvmDir, "nvm.sh");
     const nodeVersion = await exec(
-      `source ${nvmPath} && nvm_resolve_local_alias default`,
+      `unset npm_config_prefix && source ${nvmPath} && nvm_resolve_local_alias default`,
       {
         shell,
         encoding: "utf8",
@@ -112,11 +112,7 @@ async function get(projectFile, isRetry = false) {
       const options = {
         stdio: ["pipe", "pipe", "pipe", "ipc"],
       };
-      const child = child_process.spawn(
-        isRetry ? "node" : "failsssss",
-        args,
-        options,
-      );
+      const child = child_process.spawn("node", args, options);
       child.on("error", async error => {
         const response = {
           name: name,
