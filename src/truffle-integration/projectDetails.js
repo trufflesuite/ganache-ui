@@ -92,8 +92,8 @@ async function get(projectFile) {
           throw new Error(error);
         }
       });
-      child.stderr.on("data", data => {
-        throw new Error(data);
+      child.stderr.on("data", () => {
+        // we ignore stderr on purpose, as some truffle configs may be writing to it (via console.error, etc).
       });
       child.on("message", async output => {
         if (output.error) {
