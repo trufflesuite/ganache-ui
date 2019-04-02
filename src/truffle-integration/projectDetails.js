@@ -23,7 +23,6 @@ async function getNodeVersionFromShell(shell, nvmDir) {
       return nodeVersion.trim();
     }
   } catch (e) {
-    throw e;
     // We throw the error away because we really only care if it worked or not
   }
   return null;
