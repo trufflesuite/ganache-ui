@@ -3,44 +3,58 @@ const path = require("path");
 const child_process = require("child_process");
 const TruffleConfig = require("truffle-config");
 const temp = require("temp");
+const { promisify } = require("util");
+const exec = promisify(child_process.exec.bind(child_process));
 
 const noNodeErrorMessage =
-  "Could not find 'node'. NodeJS is required to be installed to link Truffle projects.";
+  "Could not find 'node'. Node.js is required to be installed to link Truffle projects.";
+
+async function getNodeVersionFromShell(shell, nvmDir) {
+  try {
+    let nodeVersion = await exec(
+      "source " +
+        path.join(nvmDir, "nvm.sh") +
+        " && nvm_resolve_local_alias default",
+      {
+        shell,
+        encoding: "utf8",
+      },
+    );
+    if (typeof nodeVersion === "string") {
+      return nodeVersion.trim();
+    }
+  } catch (e) {
+    // We throw the error away because we really only care if it worked or not
+  }
+  return null;
+}
 
 async function attemptRetry(projectFile) {
-  const nvmDir = path.join(process.env.HOME, ".nvm");
-
-  if (fs.existsSync(nvmDir)) {
-    let shell;
-
-    if (fs.existsSync("/bin/bash")) {
-      shell = "/bin/bash";
-    } else if (fs.existsSync("/usr/bin/bash")) {
-      shell = "/usr/bin/bash";
-    } else {
-      throw new Error(noNodeErrorMessage);
-    }
-
-    process.env.NVM_DIR = nvmDir;
-    const nodeVersion = child_process
-      .execSync(
-        "source " +
-          path.join(nvmDir, "nvm.sh") +
-          " && nvm_resolve_local_alias default",
-        {
-          shell: shell,
-          encoding: "utf8",
-        },
-      )
-      .trim();
-
-    const nodeDir = path.join(nvmDir, "versions", "node", nodeVersion, "bin");
-    process.env.PATH = nodeDir + ":" + process.env.PATH;
-
-    return await get(projectFile, true);
-  } else {
+  // Windows is SOL at this point. If people are installing node via nvm-windows
+  // (https://github.com/coreybutler/nvm-windows) and manage to ignore the path
+  // the same way linux does we can try to handle that here. For now, just bail.
+  if (process.platform === "win32") {
     throw new Error(noNodeErrorMessage);
   }
+  const nvmDir = path.join(process.env.HOME, ".nvm");
+  const shellLocations = ["/bin/bash", "/usr/bin/bash"];
+  // search shell locations for our node version
+  let nodeVersion = null;
+  for (let i = 0; i < shellLocations.length && nodeVersion == null; i++) {
+    nodeVersion = await getNodeVersionFromShell(shellLocations[i], nvmDir);
+  }
+
+  // if we still don't have a node version we're SOL
+  if (!nodeVersion) {
+    throw new Error(noNodeErrorMessage);
+  }
+
+  // now fix up the PATH to include our user's node dir
+  const nodeDir = path.join(nvmDir, "versions", "node", nodeVersion, "bin");
+  process.env.PATH = nodeDir + path.delimiter + (process.env.PATH || "");
+  process.env.NVM_DIR = nvmDir;
+
+  return await get(projectFile, true);
 }
 
 async function get(projectFile, isRetry = false) {
@@ -100,16 +114,30 @@ async function get(projectFile, isRetry = false) {
       };
       const child = child_process.spawn("node", args, options);
       child.on("error", async error => {
+        const response = {
+          name: name,
+          configFile: projectFile,
+          config: {},
+          contracts: [],
+        };
         if (error.code === "ENOENT") {
           // could not find node. check to see if they have ~/.nvm
-          if (!isRetry) {
-            resolve(await attemptRetry(projectFile));
+          if (isRetry) {
+            response.error = error.message;
           } else {
-            throw new Error(noNodeErrorMessage);
+            try {
+              resolve(await attemptRetry(projectFile));
+              return;
+            } catch (e) {
+              // Don't crash if we can't do anything about it. Just inform
+              // the user of the error
+              response.error = e.message;
+            }
           }
         } else {
-          throw new Error(error);
+          response.error = error.message;
         }
+        resolve(response);
       });
       child.stderr.on("data", data => {
         throw new Error(data);

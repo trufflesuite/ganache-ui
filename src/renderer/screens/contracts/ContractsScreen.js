@@ -30,8 +30,8 @@ class ContractsScreen extends Component {
               errorMessage = (
                 <span>
                   <strong>Your Truffle Project config is invalid.</strong> The
-                  file should be named either 'truffle.js' or
-                  'truffle-config.js'.{" "}
+                  file should be named either &quot;truffle.js&quot; or
+                  &quot;truffle-config.js&quot;.{" "}
                   <Link className="settingsLink" to="/config">
                     Choose a valid configuration file.
                   </Link>
@@ -42,7 +42,12 @@ class ContractsScreen extends Component {
             default: {
               errorMessage = (
                 <span>
-                  <strong>Unknown error:</strong> {project.error}
+                  <strong>Unhandled Error:</strong>
+                  <div>{project.error}</div>
+                  <Link className="settingsLink" to="/config">
+                    Check the project configuration
+                  </Link>{" "}
+                  or try restarting Ganache.
                 </span>
               );
               break;
