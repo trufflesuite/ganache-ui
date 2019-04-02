@@ -119,7 +119,7 @@ class TruffleIntegrationService extends EventEmitter {
           },
         });
       } else {
-        reject("Not connected to child process");
+        reject(new Error("Not connected to child process"));
       }
     });
   }
@@ -149,7 +149,7 @@ class TruffleIntegrationService extends EventEmitter {
           data: { contract, contracts, block },
         });
       } else {
-        reject("Not connected to child process");
+        reject(new Error("Not connected to child process"));
       }
     });
   }
@@ -170,7 +170,7 @@ class TruffleIntegrationService extends EventEmitter {
           data: { contract, contracts, log },
         });
       } else {
-        reject("Not connected to child process");
+        reject(new Error("Not connected to child process"));
       }
     });
   }
@@ -191,7 +191,7 @@ class TruffleIntegrationService extends EventEmitter {
           data: { contract, contracts, transaction },
         });
       } else {
-        reject("Not connected to child process");
+        reject(new Error("Not connected to child process"));
       }
     });
   }
