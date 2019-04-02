@@ -48,7 +48,7 @@ before_install:
       security default-keychain -s $KEYCHAIN;
       security unlock-keychain -p mysecretpassword $KEYCHAIN;
       security import $CSC_LINK -k $KEYCHAIN -T /usr/bin/codesign -A;
-      security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k mysecretpassword  build.keychain;
+      security set-key-partition-list -S "apple-tool:,apple:,codesign:" -s -k mysecretpassword  build.keychain;
 
       fi
   fi
