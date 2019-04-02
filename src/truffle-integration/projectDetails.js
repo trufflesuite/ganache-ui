@@ -11,10 +11,9 @@ const noNodeErrorMessage =
 
 async function getNodeVersionFromShell(shell, nvmDir) {
   try {
-    let nodeVersion = await exec(
-      "source " +
-        path.join(nvmDir, "nvm.sh") +
-        " && nvm_resolve_local_alias default",
+    const nvmPath = path.join(nvmDir, "nvm.sh");
+    const nodeVersion = await exec(
+      `source ${nvmPath} && nvm_resolve_local_alias default`,
       {
         shell,
         encoding: "utf8",
@@ -24,6 +23,7 @@ async function getNodeVersionFromShell(shell, nvmDir) {
       return nodeVersion.trim();
     }
   } catch (e) {
+    throw e;
     // We throw the error away because we really only care if it worked or not
   }
   return null;
@@ -112,7 +112,11 @@ async function get(projectFile, isRetry = false) {
       const options = {
         stdio: ["pipe", "pipe", "pipe", "ipc"],
       };
-      const child = child_process.spawn("node", args, options);
+      const child = child_process.spawn(
+        isRetry ? "node" : "failsssss",
+        args,
+        options,
+      );
       child.on("error", async error => {
         const response = {
           name: name,
