@@ -39,9 +39,14 @@ export function initCore(store) {
       store.dispatch(setSettings(globalSettings, workspaceSettings));
 
       // Ensure web3 is set
-      const url = `ws://${workspaceSettings.server.hostname}:${
-        workspaceSettings.server.port
-      }`;
+      // 0.0.0.0 doesn't work the same as it does on other platforms, so we need to replace it
+      // with localhost. Note: we don't want to update the _stored_ hostname, as 0.0.0.0 a valid concept.
+      const hostname = workspaceSettings.server.hostname.replace(
+        "0.0.0.0",
+        "localhost",
+      );
+      const url = `ws://${hostname}:${workspaceSettings.server.port}`;
+
       ipcRenderer.send("web3-provider", url);
       store.dispatch(setRPCProviderUrl(url));
 
