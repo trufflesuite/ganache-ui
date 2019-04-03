@@ -13,6 +13,7 @@ class ContractsScreen extends Component {
         let errorMessage;
         if (typeof project.error !== "undefined") {
           switch (project.error) {
+            case "project-directory-does-not-exist":
             case "project-does-not-exist": {
               errorMessage = (
                 <span>
