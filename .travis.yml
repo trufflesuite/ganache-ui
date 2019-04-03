@@ -40,17 +40,15 @@ before_install:
 - |
   if [ "$TRAVIS_OS_NAME" = "osx" ]; then
     export CSC_IDENTITY_AUTO_DISCOVERY=false;
-    if [ "$TRAVIS_BRANCH" = "fix/osx-build" ]; then
-      export CSC_LINK=certs/osx.p12;
-      openssl aes-256-cbc -K $encrypted_7777a4e0a460_key -iv $encrypted_7777a4e0a460_iv -in certs/osx.p12.enc -out $CSC_LINK -d;
+    export CSC_LINK=certs/osx.p12;
+    openssl aes-256-cbc -K $encrypted_7777a4e0a460_key -iv $encrypted_7777a4e0a460_iv -in certs/osx.p12.enc -out $CSC_LINK -d;
 
-      export KEYCHAIN=build.keychain;
-      security create-keychain -p mysecretpassword $KEYCHAIN;
-      security default-keychain -s $KEYCHAIN;
-      security unlock-keychain -p mysecretpassword $KEYCHAIN;
-      security import $CSC_LINK -k $KEYCHAIN -P $CSC_KEY_PASSWORD -T /usr/bin/codesign;
-      security set-key-partition-list -S "apple-tool:,apple:,codesign:" -s -k mysecretpassword $KEYCHAIN;
-    fi
+    export KEYCHAIN=build.keychain;
+    security create-keychain -p mysecretpassword $KEYCHAIN;
+    security default-keychain -s $KEYCHAIN;
+    security unlock-keychain -p mysecretpassword $KEYCHAIN;
+    security import $CSC_LINK -k $KEYCHAIN -P $CSC_KEY_PASSWORD -T /usr/bin/codesign;
+    security set-key-partition-list -S "apple-tool:,apple:,codesign:" -s -k mysecretpassword $KEYCHAIN;
   fi
 - nvm --version
 - node --version
