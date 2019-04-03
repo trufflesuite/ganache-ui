@@ -37,7 +37,8 @@ before_install:
     export LINK="gcc-5";
     export LINKXX="g++-5";
   fi
-- if [ "$TRAVIS_OS_NAME" = "osx" ]; then
+- |
+  if [ "$TRAVIS_OS_NAME" = "osx" ]; then
     export CSC_IDENTITY_AUTO_DISCOVERY=false;
     if [ "$TRAVIS_BRANCH" = "fix/osx-build" ]; then
       export CSC_LINK=certs/osx.p12;
