@@ -43,7 +43,12 @@ class ContractsScreen extends Component {
             default: {
               errorMessage = (
                 <span>
-                  <strong>Unknown error:</strong> {project.error}
+                  <strong>Unhandled Error:</strong>
+                  <div>{project.error}</div>
+                  <Link className="settingsLink" to="/config">
+                    Check the project configuration
+                  </Link>{" "}
+                  or try restarting Ganache.
                 </span>
               );
               break;
