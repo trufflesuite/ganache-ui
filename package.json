@@ -15,7 +15,7 @@
     "build-windows": "electron-builder --win",
     "test": "npm run test-mocha && npm run test-jest",
     "test-jest": "jest __tests__/.*.test.js",
-    "test-mocha": "mocha --compilers js:babel-register --check-leaks --globals _scratch,sanitizedData 'test/mocha/**/*.test.js'",
+    "test-mocha": "cross-env GANACHE_DEV_MODE=true ELECTRON_APP_PATH=./ mocha --compilers js:babel-register --check-leaks --globals _scratch,sanitizedData 'test/mocha/**/*.test.js'",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
@@ -219,7 +219,7 @@
     "find-process": "^1.1.0",
     "fix-path": "^2.1.0",
     "fs-extra": "^7.0.0",
-    "ganache-core": "2.5.3",
+    "ganache-core": "2.5.4",
     "keccak": "^1.4.0",
     "lodash.clonedeep": "^4.5.0",
     "lodash.isequal": "^4.5.0",

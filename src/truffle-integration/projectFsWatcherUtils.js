@@ -8,6 +8,7 @@ const path = require("path");
  * @returns {string[]} An array of directory names which are ancestors to currDir
  */
 const getAncestorDirs = (truffle_directory, currDir, ancestorDirs = []) => {
+  if (currDir == null) return [];
   const parent = path.dirname(currDir);
 
   if (parent === currDir) return ancestorDirs;

@@ -7,7 +7,7 @@ import StyledSelect from "../../../components/styled-select/StyledSelect";
 const VALIDATIONS = {
   "workspace.server.gasPrice": {
     allowedChars: /^\d*$/,
-    min: 1,
+    min: 0,
     max: Number.MAX_SAFE_INTEGER,
     canBeBlank: true,
   },
@@ -126,7 +126,7 @@ class ChainScreen extends Component {
                 onChange={this.validateChange}
               />
               {this.props.validationErrors["workspace.server.gasPrice"] && (
-                <p className="ValidationError">Must be &ge; 1</p>
+                <p className="ValidationError">Must be &ge; 0</p>
               )}
             </div>
             <div className="RowItem">

@@ -30,5 +30,20 @@ if (!fs.existsSync(projectFile)) {
 } else {
   const output = require(projectFile);
 
-  process.send(output);
+  // it isn't "safe" to serialize the output itself, as it may have functions and circular dependencies
+  // all we actually  need are the following three properties, and I'm type checking them just to be on the safe side.
+  process.send({
+    truffle_directory:
+      typeof output.truffle_directory === "string"
+        ? output.truffle_directory
+        : undefined,
+    build_directory:
+      typeof output.build_directory === "string"
+        ? output.build_directory
+        : undefined,
+    contracts_build_directory:
+      typeof output.contracts_build_directory === "string"
+        ? output.contracts_build_directory
+        : undefined,
+  });
 }

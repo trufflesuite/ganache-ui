@@ -10,7 +10,6 @@ export function setWeb3Instance(web3Instance) {
 
 export const SET_RPC_PROVIDER_URL = `${prefix}/SET_RPC_PROVIDER_URL`;
 export function setRPCProviderUrl(url) {
-  url = url.replace("0.0.0.0", "127.0.0.1");
   return function(dispatch, getState) {
     const provider = new ReduxWeb3Provider(url, dispatch, getState);
     const web3Instance = new Web3(provider);

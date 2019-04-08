@@ -121,18 +121,20 @@ class WorkspaceScreen extends Component {
           <div className="Row">
             <div className="RowItem">
               <div className="WorkspaceProjects">
-                {projects.map((path, idx) => {
-                  const selected = this.state.selectedIdx === idx;
-                  return (
-                    <div
-                      className={`projectItem ${selected && "active"}`}
-                      key={path}
-                      onClick={this.handleProjectClick(idx)}
-                    >
-                      {path}
-                    </div>
-                  );
-                })}
+                <div className="projectItemContainer">
+                  {projects.map((path, idx) => {
+                    const selected = this.state.selectedIdx === idx;
+                    return (
+                      <div
+                        className={`projectItem ${selected && "active"}`}
+                        key={path}
+                        onClick={this.handleProjectClick(idx)}
+                      >
+                        {path}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
               <div className="WorkspaceButtons">
                 <button
