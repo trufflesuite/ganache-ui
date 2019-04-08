@@ -253,7 +253,7 @@
     "scrypt": "^6.0.3",
     "temp": "^0.8.3",
     "truffle-config": "^1.1.0-next.1",
-    "truffle-decoder": "2.0.4",
+    "truffle-decoder": "^2.0.5",
     "universal-analytics": "^0.4.13",
     "uuid": "^3.1.0",
     "web3": "1.0.0-beta.37"
