@@ -31,6 +31,8 @@ class ServerScreen extends Component {
     this.state = {
       automine:
         typeof props.config.settings.workspace.server.blockTime == "undefined",
+      regtest:
+        props.config.settings.workspace.server.regtest || false
     };
   }
 
@@ -62,6 +64,15 @@ class ServerScreen extends Component {
 
     this.setState({
       automine: !this.state.automine,
+    });
+  };
+
+  toggleRegtest = () => {
+    var newValue = !this.state.regtest;
+    this.props.config.settings.workspace.server.regtest = newValue;
+
+    this.setState({
+      regtest: !this.state.regtest,
     });
   };
 
@@ -219,6 +230,27 @@ class ServerScreen extends Component {
             </div>
             <div className="RowItem">
               <p>Process transactions instantaneously.</p>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h4>REGTEST</h4>
+          <div className="Row">
+            <div className="RowItem">
+              <div className="Switch">
+                <input
+                  type="checkbox"
+                  name="regtest"
+                  id="Regtest"
+                  onChange={this.toggleRegtest}
+                  checked={this.state.regtest}
+                />
+                <label htmlFor="Regtest">REGTEST ENABLED</label>
+              </div>
+            </div>
+            <div className="RowItem">
+              <p>Connect to non-ganache node.</p>
             </div>
           </div>
         </section>

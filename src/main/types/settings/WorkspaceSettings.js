@@ -26,6 +26,13 @@ const initialSettings = {
     hardfork: "petersburg",
   },
   projects: [],
+  regtest: {
+    name: "RSK Regtest",
+    hostname: "127.0.0.1",
+    port: 4445,
+    network_id: 7771,
+    suffix: "/websocket"
+  }
 };
 
 class WorkspaceSettings extends Settings {

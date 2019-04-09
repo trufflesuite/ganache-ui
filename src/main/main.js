@@ -301,12 +301,12 @@ app.on("ready", () => {
       chain.on("server-started", data => {
         if (workspace) {
           mainWindow.webContents.send(SET_KEY_DATA, {
-            privateKeys: data.privateKeys,
-            mnemonic: data.mnemonic,
-            hdPath: data.hdPath,
+            privateKeys: data.privateKeys || "",
+            mnemonic: data.mnemonic || "",
+            hdPath: data.hdPath || "",
           });
 
-          workspace.settings.handleNewMnemonic(data.mnemonic);
+          workspace.settings.handleNewMnemonic(data.mnemonic || "");
 
           const globalSettings = global.getAll();
           const workspaceSettings = workspace.settings.getAll();

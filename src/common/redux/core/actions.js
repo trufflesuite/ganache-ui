@@ -1,5 +1,7 @@
 import { push } from "react-router-redux";
 import { ipcRenderer } from "electron";
+const Web3 = require("web3");
+const WsProvider = require("web3-providers-ws");
 
 import {
   web3CleanUpHelper,
@@ -108,18 +110,46 @@ export const setBlockNumber = function(number) {
 export const GET_BLOCK_SUBSCRIPTION = `${prefix}/GET_BLOCK_SUBSCRIPTION`;
 export const getBlockSubscription = function() {
   return async function(dispatch, getState) {
-    let subscription = await web3ActionCreator(
-      dispatch,
-      getState,
-      "subscribe",
-      ["newBlockHeaders"],
-    );
+    let blockHeaderSubscription = null;
 
-    subscription.on("data", blockHeader => {
-      let currentBlockNumber = getState().core.latestBlock;
+    if (getState().config.settings.workspace.server.regtest && getState().config.settings.workspace.regtest) {
+      const regtestConfig = getState().config.settings.workspace.regtest;
+      const suffix = regtestConfig && regtestConfig.suffix
+        ? regtestConfig.suffix
+        : "";
+      const url = `ws://${regtestConfig.hostname}:${
+        regtestConfig.port
+        }` + suffix;
+      let web3 = await new Web3(new WsProvider(url));
+      blockHeaderSubscription = web3.eth.subscribe(
+        "newBlockHeaders",
+        error => {
+          if (error) {
+            throw error;
+          }
+        },
+      );
+    } else {
+      blockHeaderSubscription = await web3ActionCreator(
+        dispatch,
+        getState,
+        "subscribe",
+        ["newBlockHeaders"],
+      );
+    }
 
-      if (blockHeader.number != currentBlockNumber) {
-        dispatch(setBlockNumber(blockHeader.number));
+    let subscriptionProvider = await blockHeaderSubscription.options.requestManager.provider;
+    let subscriptionConnection = await subscriptionProvider.connection || subscriptionProvider.provider.connection;
+    blockHeaderSubscription.on("data", async block => {
+      let web3Instance = await getState().web3.web3Instance;
+      if (web3Instance == null) return;
+      let stateUrl = await web3Instance.currentProvider.provider.connection.url;
+      if (stateUrl == subscriptionConnection.url) {
+        let currentBlockNumber = getState().core.latestBlock;
+
+        if (block.number != currentBlockNumber) {
+          dispatch(setBlockNumber(block.number));
+        }
       }
     });
   };

@@ -86,89 +86,97 @@ function startServer(options) {
       logging.logToFile(startingMessage);
     }
 
-    server = ganacheLib.server(options);
+    if (!options.regtest) {
+      server = ganacheLib.server(options);
 
-    // We'll also log all methods that aren't marked internal by Ganache
-    var oldSend = server.provider.send.bind(server.provider);
-    server.provider.send = function(payload, callback) {
-      if (payload.internal !== true) {
-        if (Array.isArray(payload)) {
-          payload.forEach(function(item) {
-            console.log(item.method);
-          });
-        } else {
-          console.log(payload.method);
-        }
-      }
-
-      oldSend(payload, callback);
-    };
-
-    server.listen(options.port, options.hostname, function(err, result) {
-      if (err) {
-        process.send({ type: "start-error", data: err });
-        return;
-      }
-
-      var state = result ? result : server.provider.manager.state;
-
-      try {
-        let db = state.blockchain.data.db;
-        // This is kind of a hack until https://github.com/trufflesuite/ganache-core/pull/271 is released
-        // dbLocation = db.directory
-        do {
-          dbLocation = db.location;
-          if (db.db) {
-            db = db.db;
+      // We'll also log all methods that aren't marked internal by Ganache
+      var oldSend = server.provider.send.bind(server.provider);
+      server.provider.send = function(payload, callback) {
+        if (payload.internal !== true) {
+          if (Array.isArray(payload)) {
+            payload.forEach(function(item) {
+              console.log(item.method);
+            });
+          } else {
+            console.log(payload.method);
           }
-        } while (!dbLocation && db && (db.location || db.db));
-      } catch (e) {
-        console.error(
-          "Couldn't access location of chaindata. You will be unable to create a workspace from this session.",
-        );
-      }
+        }
 
-      if (!state) {
-        process.send({
-          type: "start-error",
-          data: "Couldn't get a reference to TestRPC's StateManager.",
+        oldSend(payload, callback);
+      };
+
+      server.listen(options.port, options.hostname, function(err, result) {
+        if (err) {
+          process.send({ type: "start-error", data: err });
+          return;
+        }
+
+        var state = result ? result : server.provider.manager.state;
+
+        try {
+          let db = state.blockchain.data.db;
+          // This is kind of a hack until https://github.com/trufflesuite/ganache-core/pull/271 is released
+          // dbLocation = db.directory
+          do {
+            dbLocation = db.location;
+            if (db.db) {
+              db = db.db;
+            }
+          } while (!dbLocation && db && (db.location || db.db));
+        } catch (e) {
+          console.error(
+            "Couldn't access location of chaindata. You will be unable to create a workspace from this session.",
+          );
+        }
+
+        if (!state) {
+          process.send({
+            type: "start-error",
+            data: "Couldn't get a reference to TestRPC's StateManager.",
+          });
+          return;
+        }
+
+        let privateKeys = {};
+
+        var accounts = state.accounts;
+        var addresses = Object.keys(accounts);
+
+        addresses.forEach(function(address) {
+          privateKeys[address] = accounts[address].secretKey.toString("hex");
         });
-        return;
-      }
 
-      let privateKeys = {};
+        let data = Object.assign({}, server.provider.options);
 
-      var accounts = state.accounts;
-      var addresses = Object.keys(accounts);
+        // delete anything which might've been in the ganache-core options object
+        // that we don't want to pass on to the main process
+        delete data.logger;
+        delete data.vm;
+        delete data.state;
+        delete data.trie;
 
-      addresses.forEach(function(address) {
-        privateKeys[address] = accounts[address].secretKey.toString("hex");
+        // ensure certain fields are present for backward compatibility with old
+        // versions of ganache-core
+        data.hdPath = data.hdPath || state.wallet_hdpath;
+        data.mnemonic = data.mnemonic || state.mnemonic;
+        data.privateKeys = privateKeys;
+
+        process.send({ type: "server-started", data: data });
+
+        console.log("Ganache started successfully!");
+        console.log("Waiting for requests...");
       });
 
-      let data = Object.assign({}, server.provider.options);
-
-      // delete anything which might've been in the ganache-core options object
-      // that we don't want to pass on to the main process
-      delete data.logger;
-      delete data.vm;
-      delete data.state;
-      delete data.trie;
-
-      // ensure certain fields are present for backward compatibility with old
-      // versions of ganache-core
-      data.hdPath = data.hdPath || state.wallet_hdpath;
-      data.mnemonic = data.mnemonic || state.mnemonic;
-      data.privateKeys = privateKeys;
-
+      server.on("close", function() {
+        process.send({ type: "server-stopped" });
+      });
+  } else {
+      let data = {};
+      data.hdPath = "";
+      data.mnemonic = "";
+      data.privateKeys = "";
       process.send({ type: "server-started", data: data });
-
-      console.log("Ganache started successfully!");
-      console.log("Waiting for requests...");
-    });
-
-    server.on("close", function() {
-      process.send({ type: "server-stopped" });
-    });
+  }
   });
 }
 
