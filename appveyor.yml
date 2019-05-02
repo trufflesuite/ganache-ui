@@ -15,7 +15,7 @@ environment:
   CERT_PASSPHRASE:
     secure: kMG4K6eKtrVcehlpLDdxX8DAe1gvzaKcdn0HR2IdtgG4+eFqczuddRdkq18ZSzqeDTA8/CxaY8p13NwRLP0EGNztobwSwE/WKq7Aa+MeRFc=
   GH_TOKEN:
-    secure: w01ayU0xx5aYR68/rJbAtdtfs+6bXFhYhZkRf4aeY8ca2qikM0UWiC7G5xXeUkz9
+    secure: S+Bnfbb+uco7s2X3jqmfP3vwxLIIZTmNmT0f8y982PaiUQB1AW8YNN7Acpi0JQOi
   matrix:
     - nodejs_version: 10
 

@@ -1,42 +1,35 @@
 language: node_js
 node_js:
-  - '10'
-
+- '10'
 dist: trusty
 sudo: false
 matrix:
   include:
-    - os: osx
-    - os: linux
-
+  - os: osx
+  - os: linux
 addons:
   apt:
     sources:
-      - ubuntu-toolchain-r-test
+    - ubuntu-toolchain-r-test
     packages:
-      - gcc-5
-      - g++-5
-
+    - gcc-5
+    - g++-5
 cache:
   directories:
-    - node_modules
-    - '$HOME/.cache/electron'
-    - '$HOME/.cache/electron-builder'
-
+  - node_modules
+  - "$HOME/.cache/electron"
+  - "$HOME/.cache/electron-builder"
 env:
   global:
-    - ELECTRON_CACHE=$HOME/.cache/electron
-    - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
-    - secure: "LAIosKgHsPTW1INSFQbk6tzwiZvFANSpd7URnArzZU4ewhWI9efTqP8lKu9GeaSYTZGWY5VDOlbn7styAbVeoF+5HPNADTJBvPnBsM/XDudvWaVSTGrvEfvjitEtbXHVMsr+4o5St/jSoUABnC7DYJjzmifdXNhLx0MN93RlgauHamktpoATPlFpARjl2fvh+t/LGSv4VCEQkJ8HSlsOYpOPcMS2qSXZOHM43GeAKCQ09U3VGFfBzShBGjoCB4xzb1TNneew5BnJm9HLpO7CfmYvMbQoCFYCWtjAaTIGdlGaRjNkBHI3dKWprGsB15y7nILIjW56JWlCeW9PoRqcrLR6wAOLd6lzvro+w8L4oE4l5eFw/Pdvu8qUR8fmHFZGAtg77EevjAWcv0uxmGataFKszH55YPVHQCHzPkB0VC+m+GPwm7dRGMQttoeVG8X3/QYDO7N+35/AY4vTdjdqePp0FwKrah1tXGhnUkC/e0XSi8kSYQeMOn9crzFXY+pBuciUx4WA7fXJoxazYYsTAbHqsEyNKCMtUG/X0f+IOUCdnN4DSnDXTOtw22N4qYSyv2RDuu2UMgygmecj2J/A8s0YYc/a4EIlIYsGUuUILP22dxpXO9yqOziAFuzfUNpi2NCbrjvfiqkgYzC7LtVAJAOTqxPbTBtjQhVq4SfE9nM="
-    - secure: "MrkHZgU2aXfvHJY55gXFoB/diVP/GMoZfrftJeJqBU0L6t4GIWC01xrQGuS/nNNWL9ixwxSkjg1rWVr63uel905vbeP/05bNLJ8HypPPkKJs7Sd6h/2/ZDd5zAe+63J3yrpuXJj6y4tlIEPZExyHnpPZHu2fAQV0pyvkGefyyaJY9awAlCOfoCquHE9Y98EAXCxqOSdbSStSOoX6dAPdjN8CZ/Bq0gSlqZYdMBwzHee0VC4ftgGMVeXcAdJ9NNAwi70PIHryCW0YvmzLkDwJtG7GYQ7hAOgLreruu9ifmOYmRWAI4Ko8WPgD5fv46VLrsJ2Zmn5MgEg5IVR1b9oWfdo4BlC20XS2EtAWcizzCSIYza10rJJ10gyPQ32WlXwPtpohaJeyTIaEx8dTvfPe4pqRTck2UrkF215FFNgTN0tUWsrIFbYNCXVhCBSOER5ZH9uiZxmyh44rSk4Svro42hJCWquFEZAdyxld7LUJVeFNtb9SWU/5W06uExHJ0+d9MFUf0XJK6OHWol19ZTSYayLaZ2Tm2C2wrAHcUvHlsl9tUySVSVbX9+EZyhVpRn6O2ZmW2fAnKmGsOwbCljEwfFBGxReI56v7iI4RsySAS9z/pzl7+8CfjJ/tnVA6JlfGOpLhprwrc0xEH8dJKMDw51kt3yGMGFQwPo+Eq5EQ34Q="
-
+  - ELECTRON_CACHE=$HOME/.cache/electron
+  - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
+  # encrypted CSC_KEY_PASSWORD:
+  - secure: MrkHZgU2aXfvHJY55gXFoB/diVP/GMoZfrftJeJqBU0L6t4GIWC01xrQGuS/nNNWL9ixwxSkjg1rWVr63uel905vbeP/05bNLJ8HypPPkKJs7Sd6h/2/ZDd5zAe+63J3yrpuXJj6y4tlIEPZExyHnpPZHu2fAQV0pyvkGefyyaJY9awAlCOfoCquHE9Y98EAXCxqOSdbSStSOoX6dAPdjN8CZ/Bq0gSlqZYdMBwzHee0VC4ftgGMVeXcAdJ9NNAwi70PIHryCW0YvmzLkDwJtG7GYQ7hAOgLreruu9ifmOYmRWAI4Ko8WPgD5fv46VLrsJ2Zmn5MgEg5IVR1b9oWfdo4BlC20XS2EtAWcizzCSIYza10rJJ10gyPQ32WlXwPtpohaJeyTIaEx8dTvfPe4pqRTck2UrkF215FFNgTN0tUWsrIFbYNCXVhCBSOER5ZH9uiZxmyh44rSk4Svro42hJCWquFEZAdyxld7LUJVeFNtb9SWU/5W06uExHJ0+d9MFUf0XJK6OHWol19ZTSYayLaZ2Tm2C2wrAHcUvHlsl9tUySVSVbX9+EZyhVpRn6O2ZmW2fAnKmGsOwbCljEwfFBGxReI56v7iI4RsySAS9z/pzl7+8CfjJ/tnVA6JlfGOpLhprwrc0xEH8dJKMDw51kt3yGMGFQwPo+Eq5EQ34Q=
+  # encrypted GH_TOKEN:
+  - secure: N551P94nYNIuv5IIcvgtee/jfd9ReGYRbq5hUvgG1pRbb+8wtNWT9JM6qIUflj0GoVCDeuz+urvqFwC4OET/NC6sGB9rtVoAVjf7vfKaoxPTN2wSMjT8GcVXvnG6S5hdPO6JlVrXZf2kDJr8p0vWKgRTgU7hSfEr8Nuxk938MC+qLUpuS6oAx0Vekkq/05OrZMIiheqHpSbXZido1SWBEy+XdL1MpNpKYSnp4gQXxtOQkF28vHQMKVDvPNoPm0RpuYmab6kJnGXDkWIsBtZlknw+Wf0oK9LJRuV8jFD4rkxRthuYDAXiep3dY8bkCZzo80Sy/KEB2oYKvMSBNDYlBoYeR3hsv5OB8ujhCDoXdBddjhIEe9vIFV93QWVzE+XCCfG1IczhTQ57Pk33eGfvRv/QnGnXKdSqS2+4roXOfohFh98oRzKGsFhjZ+22QQkyBHwcghw5xywPcr8ZF0ZC06pF7hvCFIlubDz9ZAaQo7vkpXbbft34ooxpGvSgQ5JOUXMu/zDy1E+szXwgcCn5trXhPEUhznCKiC2qrR4q1mVzyspXOHxz7hXkthWqUZEKFWrJw3/ttSZd1qQ7HFv2Re1eEIA/Q0HpCMe4Php5oqRDsxA7zUIHpw19aqtAhCR4WNg8yY7OmGXp3VeUQ3aiS/fFBbbsYRFj62Fv4Hr5BJY=
 before_install:
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then
-    export CC="gcc-5";
-    export CXX="g++-5";
-    export LINK="gcc-5";
-    export LINKXX="g++-5";
-  fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then export CC="gcc-5"; export CXX="g++-5";
+  export LINK="gcc-5"; export LINKXX="g++-5"; fi
 - |
   if [ "$TRAVIS_OS_NAME" = "osx" ]; then
     export CSC_IDENTITY_AUTO_DISCOVERY=false;
@@ -53,11 +46,6 @@ before_install:
 - nvm --version
 - node --version
 - npm --version
-
 script:
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then
-    npm run build-linux;
-  fi
-- if [ "$TRAVIS_OS_NAME" = "osx" ]; then
-    npm run build-mac;
-  fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then npm run build-linux; fi
+- if [ "$TRAVIS_OS_NAME" = "osx" ]; then npm run build-mac; fi
