@@ -15,7 +15,7 @@ async function getContractState(
     inheritedContracts,
     web3Host,
   );
-  decoder.init();
+  await decoder.init();
 
   let contractState;
   try {
@@ -39,7 +39,7 @@ async function getDecodedEvent(
     inheritedContracts,
     web3Host,
   );
-  decoder.init();
+  await decoder.init();
 
   const decodedLog = await decoder.decodeLog(log);
 
@@ -57,7 +57,7 @@ async function getDecodedTransaction(
     inheritedContracts,
     web3Host,
   );
-  decoder.init();
+  await decoder.init();
 
   const decodedData = await decoder.decodeTransaction(transaction);
 
@@ -88,9 +88,11 @@ function toJSON(object) {
       }
       case "array": {
         // TODO:
+        break;
       }
       case "mapping": {
         // TODO:
+        break;
       }
     }
   }
