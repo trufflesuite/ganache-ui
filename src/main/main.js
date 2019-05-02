@@ -211,23 +211,38 @@ app.on("ready", () => {
     );
 
     ipcMain.on(GET_DECODED_EVENT, async (event, contract, contracts, log) => {
-      const decodedLog = await truffleIntegration.getDecodedEvent(
-        contract,
-        contracts,
-        log,
-      );
-      mainWindow.webContents.send(GET_DECODED_EVENT, decodedLog);
+      try {
+        const decodedLog = await truffleIntegration.getDecodedEvent(
+          contract,
+          contracts,
+          log,
+        );
+        mainWindow.webContents.send(GET_DECODED_EVENT, decodedLog);
+      } catch (e) {
+        mainWindow.webContents.send(GET_DECODED_EVENT, {
+          error: { stack: e.stack, messages: e.message },
+        });
+      }
     });
 
     ipcMain.on(
       GET_DECODED_TRANSACTION_INPUT,
       async (event, contract, contracts, transaction) => {
-        const decodedData = await truffleIntegration.getDecodedTransaction(
-          contract,
-          contracts,
-          transaction,
-        );
-        mainWindow.webContents.send(GET_DECODED_TRANSACTION_INPUT, decodedData);
+        try {
+          const decodedData = await truffleIntegration.getDecodedTransaction(
+            contract,
+            contracts,
+            transaction,
+          );
+          mainWindow.webContents.send(
+            GET_DECODED_TRANSACTION_INPUT,
+            decodedData,
+          );
+        } catch (e) {
+          mainWindow.webContents.send(GET_DECODED_TRANSACTION_INPUT, {
+            error: { stack: e.stack, messages: e.message },
+          });
+        }
       },
     );
 
