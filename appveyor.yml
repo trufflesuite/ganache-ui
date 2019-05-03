@@ -4,6 +4,9 @@ image:
 platform:
   - x64
 
+# Start builds on tags only
+skip_non_tags: true
+
 cache:
   - node_modules -> package-lock.json
   - '%APPDATA%\npm-cache'
