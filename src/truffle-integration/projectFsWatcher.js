@@ -131,6 +131,9 @@ class ProjectFsWatcher extends EventEmitter {
         contract.address = contract.networks[this.networkId].address;
         contract.creationTxHash =
           contract.networks[this.networkId].transactionHash;
+        contract.events = Object.values(
+          contract.networks[this.networkId].events,
+        );
       }
 
       return contract;

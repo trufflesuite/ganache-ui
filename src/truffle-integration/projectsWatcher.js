@@ -115,13 +115,15 @@ class ProjectsWatcher extends EventEmitter {
     let topics = [];
     for (let i = 0; i < project.contracts.length; i++) {
       const contract = project.contracts[i];
-      const abiEvents = contract.abi.filter(entry => {
-        return (
-          entry.type === "event" &&
-          this.subscribedTopics.indexOf(entry.signature) === -1
-        );
-      });
-      topics = topics.concat(abiEvents.map(event => event.signature));
+      if (contract.events) {
+        const events = contract.events.filter(entry => {
+          return (
+            entry.type === "event" &&
+            this.subscribedTopics.indexOf(entry.signature) === -1
+          );
+        });
+        topics = topics.concat(events.map(event => event.signature));
+      }
     }
     this.subscribedTopics = this.subscribedTopics.concat(topics);
   }
