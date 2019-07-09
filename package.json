@@ -219,7 +219,7 @@
     "find-process": "^1.1.0",
     "fix-path": "^2.1.0",
     "fs-extra": "^7.0.0",
-    "ganache-core": "2.5.7",
+    "ganache-core": "2.5.8-beta.0",
     "keccak": "^1.4.0",
     "lodash.clonedeep": "^4.5.0",
     "lodash.isequal": "^4.5.0",
