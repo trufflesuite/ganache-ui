@@ -106,7 +106,7 @@ class HomeScreen extends Component {
     const learnMore = (
       <p className="learnMoreText">
         <a href="https://github.com/trufflesuite/ganache/releases/tag/v2.0.0">
-          Learn more about the latest update!
+          Learn more about the update to version 2!
         </a>
       </p>
     );
