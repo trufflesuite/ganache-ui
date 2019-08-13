@@ -256,7 +256,7 @@
     "truffle-decoder": "^3.0.1",
     "universal-analytics": "^0.4.13",
     "uuid": "^3.1.0",
-    "web3": "1.0.0-beta.37"
+    "web3": "1.2.1"
   },
   "optionalDependencies": {
     "7zip-bin-win": "^2.2.0",
