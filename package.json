@@ -252,6 +252,7 @@
     "rlp": "^2.1.0",
     "scrypt": "^6.0.3",
     "temp": "^0.8.3",
+    "truffle": "^5.0.14",
     "truffle-config": "^1.1.18",
     "truffle-decoder": "^3.0.8",
     "universal-analytics": "^0.4.13",
