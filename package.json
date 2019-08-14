@@ -243,6 +243,7 @@
     "redux-thunk": "^2.2.0",
     "reselect": "^2.5.4",
     "temp": "^0.8.3",
+    "truffle": "5.0.31",
     "truffle-config": "^1.1.9",
     "truffle-decoder": "^3.0.1",
     "universal-analytics": "^0.4.13",
