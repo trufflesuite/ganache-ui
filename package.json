@@ -9,8 +9,7 @@
     "start": "electron-forge start",
     "lint": "eslint .",
     "sign-mac": "codesign --deep --force --verbose --sign 'Developer ID Application: Timothy Coulter (58RKXWC272)' ./dist/*.dmg",
-    "makeappxassets": "svg2uwptiles -i ./Logo.svg -c ./blank.svg -o ./resources/appx/",
-    "build-linux": "cd ./node_modules/rabin-bindings && node-gyp rebuild && cd ../../ && electron-builder --linux",
+    "build-linux": "electron-builder --linux",
     "build-mac": "electron-builder --mac",
     "build-windows": "electron-builder --win",
     "test": "npm run test-mocha && npm run test-jest",
@@ -201,7 +200,6 @@
     "rcedit": "^0.9.0",
     "redux-logger": "^2.7.4",
     "source-map-support": "^0.4.8",
-    "svg2uwptiles": "0.0.4",
     "webpack": "^4.28.4"
   },
   "dependencies": {
@@ -213,27 +211,22 @@
     "electron-compile": "^6.4.2",
     "electron-settings": "^3.1.2",
     "electron-squirrel-startup": "^1.0.0",
-    "ethagen": "0.0.2",
+    "ethagen": "0.1.2",
     "ethereumjs-units": "^0.2.0",
     "filesize": "^3.6.1",
-    "find-process": "^1.1.0",
     "fix-path": "^2.1.0",
     "fs-extra": "^7.0.0",
-    "ganache-core": "2.6.1",
-    "keccak": "^1.4.0",
+    "ganache-core": "2.6.1-beta.0",
     "lodash.clonedeep": "^4.5.0",
     "lodash.isequal": "^4.5.0",
     "lodash.merge": "^4.6.1",
     "lodash.omit": "^4.5.0",
     "lodash.padstart": "^4.6.1",
-    "moment": "^2.17.1",
-    "moment-timezone": "^0.5.11",
+    "moment": "^2.24.0",
+    "moment-timezone": "^0.5.26",
     "moniker": "^0.1.2",
-    "mousetrap": "^1.6.1",
     "node-localstorage": "^1.3.1",
-    "pidusage": "^1.1.5",
     "pluralize": "^5.0.0",
-    "rabin-bindings": "^1.7.4",
     "react": "^16.3.2",
     "react-custom-scrollbars": "^4.2.1",
     "react-dom": "^16.3.2",
@@ -249,8 +242,6 @@
     "redux": "^3.6.0",
     "redux-thunk": "^2.2.0",
     "reselect": "^2.5.4",
-    "rlp": "^2.1.0",
-    "scrypt": "^6.0.3",
     "temp": "^0.8.3",
     "truffle": "5.0.31",
     "truffle-config": "^1.1.18",
@@ -264,7 +255,7 @@
     "dmg-builder": "^5.3.0"
   },
   "devEngines": {
-    "node": ">=6.x",
-    "npm": ">=3.x"
+    "node": ">=12.8",
+    "npm": ">=6.9"
   }
 }
