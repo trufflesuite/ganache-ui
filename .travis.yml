@@ -9,8 +9,6 @@ matrix:
   - os: linux
 addons:
   apt:
-    sources:
-    - ubuntu-toolchain-r-test
     packages:
     - gcc-5
     - g++-5
