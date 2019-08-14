@@ -1,7 +1,7 @@
 {
   "name": "ganache",
   "productName": "Ganache",
-  "version": "2.1.1-beta.0",
+  "version": "2.1.1-beta.1",
   "description": "Personal Blockchain for Ethereum",
   "main": "./src/init.js",
   "private": true,
