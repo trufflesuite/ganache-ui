@@ -20,8 +20,8 @@ Please open issues and pull requests for new features, questions, and bug fixes.
 
 Requirements:
 
-- `npm v5.3.0`
-- `node v8.3.0`
+- `npm v6.9.0`
+- `node v12.8.0`
 
 To get started:
 
