@@ -1,6 +1,4 @@
 language: node_js
-node_js:
-- '10.16.0'
 dist: bionic
 osx_image: xcode10.3
 matrix:
@@ -33,6 +31,7 @@ before_install:
     security import $CSC_LINK -k $KEYCHAIN -P $CSC_KEY_PASSWORD -T /usr/bin/codesign;
     security set-key-partition-list -S "apple-tool:,apple:,codesign:" -s -k mysecretpassword $KEYCHAIN;
   fi
+- nvm use 10.16.0
 - nvm --version
 - node --version
 - npm --version
