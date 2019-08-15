@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-- 'v10.16.2'
+- 'v10.14.0'
 dist: bionic
 osx_image: xcode10.3
 matrix:
