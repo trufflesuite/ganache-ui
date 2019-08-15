@@ -35,6 +35,7 @@ before_install:
   fi
 - nvm use v10.16.0
 - nvm ls
+- nvm use 10.16.0
 - nvm --version
 - node --version
 - npm --version
