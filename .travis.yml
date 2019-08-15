@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-- "v10.15.0"
+- "10.15.0"
 dist: bionic
 osx_image: xcode11
 matrix:
@@ -33,11 +33,6 @@ before_install:
     security import $CSC_LINK -k $KEYCHAIN -P $CSC_KEY_PASSWORD -T /usr/bin/codesign;
     security set-key-partition-list -S "apple-tool:,apple:,codesign:" -s -k mysecretpassword $KEYCHAIN;
   fi
-- nvm ls
-- nvm use 10.16.0
-- nvm --version
-- node --version
-- npm --version
 script:
 - if [ "$TRAVIS_OS_NAME" = "linux" ]; then npm run build-linux; fi
 - if [ "$TRAVIS_OS_NAME" = "osx" ]; then npm run build-mac; fi
