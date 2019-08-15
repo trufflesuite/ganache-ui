@@ -1,5 +1,7 @@
 language: node_js
 node_js:
+# Use 10.15.0 because xcode11 already has it installed, and xcode 11 is slow so
+# we do what we can to make it faster.
 - "10.15.0"
 dist: bionic
 osx_image: xcode11
@@ -9,9 +11,10 @@ matrix:
   - os: linux
 cache:
   directories:
-  - node_modules
+  - "$HOME/.npm"
   - "$HOME/.cache/electron"
   - "$HOME/.cache/electron-builder"
+
 env:
   global:
   - ELECTRON_CACHE=$HOME/.cache/electron
