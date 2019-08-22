@@ -1,3 +1,4 @@
+const map = require("lodash.map");
 const Web3 = require("web3");
 const HttpProvider = require("web3-providers-http");
 const WsProvider = require("web3-providers-ws");
@@ -121,7 +122,17 @@ class ProjectsWatcher extends EventEmitter {
           this.subscribedTopics.indexOf(entry.signature) === -1
         );
       });
-      topics = topics.concat(abiEvents.map(event => event.signature));
+      topics = topics.concat(
+        abiEvents.map(abi => {
+          // if the abi has a signature (truffle used to add it), use it:
+          if (abi.signature) return abi.signature;
+
+          // otherwise, generate it:
+          const fnSignature =
+            abi.name + "(" + map(abi.inputs, "type").join(",") + ")";
+          return Web3.utils.sha3(fnSignature);
+        }),
+      );
     }
     this.subscribedTopics = this.subscribedTopics.concat(topics);
   }
