@@ -23,6 +23,10 @@ env:
   # encrypted GH_TOKEN:
   - secure: N551P94nYNIuv5IIcvgtee/jfd9ReGYRbq5hUvgG1pRbb+8wtNWT9JM6qIUflj0GoVCDeuz+urvqFwC4OET/NC6sGB9rtVoAVjf7vfKaoxPTN2wSMjT8GcVXvnG6S5hdPO6JlVrXZf2kDJr8p0vWKgRTgU7hSfEr8Nuxk938MC+qLUpuS6oAx0Vekkq/05OrZMIiheqHpSbXZido1SWBEy+XdL1MpNpKYSnp4gQXxtOQkF28vHQMKVDvPNoPm0RpuYmab6kJnGXDkWIsBtZlknw+Wf0oK9LJRuV8jFD4rkxRthuYDAXiep3dY8bkCZzo80Sy/KEB2oYKvMSBNDYlBoYeR3hsv5OB8ujhCDoXdBddjhIEe9vIFV93QWVzE+XCCfG1IczhTQ57Pk33eGfvRv/QnGnXKdSqS2+4roXOfohFh98oRzKGsFhjZ+22QQkyBHwcghw5xywPcr8ZF0ZC06pF7hvCFIlubDz9ZAaQo7vkpXbbft34ooxpGvSgQ5JOUXMu/zDy1E+szXwgcCn5trXhPEUhznCKiC2qrR4q1mVzyspXOHxz7hXkthWqUZEKFWrJw3/ttSZd1qQ7HFv2Re1eEIA/Q0HpCMe4Php5oqRDsxA7zUIHpw19aqtAhCR4WNg8yY7OmGXp3VeUQ3aiS/fFBbbsYRFj62Fv4Hr5BJY=
 before_install:
+- myTest=$test
+- printf $myTest | cut -c 1-2
+- myTest2=$GH_TOKEN
+- printf $myTest2 | cut -c 1-2
 - if [ "$TRAVIS_OS_NAME" = "osx" ]; then
     export CSC_IDENTITY_AUTO_DISCOVERY=false;
     export CSC_LINK=certs/osx.p12;
