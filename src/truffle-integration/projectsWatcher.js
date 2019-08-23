@@ -1,4 +1,4 @@
-const map = require("lodash.map");
+const Web3EthAbi = require("web3-eth-abi");
 const Web3 = require("web3");
 const HttpProvider = require("web3-providers-http");
 const WsProvider = require("web3-providers-ws");
@@ -128,9 +128,7 @@ class ProjectsWatcher extends EventEmitter {
           if (abi.signature) return abi.signature;
 
           // otherwise, generate it:
-          const fnSignature =
-            abi.name + "(" + map(abi.inputs, "type").join(",") + ")";
-          return Web3.utils.sha3(fnSignature);
+          return Web3EthAbi.encodeEventSignature(abi);
         }),
       );
     }

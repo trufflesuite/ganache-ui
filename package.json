@@ -219,7 +219,6 @@
     "ganache-core": "2.7.0",
     "lodash.clonedeep": "^4.5.0",
     "lodash.isequal": "^4.5.0",
-    "lodash.map": "4.6.0",
     "lodash.merge": "^4.6.1",
     "lodash.omit": "^4.5.0",
     "lodash.padstart": "^4.6.1",
@@ -249,7 +248,8 @@
     "truffle-decoder": "^3.0.8",
     "universal-analytics": "^0.4.13",
     "uuid": "^3.1.0",
-    "web3": "1.2.1"
+    "web3": "1.2.1",
+    "web3-eth-abi": "1.2.1"
   },
   "optionalDependencies": {
     "7zip-bin-win": "^2.2.0",
