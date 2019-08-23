@@ -1,3 +1,4 @@
+const { encodeEventSignature } = require("web3-eth-abi");
 const Web3 = require("web3");
 const HttpProvider = require("web3-providers-http");
 const WsProvider = require("web3-providers-ws");
@@ -112,18 +113,17 @@ class ProjectsWatcher extends EventEmitter {
   }
 
   async subscribeToEvents(project) {
-    let topics = [];
-    for (let i = 0; i < project.contracts.length; i++) {
-      const contract = project.contracts[i];
-      const abiEvents = contract.abi.filter(entry => {
-        return (
-          entry.type === "event" &&
-          this.subscribedTopics.indexOf(entry.signature) === -1
-        );
+    project.contracts.forEach(contract => {
+      contract.abi.forEach(entry => {
+        if (entry.type !== "event") return;
+        // truffle used to add a `signature` to migrated contracts
+        // so use that if supplied, otherwise generate it
+        const topic = entry.signature || encodeEventSignature(entry);
+        // only add it if we haven't seen it before
+        if (this.subscribedTopics.includes(topic)) return;
+        this.subscribedTopics.push(topic);
       });
-      topics = topics.concat(abiEvents.map(event => event.signature));
-    }
-    this.subscribedTopics = this.subscribedTopics.concat(topics);
+    });
   }
 
   async add(project, networkId) {
