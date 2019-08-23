@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { remote } from "electron";
 import path from "path";
 import ModalDetails from "../../../components/modal/ModalDetails";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import OnlyIf from "../../../components/only-if/OnlyIf";
 
 class WorkspaceScreen extends Component {
   state = { selectedIdx: null };
@@ -120,9 +122,43 @@ class WorkspaceScreen extends Component {
           <h4>TRUFFLE PROJECTS</h4>
           <div className="Row">
             <div className="RowItem">
+              {this.props.config.validationErrors["workspace.project"] && (
+                <div>
+                  <div className="ValidationError">
+                    {
+                      this.props.config.validationErrors["workspace.project"]
+                        .message
+                    }
+                    <button
+                      onClick={() => {
+                        this.setState({
+                          showErrorDetails: !this.state.showErrorDetails,
+                        });
+                      }}
+                    >
+                      <OnlyIf test={this.state.showErrorDetails}>
+                        hide stack trace
+                      </OnlyIf>
+                      <OnlyIf test={!this.state.showErrorDetails}>
+                        show stack trace
+                      </OnlyIf>
+                    </button>
+                    <OnlyIf test={this.state.showErrorDetails}>
+                      <div className="ValidationDetails">
+                        <SyntaxHighlighter language="bash">
+                          {this.props.config.validationErrors[
+                            "workspace.project"
+                          ].stack.map(line => line.toString())}
+                        </SyntaxHighlighter>
+                      </div>
+                    </OnlyIf>
+                  </div>
+                  <br />
+                </div>
+              )}
               <div className="WorkspaceProjects">
                 <div className="projectItemContainer">
-                  {projects.map((path, idx) => {
+                  {(projects || []).map((path, idx) => {
                     const selected = this.state.selectedIdx === idx;
                     return (
                       <div

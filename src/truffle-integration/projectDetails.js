@@ -169,16 +169,28 @@ async function get(projectFile, isRetry = false) {
 
       child.on("exit", code => {
         if (code != 0 && !receivedErrorEvent) {
-          const messageLines = [
-            "An error occurred while running the project loader script",
-            `for project file ${projectFile} in ${configFileDirectory} folder.`,
-            "",
-            "Here the standard error ouput of the project loader script:",
-            "",
-            stdErrLines.join("\n"),
-          ];
+          const response = {
+            name: name,
+            configFile: projectFile,
+            config: {},
+            contracts: [],
+          };
 
-          throw new Error(messageLines.join("\n"));
+          resolve(response);
+
+          const message =
+            `An error occurred while running ${projectFile}! ` +
+            "Did you forget to `npm install` your project?";
+          const error = new Error(message);
+          error.stack = stdErrLines.map(e => e.toString());
+          error.code = "PROJECTERROR";
+
+          // // a race condition can cause this error to be handled, thus sending
+          // // commands to render things in the UI, before the UI is ready. I don't
+          // // want to fix this right now.
+          // setTimeout(() => {
+          throw error;
+          // }, 5000);
         }
       });
 
