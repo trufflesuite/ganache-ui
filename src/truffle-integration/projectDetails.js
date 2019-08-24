@@ -184,13 +184,7 @@ async function get(projectFile, isRetry = false) {
           const error = new Error(message);
           error.stack = stdErrLines.map(e => e.toString());
           error.code = "PROJECTERROR";
-
-          // // a race condition can cause this error to be handled, thus sending
-          // // commands to render things in the UI, before the UI is ready. I don't
-          // // want to fix this right now.
-          // setTimeout(() => {
           throw error;
-          // }, 5000);
         }
       });
 
