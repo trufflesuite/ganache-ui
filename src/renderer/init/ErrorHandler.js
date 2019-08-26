@@ -13,6 +13,12 @@ export function handleError(store, error) {
 
   if (typeof error === "object" && "code" in error) {
     switch (error.code) {
+      case "PROJECTERROR":
+        store.dispatch(setSettingError("workspace.project", error));
+        activeConfigTab = "workspace";
+        category = "project";
+        detail = error.code;
+        break;
       case "EADDRINUSE":
       case "EACESS":
       case "EACCES":

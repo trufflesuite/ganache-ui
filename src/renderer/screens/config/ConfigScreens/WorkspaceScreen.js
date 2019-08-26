@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { remote } from "electron";
 import path from "path";
 import ModalDetails from "../../../components/modal/ModalDetails";
+import SyntaxHighlighter from "react-syntax-highlighter";
 
 class WorkspaceScreen extends Component {
   state = { selectedIdx: null };
@@ -94,8 +95,15 @@ class WorkspaceScreen extends Component {
     }
   };
 
+  toggleErrorDetails = () =>
+    this.setState({ showErrorDetails: !this.state.showErrorDetails });
+
   render() {
     const { name, projects } = this.props.config.settings.workspace;
+    const validationErrors = this.props.config.validationErrors[
+      "workspace.project"
+    ];
+    const showErrorDetails = this.state.showErrorDetails;
     return (
       <div>
         <h2>WORKSPACE</h2>
@@ -120,9 +128,29 @@ class WorkspaceScreen extends Component {
           <h4>TRUFFLE PROJECTS</h4>
           <div className="Row">
             <div className="RowItem">
+              {validationErrors && (
+                <div>
+                  <div className="ValidationError">
+                    {validationErrors.message}
+                    <button onClick={this.toggleErrorDetails}>
+                      {showErrorDetails
+                        ? "hide stack trace"
+                        : "show stack trace"}
+                    </button>
+                    {showErrorDetails && (
+                      <div className="ValidationDetails">
+                        <SyntaxHighlighter language="bash">
+                          {validationErrors.stack.map(line => line.toString())}
+                        </SyntaxHighlighter>
+                      </div>
+                    )}
+                  </div>
+                  <br />
+                </div>
+              )}
               <div className="WorkspaceProjects">
                 <div className="projectItemContainer">
-                  {projects.map((path, idx) => {
+                  {(projects || []).map((path, idx) => {
                     const selected = this.state.selectedIdx === idx;
                     return (
                       <div

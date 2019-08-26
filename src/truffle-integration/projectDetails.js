@@ -134,8 +134,13 @@ async function get(projectFile, isRetry = false) {
         stdio: ["pipe", "pipe", "pipe", "ipc"],
         cwd: configFileDirectory,
       };
+
       const child = child_process.spawn("node", args, options);
+
+      let receivedErrorEvent = false;
       child.on("error", async error => {
+        receivedErrorEvent = true;
+
         const response = {
           name: name,
           configFile: projectFile,
@@ -161,9 +166,36 @@ async function get(projectFile, isRetry = false) {
         }
         resolve(response);
       });
-      child.stderr.on("data", () => {
-        // we ignore stderr on purpose, as some truffle configs may be writing to it (via console.error, etc).
+
+      child.on("exit", code => {
+        if (code != 0 && !receivedErrorEvent) {
+          const response = {
+            name: name,
+            configFile: projectFile,
+            config: {},
+            contracts: [],
+          };
+
+          resolve(response);
+
+          const message =
+            `An error occurred while running ${projectFile}! ` +
+            "Did you forget to `npm install` your project?";
+          const error = new Error(message);
+          error.stack = stdErrLines.map(e => e.toString());
+          error.code = "PROJECTERROR";
+          throw error;
+        }
       });
+
+      const stdErrLines = [];
+      child.stderr.on("data", message => {
+        // we know stderr is not fully reliable, as some truffle configs may be writing to it (via console.error, etc).
+        // however, we still catch in case we exit straight via the `on('exit')` to display a meaningful message
+        // to the user.
+        stdErrLines.push(message);
+      });
+
       child.on("message", async output => {
         if (output.error) {
           return resolve({
