@@ -112,7 +112,7 @@ class ProjectsWatcher extends EventEmitter {
     }
   }
 
-  async subscribeToEvents(project) {
+  setSubscriptionTopics(project) {
     project.contracts.forEach(contract => {
       contract.abi.forEach(entry => {
         if (entry.type !== "event") return;
@@ -131,7 +131,7 @@ class ProjectsWatcher extends EventEmitter {
 
     const projectIndex = this.projects.length;
     fsWatcher.on("project-details-update", async data => {
-      await this.subscribeToEvents(data);
+      await this.setSubscriptionTopics(data);
       for (let i = 0; i < data.contracts.length; i++) {
         data.contracts[i].projectIndex = projectIndex;
       }
@@ -149,7 +149,7 @@ class ProjectsWatcher extends EventEmitter {
       tempProject.contracts[i].projectIndex = projectIndex;
     }
 
-    await this.subscribeToEvents(tempProject);
+    await this.setSubscriptionTopics(tempProject);
 
     return tempProject;
   }
