@@ -3,7 +3,6 @@ import { remote } from "electron";
 import path from "path";
 import ModalDetails from "../../../components/modal/ModalDetails";
 import SyntaxHighlighter from "react-syntax-highlighter";
-import OnlyIf from "../../../components/only-if/OnlyIf";
 
 class WorkspaceScreen extends Component {
   state = { selectedIdx: null };
@@ -96,8 +95,15 @@ class WorkspaceScreen extends Component {
     }
   };
 
+  toggleErrorDetails = () =>
+    this.setState({ showErrorDetails: !this.state.showErrorDetails });
+
   render() {
     const { name, projects } = this.props.config.settings.workspace;
+    const validationErrors = this.props.config.validationErrors[
+      "workspace.project"
+    ];
+    const showErrorDetails = this.state.showErrorDetails;
     return (
       <div>
         <h2>WORKSPACE</h2>
@@ -122,36 +128,22 @@ class WorkspaceScreen extends Component {
           <h4>TRUFFLE PROJECTS</h4>
           <div className="Row">
             <div className="RowItem">
-              {this.props.config.validationErrors["workspace.project"] && (
+              {validationErrors && (
                 <div>
                   <div className="ValidationError">
-                    {
-                      this.props.config.validationErrors["workspace.project"]
-                        .message
-                    }
-                    <button
-                      onClick={() => {
-                        this.setState({
-                          showErrorDetails: !this.state.showErrorDetails,
-                        });
-                      }}
-                    >
-                      <OnlyIf test={this.state.showErrorDetails}>
-                        hide stack trace
-                      </OnlyIf>
-                      <OnlyIf test={!this.state.showErrorDetails}>
-                        show stack trace
-                      </OnlyIf>
+                    {validationErrors.message}
+                    <button onClick={this.toggleErrorDetails}>
+                      {showErrorDetails
+                        ? "hide stack trace"
+                        : "show stack trace"}
                     </button>
-                    <OnlyIf test={this.state.showErrorDetails}>
+                    {showErrorDetails && (
                       <div className="ValidationDetails">
                         <SyntaxHighlighter language="bash">
-                          {this.props.config.validationErrors[
-                            "workspace.project"
-                          ].stack.map(line => line.toString())}
+                          {validationErrors.stack.map(line => line.toString())}
                         </SyntaxHighlighter>
                       </div>
-                    </OnlyIf>
+                    )}
                   </div>
                   <br />
                 </div>
