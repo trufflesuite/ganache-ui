@@ -9,7 +9,7 @@ class BlockList extends Component {
     super(props);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     // If the scroll position changed...
     const latestRequested =
       nextProps.blocks.requested[nextProps.core.latestBlock];
@@ -46,7 +46,7 @@ class BlockList extends Component {
 
   render() {
     return (
-      <div className="BlockList" ref="container">
+      <div className="BlockList">
         {this.props.blocks.inView.map(block => {
           return (
             <MiniBlockCard

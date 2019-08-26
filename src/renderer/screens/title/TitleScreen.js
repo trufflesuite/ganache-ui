@@ -11,10 +11,10 @@ import BugModal from "../appshell/BugModal";
 class TitleScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = {
+    this.setState({
       version: pkg.version,
       firstRun: undefined,
-    };
+    });
 
     const intervalId = setInterval(() => {
       if (this.state.firstRun === true) {
@@ -27,12 +27,12 @@ class TitleScreen extends Component {
     }, 1000);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (
       "global" in nextProps.config.settings &&
       "firstRun" in nextProps.config.settings.global
     ) {
-      this.state.firstRun = nextProps.config.settings.global.firstRun;
+      this.setState({ firstRun: nextProps.config.settings.global.firstRun });
     }
   }
 
