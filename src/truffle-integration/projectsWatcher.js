@@ -131,7 +131,7 @@ class ProjectsWatcher extends EventEmitter {
 
     const projectIndex = this.projects.length;
     fsWatcher.on("project-details-update", async data => {
-      this.setSubscriptionTopics(data);
+      await this.subscribeToEvents(data);
       for (let i = 0; i < data.contracts.length; i++) {
         data.contracts[i].projectIndex = projectIndex;
       }
@@ -149,7 +149,7 @@ class ProjectsWatcher extends EventEmitter {
       tempProject.contracts[i].projectIndex = projectIndex;
     }
 
-    this.setSubscriptionTopics(tempProject);
+    await this.subscribeToEvents(tempProject);
 
     return tempProject;
   }
