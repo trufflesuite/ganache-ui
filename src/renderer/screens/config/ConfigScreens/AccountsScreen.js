@@ -190,6 +190,10 @@ class AccountsScreen extends Component {
                       Must be at least 12 words long and only contain letters
                     </p>
                   )}
+                  <p className="danger">
+                    note: this mnemonic is not secure; don&apos;t use it on a
+                    public blockchain.
+                  </p>
                 </div>
                 <div className="RowItem">
                   <p>Enter the Mnemonic you wish to use.</p>

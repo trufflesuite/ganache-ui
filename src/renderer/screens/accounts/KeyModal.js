@@ -11,16 +11,27 @@ export default class KeyModal extends PureComponent {
       <Modal className="KeyModal">
         <header>
           <h4>
-            <ChecksumAddress address={this.props.accountAddress} />
+            <KeyIcon /> ACCOUNT INFORMATION
           </h4>
         </header>
 
         <section>
           <dl>
-            <dt>
-              <KeyIcon /> PRIVATE KEY
-            </dt>
-            <dd>{this.props.privateKey}</dd>
+            <dt>ACCOUNT ADDRESS</dt>
+            <dd>
+              <ChecksumAddress address={this.props.accountAddress} />
+            </dd>
+          </dl>
+          <dl>
+            <dt>PRIVATE KEY</dt>
+            <dd>
+              {this.props.privateKey}
+              <br />
+              <p className="danger">
+                Do not use this private key on a public blockchain; use it for
+                development purposes only!
+              </p>
+            </dd>
           </dl>
           <footer>
             <button onClick={this.props.onCloseModal}>DONE</button>

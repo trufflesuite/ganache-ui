@@ -71,6 +71,11 @@ a {
   text-decoration: none;
 }
 
+::selection {
+  background-color: var(--app-button-primary-color);
+  color: var(--app-button-primary-background-color);
+}
+
 svg:not([class]) {
   g,
   path,
@@ -122,4 +127,11 @@ textarea {
 
 .scroll-light {
   background-color: rgba(255, 255, 255, 0.2);
+}
+
+.danger {
+  margin-top: .5em !important;
+  font-weight: bold !important;
+  color: red !important;
+  font-size: .65em !important;
 }
