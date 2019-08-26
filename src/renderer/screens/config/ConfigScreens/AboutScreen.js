@@ -15,7 +15,7 @@ class AccountsScreen extends Component {
           </h4>
           <div className="GanacheDescription">
             Ganache is created with <span className="heart">♥</span> by{" "}
-            <a href="http://truffleframework.com">Truffle</a>
+            <a href="https://trufflesuite.com">Truffle</a>
             <br />
             Follow development and report issues on{" "}
             <a href="https://github.com/trufflesuite/ganache">GitHub</a>
