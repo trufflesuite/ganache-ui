@@ -11,10 +11,10 @@ import BugModal from "../appshell/BugModal";
 class TitleScreen extends Component {
   constructor(props) {
     super(props);
-    this.setState({
+    this.state = {
       version: pkg.version,
       firstRun: undefined,
-    });
+    };
 
     const intervalId = setInterval(() => {
       if (this.state.firstRun === true) {
