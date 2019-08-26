@@ -152,17 +152,22 @@ app.on("ready", () => {
     );
 
     truffleIntegration.on("error", async error => {
-      if (mainWindow) {
-        mainWindow.webContents.send(SET_SYSTEM_ERROR, error);
-      }
-
       if (truffleIntegration) {
         await truffleIntegration.stopWatching();
       }
 
       if (chain.isServerStarted()) {
         // Something wrong happened in the chain, let's try to stop it
+        if (mainWindow) {
+          mainWindow.webContents.send(SET_SYSTEM_ERROR, error);
+        }
         await chain.stopServer();
+      } else {
+        chain.once("server-started", () => {
+          if (mainWindow) {
+            mainWindow.webContents.send(SET_SYSTEM_ERROR, error);
+          }
+        });
       }
     });
 
@@ -340,7 +345,14 @@ app.on("ready", () => {
 
       chain.on("stderr", data => {
         const lines = data.split(/\n/g);
-        mainWindow.webContents.send(ADD_LOG_LINES, lines);
+        // `mainWindow` can be null/undefined here if the process is killed
+        // (common when developing)
+        //
+        if (mainWindow) {
+          mainWindow.webContents.send(ADD_LOG_LINES, lines);
+        } else {
+          console.error(data);
+        }
       });
 
       chain.on("error", async error => {

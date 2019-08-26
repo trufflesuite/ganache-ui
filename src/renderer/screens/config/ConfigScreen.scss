@@ -8,6 +8,7 @@
   left: 0px;
   right: 0px;
   width: 100%;
+  overflow: auto;
 
   main {
     width: 100%;
@@ -172,17 +173,12 @@
       align-items: flex-start;
       flex-direction: row;
       margin-bottom: 2rem;
+      justify-content: space-between;
     }
 
     .RowItem {
-      width: 50%;
+      width: calc(50% - 1rem);
       align-items: center;
-      margin-right: 1rem;
-    }
-
-    .RowItem + .RowItem {
-      margin-right: 0;
-      margin-left: 1rem;
     }
 
     input[type='text'], input[type='number'], input[type='file'], select {
@@ -198,6 +194,13 @@
       font-size: 14px;
       border-bottom: 1px solid;
       border-bottom-color: rgba(0, 0, 0, 0.2);
+
+      button {
+        display: block;
+        margin: 0 1em 0 auto;
+        background: transparent;
+        padding: 0;
+      }
 
       &:last-child {
         border-bottom: 0;
