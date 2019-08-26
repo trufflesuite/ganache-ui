@@ -345,7 +345,14 @@ app.on("ready", () => {
 
       chain.on("stderr", data => {
         const lines = data.split(/\n/g);
-        mainWindow.webContents.send(ADD_LOG_LINES, lines);
+        // `mainWindow` can be null/undefined here if the process is killed
+        // (common when developing)
+        //
+        if (mainWindow) {
+          mainWindow.webContents.send(ADD_LOG_LINES, lines);
+        } else {
+          console.error(data);
+        }
       });
 
       chain.on("error", async error => {
