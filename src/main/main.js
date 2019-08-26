@@ -957,7 +957,7 @@ app.on("ready", () => {
             {
               label: "Learn More",
               click() {
-                shell.openExternal("https://truffleframework.com/ganache");
+                shell.openExternal("https://trufflesuite.com/ganache");
               },
             },
             {
@@ -1051,7 +1051,7 @@ app.on("ready", () => {
             {
               label: "Learn More",
               click() {
-                shell.openExternal("https://truffleframework.com/ganache");
+                shell.openExternal("https://trufflesuite.com/ganache");
               },
             },
             {
