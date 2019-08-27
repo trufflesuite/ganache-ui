@@ -14,7 +14,7 @@ import UpdateModal from "../auto-update/UpdateModal";
 import OnlyIf from "../../components/only-if/OnlyIf";
 
 ElectronCookies.enable({
-  origin: "http://truffleframework.com/ganache",
+  origin: "https://truflesuite.com/ganache",
 });
 
 class AppShell extends Component {
@@ -40,7 +40,7 @@ class AppShell extends Component {
   };
 
   setScrollTop = scrollTop => {
-    this.refs.shellcontainer.scrollTop = scrollTop;
+    this.shellcontainer.scrollTop = scrollTop;
   };
 
   onCloseError() {
@@ -54,7 +54,7 @@ class AppShell extends Component {
       <div className="AppShell">
         <TopNavbar {...this.props} />
 
-        <div className="ShellContainer" ref="shellcontainer">
+        <div className="ShellContainer" ref={el => (this.shellcontainer = el)}>
           <Scrollbars
             className="scrollBar"
             onScrollFrame={this._handleScroll.bind(this)}
