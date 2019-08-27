@@ -31,6 +31,7 @@
   },
   "browserslist": "chrome 50",
   "build": {
+    "npmRebuild": false,
     "appId": "org.trufflesuite.ganache",
     "files": [
       "src/**/*",
@@ -47,8 +48,8 @@
       "output": "dist"
     },
     "win": {
+      "certificateSha1": "AF06A54A4EB31362AAF82F3559828ED7502918C6",
       "icon": "resources/icons/win/icon.ico",
-      "certificateFile": "./certs/cert.pfx",
       "target": [
         {
           "target": "nsis",
@@ -68,17 +69,18 @@
       "identityName": "Ganache",
       "publisher": "CN=Consensys Inc, O=Consensys Inc, L=New York, S=New York, C=US",
       "publisherDisplayName": "Consensys Inc",
-      "backgroundColor": "#34262A"
+      "backgroundColor": "#34262A",
+      "artifactName": "Ganache-${version}-${os}-${arch}.${ext}"
     },
     "nsis": {
       "oneClick": false,
-      "allowToChangeInstallationDirectory": "true",
-      "deleteAppDataOnUninstall": "true",
-      "artifactName": "Ganache-${version}-setup.${ext}"
+      "allowToChangeInstallationDirectory": true,
+      "deleteAppDataOnUninstall": true,
+      "artifactName": "Ganache-${version}-${os}-${arch}-setup.${ext}"
     },
     "mac": {
       "icon": "resources/icons/icon.icns",
-      "identity": "Timothy Coulter (58RKXWC272)"
+      "category": "public.app-category.developer-tools"
     },
     "dmg": {
       "background": "resources/dmg/background.tiff",
@@ -98,7 +100,9 @@
         }
       ],
       "icon": "resources/icons/icon.icns",
-      "format": "ULFO"
+      "format": "ULFO",
+      "sign": true,
+      "artifactName": "Ganache-${version}-${os}.${ext}"
     },
     "linux": {
       "target": [
@@ -112,7 +116,7 @@
       "icon": "resources/icons/png/",
       "category": "Development",
       "executableName": "Ganache",
-      "artifactName": "Ganache-${version}.${ext}"
+      "artifactName": "ganache-${version}-${os}-${arch}.${ext}"
     }
   },
   "config": {
@@ -175,7 +179,7 @@
     "chai": "^3.5.0",
     "concurrently": "^3.1.0",
     "cross-env": "^3.1.4",
-    "electron-builder": "20.31.3",
+    "electron-builder": "21.2.0",
     "electron-compilers": "^5.9.0",
     "electron-debug": "^1.1.0",
     "electron-devtools-installer": "^2.0.1",
@@ -257,6 +261,6 @@
     "dmg-builder": "^5.3.0"
   },
   "devEngines": {
-    "node": "10.15.0"
+    "node": "8.16.0"
   }
 }
