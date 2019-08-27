@@ -12,7 +12,7 @@ Ganache is your personal blockchain for Ethereum development.
 
 ### Getting started
 
-You can download a self-contained prebuilt Ganache binary for your platform of choice using the "Download" button on the [Ganache](http://truffleframework.com/ganache/) website, or from this repository's [releases](https://github.com/trufflesuite/ganache/releases) page.
+You can download a self-contained prebuilt Ganache binary for your platform of choice using the "Download" button on the [Ganache](https://trufflesuite.com/ganache/) website, or from this repository's [releases](https://github.com/trufflesuite/ganache/releases) page.
 
 ### Contributing
 
@@ -93,4 +93,4 @@ Note from the author: I found managing these assets manually -- especially the a
 
 ### By Truffle
 
-Ganache is part of the Truffle suite of tools. [Find out more!](http://truffleframework.com)
+Ganache is part of the Truffle suite of tools. [Find out more!](https://trufflesuite.com)
