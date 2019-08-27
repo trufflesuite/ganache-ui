@@ -7,7 +7,7 @@ import * as Transactions from "../../../common/redux/transactions/actions";
 import TxList from "./TxList";
 
 class RecentTransactions extends Component {
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     // If the scroll position changed...
     if (
       nextProps.appshell.scrollPosition != this.props.appshell.scrollPosition

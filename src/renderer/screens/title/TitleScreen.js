@@ -27,12 +27,12 @@ class TitleScreen extends Component {
     }, 1000);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (
       "global" in nextProps.config.settings &&
       "firstRun" in nextProps.config.settings.global
     ) {
-      this.state.firstRun = nextProps.config.settings.global.firstRun;
+      this.setState({ firstRun: nextProps.config.settings.global.firstRun });
     }
   }
 

@@ -10,7 +10,7 @@ class InputSelect extends React.Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     this.setState({
       value: nextProps.value,
     });
