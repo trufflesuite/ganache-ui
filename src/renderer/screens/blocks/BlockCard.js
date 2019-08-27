@@ -17,7 +17,7 @@ class BlockCard extends Component {
     this.props.dispatch(Blocks.showBlock(this.props.blockNumber));
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.props.blockNumber != nextProps.blockNumber) {
       this.props.dispatch(Blocks.showBlock(nextProps.blockNumber));
     }
