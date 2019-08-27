@@ -18,7 +18,7 @@
   right: 0;
   height: 100%;
   width: 100%;
-  z-index: 2;
+  z-index: 4;
   background-color: rgba(117, 127, 134, 0.9);
   display: flex;
   flex-direction: column;
@@ -95,6 +95,7 @@
 
     dl {
       margin: 0;
+      width: 100%;
 
       dt,
       dd {
