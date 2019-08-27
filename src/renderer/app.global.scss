@@ -71,6 +71,11 @@ a {
   text-decoration: none;
 }
 
+::selection {
+  background-color: var(--app-button-primary-color);
+  color: var(--app-button-primary-background-color);
+}
+
 svg:not([class]) {
   g,
   path,
