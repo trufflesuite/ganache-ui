@@ -348,14 +348,17 @@ app.on("ready", () => {
       });
 
       chain.on("stdout", data => {
-        mainWindow.webContents.send(ADD_LOG_LINES, data.split(/\n/g));
+        // `mainWindow` can be null/undefined here if the process is killed
+        // (common when developing)
+        if (mainWindow) {
+          mainWindow.webContents.send(ADD_LOG_LINES, data.split(/\n/g));
+        }
       });
 
       chain.on("stderr", data => {
         const lines = data.split(/\n/g);
         // `mainWindow` can be null/undefined here if the process is killed
         // (common when developing)
-        //
         if (mainWindow) {
           mainWindow.webContents.send(ADD_LOG_LINES, lines);
         } else {
