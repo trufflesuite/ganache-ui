@@ -7,27 +7,27 @@ class LogContainer extends Component {
     return nextProps.logs.lines.length !== this.props.logs.lines.length;
   }
 
-  componentWillUpdate() {
+  UNSAFE_componentWillUpdate() {
     var pixelBuffer = 10;
-    var node = this.refs.LogItems;
+    var node = this.LogItems;
     this.shouldScrollBottom =
       node.scrollTop + node.offsetHeight >= node.scrollHeight - pixelBuffer;
   }
 
   componentDidUpdate() {
     if (this.shouldScrollBottom) {
-      this.refs.LogItems.scrollTop = this.refs.LogItems.scrollHeight;
+      this.LogItems.scrollTop = this.LogItems.scrollHeight;
     }
   }
 
   componentDidMount() {
-    this.refs.LogItems.scrollTop = this.refs.LogItems.scrollHeight;
+    this.LogItems.scrollTop = this.LogItems.scrollHeight;
   }
 
   render() {
     return (
-      <div className="LogContainer" ref="LogContainer">
-        <ul ref="LogItems">
+      <div className="LogContainer">
+        <ul ref={el => (this.LogItems = el)}>
           <Scrollbars
             className="scrollBar"
             renderThumbVertical={props => (

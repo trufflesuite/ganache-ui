@@ -13,21 +13,28 @@ cache:
   - '%USERPROFILE%\.electron'
 
 environment:
-  CSC_KEY_PASSWORD:
-    secure: 6HPJFbG4UcVgagENR42Pc1bshVrRsoMxt0xDKrR1eCs=
-  CERT_PASSPHRASE:
+  CERT_ENCRYPTION_KEY:
     secure: kMG4K6eKtrVcehlpLDdxX8DAe1gvzaKcdn0HR2IdtgG4+eFqczuddRdkq18ZSzqeDTA8/CxaY8p13NwRLP0EGNztobwSwE/WKq7Aa+MeRFc=
+  CERT_ENCRYPTION_SALT:
+    secure: 2v3yczKKH+sntflfb+0iakdCSb1B4QqNtkzXBe+H3DmWgrPxOAV54fKdOSPKowHDiokPjpDlX7yFpwGxpaO5Mg==
+  CERT_PRIVATE_KEY_PASSWORD:
+    secure: 6HPJFbG4UcVgagENR42Pc1bshVrRsoMxt0xDKrR1eCs=
   GH_TOKEN:
     secure: S+Bnfbb+uco7s2X3jqmfP3vwxLIIZTmNmT0f8y982PaiUQB1AW8YNN7Acpi0JQOi
   matrix:
-    - nodejs_version: 10.15.0
+    - nodejs_version: 8.16.0
 
 install:
   - ps: $env:package_version = (Get-Content -Raw -Path package.json | ConvertFrom-Json).version 
   - ps: Update-AppveyorBuild -Version "$env:package_version-$env:APPVEYOR_BUILD_NUMBER"
   - ps: if(-not $env:APPVEYOR_PULL_REQUEST_NUMBER) {
-          iex ((New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/appveyor/secure-file/master/install.ps1'));
-          appveyor-tools\secure-file -decrypt certs/cert.pfx.enc -secret $env:CERT_PASSPHRASE;
+          iex ((New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/appveyor/secure-file/master/install.ps1')) > $null;
+          appveyor-tools\secure-file -decrypt certs/cert.pfx.enc -secret $env:CERT_ENCRYPTION_KEY -salt $env:CERT_ENCRYPTION_SALT > $null;
+          Import-PfxCertificate -Password (ConvertTo-SecureString $env:CERT_PRIVATE_KEY_PASSWORD -AsPlainText -Force) -FilePath certs/cert.pfx -CertStoreLocation Cert:\CurrentUser\My > $null;
+          Remove-Item certs/cert.pfx;
+          Remove-Item Env:/CERT_ENCRYPTION_KEY;
+          Remove-Item Env:/CERT_ENCRYPTION_SALT;
+          Remove-Item Env:/CERT_PRIVATE_KEY_PASSWORD;
         }
   - ps: Install-Product node $env:nodejs_version x64
   - set CI=true

@@ -62,7 +62,7 @@ class AccountList extends Component {
               <div className="Value">{index}</div>
             </div>
             <span
-              className="ShowKeys"
+              className="ShowKeys popover-container"
               onClick={() => {
                 self.showKeys(
                   account,

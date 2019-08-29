@@ -1,8 +1,7 @@
 language: node_js
 node_js:
-# Use 10.15.0 because xcode11 already has it installed, and xcode 11 is slow so
-# we do what we can to make it faster.
-- "10.15.0"
+# Use 8.16.0 because that is what Electron needs
+- "8.16.0"
 dist: bionic
 osx_image: xcode11
 matrix:
@@ -23,17 +22,26 @@ env:
   # encrypted GH_TOKEN:
   - secure: N551P94nYNIuv5IIcvgtee/jfd9ReGYRbq5hUvgG1pRbb+8wtNWT9JM6qIUflj0GoVCDeuz+urvqFwC4OET/NC6sGB9rtVoAVjf7vfKaoxPTN2wSMjT8GcVXvnG6S5hdPO6JlVrXZf2kDJr8p0vWKgRTgU7hSfEr8Nuxk938MC+qLUpuS6oAx0Vekkq/05OrZMIiheqHpSbXZido1SWBEy+XdL1MpNpKYSnp4gQXxtOQkF28vHQMKVDvPNoPm0RpuYmab6kJnGXDkWIsBtZlknw+Wf0oK9LJRuV8jFD4rkxRthuYDAXiep3dY8bkCZzo80Sy/KEB2oYKvMSBNDYlBoYeR3hsv5OB8ujhCDoXdBddjhIEe9vIFV93QWVzE+XCCfG1IczhTQ57Pk33eGfvRv/QnGnXKdSqS2+4roXOfohFh98oRzKGsFhjZ+22QQkyBHwcghw5xywPcr8ZF0ZC06pF7hvCFIlubDz9ZAaQo7vkpXbbft34ooxpGvSgQ5JOUXMu/zDy1E+szXwgcCn5trXhPEUhznCKiC2qrR4q1mVzyspXOHxz7hXkthWqUZEKFWrJw3/ttSZd1qQ7HFv2Re1eEIA/Q0HpCMe4Php5oqRDsxA7zUIHpw19aqtAhCR4WNg8yY7OmGXp3VeUQ3aiS/fFBbbsYRFj62Fv4Hr5BJY=
 before_install:
-- if [ "$TRAVIS_OS_NAME" = "osx" ]; then
-    export CSC_IDENTITY_AUTO_DISCOVERY=false;
-    export CSC_LINK=certs/osx.p12;
-    openssl aes-256-cbc -K $encrypted_7777a4e0a460_key -iv $encrypted_7777a4e0a460_iv -in certs/osx.p12.enc -out $CSC_LINK -d;
+  # Only mess with encryption if we might be publishing (don't set up keychain for PRs)
+- if [ "$TRAVIS_OS_NAME" = "osx" ] && [ "$TRAVIS_SECURE_ENV_VARS" = "true" ] && [ "$TRAVIS_PULL_REQUEST" = "false" ]; then
+    echo "Configuring keychain...";
+    export CERT=certs/osx.p12;
+    openssl aes-256-cbc -K $encrypted_7777a4e0a460_key -iv $encrypted_7777a4e0a460_iv -in certs/osx.p12.enc -out $CERT -d;
 
-    export KEYCHAIN=build.keychain;
-    security create-keychain -p mysecretpassword $KEYCHAIN;
-    security default-keychain -s $KEYCHAIN;
-    security unlock-keychain -p mysecretpassword $KEYCHAIN;
-    security import $CSC_LINK -k $KEYCHAIN -P $CSC_KEY_PASSWORD -T /usr/bin/codesign;
-    security set-key-partition-list -S "apple-tool:,apple:,codesign:" -s -k mysecretpassword $KEYCHAIN;
+    export CSC_KEYCHAIN=build.keychain;
+    export KEYCHAIN_PASS=$RANDOM.$RANDOM.$RANDOM;
+    security create-keychain -p $KEYCHAIN_PASS $CSC_KEYCHAIN;
+    security default-keychain -s $CSC_KEYCHAIN;
+    security unlock-keychain -p $KEYCHAIN_PASS $CSC_KEYCHAIN;
+    security import $CERT -k $CSC_KEYCHAIN -P $CSC_KEY_PASSWORD -T /usr/bin/codesign;
+
+    echo "Setting key partition list";
+    security set-key-partition-list -S "apple-tool:,apple:,codesign:" -s -k $KEYCHAIN_PASS $CSC_KEYCHAIN >/dev/null 2>&1;
+
+    rm $CERT;
+    unset CERT;
+    unset KEYCHAIN_PASS;
+    unset CSC_KEY_PASSWORD;
   fi
 script:
 - if [ "$TRAVIS_OS_NAME" = "linux" ]; then npm run build-linux; fi

@@ -2,7 +2,7 @@ import ua from "universal-analytics";
 import * as pkg from "../../../package.json";
 
 const ganacheAnalyticsId = "UA-83874933-5";
-const ganacheUrl = "http://truffleframework.com/ganache";
+const ganacheUrl = "https://trufflesuite.com/ganache";
 const ganacheName = "Ganache";
 const appVersion = pkg.version;
 

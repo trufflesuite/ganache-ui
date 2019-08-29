@@ -34,7 +34,7 @@ class ContractDetails extends Component {
     this.state = { project, contract };
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const contractCache = this.props.workspaces.current.contractCache;
     const cache = contractCache[this.state.contract.address];
     const transactions = cache.transactions.slice(

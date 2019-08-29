@@ -33,14 +33,14 @@
     a {
       background: rgba(44, 54, 67, 1.000);
       border-radius: 4px;
-      color: rgba(242, 175, 103, 1.000);
+      color: var(--app-button-primary-color);
       padding: .5rem;
       text-decoration: none;
       font-size: .8rem;
       text-transform: uppercase;
 
       &:hover {
-        color: lighten( rgba(242, 175, 103, 1.000), 10%);
+        color: lighten( var(--app-button-primary-color), 10%);
       }
     }
   }

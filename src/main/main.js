@@ -1,4 +1,12 @@
-import { app, BrowserWindow, Menu, shell, ipcMain, screen } from "electron";
+import {
+  app,
+  BrowserWindow,
+  Menu,
+  shell,
+  ipcMain,
+  screen,
+  clipboard,
+} from "electron";
 import { enableLiveReload } from "electron-compile";
 import { initAutoUpdates, getAutoUpdateService } from "./init/AutoUpdate.js";
 import path from "path";
@@ -152,17 +160,22 @@ app.on("ready", () => {
     );
 
     truffleIntegration.on("error", async error => {
-      if (mainWindow) {
-        mainWindow.webContents.send(SET_SYSTEM_ERROR, error);
-      }
-
       if (truffleIntegration) {
         await truffleIntegration.stopWatching();
       }
 
       if (chain.isServerStarted()) {
         // Something wrong happened in the chain, let's try to stop it
+        if (mainWindow) {
+          mainWindow.webContents.send(SET_SYSTEM_ERROR, error);
+        }
         await chain.stopServer();
+      } else {
+        chain.once("server-started", () => {
+          if (mainWindow) {
+            mainWindow.webContents.send(SET_SYSTEM_ERROR, error);
+          }
+        });
       }
     });
 
@@ -335,12 +348,22 @@ app.on("ready", () => {
       });
 
       chain.on("stdout", data => {
-        mainWindow.webContents.send(ADD_LOG_LINES, data.split(/\n/g));
+        // `mainWindow` can be null/undefined here if the process is killed
+        // (common when developing)
+        if (mainWindow) {
+          mainWindow.webContents.send(ADD_LOG_LINES, data.split(/\n/g));
+        }
       });
 
       chain.on("stderr", data => {
         const lines = data.split(/\n/g);
-        mainWindow.webContents.send(ADD_LOG_LINES, lines);
+        // `mainWindow` can be null/undefined here if the process is killed
+        // (common when developing)
+        if (mainWindow) {
+          mainWindow.webContents.send(ADD_LOG_LINES, lines);
+        } else {
+          console.error(data);
+        }
       });
 
       chain.on("error", async error => {
@@ -671,16 +694,85 @@ app.on("ready", () => {
     });
 
     mainWindow.webContents.on("context-menu", (e, props) => {
-      const { x, y } = props;
-
-      Menu.buildFromTemplate([
-        {
-          label: "Inspect element",
+      const { x, y, isEditable, selectionText } = props;
+      const hasText = selectionText.length !== 0;
+      const template = [];
+      if (isEditable) {
+        template.push({
+          label: "Cut",
+          accelerator: "CmdOrCtrl+X",
+          selector: "cut:",
+          enabled: hasText,
           click() {
-            mainWindow.inspectElement(x, y);
+            clipboard.writeText(selectionText);
+            mainWindow.webContents.delete();
           },
+        });
+      }
+
+      if (hasText || isEditable) {
+        template.push({
+          label: "Copy",
+          accelerator: "CmdOrCtrl+C",
+          selector: "copy:",
+          enabled: hasText,
+          click() {
+            clipboard.writeText(selectionText);
+          },
+        });
+      }
+
+      if (isEditable) {
+        template.push({
+          label: "Paste",
+          accelerator: "CmdOrCtrl+V",
+          selector: "paste:",
+          enabled: clipboard.readText().length > 0,
+          click() {
+            let clipboardContent = clipboard.readText();
+            mainWindow.webContents.insertText(clipboardContent);
+          },
+        });
+      }
+
+      // add a "Search Google for" context menu when the text is Googleable.
+      const printableText = selectionText.replace(/[^ -~]+/g, " ").trim();
+      if (printableText.length > 0) {
+        let trimmedText = printableText;
+        if (trimmedText.length > 50) {
+          trimmedText = trimmedText.substring(0, 60);
+          const lastWordIndex = trimmedText.lastIndexOf(" ");
+          if (lastWordIndex !== -1) {
+            trimmedText = trimmedText.substring(0, lastWordIndex) + "…";
+          }
+        }
+        if (template.length > 2) {
+          template.push({ type: "separator" });
+        }
+        template.push({
+          label: `Search Google for “${trimmedText}”`,
+          click: () => {
+            shell.openExternal(
+              `https://www.google.com/search?q=${encodeURIComponent(
+                printableText,
+              )}`,
+            );
+          },
+        });
+      }
+
+      if (template.length) {
+        template.push({ type: "separator" });
+      }
+
+      template.push({
+        label: "Inspect",
+        click() {
+          mainWindow.inspectElement(x, y);
         },
-      ]).popup(mainWindow);
+      });
+
+      Menu.buildFromTemplate(template).popup(mainWindow);
     });
 
     if (process.platform === "darwin") {
@@ -880,7 +972,7 @@ app.on("ready", () => {
             {
               label: "Learn More",
               click() {
-                shell.openExternal("https://truffleframework.com/ganache");
+                shell.openExternal("https://trufflesuite.com/ganache");
               },
             },
             {
@@ -974,7 +1066,7 @@ app.on("ready", () => {
             {
               label: "Learn More",
               click() {
-                shell.openExternal("https://truffleframework.com/ganache");
+                shell.openExternal("https://trufflesuite.com/ganache");
               },
             },
             {

@@ -1,7 +1,7 @@
 {
   "name": "ganache",
   "productName": "Ganache",
-  "version": "2.1.1-beta.2",
+  "version": "2.1.1-beta.3",
   "description": "Personal Blockchain for Ethereum",
   "main": "./src/init.js",
   "private": true,
@@ -31,6 +31,7 @@
   },
   "browserslist": "chrome 50",
   "build": {
+    "npmRebuild": false,
     "appId": "org.trufflesuite.ganache",
     "files": [
       "src/**/*",
@@ -47,8 +48,8 @@
       "output": "dist"
     },
     "win": {
+      "certificateSha1": "AF06A54A4EB31362AAF82F3559828ED7502918C6",
       "icon": "resources/icons/win/icon.ico",
-      "certificateFile": "./certs/cert.pfx",
       "target": [
         {
           "target": "nsis",
@@ -68,17 +69,18 @@
       "identityName": "Ganache",
       "publisher": "CN=Consensys Inc, O=Consensys Inc, L=New York, S=New York, C=US",
       "publisherDisplayName": "Consensys Inc",
-      "backgroundColor": "#34262A"
+      "backgroundColor": "#34262A",
+      "artifactName": "Ganache-${version}-${os}-${arch}.${ext}"
     },
     "nsis": {
       "oneClick": false,
-      "allowToChangeInstallationDirectory": "true",
-      "deleteAppDataOnUninstall": "true",
-      "artifactName": "Ganache-${version}-setup.${ext}"
+      "allowToChangeInstallationDirectory": true,
+      "deleteAppDataOnUninstall": true,
+      "artifactName": "Ganache-${version}-${os}-${arch}-setup.${ext}"
     },
     "mac": {
       "icon": "resources/icons/icon.icns",
-      "identity": "Timothy Coulter (58RKXWC272)"
+      "category": "public.app-category.developer-tools"
     },
     "dmg": {
       "background": "resources/dmg/background.tiff",
@@ -98,7 +100,9 @@
         }
       ],
       "icon": "resources/icons/icon.icns",
-      "format": "ULFO"
+      "format": "ULFO",
+      "sign": true,
+      "artifactName": "Ganache-${version}-${os}.${ext}"
     },
     "linux": {
       "target": [
@@ -112,7 +116,7 @@
       "icon": "resources/icons/png/",
       "category": "Development",
       "executableName": "Ganache",
-      "artifactName": "Ganache-${version}.${ext}"
+      "artifactName": "ganache-${version}-${os}-${arch}.${ext}"
     }
   },
   "config": {
@@ -175,7 +179,7 @@
     "chai": "^3.5.0",
     "concurrently": "^3.1.0",
     "cross-env": "^3.1.4",
-    "electron-builder": "20.31.2",
+    "electron-builder": "21.2.0",
     "electron-compilers": "^5.9.0",
     "electron-debug": "^1.1.0",
     "electron-devtools-installer": "^2.0.1",
@@ -216,7 +220,7 @@
     "filesize": "^3.6.1",
     "fix-path": "^2.1.0",
     "fs-extra": "^7.0.0",
-    "ganache-core": "2.7.0",
+    "ganache-core": "2.8.0-beta.0",
     "lodash.clonedeep": "^4.5.0",
     "lodash.isequal": "^4.5.0",
     "lodash.merge": "^4.6.1",
@@ -238,6 +242,7 @@
     "react-render-html": "^0.6.0",
     "react-router": "^3.0.1",
     "react-router-redux": "^4.0.7",
+    "react-syntax-highlighter": "11.0.2",
     "react-virtualized": "^9.21.0",
     "redux": "^3.6.0",
     "redux-thunk": "^2.2.0",
@@ -248,13 +253,14 @@
     "truffle-decoder": "^3.0.8",
     "universal-analytics": "^0.4.13",
     "uuid": "^3.1.0",
-    "web3": "1.2.1"
+    "web3": "1.2.1",
+    "web3-eth-abi": "1.2.1"
   },
   "optionalDependencies": {
     "7zip-bin-win": "^2.2.0",
     "dmg-builder": "^5.3.0"
   },
   "devEngines": {
-    "node": "10.15.0"
+    "node": "8.16.0"
   }
 }

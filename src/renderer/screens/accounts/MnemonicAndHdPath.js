@@ -37,7 +37,13 @@ export default class MnemonicAndHdPath extends PureComponent {
               ?
             </span>
           </h4>
-          <span>{this.props.mnemonic}</span>
+          <span className="popover-container">
+            {this.props.mnemonic}{" "}
+            <span className="popover popunder">
+              note: this mnemonic is not secure; don&apos;t use it on a public
+              blockchain.
+            </span>
+          </span>
         </div>
         <div className="HDPath">
           <h4>HD PATH</h4>
