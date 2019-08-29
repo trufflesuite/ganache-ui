@@ -1,8 +1,7 @@
 language: node_js
 node_js:
-# Use 10.15.0 because xcode11 already has it installed, and xcode 11 is slow so
-# we do what we can to make it faster.
-- "10.15.0"
+# Use 8.16.0 because that is what Electron needs
+- "8.16.0"
 dist: bionic
 osx_image: xcode11
 matrix:
@@ -26,24 +25,23 @@ before_install:
   # Only mess with encryption if we might be publishing (don't set up keychain for PRs)
 - if [ "$TRAVIS_OS_NAME" = "osx" ] && [ "$TRAVIS_SECURE_ENV_VARS" = "true" ] && [ "$TRAVIS_PULL_REQUEST" = "false" ]; then
     echo "Configuring keychain...";
-    export CSC_IDENTITY_AUTO_DISCOVERY=false;
-    export CSC_LINK=certs/osx.p12;
-    openssl aes-256-cbc -K $encrypted_7777a4e0a460_key -iv $encrypted_7777a4e0a460_iv -in certs/osx.p12.enc -out $CSC_LINK -d;
+    export CERT=certs/osx.p12;
+    openssl aes-256-cbc -K $encrypted_7777a4e0a460_key -iv $encrypted_7777a4e0a460_iv -in certs/osx.p12.enc -out $CERT -d;
 
-    export KEYCHAIN=build.keychain;
+    export CSC_KEYCHAIN=build.keychain;
     export KEYCHAIN_PASS=$RANDOM.$RANDOM.$RANDOM;
-    security -q create-keychain -p $KEYCHAIN_PASS $KEYCHAIN >/dev/null 2>&1;
-    security -q default-keychain -s $KEYCHAIN >/dev/null 2>&1;
-    security -q unlock-keychain -p $KEYCHAIN_PASS $KEYCHAIN >/dev/null 2>&1;
-    security -q import $CSC_LINK -k $KEYCHAIN -P $CSC_KEY_PASSWORD -T /usr/bin/codesign >/dev/null 2>&1;
-    security -q set-key-partition-list -S "apple-tool:,apple:,codesign:" -s -k $KEYCHAIN_PASS $KEYCHAIN >/dev/null 2>&1;
+    security create-keychain -p $KEYCHAIN_PASS $CSC_KEYCHAIN;
+    security default-keychain -s $CSC_KEYCHAIN;
+    security unlock-keychain -p $KEYCHAIN_PASS $CSC_KEYCHAIN;
+    security import $CERT -k $CSC_KEYCHAIN -P $CSC_KEY_PASSWORD -T /usr/bin/codesign;
 
-    rm $CSC_LINK;
+    echo "Setting key partition list";
+    security set-key-partition-list -S "apple-tool:,apple:,codesign:" -s -k $KEYCHAIN_PASS $CSC_KEYCHAIN >/dev/null 2>&1;
+
+    rm $CERT;
+    unset CERT;
     unset KEYCHAIN_PASS;
-    unset KEYCHAIN;
     unset CSC_KEY_PASSWORD;
-    unset CSC_LINK;
-    unset CSC_IDENTITY_AUTO_DISCOVERY;
   fi
 script:
 - if [ "$TRAVIS_OS_NAME" = "linux" ]; then npm run build-linux; fi

@@ -3,16 +3,12 @@ import React, { PureComponent } from "react";
 import ChecksumAddress from "../../components/checksum-addresses/ChecksumAddress";
 import Modal from "../../components/modal/Modal";
 
-import KeyIcon from "../../icons/key.svg";
-
 export default class KeyModal extends PureComponent {
   render() {
     return (
       <Modal className="KeyModal">
         <header>
-          <h4>
-            <KeyIcon /> ACCOUNT INFORMATION
-          </h4>
+          <h4>ACCOUNT INFORMATION</h4>
         </header>
 
         <section>
