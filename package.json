@@ -27,8 +27,6 @@
   "scripts": {
     "dev": "electron-webpack dev",
     "compile": "electron-webpack",
-    "dist": "npm run compile && electron-builder",
-    "dist:dir": "npm run dist --dir -c.compression=store -c.mac.identity=null",
     "lint": "eslint .",
     "sign-mac": "codesign --deep --force --verbose --sign 'Developer ID Application: Timothy Coulter (58RKXWC272)' ./dist/*.dmg",
     "build-linux": "npm run compile && electron-builder --linux",
