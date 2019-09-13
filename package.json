@@ -47,6 +47,7 @@
     "electron": "5.0.6",
     "electron-builder": "^21.0.11",
     "electron-webpack": "^2.7.4",
+    "eslint-config-prettier": "^6.3.0",
     "ethagen": "0.1.2",
     "fix-path": "^2.1.0",
     "husky": "^3.0.5",
@@ -77,5 +78,16 @@
     "plugins": [
       "@babel/plugin-proposal-class-properties"
     ]
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   }
 }
