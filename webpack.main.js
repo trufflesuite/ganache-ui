@@ -3,8 +3,8 @@ module.exports = {
     rules: [
       {
         test: /\.js$/,
-        use: 'shebang-loader'
-      }
-    ]
-  }
-}
+        use: "shebang-loader",
+      },
+    ],
+  },
+};
