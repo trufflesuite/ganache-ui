@@ -8,7 +8,7 @@ import {
   clipboard,
 } from "electron"
 // import { format as formatUrl } from 'url'
-import { initAutoUpdates } from "./init/AutoUpdate.js";
+import { initAutoUpdates, getAutoUpdateService } from "./init/AutoUpdate.js";
 import path from "path";
 import * as os from "os";
 import merge from "lodash.merge";
@@ -97,13 +97,33 @@ if (process.platform === "darwin") {
 }
 const getIconPath = () => {
   return process.platform === "win32"
-    ? path.resolve(`${__dirname}/../static/icons/win/icon.ico`)
-    : path.resolve(`${__dirname}/../static/icons/png/256x256.png`); // Mac & Linux, use an icon
+    ? path.resolve(`${__dirname}/../../resources/icons/win/icon.ico`)
+    : path.resolve(`${__dirname}/../../resources/icons/png/256x256.png`); // Mac & Linux, use an icon
 };
 
 if (process.platform === "darwin") {
   app.dock.setIcon(getIconPath());
 }
+
+const performShutdownTasks = async ({ truffleIntegration, chain }) => {
+  // don't quit the app before the updater can do its thing
+  const service = getAutoUpdateService();
+  if (service == null || !service.isRestartingForUpdate) {
+    mainWindow = null;
+
+    if (truffleIntegration) {
+      await truffleIntegration.stopWatching();
+    }
+
+    if (chain.isServerStarted()) {
+      await chain.stopServer();
+    }
+
+    chain.stopProcess();
+    truffleIntegration.stopProcess();
+    app.quit();
+  }
+};
 
 // create main BrowserWindow when electron is ready
 app.on('ready', () => {  
@@ -405,6 +425,7 @@ app.on('ready', () => {
 
     workspaceManager.bootstrap();
 
+    // eslint-disable-next-line
     workspace = workspaceManager.get(workspaceName);
     const workspaceSettings = workspace.settings.getAll();
 
@@ -487,6 +508,7 @@ app.on('ready', () => {
       }
     }
 
+    // eslint-disable-next-line
     workspace = workspaceManager.get(name);
 
     if (typeof workspace === "undefined") {

@@ -1,7 +1,7 @@
 language: node_js
 node_js:
-# Use 8.16.0 because that is what Electron needs
-- "8.16.0"
+# Use 12.9.0 because that is what Electron needs
+- "12.9.0"
 dist: bionic
 osx_image: xcode11
 matrix:

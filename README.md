@@ -20,7 +20,7 @@ Please open issues and pull requests for new features, questions, and bug fixes.
 
 Requirements:
 
-- `node v8.16.0`
+- `node v12.9.0`
 
 To get started:
 

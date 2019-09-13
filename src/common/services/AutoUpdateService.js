@@ -1,6 +1,6 @@
 import EventEmitter from "events";
 import { app } from "electron";
-import { autoUpdater } from "benjamincburns-forked-electron-updater";
+import { autoUpdater } from "electron-updater";
 import { CancellationToken } from "builder-util-runtime";
 import path from "path";
 import merge from "lodash.merge";

@@ -1,6 +1,6 @@
 {
   "presets": [
-    ["env", { "targets": { "electron": "1.6.0" } }],
+    ["env", { "targets": { "electron": "6.0.9" } }],
     "stage-0",
     "react"
   ],

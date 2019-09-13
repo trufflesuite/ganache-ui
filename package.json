@@ -27,13 +27,13 @@
   "scripts": {
     "dev": "electron-webpack dev",
     "compile": "electron-webpack",
-    "dist": "yarn compile && electron-builder",
-    "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null",
+    "dist": "npm run compile && electron-builder",
+    "dist:dir": "npm run dist --dir -c.compression=store -c.mac.identity=null",
     "lint": "eslint .",
     "sign-mac": "codesign --deep --force --verbose --sign 'Developer ID Application: Timothy Coulter (58RKXWC272)' ./dist/*.dmg",
-    "build-linux": "electron-builder --linux",
-    "build-mac": "electron-builder --mac",
-    "build-windows": "electron-builder --win",
+    "build-linux": "npm run compile && electron-builder --linux",
+    "build-mac": "npm run compile && electron-builder --mac",
+    "build-windows": "npm run compile && electron-builder --win",
     "test": "npm run test-mocha && npm run test-jest",
     "test-jest": "jest __tests__/.*.test.js",
     "test-mocha": "cross-env GANACHE_DEV_MODE=true ELECTRON_APP_PATH=./ mocha --compilers js:babel-register --check-leaks --globals _scratch,sanitizedData 'test/mocha/**/*.test.js'",
@@ -71,46 +71,46 @@
     "truffle-config": "^1.1.18",
     "truffle-decoder": "^3.0.8",
     "web3": "1.2.1",
-    "web3-eth-abi": "1.2.1"
+    "web3-eth-abi": "1.2.1",
+    "ethagen": "0.1.2",
+    "fix-path": "^2.1.0",
+    "lodash.clonedeep": "^4.5.0",
+    "lodash.isequal": "^4.5.0",
+    "lodash.merge": "^4.6.2",
+    "lodash.omit": "^4.5.0",
+    "lodash.padstart": "^4.6.1",
+    "moniker": "^0.1.2",
+    "node-localstorage": "^1.3.1",
+    "redux-logger": "^2.7.4",
+    "universal-analytics": "^0.4.13"
   },
   "devDependencies": {
     "@babel/preset-react": "^7.0.0",
     "babel-eslint": "^10.0.3",
-    "benjamincburns-forked-electron-updater": "2.21.6",
-    "electron": "5.0.6",
-    "electron-builder": "^21.0.11",
+    "electron": "6.0.9",
+    "electron-builder": "^21.2.0",
+    "electron-updater": "^4.1.2",
     "electron-webpack": "^2.7.4",
     "eslint": "^6.3.0",
     "eslint-config-prettier": "^6.3.0",
     "eslint-plugin-jest": "^22.17.0",
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-react": "^7.14.3",
-    "ethagen": "0.1.2",
-    "fix-path": "^2.1.0",
     "husky": "^3.0.5",
+    "js-scrypt": "^0.2.0",
     "lint-staged": "^9.2.5",
-    "lodash.clonedeep": "^4.5.0",
-    "lodash.isequal": "^4.5.0",
-    "lodash.merge": "^4.6.1",
-    "lodash.omit": "^4.5.0",
-    "lodash.padstart": "^4.6.1",
-    "moniker": "^0.1.2",
-    "node-localstorage": "^1.3.1",
     "node-sass": "^4.12.0",
     "prettier": "^1.18.2",
-    "react-router-redux": "^4.0.7",
     "react-svg-loader": "^3.0.3",
-    "redux-logger": "^2.7.4",
     "sass-loader": "^8.0.0",
-    "universal-analytics": "^0.4.13",
-    "webpack": "~4.35.3"
+    "webpack": "^4.40.2"
   },
   "electronWebpack": {
     "main": {
-      "webpackConfig": "webpack.main.js"
+      "webpackConfig": "webpack/webpack.main.js"
     },
     "renderer": {
-      "webpackConfig": "webpack.renderer.js"
+      "webpackConfig": "webpack/webpack.renderer.js"
     }
   },
   "babel": {
@@ -217,5 +217,8 @@
       "executableName": "Ganache",
       "artifactName": "ganache-${version}-${os}-${arch}.${ext}"
     }
+  },
+  "engines": {
+    "node": "12.9.0"
   }
 }
