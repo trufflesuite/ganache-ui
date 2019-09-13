@@ -1,4 +1,4 @@
-import * as Core from "./actions";
+const Core = require("./actions");
 
 const initialState = {
   started: false,
