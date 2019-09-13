@@ -1,12 +1,44 @@
 {
-  "name": "ganach3",
-  "version": "0.0.1",
+  "name": "ganache",
+  "productName": "Ganache",
+  "version": "2.1.1",
+  "description": "Personal Blockchain for Ethereum",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/trufflesuite/ganache.git"
+  },
+  "author": {
+    "name": "Truffle",
+    "email": "inquiry@trufflesuite.com",
+    "url": "https://github.com/trufflesuite"
+  },
   "license": "MIT",
+  "private": true,
+  "bugs": {
+    "url": "https://github.com/trufflesuite/ganache/issues"
+  },
+  "keywords": [
+    "ganache",
+    "ethereum",
+    "blockchain",
+    "truffle"
+  ],
+  "homepage": "https://github.com/trufflesuite/ganache#readme",
   "scripts": {
     "dev": "electron-webpack dev",
     "compile": "electron-webpack",
     "dist": "yarn compile && electron-builder",
-    "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null"
+    "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null",
+    "lint": "eslint .",
+    "sign-mac": "codesign --deep --force --verbose --sign 'Developer ID Application: Timothy Coulter (58RKXWC272)' ./dist/*.dmg",
+    "build-linux": "electron-builder --linux",
+    "build-mac": "electron-builder --mac",
+    "build-windows": "electron-builder --win",
+    "test": "npm run test-mocha && npm run test-jest",
+    "test-jest": "jest __tests__/.*.test.js",
+    "test-mocha": "cross-env GANACHE_DEV_MODE=true ELECTRON_APP_PATH=./ mocha --compilers js:babel-register --check-leaks --globals _scratch,sanitizedData 'test/mocha/**/*.test.js'",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "dependencies": {
     "@babel/plugin-proposal-class-properties": "^7.5.5",
@@ -95,6 +127,95 @@
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
+    }
+  },
+  "build": {
+    "npmRebuild": false,
+    "appId": "org.trufflesuite.ganache",
+    "files": [
+      "src/**/*",
+      "node_modules/**/*",
+      "resources/fonts/*",
+      "resources/icons/**/*",
+      "package.json"
+    ],
+    "extraFiles": [
+      "src/truffle-project-loader/index.js"
+    ],
+    "directories": {
+      "buildResources": "resources",
+      "output": "dist"
+    },
+    "win": {
+      "certificateSha1": "AF06A54A4EB31362AAF82F3559828ED7502918C6",
+      "icon": "resources/icons/win/icon.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "appx",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "appx": {
+      "identityName": "Ganache",
+      "publisher": "CN=Consensys Inc, O=Consensys Inc, L=New York, S=New York, C=US",
+      "publisherDisplayName": "Consensys Inc",
+      "backgroundColor": "#34262A",
+      "artifactName": "Ganache-${version}-${os}-${arch}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "deleteAppDataOnUninstall": true,
+      "artifactName": "Ganache-${version}-${os}-${arch}-setup.${ext}"
+    },
+    "mac": {
+      "icon": "resources/icons/icon.icns",
+      "category": "public.app-category.developer-tools"
+    },
+    "dmg": {
+      "background": "resources/dmg/background.tiff",
+      "contents": [
+        {
+          "x": 219,
+          "y": 358,
+          "type": "dir",
+          "name": "Ganache.app"
+        },
+        {
+          "x": 439,
+          "y": 358,
+          "type": "link",
+          "name": "Applications",
+          "path": "/Applications"
+        }
+      ],
+      "icon": "resources/icons/icon.icns",
+      "format": "ULFO",
+      "sign": true,
+      "artifactName": "Ganache-${version}-${os}.${ext}"
+    },
+    "linux": {
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "resources/icons/png/",
+      "category": "Development",
+      "executableName": "Ganache",
+      "artifactName": "ganache-${version}-${os}-${arch}.${ext}"
     }
   }
 }
