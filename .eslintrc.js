@@ -3,7 +3,6 @@ module.exports = {
   plugins: ["prettier", "react", "jest"],
   parser: "babel-eslint",
   rules: {
-    "prettier/prettier": [1, { trailingComma: "all" }],
     "no-console": "warn",
     "react/prop-types": 0
   },
@@ -20,5 +19,3 @@ module.exports = {
     }
   }
 };
-
-
