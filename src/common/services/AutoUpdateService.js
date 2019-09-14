@@ -1,16 +1,12 @@
 import EventEmitter from "events";
-import { app } from "electron";
+import log from "electron-log";
 import { autoUpdater } from "electron-updater";
 import { CancellationToken } from "builder-util-runtime";
-import path from "path";
 import merge from "lodash.merge";
 
 const isDevMode = process.execPath.match(/[\\/]electron/);
-
 const defaultOptions = {
-  allowPrerelease: false,
-  fullChangelog: false,
-  autoDownload: false,
+  autoDownload: false
 };
 
 export default class AutoUpdateService extends EventEmitter {
@@ -19,21 +15,9 @@ export default class AutoUpdateService extends EventEmitter {
     const self = this;
 
     options = merge({}, defaultOptions, options || {});
-
-    autoUpdater.allowPrerelease = options.allowPrerelease;
-    autoUpdater.fullChangelog = options.fullChangelog;
+    log.transports.file.level = "debug";
+    autoUpdater.logger = log;
     autoUpdater.autoDownload = options.autoDownload;
-    autoUpdater.currentVersion = isDevMode ? "1.0.0" : app.getVersion();
-
-    if (isDevMode) {
-      autoUpdater.updateConfigPath = path.join(
-        __dirname,
-        "..",
-        "..",
-        "..",
-        "dev-app-update.yml",
-      );
-    }
 
     this._cancelToken = null;
     this.isCheckingForUpdate = false;

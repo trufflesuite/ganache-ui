@@ -1,0 +1,31 @@
+.LogoWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-size: 20px;
+
+    font-weight: 700;
+    line-height: 3.2;
+
+    .Logo {
+        height: 128px;
+        width: 128px;
+        background-image: url(~@/icons/logo.svg);
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: 128px 128px;
+        will-change: opacity;
+
+        opacity: 0;
+
+        animation: fadeIn 500ms .8s forwards;
+        svg {
+            g,
+            path,
+            circle {
+                stroke: none !important;
+            }
+        }
+    }
+}

@@ -1,18 +1,21 @@
+const path = require("path");
+
 module.exports = function(config) {
-  // find the rule
+  // we don't want to url-encode svgs, so remove thesvgs from the image rule
   const imageRule = config.module.rules.find(rule => {
     return rule.test.toString() === "/\\.(png|jpe?g|gif|svg)(\\?.*)?$/";
   });
 
   // override its test
   imageRule.test = /\.(png|jpe?g|gif)(\?.*)?$/;
-  // add your extra rule
+
+  // add our custom rules
   config.module.rules.push.apply(config.module.rules, [
     {
       test: /\.(js|jsx)$/,
       loader: "babel-loader",
       options: {
-        presets: ["@babel/react"],
+        presets: ["@babel/react"]
       },
     },
     {
@@ -25,16 +28,21 @@ module.exports = function(config) {
             svgo: {
               plugins: [
                 {
-                  removeTitle: false,
-                },
-              ],
-              floatPrecision: 2,
-            },
-          },
-        },
-      ],
-    },
+                  removeViewBox: false
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
   ]);
-  // finally return the modified config
+
+  // Enable referencing our static assets in css/scss:
+  if (!config.resolve) {
+    config.resolve = {};
+  }
+  config.resolve.alias["@static"] = path.resolve ( __dirname, '../static' );
+
   return config;
 };

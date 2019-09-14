@@ -5,6 +5,7 @@ import * as pkg from "../../../../package.json";
 
 import connect from "../helpers/connect";
 
+import Logo from "../../components/logo/Logo.js";
 import OnlyIf from "../../components/only-if/OnlyIf";
 import BugModal from "../appshell/BugModal";
 
@@ -40,9 +41,7 @@ class TitleScreen extends Component {
     return (
       <div className="TitleScreenContainer">
         <div className="TitleScreen">
-          <div className="LogoWrapper">
-            <div className="Logo FadeInElement" />
-          </div>
+          <Logo fadeInElement={true} />
           <h4>
             <strong>Ganache</strong>
             <div className="GanacheVersion">v{this.state.version}</div>

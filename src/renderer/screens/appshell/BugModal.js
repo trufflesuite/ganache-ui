@@ -73,7 +73,7 @@ class BugModal extends Component {
     let unsanitizedSystemError =
       this.props.systemError.stack || this.props.systemError;
     let sanitizedSystemError = "";
-
+    
     if (unsanitizedSystemError) {
       sanitizedSystemError = sanitizeError(unsanitizedSystemError);
     }
@@ -82,7 +82,7 @@ class BugModal extends Component {
       <Modal className="BugModal">
         <section className="Bug">
           <BugIcon /*size={192}*/ />
-          <h4>Uh Oh... That's a bug.</h4>
+          <h4>Uh Oh... That&apos;s a bug.</h4>
           <p>
             Ganache encountered an error. Help us fix it by raising a GitHub
             issue!
