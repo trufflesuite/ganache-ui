@@ -17,18 +17,18 @@ class WorkspaceScreen extends Component {
     });
   };
 
-  handleAddProjectClick = () => {
-    const pathArray = remote.dialog.showOpenDialog({
+  handleAddProjectClick = async () => {
+    const pathArray = await remote.dialog.showOpenDialog({
       properties: ["openFile"],
       filters: [{ name: "Truffle Config File", extensions: ["js"] }],
     });
 
     if (
       pathArray &&
-      pathArray.length > 0 &&
-      path.basename(pathArray[0]).match(/^truffle(-config)?.js$/)
+      pathArray.filePaths.length > 0 &&
+      path.basename(pathArray.filePaths[0]).match(/^truffle(-config)?.js$/)
     ) {
-      this.props.addWorkspaceProject(pathArray[0]);
+      this.props.addWorkspaceProject(pathArray.filePaths[0]);
       this.setState({ selectedIdx: null });
     }
   };

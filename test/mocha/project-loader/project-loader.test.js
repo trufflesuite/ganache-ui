@@ -1,7 +1,7 @@
 const path = require("path");
 const assert = require("assert");
 /* eslint-disable no-console */
-import ProjectDetailsFile from "../../../src/truffle-integration/projectDetails";
+import ProjectDetailsFile from "../../../static/truffle-integration/projectDetails";
 
 describe("Project Loader", () => {
   it("shouldn't crash when loading a truffle config", async () => {

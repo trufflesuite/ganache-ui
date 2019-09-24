@@ -34,12 +34,11 @@
     "build-windows": "npm run compile && electron-builder --win",
     "test": "npm run test-mocha && npm run test-jest",
     "test-jest": "jest __tests__/.*.test.js",
-    "test-mocha": "cross-env GANACHE_DEV_MODE=true ELECTRON_APP_PATH=./ mocha --compilers js:babel-register --check-leaks --globals _scratch,sanitizedData 'test/mocha/**/*.test.js'",
+    "test-mocha": "cross-env GANACHE_DEV_MODE=true ELECTRON_APP_PATH=./ mocha --require @babel/register --check-leaks 'test/mocha/**/*.test.js'",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
   "dependencies": {
-    "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@exponent/electron-cookies": "^2.0.0",
     "@seesemichaelj/react-json-view": "^1.20.2",
     "electron-log": "^3.0.7",
@@ -47,12 +46,11 @@
     "ethereumjs-units": "^0.2.0",
     "filesize": "^3.6.1",
     "fix-path": "^2.1.0",
-    "ganache-core": "2.8.0",
+    "fs-extra": "8.1.0",
     "lodash.clonedeep": "^4.5.0",
     "lodash.isequal": "^4.5.0",
     "lodash.merge": "^4.6.2",
     "lodash.omit": "^4.5.0",
-    "lodash.padstart": "^4.6.1",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.26",
     "moniker": "^0.1.2",
@@ -76,18 +74,20 @@
     "redux-thunk": "^2.2.0",
     "shebang-loader": "^0.0.1",
     "source-map-support": "^0.5.13",
-    "temp": "^0.8.3",
-    "truffle": "5.0.31",
-    "truffle-config": "^1.1.18",
-    "truffle-decoder": "^3.0.8",
+    "truffle": "^5.0.37",
     "universal-analytics": "^0.4.13",
     "web3": "1.2.1",
-    "web3-eth-abi": "1.2.1"
+    "web3-providers-http": "1.2.1",
+    "web3-providers-ws": "1.2.1"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/preset-env": "^7.6.2",
     "@babel/preset-react": "^7.0.0",
-    "babel-eslint": "^10.0.3",
-    "electron": "6.0.9",
+    "@babel/register": "^7.0.0",
+    "babel-jest": "^24.9.0",
+    "cross-env": "^6.0.0",
+    "electron": "^6.0.9",
     "electron-builder": "^21.2.0",
     "electron-updater": "^4.1.2",
     "electron-webpack": "^2.7.4",
@@ -97,12 +97,14 @@
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-react": "^7.14.3",
     "husky": "^3.0.5",
+    "jest": "^24.9.0",
     "js-scrypt": "^0.2.0",
     "lint-staged": "^9.2.5",
     "node-sass": "^4.12.0",
     "prettier": "^1.18.2",
     "react-svg-loader": "^3.0.3",
     "sass-loader": "^8.0.0",
+    "temp": "0.8.3",
     "webpack": "^4.40.2"
   },
   "electronWebpack": {
@@ -116,6 +118,16 @@
   "babel": {
     "plugins": [
       "@babel/plugin-proposal-class-properties"
+    ],
+    "presets": [
+      [
+        "@babel/env",
+        {
+          "targets": {
+            "node": "current"
+          }
+        }
+      ]
     ]
   },
   "lint-staged": {
@@ -136,9 +148,6 @@
       "src/**/*",
       "node_modules/**/*",
       "package.json"
-    ],
-    "extraFiles": [
-      "src/truffle-project-loader/index.js"
     ],
     "win": {
       "certificateSha1": "AF06A54A4EB31362AAF82F3559828ED7502918C6",

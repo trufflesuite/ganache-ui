@@ -15,8 +15,9 @@ class TruffleIntegrationService extends EventEmitter {
 
   start() {
     let chainPath = join(
-      __dirname,
-      "../../truffle-integration/",
+      __static,
+      "node",
+      "truffle-integration",
       "index.js",
     );
     const options = {
