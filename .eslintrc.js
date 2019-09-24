@@ -5,6 +5,10 @@ module.exports = {
     "no-console": "warn",
     "react/prop-types": 0
   },
+  parserOptions: {
+    "ecmaVersion": 8,
+    "sourceType": "module"
+  },
   env: {
     es6: true,
     browser: true,
