@@ -1,7 +1,6 @@
 module.exports = {
   extends: ["prettier", "eslint:recommended", "plugin:react/recommended"],
   plugins: ["prettier", "react", "jest"],
-  parser: "babel-eslint",
   rules: {
     "no-console": "warn",
     "react/prop-types": 0
