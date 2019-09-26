@@ -18,7 +18,7 @@ import ModalDetails from "../../components/modal/ModalDetails";
 
 import Spinner from "../../components/spinner/Spinner";
 
-import Logo from "../../../../Logo.svg";
+import Logo from "../../icons/logo.svg";
 import ChainIcon from "../../icons/chain.svg";
 import MenuIcon from "../../icons/list.svg";
 import TrashIcon from "../../icons/trash-icon.svg";

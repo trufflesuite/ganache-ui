@@ -4,6 +4,7 @@ import { push } from "react-router-redux";
 import connect from "../helpers/connect";
 
 import * as Config from "../../../common/redux/config/actions";
+import Logo from "../../components/logo/Logo.js";
 
 class FirstRunScreen extends Component {
   constructor(props) {
@@ -55,7 +56,7 @@ class FirstRunScreen extends Component {
         <div className="Card CardShadow">
           <div className="MainContent">
             <div className="LeftColumn">
-              <div className="Logo" />
+              <Logo></Logo>
               <h1>SUPPORT GANACHE</h1>
               <p>
                 Ganache includes Google Analytics tracking to help us better
@@ -106,7 +107,6 @@ class FirstRunScreen extends Component {
                 <input
                   type="checkbox"
                   name="enableAnalytics"
-                  ref="enableAnalytics"
                   id="EnableAnalytics"
                   onChange={this._handleInputChange}
                   checked={this.state.enableAnalytics}
@@ -118,7 +118,7 @@ class FirstRunScreen extends Component {
                   <span>Analytics enabled. Thanks!</span>
                 ) : (
                   <span>
-                    You've opted out. You can always opt-in later via the
+                    You&apos;ve opted out. You can always opt-in later via the
                     Settings tab.{" "}
                   </span>
                 )}

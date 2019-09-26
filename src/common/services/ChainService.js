@@ -21,7 +21,7 @@ class ChainService extends EventEmitter {
 
   start() {
     if (this.child === null) {
-      let chainPath = path.join(__dirname, "../../chain/", "chain.js");
+      let chainPath = path.join(__static, "node", "chain", "chain.js");
       const options = {
         stdio: ["pipe", "pipe", "pipe", "ipc"],
       };

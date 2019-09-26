@@ -4,6 +4,7 @@ import MDSpinner from "react-md-spinner";
 import connect from "../helpers/connect";
 import OnlyIf from "../../components/only-if/OnlyIf";
 import BugModal from "../appshell/BugModal";
+import Logo from "../../components/logo/Logo";
 
 class LoaderScreen extends Component {
   render() {
@@ -17,9 +18,7 @@ class LoaderScreen extends Component {
             className="spinner"
             duration={2666}
           />
-          <div className="LogoWrapper">
-            <div className="Logo FadeInElement" />
-          </div>
+          <Logo fadeInElement={true} />
         </div>
         <OnlyIf
           test={

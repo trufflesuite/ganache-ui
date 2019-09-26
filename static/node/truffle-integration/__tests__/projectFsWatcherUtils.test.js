@@ -1,4 +1,4 @@
-import { getAncestorDirs } from "../projectFsWatcherUtils";
+const { getAncestorDirs } = require("../projectFsWatcherUtils");
 
 describe("projectFsWatcherUtils", () => {
   describe("getAncestorDirs", () => {

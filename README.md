@@ -20,7 +20,7 @@ Please open issues and pull requests for new features, questions, and bug fixes.
 
 Requirements:
 
-- `node v8.16.0`
+- `node v12.9.0`
 
 To get started:
 
@@ -87,7 +87,7 @@ Two tools were used:
 * [electron-icon-maker](https://www.npmjs.com/package/electron-icon-maker)
 * [svg2uwptiles](https://www.npmjs.com/package/svg2uwptiles)
 
-`electron-icon-maker` generates assets for all platforms when using Electron's `squirrel` package, and these assets live in `./resources/icons`. `svg2uwptiles` generates all assets needed for the Windows appx build, and those assets live in `./resources/appx`. These locations *can* be changed in the future, but make sure to change the associated configuration pointing to these assets.
+`electron-icon-maker` generates assets for all platforms when using Electron's `squirrel` package, and these assets live in `./static/icons`. `svg2uwptiles` generates all assets needed for the Windows appx build, and those assets live in `./build/appx`. These locations *can* be changed in the future, but make sure to change the associated configuration pointing to these assets.
 
 Note from the author: I found managing these assets manually -- especially the appx assets -- was a pain. If possible, try not to edit the assets themselves and use one of the generators above.
 

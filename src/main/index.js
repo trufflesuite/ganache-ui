@@ -6,25 +6,16 @@ import {
   ipcMain,
   screen,
   clipboard,
-} from "electron";
-import { enableLiveReload } from "electron-compile";
+} from "electron"
+
 import { initAutoUpdates, getAutoUpdateService } from "./init/AutoUpdate.js";
 import path from "path";
 import * as os from "os";
 import merge from "lodash.merge";
-import ethagen from "ethagen";
+import ethagen from "ethagen/wallet";
 import moniker from "moniker";
-import fixPath from "fix-path";
-
-const isDevMode = process.execPath.match(/[\\/]electron/) !== null;
-
-if (isDevMode) {
-  enableLiveReload({ strategy: "react-hmr" });
-
-  // let installExtension = require('electron-devtools-installer')
-  // let REACT_DEVELOPER_TOOLS = installExtension.REACT_DEVELOPER_TOOLS
-}
-
+import fixPath from "fix-path"
+import { format as formatUrl } from 'url';
 import {
   REQUEST_SERVER_RESTART,
   SET_SERVER_STARTED,
@@ -70,15 +61,12 @@ import WorkspaceManager from "./types/workspaces/WorkspaceManager";
 import GoogleAnalyticsService from "../common/services/GoogleAnalyticsService";
 import TruffleIntegrationService from "../common/services/TruffleIntegrationService.js";
 
+const isDevMode = process.execPath.match(/[\\/]electron/) !== null;
+const isDevelopment = process.env.NODE_ENV !== 'production';
+
 let menu;
 let template;
 let mainWindow = null;
-let consoleService = null; // eslint-disable-line
-
-// If you want to test out error handling
-// setTimeout(() => {
-//   throw new Error("Error from main process!")
-// }, 8000)
 
 process.on("uncaughtException", err => {
   if (mainWindow && err) {
@@ -90,9 +78,16 @@ process.on("unhandledRejection", err => {
   if (mainWindow && err) {
     mainWindow.webContents.send(SET_SYSTEM_ERROR, err.stack || err);
   }
-});
+})
 
 app.setName("Ganache");
+if (isDevMode) {
+  // electron can't get the version from our package.json when
+  // launched via `webpack-electron dev`. This makes electron-updater
+  // throw because the app version is "0.0".
+  const version = require("../../package.json").version;
+  app.getVersion = () => version;
+}
 
 // https://github.com/sindresorhus/fix-path
 // GUI apps on macOS don't inherit the $PATH defined in your dotfiles (.bashrc/.bash_profile/.zshrc/etc)
@@ -101,11 +96,12 @@ app.setName("Ganache");
 if (process.platform === "darwin") {
   fixPath();
 }
-
 const getIconPath = () => {
   return process.platform === "win32"
-    ? path.resolve(`${__dirname}/../../resources/icons/win/icon.ico`)
-    : path.resolve(`${__dirname}/../../resources/icons/png/256x256.png`); // Mac & Linux, use an icon
+    // eslint-disable-next-line
+    ? path.resolve(__static, "icons/win/icon.ico") // Windows, use an icon
+    // eslint-disable-next-line
+    : path.resolve(__static, "icons/png/256x256.png"); // Mac & Linux, use an image
 };
 
 if (process.platform === "darwin") {
@@ -132,11 +128,12 @@ const performShutdownTasks = async ({ truffleIntegration, chain }) => {
   }
 };
 
-app.on("ready", () => {
+// create main BrowserWindow when electron is ready
+app.on('ready', () => {
   // workaround for electron race condition, causing hang on startup.
   // see https://github.com/electron/electron/issues/9179 for more info
-
   setTimeout(async () => {
+
     const width = screen.getPrimaryDisplay().bounds.width;
     const chain = new ChainService(app);
     const truffleIntegration = new TruffleIntegrationService(isDevMode);
@@ -275,6 +272,8 @@ app.on("ready", () => {
     const appHeight = Math.min(800, (1 / standardAspectRation) * appWidth);
     appWidth = standardAspectRation * appHeight;
 
+    Menu.setApplicationMenu(null)
+
     mainWindow = new BrowserWindow({
       show: false,
       minWidth: 950,
@@ -283,6 +282,9 @@ app.on("ready", () => {
       height: appHeight,
       frame: true,
       icon: getIconPath(),
+      webPreferences: {
+        nodeIntegration: true
+      }
     });
 
     // Open the DevTools.
@@ -301,14 +303,20 @@ app.on("ready", () => {
       ensureExternalLinksAreOpenedInBrowser,
     );
 
-    mainWindow.loadURL(`file://${__dirname}/../renderer/app.html`);
+    if (isDevelopment) {
+      mainWindow.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`)
+    } else {
+      mainWindow.loadURL(formatUrl({
+        pathname: path.join(__dirname, "index.html"),
+        protocol: 'file',
+        slashes: true
+      }));
+    }
+
     mainWindow.webContents.on("did-finish-load", async () => {
       mainWindow.show();
       mainWindow.focus();
       mainWindow.setTitle("Ganache");
-
-      // Remove the menu bar
-      mainWindow.setMenu(null);
 
       // make sure the store registers the settings ASAP in the event of a startup crash
       const globalSettings = global.getAll();
@@ -362,11 +370,24 @@ app.on("ready", () => {
         if (mainWindow) {
           mainWindow.webContents.send(ADD_LOG_LINES, lines);
         } else {
+          // eslint-disable-next-line
           console.error(data);
         }
       });
 
-      chain.on("error", async error => {
+      chain.on("error", async _error => {
+        let error;
+        if (_error instanceof Error) {
+          // JSON.stringiy can't serialize error objects
+          // so we just convert the Error to an Object here
+          error = {};
+
+          Object.getOwnPropertyNames(_error).forEach((key) => {
+            error[key] = _error[key];
+          });
+        } else {
+          error = _error;
+        }
         mainWindow.webContents.send(SET_SYSTEM_ERROR, error);
 
         if (truffleIntegration) {
@@ -414,6 +435,7 @@ app.on("ready", () => {
 
       workspaceManager.bootstrap();
 
+      // eslint-disable-next-line
       workspace = workspaceManager.get(workspaceName);
       const workspaceSettings = workspace.settings.getAll();
 
@@ -496,6 +518,7 @@ app.on("ready", () => {
         }
       }
 
+      // eslint-disable-next-line
       workspace = workspaceManager.get(name);
 
       if (typeof workspace === "undefined") {
@@ -774,331 +797,6 @@ app.on("ready", () => {
 
       Menu.buildFromTemplate(template).popup(mainWindow);
     });
-
-    if (process.platform === "darwin") {
-      const navigate = path => mainWindow.webContents.send("navigate", path);
-      template = [
-        {
-          label: "Ganache",
-          submenu: [
-            {
-              label: "About Ganache " + app.getVersion(),
-              selector: "orderFrontStandardAboutPanel:",
-            },
-            {
-              type: "separator",
-            },
-            {
-              label: "Preferences...",
-              accelerator: "Command+,",
-              click() {
-                navigate("/config");
-              },
-            },
-            {
-              type: "separator",
-            },
-            {
-              type: "separator",
-            },
-            {
-              label: "Services",
-              submenu: [],
-            },
-            {
-              type: "separator",
-            },
-            {
-              label: "Hide Ganache",
-              accelerator: "Command+H",
-              selector: "hide:",
-            },
-            {
-              label: "Hide Others",
-              accelerator: "Command+Shift+H",
-              selector: "hideOtherApplications:",
-            },
-            {
-              label: "Show All",
-              selector: "unhideAllApplications:",
-            },
-            {
-              type: "separator",
-            },
-            {
-              label: "Quit",
-              accelerator: "Command+Q",
-              click() {
-                app.quit();
-              },
-            },
-          ],
-        },
-        {
-          label: "Edit",
-          submenu: [
-            {
-              label: "Undo",
-              accelerator: "Command+Z",
-              selector: "undo:",
-            },
-            {
-              label: "Redo",
-              accelerator: "Shift+Command+Z",
-              selector: "redo:",
-            },
-            {
-              type: "separator",
-            },
-            {
-              label: "Cut",
-              accelerator: "Command+X",
-              selector: "cut:",
-            },
-            {
-              label: "Copy",
-              accelerator: "Command+C",
-              selector: "copy:",
-            },
-            {
-              label: "Paste",
-              accelerator: "Command+V",
-              selector: "paste:",
-            },
-            {
-              label: "Select All",
-              accelerator: "Command+A",
-              selector: "selectAll:",
-            },
-          ],
-        },
-        {
-          label: "View",
-          submenu:
-            process.env.NODE_ENV === "development"
-              ? [
-                  {
-                    label: "Reload",
-                    accelerator: "Command+R",
-                    click() {
-                      mainWindow.webContents.reload();
-                    },
-                  },
-                  {
-                    label: "Toggle Full Screen",
-                    accelerator: "Ctrl+Command+F",
-                    click() {
-                      mainWindow.setFullScreen(!mainWindow.isFullScreen());
-                    },
-                  },
-                  {
-                    label: "Toggle Developer Tools",
-                    accelerator: "Alt+Command+I",
-                    click() {
-                      mainWindow.toggleDevTools();
-                    },
-                  },
-                ]
-              : [
-                  {
-                    label: "Toggle Full Screen",
-                    accelerator: "Ctrl+Command+F",
-                    click() {
-                      mainWindow.setFullScreen(!mainWindow.isFullScreen());
-                    },
-                  },
-                ],
-        },
-        {
-          label: "Window",
-          submenu: [
-            {
-              label: "Accounts",
-              accelerator: "Command+1",
-              click() {
-                navigate("/accounts");
-              },
-            },
-            {
-              label: "Blocks",
-              accelerator: "Command+2",
-              click() {
-                navigate("/blocks");
-              },
-            },
-            {
-              label: "Transactions",
-              accelerator: "Command+3",
-              click() {
-                navigate("/transactions");
-              },
-            },
-            {
-              label: "Logs",
-              accelerator: "Command+4",
-              click() {
-                navigate("/logs");
-              },
-            },
-            {
-              label: "Settings",
-              accelerator: "Command+5",
-              click() {
-                navigate("/config");
-              },
-            },
-            {
-              label: "Minimize",
-              accelerator: "Command+M",
-              selector: "performMiniaturize:",
-            },
-            {
-              label: "Close",
-              accelerator: "Command+W",
-              selector: "performClose:",
-            },
-            {
-              type: "separator",
-            },
-            {
-              label: "Bring All to Front",
-              selector: "arrangeInFront:",
-            },
-          ],
-        },
-        {
-          label: "Help",
-          submenu: [
-            {
-              label: "Learn More",
-              click() {
-                shell.openExternal("https://trufflesuite.com/ganache");
-              },
-            },
-            {
-              label: "Documentation",
-              click() {
-                shell.openExternal(
-                  "https://github.com/trufflesuite/ganache/blob/master/README.md",
-                );
-              },
-            },
-            {
-              label: "Community Discussions",
-              click() {
-                shell.openExternal(
-                  "https://github.com/trufflesuite/ganache/issues",
-                );
-              },
-            },
-            {
-              label: "Search Issues",
-              click() {
-                shell.openExternal(
-                  "https://github.com/trufflesuite/ganache/issues",
-                );
-              },
-            },
-          ],
-        },
-      ];
-
-      menu = Menu.buildFromTemplate(template);
-      Menu.setApplicationMenu(menu);
-    } else {
-      template = [
-        {
-          label: "&File",
-          submenu: [
-            {
-              label: "&Open",
-              accelerator: "Ctrl+O",
-            },
-            {
-              label: "&Close",
-              accelerator: "Ctrl+W",
-              click() {
-                mainWindow.close();
-              },
-            },
-          ],
-        },
-        {
-          label: "&View",
-          submenu:
-            process.env.NODE_ENV === "development"
-              ? [
-                  {
-                    label: "&Reload",
-                    accelerator: "Ctrl+R",
-                    click() {
-                      mainWindow.webContents.reload();
-                    },
-                  },
-                  {
-                    label: "Toggle &Full Screen",
-                    accelerator: "F11",
-                    click() {
-                      mainWindow.setFullScreen(!mainWindow.isFullScreen());
-                    },
-                  },
-                  {
-                    label: "Toggle &Developer Tools",
-                    accelerator: "Alt+Ctrl+I",
-                    click() {
-                      mainWindow.toggleDevTools();
-                    },
-                  },
-                ]
-              : [
-                  {
-                    label: "Toggle &Full Screen",
-                    accelerator: "F11",
-                    click() {
-                      mainWindow.setFullScreen(!mainWindow.isFullScreen());
-                    },
-                  },
-                ],
-        },
-        {
-          label: "Help",
-          submenu: [
-            {
-              label: "Learn More",
-              click() {
-                shell.openExternal("https://trufflesuite.com/ganache");
-              },
-            },
-            {
-              label: "Documentation",
-              click() {
-                shell.openExternal(
-                  "https://github.com/trufflesuite/ganache/blob/master/README.md",
-                );
-              },
-            },
-            {
-              label: "Community Discussions",
-              click() {
-                shell.openExternal(
-                  "https://github.com/trufflesuite/ganache/issues",
-                );
-              },
-            },
-            {
-              label: "Search Issues",
-              click() {
-                shell.openExternal(
-                  "https://github.com/trufflesuite/ganache/issues",
-                );
-              },
-            },
-          ],
-        },
-      ];
-      menu = Menu.buildFromTemplate(template);
-      Menu.setApplicationMenu(menu);
-    }
   }, 0);
 });
 

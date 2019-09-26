@@ -1,6 +1,6 @@
 import EventEmitter from "events";
 import { fork } from "child_process";
-import path from "path";
+import { join } from "path";
 import { app } from "electron";
 
 // https://github.com/electron/electron/blob/cd0aa4a956cb7a13cbe0e12029e6156c3e892924/docs/api/process.md#process-object
@@ -14,9 +14,10 @@ class TruffleIntegrationService extends EventEmitter {
   }
 
   start() {
-    let chainPath = path.join(
-      __dirname,
-      "../../truffle-integration/",
+    let chainPath = join(
+      __static,
+      "node",
+      "truffle-integration",
       "index.js",
     );
     const options = {

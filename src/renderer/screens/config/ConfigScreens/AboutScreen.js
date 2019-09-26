@@ -1,14 +1,13 @@
 import React, { Component } from "react";
 import * as pkg from "../../../../../package.json";
+import Logo from "../../../components/logo/Logo.js";
 
 class AccountsScreen extends Component {
   render() {
     return (
       <div className="AboutScreenContainer">
         <div className="AboutScreen">
-          <div className="LogoWrapper">
-            <div className="Logo" />
-          </div>
+          <Logo />
           <h4>
             <strong>Ganache</strong>
             <div className="GanacheVersion">v{pkg.version}</div>

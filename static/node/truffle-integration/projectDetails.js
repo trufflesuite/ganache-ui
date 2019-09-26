@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const child_process = require("child_process");
-const TruffleConfig = require("truffle-config");
+const TruffleConfig = require("@truffle/config");
 const temp = require("temp");
 const { promisify } = require("util");
 const exec = promisify(child_process.exec.bind(child_process));
@@ -93,24 +93,12 @@ async function get(projectFile, isRetry = false) {
         });
       });
 
-      let oldProjectLoaderLocation;
-      if (process.env.GANACHE_DEV_MODE === "true") {
-        oldProjectLoaderLocation = path.join(
-          process.env.ELECTRON_APP_PATH,
-          "src",
-          "truffle-project-loader",
-          "index.js",
-        );
-      } else {
-        oldProjectLoaderLocation = path.join(
-          process.env.ELECTRON_APP_PATH,
-          "..",
-          "..",
-          "src",
-          "truffle-project-loader",
-          "index.js",
-        );
-      }
+      const oldProjectLoaderLocation = path.join(
+        __dirname,
+        "../",
+        "truffle-project-loader",
+        "index.js",
+      );
 
       const projectLoaderFile = await new Promise((resolve, reject) => {
         fs.readFile(oldProjectLoaderLocation, null, (err, data) => {

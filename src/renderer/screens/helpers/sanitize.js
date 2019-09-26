@@ -11,9 +11,8 @@ export function sanitizePaths(message) {
   // path separator (oddly, on Windows, different errors will give
   // us different path separators)
   var appPath = app.getAppPath().replace(/\\/g, "/");
-
   // I couldn't figure out the regex, so a loop will do.
-  while (message.indexOf(appPath) >= 0) {
+  while (message && message.indexOf && message.indexOf(appPath) >= 0) {
     message = message.replace(appPath, "");
   }
 

@@ -2,7 +2,6 @@
 
 var ganacheLib = require("ganache-core");
 var logging = require("./logging");
-var pkg = require("../../package.json");
 
 if (!process.send) {
   console.log("Not running as child process. Throwing.");
@@ -78,9 +77,7 @@ function startServer(options) {
     }
 
     // log startup options without logging user's mnemonic
-    const startingMessage = `Starting server (version ${
-      pkg.version
-    }) with initial configuration: ${JSON.stringify(sanitizedOptions)}`;
+    const startingMessage = `Starting server with initial configuration: ${JSON.stringify(sanitizedOptions)}`;
     console.log(startingMessage);
     if (logToFile) {
       logging.logToFile(startingMessage);

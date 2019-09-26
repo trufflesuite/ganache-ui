@@ -1,4 +1,4 @@
-const TruffleDecoder = require("truffle-decoder");
+const TruffleDecoder = require("@truffle/decoder");
 
 async function getContractState(
   truffleContract,
