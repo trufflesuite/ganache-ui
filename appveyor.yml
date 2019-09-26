@@ -36,7 +36,7 @@ install:
           Remove-Item Env:/CERT_ENCRYPTION_SALT;
           Remove-Item Env:/CERT_PRIVATE_KEY_PASSWORD;
         }
-  - ps: Install-Product node $env:nodejs_version x64
+  - ps: Update-NodeJsInstallation $env:nodejs_version x64
   - set CI=true
   - npm install -g npm@latest
   - set PATH=%APPDATA%\npm;%PATH%
