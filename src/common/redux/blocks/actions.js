@@ -91,7 +91,7 @@ const getBlock = async function(number, web3Instance) {
   let block = await web3Request("getBlock", [number, false], web3Instance);
   let transactionCount = await web3Request(
     "getBlockTransactionCount",
-    [block.number],
+    [block.hash],
     web3Instance,
   );
 
@@ -110,11 +110,11 @@ export const showBlock = function(number) {
       block.transactions,
       getState().web3.web3Instance,
     );
-    block.receipts = {};
-
+    const receiptMap = {};
     receipts.forEach(receipt => {
-      block.receipts[receipt.transactionHash] = receipt;
+      receiptMap[receipt.transactionHash] = receipt;
     });
+    block.receipts = receiptMap;
 
     dispatch({ type: SET_CURRENT_BLOCK_SHOWN, block });
   };
