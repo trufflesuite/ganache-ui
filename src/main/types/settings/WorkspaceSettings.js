@@ -24,6 +24,7 @@ const initialSettings = {
     gasLimit: 6721975,
     gasPrice: 20000000000,
     hardfork: "petersburg",
+    fork: null
   },
   projects: [],
 };
