@@ -30,7 +30,7 @@ const VALIDATIONS = {
 };
 
 const FORK_URLS = {
-  mainnet: "https://ropsten.infura.io/f6194ba837b640bba3db3d29cc658b07",
+  mainnet: "https://mainnet.infura.io/f6194ba837b640bba3db3d29cc658b07",
   ropsten: "https://ropsten.infura.io/f6194ba837b640bba3db3d29cc658b07",
   kovan: "https://kovan.infura.io/f6194ba837b640bba3db3d29cc658b07",
   rinkeby: "https://rinkeby.infura.io/f6194ba837b640bba3db3d29cc658b07",
@@ -267,7 +267,7 @@ class ChainScreen extends Component {
               <div className="RowItem">
                 <input
                   name="workspace.server.fork"
-                  type="text"
+                  type="url"
                   value={this.props.config.settings.workspace.server.fork}
                   onChange={this.validateChange.bind(this)}
                 />
@@ -281,7 +281,7 @@ class ChainScreen extends Component {
               <div className="RowItem">
                 <input
                   name="workspace.server.fork_block_number"
-                  type="text"
+                  type="number"
                   value={this.props.config.settings.workspace.server.fork_block_number}
                   onChange={this.validateChange.bind(this)}
                 />
