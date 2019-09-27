@@ -64,8 +64,6 @@ import TruffleIntegrationService from "../common/services/TruffleIntegrationServ
 const isDevMode = process.execPath.match(/[\\/]electron/) !== null;
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
-let menu;
-let template;
 let mainWindow = null;
 
 process.on("uncaughtException", err => {
@@ -340,9 +338,11 @@ app.on('ready', () => {
             privateKeys: data.privateKeys,
             mnemonic: data.mnemonic,
             hdPath: data.hdPath,
+            fork_block_number: data.fork_block_number
           });
 
           workspace.settings.handleNewMnemonic(data.mnemonic);
+          workspace.settings.handleNewForkBlockNumber(data.fork_block_number);
 
           const globalSettings = global.getAll();
           const workspaceSettings = workspace.settings.getAll();

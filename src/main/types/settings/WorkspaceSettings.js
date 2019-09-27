@@ -66,6 +66,10 @@ class WorkspaceSettings extends Settings {
     }
   }
 
+  handleNewForkBlockNumber(forkBlockNumber) {
+    this.set("server.fork_block_number", forkBlockNumber);
+  }
+
   insertDbPath(currentSettings) {
     if (this.chaindataDirectory) {
       return merge({}, currentSettings, {
