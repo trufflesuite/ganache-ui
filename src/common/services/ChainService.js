@@ -25,7 +25,8 @@ class ChainService extends EventEmitter {
       const options = {
         stdio: ["pipe", "pipe", "pipe", "ipc"],
       };
-      this.child = fork(chainPath, [], options);
+      const forkArgs = process.env.NODE_ENV === "development" ? ["--inspect", 5859] : [];
+      this.child = fork(chainPath, forkArgs, options);
       this.child.on("message", message => {
         if (message.type == "process-started") {
           this.emit("start");

@@ -7,15 +7,14 @@ class LogContainer extends Component {
     return nextProps.logs.lines.length !== this.props.logs.lines.length;
   }
 
-  UNSAFE_componentWillUpdate() {
+  getSnapshotBeforeUpdate() {
     var pixelBuffer = 10;
     var node = this.LogItems;
-    this.shouldScrollBottom =
-      node.scrollTop + node.offsetHeight >= node.scrollHeight - pixelBuffer;
+    return node.scrollTop + node.offsetHeight >= node.scrollHeight - pixelBuffer;
   }
 
-  componentDidUpdate() {
-    if (this.shouldScrollBottom) {
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (snapshot) {
       this.LogItems.scrollTop = this.LogItems.scrollHeight;
     }
   }

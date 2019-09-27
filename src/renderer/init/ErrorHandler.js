@@ -3,6 +3,8 @@ import { setSystemError, setModalError } from "../../common/redux/core/actions";
 import {
   setSettingError,
   showConfigScreen,
+  setStartupMode,
+  STARTUP_MODE,
 } from "../../common/redux/config/actions";
 
 export function handleError(store, error) {
@@ -45,6 +47,7 @@ export function handleError(store, error) {
         break;
       case "CUSTOMERROR":
         store.dispatch(setSettingError(error.key, error.value));
+        store.dispatch(setStartupMode(STARTUP_MODE.NEW_WORKSPACE));
         activeConfigTab = error.tab;
         category = "custom";
         detail = error.key + " - " + error.value;

@@ -32,9 +32,7 @@ class ContractDetails extends Component {
     const contract = filteredContracts[0];
 
     this.state = { project, contract };
-  }
-
-  UNSAFE_componentWillMount() {
+  
     const contractCache = this.props.workspaces.current.contractCache;
     const cache = contractCache[this.state.contract.address];
     const transactions = cache.transactions.slice(

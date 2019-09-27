@@ -7,25 +7,25 @@ import * as Transactions from "../../../common/redux/transactions/actions";
 import TxList from "./TxList";
 
 class RecentTransactions extends Component {
-  UNSAFE_componentWillReceiveProps(nextProps) {
+  componentDidUpdate(prevProps) {
     // If the scroll position changed...
     if (
-      nextProps.appshell.scrollPosition != this.props.appshell.scrollPosition
+      prevProps.appshell.scrollPosition != this.props.appshell.scrollPosition
     ) {
-      if (nextProps.appshell.scrollPosition == "top") {
+      if (prevProps.appshell.scrollPosition == "top") {
         this.props.dispatch(Transactions.requestPreviousPage());
-      } else if (nextProps.appshell.scrollPosition == "bottom") {
+      } else if (prevProps.appshell.scrollPosition == "bottom") {
         this.props.dispatch(Transactions.requestNextPage());
       }
       return;
     }
 
     // No change in scroll position?
-    var blocksRequested = Object.keys(nextProps.transactions.blocksRequested);
+    var blocksRequested = Object.keys(prevProps.transactions.blocksRequested);
     var latestBlockRequested = Math.max.apply(Math, blocksRequested.concat(-1));
     if (
-      nextProps.appshell.scrollPosition == "top" &&
-      nextProps.core.latestBlock > latestBlockRequested
+      prevProps.appshell.scrollPosition == "top" &&
+      prevProps.core.latestBlock > latestBlockRequested
     ) {
       this.props.dispatch(Transactions.requestPreviousPage());
     }

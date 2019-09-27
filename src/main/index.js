@@ -25,6 +25,10 @@ import {
 } from "../common/redux/core/actions";
 
 import {
+  SHOW_CONFIG_SCREEN,
+} from "../common/redux/config/actions";
+
+import {
   SET_WORKSPACES,
   OPEN_WORKSPACE,
   CLOSE_WORKSPACE,
@@ -332,6 +336,14 @@ app.on('ready', () => {
         }
       });
 
+      chain.on("start-error", err => {
+        err.code = "CUSTOMERROR";
+        err.key = "workspace.server.chain";
+        err.value = err.message + "\n\n" + err.stack;
+        err.tab = "server";
+
+        mainWindow.webContents.send(SET_SYSTEM_ERROR, err);
+      });
       chain.on("server-started", data => {
         if (workspace) {
           mainWindow.webContents.send(SET_KEY_DATA, {

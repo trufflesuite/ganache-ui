@@ -9,18 +9,18 @@ class BlockList extends Component {
     super(props);
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
+  componentDidUpdate(prevProps) {
     // If the scroll position changed...
     const latestRequested =
-      nextProps.blocks.requested[nextProps.core.latestBlock];
-    const earliestRequested = nextProps.blocks.requested[0];
+    prevProps.blocks.requested[prevProps.core.latestBlock];
+    const earliestRequested = prevProps.blocks.requested[0];
     if (
-      nextProps.appshell.scrollPosition != this.props.appshell.scrollPosition
+      prevProps.appshell.scrollPosition != this.props.appshell.scrollPosition
     ) {
-      if (nextProps.appshell.scrollPosition == "top" && !latestRequested) {
+      if (prevProps.appshell.scrollPosition == "top" && !latestRequested) {
         this.props.dispatch(Blocks.requestPreviousPage());
       } else if (
-        nextProps.appshell.scrollPosition == "bottom" &&
+        prevProps.appshell.scrollPosition == "bottom" &&
         !earliestRequested
       ) {
         this.props.dispatch(Blocks.requestNextPage());
@@ -30,14 +30,14 @@ class BlockList extends Component {
 
     // No change in scroll position? If a new block has been added,
     // request the previous page
-    if (nextProps.blocks.inView.length == 0) {
+    if (prevProps.blocks.inView.length == 0) {
       return;
     }
 
-    var latestBlockInView = nextProps.blocks.inView[0].number;
+    var latestBlockInView = prevProps.blocks.inView[0].number;
     if (
-      nextProps.appshell.scrollPosition == "top" &&
-      nextProps.core.latestBlock > latestBlockInView &&
+      prevProps.appshell.scrollPosition == "top" &&
+      prevProps.core.latestBlock > latestBlockInView &&
       !latestRequested
     ) {
       this.props.dispatch(Blocks.requestPreviousPage());

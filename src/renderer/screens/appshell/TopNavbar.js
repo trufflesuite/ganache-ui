@@ -226,6 +226,13 @@ class TopNavbar extends Component {
         <section className="StatusAndControls">
           <div className="Status">
             <StatusIndicator title="CURRENT BLOCK" value={blockNumber} />
+            { this.props.config.settings.workspace.server.fork ?
+              (<StatusIndicator
+                title="FORK BLOCK"
+                tooltip={this.props.config.settings.workspace.server.fork}
+                value={this.props.config.settings.workspace.server.fork_block_number}
+              />) : ""
+            }
             <StatusIndicator title="GAS PRICE" value={gasPrice} />
             <StatusIndicator title="GAS LIMIT" value={gasLimit} />
             <StatusIndicator title="HARDFORK" value={hardfork} />

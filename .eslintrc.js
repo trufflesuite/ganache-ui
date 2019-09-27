@@ -1,9 +1,11 @@
 module.exports = {
   extends: ["prettier", "eslint:recommended", "plugin:react/recommended"],
-  plugins: ["prettier", "react", "jest"],
+  plugins: ["prettier", "react", "jest", "react-hooks"],
   rules: {
     "no-console": "warn",
-    "react/prop-types": 0
+    "react/prop-types": 0,
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn"
   },
   parserOptions: {
     "ecmaVersion": 8,

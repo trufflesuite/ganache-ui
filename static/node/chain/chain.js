@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+//var ganacheLib = require("../../../../ganache-core"); // for easy testing
 var ganacheLib = require("ganache-core");
 var logging = require("./logging");
 
@@ -103,7 +104,7 @@ function startServer(options) {
 
     server.listen(options.port, options.hostname, function(err, result) {
       if (err) {
-        process.send({ type: "start-error", data: err });
+        process.send({ type: "start-error", data: {code: err.code, stack: err.stack, message: err.message} });
         return;
       }
 

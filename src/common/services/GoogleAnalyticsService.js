@@ -122,6 +122,8 @@ class GoogleAnalyticsService {
           gasLimit: workspaceSettings.server.gasLimit,
           gasPrice: workspaceSettings.server.gasPrice,
           hardfork: workspaceSettings.server.hardfork,
+          fork: workspaceSettings.server.fork,
+          fork_block_number: workspaceSettings.server.fork_block_number,
         };
 
         this.user.set("cd1", config.hostname);
@@ -135,6 +137,8 @@ class GoogleAnalyticsService {
         this.user.set("cd9", config.gasLimit);
         this.user.set("cd10", config.gasPrice);
         this.user.set("cd11", config.hardfork);
+        this.user.set("cd12", config.fork);
+        this.user.set("cd13", config.fork_block_number);
       }
     }
   }

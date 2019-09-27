@@ -28,13 +28,13 @@ class TitleScreen extends Component {
     }, 1000);
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
+  static getDerivedStateFromProps(nextProps) {
     if (
       "global" in nextProps.config.settings &&
       "firstRun" in nextProps.config.settings.global
     ) {
-      this.setState({ firstRun: nextProps.config.settings.global.firstRun });
-    }
+      return { firstRun: nextProps.config.settings.global.firstRun };
+    } else return null;
   }
 
   render() {

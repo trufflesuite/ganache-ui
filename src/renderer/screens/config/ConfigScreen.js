@@ -298,7 +298,7 @@ class ConfigScreen extends PureComponent {
         dispatch: this.props.dispatch,
       },
     );
-
+    
     return (
       <main className="ConfigScreen">
         <div className="Tabs">
