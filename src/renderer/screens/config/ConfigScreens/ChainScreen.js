@@ -23,12 +23,12 @@ const VALIDATIONS = {
   },
 };
 
-// const FORK_URLS = {
-//   mainnet: "https://mainnet.infura.io/ganache",
-//   ropsten: "https://ropsten.infura.io/ganache",
-//   kovan: "https://kovan.infura.io/ganache",
-//   rinkeby: "https://rinkeby.infura.io/ganache",
-// };
+const FORK_URLS = {
+  mainnet: "https://cloudflare-eth.com",
+  // ropsten: "https://ropsten.infura.io/ganache",
+  // kovan: "https://kovan.infura.io/ganache",
+  // rinkeby: "https://rinkeby.infura.io/ganache",
+};
 
 class ChainScreen extends Component {
   constructor(props) {
@@ -39,11 +39,11 @@ class ChainScreen extends Component {
     };
   }
 
-  validateChange = e => {
+  validateChange(e) {
     this.props.validateChange(e, VALIDATIONS);
-  };
+  }
 
-  toggleForking = () => {
+  toggleForking() {
     var toggleValue = !this.state.forking;
 
     // Remove fork if we turn forking off
@@ -62,7 +62,7 @@ class ChainScreen extends Component {
     this.setState({
       forking: toggleValue,
     });
-  };
+  }
 
   cleanNumber(value) {
     if (isNaN(value) || value === null || value === undefined) {
@@ -76,6 +76,7 @@ class ChainScreen extends Component {
     const enabled =
       this.props.config.settings.workspace.isDefault ||
       this.props.config.startupMode === STARTUP_MODE.NEW_WORKSPACE;
+    const hasCustomURL = Object.values(FORK_URLS).includes(this.props.config.settings.workspace.server.fork)
     return (
       <div>
         <h2>GAS</h2>
@@ -158,7 +159,7 @@ class ChainScreen extends Component {
             </div>
           </div>
         </section>
-        {/* <h2>CHAIN FORKING</h2>
+        <h2>CHAIN FORKING</h2>
         <section>
           <div className="Row">
             <div className="RowItem">
@@ -174,13 +175,13 @@ class ChainScreen extends Component {
               </div>
             </div>
             <div className="RowItem">
-              <p>Fork an existing chain creating a new sandbox with the existing chain's accounts, contracts, transactions and data.</p>
+              <p>Fork an existing chain creating a new sandbox with the existing chain&apos;s accounts, contracts, transactions and data.</p>
             </div>
           </div>
         </section>
         <OnlyIf test={this.state.forking}>
           <section>
-            <h4>SELECT CHAIN (PROVIDED BY INFURA)</h4>
+            <h4>SELECT CHAIN</h4>
             <div className="Row">
               <div className="RowItem">
                 <div className="Radio">
@@ -194,7 +195,7 @@ class ChainScreen extends Component {
                     Main Ethereum Network
                   </label>
                 </div>
-                <div className="Radio">
+                {/* <div className="Radio">
                   <label>
                     <input type="radio" 
                       value={FORK_URLS.ropsten}
@@ -226,13 +227,13 @@ class ChainScreen extends Component {
                     />
                     Rinkeby
                   </label>
-                </div>
+                </div> */}
               </div>
               <div className="RowItem">
                 <p>Note: Chain forking is an advanced feature and is still in active development. Please let the Truffle team know if you run into any issues.</p>
               </div>
             </div>
-            {/* <h4>OR CUSTOM URL</h4>
+            <h4>OR CUSTOM URL</h4>
             <div className="Row">
               <div className="RowItem">
                 <input
@@ -243,11 +244,11 @@ class ChainScreen extends Component {
                 />
               </div>
               <div className="RowItem">
-                <p>The URL of the existing chain's RPC server. Eg., https://mainnet.infura.io</p>
+                <p>The URL of the existing chain&apos;s RPC server, e.g., https://beta-mainnet.trufflesuite.com@56789</p>
               </div>
             </div> 
           </section>
-        </OnlyIf> */}
+        </OnlyIf>
       </div>
     );
   }
