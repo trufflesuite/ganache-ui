@@ -37,7 +37,7 @@
     "test-mocha": "cross-env GANACHE_DEV_MODE=true ELECTRON_APP_PATH=./ mocha --require @babel/register --check-leaks 'test/mocha/**/*.test.js'",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "postinstall": "cd static; cd node; npm ci --only=production"
+    "postinstall": "cd static/node && npm ci --only=prod"
   },
   "dependencies": {
     "@exponent/electron-cookies": "^2.0.0",

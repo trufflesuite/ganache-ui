@@ -26,7 +26,7 @@ To get started:
 
 0. Clone this repo
 0. Run `npm install`
-0. Run `npm start`
+0. Run `npm run dev`
 
 If using Windows, you may need [windows-build-tools](https://www.npmjs.com/package/windows-build-tools) installed first.
 
