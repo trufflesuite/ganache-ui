@@ -133,7 +133,16 @@
                 &:last-child {
                   margin-bottom: 0;
                 }
-    
+
+                .CloneWorkspace {
+                  opacity: 0;
+                  width: 1.3rem;
+                  vertical-align: middle;
+                  transition: all .3s;
+                  position: absolute;
+                  right: 3rem;
+                }
+
                 .DeleteWorkspace {
                   opacity: 0;
                   width: 1.3rem;
@@ -146,8 +155,8 @@
                 &:hover, &:focus, &:active {
                   color: #fbf1ec;
                   background: #5f474e;
-    
-                  .DeleteWorkspace {
+
+                  .DeleteWorkspace, .CloneWorkspace {
                     opacity: 1;
     
                     &:hover, &:focus {

@@ -82,6 +82,15 @@ export const deleteWorkspace = function(name) {
   };
 };
 
+export const CLONE_WORKSPACE = `${prefix}/CLONE_WORKSPACE`;
+export const cloneWorkspace = function(name, cloneName) {
+  return function(dispatch) {
+    dispatch({ type: CLONE_WORKSPACE, name, cloneName });
+
+    ipcRenderer.send(CLONE_WORKSPACE, name, cloneName);
+  };
+};
+
 export const SET_CURRENT_WORKSPACE = `${prefix}/SET_CURRENT_WORKSPACE`;
 export const setCurrentWorkspace = function(workspace, contractCache) {
   return { type: SET_CURRENT_WORKSPACE, workspace, contractCache };

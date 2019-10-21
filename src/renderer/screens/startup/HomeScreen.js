@@ -9,6 +9,7 @@ import {
   openDefaultWorkspace,
   openNewWorkspaceConfig,
   deleteWorkspace,
+  cloneWorkspace,
 } from "../../../common/redux/workspaces/actions";
 import UpdateNotification from "../auto-update/UpdateNotification";
 import ErrorModal from "../../components/modal/ErrorModal";
@@ -22,6 +23,7 @@ import Logo from "../../icons/logo.svg";
 import ChainIcon from "../../icons/chain.svg";
 import MenuIcon from "../../icons/list.svg";
 import TrashIcon from "../../icons/trash-icon.svg";
+import CloneIcon from "../../icons/clone-regular.svg";
 
 class HomeScreen extends Component {
   constructor(props) {
@@ -33,8 +35,21 @@ class HomeScreen extends Component {
     this.props.dispatch(openWorkspace(workspaceName));
   }
 
+  handleCloneWorkspace(e) {
+    const workspaceName = e.currentTarget.parentElement.querySelector("span").innerText;
+    e.stopPropagation();
+    e.preventDefault();
+
+    document.activeElement.blur();
+
+    // Future improvement: Create modal dialog asking for new name
+    // For now, just go with hardcoded extension
+    const cloneName = workspaceName + "-clone";
+    this.props.dispatch(cloneWorkspace(workspaceName, cloneName));
+  }
+
   handleDeleteWorkspace(e) {
-    const workspaceName = e.currentTarget.previousSibling.innerText;
+    const workspaceName = e.currentTarget.parentElement.querySelector("span").innerText;
     e.stopPropagation();
     e.preventDefault();
 
@@ -80,7 +95,15 @@ class HomeScreen extends Component {
             <button onClick={this.selectWorkspace.bind(this)}>
               <span>{workspaceName}</span>
               <div
+                className="CloneWorkspace"
+                title="Clone workspace"
+                onClick={this.handleCloneWorkspace.bind(this)}
+              >
+                <CloneIcon/>
+              </div>
+              <div
                 className="DeleteWorkspace"
+                title="Remove workspace"
                 onClick={this.handleDeleteWorkspace.bind(this)}
               >
                 <TrashIcon />
