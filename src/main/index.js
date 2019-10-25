@@ -19,14 +19,12 @@ import { format as formatUrl } from 'url';
 import {
   REQUEST_SERVER_RESTART,
   SET_SERVER_STARTED,
-  SET_KEY_DATA,
   SET_SYSTEM_ERROR,
   SHOW_HOME_SCREEN,
 } from "../common/redux/core/actions";
-
 import {
-  SHOW_CONFIG_SCREEN,
-} from "../common/redux/config/actions";
+  SET_KEY_DATA
+} from "../integrations/ethereum/common/redux/core/actions";
 
 import {
   SET_WORKSPACES,
@@ -35,19 +33,22 @@ import {
   SAVE_WORKSPACE,
   DELETE_WORKSPACE,
   SET_CURRENT_WORKSPACE,
+  OPEN_NEW_WORKSPACE_CONFIG,
+} from "../common/redux/workspaces/actions";
+
+import {
   CONTRACT_TRANSACTION,
   CONTRACT_EVENT,
   GET_CONTRACT_DETAILS,
-  OPEN_NEW_WORKSPACE_CONFIG,
   PROJECT_UPDATED,
-} from "../common/redux/workspaces/actions";
+} from "../integrations/ethereum/common/redux/workspaces/actions";
 
 import {
   GET_DECODED_EVENT,
   SET_SUBSCRIBED_TOPICS,
-} from "../common/redux/events/actions";
+} from "../integrations/ethereum/common/redux/events/actions";
 
-import { GET_DECODED_TRANSACTION_INPUT } from "../common/redux/transactions/actions";
+import { GET_DECODED_TRANSACTION_INPUT } from "../integrations/ethereum/common/redux/transactions/actions";
 
 import {
   SET_SETTINGS,
@@ -63,7 +64,7 @@ import ChainService from "../common/services/ChainService";
 import GlobalSettings from "./types/settings/GlobalSettings";
 import WorkspaceManager from "./types/workspaces/WorkspaceManager";
 import GoogleAnalyticsService from "../common/services/GoogleAnalyticsService";
-import TruffleIntegrationService from "../common/services/TruffleIntegrationService.js";
+import TruffleIntegrationService from "../integrations/ethereum/common/services/TruffleIntegrationService.js";
 
 const isDevMode = process.execPath.match(/[\\/]electron/) !== null;
 const isDevelopment = process.env.NODE_ENV !== 'production';

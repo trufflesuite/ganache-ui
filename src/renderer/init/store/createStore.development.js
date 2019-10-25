@@ -4,16 +4,11 @@ import { hashHistory } from "react-router";
 import { routerMiddleware, push } from "react-router-redux";
 import createLogger from "redux-logger";
 
-import {
-  RPC_REQUEST_STARTED,
-  RPC_REQUEST_SUCCEEDED,
-} from "../../../common/redux/web3/helpers/ReduxWeb3Provider";
-
 import { ADD_LOG_LINES } from "../../../common/redux/logs/actions";
 
 import { SET_SCROLL_POSITION } from "../../../common/redux/appshell/actions";
-
-import { CACHE_REQUEST } from "../../../common/redux/request-cache/actions";
+import { CACHE_REQUEST } from "../../../integrations/ethereum/common/redux/request-cache/actions";
+import { RPC_REQUEST_SUCCEEDED, RPC_REQUEST_STARTED } from "../../../integrations/ethereum/common/redux/web3/helpers/ReduxWeb3Provider";
 
 const actionCreators = {
   push,

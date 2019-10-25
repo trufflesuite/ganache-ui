@@ -1,4 +1,4 @@
-import { web3Request } from "../web3/helpers/Web3ActionCreator";
+import { web3Request } from "../../../integrations/ethereum/common/redux/web3/helpers/Web3ActionCreator";
 import { push } from "react-router-redux";
 
 export const query = function(message) {

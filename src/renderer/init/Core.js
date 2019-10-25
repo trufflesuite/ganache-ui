@@ -1,26 +1,29 @@
 import { ipcRenderer } from "electron";
 import { replace } from "react-router-redux";
 
-import { setRPCProviderUrl } from "../../common/redux/web3/actions";
+import { setRPCProviderUrl } from "../../integrations/ethereum/common/redux/web3/actions";
 
 import {
   SET_SERVER_STARTED,
-  SET_BLOCK_NUMBER,
   SET_SYSTEM_ERROR,
   SET_MODAL_ERROR,
-  SET_KEY_DATA,
-  getGasPrice,
-  getGasLimit,
-  getBlockSubscription,
   setServerStarted,
-  setBlockNumber,
-  setKeyData,
-  setBlockNumberToLatest,
   SHOW_HOME_SCREEN,
   showHomeScreen,
 } from "../../common/redux/core/actions";
 
-import { getAccounts } from "../../common/redux/accounts/actions";
+import {
+  SET_BLOCK_NUMBER,
+  SET_KEY_DATA,
+  getGasPrice,
+  getGasLimit,
+  getBlockSubscription,
+  setBlockNumber,
+  setKeyData,
+  setBlockNumberToLatest,
+} from "../../integrations/ethereum/common/redux/core/actions";
+
+import { getAccounts } from "../../integrations/ethereum/common/redux/accounts/actions";
 
 import {
   setSettings,

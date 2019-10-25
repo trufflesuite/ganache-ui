@@ -6,7 +6,7 @@ import { initConfig } from "./Config";
 import { initLogs } from "./Logs";
 import { initNetwork } from "./Network";
 import { initWorkspaces } from "./Workspaces";
-import { initEvents } from "./Events";
+import { initEvents } from "../../integrations/ethereum/renderer/init/Events";
 
 // This will be called before the very first render, so you can do whatever
 // you want here. The Redux Store is available at this point, so you can

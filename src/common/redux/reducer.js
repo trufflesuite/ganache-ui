@@ -11,17 +11,17 @@ import { REQUEST_SERVER_RESTART } from "./core/actions";
 
 import AppShellReducer from "./appshell/reducers";
 import ConfigReducer from "./config/reducers";
-import CoreReducer from "./core/reducers";
-import Web3Reducer from "./web3/reducers";
-import AccountsReducer from "./accounts/reducers";
-import BlocksReducer from "./blocks/reducers";
-import TransactionsReducer from "./transactions/reducers";
+import CoreReducer from "../../integrations/ethereum/common/redux/core/reducers";
+import Web3Reducer from "../../integrations/ethereum/common/redux/web3/reducers";
+import AccountsReducer from "../../integrations/ethereum/common/redux/accounts/reducers";
+import BlocksReducer from "../../integrations/ethereum/common/redux/blocks/reducers";
+import TransactionsReducer from "../../integrations/ethereum/common/redux/transactions/reducers";
 import LogsReducer from "./logs/reducers";
-import RequestCacheReducer from "./request-cache/reducers";
+import RequestCacheReducer from "../../integrations/ethereum/common/redux/request-cache/reducers";
 import UpdateReducer from "./auto-update/reducers";
 import NetworkReducer from "./network/reducers";
 import WorkspacesReducer from "./workspaces/reducers";
-import EventsReducer from "./events/reducers";
+import EventsReducer from "../../integrations/ethereum/common/redux/events/reducers";
 
 const appReducer = combineReducers({
   appshell: AppShellReducer,

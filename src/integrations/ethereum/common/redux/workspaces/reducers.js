@@ -1,17 +1,13 @@
 import {
   SET_WORKSPACES,
-  SET_CURRENT_WORKSPACE
-} from "./actions";
-
-import {
-  CLEAR_SHOWN_CONTRACT,
-  CONTRACT_EVENT,
+  SET_CURRENT_WORKSPACE,
   CONTRACT_TRANSACTION,
+  CONTRACT_EVENT,
   GET_CONTRACT_DETAILS,
+  CLEAR_SHOWN_CONTRACT,
   PROJECT_UPDATED,
-  SET_LOADING_CONTRACT_DETAILS
-} from "../../../integrations/ethereum/common/redux/workspaces/actions";
-
+  SET_LOADING_CONTRACT_DETAILS,
+} from "./actions";
 import cloneDeep from "lodash.clonedeep";
 
 const initialState = {
@@ -145,7 +141,7 @@ export default function(state = initialState, action) {
     }
     case SET_LOADING_CONTRACT_DETAILS: 
       nextState.current.shownContract.loading = action.loading;
-    break;
+      break;
     default:
       break;
   }
