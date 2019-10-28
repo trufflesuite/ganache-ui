@@ -1,0 +1,1 @@
+JRE archives downloaded from: https://adoptopenjdk.net/archive.html

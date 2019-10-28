@@ -1,1 +1,0 @@
-To update or download the corda jar go to https://ci-artifactory.corda.r3cev.com/artifactory/corda/net/corda/corda/ and download the version you want.
