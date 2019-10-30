@@ -49,6 +49,7 @@
     },
     "win": {
       "certificateSha1": "AF06A54A4EB31362AAF82F3559828ED7502918C6",
+      "verifyUpdateCodeSignature": false,
       "icon": "resources/icons/win/icon.ico",
       "target": [
         {
