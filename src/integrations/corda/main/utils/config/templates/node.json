@@ -222,14 +222,22 @@
             "pattern": "^(.*)$"
           },
           "permissions": {
-            "type": "array",
+            "type": "permissionsArray",
             "items": {
               "type": "string",
-              "default": "",
-              "examples": [
+              "required":[
                 "ALL"
               ],
-              "pattern": "^(.*)$"
+              "properties": {
+                "ALL": {
+                  "type": "string",
+                  "default": "",
+                  "examples": [
+                    "ALL"
+                  ],
+                  "pattern": "^(.*)$"
+                }
+              }
             }
           }
         }
