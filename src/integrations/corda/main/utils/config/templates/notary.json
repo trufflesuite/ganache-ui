@@ -1,0 +1,167 @@
+{
+  "definitions": {},
+  "type": "object",
+  "title": "Notary Schema",
+  "required": [
+    "myLegalName",
+    "keyStorePassword",
+    "trustStorePassword",
+    "p2pAddress",
+    "rpcSettings",
+    "notary",
+    "devMode"
+  ],
+  "properties": {
+    "myLegalName": {
+      "$id": "#/properties/myLegalName",
+      "type": "string",
+      "title": "Mylegalname Schema",
+      "default": "",
+      "examples": [
+        "O=Notary Service,OU=corda,L=London,C=GB"
+      ],
+      "pattern": "^(.*)$"
+    },
+    "keyStorePassword": {
+      "$id": "#/properties/keyStorePassword",
+      "type": "string",
+      "title": "The Keystorepassword Schema",
+      "default": "",
+      "examples": [
+        "cordacadevpass"
+      ],
+      "pattern": "^(.*)$"
+    },
+    "trustStorePassword": {
+      "$id": "#/properties/trustStorePassword",
+      "type": "string",
+      "title": "The Truststorepassword Schema",
+      "default": "",
+      "examples": [
+        "trustpass"
+      ],
+      "pattern": "^(.*)$"
+    },
+    "p2pAddress": {
+      "$id": "#/properties/p2pAddress",
+      "type": "string",
+      "title": "The P2paddress Schema",
+      "default": "",
+      "examples": [
+        "localhost:12345"
+      ],
+      "pattern": "^localhost:(102[4-9]|10[3-9][0-9]|1[1-9][0-9]{2}|[2-9][0-9]{3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$"
+    },
+    "rpcSettings": {
+      "$id": "#/properties/rpcSettings",
+      "type": "object",
+      "title": "The Rpcsettings Schema",
+      "required": [
+        "useSsl",
+        "standAloneBroker",
+        "address",
+        "adminAddress"
+      ],
+      "properties": {
+        "useSsl": {
+          "$id": "#/properties/rpcSettings/properties/useSsl",
+          "type": "boolean",
+          "title": "The Usessl Schema",
+          "default": false,
+          "examples": [
+            false
+          ]
+        },
+        "standAloneBroker": {
+          "$id": "#/properties/rpcSettings/properties/standAloneBroker",
+          "type": "boolean",
+          "title": "The Standalonebroker Schema",
+          "default": false,
+          "examples": [
+            false
+          ]
+        },
+        "address": {
+          "$id": "#/properties/rpcSettings/properties/address",
+          "type": "string",
+          "title": "The Address Schema",
+          "default": "",
+          "examples": [
+            "localhost:10005"
+          ],
+          "pattern": "^(.*)$"
+        },
+        "adminAddress": {
+          "$id": "#/properties/rpcSettings/properties/adminAddress",
+          "type": "string",
+          "title": "The Adminaddress Schema",
+          "default": "",
+          "examples": [
+            "localhost:10006"
+          ],
+          "pattern": "^(.*)$"
+        }
+      }
+    },
+    "notary": {
+      "$id": "#/properties/notary",
+      "type": "object",
+      "title": "The Notary Schema",
+      "required": [
+        "validating"
+      ],
+      "properties": {
+        "validating": {
+          "$id": "#/properties/notary/properties/validating",
+          "type": "boolean",
+          "title": "The Validating Schema",
+          "default": false,
+          "examples": [
+            false
+          ]
+        }
+      }
+    },
+    "devMode": {
+      "$id": "#/properties/devMode",
+      "type": "boolean",
+      "title": "The Devmode Schema",
+      "default": false,
+      "examples": [
+        true
+      ]
+    },
+    "networkServices": {
+      "$id": "#/properties/networkServices",
+      "type": "object",
+      "title": "The Networkservices Schema",
+      "default": null,
+      "required": [
+        "doormanURL",
+        "networkMapURL"
+      ],
+      "properties": {
+        "doormanURL": {
+          "$id": "#/properties/networkServices/properties/doormanURL",
+          "type": "string",
+          "title": "The Doormanurl Schema",
+          "default": "",
+          "examples": [
+            "https://cz.example.com"
+          ],
+          "pattern": "^(.*)$"
+        },
+        "networkMapURL": {
+          "$id": "#/properties/networkServices/properties/networkMapURL",
+          "type": "string",
+          "title": "The Networkmapurl Schema",
+          "default": "",
+          "examples": [
+            "https://cz.example.com"
+          ],
+          "pattern": "^(.*)$"
+        }
+      }
+    }
+  }
+}

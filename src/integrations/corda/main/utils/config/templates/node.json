@@ -1,0 +1,234 @@
+{
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://example.com/root.json",
+  "type": "object",
+  "title": "The Root Schema",
+  "required": [
+    "myLegalName",
+    "keyStorePassword",
+    "trustStorePassword",
+    "crlCheckSoftFail",
+    "dataSourceProperties",
+    "p2pAddress",
+    "rpcSettings",
+    "rpcUsers",
+    "devMode"
+  ],
+  "properties": {
+    "myLegalName": {
+      "$id": "#/properties/myLegalName",
+      "type": "string",
+      "title": "The Mylegalname Schema",
+      "default": "",
+      "examples": [
+        "O=Bank A,L=London,C=GB"
+      ],
+      "pattern": "^(.*)$"
+    },
+    "keyStorePassword": {
+      "$id": "#/properties/keyStorePassword",
+      "type": "string",
+      "title": "The Keystorepassword Schema",
+      "default": "",
+      "examples": [
+        "cordacadevpass"
+      ],
+      "pattern": "^(.*)$"
+    },
+    "trustStorePassword": {
+      "$id": "#/properties/trustStorePassword",
+      "type": "string",
+      "title": "The Truststorepassword Schema",
+      "default": "",
+      "examples": [
+        "trustpass"
+      ],
+      "pattern": "^(.*)$"
+    },
+    "crlCheckSoftFail": {
+      "$id": "#/properties/crlCheckSoftFail",
+      "type": "boolean",
+      "title": "The Crlchecksoftfail Schema",
+      "default": false,
+      "examples": [
+        true
+      ]
+    },
+    "dataSourceProperties": {
+      "$id": "#/properties/dataSourceProperties",
+      "type": "object",
+      "title": "The Datasourceproperties Schema",
+      "required": [
+        "dataSourceClassName",
+        "dataSource.url",
+        "dataSource.user",
+        "dataSource.password"
+      ],
+      "properties": {
+        "dataSourceClassName": {
+          "$id": "#/properties/dataSourceProperties/properties/dataSourceClassName",
+          "type": "className",
+          "title": "The Datasourceclassname Schema",
+          "default": "",
+          "examples": [
+            "org.h2.jdbcx.JdbcDataSource"
+          ],
+          "pattern": "^(.*)$"
+        },
+        "dataSource.url": {
+          "$id": "#/properties/dataSourceProperties/properties/dataSource.url",
+          "type": "string",
+          "title": "The Datasource.url Schema",
+          "default": "",
+          "examples": [
+            "jdbc:h2:file:\"${baseDirectory}\"/persistence"
+          ],
+          "pattern": "^(.*)$"
+        },
+        "dataSource.user": {
+          "$id": "#/properties/dataSourceProperties/properties/dataSource.user",
+          "type": "username",
+          "title": "The Datasource.user Schema",
+          "default": "",
+          "examples": [
+            "sa"
+          ],
+          "pattern": "^(.*)$"
+        },
+        "dataSource.password": {
+          "$id": "#/properties/dataSourceProperties/properties/dataSource.password",
+          "type": "string",
+          "title": "The Datasource.password Schema",
+          "default": "",
+          "examples": [
+            ""
+          ],
+          "pattern": "^(.*)$"
+        }
+      }
+    },
+    "p2pAddress": {
+      "$id": "#/properties/p2pAddress",
+      "type": "string",
+      "title": "The P2paddress Schema",
+      "default": "",
+      "examples": [
+        "localhost:10002"
+      ],
+      "pattern": "^(.*)$"
+    },
+    "rpcSettings": {
+      "$id": "#/properties/rpcSettings",
+      "type": "object",
+      "title": "The Rpcsettings Schema",
+      "required": [
+        "useSsl",
+        "standAloneBroker",
+        "address",
+        "adminAddress"
+      ],
+      "properties": {
+        "useSsl": {
+          "$id": "#/properties/rpcSettings/properties/useSsl",
+          "type": "boolean",
+          "title": "The Usessl Schema",
+          "default": false,
+          "examples": [
+            false
+          ]
+        },
+        "standAloneBroker": {
+          "$id": "#/properties/rpcSettings/properties/standAloneBroker",
+          "type": "boolean",
+          "title": "The Standalonebroker Schema",
+          "default": false,
+          "examples": [
+            false
+          ]
+        },
+        "address": {
+          "$id": "#/properties/rpcSettings/properties/address",
+          "type": "string",
+          "title": "The Address Schema",
+          "default": "",
+          "examples": [
+            "localhost:10003"
+          ],
+          "pattern": "^(.*)$"
+        },
+        "adminAddress": {
+          "$id": "#/properties/rpcSettings/properties/adminAddress",
+          "type": "string",
+          "title": "The Adminaddress Schema",
+          "default": "",
+          "examples": [
+            "localhost:10004"
+          ],
+          "pattern": "^(.*)$"
+        }
+      }
+    },
+    "rpcUsers": {
+      "$id": "#/properties/rpcUsers",
+      "type": "array",
+      "title": "The Rpcusers Schema",
+      "items": {
+        "$id": "#/properties/rpcUsers/items",
+        "type": "object",
+        "title": "The Items Schema",
+        "required": [
+          "username",
+          "password",
+          "permissions"
+        ],
+        "properties": {
+          "username": {
+            "$id": "#/properties/rpcUsers/items/properties/username",
+            "type": "username",
+            "title": "The Username Schema",
+            "default": "",
+            "examples": [
+              "user1"
+            ],
+            "pattern": "^(.*)$"
+          },
+          "password": {
+            "$id": "#/properties/rpcUsers/items/properties/password",
+            "type": "password",
+            "title": "The Password Schema",
+            "default": "",
+            "examples": [
+              "letmein"
+            ],
+            "pattern": "^(.*)$"
+          },
+          "permissions": {
+            "$id": "#/properties/rpcUsers/items/properties/permissions",
+            "type": "array",
+            "title": "The Permissions Schema",
+            "items": {
+              "$id": "#/properties/rpcUsers/items/properties/permissions/items",
+              "type": "string",
+              "title": "The Items Schema",
+              "default": "",
+              "examples": [
+                "ALL"
+              ],
+              "pattern": "^(.*)$"
+            }
+          }
+        }
+      }
+    },
+    "devMode": {
+      "$id": "#/properties/devMode",
+      "type": "boolean",
+      "title": "The Devmode Schema",
+      "default": false,
+      "examples": [
+        true
+      ]
+    }
+  }
+}
