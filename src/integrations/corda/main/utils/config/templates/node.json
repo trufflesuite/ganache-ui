@@ -13,8 +13,8 @@
   ],
   "properties": {
     "myLegalName": {
-      "type": "string",
-      "default": "O=Bank A,L=London,C=GB",
+      "type": "myLegalName",
+      "default": "O=Bank {{O}},L=London,C=GB",
       "pattern": "^(.*)$"
     },
     "keyStorePassword": {
