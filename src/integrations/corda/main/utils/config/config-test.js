@@ -1,4 +1,4 @@
-const generate = require(".");
+const generate = require("./generate");
 // const conf = require("./utils/config/templates/node.json");
 const { createWriteStream } = require("fs");
 const conf = require("./templates/notary.json");
