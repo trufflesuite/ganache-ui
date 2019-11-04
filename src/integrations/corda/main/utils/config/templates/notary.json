@@ -14,34 +14,22 @@
   "properties": {
     "myLegalName": {
       "type": "string",
-      "default": "",
-      "examples": [
-        "O=Notary Service,OU=corda,L=London,C=GB"
-      ],
+      "default": "O=Notary Service,OU=corda,L=London,C=GB",
       "pattern": "^(.*)$"
     },
     "keyStorePassword": {
       "type": "string",
-      "default": "",
-      "examples": [
-        "cordacadevpass"
-      ],
+      "default": "cordacadevpass",
       "pattern": "^(.*)$"
     },
     "trustStorePassword": {
       "type": "string",
-      "default": "",
-      "examples": [
-        "trustpass"
-      ],
+      "default": "trustpass",
       "pattern": "^(.*)$"
     },
     "p2pAddress": {
       "type": "string",
-      "default": "",
-      "examples": [
-        "localhost:12345"
-      ],
+      "default": "localhost:12345",
       "pattern": "^localhost:(102[4-9]|10[3-9][0-9]|1[1-9][0-9]{2}|[2-9][0-9]{3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$"
     },
     "rpcSettings": {
@@ -55,32 +43,20 @@
       "properties": {
         "useSsl": {
           "type": "boolean",
-          "default": false,
-          "examples": [
-            false
-          ]
+          "default": false
         },
         "standAloneBroker": {
           "type": "boolean",
-          "default": false,
-          "examples": [
-            false
-          ]
+          "default": false
         },
         "address": {
           "type": "string",
-          "default": "",
-          "examples": [
-            "localhost:10005"
-          ],
+          "default": "localhost:10005",
           "pattern": "^(.*)$"
         },
         "adminAddress": {
           "type": "string",
-          "default": "",
-          "examples": [
-            "localhost:10006"
-          ],
+          "default": "localhost:10006",
           "pattern": "^(.*)$"
         }
       }
@@ -93,19 +69,13 @@
       "properties": {
         "validating": {
           "type": "boolean",
-          "default": false,
-          "examples": [
-            false
-          ]
+          "default": false
         }
       }
     },
     "devMode": {
       "type": "boolean",
-      "default": false,
-      "examples": [
-        true
-      ]
+      "default": true
     },
     "networkServices": {
       "type": "object",
@@ -117,18 +87,12 @@
       "properties": {
         "doormanURL": {
           "type": "string",
-          "default": "",
-          "examples": [
-            "https://cz.example.com"
-          ],
+          "default": "https://cz.example.com",
           "pattern": "^(.*)$"
         },
         "networkMapURL": {
           "type": "string",
-          "default": "",
-          "examples": [
-            "https://cz.example.com"
-          ],
+          "default": "https://cz.example.com",
           "pattern": "^(.*)$"
         }
       }
