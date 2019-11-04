@@ -1,4 +1,3 @@
-const conf = require("./templates/node.json");
 const SPACES = 4;
 const write = console.log;
 
@@ -26,31 +25,51 @@ const format = (el, element, isPermissions) => {
   return result;
 }
 
+const writeArray = ctx => {
+  const {padding, el, current, depth} = ctx;
+  write(`${padding}${el} = [{`);
+  generate(current.items, depth + 1, true);
+  write(`${padding}}]`);
+}
+
+const writeObject = ctx => {
+  const {padding, el, current, depth} = ctx;
+  write(`${padding}${el} {`);
+  generate(current, depth + 1);
+  write(`${padding}}`);
+}
+
+const writePermissionsArray = ctx => {
+  const {padding, el, current, depth} = ctx;
+  if (current.type === "permissionsArray") {
+    // SPECIAL CASE
+    write(`${padding}${el} = [`)
+    generate(current.items, depth + 1, false, true);
+    write(`${padding}]`)
+  } else {
+    write(`${padding}${el}=${current.examples[0]}`);
+  }
+}
+
+const writeDefault = ctx => {
+  write(`${ctx.padding}${format(ctx.el, ctx.current, ctx.isPermissions)}`);
+}
+
 const generate = (root, depth = 0, isArray = false, isPermissions = false) => {
   const padding = " ".repeat(depth * SPACES);
+  const globalContext = { padding, depth, isPermissions };
   root.required.forEach((el) => {
-    const current = root.properties[el];
+    const context = Object.assign({}, globalContext, {el, current: root.properties[el]});
     if (isArray) {
-      if (current.type === "permissionsArray") {
-        // SPECIAL CASE
-        write(`${padding}${el} = [`)
-        generate(current.items, depth + 1, false, true);
-        write(`${padding}]`)
-      } else {
-        write(`${padding}${el}=${current.examples[0]}`)    
-      }
-    } else if (current.type === "object"){
-      write(`${padding}${el} {`)
-      generate(current, depth + 1);
-      write(`${padding}}`)
-    } else if (current.type === "array") {
-      write(`${padding}${el} = [{`)
-      generate(current.items, depth + 1, true);
-      write(`${padding}}]`)
+      writePermissionsArray(context);
+    } else if (context.current.type === "object"){
+      writeObject(context);
+    } else if (context.current.type === "array") {
+      writeArray(context);
     } else {
-      write(`${padding}${format(el, current, isPermissions)}`);
+      writeDefault(context);
     }
   })
 }
 
-generate(conf);
+module.exports = generate;
