@@ -28,7 +28,7 @@
       "pattern": "^(.*)$"
     },
     "p2pAddress": {
-      "type": "string",
+      "type": "url",
       "default": "localhost:12345",
       "pattern": "^localhost:(102[4-9]|10[3-9][0-9]|1[1-9][0-9]{2}|[2-9][0-9]{3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$"
     },
@@ -50,12 +50,12 @@
           "default": false
         },
         "address": {
-          "type": "string",
+          "type": "url",
           "default": "localhost:10005",
           "pattern": "^(.*)$"
         },
         "adminAddress": {
-          "type": "string",
+          "type": "url",
           "default": "localhost:10006",
           "pattern": "^(.*)$"
         }
@@ -86,12 +86,12 @@
       ],
       "properties": {
         "doormanURL": {
-          "type": "string",
+          "type": "url",
           "default": "https://cz.example.com",
           "pattern": "^(.*)$"
         },
         "networkMapURL": {
-          "type": "string",
+          "type": "url",
           "default": "https://cz.example.com",
           "pattern": "^(.*)$"
         }

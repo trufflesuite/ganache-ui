@@ -1,5 +1,5 @@
 const SPACES = 4;
-const write = console.log;
+let modifiers;
 
 const format = (el, element, isPermissions) => {
   let result;
@@ -17,6 +17,9 @@ const format = (el, element, isPermissions) => {
       case "string":
         result = `${el} = "${element.default}"`;
         break;
+      case "url":
+        result = `${el} = "127.0.0.1:${modifiers.port()}"`
+        break;
       default:
         result = `${el} = ${element.default}`;
         break;
@@ -27,32 +30,32 @@ const format = (el, element, isPermissions) => {
 
 const writeArray = ctx => {
   const {padding, el, current, depth} = ctx;
-  write(`${padding}${el} = [{`);
+  modifiers.write(`${padding}${el} = [{`);
   generate(current.items, depth + 1, true);
-  write(`${padding}}]`);
+  modifiers.write(`${padding}}]`);
 }
 
 const writeObject = ctx => {
   const {padding, el, current, depth} = ctx;
-  write(`${padding}${el} {`);
+  modifiers.write(`${padding}${el} {`);
   generate(current, depth + 1);
-  write(`${padding}}`);
+  modifiers.write(`${padding}}`);
 }
 
 const writePermissionsArray = ctx => {
   const {padding, el, current, depth} = ctx;
   if (current.type === "permissionsArray") {
     // SPECIAL CASE
-    write(`${padding}${el} = [`)
+    modifiers.write(`${padding}${el} = [`)
     generate(current.items, depth + 1, false, true);
-    write(`${padding}]`)
+    modifiers.write(`${padding}]`)
   } else {
-    write(`${padding}${el}=${current.default}`);
+    modifiers.write(`${padding}${el}=${current.default}`);
   }
 }
 
 const writeDefault = ctx => {
-  write(`${ctx.padding}${format(ctx.el, ctx.current, ctx.isPermissions)}`);
+  modifiers.write(`${ctx.padding}${format(ctx.el, ctx.current, ctx.isPermissions)}`);
 }
 
 const generate = (root, depth = 0, isArray = false, isPermissions = false) => {
@@ -72,4 +75,9 @@ const generate = (root, depth = 0, isArray = false, isPermissions = false) => {
   })
 }
 
-module.exports = generate;
+const generateConfig = (root, _modifiers) => {
+  modifiers = _modifiers;
+  generate(root);
+}
+
+module.exports = generateConfig;

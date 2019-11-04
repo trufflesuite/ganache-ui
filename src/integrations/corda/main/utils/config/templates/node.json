@@ -65,7 +65,7 @@
       }
     },
     "p2pAddress": {
-      "type": "string",
+      "type": "url",
       "default": "localhost:10002",
       "pattern": "^(.*)$"
     },
@@ -87,12 +87,12 @@
           "default": false
         },
         "address": {
-          "type": "string",
+          "type": "url",
           "default": "localhost:10003",
           "pattern": "^(.*)$"
         },
         "adminAddress": {
-          "type": "string",
+          "type": "url",
           "default": "localhost:10004",
           "pattern": "^(.*)$"
         }
