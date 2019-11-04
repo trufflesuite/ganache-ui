@@ -15,10 +15,10 @@ const format = (el, element, isPermissions) => {
   } else {
     switch (element.type) {
       case "string":
-        result = `${el} = "${element.examples[0]}"`;
+        result = `${el} = "${element.default}"`;
         break;
       default:
-        result = `${el} = ${element.examples[0]}`;
+        result = `${el} = ${element.default}`;
         break;
     }
   }
@@ -47,7 +47,7 @@ const writePermissionsArray = ctx => {
     generate(current.items, depth + 1, false, true);
     write(`${padding}]`)
   } else {
-    write(`${padding}${el}=${current.examples[0]}`);
+    write(`${padding}${el}=${current.default}`);
   }
 }
 

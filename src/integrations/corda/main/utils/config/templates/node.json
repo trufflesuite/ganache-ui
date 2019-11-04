@@ -14,34 +14,22 @@
   "properties": {
     "myLegalName": {
       "type": "string",
-      "default": "",
-      "examples": [
-        "O=Bank A,L=London,C=GB"
-      ],
+      "default": "O=Bank A,L=London,C=GB",
       "pattern": "^(.*)$"
     },
     "keyStorePassword": {
       "type": "string",
-      "default": "",
-      "examples": [
-        "cordacadevpass"
-      ],
+      "default": "cordacadevpass",
       "pattern": "^(.*)$"
     },
     "trustStorePassword": {
       "type": "string",
-      "default": "",
-      "examples": [
-        "trustpass"
-      ],
+      "default":"trustpass",
       "pattern": "^(.*)$"
     },
     "crlCheckSoftFail": {
       "type": "boolean",
-      "default": false,
-      "examples": [
-        true
-      ]
+      "default": true
     },
     "dataSourceProperties": {
       "type": "object",
@@ -54,44 +42,31 @@
       "properties": {
         "dataSourceClassName": {
           "type": "className",
-          "default": "",
-          "examples": [
-            "org.h2.jdbcx.JdbcDataSource"
-          ],
+          "value" : "",
+          "default": "org.h2.jdbcx.JdbcDataSource",
           "pattern": "^(.*)$"
         },
         "dataSource.url": {
           "type": "string",
           "default": "",
-          "examples": [
-            "jdbc:h2:file:\"${baseDirectory}\"/persistence"
-          ],
+          "examples": "jdbc:h2:file:\"${baseDirectory}\"/persistence",
           "pattern": "^(.*)$"
         },
         "dataSource.user": {
           "type": "username",
-          "default": "",
-          "examples": [
-            "sa"
-          ],
+          "default": "sa",
           "pattern": "^(.*)$"
         },
         "dataSource.password": {
           "type": "string",
           "default": "",
-          "examples": [
-            ""
-          ],
           "pattern": "^(.*)$"
         }
       }
     },
     "p2pAddress": {
       "type": "string",
-      "default": "",
-      "examples": [
-        "localhost:10002"
-      ],
+      "default": "localhost:10002",
       "pattern": "^(.*)$"
     },
     "rpcSettings": {
@@ -104,41 +79,21 @@
       ],
       "properties": {
         "useSsl": {
-          "$id": "#/properties/rpcSettings/properties/useSsl",
           "type": "boolean",
-          "title": "The Usessl Schema",
-          "default": false,
-          "examples": [
-            false
-          ]
+          "default": false
         },
         "standAloneBroker": {
-          "$id": "#/properties/rpcSettings/properties/standAloneBroker",
           "type": "boolean",
-          "title": "The Standalonebroker Schema",
-          "default": false,
-          "examples": [
-            false
-          ]
+          "default": false
         },
         "address": {
-          "$id": "#/properties/rpcSettings/properties/address",
           "type": "string",
-          "title": "The Address Schema",
-          "default": "",
-          "examples": [
-            "localhost:10003"
-          ],
+          "default": "localhost:10003",
           "pattern": "^(.*)$"
         },
         "adminAddress": {
-          "$id": "#/properties/rpcSettings/properties/adminAddress",
           "type": "string",
-          "title": "The Adminaddress Schema",
-          "default": "",
-          "examples": [
-            "localhost:10004"
-          ],
+          "default": "localhost:10004",
           "pattern": "^(.*)$"
         }
       }
@@ -155,18 +110,12 @@
         "properties": {
           "username": {
             "type": "username",
-            "default": "",
-            "examples": [
-              "user1"
-            ],
+            "default": "user1",
             "pattern": "^(.*)$"
           },
           "password": {
             "type": "password",
-            "default": "",
-            "examples": [
-              "letmein"
-            ],
+            "default": "letmein",
             "pattern": "^(.*)$"
           },
           "permissions": {
@@ -179,10 +128,7 @@
               "properties": {
                 "ALL": {
                   "type": "string",
-                  "default": "",
-                  "examples": [
-                    "ALL"
-                  ],
+                  "default": "ALL",
                   "pattern": "^(.*)$"
                 }
               }
@@ -193,10 +139,7 @@
     },
     "devMode": {
       "type": "boolean",
-      "default": false,
-      "examples": [
-        true
-      ]
+      "default": true
     }
   }
 }
