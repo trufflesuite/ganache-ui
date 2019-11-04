@@ -100,8 +100,7 @@
         "useSsl",
         "standAloneBroker",
         "address",
-        "adminAddress",
-        "rpcSettings"
+        "adminAddress"
       ],
       "properties": {
         "useSsl": {
@@ -141,57 +140,6 @@
             "localhost:10004"
           ],
           "pattern": "^(.*)$"
-        },
-        "rpcSettings": {
-          "$id": "#/properties/rpcSettings",
-          "type": "object",
-          "title": "The Rpcsettings Schema",
-          "required": [
-            "useSsl",
-            "standAloneBroker",
-            "address",
-            "adminAddress"
-          ],
-          "properties": {
-            "useSsl": {
-              "$id": "#/properties/rpcSettings/properties/useSsl",
-              "type": "boolean",
-              "title": "The Usessl Schema",
-              "default": false,
-              "examples": [
-                false
-              ]
-            },
-            "standAloneBroker": {
-              "$id": "#/properties/rpcSettings/properties/standAloneBroker",
-              "type": "boolean",
-              "title": "The Standalonebroker Schema",
-              "default": false,
-              "examples": [
-                false
-              ]
-            },
-            "address": {
-              "$id": "#/properties/rpcSettings/properties/address",
-              "type": "string",
-              "title": "The Address Schema",
-              "default": "",
-              "examples": [
-                "localhost:10003"
-              ],
-              "pattern": "^(.*)$"
-            },
-            "adminAddress": {
-              "$id": "#/properties/rpcSettings/properties/adminAddress",
-              "type": "string",
-              "title": "The Adminaddress Schema",
-              "default": "",
-              "examples": [
-                "localhost:10004"
-              ],
-              "pattern": "^(.*)$"
-            }
-          }
         }
       }
     },
