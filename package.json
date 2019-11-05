@@ -47,6 +47,7 @@
     "ethereumjs-units": "^0.2.0",
     "filesize": "^3.6.1",
     "fix-path": "^2.1.0",
+    "follow-redirects": "1.9.0",
     "fs-extra": "8.1.0",
     "lodash.clonedeep": "^4.5.0",
     "lodash.isequal": "^4.5.0",
@@ -77,6 +78,7 @@
     "source-map-support": "^0.5.13",
     "truffle": "^5.0.37",
     "universal-analytics": "^0.4.13",
+    "unzip-stream": "0.3.0",
     "web3": "1.2.1",
     "web3-providers-http": "1.2.1",
     "web3-providers-ws": "1.2.1"
