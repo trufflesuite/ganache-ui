@@ -14,8 +14,14 @@ function waitForClose( stream ){
     return waitForEvent(stream, "close");
 }
 
+const produceModifier = (...args) => {
+  return Object.assign({}, ...args);
+}
+
 // const alphabet = "abcdefghijklmnopqrstuvwxyz";
 const bootstrap = async (nodes, notaries, startPort, path = "integrations/corda") => {
+  const nodesArr = [];
+  const notariesArr = [];
   console.log(__dirname);
   
   const projectHome = join(__dirname, "../../../../../..", path);
@@ -23,14 +29,23 @@ const bootstrap = async (nodes, notaries, startPort, path = "integrations/corda"
   
   const getPort = port(startPort);
   const getNonce = ((val) => () => val++)(0);
-  const names = [];
-  
+
+  const modifier = {
+    getPort,
+    getNonce,
+    postgres: {
+      port: 5432,
+      schema: "mynode"
+    }
+  }
+
   for (let i = 0; i < notaries; i++) {
     // 
     const name = `notary${i}`;
-    names.push(name);
+    nodesArr.push(name);
     const stream = createWriteStream(join(projectHome, "corda", `${name}_node.conf`));
-    generate(templates.notary, { getPort, getNonce, write: (val) => stream.write(`${val}\n`, "utf8") });
+    const write = (val) => stream.write(`${val}\n`, "utf8");
+    generate(templates.notary, produceModifier(modifier, { write }));
     const close = waitForClose(stream).catch(console.log);
     stream.end();
     await close;
@@ -40,10 +55,11 @@ const bootstrap = async (nodes, notaries, startPort, path = "integrations/corda"
 
   for (let i = 0; i < nodes; i++) {
     const name = `party${i}`;
-    names.push(name);
+    notariesArr.push(name);
     const stream = createWriteStream(join(projectHome, "corda", `${name}_node.conf`));
     const close = waitForClose(stream).catch(console.log);
-    generate(templates.node, { getPort, getNonce, write: (val) => stream.write(`${val}\n`, "utf8") });
+    const write = (val) => stream.write(`${val}\n`, "utf8");
+    generate(templates.node, produceModifier(modifier, { write }));
     stream.end();
     await close;
   }
@@ -53,15 +69,6 @@ const bootstrap = async (nodes, notaries, startPort, path = "integrations/corda"
   const JAVA_HOME = join(projectHome, "java/OpenJDK", "OpenJDK8U-jre_x64_linux_hotspot_8u232b09");
 
   console.log(JAVA_HOME);
-  // const commands = [];
-  // commands.push(`JAVA_HOME=${JAVA_HOME}`);
-  // commands.push(`PATH=$JAVA_HOME/bin:$PATH`);
-  // commands.push(`java -jar ${join(projectHome, "corda-tools-network-bootstrapper-4.1.jar")}`);
-  // commands.push(`--dir ${join(projectHome, "corda")}`);
-
-  // const command = commands.join(" ");
-
-  // console.log(command);
 
   const java = spawn("java", ["-jar", `${join(projectHome, "corda-tools-network-bootstrapper-4.1.jar")}`, "--dir", join(projectHome, "corda")], {
     env : {
@@ -70,27 +77,19 @@ const bootstrap = async (nodes, notaries, startPort, path = "integrations/corda"
   });
 
   java.stdout.on('data', (data) => {
-    console.log(`stdout:\n${data}`);
+    console.log(`${data}`);
   });
 
   java.stderr.on('data', (data) => {
     console.error(`stderr:\n${data}`);
   });
 
-  java.on('close', (code) => {
-    console.log(`child process exited with code ${code}`);
+  return new Promise((resolve) => {
+    java.on('close', (code) => {
+      console.log(`child process exited with code ${code}`);
+      resolve({ nodes: nodesArr, notaries: notariesArr });
+    });
   });
-  // const networkBootstrap = exec(command,
-  //   function (error, stdout, stderr) {
-  //       console.log('stdout: ' + stdout);
-  //       console.log('stderr: ' + stderr);
-  //       if (error !== null) {
-  //            console.log('exec error: ' + error);
-  //       }
-  //   });
-
-  // console.log(networkBootstrap);
-
 }
 
 module.exports = bootstrap;
