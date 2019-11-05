@@ -1,7 +1,7 @@
 const { Extract } = require("unzip-stream");
 const { get } = require("follow-redirects/https");
 const URL = require("url");
-const { join, parse } = require("path");
+const { join, parse, resolve } = require("path");
 const { existsSync, createWriteStream, unlink } = require("fs");
 
 function parseUrl(urlString){
@@ -10,9 +10,11 @@ function parseUrl(urlString){
 }
 
 class Downloader {
-  constructor(saveLocation) {
-    this.saveLocation = saveLocation;
+  constructor(saveLocation = "../../../dist/extras/") {
+    this.saveLocation = resolve(__dirname, saveLocation);
+    console.log(this.saveLocation);
   }
+
   /**
    * Downloads the resource to the saveLocation, using the file
    * @param {string} url The URL of the resource to download
