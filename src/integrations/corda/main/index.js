@@ -1,5 +1,8 @@
-const { network } = require("./utils/");
+const { NetworkManager } = require("./utils/network");
 
 (async () => {
-  await network.bootstrap(2, 1, 10000);
+  const manager = new NetworkManager();
+  await manager.bootstrap(2,1);
+  console.log("STARTING");
+  await manager.start();
 })();
