@@ -48,8 +48,7 @@
         },
         "dataSource.url": {
           "type": "string",
-          "default": "",
-          "examples": "jdbc:h2:file:\"${baseDirectory}\"/persistence",
+          "default": "jdbc:h2:file:\"${baseDirectory}\"/persistence",
           "pattern": "^(.*)$"
         },
         "dataSource.user": {
