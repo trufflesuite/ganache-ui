@@ -1,4 +1,4 @@
-const pg = require("./postgres");
+const pg = require("./postgres")();
 const nodeNames = ["hello", "world"];
 const fileSystemSafeWorkspaceName = "testing";
 const postgresPort = 15432;
