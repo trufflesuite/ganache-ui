@@ -2,7 +2,7 @@ const { Extract } = require("unzip-stream");
 const { get } = require("follow-redirects/https");
 const URL = require("url");
 const { join, parse } = require("path");
-const { createWriteStream, unlink } = require("fs");
+const { existsSync, createWriteStream, unlink } = require("fs");
 
 function parseUrl(urlString){
   const parsed = URL.parse(urlString);
@@ -17,10 +17,14 @@ class Downloader {
    * Downloads the resource to the saveLocation, using the file
    * @param {string} url The URL of the resource to download
    */
-  download(url) {
+  download(url, force = false) {
     const parsedUri = parseUrl(url);
     const isZip = parsedUri.ext.toLowerCase() === ".zip";
     const dest = join(this.saveLocation, isZip ? parsedUri.name : parsedUri.base);
+    // if the file/folder already exists don't download it again unless we are `force`d to
+    if (!force && existsSync(dest)){
+      return Promise.resolve(dest);
+    }
     const fn = isZip ? this.unzip : this.save;
     return new Promise((resolve, reject) => {
       get(url, (response) => {
