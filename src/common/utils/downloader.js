@@ -12,7 +12,6 @@ function parseUrl(urlString){
 class Downloader {
   constructor(saveLocation = "../../../dist/extras/") {
     this.saveLocation = resolve(__dirname, saveLocation);
-    console.log(this.saveLocation);
   }
 
   /**
