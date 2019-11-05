@@ -6,6 +6,9 @@
     "myLegalName",
     "keyStorePassword",
     "trustStorePassword",
+    "crlCheckSoftFail",
+    "dataSourceProperties",
+    "database",
     "p2pAddress",
     "rpcSettings",
     "notary",
@@ -26,6 +29,54 @@
       "type": "string",
       "default": "trustpass",
       "pattern": "^(.*)$"
+    },
+    "crlCheckSoftFail": {
+      "type": "boolean",
+      "default": true
+    },
+    "dataSourceProperties": {
+      "type": "object",
+      "required": [
+        "dataSourceClassName",
+        "dataSource.url",
+        "dataSource.user",
+        "dataSource.password"
+      ],
+      "properties": {
+        "dataSourceClassName": {
+          "type": "className",
+          "value" : "",
+          "default": "org.postgresql.ds.PGSimpleDataSource",
+          "pattern": "^(.*)$"
+        },
+        "dataSource.url": {
+          "type": "postgresUrl",
+          "default": "jdbc:postgresql://127.0.0.1:{{port}}/{{schema}}",
+          "pattern": "^(.*)$"
+        },
+        "dataSource.user": {
+          "type": "username",
+          "default": "corda",
+          "pattern": "^(.*)$"
+        },
+        "dataSource.password": {
+          "type": "string",
+          "default": "",
+          "pattern": "^(.*)$"
+        }
+      }
+    },
+    "database": {
+      "type": "object",
+      "required": [
+        "transactionIsolationLevel"
+      ],
+      "properties": {
+        "transactionIsolationLevel": {
+          "type": "string",
+          "default": "READ_COMMITTED"
+        }
+      }
     },
     "p2pAddress": {
       "type": "url",

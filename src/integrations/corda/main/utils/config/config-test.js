@@ -6,6 +6,13 @@ const {port} = require("../network");
 
 const stream = createWriteStream("test.conf");
 
-generate(conf, { port: port(10009), write: (val) => stream.write(`${val}\n`, "utf8") });
+generate(conf, {
+    getPort: port(10009),
+    write: (val) => stream.write(`${val}\n`, "utf8"),
+    postgres: {
+        port: 5432,
+        schema: "mynode"
+    }
+});
 
 stream.end();

@@ -20,6 +20,9 @@ const format = (el, element, isPermissions) => {
       case "myLegalName":
         result = `${el} = "${element.default}"`.replace("{{O}}", modifiers.getNonce());
         break;
+      case "postgresUrl":
+        result = `${el} = "${element.default}"`.replace("{{port}}", modifiers.postgres.port).replace("{{schema}}", modifiers.postgres.schema);
+        break;
       case "url":
         result = `${el} = "127.0.0.1:${modifiers.getPort()}"`
         break;

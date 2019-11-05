@@ -6,6 +6,7 @@
     "trustStorePassword",
     "crlCheckSoftFail",
     "dataSourceProperties",
+    "database",
     "p2pAddress",
     "rpcSettings",
     "rpcUsers",
@@ -43,23 +44,35 @@
         "dataSourceClassName": {
           "type": "className",
           "value" : "",
-          "default": "org.h2.jdbcx.JdbcDataSource",
+          "default": "org.postgresql.ds.PGSimpleDataSource",
           "pattern": "^(.*)$"
         },
         "dataSource.url": {
-          "type": "string",
-          "default": "jdbc:h2:file:\"${baseDirectory}\"/persistence",
+          "type": "postgresUrl",
+          "default": "jdbc:postgresql://127.0.0.1:{{port}}/{{schema}}",
           "pattern": "^(.*)$"
         },
         "dataSource.user": {
           "type": "username",
-          "default": "sa",
+          "default": "corda",
           "pattern": "^(.*)$"
         },
         "dataSource.password": {
           "type": "string",
           "default": "",
           "pattern": "^(.*)$"
+        }
+      }
+    },
+    "database": {
+      "type": "object",
+      "required": [
+        "transactionIsolationLevel"
+      ],
+      "properties": {
+        "transactionIsolationLevel": {
+          "type": "string",
+          "default": "READ_COMMITTED"
         }
       }
     },
