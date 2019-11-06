@@ -43,7 +43,6 @@
       "properties": {
         "dataSourceClassName": {
           "type": "className",
-          "value" : "",
           "default": "org.postgresql.ds.PGSimpleDataSource",
           "pattern": "^(.*)$"
         },
