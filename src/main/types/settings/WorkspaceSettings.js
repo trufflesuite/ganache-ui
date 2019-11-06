@@ -31,8 +31,8 @@ const initialSettings = {
 };
 
 class WorkspaceSettings extends Settings {
-  constructor(directory, chaindataDirectory) {
-    super(directory, initialSettings);
+  constructor(directory, chaindataDirectory, flavor = "ethereum") {
+    super(directory, merge({}, initialSettings, {flavor}));
 
     this.chaindataDirectory = chaindataDirectory;
 
@@ -41,7 +41,7 @@ class WorkspaceSettings extends Settings {
         gasLimit: initialSettings.server.gasLimit,
         gasPrice: initialSettings.server.gasPrice,
         hardfork: initialSettings.server.hardfork,
-      },
+      }
     };
   }
 

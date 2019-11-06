@@ -34,11 +34,13 @@ class WorkspaceManager {
               path.join(workspacesDirectory, sanitizedName),
             );
           }
-          return new Workspace(name, this.directory);
+          const flavor = settings.get("flavor");
+          return new Workspace(name, this.directory, flavor);
         });
     }
 
-    this.workspaces.push(new Workspace(null, this.directory));
+    this.workspaces.push(new Workspace(null, this.directory, "ethereum"));
+    this.workspaces.push(new Workspace(null, this.directory, "corda"));
   }
 
   bootstrap() {
@@ -54,8 +56,16 @@ class WorkspaceManager {
       .map(workspace => workspace.name);
   }
 
-  get(name) {
-    return this.workspaces.find(workspace => name === workspace.name);
+  get(name, flavor = "ethereum") {
+    return this.workspaces.find(workspace => name === workspace.name && isFlavor(workspace.flavor, flavor));
+  }
+}
+
+function isFlavor(flavorA, flavorB){
+  if (flavorA === undefined && flavorB === "ethereum") {
+    return true;
+  } else {
+    return flavorA === flavorB;
   }
 }
 

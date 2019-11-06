@@ -30,7 +30,9 @@ class HomeScreen extends Component {
 
   selectWorkspace(e) {
     const workspaceName = e.currentTarget.querySelector("span").innerText;
-    this.props.dispatch(openWorkspace(workspaceName));
+    // TODO: GET ACTUAL WORKSPACE TYPE.
+    //const workspaceFlavor = this.props.workspaces.names[workspaceName].settings.flavor;
+    this.props.dispatch(openWorkspace(workspaceName, "ethereum"));
   }
 
   handleDeleteWorkspace(e) {
@@ -62,7 +64,10 @@ class HomeScreen extends Component {
   }
 
   handleQuickstartPress() {
-    this.props.dispatch(openDefaultWorkspace());
+    //const defaultFlavor = "ethereum";
+    // TODO: FOR QUICK TESTING ONLY
+    const defaultFlavor = "corda";
+    this.props.dispatch(openDefaultWorkspace(defaultFlavor));
   }
 
   handleNewWorkspacePress() {

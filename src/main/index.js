@@ -520,7 +520,7 @@ app.on('ready', () => {
       mainWindow.webContents.send(SHOW_HOME_SCREEN);
     });
 
-    ipcMain.on(OPEN_WORKSPACE, async (event, name) => {
+    ipcMain.on(OPEN_WORKSPACE, async (event, name, flavor = "ethereum") => {
       if (workspace) {
         if (truffleIntegration) {
           await truffleIntegration.stopWatching();
@@ -532,7 +532,7 @@ app.on('ready', () => {
       }
 
       // eslint-disable-next-line
-      workspace = workspaceManager.get(name);
+      workspace = workspaceManager.get(name, flavor);
 
       if (typeof workspace === "undefined") {
         // couldn't find the workspace in the manager?
