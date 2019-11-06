@@ -71,7 +71,11 @@ export function initCore(store) {
         }
         case STARTUP_MODE.NORMAL:
         default: {
-          store.dispatch(replace("/accounts"));
+          if (workspaceSettings.flavor === "corda") {
+            store.dispatch(replace("/corda"));  
+          } else {
+            store.dispatch(replace("/accounts"));
+          }
           break;
         }
       }

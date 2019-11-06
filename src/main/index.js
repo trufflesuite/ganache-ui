@@ -34,6 +34,7 @@ import {
   DELETE_WORKSPACE,
   SET_CURRENT_WORKSPACE,
   OPEN_NEW_WORKSPACE_CONFIG,
+  DOWNLOAD_EXTRAS,
 } from "../common/redux/workspaces/actions";
 
 import {
@@ -60,6 +61,7 @@ import { SET_INTERFACES } from "../common/redux/network/actions";
 
 import { ADD_LOG_LINES } from "../common/redux/logs/actions";
 
+import extras from "../common/extras";
 import ChainService from "../common/services/ChainService";
 import GlobalSettings from "./types/settings/GlobalSettings";
 import WorkspaceManager from "./types/workspaces/WorkspaceManager";
@@ -143,6 +145,7 @@ app.on('ready', () => {
     const global = new GlobalSettings(
       path.join(app.getPath("userData"), "global"),
     );
+    const config = extras.init(path.join(app.getPath("userData"), "extras"));
     const GoogleAnalytics = new GoogleAnalyticsService();
     const workspaceManager = new WorkspaceManager(app.getPath("userData"));
     let workspace;
@@ -258,6 +261,34 @@ app.on('ready', () => {
         }
       },
     );
+
+    ipcMain.on(DOWNLOAD_EXTRAS, async (event, flavor) => {
+      if (Object.prototype.hasOwnProperty.call(config, flavor)) {
+        const extras = config[flavor];
+        mainWindow.webContents.send(DOWNLOAD_EXTRAS, {
+          status: "downloading",
+          flavor
+        });
+        try {
+          await extras.downloadAll();
+          mainWindow.webContents.send(DOWNLOAD_EXTRAS, {
+            status: "success",
+            flavor
+          });
+        } catch (e) {
+          mainWindow.webContents.send(DOWNLOAD_EXTRAS, {
+            status: "failed",
+            error: e,
+            flavor
+          });
+        }
+      } else { 
+        mainWindow.webContents.send(DOWNLOAD_EXTRAS, {
+          status: "failed",
+          flavor
+        });
+      }
+    });
 
     ipcMain.on("web3-provider", (event, url) => {
       truffleIntegration.setWeb3(url);
@@ -520,7 +551,7 @@ app.on('ready', () => {
       mainWindow.webContents.send(SHOW_HOME_SCREEN);
     });
 
-    ipcMain.on(OPEN_WORKSPACE, async (event, name) => {
+    ipcMain.on(OPEN_WORKSPACE, async (event, name, flavor = "ethereum") => {
       if (workspace) {
         if (truffleIntegration) {
           await truffleIntegration.stopWatching();
@@ -532,7 +563,7 @@ app.on('ready', () => {
       }
 
       // eslint-disable-next-line
-      workspace = workspaceManager.get(name);
+      workspace = workspaceManager.get(name, flavor);
 
       if (typeof workspace === "undefined") {
         // couldn't find the workspace in the manager?

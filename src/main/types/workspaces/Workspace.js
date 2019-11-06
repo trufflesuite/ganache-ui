@@ -5,8 +5,9 @@ import WorkspaceSettings from "../settings/WorkspaceSettings";
 import ContractCache from "../../../integrations/ethereum/main/types/contracts/ContractCache";
 
 class Workspace {
-  constructor(name, configDirectory) {
+  constructor(name, configDirectory, flavor = "ethereum") {
     this.name = name; // null for quickstart/default workspace
+    this.flavor = flavor;
     this.projects = [];
     this.init(configDirectory);
 
@@ -15,6 +16,7 @@ class Workspace {
     this.settings = new WorkspaceSettings(
       this.workspaceDirectory,
       this.chaindataDirectory,
+      flavor
     );
 
     this.contractCache = new ContractCache(this.workspaceDirectory);
@@ -25,6 +27,7 @@ class Workspace {
     this.workspaceDirectory = Workspace.generateDirectoryPath(
       this.sanitizedName,
       configDirectory,
+      this.flavor
     );
     this.basename = path.basename(this.workspaceDirectory);
     this.chaindataDirectory = this.generateChaindataDirectory();
@@ -36,9 +39,13 @@ class Workspace {
       : name.replace(/\s/g, "-").replace(/[^a-zA-Z0-9\-_.]/g, "");
   }
 
-  static generateDirectoryPath(sanitizedName, configDirectory) {
+  static generateDirectoryPath(sanitizedName, configDirectory, flavor = "ethereum") {
     if (sanitizedName === null) {
-      return path.join(configDirectory, "default");
+      if (flavor === "ethereum") {
+        return path.join(configDirectory, "default");
+      } else {
+        return path.join(configDirectory, `default-${flavor}`);
+      }
     } else {
       return path.join(configDirectory, "workspaces", sanitizedName);
     }

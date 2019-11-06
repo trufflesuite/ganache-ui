@@ -34,19 +34,19 @@ export const closeWorkspace = function() {
 };
 
 export const OPEN_WORKSPACE = `${prefix}/OPEN_WORKSPACE`;
-export const openWorkspace = function(name) {
+export const openWorkspace = function(name, flavor = "ethereum") {
   return function(dispatch) {
     dispatch(push("/loader"));
-    dispatch({ type: OPEN_WORKSPACE, name });
-    ipcRenderer.send(OPEN_WORKSPACE, name);
+    dispatch({ type: OPEN_WORKSPACE, name, flavor});
+    ipcRenderer.send(OPEN_WORKSPACE, name, flavor);
   };
 };
 
-export const openDefaultWorkspace = function() {
+export const openDefaultWorkspace = function(flavor = "ethereum") {
   return function(dispatch) {
     dispatch(push("/loader"));
-    dispatch({ type: OPEN_WORKSPACE, name: null });
-    ipcRenderer.send(OPEN_WORKSPACE, null);
+    dispatch({ type: OPEN_WORKSPACE, name: null, flavor });
+    ipcRenderer.send(OPEN_WORKSPACE, null, flavor);
   };
 };
 
@@ -83,4 +83,12 @@ export const deleteWorkspace = function(name) {
 export const SET_CURRENT_WORKSPACE = `${prefix}/SET_CURRENT_WORKSPACE`;
 export const setCurrentWorkspace = function(workspace, contractCache) {
   return { type: SET_CURRENT_WORKSPACE, workspace, contractCache };
+};
+
+export const DOWNLOAD_EXTRAS = `${prefix}/DOWNLOAD_EXTRAS`;
+export const downloadExtras = function(flavor) {
+  return function(dispatch) {
+    dispatch({ type: DOWNLOAD_EXTRAS, flavor });
+    ipcRenderer.send(DOWNLOAD_EXTRAS, flavor);
+  };
 };

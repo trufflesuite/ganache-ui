@@ -18,7 +18,7 @@ class Downloader {
    * Downloads the resource to the saveLocation, using the file
    * @param {string} url The URL of the resource to download
    */
-  download(url, force = false) {
+  async download(url, force = false) {
     const parsedUri = parseUrl(url);
     const isZip = parsedUri.ext.toLowerCase() === ".zip";
     const dest = join(this.saveLocation, isZip ? parsedUri.name : parsedUri.base);
@@ -40,7 +40,7 @@ class Downloader {
       });
     });
   }
-  save(stream, dest) {
+  async save(stream, dest) {
     const file = createWriteStream(dest);
     stream.pipe(file);
     return new Promise((resolve, reject) => {
@@ -49,14 +49,14 @@ class Downloader {
       }).on("error", reject);
     });
   }
-  unzip(stream, path) {
+  async unzip(stream, path) {
     return new Promise((resolve, reject) => {
       stream.pipe(Extract({ path }))
         .on("close", resolve)
         .on("error", reject);
     });
   }
-  downloadAll(urls) {
+  async downloadAll(urls) {
     return Promise.all(urls.map(this.download.bind(this)));
   }
 }
