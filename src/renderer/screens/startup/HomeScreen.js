@@ -9,6 +9,7 @@ import {
   openDefaultWorkspace,
   openNewWorkspaceConfig,
   deleteWorkspace,
+  downloadExtras
 } from "../../../common/redux/workspaces/actions";
 import UpdateNotification from "../auto-update/UpdateNotification";
 import ErrorModal from "../../components/modal/ErrorModal";
@@ -68,6 +69,10 @@ class HomeScreen extends Component {
     // TODO: FOR QUICK TESTING ONLY
     const defaultFlavor = "corda";
     this.props.dispatch(openDefaultWorkspace(defaultFlavor));
+  }
+
+  handleDownloadPress() {
+    this.props.dispatch(downloadExtras("corda"));
   }
 
   handleNewWorkspacePress() {
@@ -158,6 +163,9 @@ class HomeScreen extends Component {
                   <button onClick={this.handleQuickstartPress.bind(this)}>
                     <ChainIcon />
                     Quickstart
+                  </button>
+                  <button onClick={this.handleDownloadPress.bind(this)}>
+                    Download Corda
                   </button>
                   <button onClick={this.handleNewWorkspacePress.bind(this)}>
                     <MenuIcon />

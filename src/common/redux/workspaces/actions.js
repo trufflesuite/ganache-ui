@@ -84,3 +84,11 @@ export const SET_CURRENT_WORKSPACE = `${prefix}/SET_CURRENT_WORKSPACE`;
 export const setCurrentWorkspace = function(workspace, contractCache) {
   return { type: SET_CURRENT_WORKSPACE, workspace, contractCache };
 };
+
+export const DOWNLOAD_EXTRAS = `${prefix}/DOWNLOAD_EXTRAS`;
+export const downloadExtras = function(flavor) {
+  return function(dispatch) {
+    dispatch({ type: DOWNLOAD_EXTRAS, flavor });
+    ipcRenderer.send(DOWNLOAD_EXTRAS, flavor);
+  };
+};

@@ -31,27 +31,27 @@ function getOsInfo() {
   }
 }
 
-module.exports = (path) => {
-  const releaseUrl = "https://github.com/trufflesuite/ganache-flavors/releases/download/0.0.1/";
-  const downloader = new Downloader(path);
-  class File {
-    constructor(name) {
-      this.name = name;
-      this.url = releaseUrl + "/" + name;
+module.exports = {
+  init: (path) => {
+    const releaseUrl = "https://github.com/trufflesuite/ganache-flavors/releases/download/0.0.1/";
+    const downloader = new Downloader(path);
+    class File {
+      constructor(name) {
+        this.name = name;
+        this.url = releaseUrl + "/" + name;
+      }
+      async download() {
+        return downloader.download(this.url);
+      }
     }
-    async download() {
-      return downloader.download(this.url);
-    }
-  }
-  const os = getOsInfo();
-  const platform = os.platform;
-  const arch = os.arch;
-  const config = {
-    extras: {
+    const os = getOsInfo();
+    const platform = os.platform;
+    const arch = os.arch;
+    const extras = {
       downloader: downloader,
       corda: {
         downloadAll: async () => {
-          const keys = Object.values(config.corda.files);
+          const keys = Object.values(extras.corda.files).map(file => file.url);
           const pathPromises = downloader.downloadAll(keys);
           return pathPromises.then((paths) => {
             const result = {};
@@ -63,9 +63,10 @@ module.exports = (path) => {
           cordaBoostrapper: new File(`corda-tools-network-bootstrapper-4.1.jar`),
           braidServer: new File(`braid-server.jar`),
           postgres: new File(`postgresql-9.6.15-2-${platform}-${arch}-binaries.zip`),
-          jre: new File(`OpenJDK8U-jre_${arch}_-${platform}_hotspot_8u232b09.zip`)
+          jre: new File(`OpenJDK8U-jre_${arch}_${platform}_hotspot_8u232b09.zip`)
         }
       }
     }
+    return extras;
   }
 };
