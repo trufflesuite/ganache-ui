@@ -1,6 +1,18 @@
 const SPACES = 4;
 let modifiers;
 
+const value = (element) => {
+  let result;
+  if (element.value === null || element.value === undefined) {
+    result = element.default;
+  } else {
+    result = element.value;
+  }
+  return result;
+}
+
+const replace = (element, ...pairs) => pairs.reduce((prev, curr) => prev.replace(...curr), value(element));
+
 const format = (el, element, isPermissions) => {
   let result;
   if (isPermissions) {
@@ -15,19 +27,27 @@ const format = (el, element, isPermissions) => {
   } else {
     switch (element.type) {
       case "string":
-        result = `${el} = "${element.default}"`;
+        result = `${el} = "${value(element)}"`;
         break;
       case "myLegalName":
-        result = `${el} = "${element.default}"`.replace("{{O}}", modifiers.getNonce());
+        {
+          const val = replace(element, ["{{O}}", modifiers.getNonce()]);
+          result = `${el} = "${val}"`;
+        }
+        // result = `${el} = "${value(element)}"`.replace("{{O}}", modifiers.getNonce());
         break;
       case "postgresUrl":
-        result = `${el} = "${element.default}"`.replace("{{port}}", modifiers.postgres.port).replace("{{schema}}", modifiers.postgres.schema);
+        {
+          const val = replace(element, ["{{port}}", modifiers.postgres.port], ["{{schema}}", modifiers.postgres.schema]);
+          result = `${el} = "${val}"`;
+        }
+        // result = `${el} = "${value(element)}"`.replace("{{port}}", modifiers.postgres.port).replace("{{schema}}", modifiers.postgres.schema);
         break;
       case "url":
         result = `${el} = "127.0.0.1:${modifiers.getPort()}"`
         break;
       default:
-        result = `${el} = ${element.default}`;
+        result = `${el} = ${value(element)}`;
         break;
     }
   }
