@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-class Dashboard extends Component {
+class Nodes extends Component {
   constructor(props) {
     super(props);
 
@@ -9,7 +9,7 @@ class Dashboard extends Component {
 
   render() {
     return (
-      <div className="Dashboard">
+      <div className="Nodes">
         <main>
           Sup, Yo?
         </main>
@@ -18,4 +18,4 @@ class Dashboard extends Component {
   }
 }
 
-export default Dashboard;
+export default Nodes;

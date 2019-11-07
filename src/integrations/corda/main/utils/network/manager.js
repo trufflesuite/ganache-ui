@@ -1,36 +1,38 @@
-const bootstrap = require("./bootstrap");
+const {writeConfig, bootstrap} = require("./bootstrap");
 const { spawn } = require("child_process");
 const { EventEmitter } = require("events");
 const { join } = require("path");
+const postgres = require("../postgres");
 
 class NetworkManager extends EventEmitter {
-  constructor () {
+  constructor (config, workspaceDirectory) {
     super();
+    this.config = config;
+    this.workspaceDirectory = workspaceDirectory;
     this.nodes = [];
     this.notaries = [];
     this.processes = [];
   }
 
-  async bootstrap(numOfNodes, numOfNotaries, port = 10000){
-    const output = await bootstrap(numOfNodes, numOfNotaries, port);
-    console.log(output);
-    const { nodes, notaries } = output;
-    this.nodes = nodes;
-    this.notaries = notaries;
+  async bootstrap(nodes, notaries, port = 10000) {
+    const POSTGRES_HOME = await this.config.corda.files.postgres.download();
+    const {nodesArr, notariesArr} = await writeConfig(this.workspaceDirectory, nodes, notaries, port);
+    this.nodes = nodesArr;
+    this.notaries = notariesArr;
+    this.entities = this.nodes.concat(this.notaries);
+    this.pg = postgres(POSTGRES_HOME).start(15433, this.workspaceDirectory, this.entities);
+    const output = await bootstrap(this.workspaceDirectory, this.config);
+    
     this.emit("bootstrap", output);
     return output;
   }
 
   async start(){
-    const entities = this.nodes.concat(this.notaries);
-    const projectHome = join(__dirname, "../../../../../..", "integrations/corda");
-    const JAVA_HOME = join(projectHome, "java/OpenJDK/OpenJDK8U-jre_x64_linux_hotspot_8u232b09");
-    // this.entities = [];
-    const promises = [];
-    entities.forEach((entity) => {
-      const currentPath = join(projectHome, "corda", entity);
-      console.log(currentPath);
-      console.log(JAVA_HOME);
+    const entities = this.entities;
+    const JAVA_HOME = await this.config.corda.files.jre.download();
+
+    const promises = entities.map((entity) => {
+      const currentPath = join(this.workspaceDirectory, entity);
       const java = spawn("java", ["-jar", "corda.jar"], {
         cwd : currentPath,
         env : {
@@ -38,23 +40,32 @@ class NetworkManager extends EventEmitter {
         }
       });
 
-      java.stdout.on('data', (data) => {
-        console.log(`${data}`);
-      });
-
       java.stderr.on('data', (data) => {
         console.error(`stderr:\n${data}`);
       });
-      promises.push(new Promise((resolve) => {
-        java.on('close', (code) => {
-          console.log(`child process exited with code ${code}`);
-          resolve();
-        });
-      }));
 
-      java.on("error", console.log);
-    })
-    return Promise.all(promises);
+      java.on("error", console.error);
+
+      return new Promise((resolve, reject) => {
+        java.on('close', (code) => {
+          // TODO: handle premature individual node shutdown
+          /// close postgres, close other nodes, what do?
+          console.log(`child process exited with code ${code}`);
+          reject();
+        });
+
+        java.stdout.on('data', (data) => {
+          console.log(`${data}`);
+          if (data.toString().includes('" started up and registered in ')) {
+            resolve();
+          }
+        });
+      });
+    });
+    await Promise.all(promises);
+  }
+  stop(){
+    this.pg && this.pg.stop();
   }
   
   getNodes(){

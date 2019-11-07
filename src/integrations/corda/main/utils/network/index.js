@@ -1,9 +1,10 @@
-const bootstrap = require("./bootstrap");
+const {writeConfig, bootstrap} = require("./bootstrap");
 const NetworkManager = require("./manager");
 const port = require("./port");
 
 module.exports = {
   NetworkManager,
   bootstrap,
+  writeConfig,
   port
 }

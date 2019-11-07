@@ -140,12 +140,12 @@ app.on('ready', () => {
   setTimeout(async () => {
 
     const width = screen.getPrimaryDisplay().bounds.width;
-    const chain = new ChainService(app);
+    const config = extras.init(path.join(app.getPath("userData"), "extras"));
+    const chain = new ChainService(config);
     const truffleIntegration = new TruffleIntegrationService(isDevMode);
     const global = new GlobalSettings(
       path.join(app.getPath("userData"), "global"),
     );
-    const config = extras.init(path.join(app.getPath("userData"), "extras"));
     const GoogleAnalytics = new GoogleAnalyticsService();
     const workspaceManager = new WorkspaceManager(app.getPath("userData"));
     let workspace;
@@ -364,7 +364,7 @@ app.on('ready', () => {
       chain.on("start", async () => {
         if (workspace) {
           const workspaceSettings = workspace.settings.getAll();
-          chain.startServer(workspaceSettings);
+          chain.startServer(workspace.workspaceDirectory, workspaceSettings);
         }
       });
 
@@ -613,7 +613,7 @@ app.on('ready', () => {
         );
 
         startupMode = STARTUP_MODE.NORMAL;
-        chain.start();
+        chain.start(tempWorkspace.flavor);
 
         // this sends the network interfaces to the renderer process for
         //  enumering in the config screen. it sends repeatedly
@@ -655,7 +655,7 @@ app.on('ready', () => {
       );
 
       startupMode = STARTUP_MODE.NEW_WORKSPACE;
-      chain.start();
+      chain.start(workspace.flavor);
 
       // this sends the network interfaces to the renderer process for
       //  enumering in the config screen. it sends repeatedly

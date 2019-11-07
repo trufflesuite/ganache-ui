@@ -6,8 +6,8 @@ const { spawn } = require('child_process');
 
 function waitForEvent( stream, event ){
     return new Promise( resolve  => {
-        stream.on( event, resolve )
-    })
+        stream.on( event, resolve );
+    });
 }
 
 function waitForClose( stream ){
@@ -18,14 +18,9 @@ const produceModifier = (...args) => {
   return Object.assign({}, ...args);
 }
 
-// const alphabet = "abcdefghijklmnopqrstuvwxyz";
-const bootstrap = async (nodes, notaries, startPort, path = "integrations/corda") => {
+const writeConfig = async (workspaceDirectory,  nodes, notaries, startPort) => {
   const nodesArr = [];
   const notariesArr = [];
-  console.log(__dirname);
-  
-  const projectHome = join(__dirname, "../../../../../..", path);
-  console.log(projectHome);
   
   const getPort = port(startPort);
   const getNonce = ((val) => () => val++)(0);
@@ -34,43 +29,46 @@ const bootstrap = async (nodes, notaries, startPort, path = "integrations/corda"
     getPort,
     getNonce,
     postgres: {
-      port: 5432,
-      schema: "mynode"
+      port: 15433,
+      schema: undefined
     }
   }
 
-  for (let i = 0; i < notaries; i++) {
-    // 
+  for (let i = 0; i < notaries.length; i++) {
     const name = `notary${i}`;
     nodesArr.push(name);
-    const stream = createWriteStream(join(projectHome, "corda", `${name}_node.conf`));
+    const stream = createWriteStream(join(workspaceDirectory, `${name}_node.conf`));
     const write = (val) => stream.write(`${val}\n`, "utf8");
-    generate(templates.notary, produceModifier(modifier, { write }));
+    const mod = produceModifier(modifier, { write });
+    mod.postgres.schema = name;
+    generate(templates.notary, mod);
     const close = waitForClose(stream).catch(console.log);
     stream.end();
     await close;
-    //
-
   }
 
-  for (let i = 0; i < nodes; i++) {
+  for (let i = 0; i < nodes.length; i++) {
     const name = `party${i}`;
     notariesArr.push(name);
-    const stream = createWriteStream(join(projectHome, "corda", `${name}_node.conf`));
+    const stream = createWriteStream(join(workspaceDirectory, `${name}_node.conf`));
     const close = waitForClose(stream).catch(console.log);
     const write = (val) => stream.write(`${val}\n`, "utf8");
-    generate(templates.node, produceModifier(modifier, { write }));
+    const mod = produceModifier(modifier, { write });
+    mod.postgres.schema = name;
+    generate(templates.node, mod);
     stream.end();
     await close;
   }
-  
-  console.log(process.cwd());
-  console.log(join(path, "corda", `test_node.conf`));
-  const JAVA_HOME = join(projectHome, "java/OpenJDK", "OpenJDK8U-jre_x64_linux_hotspot_8u232b09");
+  return {
+    nodesArr,
+    notariesArr
+  }
+}
 
-  console.log(JAVA_HOME);
-
-  const java = spawn("java", ["-jar", `${join(projectHome, "corda-tools-network-bootstrapper-4.1.jar")}`, "--dir", join(projectHome, "corda")], {
+const bootstrap = async (workspaceDirectory, config) => {
+  const JAVA_HOME = await config.corda.files.jre.download();
+  const CORDA_BOOTSTRAPPER = await config.corda.files.cordaBoostrapper.download();
+  const java = spawn("java", ["-jar", CORDA_BOOTSTRAPPER, "--dir", workspaceDirectory], {
     env : {
       PATH : `${JAVA_HOME}/bin:$PATH`
     }
@@ -84,12 +82,22 @@ const bootstrap = async (nodes, notaries, startPort, path = "integrations/corda"
     console.error(`stderr:\n${data}`);
   });
 
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
+    java.on('error', (err) => {
+      console.error(err);
+      // TODO: if we reject here, we'll also then `resolve` in the close
+      // event. this is not right. fix it.
+      reject(err);
+    });
+
     java.on('close', (code) => {
       console.log(`child process exited with code ${code}`);
-      resolve({ nodes: nodesArr, notaries: notariesArr });
+      resolve();
     });
   });
 }
 
-module.exports = bootstrap;
+module.exports = {
+  writeConfig,
+  bootstrap
+}

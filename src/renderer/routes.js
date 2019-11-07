@@ -4,7 +4,7 @@ import { Route } from "react-router";
 import AppShell from "./screens/appshell/AppShell";
 import ConfigScreen from "./screens/config/ConfigScreen";
 import AccountsScreen from "../integrations/ethereum/renderer/screens/accounts/AccountsScreen";
-import CordaScreen from "../integrations/corda/renderer/screens/Dashboard";
+import CordaNodes from "../integrations/corda/renderer/screens/Nodes";
 import BlocksScreen from "../integrations/ethereum/renderer/screens/blocks/BlocksScreen";
 import TransactionsScreen from "../integrations/ethereum/renderer/screens/transactions/TransactionsScreen";
 import LogsScreen from "./screens/logs/LogsScreen";
@@ -25,7 +25,6 @@ const routes = (
       <Route path="/first_run" component={FirstRunScreen} />
       <Route path="/loader" component={LoaderScreen} />
       <Route path="/" component={AppShell}>
-        <Route path="/corda" component={CordaScreen} />
         <Route path="/accounts" component={AccountsScreen} />
         <Route path="/blocks(/:blockNumber)" component={BlocksScreen} />
         <Route
@@ -45,6 +44,8 @@ const routes = (
         />
         <Route path="/notfound" component={NotFoundScreen} />
         <Route path="/config(/:activeTab)" component={ConfigScreen} />
+
+        <Route path="/corda" component={CordaNodes} />
       </Route>
     </Route>
   );
