@@ -67,7 +67,7 @@ class HomeScreen extends Component {
   handleQuickstartPress() {
     //const defaultFlavor = "ethereum";
     // TODO: FOR QUICK TESTING ONLY
-    const defaultFlavor = "corda";
+    const defaultFlavor = "ethereum";
     this.props.dispatch(openDefaultWorkspace(defaultFlavor));
   }
 

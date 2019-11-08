@@ -76,7 +76,7 @@ const migrateMnemonicSettings = function(currentSettings) {
   // If we're migrating a settings file from before we used a persistent,
   // randomly generated mnemonic by default, randomizeMnemonic on start will
   // be undefined.
-  if (currentSettings.randomizeMnemonicOnStart === undefined) {
+  if (currentSettings.randomizeMnemonicOnStart === undefined && currentSettings.server) {
     // Before we added the randomizeMnemonicOnStart flag, the absence of a
     // mnemonic meant that we wanted a random one one each run. We want to
     // preserve this preference.

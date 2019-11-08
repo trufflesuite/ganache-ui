@@ -4,6 +4,10 @@ import path from "path";
 import cloneDeep from "lodash.clonedeep";
 
 // https://github.com/electron/electron/blob/cd0aa4a956cb7a13cbe0e12029e6156c3e892924/docs/api/process.md#process-object
+const CHAIN_PATH = path.join(__static, "node", "chain", "chain.js");
+const CHAIN_OPTIONS = {
+  stdio: ["pipe", "pipe", "pipe", "ipc"],
+};
 
 /**
  * Provides an API to Ganache for managing the blockchain, encapsulating the
@@ -18,100 +22,85 @@ class EthereumChainService extends EventEmitter {
   }
 
   start() {
-    if (this._child === null) {
-      let chainPath = path.join(__static, "node", "chain", "chain.js");
-      const options = {
-        stdio: ["pipe", "pipe", "pipe", "ipc"],
-      };
-      const forkArgs = process.env.NODE_ENV === "development" ? ["--inspect", 5859] : [];
-      this._child = fork(chainPath, forkArgs, options);
-      this._child.on("message", message => {
-        if (message.type == "process-started") {
-          this.emit("start");
-        }
-        if (message.type == "server-started") {
-          this._serverStarted = true;
-        }
-        if (message.type == "server-stopped") {
-          this._serverStarted = false;
-        }
-        this.emit(message.type, message.data);
-      });
-      this._child.on("error", error => {
-        this.emit("error", error);
-      });
-      this._child.on("exit", this._exitHandler);
-      this._child.stdout.on("data", data => {
-        // Remove all \r's and the final line ending
-        this.emit(
-          "stdout",
-          data
-            .toString()
-            .replace(/\r/g, "")
-            .replace(/\n$/, ""),
-        );
-      });
-      this._child.stderr.on("data", data => {
-        // Remove all \r's and the final line ending
-        this.emit(
-          "stderr",
-          data
-            .toString()
-            .replace(/\r/g, "")
-            .replace(/\n$/, ""),
-        );
-      });
+    if (this._child) {
+      this.emit("message", "start");
     } else {
-      this.emit("start");
+      const forkArgs = process.env.NODE_ENV === "development" ? ["--inspect", 5859] : [];
+      const child = this._child = fork(CHAIN_PATH, forkArgs, CHAIN_OPTIONS);
+      child.on("message", ({type, data}) => {
+        switch (type) {
+          case "process-started":
+            this.emit("message", "start");
+          break;
+          case "server-started":
+            this._serverStarted = true;
+          break;
+          case "server-stopped":
+            this._serverStarted = false;
+          break;
+        }
+        this.emit(type, data);
+        this.emit("message", type, data);
+      });
+      child.on("error", error => {
+        this.emit("error", error);
+        this.emit("message", "error", error);
+      });
+      child.on("exit", this._exitHandler);
+      child.stdout.on("data", this._stdHandler);
+      child.stderr.on("data", this._stdHandler);
     }
   }
 
-  async startServer(_workspaceDirectory, settings) {
-    if (this._child !== null) {
+  async startServer(settings, _workspaceDirectory) {
+    if (this._child) {
       const options = this._ganacheCoreOptionsFromGanacheSettingsObject(settings);
-      this._child.send({
-        type: "start-server",
-        data: options,
+      return new Promise((resolve, reject) => {
+        this.once("start-server", resolve);
+        this.once("error", reject);
+        this._child.send({
+          type: "start-server",
+          data: options,
+        });
       });
+    } else {
+      throw new Error("Can't stop server. Process not started.");
     }
   }
 
   stopServer() {
-    return new Promise(resolve => {
-      this.once("server-stopped", () => {
-        resolve();
-      });
-      if (this._child !== null) {
+    if (this._child && this._child.connected) {
+      return new Promise(resolve => {
+        this.once("server-stopped", resolve);
         this._child.send({
-          type: "stop-server",
+          type: "stop-server"
         });
-      } else {
-        resolve();
-      }
-    });
+      });
+    }
   }
 
   getDbLocation() {
-    return new Promise(resolve => {
-      this.once("db-location", location => {
-        resolve(location);
-      });
-      if (this._child !== null) {
-        this._child.send({
-          type: "get-db-location",
+    if (this._child) {
+      if (this.isServerStarted()) {
+        return new Promise(resolve => {
+          this.once("db-location", resolve);
+          this._child.send({
+            type: "get-db-location",
+          });
         });
       } else {
-        resolve(undefined);
+        throw new Error("Can't get db-location. Server not started.");
       }
-    });
+    } else {
+      throw new Error("Can't get db-location. Process not started.");
+    }
   }
 
-  stopProcess() {
-    if (this._child !== null) {
+  async stopProcess() {
+    if (this._child) {
+      await this.stopServer();
       this._child.removeListener("exit", this._exitHandler);
-      if (this._child) {
-        this._child.kill("SIGINT");
-      }
+      this._child.kill("SIGINT");
     }
   }
 
@@ -138,17 +127,29 @@ class EthereumChainService extends EventEmitter {
   }
 
   _exitHandler(code, signal) {
+    this._child = null;
     if (code != null) {
-      this.emit(
+      this.emit("message", 
         "error",
         `Blockchain process exited prematurely with code '${code}', due to signal '${signal}'.`,
       );
     } else {
-      this.emit(
+      this.emit("message", 
         "error",
         `Blockchain process exited prematurely due to signal '${signal}'.`,
       );
     }
+  }
+
+  _stdHandler (data) {
+    // Remove all \r's and the final line ending
+    this.emit("message", 
+      "stdout",
+      data
+        .toString()
+        .replace(/\r/g, "")
+        .replace(/\n$/, ""),
+    );
   }
 }
 

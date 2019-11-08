@@ -29,7 +29,7 @@ export const getAccountBalance = function(address) {
     var currentBalance = getState().accounts.balances[address];
 
     // Remember, these are BigNumber objects
-    if (balance.toString(10) != currentBalance.toString(10)) {
+    if (balance === undefined || currentBalance === undefined || balance.toString(10) !== currentBalance.toString(10)) {
       dispatch({ type: GET_ACCOUNT_BALANCE, address, balance });
     }
   };

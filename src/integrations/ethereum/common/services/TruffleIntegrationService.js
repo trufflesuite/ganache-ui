@@ -14,71 +14,61 @@ class TruffleIntegrationService extends EventEmitter {
   }
 
   start() {
-    let chainPath = join(
-      __static,
-      "node",
-      "truffle-integration",
-      "index.js",
-    );
-    const options = {
-      stdio: ["pipe", "pipe", "pipe", "ipc"],
-      env: {
-        ...process.env,
-        ELECTRON_APP_PATH: app.getAppPath(),
-        GANACHE_DEV_MODE: this.isDevMode,
-      },
-    };
-    const args = [];
-    this.child = fork(chainPath, args, options);
-    this.child.on("message", message => {
-      if (message.type == "process-started") {
-        this.emit("start");
-      }
-      this.emit(message.type, message.data);
-    });
-    this.child.on("error", error => {
-      console.log(error);
-      this.emit("error", error);
-    });
-    this.child.on("exit", this._exitHandler);
-    this.child.stdout.on("data", data => {
-      console.log(data.toString());
-      // Remove all \r's and the final line ending
-      this.emit(
-        "stdout",
-        data
-          .toString()
-          .replace(/\r/g, "")
-          .replace(/\n$/, ""),
+    console.log("start");
+    if (this.child) {
+      this.emit("start");
+    } else {
+      let chainPath = join(
+        __static,
+        "node",
+        "truffle-integration",
+        "index.js",
       );
-    });
-    this.child.stderr.on("data", data => {
-      console.log(data.toString());
-      // Remove all \r's and the final line ending
-      this.emit(
-        "stderr",
-        data
-          .toString()
-          .replace(/\r/g, "")
-          .replace(/\n$/, ""),
-      );
-    });
+      const options = {
+        stdio: ["pipe", "pipe", "pipe", "ipc"],
+        env: {
+          ...process.env,
+          ELECTRON_APP_PATH: app.getAppPath(),
+          GANACHE_DEV_MODE: this.isDevMode,
+        },
+      };
+      const forkArgs = process.env.NODE_ENV === "development" ? ["--inspect", 5860] : [];
+      this.child = fork(chainPath, forkArgs, options);
+      this.child.on("message", message => {
+        if (message.type == "process-started") {
+          this.emit("start");
+        }
+        this.emit(message.type, message.data);
+      });
+      this.child.on("error", error => {
+        console.log(error);
+        this.emit("error", error);
+      });
+      this.child.on("exit", this._exitHandler);
+      this.child.stdout.on("data", this._handleStd);
+      this.child.stderr.on("data", this._handleStd);
+    }
   }
 
   stopProcess() {
-    if (this.child !== null && this.child.connected) {
+    console.log("stop process");
+    if (this.child !== null) {
       this.child.removeListener("exit", this._exitHandler);
-      if (this.child) {
-        this.child.kill("SIGINT");
+      if (this.child.connected) {
+        try {
+          this.child.kill("SIGINT");
+        } catch(e){
+          // ignore, child is likely already killed.
+        }
       }
+      this.child = null;
     }
   }
 
   async stopWatching() {
+    console.log("stop watching");
     return new Promise(resolve => {
-      this.once("watcher-stopped", () => {
-        resolve();
-      });
+      this.once("watcher-stopped", resolve);
 
       if (this.child !== null && this.child.connected) {
         this.child.send({
@@ -103,6 +93,18 @@ class TruffleIntegrationService extends EventEmitter {
         `Truffle Integration process exited prematurely due to signal '${signal}'.`,
       );
     }
+  }
+
+  _handleStd(data){
+    console.log(data.toString());
+    // Remove all \r's and the final line ending
+    this.emit(
+      "stdout",
+      data
+        .toString()
+        .replace(/\r/g, "")
+        .replace(/\n$/, ""),
+    );
   }
 
   async getProjectDetails(projectConfigFile, networkId) {

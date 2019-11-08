@@ -12,7 +12,7 @@ class CordaChainService extends EventEmitter {
     this.emit("start");
   }
 
-  async startServer(workspaceDirectory, settings) {
+  async startServer(settings, workspaceDirectory) {
     await this.stopServer();
     const manager = this.manager = new NetworkManager(this.config, workspaceDirectory);
     const output = await manager.bootstrap(settings.nodes, settings.notaries);
@@ -31,7 +31,7 @@ class CordaChainService extends EventEmitter {
 
   getDbLocation() {
     return new Promise(resolve => {
-      
+      resolve();
     });
   }
 
