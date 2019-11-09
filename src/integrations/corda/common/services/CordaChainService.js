@@ -9,29 +9,37 @@ class CordaChainService extends EventEmitter {
   }
 
   start() {
-    this.emit("start");
+    this.emit("message", "start");
+    this.emit("process-started");
+    this.emit("message", "process-started");
   }
 
   async startServer(settings, workspaceDirectory) {
     await this.stopServer();
     const manager = this.manager = new NetworkManager(this.config, workspaceDirectory);
+    console.log("bootstrapping...");
     const output = await manager.bootstrap(settings.nodes, settings.notaries);
+    console.log("starting...");
     await manager.start();
     console.log("server started");
 
     this._serverStarted = true;
     this.emit("server-started", output);
+    this.emit("message", "server-started", output);
   }
 
   async stopServer() {
     if (this.manager) {
-      return await this.manager.stop();
+      const stop = await this.manager.stop();
+      this.emit("server-stopped");
+      this.emit("message", "server-stopped");
+      return stop;
     }
   }
 
   getDbLocation() {
     return new Promise(resolve => {
-      resolve();
+      resolve(undefined);
     });
   }
 
