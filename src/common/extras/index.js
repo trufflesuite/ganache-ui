@@ -38,7 +38,7 @@ module.exports = {
     class File {
       constructor(name) {
         this.name = name;
-        this.url = releaseUrl + "/" + name;
+        this.url = releaseUrl + name;
       }
       async download() {
         return downloader.download(this.url);
