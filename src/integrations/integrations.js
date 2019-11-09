@@ -13,9 +13,9 @@ class Integrations extends EventEmitter {
       return this.chain.start();
     }
   }
-  async startServer(workspaceSettings) {
+  async startServer(workspaceSettings, workspaceDirectory) {
     if (this.chain) {
-      return this.chain.startServer(workspaceSettings);
+      return this.chain.startServer(workspaceSettings, workspaceDirectory);
     }
   }
   async stop() {

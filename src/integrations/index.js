@@ -96,7 +96,7 @@ class IntegrationManager extends EventEmitter {
   async startServer() {
     if (this.flavor) {
       const settings = this.workspace.settings.getAll();
-      await this.flavor.startServer(settings);
+      await this.flavor.startServer(settings, this.workspace.workspaceDirectory);
     }
   }
 
