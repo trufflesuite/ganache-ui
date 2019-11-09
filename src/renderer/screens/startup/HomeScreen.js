@@ -27,6 +27,9 @@ import TrashIcon from "../../icons/trash-icon.svg";
 class HomeScreen extends Component {
   constructor(props) {
     super(props);
+    this.state = {flavor: "ethereum"};
+
+    this.handleFlavorChange = this.handleFlavorChange.bind(this);
   }
 
   selectWorkspace(e) {
@@ -67,7 +70,7 @@ class HomeScreen extends Component {
   handleQuickstartPress() {
     //const defaultFlavor = "ethereum";
     // TODO: FOR QUICK TESTING ONLY
-    const defaultFlavor = "ethereum";
+    const defaultFlavor = this.state.flavor;
     this.props.dispatch(openDefaultWorkspace(defaultFlavor));
   }
 
@@ -77,6 +80,9 @@ class HomeScreen extends Component {
 
   handleNewWorkspacePress() {
     this.props.dispatch(openNewWorkspaceConfig());
+  }
+  handleFlavorChange(event) {
+    this.setState({flavor: event.target.value});
   }
 
   render() {
@@ -164,6 +170,10 @@ class HomeScreen extends Component {
                     <ChainIcon />
                     Quickstart
                   </button>
+                  <select value={this.state.flavor} onChange={this.handleFlavorChange}>
+                    <option value="ethereum">Ethereum</option>
+                    <option value="corda">Corda</option>
+                  </select>
                   <button onClick={this.handleDownloadPress.bind(this)}>
                     Download Corda
                   </button>
