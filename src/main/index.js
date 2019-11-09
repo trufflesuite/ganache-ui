@@ -92,7 +92,6 @@ const performShutdownTasks = async (integrations) => {
 
 // create main BrowserWindow when electron is ready
 app.on('ready', () => {
-  let mainWindow;
   const USERDATA_PATH = app.getPath("userData");
   const global = new GlobalSettings(path.join(USERDATA_PATH, "global"));
   const GoogleAnalytics = new GoogleAnalyticsService();
@@ -453,7 +452,7 @@ app.on('ready', () => {
     );
 
     startupMode = STARTUP_MODE.NORMAL;
-    await integrations.startChain();
+    await integrations.startServer();
 
     // this sends the network interfaces to the renderer process for
     //  enumering in the config screen. it sends repeatedly
