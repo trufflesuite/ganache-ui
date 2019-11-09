@@ -14,7 +14,6 @@ class TruffleIntegrationService extends EventEmitter {
   }
 
   start() {
-    console.log("start");
     if (this.child) {
       this.emit("start");
     } else {
@@ -51,7 +50,6 @@ class TruffleIntegrationService extends EventEmitter {
   }
 
   stopProcess() {
-    console.log("stop process");
     if (this.child !== null) {
       this.child.removeListener("exit", this._exitHandler);
       if (this.child.connected) {
@@ -66,7 +64,6 @@ class TruffleIntegrationService extends EventEmitter {
   }
 
   async stopWatching() {
-    console.log("stop watching");
     return new Promise(resolve => {
       this.once("watcher-stopped", resolve);
 
