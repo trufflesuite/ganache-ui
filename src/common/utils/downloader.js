@@ -41,7 +41,7 @@ class Downloader {
     });
   }
   async save(stream, dest) {
-    const file = createWriteStream(dest);
+    const file = createWriteStream(dest, { mode: 0o755 });
     stream.pipe(file);
     return new Promise((resolve, reject) => {
       file.on("finish", () => {
