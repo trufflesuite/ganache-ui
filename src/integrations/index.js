@@ -45,9 +45,9 @@ class IntegrationManager extends EventEmitter {
         await this.stopChain();
       }
 
-      this.flavor = new integrations[flavor](this);
-      this.flavor.name = flavor;
-      this.flavor.on("message", (...args) => {
+      const integration = this.flavor = new integrations[flavor](this);
+      integration.name = flavor;
+      integration.on("message", (...args) => {
         this.emit.apply(this, args);
       });
       await this.startChain();

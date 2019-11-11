@@ -5,6 +5,7 @@ class Corda extends Integrations {
     constructor(integrationManager) {
         super(integrationManager);
         this.chain = new CordaChainService(integrationManager.config);
+        this.chain.on("message", this.emit.bind(this, "message"));
     }
 }
 
