@@ -10,6 +10,9 @@ function patchUnzipStream(extractor) {
   const _readExtraFields = unzipStream._readExtraFields.bind(unzipStream);
   const oldProcessDataChunk = unzipStream.processDataChunk;
   extractor.unzipStream.processDataChunk = function (chunk) {
+    // we _must_ get the `state` here, as `oldProcessDataChunk` changes it
+    const state = unzipStream.state;
+    
     // call the old method, as it calculates some values we need and
     // performs some other state checks
     const ret = oldProcessDataChunk.call(unzipStream, chunk);
@@ -17,7 +20,6 @@ function patchUnzipStream(extractor) {
     // if ret is 0 it means we haven't buffered enough data yet, exit now
     if (ret === 0) return 0;
 
-    const state = unzipStream.state;
     // our permissions data is in CENTRAL_DIRECTORY_FILE_HEADER_SUFFIX
     if (state === CENTRAL_DIRECTORY_FILE_HEADER_SUFFIX) {
       const parsedEntity = unzipStream.parsedEntity;
