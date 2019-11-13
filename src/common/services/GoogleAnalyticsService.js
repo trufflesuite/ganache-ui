@@ -107,38 +107,41 @@ class GoogleAnalyticsService {
           }
         }
 
-        const config = {
-          hostname,
-          port: workspaceSettings.server.port,
-          networkId: workspaceSettings.server.network_id,
-          blockTime:
-            typeof workspaceSettings.server.blockTime == "undefined"
-              ? "automine"
-              : workspaceSettings.server.blockTime,
-          defaultBalance: workspaceSettings.server.default_balance_ether,
-          totalAccounts: workspaceSettings.server.total_accounts,
-          autoMnemonic: workspaceSettings.randomizeMnemonicOnStart,
-          locked: workspaceSettings.server.locked,
-          gasLimit: workspaceSettings.server.gasLimit,
-          gasPrice: workspaceSettings.server.gasPrice,
-          hardfork: workspaceSettings.server.hardfork,
-          fork: workspaceSettings.server.fork,
-          fork_block_number: workspaceSettings.server.fork_block_number,
-        };
+        // TODO: ETHEREUM
+        if (workspaceSettings.server) {
+          const config = {
+            hostname,
+            port: workspaceSettings.server.port,
+            networkId: workspaceSettings.server.network_id,
+            blockTime:
+              typeof workspaceSettings.server.blockTime == "undefined"
+                ? "automine"
+                : workspaceSettings.server.blockTime,
+            defaultBalance: workspaceSettings.server.default_balance_ether,
+            totalAccounts: workspaceSettings.server.total_accounts,
+            autoMnemonic: workspaceSettings.randomizeMnemonicOnStart,
+            locked: workspaceSettings.server.locked,
+            gasLimit: workspaceSettings.server.gasLimit,
+            gasPrice: workspaceSettings.server.gasPrice,
+            hardfork: workspaceSettings.server.hardfork,
+            fork: workspaceSettings.server.fork,
+            fork_block_number: workspaceSettings.server.fork_block_number,
+          };
 
-        this.user.set("cd1", config.hostname);
-        this.user.set("cd2", config.port);
-        this.user.set("cd3", config.networkId);
-        this.user.set("cd4", config.blockTime);
-        this.user.set("cd5", config.defaultBalance);
-        this.user.set("cd6", config.totalAccounts);
-        this.user.set("cd7", config.autoMnemonic);
-        this.user.set("cd8", config.locked);
-        this.user.set("cd9", config.gasLimit);
-        this.user.set("cd10", config.gasPrice);
-        this.user.set("cd11", config.hardfork);
-        this.user.set("cd12", config.fork);
-        this.user.set("cd13", config.fork_block_number);
+          this.user.set("cd1", config.hostname);
+          this.user.set("cd2", config.port);
+          this.user.set("cd3", config.networkId);
+          this.user.set("cd4", config.blockTime);
+          this.user.set("cd5", config.defaultBalance);
+          this.user.set("cd6", config.totalAccounts);
+          this.user.set("cd7", config.autoMnemonic);
+          this.user.set("cd8", config.locked);
+          this.user.set("cd9", config.gasLimit);
+          this.user.set("cd10", config.gasPrice);
+          this.user.set("cd11", config.hardfork);
+          this.user.set("cd12", config.fork);
+          this.user.set("cd13", config.fork_block_number);
+        }
       }
     }
   }
