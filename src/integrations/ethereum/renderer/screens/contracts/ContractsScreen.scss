@@ -91,21 +91,6 @@
     }
   }
 
-  .Label {
-    font-size: .75rem;
-    font-family: "RobotoCondensed-Regular";
-    font-weight: 800;
-    color: var(--app-card-label);
-    margin-bottom: .25rem;
-  }
-
-  .Value {
-    font-size: 1.125rem;
-    font-family: "Fira Code Regular";
-    color: var(--app-card-value);
-    word-break: break-all;
-  }
-
   .TxCount {
     .Label {
       font-size: .625rem;

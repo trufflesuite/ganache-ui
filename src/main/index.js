@@ -287,7 +287,7 @@ app.on('ready', () => {
 
     integrations.on("server-started", data => {
       if (workspace) {
-        if (workspace.settings.flavor === "ethereum") {
+        if (workspace.flavor === "ethereum") {
           mainWindow.webContents.send(SET_KEY_DATA, {
             privateKeys: data.privateKeys,
             mnemonic: data.mnemonic,

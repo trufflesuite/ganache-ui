@@ -25,6 +25,8 @@ import TxIcon from "../../icons/transactions.svg";
 import LogsIcon from "../../icons/console.svg";
 import ContractsIcon from "../../icons/contract-icon.svg";
 import EventsIcon from "../../icons/events-icon.svg";
+import MenuIcon from "../../icons/list.svg";
+import ChainIcon from "../../icons/chain.svg";
 
 import SettingsIcon from "../../icons/settings.svg";
 import SearchIcon from "../../icons/search.svg";
@@ -163,7 +165,6 @@ class TopNavbar extends Component {
     const isNewVersionAvailable = this.props.autoUpdate.isNewVersionAvailable;
 
     let children;
-    console.log(this.props);
     switch (this.props.config.settings.workspace.flavor) {
       case "ethereum":
           children = this._generateEthereumChildren();
@@ -231,7 +232,24 @@ class TopNavbar extends Component {
   }
   _generateCordaChildren(){
     return {
-      menu: (<>Menu</>),
+      menu: (<>
+        <Link to="/nodes" activeClassName="Active">
+          <ChainIcon />
+          Nodes
+        </Link>
+        <Link to="/notaries" activeClassName="Active">
+          <MenuIcon />
+          Notaries
+        </Link>
+        <Link to="/cordapps" activeClassName="Active">
+          <ContractsIcon />
+          CorDapps
+        </Link>
+        <Link to="/transactions" activeClassName="Active">
+          <TxIcon />
+          Transactions
+        </Link>
+      </>),
       searchText: "Search",
       status: (<>status</>),
       action: (<>action</>),

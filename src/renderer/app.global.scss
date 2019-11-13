@@ -142,3 +142,29 @@ textarea {
   color: red !important;
   font-size: .65em !important;
 }
+
+.Label {
+  font-size: .75rem;
+  font-family: "RobotoCondensed-Regular";
+  font-weight: 800;
+  color: var(--app-card-label);
+  margin-bottom: .25rem;
+}
+
+.Value {
+  font-size: 1.125rem;
+  font-family: "Fira Code Regular";
+  color: var(--app-card-value);
+  word-break: break-all;
+}
+
+.DataRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.3rem .8rem;
+  background-color: var(--app-card-default-background);
+  position: relative;
+  border-bottom: 1px solid #aaa;
+}

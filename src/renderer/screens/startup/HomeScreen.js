@@ -32,11 +32,8 @@ class HomeScreen extends Component {
     this.handleFlavorChange = this.handleFlavorChange.bind(this);
   }
 
-  selectWorkspace(e) {
-    const workspaceName = e.currentTarget.querySelector("span").innerText;
-    // TODO: GET ACTUAL WORKSPACE TYPE.
-    //const workspaceFlavor = this.props.workspaces.names[workspaceName].settings.flavor;
-    this.props.dispatch(openWorkspace(workspaceName, "ethereum"));
+  selectWorkspace(workspace) {
+    this.props.dispatch(openWorkspace(workspace.name, workspace.flavor));
   }
 
   handleDeleteWorkspace(e) {
@@ -87,14 +84,13 @@ class HomeScreen extends Component {
 
   render() {
     let workspaces;
-    const hasWorkspaces = this.props.workspaces.names.length;
-
+    const hasWorkspaces = this.props.workspaces.info.length;
     if (hasWorkspaces) {
-      workspaces = this.props.workspaces.names.map(workspaceName => {
+      workspaces = this.props.workspaces.info.map(workspaceInfo => {
         return (
-          <li key={workspaceName}>
-            <button onClick={this.selectWorkspace.bind(this)}>
-              <span>{workspaceName}</span>
+          <li key={workspaceInfo.name + workspaceInfo.flavor}>
+            <button onClick={()=>this.selectWorkspace(workspaceInfo)}>
+              <span>{workspaceInfo.name} ({workspaceInfo.flavor})</span>
               <div
                 className="DeleteWorkspace"
                 onClick={this.handleDeleteWorkspace.bind(this)}

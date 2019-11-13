@@ -3,20 +3,6 @@
   padding: 0;
 
   position: relative;
-
-  .Label {
-    font-size: .875rem;
-    font-family: "RobotoCondensed-Regular";
-    font-weight: 300;
-    color: var(--app-card-label);
-    min-width: 42px;
-  }
-  
-  .Value {
-    font-size: 1.125rem;
-    font-family: "Fira Code Regular";
-    color: var(--app-card-value);
-  }
   
   .AccountCard {
     display: flex;

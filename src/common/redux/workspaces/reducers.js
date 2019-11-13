@@ -47,7 +47,7 @@ export default function(state = initialState, action) {
 
   switch (action.type) {
     case SET_WORKSPACES:
-      nextState.names = cloneDeep(action.workspaces);
+      nextState.info = cloneDeep(action.workspaces);
       break;
     case SET_CURRENT_WORKSPACE:
       nextState.current = cloneDeep(action.workspace);

@@ -34,20 +34,6 @@
     width: 100%;
   }
 
-  .Label {
-    font-size: .875rem;
-    font-family: "RobotoCondensed-Regular";
-    font-weight: 300;
-    color: var(--app-card-label);
-  }
-
-  .Value {
-    font-size: 1.125rem;
-    font-family: "Fira Code Regular";
-    color: var(--app-card-value);
-    word-break: break-all;
-  }
-
   .BlockNumber,
   .BlockHash {
     display: flex;
