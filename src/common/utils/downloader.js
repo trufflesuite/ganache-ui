@@ -106,8 +106,10 @@ class Downloader {
         .on("error", reject);
     });
   }
-  async downloadAll(urls) {
-    return Promise.all(urls.map(this.download.bind(this)));
+  async downloadAll(urls, force) {
+    return Promise.all(urls.map((url) => {
+      return this.download(url, force);
+    }));
   }
 }
 

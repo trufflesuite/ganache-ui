@@ -50,9 +50,9 @@ module.exports = {
     const extras = {
       downloader: downloader,
       corda: {
-        downloadAll: async () => {
+        downloadAll: async (force = false) => {
           const keys = Object.values(extras.corda.files).map(file => file.url);
-          const pathPromises = downloader.downloadAll(keys);
+          const pathPromises = downloader.downloadAll(keys, force);
           return pathPromises.then((paths) => {
             const result = {};
             keys.forEach((key, i) => result[key] = paths[i]);
