@@ -159,54 +159,25 @@ class TopNavbar extends Component {
   }
 
   render() {
-    const blockNumber = this.props.core.latestBlock;
-    const gasPrice = this.props.core.gasPrice;
-    const gasLimit = this.props.core.gasLimit;
-    const hardfork = this.props.config.settings.workspace.server.hardfork;
-    const snapshots = this.props.core.snapshots;
-    const isMining = this.props.core.isMining;
     const isLogsPage = this.props.location.pathname === "/logs";
     const isNewVersionAvailable = this.props.autoUpdate.isNewVersionAvailable;
-    const miningPaused = !isMining;
-    const currentSnapshotId = snapshots.length;
-    const showControls = false;
+
+    let children;
+    console.log(this.props);
+    switch (this.props.config.settings.workspace.flavor) {
+      case "ethereum":
+          children = this._generateEthereumChildren();
+          break;
+      case "corda":
+          children = this._generateCordaChildren();
+        break;
+    }
 
     return (
       <nav className="TopNavBar">
         <main className="Main">
           <div className="Menu">
-            <Link to="/accounts" activeClassName="Active">
-              <AccountIcon />
-              Accounts
-            </Link>
-            <Link to="/blocks" activeClassName="Active">
-              <BlockIcon />
-              Blocks
-            </Link>
-            <Link to="/transactions" activeClassName="Active">
-              <TxIcon />
-              Transactions
-            </Link>
-            <Link
-              to="/contracts"
-              className={
-                this.props.location.pathname.startsWith("/contracts")
-                  ? "Active"
-                  : ""
-              }
-              activeClassName="Active"
-            >
-              <ContractsIcon />
-              Contracts
-            </Link>
-            <Link to="/events" activeClassName="Active">
-              <EventsIcon />
-              Events
-            </Link>
-            <Link to="/logs" activeClassName="Active">
-              <LogsIcon />
-              Logs
-            </Link>
+            {children.menu}
           </div>
           <div className="NotificationAndSearchBar">
             <OnlyIf test={isNewVersionAvailable}>
@@ -214,8 +185,8 @@ class TopNavbar extends Component {
             </OnlyIf>
             <input
               type="text"
-              placeholder="SEARCH FOR BLOCK NUMBERS OR TX HASHES"
-              title="SEARCH FOR BLOCK NUMBERS OR TX HASHES"
+              placeholder={children.searchText}
+              title={children.searchText}
               value={this.state.searchInput}
               onChange={this.handleSearchChange.bind(this)}
               onKeyPress={this.handleSearchKeyPress.bind(this)}
@@ -225,31 +196,7 @@ class TopNavbar extends Component {
         </main>
         <section className="StatusAndControls">
           <div className="Status">
-            <StatusIndicator title="CURRENT BLOCK" value={blockNumber} />
-            { this.props.config.settings.workspace.server.fork ?
-              (<StatusIndicator
-                title="FORK BLOCK"
-                tooltip={this.props.config.settings.workspace.server.fork}
-                value={this.props.config.settings.workspace.server.fork_block_number}
-              />) : ""
-            }
-            <StatusIndicator title="GAS PRICE" value={gasPrice} />
-            <StatusIndicator title="GAS LIMIT" value={gasLimit} />
-            <StatusIndicator title="HARDFORK" value={hardfork} />
-            <StatusIndicator
-              title="NETWORK ID"
-              value={this.props.config.settings.workspace.server.network_id}
-            />
-            <StatusIndicator
-              title="RPC SERVER"
-              value={`http://${
-                this.props.config.settings.workspace.server.hostname
-              }:${this.props.config.settings.workspace.server.port}`}
-            />
-            <StatusIndicator
-              title="MINING STATUS"
-              value={miningPaused ? "STOPPED" : this._renderMiningTime()}
-            />
+            {children.status}
             <StatusIndicator
               title="WORKSPACE"
               value={this.props.config.settings.workspace.name}
@@ -276,24 +223,111 @@ class TopNavbar extends Component {
                 Clear Logs
               </button>
             </OnlyIf>
-            <OnlyIf test={showControls}>
-              <button className="MiningBtn" onClick={this._handleForceMine}>
-                <ForceMineIcon /*size={18}*/ /> Force Mine
-              </button>
-            </OnlyIf>
-            <OnlyIf test={showControls}>
-              <button className="MiningBtn" onClick={this._handleMakeSnapshot}>
-                <SnapshotIcon /*size={18}*/ /> TAKE SNAPSHOT #
-                {currentSnapshotId + 1}
-              </button>
-            </OnlyIf>
-            <OnlyIf test={showControls}>
-              {this._renderSnapshotControls()}
-            </OnlyIf>
+            {children.actions}
           </div>
         </section>
       </nav>
     );
+  }
+  _generateCordaChildren(){
+    return {
+      menu: (<>Menu</>),
+      searchText: "Search",
+      status: (<>status</>),
+      action: (<>action</>),
+    }
+  }
+
+  _generateEthereumChildren(){
+    const blockNumber = this.props.core.latestBlock;
+    const gasPrice = this.props.core.gasPrice;
+    const gasLimit = this.props.core.gasLimit;
+    const hardfork = this.props.config.settings.workspace.server.hardfork;
+    const snapshots = this.props.core.snapshots;
+    const isMining = this.props.core.isMining;
+    const miningPaused = !isMining;
+    const currentSnapshotId = snapshots.length;
+    const showControls = false;
+    const contractsClassname = this.props.location.pathname.startsWith("/contracts") ? "Active" : "";
+
+    return {
+      menu: (
+        <>
+          <Link to="/accounts" activeClassName="Active">
+            <AccountIcon />
+            Accounts
+          </Link>
+          <Link to="/blocks" activeClassName="Active">
+            <BlockIcon />
+            Blocks
+          </Link>
+          <Link to="/transactions" activeClassName="Active">
+            <TxIcon />
+            Transactions
+          </Link>
+          <Link to="/contracts" className={contractsClassname} activeClassName="Active">
+            <ContractsIcon />
+            Contracts
+          </Link>
+          <Link to="/events" activeClassName="Active">
+            <EventsIcon />
+            Events
+          </Link>
+          <Link to="/logs" activeClassName="Active">
+            <LogsIcon />
+            Logs
+          </Link>
+        </>
+      ),
+      searchText: "SEARCH FOR BLOCK NUMBERS OR TX HASHES",
+      status: (
+        <>
+          <StatusIndicator title="CURRENT BLOCK" value={blockNumber} />
+          { this.props.config.settings.workspace.server.fork ?
+            (<StatusIndicator
+              title="FORK BLOCK"
+              tooltip={this.props.config.settings.workspace.server.fork}
+              value={this.props.config.settings.workspace.server.fork_block_number}
+            />) : ""
+          }
+          <StatusIndicator title="GAS PRICE" value={gasPrice} />
+          <StatusIndicator title="GAS LIMIT" value={gasLimit} />
+          <StatusIndicator title="HARDFORK" value={hardfork} />
+          <StatusIndicator
+            title="NETWORK ID"
+            value={this.props.config.settings.workspace.server.network_id}
+          />
+          <StatusIndicator
+            title="RPC SERVER"
+            value={`http://${
+              this.props.config.settings.workspace.server.hostname
+            }:${this.props.config.settings.workspace.server.port}`}
+          />
+          <StatusIndicator
+            title="MINING STATUS"
+            value={miningPaused ? "STOPPED" : this._renderMiningTime()}
+          />
+        </>
+      ),
+      actions: (
+        <>
+          <OnlyIf test={showControls}>
+            <button className="MiningBtn" onClick={this._handleForceMine}>
+              <ForceMineIcon /*size={18}*/ /> Force Mine
+            </button>
+          </OnlyIf>
+          <OnlyIf test={showControls}>
+            <button className="MiningBtn" onClick={this._handleMakeSnapshot}>
+              <SnapshotIcon /*size={18}*/ /> TAKE SNAPSHOT #
+              {currentSnapshotId + 1}
+            </button>
+          </OnlyIf>
+          <OnlyIf test={showControls}>
+            {this._renderSnapshotControls()}
+          </OnlyIf>
+        </>
+      )
+    };
   }
 }
 

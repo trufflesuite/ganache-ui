@@ -44,23 +44,25 @@ export function initCore(store) {
       // Ensure web3 is set
       // 0.0.0.0 doesn't work the same as it does on other platforms, so we need to replace it
       // with localhost. Note: we don't want to update the _stored_ hostname, as 0.0.0.0 a valid concept.
-      const hostname = workspaceSettings.server.hostname.replace(
-        "0.0.0.0",
-        "localhost",
-      );
-      const url = `ws://${hostname}:${workspaceSettings.server.port}`;
+      if (workspaceSettings.flavor === "ethereum") {
+        const hostname = workspaceSettings.server.hostname.replace(
+          "0.0.0.0",
+          "localhost",
+        );
+        const url = `ws://${hostname}:${workspaceSettings.server.port}`;
 
-      ipcRenderer.send("web3-provider", url);
-      store.dispatch(setRPCProviderUrl(url));
+        ipcRenderer.send("web3-provider", url);
+        store.dispatch(setRPCProviderUrl(url));
 
-      store.dispatch(setBlockNumberToLatest());
-      store.dispatch(getAccounts());
-      store.dispatch(getGasPrice());
-      store.dispatch(getGasLimit());
+        store.dispatch(setBlockNumberToLatest());
+        store.dispatch(getAccounts());
+        store.dispatch(getGasPrice());
+        store.dispatch(getGasLimit());
 
-      store.dispatch(getBlockSubscription());
+        store.dispatch(getBlockSubscription());
 
-      store.dispatch(setServerStarted());
+        store.dispatch(setServerStarted());
+      }
 
       store.dispatch(setStartupMode(startupMode));
       switch (startupMode) {

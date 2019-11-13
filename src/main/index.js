@@ -287,15 +287,17 @@ app.on('ready', () => {
 
     integrations.on("server-started", data => {
       if (workspace) {
-        mainWindow.webContents.send(SET_KEY_DATA, {
-          privateKeys: data.privateKeys,
-          mnemonic: data.mnemonic,
-          hdPath: data.hdPath,
-          fork_block_number: data.fork_block_number
-        });
+        if (workspace.settings.flavor === "ethereum") {
+          mainWindow.webContents.send(SET_KEY_DATA, {
+            privateKeys: data.privateKeys,
+            mnemonic: data.mnemonic,
+            hdPath: data.hdPath,
+            fork_block_number: data.fork_block_number
+          });
 
-        workspace.settings.handleNewMnemonic(data.mnemonic);
-        workspace.settings.handleNewForkBlockNumber(data.fork_block_number);
+          workspace.settings.handleNewMnemonic(data.mnemonic);
+          workspace.settings.handleNewForkBlockNumber(data.fork_block_number);
+        }
 
         const globalSettings = global.getAll();
         const workspaceSettings = workspace.settings.getAll();
