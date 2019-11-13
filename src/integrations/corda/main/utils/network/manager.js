@@ -47,7 +47,7 @@ class NetworkManager extends EventEmitter {
       java.on("error", console.error);
 
       return new Promise((resolve, reject) => {
-        java.on('close', (code) => {
+        java.once('close', (code) => {
           // TODO: handle premature individual node shutdown
           /// close postgres, close other nodes, what do?
           console.log(`child process exited with code ${code}`);
@@ -57,15 +57,40 @@ class NetworkManager extends EventEmitter {
         java.stdout.on('data', (data) => {
           console.log(`${data}`);
           if (data.toString().includes('" started up and registered in ')) {
-            resolve();
+            resolve({
+              process: java,
+              entity
+            });
           }
         });
       });
     });
-    await Promise.all(promises);
+    return Promise.all(promises).then((entities) => {
+      entities.forEach(({process}) => {
+        this.processes.push(process);
+      })
+      return entities;
+    });
   }
-  stop(){
-    this.pg && this.pg.stop();
+  stop() {
+    try {
+      this.pg && this.pg.stop();
+      this.pg = null;
+    } catch(e) {
+      console.error("Error occured while attempting to stop postgres...");
+      console.error(e);
+    }
+    let process;
+    let promises = [];
+    while (process = this.processes.shift()) {
+      promises.push(new Promise(resolve => {
+        process.once("close", resolve);
+      }));
+      if (!process.killed) {
+        process.kill();
+      }
+    }
+    return Promise.all(promises);
   }
   
   getNodes(){
