@@ -85,14 +85,15 @@ const bootstrap = async (workspaceDirectory, config) => {
   return new Promise((resolve, reject) => {
     java.on('error', (err) => {
       console.error(err);
-      // TODO: if we reject here, we'll also then `resolve` in the close
-      // event. this is not right. fix it.
-      reject(err);
     });
 
     java.on('close', (code) => {
       console.log(`child process exited with code ${code}`);
-      resolve();
+      if (code === 0) {
+        resolve();
+      } else {
+        reject(code);
+      }
     });
   });
 }
