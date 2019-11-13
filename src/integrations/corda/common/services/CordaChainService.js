@@ -14,6 +14,13 @@ class CordaChainService extends EventEmitter {
     this.emit("message", "process-started");
   }
 
+  async stop() {
+    await this.stopServer();
+    this.emit("message", "stop");
+    this.emit("process-stopped");
+    this.emit("message", "process-stopped");
+  }
+
   async startServer(settings, workspaceDirectory) {
     await this.stopServer();
     const manager = this.manager = new NetworkManager(this.config, workspaceDirectory);
@@ -41,10 +48,6 @@ class CordaChainService extends EventEmitter {
     return new Promise(resolve => {
       resolve(undefined);
     });
-  }
-
-  stopProcess() {
-    
   }
 }
 

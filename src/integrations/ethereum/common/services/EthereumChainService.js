@@ -96,7 +96,7 @@ class EthereumChainService extends EventEmitter {
     }
   }
 
-  async stopProcess() {
+  async stop() {
     if (this._child) {
       await this.stopServer();
       this._child.removeListener("exit", this._exitHandler);

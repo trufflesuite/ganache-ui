@@ -141,7 +141,7 @@ class Ethereum extends Integrations {
   async stop() {
     await this.stopServer();
     return Promise.all([
-      this.chain.stopProcess(),
+      this.chain.stop(),
       this.truffleIntegration.stopProcess()
     ]);
   }
