@@ -1,6 +1,7 @@
 const Core = require("./actions");
 
 const initialState = {
+  flavor: "ethereum",
   started: false,
   isMining: true,
   mnemonic: "",
