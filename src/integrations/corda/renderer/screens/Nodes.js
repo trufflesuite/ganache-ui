@@ -3,18 +3,18 @@ import connect from "../../../../renderer/screens/helpers/connect";
 import React, { Component } from "react";
 
 function line(node, services = []) {
-  return (<div key={`node-${node}`} className="DataRow">
+  return (<div key={`node-${node.safeName}`} className="DataRow">
     <div>
       <div className="Label">Legal ID</div>
-      <div className="Value">{node}</div>
+      <div className="Value">{node.name}</div>
     </div>
     <div>
       <div className="Label">DB Connection String</div>
-      <div className="Value">2001 (TODO)</div>
+      <div className="Value">{node.dbPort}</div>
     </div>
     <div>
-      <div className="Label">SSH Port</div>
-      <div className="Value">7334 (TODO)</div>
+      <div className="Label">RPC Port</div>
+      <div className="Value">{node.rpcPort}</div>
     </div>
     <div>
       <div className="Label">Services</div>
