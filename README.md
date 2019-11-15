@@ -91,6 +91,27 @@ Two tools were used:
 
 Note from the author: I found managing these assets manually -- especially the appx assets -- was a pain. If possible, try not to edit the assets themselves and use one of the generators above.
 
+### Flavored Development
+
+"Extras" aren't stored here in this repository fordue to file size issues, licensing issues, or both.
+
+Non-ethereum "flavored" Ganache extras are uploaded to releases here: https://github.com/trufflesuite/ganache-flavors/releases
+
+When "extras" change they should be uploaded to a new release, and a corresonding Ganache release that targets the new ganache-flavors release (see `common/extras/index.js` for what you'dd need to update)
+
+#### Corda
+
+Corda requires 4 "extras" that get downloaded at runtime.
+
+`braid-server.jar` is used to communicate to corda nodes via JSON RPC over HTTP. This file is built from https://gitlab.com/bluebank/braid/tree/master/braid-server. To build: run `mvn clean install` in the root of the project.
+
+`corda-tools-network-bootstrapper-4.1.jar` is used to create corda networks from configuration (`_node.conf`) files. It contains an embedded `corda.jar` and the logic required to create a network. To update or download the latest corda-tools-network-bootstrapper go to https://software.r3.com/artifactory/corda-releases/net/corda/ and download the version you want. You'll need to update the file name in `src/common/extras/index.js` if the version changes.
+
+Corda and braid require Java's *JRE* `1.8`, aka `8`. We "release" 4 versions of JRE 1.8: Linux x64, Mac x64, Windows x32, and Windows x64. The Java releases are downloaded from https://adoptopenjdk.net/archive.html -- we use "OpenJDK 8 (LTS)" with "HotSpot". To redistribute these files you will need to unpack/unzip them, then zip them up again (make sure you are on Linux for the Linux release, as it needs its file permissions properly embedded within the zip). It is very important that you **ensure that all files are stored at the root of the zip**. You'll also want to rename the zip files in the following format: `OpenJDK8U-jre_{arch}_{os-name}_hotspot_{version}.zip`. You'll need to update the `version` in `src/common/extras/index.js` if it changes.
+
+Corda requires PostgreSQL 9.6. We "release" 4 versions of PostgreSQL 9.6: Linux x64, Mac x64, Windows x32, and Windows x64. These are downloaded from https://www.enterprisedb.com/downloads/postgres-postgresql-downloads.To redistribute these files you will need to unpack/unzip them, then zip them up again (make sure you are on Linux for the Linux release, as it needs its file permissions properly embedded within the zip). It is very important that you **ensure that all files are stored at the root of the zip**. You'll also want to rename the zip files in the following format: `postgresql-{version}-2-{os-name}-{arch}-binaries.zip`. You'll need to update the `version` in `src/common/extras/index.js` if it changes.
+
+
 ### By Truffle
 
 Ganache is part of the Truffle suite of tools. [Find out more!](https://trufflesuite.com)
