@@ -76,7 +76,7 @@
       }
     },
     "p2pAddress": {
-      "type": "url",
+      "type": "p2pPort",
       "default": "localhost:10002",
       "pattern": "^(.*)$"
     },
@@ -98,12 +98,12 @@
           "default": false
         },
         "address": {
-          "type": "url",
+          "type": "url.rpc",
           "default": "localhost:10003",
           "pattern": "^(.*)$"
         },
         "adminAddress": {
-          "type": "url",
+          "type": "url.admin",
           "default": "localhost:10004",
           "pattern": "^(.*)$"
         }
