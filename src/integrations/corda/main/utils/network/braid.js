@@ -2,7 +2,7 @@ const { spawn } = require("child_process");
 
 // java -jar braid-server.jar localhost:10007 user1 letmein 8000 3 ./corda/party1/cordapps/
 
-let port = 8000; // TODO: change this
+let port = 20000; // TODO: change this
 
 class Braid {
   constructor(braid_home){
