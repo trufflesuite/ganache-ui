@@ -20,7 +20,7 @@ function parseUrl(urlString){
 function moveRemove(path, suffix) {
   const tmpDest = temp.path({suffix});
   // move it first
-  const pendingMove = move(path, tmpDest);
+  const pendingMove = move(path, tmpDest).catch(console.error);
   // then delete it (fire and forget)
   pendingMove.then(() => remove(tmpDest).catch(console.error));
   return pendingMove;
