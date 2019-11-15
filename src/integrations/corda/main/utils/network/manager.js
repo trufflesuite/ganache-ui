@@ -16,17 +16,16 @@ class NetworkManager extends EventEmitter {
   }
 
   async bootstrap(nodes, notaries, port = 10000) {
+    // const mapper = (arr) => arr.map((val) => new Map(Object.entries(val)));
     const BRAID_HOME = this.config.corda.files.braidServer.download();
     const POSTGRES_HOME = this.config.corda.files.postgres.download();
     const {nodesArr, notariesArr} = await writeConfig(this.workspaceDirectory, nodes, notaries, port);
     this.nodes = nodesArr;
     this.notaries = notariesArr;
     this.entities = this.nodes.concat(this.notaries);
-    this.pg = postgres(await POSTGRES_HOME).start(15433, this.workspaceDirectory, this.entities);
+    this.pg = postgres(await POSTGRES_HOME).start(this.entities[0].dbPort, this.workspaceDirectory, this.entities);
     await bootstrapDir(this.workspaceDirectory, this.config);
-    this.braid = new Braid(await BRAID_HOME);
-    // this.emit("bootstrap", output);
-    // return output;
+    this.braid = new Braid(join(await BRAID_HOME, ".."));
   }
 
   
@@ -37,14 +36,14 @@ class NetworkManager extends EventEmitter {
     const config = { env : { PATH : `${JAVA_HOME}/bin:$PATH` } };
 
     const promises = entities.map((entity) => {
-      const currentPath = join(this.workspaceDirectory, entity);
+      const currentPath = join(this.workspaceDirectory, entity.safeName);
+      this.braid.start(entity, currentPath, config);
       const currentConfig = Object.assign({ cwd : currentPath }, config);
-      this.braid.start(entity, currentPath);
       const corda = new Corda(entity, currentConfig);
       this.processes.push(corda);
       return corda.start();
     });
-    this.braid.getAll();
+
     return Promise.all(promises);
   }
 
