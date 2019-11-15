@@ -2,7 +2,7 @@ const { spawn } = require("child_process");
 
 // java -jar braid-server.jar localhost:10007 user1 letmein 8000 3 ./corda/party1/cordapps/
 
-let port = 20000; // TODO: change this
+let port = 8000; // TODO: change this
 
 class Braid {
   constructor(braid_home){
@@ -14,8 +14,9 @@ class Braid {
     const name = entity.safeName;
     const exists = this.servers.get(name);
     if(!exists) {
-      const currentConfig = Object.assign({ cwd : this.BRAID_HOME }, config);
-      const braid = spawn("java", ["-jar", "braid-server.jar", `localhost:${entity.rpcPort}`, "user1", "letmein", port++, 3, `${path}/cordapps/`], currentConfig);
+      const currentConfig = Object.assign({ cwd : this.BRAID_HOME, shell: true }, config);
+      const args = ["-jar", "braid-server.jar", `localhost:${entity.rpcPort}`, "user1", "letmein", port++, 3, `${path}/cordapps/`];
+      const braid = spawn("java", args, currentConfig);
 
       braid.stderr.on('data', (data) => {
         console.error(`stderr:\n${data}`);
