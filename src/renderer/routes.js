@@ -46,6 +46,7 @@ const routes = (
         <Route path="/config(/:activeTab)" component={ConfigScreen} />
 
         <Route path="/corda" component={CordaNodes} />
+        <Route path="/corda/notaries" component={CordaNodes} />
       </Route>
     </Route>
   );

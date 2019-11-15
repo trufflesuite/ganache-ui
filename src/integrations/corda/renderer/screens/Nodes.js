@@ -33,12 +33,13 @@ class Nodes extends Component {
   }
 
   render() {
+    const type = this.props.route.path === "/corda/notaries" ? "notaries" : "nodes";
     const workspace = this.props.config.settings.workspace;
+    const services = type === "nodes" ? [] : [];
     return (
       <div className="Nodes DataRows">
         <main>
-          {workspace.nodes.map((node) => line(node))}
-          {workspace.notaries.map((notary) => line(notary, ["Notary"]))}
+          {workspace[type].map((node) => line(node, services))}
         </main>
       </div>
     );
