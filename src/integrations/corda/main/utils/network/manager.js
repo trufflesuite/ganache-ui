@@ -32,24 +32,24 @@ class NetworkManager extends EventEmitter {
     this.braid = new Braid(join(await BRAID_HOME, ".."));
   }
 
-  
-
   async start(){
     const entities = this.entities;
     this.emit("message", "progress", "Loading JRE...");
     const JAVA_HOME = await this.config.corda.files.jre.download();
     const config = { env : { PATH : `${JAVA_HOME}/bin:$PATH` } };
 
-    const promises = entities.map((entity) => {
+    this.emit("message", "progress", "Starting Corda Nodes...");
+    let startedNodes = 0;
+    const promises = entities.map(async (entity) => {
       const currentPath = join(this.workspaceDirectory, entity.safeName);
-      this.braid.start(entity, currentPath, config);
+      const braidPromise = this.braid.start(entity, currentPath, config);
       const currentConfig = Object.assign({ cwd : currentPath }, config);
       const corda = new Corda(entity, currentConfig);
       this.processes.push(corda);
-      return corda.start();
+      await Promise.all([corda.start(), braidPromise]);
+      this.emit("message", "progress", `Starting Corda nodes (${++startedNodes}/${entities.length})`)
     });
 
-    this.emit("message", "progress", "Starting Corda Nodes and Braid Servers...");
     return Promise.all(promises);
   }
 
