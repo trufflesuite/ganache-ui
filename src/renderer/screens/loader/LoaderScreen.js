@@ -19,6 +19,7 @@ class LoaderScreen extends Component {
             duration={2666}
           />
           <Logo fadeInElement={true} />
+          <h4 className="LoaderProgress">{this.props.core.progress}</h4>
         </div>
         <OnlyIf
           test={

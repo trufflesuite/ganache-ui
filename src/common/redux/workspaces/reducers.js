@@ -29,8 +29,11 @@ const initialShownContract = {
 };
 
 function linkContractCacheToProject(contractCache, project) {
+  if(!project.contracts) return;
+
   for (let j = 0; j < project.contracts.length; j++) {
     const contract = project.contracts[j];
+    if (!contractCache) return;
 
     if (typeof contractCache[contract.address] === "undefined") {
       contractCache[contract.address] = {

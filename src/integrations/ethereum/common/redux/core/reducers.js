@@ -2,7 +2,6 @@ const Core = require("./actions");
 
 const initialState = {
   flavor: "ethereum",
-  started: false,
   isMining: true,
   mnemonic: "",
   hdPath: "",
@@ -13,22 +12,14 @@ const initialState = {
   gasLimit: "0",
   hardfork: "petersburg",
   snapshots: [],
-  systemError: null,
-  showBugModal: false,
-  modalError: null,
   blocks: [],
   transactions: [],
-  updateInfo: {},
 };
 
 export default function(state = initialState, action) {
   let accountBalances;
   let accountNonces;
   switch (action.type) {
-    case Core.SET_SERVER_STARTED:
-      return Object.assign({}, state, {
-        started: true,
-      });
     case Core.SET_KEY_DATA:
       return Object.assign({}, state, {
         mnemonic: action.mnemonic,
@@ -86,30 +77,6 @@ export default function(state = initialState, action) {
     case Core.SET_BLOCK_NUMBER:
       return Object.assign({}, state, {
         latestBlock: action.number,
-      });
-
-    case Core.SET_SYSTEM_ERROR:
-      return Object.assign({}, state, {
-        systemError: action.error,
-        showBugModal: action.showBugModal,
-      });
-
-    case Core.SET_MODAL_ERROR:
-      return Object.assign({}, state, {
-        modalError: action.error,
-      });
-
-    case Core.DISMISS_MODAL_ERROR:
-      return Object.assign({}, state, {
-        modalError: null,
-      });
-
-    case Core.SET_NEW_VERSION_INFO:
-      return Object.assign({}, state, {
-        updateInfo: {
-          newVersion: action.newVersion,
-          releaseNotes: action.releaseNotes,
-        },
       });
 
     default:

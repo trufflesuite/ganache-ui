@@ -31,7 +31,3 @@ const render = () => {
 store.subscribe(render);
 
 render();
-
-if (module.hot) {
-  module.hot.accept(render);
-}

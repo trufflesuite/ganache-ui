@@ -9,7 +9,8 @@
     "transform-class-properties",
     "transform-async-to-generator",
     "transform-es2015-classes",
-    "react-hot-loader/babel"
+    "react-hot-loader/babel",
+    "@babel/plugin-proposal-class-properties"
   ],
   "sourceMaps": "inline"
 }

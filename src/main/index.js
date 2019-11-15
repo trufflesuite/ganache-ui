@@ -20,10 +20,8 @@ import {
   SET_SERVER_STARTED,
   SET_SYSTEM_ERROR,
   SHOW_HOME_SCREEN,
+  SET_PROGRESS,
 } from "../common/redux/core/actions";
-import {
-  SET_KEY_DATA
-} from "../integrations/ethereum/common/redux/core/actions";
 import {
   SET_WORKSPACES,
   OPEN_WORKSPACE,
@@ -106,6 +104,9 @@ app.on('ready', () => {
         webContents.send.apply(webContents, arguments);
       }
     }
+  });
+  integrations.on("progress", function(message) {
+    mainWindow.webContents.send(SET_PROGRESS, message);
   });
   
   const workspaceManager = integrations.workspaceManager;
@@ -285,20 +286,8 @@ app.on('ready', () => {
       mainWindow.webContents.send(SET_SYSTEM_ERROR, err);
     });
 
-    integrations.on("server-started", data => {
+    integrations.on("server-started", () => {
       if (workspace) {
-        if (workspace.flavor === "ethereum") {
-          mainWindow.webContents.send(SET_KEY_DATA, {
-            privateKeys: data.privateKeys,
-            mnemonic: data.mnemonic,
-            hdPath: data.hdPath,
-            fork_block_number: data.fork_block_number
-          });
-
-          workspace.settings.handleNewMnemonic(data.mnemonic);
-          workspace.settings.handleNewForkBlockNumber(data.fork_block_number);
-        }
-
         const globalSettings = global.getAll();
         const workspaceSettings = workspace.settings.getAll();
         mainWindow.webContents.send(
@@ -428,9 +417,9 @@ app.on('ready', () => {
     } else {
       for (let i = 0; i < workspaceSettings.projects.length; i++) {
         projects.push(
-          await integrations.flavor.truffleIntegration.getProjectDetails(
+          await integrations.flavor.projectIntegration.getProjectDetails(
             workspaceSettings.projects[i],
-            workspaceSettings.server.network_id,
+            workspaceSettings.server ? workspaceSettings.server.network_id : null,
           ),
         );
       }
@@ -535,9 +524,9 @@ app.on('ready', () => {
       let projects = [];
       for (let i = 0; i < workspaceSettings.projects.length; i++) {
         projects.push(
-          await integrations.flavor.truffleIntegration.getProjectDetails(
+          await integrations.flavor.projectIntegration.getProjectDetails(
             workspaceSettings.projects[i],
-            workspaceSettings.server.network_id,
+            workspaceSettings.server ? workspaceSettings.server.network_id : null,
           ),
         );
       }
