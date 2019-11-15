@@ -22,7 +22,7 @@ class NodeModal extends Component{
         </section>
         <section>
           <div>Legal Name</div>
-          <input type="text" onChange={(e)=>{
+          <input type="text" disabled={this.props.isEdit || false} onChange={(e)=>{
             this.setState({name: e.target.value});
           }} value={this.state.name||""}>
           </input>
@@ -124,8 +124,10 @@ class NodesScreen extends Component {
       data.node = {};
       aModal = (
         <NodeModal data={data} handleNodeUpdate={(node) => {
-          // TODO: this should be the whole node, not just the name
-          nodes.push(node.name);
+          nodes.push(node);
+          node.dbPort = 5432;
+          node.safeName = node.name.toLowerCase().replace(/[^a-z]+/g,"_");
+          node.cordapps = [];
           this.state.addNode = null;
           this.forceUpdate();
         }}></NodeModal>
@@ -138,13 +140,13 @@ class NodesScreen extends Component {
       const data = {};
       data.title = `Edit ${type}`;
       data.buttonText = "Edit";
-      data.node = {
-        name: node
-      };
+      data.node = node;
       aModal = (
-        <NodeModal closeModal={()=>{this.setState({editNode: null})}} data={data} handleNodeUpdate={(node) => {
+        <NodeModal closeModal={()=>{this.setState({editNode: null})}} isEdit={true} data={data} handleNodeUpdate={(node) => {
           // TODO: this should be the whole node, not just the name
-          nodes[idx] = node.name;
+          nodes[idx] = node;
+          node.dbPort = 5432;
+          node.cordapps = [];
           this.state.editNode = null;
           this.forceUpdate();
         }}></NodeModal>
@@ -163,10 +165,10 @@ class NodesScreen extends Component {
                   return (
                     <div
                       className={`projectItem ${selected && "active"}`}
-                      key={node}
+                      key={node.safeName}
                       onClick={this.handleNodeClick(idx)}
                     >
-                      {node}
+                      {node.name}
                     </div>
                   );
                 })
