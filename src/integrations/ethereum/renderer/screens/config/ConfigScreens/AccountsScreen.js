@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
-import OnlyIf from "../../../components/only-if/OnlyIf";
-import { STARTUP_MODE } from "../../../../common/redux/config/actions";
+import OnlyIf from "../../../../../../renderer/components/only-if/OnlyIf";
+import { STARTUP_MODE } from "../../../../../../common/redux/config/actions";
 
 const VALIDATIONS = {
   "workspace.server.total_accounts": {

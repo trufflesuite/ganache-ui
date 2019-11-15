@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { remote } from "electron";
 import path from "path";
-import ModalDetails from "../../../components/modal/ModalDetails";
+import ModalDetails from "../../../../../../renderer/components/modal/ModalDetails";
 import SyntaxHighlighter from "react-syntax-highlighter";
 
 class WorkspaceScreen extends Component {

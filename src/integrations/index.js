@@ -41,7 +41,9 @@ class IntegrationManager extends EventEmitter {
         // We're *not* switching chains, so don't need to do anything.
         if (this.flavor.name === flavor) return;
 
-        // We're switching chains; Shut down the old one completely
+        // We're switching chains; invalid the previous workspace and then
+        // shut down the old chain completely
+        this.workspace = null;
         await this.stopChain();
       }
 
@@ -94,7 +96,7 @@ class IntegrationManager extends EventEmitter {
   }
 
   async startServer() {
-    if (this.flavor) {
+    if (this.flavor && this.workspace) {
       const settings = this.workspace.settings.getAll();
       await this.flavor.startServer(settings, this.workspace.workspaceDirectory);
     }

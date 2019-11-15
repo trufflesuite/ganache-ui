@@ -23,21 +23,4 @@
       margin: 0;
     }
   }
-
-  .DataPoint {
-    .Label {
-      font-size: 0.75rem;
-      font-family: "RobotoCondensed-Regular";
-      font-weight: 800;
-      color: var(--app-card-label);
-      margin-bottom: 0.25rem;
-    }
-
-    .Value {
-      font-size: 1.125rem;
-      font-family: "Fira Code Regular";
-      color: var(--app-card-value);
-      word-break: break-all;
-    }
-  }
 }

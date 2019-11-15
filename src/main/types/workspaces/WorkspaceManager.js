@@ -53,7 +53,7 @@ class WorkspaceManager {
   getNonDefaultNames() {
     return this.workspaces
       .filter(workspace => workspace.name !== null)
-      .map(workspace => workspace.name);
+      .map(workspace => ({name: workspace.name, flavor: workspace.flavor}));
   }
 
   get(name, flavor = "ethereum") {

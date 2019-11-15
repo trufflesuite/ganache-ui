@@ -52,12 +52,5 @@ const enhancer = composeEnhancers(applyMiddleware(thunk, router, logger));
 
 export default function configureStore(reducers, initialState) {
   const store = createStore(reducers, initialState, enhancer);
-
-  // if (module.hot) {
-  //   module.hot.accept('../reducers', () =>
-  //     store.consoleaceReducer(require('../reducers')) // eslint-disable-line global-require
-  //   )
-  // }
-
   return store;
 }

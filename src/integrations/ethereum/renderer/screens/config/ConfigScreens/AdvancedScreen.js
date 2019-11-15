@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
-import OnlyIf from "../../../components/only-if/OnlyIf";
-import FilePicker from "../../../components/file-picker/FilePicker";
+import OnlyIf from "../../../../../../renderer/components/only-if/OnlyIf";
+import FilePicker from "../../../../../../renderer/components/file-picker/FilePicker";
 
 const VALIDATIONS = {
   "workspace.logDirectory": {

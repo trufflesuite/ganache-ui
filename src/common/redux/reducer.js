@@ -11,7 +11,8 @@ import { REQUEST_SERVER_RESTART } from "./core/actions";
 
 import AppShellReducer from "./appshell/reducers";
 import ConfigReducer from "./config/reducers";
-import CoreReducer from "../../integrations/ethereum/common/redux/core/reducers";
+import CoreReducer from "../../common/redux/core/reducers";
+import EthereumCoreReducer from "../../integrations/ethereum/common/redux/core/reducers";
 import Web3Reducer from "../../integrations/ethereum/common/redux/web3/reducers";
 import AccountsReducer from "../../integrations/ethereum/common/redux/accounts/reducers";
 import BlocksReducer from "../../integrations/ethereum/common/redux/blocks/reducers";
@@ -26,7 +27,11 @@ import EventsReducer from "../../integrations/ethereum/common/redux/events/reduc
 const appReducer = combineReducers({
   appshell: AppShellReducer,
   config: ConfigReducer,
-  core: CoreReducer,
+  core: function(state, action) {
+    const ethState = EthereumCoreReducer(state, action);
+    const coreState = CoreReducer(ethState, action);
+    return coreState;
+  },
   web3: Web3Reducer,
   accounts: AccountsReducer,
   blocks: BlocksReducer,

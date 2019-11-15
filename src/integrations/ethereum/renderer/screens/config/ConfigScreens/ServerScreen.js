@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { STARTUP_MODE } from "../../../../common/redux/config/actions";
-import OnlyIf from "../../../components/only-if/OnlyIf";
-import StyledSelect from "../../../components/styled-select/StyledSelect";
+import { STARTUP_MODE } from "../../../../../../common/redux/config/actions";
+import OnlyIf from "../../../../../../renderer/components/only-if/OnlyIf";
+import StyledSelect from "../../../../../../renderer/components/styled-select/StyledSelect";
 
 const VALIDATIONS = {
   "workspace.server.hostname": {

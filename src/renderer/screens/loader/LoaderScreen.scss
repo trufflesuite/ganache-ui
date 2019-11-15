@@ -55,6 +55,12 @@
   letter-spacing:4px;
   will-change: opacity, transform;
 
+  .LoaderProgress {
+    position: absolute;
+    margin-top:7em;
+    color:var(--primary-color);
+  }
+
   .spinner {
     position: absolute !important;
   }

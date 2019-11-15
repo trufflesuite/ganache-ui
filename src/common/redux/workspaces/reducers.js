@@ -29,8 +29,11 @@ const initialShownContract = {
 };
 
 function linkContractCacheToProject(contractCache, project) {
+  if(!project.contracts) return;
+
   for (let j = 0; j < project.contracts.length; j++) {
     const contract = project.contracts[j];
+    if (!contractCache) return;
 
     if (typeof contractCache[contract.address] === "undefined") {
       contractCache[contract.address] = {
@@ -47,7 +50,7 @@ export default function(state = initialState, action) {
 
   switch (action.type) {
     case SET_WORKSPACES:
-      nextState.names = cloneDeep(action.workspaces);
+      nextState.info = cloneDeep(action.workspaces);
       break;
     case SET_CURRENT_WORKSPACE:
       nextState.current = cloneDeep(action.workspace);

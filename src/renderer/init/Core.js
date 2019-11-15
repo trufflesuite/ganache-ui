@@ -10,6 +10,8 @@ import {
   setServerStarted,
   SHOW_HOME_SCREEN,
   showHomeScreen,
+  setProgress,
+  SET_PROGRESS,
 } from "../../common/redux/core/actions";
 
 import {
@@ -83,6 +85,10 @@ export function initCore(store) {
       }
     },
   );
+
+  ipcRenderer.on(SET_PROGRESS, (event, message) => {
+    store.dispatch(setProgress(message));
+  });
 
   // Block polling happens in the chain process, and is passed through
   // the main process to the render process when there's a new block.
