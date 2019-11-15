@@ -23,11 +23,9 @@ const writeConfig = async (workspaceDirectory,  nodes, notaries, startPort) => {
   const notariesArr = [];
   
   const getPort = port(startPort);
-  const getNonce = ((val) => () => val++)(0);
 
   const modifier = {
     getPort,
-    getNonce,
     postgres: {
       port: 15433,
       schema: undefined
@@ -35,27 +33,31 @@ const writeConfig = async (workspaceDirectory,  nodes, notaries, startPort) => {
   }
 
   for (let i = 0; i < notaries.length; i++) {
-    const name = `notary${i}`;
-    nodesArr.push(name);
+    const current = notaries[i];
+    const name = `${current.safeName}`;
+    notariesArr.push(current);
     const stream = createWriteStream(join(workspaceDirectory, `${name}_node.conf`));
     const write = (val) => stream.write(`${val}\n`, "utf8");
-    const mod = produceModifier(modifier, { write });
-    mod.postgres.schema = name;
+    const mod = produceModifier(modifier, { write }, current);
+    mod.postgres.schema = current.safeName;
+    mod.postgres.port = current.dbPort;
     generate(templates.notary, mod);
     const close = waitForClose(stream).catch(console.log);
     stream.end();
     await close;
   }
-
+  
   for (let i = 0; i < nodes.length; i++) {
-    const name = `party${i}`;
-    notariesArr.push(name);
+    const current = nodes[i];
+    const name = `${current.safeName}`;
+    nodesArr.push(current);
     const stream = createWriteStream(join(workspaceDirectory, `${name}_node.conf`));
-    const close = waitForClose(stream).catch(console.log);
     const write = (val) => stream.write(`${val}\n`, "utf8");
-    const mod = produceModifier(modifier, { write });
-    mod.postgres.schema = name;
+    const mod = produceModifier(modifier, { write }, current);
+    mod.postgres.schema = current.safeName;
+    mod.postgres.port = current.dbPort;
     generate(templates.node, mod);
+    const close = waitForClose(stream).catch(console.log);
     stream.end();
     await close;
   }

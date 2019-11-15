@@ -30,18 +30,22 @@ const format = (el, element, isPermissions) => {
         result = `${el} = "${value(element)}"`;
         break;
       case "myLegalName":
-        {
-          const val = replace(element, ["{{O}}", modifiers.getNonce()]);
-          result = `${el} = "${val}"`;
-        }
-        // result = `${el} = "${value(element)}"`.replace("{{O}}", modifiers.getNonce());
+        result = `${el} = "${modifiers.name}"`;
+        break;
+      case "p2pPort":
+        result = `${el} = "localhost:${modifiers.p2pPort}"`;
+        break;
+      case "url.rpc":
+        result = `${el} = "localhost:${modifiers.rpcPort}"`;
+        break;
+      case "url.admin":
+        result = `${el} = "localhost:${modifiers.adminPort}"`;
         break;
       case "postgresUrl":
         {
           const val = replace(element, ["{{port}}", modifiers.postgres.port], ["{{schema}}", modifiers.postgres.schema]);
           result = `${el} = "${val}"`;
         }
-        // result = `${el} = "${value(element)}"`.replace("{{port}}", modifiers.postgres.port).replace("{{schema}}", modifiers.postgres.schema);
         break;
       case "url":
         result = `${el} = "127.0.0.1:${modifiers.getPort()}"`
