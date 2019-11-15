@@ -19,12 +19,16 @@ class NetworkManager extends EventEmitter {
     // const mapper = (arr) => arr.map((val) => new Map(Object.entries(val)));
     const BRAID_HOME = this.config.corda.files.braidServer.download();
     const POSTGRES_HOME = this.config.corda.files.postgres.download();
+    this.emit("message", "progress", "Writing configuration files...");
     const {nodesArr, notariesArr} = await writeConfig(this.workspaceDirectory, nodes, notaries, port);
     this.nodes = nodesArr;
     this.notaries = notariesArr;
     this.entities = this.nodes.concat(this.notaries);
+    this.emit("message", "progress", "Configuring and starting PostgreSQL...");
     this.pg = postgres(await POSTGRES_HOME).start(this.entities[0].dbPort, this.workspaceDirectory, this.entities);
+    this.emit("message", "progress", "Bootstrapping nodes...");
     await bootstrapDir(this.workspaceDirectory, this.config);
+    this.emit("message", "progress", "Configuring Braid Manager...");
     this.braid = new Braid(join(await BRAID_HOME, ".."));
   }
 
@@ -32,6 +36,7 @@ class NetworkManager extends EventEmitter {
 
   async start(){
     const entities = this.entities;
+    this.emit("message", "progress", "Loading JRE...");
     const JAVA_HOME = await this.config.corda.files.jre.download();
     const config = { env : { PATH : `${JAVA_HOME}/bin:$PATH` } };
 
@@ -44,6 +49,7 @@ class NetworkManager extends EventEmitter {
       return corda.start();
     });
 
+    this.emit("message", "progress", "Starting Corda Nodes and Braid Servers...");
     return Promise.all(promises);
   }
 
