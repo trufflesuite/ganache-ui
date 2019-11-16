@@ -1,9 +1,10 @@
 const {writeConfig, bootstrap : bootstrapDir} = require("./bootstrap");
 const { EventEmitter } = require("events");
-const { join } = require("path");
+const { basename, join } = require("path");
 const postgres = require("../postgres");
 const Braid = require("./braid");
 const Corda = require("./corda");
+const fse = require("fs-extra");
 
 class NetworkManager extends EventEmitter {
   constructor (config, workspaceDirectory) {
@@ -28,8 +29,22 @@ class NetworkManager extends EventEmitter {
     this.pg = postgres(await POSTGRES_HOME).start(this.entities[0].dbPort, this.workspaceDirectory, this.entities);
     this.emit("message", "progress", "Bootstrapping nodes...");
     await bootstrapDir(this.workspaceDirectory, this.config);
+    this.emit("message", "progress", "Copying Cordapps...");
+    await this.copyCordapps();
     this.emit("message", "progress", "Configuring Braid Manager...");
     this.braid = new Braid(join(await BRAID_HOME, ".."));
+  }
+
+  async copyCordapps() {
+    const promises = [];
+    this.entities.map((node) => {
+      node.cordapps.map(path => {
+        const name = basename(path);
+        const newPath = join(this.workspaceDirectory, node.safeName, "cordapps", name);
+        promises.push(fse.copy(path, newPath));
+      });
+    });
+    return Promise.all(promises);
   }
 
   async start(){

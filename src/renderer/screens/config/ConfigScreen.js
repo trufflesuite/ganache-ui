@@ -39,9 +39,10 @@ const ETHEREUM_TABS = [
 ];
 
 const CORDA_TABS = [
-  { name: "Workspace", subRoute: "workspace", component: CordaWorkspaceScreen },
-  { name: "Nodes", subRoute: "nodes", component: NodesScreen, data:{type: "nodes"} },
-  { name: "Notaries", subRoute: "notaries", component: NodesScreen, data:{type: "notaries"} }
+  { name: "Workspace", subRoute: "corda/workspace", component: CordaWorkspaceScreen },
+  { name: "Nodes", subRoute: "corda/nodes", component: NodesScreen, data:{type: "nodes"} },
+  { name: "Notaries", subRoute: "corda/notaries", component: NodesScreen, data:{type: "notaries"} },
+  { name: "Advanced", subRoute: "corda/advanced", component: AdvancedScreen }
 ];
 
 const TABS = [
@@ -148,12 +149,25 @@ class ConfigScreen extends PureComponent {
     });
   };
 
+  updateCordaNodes = () => {
+    const projects = this.state.config.settings.workspace.projects;
+    this.state.config.settings.workspace.nodes.forEach(node => {
+      node.cordapps = projects.slice();
+    });
+    this.state.config.settings.workspace.notaries.forEach(node => {
+      node.cordapps = projects.slice();
+    });
+  }
+
   addWorkspaceProject = path => {
     const alreadyExists = this.state.config.settings.workspace.projects.includes(
       path,
     );
     if (!alreadyExists) {
       this.state.config.settings.workspace.projects.push(path);
+    }
+    if (this.state.config.settings.workspace.flavor === "corda") {
+      this.updateCordaNodes();
     }
     this.forceUpdate();
   };
@@ -163,6 +177,9 @@ class ConfigScreen extends PureComponent {
       x => x !== path,
     );
     this.state.config.settings.workspace.projects = newProjects;
+    if (this.state.config.settings.workspace.flavor === "corda") {
+      this.updateCordaNodes();
+    }
     this.forceUpdate();
   };
 

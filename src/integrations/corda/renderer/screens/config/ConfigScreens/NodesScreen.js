@@ -127,7 +127,7 @@ class NodesScreen extends Component {
           nodes.push(node);
           node.dbPort = 5432;
           node.safeName = node.name.toLowerCase().replace(/[^a-z]+/g,"_");
-          node.cordapps = [];
+          node.cordapps = this.props.config.settings.workspace.projects.slice();
           this.state.addNode = null;
           this.forceUpdate();
         }}></NodeModal>
@@ -146,7 +146,7 @@ class NodesScreen extends Component {
           // TODO: this should be the whole node, not just the name
           nodes[idx] = node;
           node.dbPort = 5432;
-          node.cordapps = [];
+          node.cordapps = this.props.config.settings.workspace.projects.slice();
           this.state.editNode = null;
           this.forceUpdate();
         }}></NodeModal>

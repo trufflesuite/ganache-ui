@@ -62,6 +62,7 @@ class AdvancedScreen extends Component {
   };
 
   render() {
+    const server = this.props.config.settings.workspace.server || {};
     return (
       <div>
         <h2>LOGGING</h2>
@@ -127,7 +128,7 @@ class AdvancedScreen extends Component {
                   name="workspace.server.verbose"
                   id="Verbose"
                   onChange={this.props.handleInputChange}
-                  checked={this.props.config.settings.workspace.server.verbose}
+                  checked={server.verbose}
                 />
                 <label htmlFor="Verbose">Verbose Logs</label>
               </div>

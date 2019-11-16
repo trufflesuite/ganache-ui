@@ -179,6 +179,10 @@ class TopNavbar extends Component {
         <main className="Main">
           <div className="Menu">
             {children.menu}
+            <Link to="/logs" activeClassName="Active">
+              <LogsIcon />
+              Logs
+            </Link>
           </div>
           <div className="NotificationAndSearchBar">
             <OnlyIf test={isNewVersionAvailable}>
@@ -233,19 +237,19 @@ class TopNavbar extends Component {
   _generateCordaChildren(){
     return {
       menu: (<>
-        <Link to="/nodes" activeClassName="Active">
+        <Link to="/corda" activeClassName="Active">
           <ChainIcon />
           Nodes
         </Link>
-        <Link to="/notaries" activeClassName="Active">
+        <Link to="/corda/notaries" activeClassName="Active">
           <MenuIcon />
           Notaries
         </Link>
-        <Link to="/cordapps" activeClassName="Active">
+        <Link to="/corda/cordapps" activeClassName="Active">
           <ContractsIcon />
           CorDapps
         </Link>
-        <Link to="/transactions" activeClassName="Active">
+        <Link to="/corda/transactions" activeClassName="Active">
           <TxIcon />
           Transactions
         </Link>
@@ -290,10 +294,6 @@ class TopNavbar extends Component {
           <Link to="/events" activeClassName="Active">
             <EventsIcon />
             Events
-          </Link>
-          <Link to="/logs" activeClassName="Active">
-            <LogsIcon />
-            Logs
           </Link>
         </>
       ),
