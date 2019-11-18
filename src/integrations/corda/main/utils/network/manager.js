@@ -28,11 +28,11 @@ class NetworkManager extends EventEmitter {
     this.entities = this.nodes.concat(this.notaries);
     this.emit("message", "progress", "Configuring and starting PostgreSQL...");
     this.pg = postgres(await POSTGRES_HOME).start(this.entities[0].dbPort, this.workspaceDirectory, this.entities);
-    this.emit("message", "progress", "Bootstrapping nodes...");
+    this.emit("message", "progress", "Bootstrapping network...");
     await cordaBootstrap.bootstrap(this.config);
     this.emit("message", "progress", "Copying Cordapps...");
     await this.copyCordapps();
-    this.emit("message", "progress", "Configuring Braid Manager...");
+    this.emit("message", "progress", "Configuring RPC Manager...");
     this.braid = new Braid(join(await BRAID_HOME, ".."));
   }
 
@@ -61,7 +61,7 @@ class NetworkManager extends EventEmitter {
       const corda = new Corda(entity, currentPath, JAVA_HOME);
       this.processes.push(corda);
       await Promise.all([corda.start(), braidPromise]);
-      this.emit("message", "progress", `Starting Corda nodes (${++startedNodes}/${entities.length})`)
+      this.emit("message", "progress", `Corda node ${++startedNodes}/${entities.length} online!`)
     });
 
     return Promise.all(promises);

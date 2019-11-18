@@ -28,14 +28,12 @@ class CordaBootstrap {
       }
     }
 
-    const makeStream = name => createWriteStream(join(this.workspaceDirectory, `${name}_node.conf`));
-
     const writer = async (arr, out, template) => {
       for (let i = 0; i < arr.length; i++) {
         const current = arr[i];
         const name = `${current.safeName}`;
         out.push(current);
-        const stream = makeStream(name);
+        const stream = createWriteStream(join(this.workspaceDirectory, `${name}_node.conf`));
         const write = (val) => stream.write(`${val}\n`, "utf8");
         const mod = produceModifier(modifier, { write }, current);
         mod.postgres.schema = current.safeName;
