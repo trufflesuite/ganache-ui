@@ -1,10 +1,9 @@
-const {writeConfig, bootstrap} = require("./bootstrap");
+const {CordaBootstrap} = require("./bootstrap");
 const NetworkManager = require("./manager");
 const port = require("./port");
 
 module.exports = {
   NetworkManager,
-  bootstrap,
-  writeConfig,
+  CordaBootstrap,
   port
 }

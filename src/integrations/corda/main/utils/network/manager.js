@@ -1,4 +1,4 @@
-const {writeConfig, bootstrap : bootstrapDir} = require("./bootstrap");
+const { CordaBootstrap } = require("./bootstrap");
 const { EventEmitter } = require("events");
 const { basename, join } = require("path");
 const postgres = require("../postgres");
@@ -21,14 +21,15 @@ class NetworkManager extends EventEmitter {
     const BRAID_HOME = this.config.corda.files.braidServer.download();
     const POSTGRES_HOME = this.config.corda.files.postgres.download();
     this.emit("message", "progress", "Writing configuration files...");
-    const {nodesArr, notariesArr} = await writeConfig(this.workspaceDirectory, nodes, notaries, port);
+    const cordaBootstrap = new CordaBootstrap(this.workspaceDirectory);
+    const {nodesArr, notariesArr} = await cordaBootstrap.writeConfig(nodes, notaries, port);
     this.nodes = nodesArr;
     this.notaries = notariesArr;
     this.entities = this.nodes.concat(this.notaries);
     this.emit("message", "progress", "Configuring and starting PostgreSQL...");
     this.pg = postgres(await POSTGRES_HOME).start(this.entities[0].dbPort, this.workspaceDirectory, this.entities);
     this.emit("message", "progress", "Bootstrapping nodes...");
-    await bootstrapDir(this.workspaceDirectory, this.config);
+    await cordaBootstrap.bootstrap(this.config);
     this.emit("message", "progress", "Copying Cordapps...");
     await this.copyCordapps();
     this.emit("message", "progress", "Configuring Braid Manager...");
