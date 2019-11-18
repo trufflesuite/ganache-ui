@@ -51,13 +51,11 @@ class NetworkManager extends EventEmitter {
     const entities = this.entities;
     this.emit("message", "progress", "Loading JRE...");
     const JAVA_HOME = await this.config.corda.files.jre.download();
-    const config = { env : { PATH : `${JAVA_HOME}/bin:$PATH` } };
 
     const promises = entities.map((entity) => {
       const currentPath = join(this.workspaceDirectory, entity.safeName);
-      this.braid.start(entity, currentPath, config);
-      const currentConfig = Object.assign({ cwd : currentPath }, config);
-      const corda = new Corda(entity, currentConfig);
+      this.braid.start(entity, currentPath, JAVA_HOME);
+      const corda = new Corda(entity, currentPath, JAVA_HOME);
       this.processes.push(corda);
       return corda.start();
     });

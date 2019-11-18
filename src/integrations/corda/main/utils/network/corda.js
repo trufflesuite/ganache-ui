@@ -1,14 +1,16 @@
 const { spawn } = require("child_process");
+const { join } = require("path");
 
 class Corda {
-  constructor(entity, config){
+  constructor(entity, path, JAVA_HOME){
     this.entity = entity;
-    this.config = config;
+    this.path = path;
+    this.JAVA_HOME = JAVA_HOME;
     this.java = null;
   }
 
   start(){
-    this.java = spawn("java", ["-jar", "corda.jar"], this.config);
+    this.java = spawn(join(this.JAVA_HOME, "bin", "java"), ["-jar", "corda.jar"], {cwd: this.path, env: null});
 
     this.java.stderr.on('data', (data) => {
       console.error(`stderr:\n${data}`);

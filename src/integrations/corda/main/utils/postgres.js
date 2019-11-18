@@ -11,21 +11,21 @@ module.exports = (POSTGRES_PATH) => {
 
       if (exists) {
         try {
-          spawnSync(`${POSTGRES_PATH}/bin/pg_ctl`, ["-D", dataDir, "stop"]);
+          spawnSync(join(POSTGRES_PATH, "bin", "pg_ctl"), ["-D", dataDir, "stop"], {env: null});
         } catch(e) {
           // ignore
         }
       } else {
         // config it
-        spawnSync(`${POSTGRES_PATH}/bin/initdb`, ["--pgdata", dataDir, "--username", "postgres"]);
+        spawnSync(join(POSTGRES_PATH, "bin", "initdb"), ["--pgdata", dataDir, "--username", "postgres"], {env: null});
       }
 
       // start it
       // console.log(`"${postgres_path}/bin/pg_ctl" -o "-F -p ${port}" -D "${dataDir}" -l logfile start -w`);
-      spawnSync(`${POSTGRES_PATH}/bin/pg_ctl`, ["-o", `-F -p ${port}`, "-D", dataDir, "-l", "logfile", "-w", "start"]);
+      spawnSync(join(POSTGRES_PATH, "bin", "pg_ctl"), ["-o", `-F -p ${port}`, "-D", dataDir, "-l", "logfile", "-w", "start"], {env: null});
       try {
-        spawnSync(`${POSTGRES_PATH}/bin/createuser`, ["--host", "127.0.0.1", "--port", port, "--createdb", "--username", "postgres", "ganache"]);
-        spawnSync(`${POSTGRES_PATH}/bin/createuser`, ["--host", "127.0.0.1", "--port", port, "--username", "postgres", "corda"]);
+        spawnSync(join(POSTGRES_PATH, "bin", "createuser"), ["--host", "127.0.0.1", "--port", port, "--createdb", "--username", "postgres", "ganache"], {env: null});
+        spawnSync(join(POSTGRES_PATH, "bin", "createuser"), ["--host", "127.0.0.1", "--port", port, "--username", "postgres", "corda"], {env: null});
       } catch(e){
         // ignore
       }
@@ -33,7 +33,7 @@ module.exports = (POSTGRES_PATH) => {
       for (let i = 0, l = schemaNames.length; i < l; i++) {
         const schema = schemaNames[i];
         try {
-          spawnSync(`${POSTGRES_PATH}/bin/createdb`, ["--host", "127.0.0.1", "--port", schema.dbPort, "--owner", "ganache", "--username", "ganache", schema.safeName]);
+          spawnSync(join(POSTGRES_PATH, "bin", "createdb"), ["--host", "127.0.0.1", "--port", schema.dbPort, "--owner", "ganache", "--username", "ganache", schema.safeName], {env: null});
         } catch(e) {
           // ignore
         }
@@ -41,7 +41,7 @@ module.exports = (POSTGRES_PATH) => {
 
       return {
         stop: () => {
-          return spawnSync(`"${POSTGRES_PATH}/bin/pg_ctl"`, ["stop" ,"-D", dataDir]);
+          return spawnSync(join(POSTGRES_PATH, "bin", "pg_ctl"), ["stop" ,"-D", dataDir], {env: null});
         }
       }
     }

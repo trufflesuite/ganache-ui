@@ -70,11 +70,9 @@ const writeConfig = async (workspaceDirectory,  nodes, notaries, startPort) => {
 const bootstrap = async (workspaceDirectory, config) => {
   const JAVA_HOME = await config.corda.files.jre.download();
   const CORDA_BOOTSTRAPPER = await config.corda.files.cordaBoostrapper.download();
-  const java = spawn("java", ["-jar", CORDA_BOOTSTRAPPER, "--dir", workspaceDirectory], {
-    env : {
-      PATH : `${JAVA_HOME}/bin:$PATH`
-    }
-  });
+  // java on the PATH is required for bootstrapper
+  const spawnConfig = {env: {PATH: join(JAVA_HOME, "bin")}};
+  const java = spawn("java", ["-jar", CORDA_BOOTSTRAPPER, "--dir", workspaceDirectory], spawnConfig);
 
   java.stdout.on('data', (data) => {
     console.log(`${data}`);
