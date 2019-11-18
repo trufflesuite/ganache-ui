@@ -49,35 +49,6 @@ class CordaBootstrap {
 
     await writer(notaries, notariesArr, templates.notary);
     await writer(nodes, nodesArr, templates.node);
-    // for (let i = 0; i < notaries.length; i++) {
-    //   const current = notaries[i];
-    //   const name = `${current.safeName}`;
-    //   notariesArr.push(current);
-    //   const stream = makeStream(name);
-    //   const write = (val) => stream.write(`${val}\n`, "utf8");
-    //   const mod = produceModifier(modifier, { write }, current);
-    //   mod.postgres.schema = current.safeName;
-    //   mod.postgres.port = current.dbPort;
-    //   generate(templates.notary, mod);
-    //   const close = waitForClose(stream).catch(console.log);
-    //   stream.end();
-    //   await close;
-    // }
-    
-    // for (let i = 0; i < nodes.length; i++) {
-    //   const current = nodes[i];
-    //   const name = `${current.safeName}`;
-    //   nodesArr.push(current);
-    //   const stream = makeStream(name);
-    //   const write = (val) => stream.write(`${val}\n`, "utf8");
-    //   const mod = produceModifier(modifier, { write }, current);
-    //   mod.postgres.schema = current.safeName;
-    //   mod.postgres.port = current.dbPort;
-    //   generate(templates.node, mod);
-    //   const close = waitForClose(stream).catch(console.log);
-    //   stream.end();
-    //   await close;
-    // }
   
     return {
       nodesArr,
