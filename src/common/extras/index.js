@@ -60,7 +60,7 @@ module.exports = {
           })
         },
         files: {
-          cordaBoostrapper: new File(`corda-tools-network-bootstrapper-4.1.jar`),
+          cordaBoostrapper: new File(`corda-tools-network-bootstrapper-4.3.jar`),
           braidServer: new File(`braid-server.jar`),
           postgres: new File(`postgresql-9.6.15-2-${platform}-${arch}-binaries.zip`),
           jre: new File(`OpenJDK8U-jre_${arch}_${platform}_hotspot_8u232b09.zip`)
