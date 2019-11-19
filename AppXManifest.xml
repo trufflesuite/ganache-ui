@@ -5,7 +5,7 @@
    xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities">
   <Identity Name="Ganache"
     ProcessorArchitecture="x64"
-    Publisher="CN=Consensys Inc, O=Consensys Inc, L=New York, S=New York, C=US"
+    Publisher="CN=Truffle Blockchain Group Inc, O=Truffle Blockchain Group Inc, L=Yakima, S=Washington, C=US"
     Version="1.2.3.0" />
   <Properties>
     <DisplayName>Ganache</DisplayName>
