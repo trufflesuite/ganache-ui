@@ -5,6 +5,8 @@ import AppShell from "./screens/appshell/AppShell";
 import ConfigScreen from "./screens/config/ConfigScreen";
 import AccountsScreen from "../integrations/ethereum/renderer/screens/accounts/AccountsScreen";
 import CordaNodes from "../integrations/corda/renderer/screens/Nodes";
+import CordaTransactions from "../integrations/corda/renderer/screens/Transactions";
+import CordaTransaction from "../integrations/corda/renderer/screens/Transaction";
 import BlocksScreen from "../integrations/ethereum/renderer/screens/blocks/BlocksScreen";
 import TransactionsScreen from "../integrations/ethereum/renderer/screens/transactions/TransactionsScreen";
 import LogsScreen from "./screens/logs/LogsScreen";
@@ -47,6 +49,8 @@ const routes = (
 
         <Route path="/corda" component={CordaNodes} />
         <Route path="/corda/notaries" component={CordaNodes} />
+        <Route path="/corda/transactions" component={CordaTransactions} />
+        <Route path="/corda/transactions/:txhash" component={CordaTransaction} />
       </Route>
     </Route>
   );
