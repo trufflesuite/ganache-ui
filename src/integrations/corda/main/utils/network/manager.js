@@ -75,7 +75,8 @@ class NetworkManager extends EventEmitter {
       console.error("Error occured while attempting to stop postgres...");
       console.error(e);
     }
-    return Promise.all(this.processes.map(cordaProcess => cordaProcess.stop()))
+
+    return Promise.all([...this.processes.map(cordaProcess => cordaProcess.stop()), this.braid.stop()]);
   }
   
   getNodes(){
