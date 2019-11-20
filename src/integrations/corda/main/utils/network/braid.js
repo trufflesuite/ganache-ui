@@ -49,11 +49,30 @@ class Braid {
   }
 
   getAll(){
-    console.log(this.servers);
+    return this.servers;
   }
 
-  shutdown(){
-    console.log("shutdown");
+  stop(){
+    const promises = [];
+    this.servers.forEach((server, key) => {
+      promises.push(new Promise(resolve => {
+        const braid = server.braid;
+        if (braid) {
+          braid.once("close", ()=> {
+            server.braid = null;
+            this.servers.delete(key);
+            resolve();
+          });
+          if(!braid.killed) {
+            braid.kill();      
+          }
+        } else {
+          this.servers.delete(key);
+          resolve();
+        }
+      }));
+    });
+    return Promise.all(promises);
   }
 }
 
