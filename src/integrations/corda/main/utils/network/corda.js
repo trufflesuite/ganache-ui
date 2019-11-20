@@ -37,9 +37,14 @@ class Corda {
 
   stop(){
     return new Promise(resolve => {
-      if (this.java && !this.java.killed) {
-        this.java.once("close", resolve);
-        this.java.kill();      
+      if (this.java) {
+        this.java.once("close", ()=>{
+          this.java = null;
+          resolve();
+        });
+        if(!this.java.killed) {
+          this.java.kill();      
+        }
       } else {
         resolve();
       }
