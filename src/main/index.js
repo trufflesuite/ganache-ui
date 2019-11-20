@@ -25,10 +25,6 @@ import {
 } from "../common/redux/core/actions";
 
 import {
-  SHOW_CONFIG_SCREEN,
-} from "../common/redux/config/actions";
-
-import {
   SET_WORKSPACES,
   OPEN_WORKSPACE,
   CLOSE_WORKSPACE,
@@ -64,6 +60,13 @@ import GlobalSettings from "./types/settings/GlobalSettings";
 import WorkspaceManager from "./types/workspaces/WorkspaceManager";
 import GoogleAnalyticsService from "../common/services/GoogleAnalyticsService";
 import TruffleIntegrationService from "../common/services/TruffleIntegrationService.js";
+import migration from "./init/migration.js";
+
+// start a migration, if needed
+const migrationPromise = migration.migrate();
+migrationPromise.then(() => {
+  migration.uninstallOld();
+});
 
 const isDevMode = process.execPath.match(/[\\/]electron/) !== null;
 const isDevelopment = process.env.NODE_ENV !== 'production';
@@ -264,8 +267,11 @@ app.on('ready', () => {
 
     truffleIntegration.start();
 
-    global.bootstrap();
-    workspaceManager.bootstrap();
+    // we can't get our app settings until the migrate is complete...
+    const bootstrapPromise = migrationPromise.then(() => {
+      global.bootstrap();
+      workspaceManager.bootstrap();
+    });
 
     const standardWidth = 1200;
     const standardHeight = 800;
@@ -320,14 +326,20 @@ app.on('ready', () => {
       mainWindow.focus();
       mainWindow.setTitle("Ganache");
 
-      // make sure the store registers the settings ASAP in the event of a startup crash
-      const globalSettings = global.getAll();
-      mainWindow.webContents.send(SET_SETTINGS, globalSettings, {});
+      // We need to wait until we have finished our migration before
+      // getting and then sending our settings and workspaces...
+      bootstrapPromise.then(() => {
+        // make sure the store registers the settings ASAP in the event of a startup crash
+        const globalSettings = global.getAll();
+        mainWindow.webContents.send(SET_SETTINGS, globalSettings, {});
 
-      mainWindow.webContents.send(
-        SET_WORKSPACES,
-        workspaceManager.getNonDefaultNames(),
-      );
+        mainWindow.webContents.send(
+          SET_WORKSPACES,
+          workspaceManager.getNonDefaultNames(),
+        );
+
+        initAutoUpdates(globalSettings, mainWindow);
+      });
 
       chain.on("start", async () => {
         if (workspace) {
@@ -411,8 +423,6 @@ app.on('ready', () => {
           await chain.stopServer();
         }
       });
-
-      initAutoUpdates(globalSettings, mainWindow);
     });
 
     ipcMain.on(SAVE_WORKSPACE, async (event, workspaceName, mnemonic) => {
