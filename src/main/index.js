@@ -41,6 +41,7 @@ import { ADD_LOG_LINES } from "../common/redux/logs/actions";
 import GlobalSettings from "./types/settings/GlobalSettings";
 import GoogleAnalyticsService from "../common/services/GoogleAnalyticsService";
 import IntegrationManager from "../integrations/index.js";
+import pojofyError from "../common/utils/pojofyError";
 
 const isDevMode = process.execPath.match(/[\\/]electron/) !== null;
 const isDevelopment = process.env.NODE_ENV !== 'production';
@@ -312,18 +313,7 @@ app.on('ready', () => {
     integrations.on("stdout", addLogLines);
     integrations.on("stderr", addLogLines);
     integrations.on("error", async _error => {
-      let error;
-      if (_error instanceof Error) {
-        // JSON.stringiy can't serialize error objects
-        // so we just convert the Error to an Object here
-        error = {};
-
-        Object.getOwnPropertyNames(_error).forEach((key) => {
-          error[key] = _error[key];
-        });
-      } else {
-        error = _error;
-      }
+      let error = pojofyError(_error);
       mainWindow.webContents.send(SET_SYSTEM_ERROR, error);
 
       await integrations.stopServer();
