@@ -11,8 +11,8 @@ class Corda {
   }
 
   start(){
-    this.java = spawn(join(this.JAVA_HOME, "bin", "java"), ["-jar", "corda.jarboo"], {cwd: this.path, env: null});
-    
+    this.java = spawn(join(this.JAVA_HOME, "bin", "java"), ["-jar", "corda.jar"], {cwd: this.path, env: null});
+
     this.java.stderr.on('data', (data) => {
       this._io.sendStdErr(data, this.entity.safeName);
       // this.emit("message", "stderr", data, this.entity.safeName);
