@@ -66,13 +66,13 @@ class CordaBootstrap {
     this._io.sendProgress("Starting Corda Network Bootstrapper...");
     const java = spawn("java", ["-jar", CORDA_BOOTSTRAPPER, "--dir", this.workspaceDirectory], spawnConfig);
 
-    this.java.stderr.on('data', (data) => {
+    java.stderr.on('data', (data) => {
       this._io.sendStdErr(data);
       // this.emit("message", "stderr", data, this.entity.safeName);
       console.error(`stderr:\n${data}`);
     });
 
-    this.java.stdout.on('data', (data) => {
+    java.stdout.on('data', (data) => {
       this._io.sendStdOut(data);
       // this.emit("message", "stdout", data, this.entity.safeName);
       console.error(`stdout:\n${data}`);

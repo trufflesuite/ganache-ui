@@ -15,28 +15,28 @@ class NetworkManager extends EventEmitter {
     this.notaries = [];
     this.processes = [];
     this._io = {};
-    this._io.progress = this.emit.bind(this, "message", "progress");
-    this._io.error = this.emit.bind(this, "message", "error");
-    this._io.stdErr = this.emit.bind(this, "message", "stderr");
-    this._io.stdOut = this.emit.bind(this, "message", "stdout");
+    this._io.sendProgress = this.emit.bind(this, "message", "progress");
+    this._io.sendError = this.emit.bind(this, "message", "error");
+    this._io.sendStdErr = this.emit.bind(this, "message", "stderr");
+    this._io.sendStdOut = this.emit.bind(this, "message", "stdout");
   }
 
   async bootstrap(nodes, notaries, port = 10000) {
       const BRAID_HOME = this.config.corda.files.braidServer.download();
       const POSTGRES_HOME = this.config.corda.files.postgres.download();
-      this.sendProgress("Writing configuration files...");
+      this._io.sendProgress("Writing configuration files...");
       const cordaBootstrap = new CordaBootstrap(this.workspaceDirectory, this._io);
       const {nodesArr, notariesArr} = await cordaBootstrap.writeConfig(nodes, notaries, port);
       this.nodes = nodesArr;
       this.notaries = notariesArr;
       this.entities = this.nodes.concat(this.notaries);
-      this.sendProgress("Configuring and starting PostgreSQL...");
+      this._io.sendProgress("Configuring and starting PostgreSQL...");
       this.pg = postgres(await POSTGRES_HOME).start(this.entities[0].dbPort, this.workspaceDirectory, this.entities);
-      this.sendProgress("Bootstrapping network...");
+      this._io.sendProgress("Bootstrapping network...");
       await cordaBootstrap.bootstrap(this.config);
-      this.sendProgress("Copying Cordapps...");
+      this._io.sendProgress("Copying Cordapps...");
       await this.copyCordapps();
-      this.sendProgress("Configuring RPC Manager...");
+      this._io.sendProgress("Configuring RPC Manager...");
       this.braid = new Braid(join(await BRAID_HOME, ".."), this._io);
   }
 
@@ -54,10 +54,10 @@ class NetworkManager extends EventEmitter {
 
   async start(){
       const entities = this.entities;
-      this.sendProgress("Loading JRE...");
+      this._io.sendProgress("Loading JRE...");
       const JAVA_HOME = await this.config.corda.files.jre.download();
 
-      this.sendProgress("Starting Corda Nodes...");
+      this._io.sendProgress("Starting Corda Nodes...");
       let startedNodes = 0;
       const promises = entities.map(async (entity) => {
         const currentPath = join(this.workspaceDirectory, entity.safeName);
@@ -66,7 +66,7 @@ class NetworkManager extends EventEmitter {
         corda.on("message", this.emit.bind(this, "message"));
         this.processes.push(corda);
         await Promise.all([corda.start(), braidPromise]);
-        this.sendProgress(`Corda node ${++startedNodes}/${entities.length} online...`)
+        this._io.sendProgress(`Corda node ${++startedNodes}/${entities.length} online...`)
       });
 
       return Promise.all(promises);
