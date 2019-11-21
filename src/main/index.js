@@ -300,11 +300,11 @@ app.on('ready', () => {
       }
     });
 
-    function addLogLines(strData) {
+    function addLogLines(data, context) {
       // `mainWindow` can be null/undefined here if the process is killed
       // (common when developing)
       if (mainWindow) {
-        mainWindow.webContents.send(ADD_LOG_LINES, strData.split(/\n/g));
+        mainWindow.webContents.send(ADD_LOG_LINES, data.toString().split(/\n/g), context);
       } else {
         // eslint-disable-next-line
         console.error(strData);

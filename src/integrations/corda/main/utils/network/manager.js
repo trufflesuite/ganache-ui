@@ -14,15 +14,18 @@ class NetworkManager extends EventEmitter {
     this.nodes = [];
     this.notaries = [];
     this.processes = [];
-    this.sendProgress = this.emit.bind(this, "message", "progress");
-    this.sendError = this.emit.bind(this, "message", "error");
+    this._io = {};
+    this._io.progress = this.emit.bind(this, "message", "progress");
+    this._io.error = this.emit.bind(this, "message", "error");
+    this._io.stdErr = this.emit.bind(this, "message", "stderr");
+    this._io.stdOut = this.emit.bind(this, "message", "stdout");
   }
 
   async bootstrap(nodes, notaries, port = 10000) {
       const BRAID_HOME = this.config.corda.files.braidServer.download();
       const POSTGRES_HOME = this.config.corda.files.postgres.download();
       this.sendProgress("Writing configuration files...");
-      const cordaBootstrap = new CordaBootstrap(this.workspaceDirectory, this.sendProgress, this.sendError);
+      const cordaBootstrap = new CordaBootstrap(this.workspaceDirectory, this._io);
       const {nodesArr, notariesArr} = await cordaBootstrap.writeConfig(nodes, notaries, port);
       this.nodes = nodesArr;
       this.notaries = notariesArr;
@@ -34,7 +37,7 @@ class NetworkManager extends EventEmitter {
       this.sendProgress("Copying Cordapps...");
       await this.copyCordapps();
       this.sendProgress("Configuring RPC Manager...");
-      this.braid = new Braid(join(await BRAID_HOME, ".."), this.sendProgress, this.sendError);
+      this.braid = new Braid(join(await BRAID_HOME, ".."), this._io);
   }
 
   async copyCordapps() {
@@ -59,7 +62,8 @@ class NetworkManager extends EventEmitter {
       const promises = entities.map(async (entity) => {
         const currentPath = join(this.workspaceDirectory, entity.safeName);
         const braidPromise = this.braid.start(entity, currentPath, JAVA_HOME);
-        const corda = new Corda(entity, currentPath, JAVA_HOME);
+        const corda = new Corda(entity, currentPath, JAVA_HOME, this._io);
+        corda.on("message", this.emit.bind(this, "message"));
         this.processes.push(corda);
         await Promise.all([corda.start(), braidPromise]);
         this.sendProgress(`Corda node ${++startedNodes}/${entities.length} online...`)
