@@ -4,9 +4,11 @@ const { join } = require("path");
 // java -jar braid-server.jar localhost:10007 user1 letmein 8000 3 ./corda/party1/cordapps/
 
 class Braid {
-  constructor(braid_home){
+  constructor(braid_home, progress, error){
     this.BRAID_HOME = braid_home;
     this.servers = new Map();
+    this.sendProgress = progress;
+    this.sendError = error;
   }
 
   start(entity, path, JAVA_HOME){
@@ -17,11 +19,14 @@ class Braid {
       // current env PATH seems to be required for braid to actually work
       const braid = spawn(join(JAVA_HOME, "bin", "java"), args, { cwd : this.BRAID_HOME, env: { PATH: process.env.PATH } });
 
-      braid.stderr.on('data', (data) => {
-        console.error(`stderr:\n${data}`);
+      braid.stderr.on('data', (error) => {
+        // this.sendError(new Error(error.toString()));
+        console.error(`stderr:\n${error}`);
       });
 
-      braid.on("error", console.error);
+      braid.on("error", (error) => {
+        this.sendError(new Error(error.toString()));
+      });
 
       this.servers.set(name, {path, braid});
 

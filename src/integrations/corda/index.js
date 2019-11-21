@@ -9,6 +9,7 @@ class Corda extends Integrations {
         this.projectIntegration = new CordAppIntegrationService();
         this.chain = new CordaChainService(integrationManager.config);
         this.chain.on("message", this.emit.bind(this, "message"));
+        this.chain.on("error", this.send.bind(this, "error"));
     }
 }
 

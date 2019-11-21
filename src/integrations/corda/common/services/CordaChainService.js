@@ -1,6 +1,5 @@
 import EventEmitter from "events";
-import utils from "../../main/utils";
-const NetworkManager = utils.network.NetworkManager;
+import { NetworkManager } from "../../main/utils/network";
 
 class CordaChainService extends EventEmitter {
   constructor(config) {
