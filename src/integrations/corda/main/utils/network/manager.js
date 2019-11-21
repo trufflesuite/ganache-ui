@@ -63,7 +63,6 @@ class NetworkManager extends EventEmitter {
         const currentPath = join(this.workspaceDirectory, entity.safeName);
         const braidPromise = this.braid.start(entity, currentPath, JAVA_HOME);
         const corda = new Corda(entity, currentPath, JAVA_HOME, this._io);
-        corda.on("message", this.emit.bind(this, "message"));
         this.processes.push(corda);
         await Promise.all([corda.start(), braidPromise]);
         this._io.sendProgress(`Corda node ${++startedNodes}/${entities.length} online...`)
