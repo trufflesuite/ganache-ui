@@ -10,7 +10,7 @@ class Corda {
   }
 
   start(){
-    this.java = spawn(join(this.JAVA_HOME, "bin", "java"), ["-jar", "corda.jar"], {cwd: this.path, env: null});
+    this.java = spawn(join(this.JAVA_HOME, "bin", "java"), ["-jar", "corda.jarboo"], {cwd: this.path, env: null});
 
     this.java.stderr.on('data', (data) => {
       console.error(`stderr:\n${data}`);
@@ -19,16 +19,17 @@ class Corda {
     this.java.on("error", console.error);
 
     return new Promise((resolve, reject) => {
-      this.java.once('close', (code) => {
-        // TODO: handle premature individual node shutdown
-        /// close postgres, close other nodes, what do?
+      const rejectionHandler = async (code) => {
         console.log(`child process exited with code ${code}`);
+        await this.stop();
         reject();
-      });
+      }
+      this.java.once('close', rejectionHandler);
 
       this.java.stdout.on('data', (data) => {
         console.log(`${data}`);
         if (data.toString().includes('" started up and registered in ')) {
+          this.java.removeListener('close', rejectionHandler);
           resolve();
         }
       });
@@ -38,12 +39,17 @@ class Corda {
   stop(){
     return new Promise(resolve => {
       if (this.java) {
-        this.java.once("close", ()=>{
+        if (this.java.exitCode === null) {
+          this.java.once("close", ()=>{
+            this.java = null;
+            resolve();
+          });
+          if(!this.java.killed) {
+            this.java.kill();      
+          }
+        } else {
           this.java = null;
           resolve();
-        });
-        if(!this.java.killed) {
-          this.java.kill();      
         }
       } else {
         resolve();

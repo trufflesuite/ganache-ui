@@ -42,6 +42,8 @@
   "dependencies": {
     "@exponent/electron-cookies": "^2.0.0",
     "@seesemichaelj/react-json-view": "^1.20.2",
+    "atob": "2.1.2",
+    "btoa": "1.2.1",
     "electron-log": "^3.0.7",
     "ethagen": "0.1.2",
     "ethereumjs-units": "^0.2.0",

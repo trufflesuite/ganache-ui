@@ -63,7 +63,7 @@ class Transaction extends Component {
     if(this.state.results.states === undefined){
       return (<div>Loading...</div>);
     } else if(this.state.results.states.length === 0){
-      return (<div>Couldn&apos;t located transaction {this.props.params.txhash}</div>);
+      return (<div>Couldn&apos;t locate transaction {this.props.params.txhash}</div>);
     }
     const tx = this.state.results.states[0];
     const meta = this.state.results.statesMetadata[0];
@@ -114,22 +114,25 @@ class Transaction extends Component {
               </thead>
               <tbody>
                 <tr>{keys.map(key => {
-                  return (<th key={"input-value_"+key}>{
+                  return (<td key={"input-value_"+key}>{
                     typeof tx.state.data[key] === "object" ? JSON.stringify(tx.state.data[key]) :tx.state.data[key]
-                    }</th>);
+                    }</td>);
                 })}</tr>
-                <tr><td colSpan={keys.length}>Output state</td></tr>
               </tbody>
               <thead>
+                <tr><td colSpan={keys.length}>Output state</td></tr>
                 <tr>{keys.map(key => {
                   return (<th key={"output-key"+key}>{key}</th>);
                 })}</tr>
               </thead>
               <tbody>
-                {keys.map(key => {
-                  return (<th key={"output-value_"+key}>...</th>);
-                })}
+                <tr>
+                  {keys.map(key => {
+                    return (<td key={"output-value_"+key}>...</td>);
+                  })}
+                </tr>
               </tbody>
+
             </table>
           </div>
           <div>
