@@ -13,10 +13,9 @@ const produceModifier = (...args) => Object.assign({}, ...args);
 
 
 class CordaBootstrap {
-  constructor(workspaceDirectory, progress, error){
+  constructor(workspaceDirectory, io){
     this.workspaceDirectory = workspaceDirectory;
-    this.sendProgress = progress;
-    this.sendError = error;
+    this._io = io;
   }
 
   async writeConfig(nodes, notaries) {
@@ -47,7 +46,7 @@ class CordaBootstrap {
       }
     }
 
-    this.sendProgress("Writing configuration files..");
+    this._io.sendProgress("Writing configuration files..");
     await writer(notaries, notariesArr, templates.notary);
     await writer(nodes, nodesArr, templates.node);
   
@@ -58,26 +57,30 @@ class CordaBootstrap {
   }
 
   async bootstrap(config) {
-    this.sendProgress("Loading JRE...");
+    this._io.sendProgress("Loading JRE...");
     const JAVA_HOME = await config.corda.files.jre.download();
-    this.sendProgress("Loading Corda Network Bootstrapper...");
+    this._io.sendProgress("Loading Corda Network Bootstrapper...");
     const CORDA_BOOTSTRAPPER = await config.corda.files.cordaBoostrapper.download();
     // java on the PATH is required for bootstrapper
     const spawnConfig = {env: {PATH: join(JAVA_HOME, "bin")}};
-    this.sendProgress("Starting Corda Network Bootstrapper...");
+    this._io.sendProgress("Starting Corda Network Bootstrapper...");
     const java = spawn("java", ["-jar", CORDA_BOOTSTRAPPER, "--dir", this.workspaceDirectory], spawnConfig);
 
-    java.stdout.on('data', (data) => {
-      console.log(`${data}`);
+    java.stderr.on('data', (data) => {
+      this._io.sendStdErr(data);
+      // this.emit("message", "stderr", data, this.entity.safeName);
+      console.error(`stderr:\n${data}`);
     });
 
-    java.stderr.on('data', (error) => {
-      console.error(`stderr:\n${error}`);
+    java.stdout.on('data', (data) => {
+      this._io.sendStdOut(data);
+      // this.emit("message", "stdout", data, this.entity.safeName);
+      console.error(`stdout:\n${data}`);
     });
 
     return new Promise((resolve, reject) => {
       java.on('error', (error) => {
-        this.sendError(new Error(error.toString()))
+        this._io.sendError(new Error(error.toString()))
       });
 
       java.on('close', (code) => {

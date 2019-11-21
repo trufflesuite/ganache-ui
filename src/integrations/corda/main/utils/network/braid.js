@@ -4,11 +4,10 @@ const { join } = require("path");
 // java -jar braid-server.jar localhost:10007 user1 letmein 8000 3 ./corda/party1/cordapps/
 
 class Braid {
-  constructor(braid_home, progress, error){
+  constructor(braid_home, io){
     this.BRAID_HOME = braid_home;
     this.servers = new Map();
-    this.sendProgress = progress;
-    this.sendError = error;
+    this._io = io;
   }
 
   start(entity, path, JAVA_HOME){
@@ -25,7 +24,7 @@ class Braid {
       });
 
       braid.on("error", (error) => {
-        this.sendError(new Error(error.toString()));
+        this._io.sendError(new Error(error.toString()));
       });
 
       this.servers.set(name, {path, braid});
