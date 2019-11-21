@@ -12,8 +12,13 @@ export default function(state = initialState, action) {
         return { time: time, line: line };
       });
 
+      var oldLines = [...state.lines];
+      if (oldLines.length > 0 && newLines.length > 0) {
+        const firstLine = newLines.shift();
+        oldLines[oldLines.length - 1].line += firstLine.line;
+      }
       return Object.assign({}, state, {
-        lines: state.lines.concat(newLines),
+        lines: oldLines.concat(newLines),
       });
 
     case Logs.CLEAR_LOG_LINES:

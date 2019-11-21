@@ -47,8 +47,8 @@ class EthereumChainService extends EventEmitter {
         this.emit("message", "error", error);
       });
       child.on("exit", this._exitHandler);
-      child.stdout.on("data", this._stdHandler);
-      child.stderr.on("data", this._stdHandler);
+      child.stdout.on("data", this._stdHandler.bind(this, "stdout"));
+      child.stderr.on("data", this._stdHandler.bind(this, "stderr"));
     }
   }
 
@@ -141,14 +141,14 @@ class EthereumChainService extends EventEmitter {
     }
   }
 
-  _stdHandler (data) {
+  _stdHandler (stdio, data) {
     // Remove all \r's and the final line ending
     this.emit("message", 
-      "stdout",
+      stdio,
       data
         .toString()
+         // we don't care enough to handling carriage returns :-|
         .replace(/\r/g, "")
-        .replace(/\n$/, ""),
     );
   }
 }
