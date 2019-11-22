@@ -39,6 +39,7 @@ const routes = (
           component={TransactionsScreen}
         />
         <Route path="/logs" component={LogsScreen} />
+        <Route path="/logs/:context" component={LogsScreen} />
         <Route path="/contracts" component={ContractsScreen} />
         <Route
           path="/contracts/:projectIndex/:contractAddress"
