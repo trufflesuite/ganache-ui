@@ -56,7 +56,7 @@ const routes = (
         <Route path="/corda/nodes/:node" component={CordaNode} />
         <Route path="/corda/notaries" component={CordaNodes} />
         <Route path="/corda/cordapps" component={CordaCordapps} />
-        <Route path="/corda/cordapp/:cordapp" component={CordaCordapp} />
+        <Route path="/corda/cordapps/:cordapp" component={CordaCordapp} />
         <Route path="/corda/transactions" component={CordaTransactions} />
         <Route path="/corda/transactions/:node/:txhash" component={CordaTransaction} />
       </Route>

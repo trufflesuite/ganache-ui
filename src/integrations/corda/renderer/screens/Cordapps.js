@@ -30,7 +30,7 @@ class Cordapps extends Component {
               {this.props.config.settings.workspace.projects.map(cordapp => {
                 const goToCordappDetails = () => {
                   this.props.dispatch(
-                    push(`/corda/cordapp/${btoa(cordapp)}`),
+                    push(`/corda/cordapps/${btoa(cordapp)}`),
                   );
                 }
                 return (<li key={cordapp} onClick={goToCordappDetails}>{cordapp}</li>);
