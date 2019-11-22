@@ -12,48 +12,50 @@ class Transaction extends Component {
   }
 
   refresh() {
-    this.props.config.settings.workspace.nodes.forEach((node) => {
-      fetch("http://localhost:" + (node.rpcPort + 10000) + "/api/rest/vault/vaultQueryBy", {
-        method: "POST",
-        headers: {
-          "accept": "application/json",
-          "content-type": "application/json"
+    const node = this.props.config.settings.workspace.nodes.find(node => node.safeName === this.props.params.node);
+    if (!node) {
+      this.setState({results: {states: []}});
+      return;
+    }
+    fetch("http://localhost:" + (node.rpcPort + 10000) + "/api/rest/vault/vaultQueryBy", {
+      method: "POST",
+      headers: {
+        "accept": "application/json",
+        "content-type": "application/json"
+      },
+      body: JSON.stringify({
+        "criteria" : {
+          "@class" : ".QueryCriteria$VaultQueryCriteria",
+          // "status" : "UNCONSUMED",
+          // "contractStateTypes" : null,
+          "stateRefs" : [{txhash: this.props.params.txhash}],
+          // "notary" : null,
+          // "softLockingCondition" : null,
+          // "timeCondition" : {
+          //   "type" : "RECORDED",
+          //   "predicate" : {
+          //     "@class" : ".ColumnPredicate${'$'}Between",
+          //     "rightFromLiteral" : "2019-09-15T12:58:23.283Z",
+          //     "rightToLiteral" : "2019-10-15T12:58:23.283Z"
+          //   }
+          // },
+          // "relevancyStatus" : "ALL",
+          // "constraintTypes" : [ ],
+          // "constraints" : [ ],
+          // "participants" : null
         },
-        body: JSON.stringify({
-          "criteria" : {
-            "@class" : ".QueryCriteria$VaultQueryCriteria",
-            // "status" : "UNCONSUMED",
-            // "contractStateTypes" : null,
-            "stateRefs" : [{txhash: this.props.params.txhash}],
-            // "notary" : null,
-            // "softLockingCondition" : null,
-            // "timeCondition" : {
-            //   "type" : "RECORDED",
-            //   "predicate" : {
-            //     "@class" : ".ColumnPredicate${'$'}Between",
-            //     "rightFromLiteral" : "2019-09-15T12:58:23.283Z",
-            //     "rightToLiteral" : "2019-10-15T12:58:23.283Z"
-            //   }
-            // },
-            // "relevancyStatus" : "ALL",
-            // "constraintTypes" : [ ],
-            // "constraints" : [ ],
-            // "participants" : null
-          },
-          // "paging" : {
-          //   "pageNumber" : -1,
-          //   "pageSize" : 200
-          // },
-          // "sorting" : {
-          //   "columns" : [ ]
-          // },
-          // "contractStateType" : "net.corda.core.contracts.ContractState"
-        })
-      }).then(res => res.json())
-      .then((json) => {
-        this.setState({results: json});
+        // "paging" : {
+        //   "pageNumber" : -1,
+        //   "pageSize" : 200
+        // },
+        // "sorting" : {
+        //   "columns" : [ ]
+        // },
+        // "contractStateType" : "net.corda.core.contracts.ContractState"
       })
     })
+    .then(res => res.json())
+    .then(results => this.setState({results}));
   }
   constructor(props) {
     super(props);

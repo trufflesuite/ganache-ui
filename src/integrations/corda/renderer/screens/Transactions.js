@@ -52,7 +52,7 @@ class Transactions extends Component {
               return txData.states.map((state) => {
                 const goToTransactionDetails = () => {
                   this.props.dispatch(
-                    push(`/corda/transactions/${state.ref.txhash}`),
+                    push(`/corda/transactions/${node.safeName}/${state.ref.txhash}`),
                   );
                 }
                   
