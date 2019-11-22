@@ -8,7 +8,8 @@ module.exports = {
     "adminPort": 10001,
     "p2pPort": 10002,
     "dbPort": 5432,
-    "cordapps": []
+    "cordapps": [],
+    "nodes": ["partyb", "partyc"]
   },{
     "name": "O=Party B,L=Paris,C=FR",
     "safeName" : "partyb",
@@ -16,7 +17,8 @@ module.exports = {
     "adminPort": 10004,
     "p2pPort": 10005,
     "dbPort": 5432,
-    "cordapps": []
+    "cordapps": [],
+    "nodes": ["partya", "partyc"]
   },{
     "name": "O=Party C,L=New York,C=US",
     "safeName" : "partyc",
@@ -24,7 +26,8 @@ module.exports = {
     "adminPort": 10007,
     "p2pPort": 10008,
     "dbPort": 5432,
-    "cordapps": []
+    "cordapps": [],
+    "nodes": ["partya", "partyb"]
   }],
   notaries : [{
     "name": "O=Notary Service,L=London,C=GB",
@@ -32,7 +35,6 @@ module.exports = {
     "rpcPort": 10009,
     "adminPort": 10010,
     "p2pPort": 10011,
-    "dbPort": 5432,
-    "cordapps": []
+    "dbPort": 5432
   }]
 };
