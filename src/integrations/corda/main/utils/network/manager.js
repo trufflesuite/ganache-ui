@@ -6,6 +6,8 @@ const Braid = require("./braid");
 const Corda = require("./corda");
 const fse = require("fs-extra");
 
+const CreateMessageEmitter = emmiter => (...args) => emmiter.emit.bind(emmiter, "message", ...args);
+
 class NetworkManager extends EventEmitter {
   constructor (config, workspaceDirectory) {
     super();
@@ -14,11 +16,13 @@ class NetworkManager extends EventEmitter {
     this.nodes = [];
     this.notaries = [];
     this.processes = [];
-    this._io = {};
-    this._io.sendProgress = this.emit.bind(this, "message", "progress");
-    this._io.sendError = this.emit.bind(this, "message", "error");
-    this._io.sendStdErr = this.emit.bind(this, "message", "stderr");
-    this._io.sendStdOut = this.emit.bind(this, "message", "stdout");
+    const msgEmitter = CreateMessageEmitter(this);
+    this._io = {
+      sendProgress : msgEmitter("progress"),
+      sendError : msgEmitter("error"),
+      sendStdErr : msgEmitter("stderr"),
+      sendStdOut : msgEmitter("stdout")
+    };
   }
 
   async bootstrap(nodes, notaries, port = 10000) {
