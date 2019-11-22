@@ -7,6 +7,10 @@ import jsonTheme from "../../../../common/utils/jsonTheme";
 import ReactJson from "@seesemichaelj/react-json-view";
 
 class Transaction extends Component {
+  componentDidMount(){
+    this.refresh();
+  }
+
   refresh() {
     this.props.config.settings.workspace.nodes.forEach((node) => {
       fetch("http://localhost:" + (node.rpcPort + 10000) + "/api/rest/vault/vaultQueryBy", {
@@ -55,8 +59,6 @@ class Transaction extends Component {
     super(props);
 
     this.state = {results:{}};
-
-    this.refresh();
   }
 
   render() {

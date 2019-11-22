@@ -6,14 +6,16 @@ import btoa from "btoa";
 
 
 class Cordapps extends Component {
+  componentDidMount(){
+    this.refresh();
+  }
+
   refresh() {
   }
   constructor(props) {
     super(props);
 
     this.state = {results:{}};
-
-    this.refresh();
   }
 
   render() {

@@ -4,6 +4,10 @@ import { push } from "react-router-redux";
 import React, { Component } from "react";
 
 class Transactions extends Component {
+  componentDidMount(){
+    this.refresh();
+  }
+
   refresh() {
     this.props.config.settings.workspace.nodes.forEach((node) => {
       fetch("http://localhost:" + (node.rpcPort + 10000) + "/api/rest/vault/vaultQuery", {
@@ -28,7 +32,6 @@ class Transactions extends Component {
       state["node_" + node.safeName] = {};
     });
     this.state = state;
-    this.refresh();
   }
   render() {
     const workspace = this.props.config.settings.workspace;

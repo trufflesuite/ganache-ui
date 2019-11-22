@@ -5,14 +5,16 @@ import { hashHistory } from "react-router";
 import atob from "atob";
 
 class Cordapp extends Component {
+  componentDidMount(){
+    this.refresh();
+  }
+
   refresh() {
   }
   constructor(props) {
     super(props);
 
     this.state = {results:{}};
-
-    this.refresh();
   }
 
   render() {
