@@ -6,6 +6,7 @@ import ConfigScreen from "./screens/config/ConfigScreen";
 import AccountsScreen from "../integrations/ethereum/renderer/screens/accounts/AccountsScreen";
 
 import CordaNodes from "../integrations/corda/renderer/screens/Nodes";
+import CordaNode from "../integrations/corda/renderer/screens/Node";
 import CordaTransactions from "../integrations/corda/renderer/screens/Transactions";
 import CordaTransaction from "../integrations/corda/renderer/screens/Transaction";
 import CordaCordapps from "../integrations/corda/renderer/screens/Cordapps";
@@ -52,6 +53,7 @@ const routes = (
         <Route path="/config(/:activeTab)" component={ConfigScreen} />
 
         <Route path="/corda" component={CordaNodes} />
+        <Route path="/corda/nodes/:node" component={CordaNode} />
         <Route path="/corda/notaries" component={CordaNodes} />
         <Route path="/corda/cordapps" component={CordaCordapps} />
         <Route path="/corda/cordapp/:cordapp" component={CordaCordapp} />

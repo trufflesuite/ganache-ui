@@ -1,9 +1,15 @@
 import connect from "../../../../renderer/screens/helpers/connect";
 
+import { push } from "react-router-redux";
 import React, { Component } from "react";
 
 function line(node, services = []) {
-  return (<div key={`node-${node.safeName}`} className="DataRow">
+  const goToNodeDetails = () => {
+    this.props.dispatch(
+      push(`/corda/nodes/${node.safeName}`),
+    );
+  }
+  return (<div key={`node-${node.safeName}`} className="DataRow" onClick={goToNodeDetails}>
     <div>
       <div className="Label">Legal ID</div>
       <div className="Value">{node.name}</div>
@@ -39,7 +45,7 @@ class Nodes extends Component {
     return (
       <div className="Nodes DataRows">
         <main>
-          {workspace[type].map((node) => line(node, services))}
+          {workspace[type].map((node) => line.bind(this)(node, services))}
         </main>
       </div>
     );
