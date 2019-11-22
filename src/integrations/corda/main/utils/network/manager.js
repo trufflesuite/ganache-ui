@@ -84,7 +84,7 @@ class NetworkManager extends EventEmitter {
       console.error(e);
     }
 
-    return Promise.all([...this.processes.map(cordaProcess => cordaProcess.stop()), this.braid.stop()]);
+    return Promise.all([...this.processes.map(cordaProcess => cordaProcess.stop()), this.braid && this.braid.stop()]);
   }
   
   getNodes(){
