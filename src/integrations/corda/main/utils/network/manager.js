@@ -46,8 +46,8 @@ class NetworkManager extends EventEmitter {
 
   async copyCordapps() {
     const promises = [];
-    this.entities.map((node) => {
-      node.cordapps.map(path => {
+    this.nodes.forEach((node) => {
+      node.cordapps.forEach(path => {
         const name = basename(path);
         const newPath = join(this.workspaceDirectory, node.safeName, "cordapps", name);
         promises.push(fse.copy(path, newPath));
