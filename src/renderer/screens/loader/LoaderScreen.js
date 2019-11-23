@@ -7,51 +7,92 @@ import BugModal from "../appshell/BugModal";
 import Logo from "../../components/logo/Logo";
 
 class LoaderScreen extends Component {
-  
-  constructor(){
-    super();
-    this.state = {progress: this.props && this.props.core ? this.props.core.progress : "", lastProgressUpdateTime: 0};
+  constructor(props){
+    super(props);
+    this.state = {progress: this.props.core.progress, lastProgressUpdateTime: Date.now()};
     this.queued = [];
-    this.timer = null;
-    this.minTimeOnprogressUpdate = 1000;
+    this.nextProgressUpdateTimer = null;
+    this.MIN_TIME_EACH_PROGRESS_UPDATE = 2000;
+    this.updateProgressWithNextThenQueue = this.updateProgressWithNextThenQueue.bind(this);
   }
-  progressIsReadyForUpdate(now) {
-    return this.queued.length === 0 && (this.state.lastProgressUpdateTime == 0 || ((this.state.lastProgressUpdateTime + this.minTimeOnprogressUpdate) <= now));
-  }
-  componentWillReceiveProps(nextProps) {
-    const currentProgress = this.state.progress;
-    if (nextProps.core.progress !== currentProgress) {
-      const now = Date.now();
-      if (this.progressIsReadyForUpdate(now)) {
-        this.setState({ progress: nextProps.core.progress, lastProgressUpdateTime: now });
-      } else {
-        const length = this.queued.push(nextProps.core.progress);
 
-        // if there was already something in the queue we don't need to setTimeout here.
-        if (length === 1) {
-          const waitFor = Math.min(now - this.state.lastProgressUpdateTime, this.minTimeOnprogressUpdate);
-          this.timer = setTimeout(function update() {
-            let progress;
-            do {
-              progress = this.queued.shift();
-            } while(progress === this.state.progress && this.queued.length > 0);
-
-            if (progress !== this.state.progress) {
-              const now = Date.now();
-              this.setState({ progress, lastProgressUpdateTime:  now}, () => {
-                if (this.queued.length > 0) {
-                  this.timer = setTimeout(update.bind(this), this.minTimeOnprogressUpdate);
-                }
-              });
-            }
-          }.bind(this), waitFor);
-        }
-      }
+  static defaultProps = {
+    core: {
+      progress: ""
     }
   }
-  componentWillUnmount(){
-    clearTimeout(this.timer);
+
+  /**
+   * Sets the nextProgress in the local state only if it is ready to recieve it.
+   * Ready means: the queue is empty and the amount of time since the last progress
+   * update is greater than our this.MIN_TIME_EACH_PROGRESS_UPDATE
+   * @param {string} nextProgress 
+   * @param {number} now 
+   * @returns {boolean} `true` if `progress` was ready and set, `false` if not.
+   */
+  setProgressIfReady(nextProgress, now) {
+    const isReady = this.queued.length === 0 && (this.state.lastProgressUpdateTime + this.MIN_TIME_EACH_PROGRESS_UPDATE <= now);
+    if (isReady) this.setProgress(nextProgress, now);
+    return isReady;
   }
+
+  /**
+   * Updates the local state `progress` with the next item in the queue
+   * then starts a timer to set the item after that in the queue, if 
+   * there is one. If the queue is empty when this is called `undefined` 
+   * will be set. So don't do that.
+   */
+  updateProgressWithNextThenQueue() {
+    // we need to grab the first item in the queue without shifting it off 
+    // because setState is asyncronous and we rely on the value of
+    // `this.state.progress` to determine if we add to the queue or not
+    this.setProgress(this.queued[0], Date.now(), () => {
+      this.queued.shift();
+      if (this.queued.length === 0) return;
+      this.nextProgressUpdateTimer = setTimeout(this.updateProgressWithNextThenQueue, this.MIN_TIME_EACH_PROGRESS_UPDATE);
+    });
+  }
+
+  /**
+   * Sets the progress value and the time it was updated in the local state
+   * @param {string} progress 
+   * @param {number} lastProgressUpdateTime 
+   * @param {function} callback (optional)
+   */
+  setProgress(progress, lastProgressUpdateTime, callback) {
+    this.setState({ progress, lastProgressUpdateTime }, callback);
+  }
+
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    const currentProgress = this.state.progress;
+    const nextProgress = nextProps.core.progress;
+    if (nextProgress === currentProgress) return;
+
+    // if this new progress is the same as our current progress, throw it out
+    if (nextProgress === currentProgress) return;
+
+    const length = this.queued.length;
+    const notEmpty = length > 0;
+    // if this new progress is the same as the last queued progress, throw it out.
+    if (notEmpty && nextProgress === this.queued[length - 1]) return;
+
+    const now = Date.now();
+
+    if (this.setProgressIfReady(nextProgress, now)) return;
+    
+    this.queued.push(nextProgress);
+
+    // if there was already something in the queue we don't need to setTimeout here.
+    if (notEmpty) return;
+
+    const waitFor = Math.min(now - this.state.lastProgressUpdateTime, this.MIN_TIME_EACH_PROGRESS_UPDATE);
+    this.nextProgressUpdateTimer = setTimeout(this.updateProgressWithNextThenQueue, waitFor);
+  }
+
+  componentWillUnmount(){
+    clearTimeout(this.nextProgressUpdateTimer);
+  }
+
   render() {
     return (
       <div className="LoaderScreenContainer">
