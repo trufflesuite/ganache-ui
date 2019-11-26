@@ -41,19 +41,33 @@ class NetworkManager extends EventEmitter {
       this._io.sendProgress("Bootstrapping network...");
       await cordaBootstrap.bootstrap(this.config);
       this._io.sendProgress("Copying Cordapps...");
-      await this.copyCordapps();
+      await this.copyCordappsAndSetupNetwork();
       this._io.sendProgress("Configuring RPC Manager...");
       this.braid = new Braid(join(await BRAID_HOME, ".."), this._io);
   }
 
-  async copyCordapps() {
+  async copyCordappsAndSetupNetwork() {
     const promises = [];
+    const networkMap = new Map();
     this.nodes.forEach((node) => {
+      const currentDir = join(this.workspaceDirectory, node.safeName);
       node.cordapps.forEach(path => {
         const name = basename(path);
-        const newPath = join(this.workspaceDirectory, node.safeName, "cordapps", name);
+        const newPath = join(currentDir, "cordapps", name);
         promises.push(fse.copy(path, newPath));
       });
+      const info = fse.readdirSync(currentDir).filter(file => file.startsWith("nodeInfo-")).reduce((p, name) => name, "");
+      const knownNodesDir = join(currentDir, "additional-node-infos");
+      const currentlyKnownNodes = fse.readdirSync(knownNodesDir).map(file => ({file, path: join(knownNodesDir, file)}));
+      networkMap.set(node.safeName, {nodes: node.nodes, info, currentlyKnownNodes});
+    });
+    networkMap.forEach((val, _key, nMap) => {
+      const needed = new Set([val.info, ...val.nodes.map((node) => nMap.get(node).info)]);
+      val.currentlyKnownNodes.forEach(node => {
+        if (!needed.has(node.file)) {
+          promises.push(fse.remove(node.path));
+        }
+    });
     });
     return Promise.all(promises);      
   }
