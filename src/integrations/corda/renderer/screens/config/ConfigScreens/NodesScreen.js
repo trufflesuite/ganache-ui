@@ -135,7 +135,6 @@ class NodesScreen extends Component {
     } else if (this.state.editNode != null) {
       const idx = this.state.editNode;
       const nodes = this.props.data.type === "nodes" ? this.props.config.settings.workspace.nodes : this.props.config.settings.workspace.notaries;
-      // TODO: this should be the whole node, not just the name
       const node = nodes[idx];
       const data = {};
       data.title = `Edit ${type}`;
@@ -143,7 +142,6 @@ class NodesScreen extends Component {
       data.node = node;
       aModal = (
         <NodeModal closeModal={()=>{this.setState({editNode: null})}} isEdit={true} data={data} handleNodeUpdate={(node) => {
-          // TODO: this should be the whole node, not just the name
           nodes[idx] = node;
           node.dbPort = 5432;
           node.cordapps = this.props.config.settings.workspace.projects.slice();
