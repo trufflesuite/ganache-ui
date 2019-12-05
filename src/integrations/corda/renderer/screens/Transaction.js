@@ -14,65 +14,70 @@ class Transaction extends Component {
   refresh() {
     const node = this.props.config.settings.workspace.nodes.find(node => node.safeName === this.props.params.node);
     if (!node) {
-      this.setState({results: {states: []}});
+      this.setState({results: []});
       return;
     }
-    fetch("http://localhost:" + (node.rpcPort + 10000) + "/api/rest/vault/vaultQueryBy", {
-      method: "POST",
-      headers: {
-        "accept": "application/json",
-        "content-type": "application/json"
-      },
-      body: JSON.stringify({
-        "criteria" : {
-          "@class" : ".QueryCriteria$VaultQueryCriteria",
-          // "status" : "UNCONSUMED",
-          // "contractStateTypes" : null,
-          "stateRefs" : [{txhash: this.props.params.txhash}],
-          // "notary" : null,
-          // "softLockingCondition" : null,
-          // "timeCondition" : {
-          //   "type" : "RECORDED",
-          //   "predicate" : {
-          //     "@class" : ".ColumnPredicate${'$'}Between",
-          //     "rightFromLiteral" : "2019-09-15T12:58:23.283Z",
-          //     "rightToLiteral" : "2019-10-15T12:58:23.283Z"
-          //   }
-          // },
-          // "relevancyStatus" : "ALL",
-          // "constraintTypes" : [ ],
-          // "constraints" : [ ],
-          // "participants" : null
+    const requests = ["UNCONSUMED", "CONSUMED"].map((status) => {
+      return fetch("https://localhost:" + (node.rpcPort + 10000) + "/api/rest/vault/vaultQueryBy", {
+        method: "POST",
+        headers: {
+          "accept": "application/json",
+          "content-type": "application/json"
         },
-        // "paging" : {
-        //   "pageNumber" : -1,
-        //   "pageSize" : 200
-        // },
-        // "sorting" : {
-        //   "columns" : [ ]
-        // },
-        // "contractStateType" : "net.corda.core.contracts.ContractState"
+        body: JSON.stringify({
+          "criteria" : {
+            "@class" : ".QueryCriteria$VaultQueryCriteria",
+            "status" : status,
+            // "contractStateTypes" : null,
+            "stateRefs" : [{txhash: this.props.params.txhash}],
+            // "notary" : null,
+            // "softLockingCondition" : null,
+            // "timeCondition" : {
+            //   "type" : "RECORDED",
+            //   "predicate" : {
+            //     "@class" : ".ColumnPredicate${'$'}Between",
+            //     "rightFromLiteral" : "2019-09-15T12:58:23.283Z",
+            //     "rightToLiteral" : "2019-10-15T12:58:23.283Z"
+            //   }
+            // },
+            // "relevancyStatus" : "ALL",
+            // "constraintTypes" : [ ],
+            // "constraints" : [ ],
+            // "participants" : null
+          },
+          // "paging" : {
+          //   "pageNumber" : -1,
+          //   "pageSize" : 200
+          // },
+          // "sorting" : {
+          //   "columns" : [ ]
+          // },
+          // "contractStateType" : "net.corda.core.contracts.ContractState"
+        })
       })
-    })
-    .then(res => res.json())
-    .then(results => this.setState({results}));
+      .then(res => res.json());
+    });
+    return Promise.all(requests).then(results => {
+      this.setState({results})
+    });
   }
   constructor(props) {
     super(props);
 
-    this.state = {results:{}};
+    this.state = {results:[]};
   }
 
   render() {
-    if(this.state.results.states === undefined){
+    if (this.state.results.length === 0) {
       return (<div>Loading...</div>);
-    } else if(this.state.results.states.length === 0){
+    } else if (!this.state.results[0].states || this.state.results[0].states.length === 0) {
       return (<div>Couldn&apos;t locate transaction {this.props.params.txhash}</div>);
     }
-    const tx = this.state.results.states[0];
-    const meta = this.state.results.statesMetadata[0];
-    const ignoreFields = ["@class", "participants", "linearId"]
-    const keys = Object.keys(tx.state.data).filter(key => !ignoreFields.includes(key));
+    const tx = this.state.results[0].states[0];
+    const unconsumedTx = this.state.results.length > 1 && this.state.results[1].states.length !== 0 ? this.state.results[1].states[0] : null;
+    const meta = this.state.results[0].statesMetadata[0];
+    // const ignoreFields = ["@class", "participants", "linearId"]
+    // const keys = Object.keys(tx.state.data).filter(key => !ignoreFields.includes(key));
     return (
       <div className="Nodes DataRows">
         <main>
@@ -91,6 +96,7 @@ class Transaction extends Component {
             <div>Contract</div>
             <div>{tx.state.contract}</div>
           </div>
+          <div>Consumed</div>
           <ReactJson
             src={
               tx.state.data
@@ -108,7 +114,25 @@ class Transaction extends Component {
             collapsed={1}
             collapseStringsAfterLength={20}
           />
-          <div>
+          <div>Unconsumed</div>
+          <ReactJson
+            src={
+              unconsumedTx ? unconsumedTx.state.data : {}
+            }
+            name={false}
+            theme={jsonTheme}
+            iconStyle="triangle"
+            edit={false}
+            add={false}
+            delete={false}
+            enableClipboard={false}
+            displayDataTypes={true}
+            displayObjectSize={true}
+            indentWidth={4}// indent by 4 because that's what Corda likes to do.
+            collapsed={1}
+            collapseStringsAfterLength={20}
+          />
+          {/* <div>
             <table>
               <thead>
                 <tr><td colSpan={keys.length}>Input State</td></tr>
@@ -138,7 +162,7 @@ class Transaction extends Component {
               </tbody>
 
             </table>
-          </div>
+          </div> */}
           <div>
             <div>Signers</div>
             <div>...</div>
