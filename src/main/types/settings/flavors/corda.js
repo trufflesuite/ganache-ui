@@ -35,6 +35,7 @@ module.exports = {
     "rpcPort": 10009,
     "adminPort": 10010,
     "p2pPort": 10011,
-    "dbPort": 5432
+    "dbPort": 5432,
+    "cordapps": []
   }]
 };

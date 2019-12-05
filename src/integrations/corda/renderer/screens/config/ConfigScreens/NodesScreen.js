@@ -2,6 +2,10 @@ import React, { Component } from "react";
 import Modal from "../../../../../../renderer/components/modal/Modal";
 import ModalDetails from "../../../../../../renderer/components/modal/ModalDetails";
 
+const modes = {
+  EDIT: "edit",
+  ADD: "add"
+}
 class NodeModal extends Component{
   constructor(props) {
     super(props);
@@ -12,7 +16,7 @@ class NodeModal extends Component{
 
   render() {
     const node = this.state;
-    const isEditing = this.props.isEdit;
+    const isEditing = this.props.mode === modes.EDIT;
     return (
       <Modal className="ErrorModal">
         <header>
@@ -78,7 +82,7 @@ class NodeModal extends Component{
 class NodesScreen extends Component {
   constructor(props){
     super(props);
-    this.state = {selectedIdx: null};
+    this.state = {mode: null, selectedIdx: null};
   }
 
   handleNodeClick = idx => () => {
@@ -87,14 +91,18 @@ class NodesScreen extends Component {
     });
   }
 
+  resetMode = () => {
+    this.setState({mode: null});
+  }
+
   handleAddNodeClick = () =>{
-    this.setState({addNode: true});
+    this.setState({mode: modes.ADD});
   }
 
   handleEditNodeClick = () =>{
     const idx = this.state.selectedIdx;
     if (idx !== null) {
-      this.setState({editNode: idx});
+      this.setState({mode: modes.EDIT, editNode: idx});
     }
   }
 
@@ -166,36 +174,47 @@ class NodesScreen extends Component {
     const nodes = this._getAllNodes();
     const corDapps = this.props.config.settings.workspace.projects.slice();
     let aModal;
-    if (this.state.addNode) {
+    const mode = this.state.mode;
+    if (mode) {
       const data = {};
-      data.title = `Add New ${type}`;
-      data.buttonText = "Add";
-      data.node = {};
+      let handleNodeUpdate;
+      switch (mode) {
+        case modes.EDIT:
+          const idx = this.state.editNode;
+          data.title = `Edit ${type}`;
+          data.buttonText = "Edit";
+          data.node = nodes[idx];
+
+          handleNodeUpdate = (node) => {
+            nodes[idx] = node;
+          };
+          break;
+        case modes.ADD:
+          data.title = `Add New ${type}`;
+          data.buttonText = "Add";
+          data.node = {};
+          handleNodeUpdate= (node) => {
+            nodes.push(node);
+            node.safeName = node.name.toLowerCase().replace(/[^a-z]+/g,"_");
+            
+          };
+          break;
+      }
       aModal = (
-        <NodeModal allNodes={this.props.config.settings.workspace.nodes} allCordDapps={corDapps} closeModal={()=>{this.setState({addNode: null})}} isEdit={false} data={data} handleNodeUpdate={(node) => {
-          nodes.push(node);
-          node.dbPort = 5432;
-          node.safeName = node.name.toLowerCase().replace(/[^a-z]+/g,"_");
-          this.state.addNode = null;
-          this.updateNetworkMap(node);
-          this.forceUpdate();
-        }}></NodeModal>
-      );
-    } else if (this.state.editNode != null) {
-      const idx = this.state.editNode;
-      const node = nodes[idx];
-      const data = {};
-      data.title = `Edit ${type}`;
-      data.buttonText = "Edit";
-      data.node = node;
-      aModal = (
-        <NodeModal allNodes={this.props.config.settings.workspace.nodes} allCordDapps={corDapps} closeModal={()=>{this.setState({editNode: null})}} isEdit={true} data={data} handleNodeUpdate={(node) => {
-          nodes[idx] = node;
-          node.dbPort = 5432;
-          this.state.editNode = null;
-          this.updateNetworkMap(node);
-          this.forceUpdate();
-        }}></NodeModal>
+        <NodeModal
+          allNodes={this.props.config.settings.workspace.nodes}
+          allCordDapps={corDapps}
+          closeModal={this.resetMode.bind(this)}
+          mode={mode}
+          data={data}
+          handleNodeUpdate={(node) => {
+            handleNodeUpdate(node);
+            node.dbPort = 5432;
+            this.resetMode();
+            this.updateNetworkMap(node);
+            this.forceUpdate();
+          }}
+        />
       );
     }
 
