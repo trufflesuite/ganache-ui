@@ -138,6 +138,7 @@ app.on('ready', () => {
 
   Menu.setApplicationMenu(null)
 
+  app.commandLine.appendSwitch("ignore-certificate-errors", "true");
   mainWindow = new BrowserWindow({
     show: false,
     minWidth: 950,
