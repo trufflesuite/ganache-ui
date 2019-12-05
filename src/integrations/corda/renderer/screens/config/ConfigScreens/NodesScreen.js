@@ -9,8 +9,10 @@ class NodeModal extends Component{
       ...this.props.data.node
     };
   }
+
   render() {
     const node = this.state;
+    const isEditing = this.props.isEdit;
     return (
       <Modal className="ErrorModal">
         <header>
@@ -22,25 +24,48 @@ class NodeModal extends Component{
         </section>
         <section>
           <div>Legal Name</div>
-          <input type="text" disabled={this.props.isEdit || false} onChange={(e)=>{
+          <input type="text" disabled={isEditing} onChange={(e) => {
             this.setState({name: e.target.value});
-          }} value={this.state.name||""}>
+          }} value={node.name||""}>
           </input>
+
           <div>RPC Port</div>
-          <input type="text" onChange={(e)=>{
+          <input type="text" onChange={(e) => {
             this.setState({rpcPort: e.target.value});
           }} value={node.rpcPort||""}>
           </input>
+
           <div>Admin Port</div>
-          <input type="text" onChange={(e)=>{
+          <input type="text" onChange={(e) => {
             this.setState({adminPort: e.target.value});
           }} value={node.adminPort||""}>
           </input>
+
           <div>P2P Port</div>
-          <input type="text" onChange={(e)=>{
+          <input type="text" onChange={(e) => {
             this.setState({p2pPort: e.target.value});
           }} value={node.p2pPort||""}>
           </input>
+
+          <div>Network Map</div>
+          <select multiple={true} onChange={(e) => {
+            const selectedNodes = [...e.target.options].filter(o => o.selected).map(o => o.value);
+            this.setState({nodes: selectedNodes});
+          }} value={node.nodes}>
+            {this.props.allNodes.filter(n => n.safeName !== node.safeName).map(n => {
+              return <option key={n.safeName} value={n.safeName}>{n.name}</option>
+            })}
+          </select>
+
+          <div>CorDapps</div>
+          <select multiple={true} onChange={(e) => {
+            const selectedCoreDapps = [...e.target.options].filter(o => o.selected).map(o => o.value);
+            this.setState({cordapps: selectedCoreDapps});
+          }} value={isEditing ? node.cordapps : this.props.allCordDapps}>
+            {this.props.allCordDapps.map(corDapp => {
+              return <option key={corDapp}>{corDapp}</option>
+            })}
+          </select>
           <footer>
             <button onClick={()=>{this.props.handleNodeUpdate(node)}}>{this.props.data.buttonText}</button>
           </footer>
@@ -73,11 +98,15 @@ class NodesScreen extends Component {
     }
   }
 
+  _getAllNodes(){
+    return this.props.data.type === "nodes" ? this.props.config.settings.workspace.nodes : this.props.config.settings.workspace.notaries
+  }
+
   removeNode = (idx) => {
     if (this.state.selectedIdx === idx) {
       this.state.selectedIdx = null;
     }
-    const nodes = this.props.data.type === "nodes" ? this.props.config.settings.workspace.nodes : this.props.config.settings.workspace.notaries;
+    const nodes = this._getAllNodes();
     nodes.splice(idx, 1);
     this.forceUpdate();
   }
@@ -112,10 +141,30 @@ class NodesScreen extends Component {
     this.props.validateChange(e, {});
   }
 
+  updateNetworkMap = (node) => {
+    this.props.config.settings.workspace.nodes.forEach(other => {
+      if (node.safeName === other.safeName) return;
+
+      const otherIndexOfNode = other.nodes.indexOf(node.safeName);
+      const otherHasConnection = otherIndexOfNode !== -1;
+      const nodeHasConnection = node.nodes.includes(other.safeName);
+      // if `other` has this `node`, but this `node` doesn't have `other`, we
+      // need update `other` to remove this `node`
+      if (otherHasConnection && !nodeHasConnection) {
+        other.nodes.splice(otherIndexOfNode, 1);
+      // if this `node` has `other`, but `other` doesn't have this `node`, we
+      // need to add this `node` to `other`
+      } else if(nodeHasConnection && !otherHasConnection) {
+        other.nodes.push(node.safeName);
+      }
+    });
+  }
+
   render() {
     const type = this.props.data.type === "nodes" ? "Node" : "Notary";
     const pluralType = this.props.data.type === "nodes" ? "Nodes" : "Notaries";
-    const nodes = this.props.data.type === "nodes" ? this.props.config.settings.workspace.nodes : this.props.config.settings.workspace.notaries;
+    const nodes = this._getAllNodes();
+    const corDapps = this.props.config.settings.workspace.projects.slice();
     let aModal;
     if (this.state.addNode) {
       const data = {};
@@ -123,29 +172,28 @@ class NodesScreen extends Component {
       data.buttonText = "Add";
       data.node = {};
       aModal = (
-        <NodeModal data={data} handleNodeUpdate={(node) => {
+        <NodeModal allNodes={this.props.config.settings.workspace.nodes} allCordDapps={corDapps} closeModal={()=>{this.setState({addNode: null})}} isEdit={false} data={data} handleNodeUpdate={(node) => {
           nodes.push(node);
           node.dbPort = 5432;
           node.safeName = node.name.toLowerCase().replace(/[^a-z]+/g,"_");
-          node.cordapps = this.props.config.settings.workspace.projects.slice();
           this.state.addNode = null;
+          this.updateNetworkMap(node);
           this.forceUpdate();
         }}></NodeModal>
       );
     } else if (this.state.editNode != null) {
       const idx = this.state.editNode;
-      const nodes = this.props.data.type === "nodes" ? this.props.config.settings.workspace.nodes : this.props.config.settings.workspace.notaries;
       const node = nodes[idx];
       const data = {};
       data.title = `Edit ${type}`;
       data.buttonText = "Edit";
       data.node = node;
       aModal = (
-        <NodeModal closeModal={()=>{this.setState({editNode: null})}} isEdit={true} data={data} handleNodeUpdate={(node) => {
+        <NodeModal allNodes={this.props.config.settings.workspace.nodes} allCordDapps={corDapps} closeModal={()=>{this.setState({editNode: null})}} isEdit={true} data={data} handleNodeUpdate={(node) => {
           nodes[idx] = node;
           node.dbPort = 5432;
-          node.cordapps = this.props.config.settings.workspace.projects.slice();
           this.state.editNode = null;
+          this.updateNetworkMap(node);
           this.forceUpdate();
         }}></NodeModal>
       );
