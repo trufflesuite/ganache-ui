@@ -10,14 +10,12 @@ class Transactions extends Component {
 
   refresh() {
     this.props.config.settings.workspace.nodes.forEach((node) => {
-      fetch("http://localhost:" + (node.rpcPort + 10000) + "/api/rest/vault/vaultQuery", {
+      fetch("https://localhost:" + (node.rpcPort + 10000) + "/api/rest/vault/vaultQuery", {
         headers: {
           "accept": "application/json"
         }
       }).then(res => res.json())
       .then((json) => {
-        console.log(json);
-        console.log(node.safeName);
         this.setState({["node_" + node.safeName]: json});
       })
     })
