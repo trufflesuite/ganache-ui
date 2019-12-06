@@ -2,6 +2,7 @@ import connect from "../../../../renderer/screens/helpers/connect";
 
 import { hashHistory } from "react-router";
 import React, { Component } from "react";
+import { push } from "react-router-redux";
 
 function filterNodeBy(nodeToMatch) {
   return (node) => {
@@ -13,15 +14,24 @@ class Node extends Component {
   constructor(props) {
     super(props);
 
+    this.state = {node: this.findNodeFromProps(), nodes:[], notaries:[], cordapps:[], transactions: {}};
+  }
+
+  findNodeFromProps(){
     const workspace = this.props.config.settings.workspace;
     const isNode = filterNodeBy(this.props.params.node);
     let matches = [...workspace.nodes, ...workspace.notaries].filter(isNode);
-    let node = matches[0];
-    this.state = {node, nodes:[], notaries:[], cordapps:[], transactions: {}};
+    return matches[0] || null;
   }
 
   componentDidMount(){
     this.refresh();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.params.node !== this.props.params.node) {
+      this.setState({node: this.findNodeFromProps(), nodes:[], notaries:[], cordapps:[], transactions: {}}, this.refresh.bind(this));
+    }
   }
 
   refresh() {
@@ -84,6 +94,10 @@ class Node extends Component {
     }
   }
 
+  getWorkspaceNode(legalName){
+    return this.props.config.settings.workspace.nodes.find(node => legalName.replace(/\s/g, "") === node.name.replace(/\s/g,""));
+  }
+
   render() {
     if (!this.state.node) {
       return (<div>Couldn&apos;t locate node {this.props.params.node}</div>);
@@ -103,7 +117,17 @@ class Node extends Component {
 
             <div>Nodes</div>
             {this.state.nodes.filter(n => n.legalIdentities[0].name !== n.name).map(node => {
-              return (<div key={node.legalIdentities[0].name}>{node.legalIdentities[0].name}</div>);
+              const workspaceNode = this.getWorkspaceNode(node.legalIdentities[0].name);
+              if (workspaceNode) {
+                const goToNodeDetails = () => {
+                  this.props.dispatch(
+                    push(`/corda/nodes/${workspaceNode.safeName}`),
+                  );
+                }
+                return (<div key={workspaceNode.safeName} onClick={goToNodeDetails} className="click">{node.legalIdentities[0].name}</div>);
+              } else {
+                return (<div key={node.legalIdentities[0].name} className="noclick">{node.legalIdentities[0].name}</div>);
+              }
             })}
             <hr />
 
@@ -115,7 +139,12 @@ class Node extends Component {
 
             <div>CorDapps</div>
             {this.state.cordapps.map(cordapp => {
-              return (<div key={cordapp}>{cordapp}</div>);
+              const goToCorDappDetails = () => {
+                this.props.dispatch(
+                  push(`/corda/cordapps`),
+                );
+              }
+              return (<div onClick={goToCorDappDetails} key={cordapp}>{cordapp}</div>);
             })}
             <hr />
 
