@@ -1,6 +1,7 @@
 const { existsSync } = require("fs");
 const { join } = require("path");
 const { spawnSync } = require("child_process");
+const temp = require("temp");
 
 
 module.exports = (POSTGRES_PATH) => {
@@ -9,13 +10,21 @@ module.exports = (POSTGRES_PATH) => {
     return (newpath) => join(part, newpath);
   })();
   return {
-    start: (port, safeWorkspaceName, schemaNames) => {
-      // stop it
-      const dataDir = join(safeWorkspaceName, `__pg_data_`);
-      const exists = existsSync(dataDir);
+    start: (port, safeWorkspaceName, schemaNames, isTemp = false) => {
+      let dataDir;
+      let exists = false;
+
+      if (isTemp) {
+        temp.track();
+        dataDir = temp.mkdirSync(`__pg_data_`);
+      } else {
+        dataDir = join(safeWorkspaceName, `__pg_data_`);
+        exists = existsSync(dataDir);
+      }
 
       if (exists) {
         try {
+          // stop it
           spawnSync(pgJoin("pg_ctl"), ["-D", dataDir, "stop"], {env: null});
         } catch(e) {
           // ignore
@@ -45,6 +54,7 @@ module.exports = (POSTGRES_PATH) => {
       }
 
       return {
+        dataDir,
         stop: () => {
           return spawnSync(pgJoin("pg_ctl"), ["stop" ,"-D", dataDir], {env: null});
         }
