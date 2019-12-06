@@ -1,8 +1,12 @@
 import connect from "../../../../renderer/screens/helpers/connect";
 
-import { hashHistory } from "react-router";
+import {Link, hashHistory } from "react-router";
 import React, { Component } from "react";
-import { push } from "react-router-redux";
+import NodeLink from "../components/NodeLink";
+import btoa from "btoa";
+
+// this is taken from braid
+const VERSION_REGEX = /^(.*?)(?:-(?:(?:\d|\.)+))\.jar?$/;
 
 function filterNodeBy(nodeToMatch) {
   return (node) => {
@@ -10,7 +14,7 @@ function filterNodeBy(nodeToMatch) {
   }
 }
 
-class Node extends Component {
+class NodeDetails extends Component {
   constructor(props) {
     super(props);
 
@@ -36,13 +40,29 @@ class Node extends Component {
 
   refresh() {
     if (this.state.node) {
+      const notariesProm = fetch("https://localhost:" + (this.state.node.rpcPort + 10000) + "/api/rest/network/notaries")
+        .then(r => r.json());
+
+      notariesProm.then(notaries => this.setState({notaries}));
+
       fetch("https://localhost:" + (this.state.node.rpcPort + 10000) + "/api/rest/network/nodes")
         .then(r => r.json())
-        .then(nodes => this.setState({nodes}));
-
-      fetch("https://localhost:" + (this.state.node.rpcPort + 10000) + "/api/rest/network/notaries")
-        .then(r => r.json())
-        .then(notaries => this.setState({notaries}));
+        .then(async nodes => {
+          const selfName = this.state.node.name.replace(/\s/g, "");
+          const notariesJson = await notariesProm;
+          const nodesOnly = nodes.filter(node => {
+            return node.legalIdentities.some(nodeIdent => {
+              // filter out self
+              if (nodeIdent.name.replace(/\s/g,"") === selfName) {
+                return false;
+              } else {
+                // filter out notaries
+                return !notariesJson.some(notary => nodeIdent.owningKey === notary.owningKey);
+              }
+            });
+          });
+          this.setState({nodes: nodesOnly});
+        });
 
       fetch("https://localhost:" + (this.state.node.rpcPort + 10000) + "/api/rest/cordapps")
         .then(r => r.json())
@@ -98,6 +118,14 @@ class Node extends Component {
     return this.props.config.settings.workspace.nodes.find(node => legalName.replace(/\s/g, "") === node.name.replace(/\s/g,""));
   }
 
+  getWorkspaceNotary(legalName){
+    return this.props.config.settings.workspace.notaries.find(notary => legalName.replace(/\s/g, "") === notary.name.replace(/\s/g,""));
+  }
+
+  getWorkspaceCordapp(name) {
+    return this.props.config.settings.workspace.projects.find(cordapp => VERSION_REGEX.exec(cordapp)[1].toLowerCase().endsWith(name.toLowerCase()));
+  }
+
   render() {
     if (!this.state.node) {
       return (<div>Couldn&apos;t locate node {this.props.params.node}</div>);
@@ -112,47 +140,66 @@ class Node extends Component {
             &larr; Back
           </button>
           <div>
-            Node/Notary (&lt;- todo) {this.state.node.name}
+            Node/Notary {this.state.node.name}
             <hr />
 
             <div>Nodes</div>
-            {this.state.nodes.filter(n => n.legalIdentities[0].name !== n.name).map(node => {
-              const workspaceNode = this.getWorkspaceNode(node.legalIdentities[0].name);
-              if (workspaceNode) {
-                const goToNodeDetails = () => {
-                  this.props.dispatch(
-                    push(`/corda/nodes/${workspaceNode.safeName}`),
-                  );
-                }
-                return (<div key={workspaceNode.safeName} onClick={goToNodeDetails} className="click">{node.legalIdentities[0].name}</div>);
-              } else {
-                return (<div key={node.legalIdentities[0].name} className="noclick">{node.legalIdentities[0].name}</div>);
-              }
-            })}
+            <div className="Nodes DataRows">
+              <main>
+                {this.state.nodes.map(node => {
+                  const workspaceNode = this.getWorkspaceNode(node.legalIdentities[0].name);
+                  if (workspaceNode) {
+                    return (<NodeLink key={`node-${workspaceNode.safeName}`} node={workspaceNode} />);
+                  } else {
+                    return (<div key={`unknown-node-${node.legalIdentities[0].name}`}>{node.name}</div>);
+                  }
+                })}
+              </main>
+            </div>
             <hr />
 
             <div>Notaries</div>
-            {this.state.notaries.map(notary => {
-              return (<div key={notary.name}>{notary.name}</div>);
-            })}
+            <div className="Nodes DataRows">
+              <main>
+                {this.state.notaries.map(notary => {
+                  const workspaceNode = this.getWorkspaceNotary(notary.name);
+                  if (workspaceNode) {
+                    return (<NodeLink key={`node-${workspaceNode.safeName}`} node={workspaceNode} />);
+                  } else {
+                    return (<div key={`unknown-node-${notary.name}`}>{notary.name}</div>);
+                  }
+                })}
+              </main>
+            </div>
             <hr />
 
             <div>CorDapps</div>
-            {this.state.cordapps.map(cordapp => {
-              const goToCorDappDetails = () => {
-                this.props.dispatch(
-                  push(`/corda/cordapps`),
-                );
-              }
-              return (<div onClick={goToCorDappDetails} key={cordapp}>{cordapp}</div>);
-            })}
+            <div className="Nodes DataRows">
+              <main>
+                {this.state.cordapps.map(cordapp => {
+                  const workspaceCordapp = this.getWorkspaceCordapp(cordapp);
+                  if (workspaceCordapp) {
+                    return (<div key={workspaceCordapp}>
+                      <Link to={`/corda/cordapps/${btoa(workspaceCordapp)})`}>{workspaceCordapp}</Link>
+                    </div>);
+                  } else {
+                    return (<div></div>);
+                  }
+                })}
+              </main>
+            </div>
             <hr />
 
             <div>Transactions</div>
-            {transactionStates.map(transaction => {
-              return (<div key={transaction.ref.txhash}>{transaction.ref.txhash}</div>);
-            })}
-
+            <div className="Nodes DataRows">
+              <main>
+                {transactionStates.map(transaction => {
+                  return (<div key={transaction.ref.txhash}>
+                    <Link to={`/corda/transactions/${this.state.node.safeName}/${transaction.ref.txhash}`}>{transaction.ref.txhash}</Link>
+                  </div>);
+                })}
+              </main>
+            </div>
           </div>
         </main>
       </div>
@@ -161,6 +208,6 @@ class Node extends Component {
 }
 
 export default connect(
-  Node,
+  NodeDetails,
   "config"
 );

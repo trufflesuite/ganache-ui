@@ -18,11 +18,6 @@ class Cordapp extends Component {
   }
 
   render() {
-    // if(this.state.results.states === undefined){
-    //   return (<div>Loading...</div>);
-    // } else if(this.state.results.states.length === 0){
-    //   return (<div>Couldn&apos;t locate Cordapp {this.props.params.txhash}</div>);
-    // }
     return (
       <div>
         <main>

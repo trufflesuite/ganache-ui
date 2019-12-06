@@ -6,7 +6,7 @@ import ConfigScreen from "./screens/config/ConfigScreen";
 import AccountsScreen from "../integrations/ethereum/renderer/screens/accounts/AccountsScreen";
 
 import CordaNodes from "../integrations/corda/renderer/screens/Nodes";
-import CordaNode from "../integrations/corda/renderer/screens/Node";
+import CordaNode from "../integrations/corda/renderer/screens/NodeDetails";
 import CordaTransactions from "../integrations/corda/renderer/screens/Transactions";
 import CordaTransaction from "../integrations/corda/renderer/screens/Transaction";
 import CordaCordapps from "../integrations/corda/renderer/screens/Cordapps";
