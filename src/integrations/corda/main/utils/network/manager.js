@@ -17,9 +17,10 @@ class IO {
 }
 
 class NetworkManager extends EventEmitter {
-  constructor (config, workspaceDirectory) {
+  constructor (config, settings, workspaceDirectory) {
     super();
     this.config = config;
+    this.settings = settings;
     this.workspaceDirectory = workspaceDirectory;
     this.nodes = [];
     this.notaries = [];
@@ -37,7 +38,7 @@ class NetworkManager extends EventEmitter {
       this.notaries = notariesArr;
       this.entities = this.nodes.concat(this.notaries);
       this._io.sendProgress("Configuring and starting PostgreSQL...");
-      this.pg = postgres(await POSTGRES_HOME).start(this.entities[0].dbPort, this.workspaceDirectory, this.entities);
+      this.pg = postgres(await POSTGRES_HOME).start(this.entities[0].dbPort, this.workspaceDirectory, this.entities, this.settings.isDefault);
       this._io.sendProgress("Bootstrapping network...");
       await cordaBootstrap.bootstrap(this.config);
       this._io.sendProgress("Copying Cordapps...");

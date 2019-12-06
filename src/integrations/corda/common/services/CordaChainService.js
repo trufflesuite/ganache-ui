@@ -23,7 +23,7 @@ class CordaChainService extends EventEmitter {
   async startServer(settings, workspaceDirectory) {
     this.emit("message", "progress", "Stopping server...");
     await this.stopServer();
-    const manager = this.manager = new NetworkManager(this.config, workspaceDirectory);
+    const manager = this.manager = new NetworkManager(this.config, settings, workspaceDirectory);
     manager.on("message", this.emit.bind(this, "message"));
 
     console.log("bootstrapping...");
