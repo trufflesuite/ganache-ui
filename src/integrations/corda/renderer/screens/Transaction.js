@@ -76,7 +76,15 @@ class Transaction extends Component {
     const tx = this.state.results[0].states[0];
     const unconsumedTx = this.state.results.length > 1 && this.state.results[1].states.length !== 0 ? this.state.results[1].states[0] : null;
     const meta = this.state.results[0].statesMetadata[0];
-    // const ignoreFields = ["@class", "participants", "linearId"]
+
+    // TODO: linearId deletion might be temporary
+    // I'm only removing it right now because it can contain a `null` which react-json-view can't handle (crashes)
+    // We need to fix this here once https://www.npmjs.com/package/@seesemichaelj/react-json-view is fixed.
+    const participants = tx.state.data.participants || [];
+    const ignoreFields = ["@class", "participants", "linearId"];
+    ignoreFields.forEach(field => {
+      delete tx.state.data[field];
+    });
     // const keys = Object.keys(tx.state.data).filter(key => !ignoreFields.includes(key));
     return (
       <div className="Nodes DataRows">
@@ -177,7 +185,7 @@ class Transaction extends Component {
           </div>
           <div>
             <div>Participants</div>
-            <div>{tx.state.data.participants.map(node => (
+            <div>{participants.map(node => (
               <div key={"participant_" + node.name}>{node.name}</div>
             ))}</div>
           </div>
