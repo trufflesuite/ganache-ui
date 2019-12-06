@@ -441,10 +441,10 @@ app.on('ready', () => {
     continuouslySendNetworkInterfaces();
   });
 
-  ipcMain.on(OPEN_NEW_WORKSPACE_CONFIG, async () => {
+  ipcMain.on(OPEN_NEW_WORKSPACE_CONFIG, async (_event, flavor = "ethereum") => {
     await integrations.stopServer();
 
-    const defaultWorkspace = workspaceManager.get(null);
+    const defaultWorkspace = workspaceManager.get(null, flavor);
     const workspaceName = moniker.choose();
     const wallet = new ethagen({ entropyBits: 128 });
     defaultWorkspace.saveAs(
@@ -456,7 +456,7 @@ app.on('ready', () => {
 
     workspaceManager.bootstrap();
 
-    await integrations.setWorkspace(workspaceName, "ethereum");
+    await integrations.setWorkspace(workspaceName, flavor);
     workspace = integrations.workspace;
 
     let tempWorkspace = {};

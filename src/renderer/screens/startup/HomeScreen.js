@@ -65,10 +65,7 @@ class HomeScreen extends Component {
   }
 
   handleQuickstartPress() {
-    //const defaultFlavor = "ethereum";
-    // TODO: FOR QUICK TESTING ONLY
-    const defaultFlavor = this.state.flavor;
-    this.props.dispatch(openDefaultWorkspace(defaultFlavor));
+    this.props.dispatch(openDefaultWorkspace(this.state.flavor));
   }
 
   handleDownloadPress() {
@@ -76,7 +73,7 @@ class HomeScreen extends Component {
   }
 
   handleNewWorkspacePress() {
-    this.props.dispatch(openNewWorkspaceConfig());
+    this.props.dispatch(openNewWorkspaceConfig(this.state.flavor));
   }
   handleFlavorChange(event) {
     this.setState({flavor: event.target.value});

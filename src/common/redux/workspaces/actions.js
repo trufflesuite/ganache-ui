@@ -51,10 +51,10 @@ export const openDefaultWorkspace = function(flavor = "ethereum") {
 };
 
 export const OPEN_NEW_WORKSPACE_CONFIG = `${prefix}/OPEN_NEW_WORKSPACE_CONFIG`;
-export const openNewWorkspaceConfig = function() {
+export const openNewWorkspaceConfig = function(flavor = "ethereum") {
   return function(dispatch) {
     dispatch(push("/loader"));
-    ipcRenderer.send(OPEN_NEW_WORKSPACE_CONFIG);
+    ipcRenderer.send(OPEN_NEW_WORKSPACE_CONFIG, flavor);
   };
 };
 
