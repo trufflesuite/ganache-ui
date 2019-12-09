@@ -6,6 +6,8 @@ import { hashHistory } from "react-router";
 import jsonTheme from "../../../../common/utils/jsonTheme";
 import ReactJson from "@seesemichaelj/react-json-view";
 
+import NodeLink from "../components/NodeLink";
+
 class Transaction extends Component {
   componentDidMount(){
     this.refresh();
@@ -86,6 +88,7 @@ class Transaction extends Component {
       delete tx.state.data[field];
     });
     // const keys = Object.keys(tx.state.data).filter(key => !ignoreFields.includes(key));
+    const workspaceNotary = this.getWorkspaceNotary(tx.state.notary.name);
     return (
       <div className="Nodes DataRows">
         <main>
@@ -177,7 +180,7 @@ class Transaction extends Component {
           </div>
           <div>
             <div>Notary</div>
-            <div>{tx.state.notary.name}</div>
+            <div>{<NodeLink node={workspaceNotary} />}</div>
           </div>
           <div>
             <div>Timestamp</div>
@@ -185,13 +188,22 @@ class Transaction extends Component {
           </div>
           <div>
             <div>Participants</div>
-            <div>{participants.map(node => (
-              <div key={"participant_" + node.name}>{node.name}</div>
-            ))}</div>
+            <div>
+              {participants.map(node => {
+                const workspaceNode = this.getWorkspaceNode(node.name);
+                return (<NodeLink key={"participant_" + workspaceNode.safeName} node={workspaceNode} />);
+              })}
+              </div>
           </div>
         </main>
       </div>
     );
+  }
+  getWorkspaceNode(legalName) {
+    return this.props.config.settings.workspace.nodes.find(node => legalName.replace(/\s/g, "") === node.name.replace(/\s/g,""));
+  }
+  getWorkspaceNotary(legalName) {
+    return this.props.config.settings.workspace.notaries.find(notary => legalName.replace(/\s/g, "") === notary.name.replace(/\s/g,""));
   }
 }
 

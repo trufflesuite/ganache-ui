@@ -3,6 +3,7 @@ const { join } = require("path");
 const { spawnSync } = require("child_process");
 const temp = require("temp");
 
+const USER = "ganache";
 
 module.exports = (POSTGRES_PATH) => {
   const pgJoin = (() => {
@@ -38,7 +39,7 @@ module.exports = (POSTGRES_PATH) => {
       // console.log(`"${postgres_path}/bin/pg_ctl" -o "-F -p ${port}" -D "${dataDir}" -l logfile start -w`);
       spawnSync(pgJoin("pg_ctl"), ["-o", `-F -p ${port}`, "-D", dataDir, "-l", "logfile", "-w", "start"], {env: null});
       try {
-        spawnSync(pgJoin("createuser"), ["--host", "127.0.0.1", "--port", port, "--createdb", "--username", "postgres", "ganache"], {env: null});
+        spawnSync(pgJoin("createuser"), ["--host", "127.0.0.1", "--port", port, "--createdb", "--username", "postgres", USER], {env: null});
         spawnSync(pgJoin("createuser"), ["--host", "127.0.0.1", "--port", port, "--username", "postgres", "corda"], {env: null});
       } catch(e){
         // ignore
@@ -47,7 +48,7 @@ module.exports = (POSTGRES_PATH) => {
       for (let i = 0, l = schemaNames.length; i < l; i++) {
         const schema = schemaNames[i];
         try {
-          spawnSync(pgJoin("createdb"), ["--host", "127.0.0.1", "--port", schema.dbPort, "--owner", "ganache", "--username", "ganache", schema.safeName], {env: null});
+          spawnSync(pgJoin("createdb"), ["--host", "127.0.0.1", "--port", schema.dbPort, "--owner", USER, "--username", USER, schema.safeName], {env: null});
         } catch(e) {
           // ignore
         }

@@ -16,6 +16,9 @@ export default function(state = initialState, action) {
       nextState.settings.global = cloneDeep(action.global);
       nextState.settings.workspace = cloneDeep(action.workspace);
       break;
+    case "VAULT_DATA":
+      nextState.updated = Date.now();
+      break;
     case Config.SET_SETTING_ERROR:
       if (typeof nextState.validationErrors === "undefined") {
         nextState.validationErrors = {};
@@ -30,9 +33,9 @@ export default function(state = initialState, action) {
     case Config.CLEAR_ALL_SETTING_ERRORS:
       nextState.validationErrors = {};
       break;
-    case Config.SET_STARTUP_MODE: {
+    case Config.SET_STARTUP_MODE: 
       nextState.startupMode = action.mode;
-    }
+      break;
     default:
       break;
   }

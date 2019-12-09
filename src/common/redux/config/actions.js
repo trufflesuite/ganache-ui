@@ -20,6 +20,10 @@ export const setSettings = function(globalSettings, workspaceSettings) {
   };
 };
 
+export function setVaultDataUpdated() {
+  return { type: "VAULT_DATA" };
+}
+
 export const REQUEST_SAVE_SETTINGS = `${prefix}/REQUEST_SAVE_SETTINGS`;
 export const requestSaveSettings = function(globalSettings, workspaceSettings) {
   return function() {

@@ -5,6 +5,7 @@ const postgres = require("../postgres");
 const Braid = require("./braid");
 const Corda = require("./corda");
 const fse = require("fs-extra");
+const { Client } = require("pg");
 
 class IO {
   constructor(context){
@@ -26,6 +27,7 @@ class NetworkManager extends EventEmitter {
     this.notaries = [];
     this.processes = [];
     this._io = new IO(this);
+    this.postGresHooksPromise = null;
   }
 
   async bootstrap(nodes, notaries, port = 10000) {
@@ -41,10 +43,55 @@ class NetworkManager extends EventEmitter {
       this.pg = postgres(await POSTGRES_HOME).start(this.entities[0].dbPort, this.workspaceDirectory, this.entities, this.settings.isDefault);
       this._io.sendProgress("Bootstrapping network...");
       await cordaBootstrap.bootstrap(this.config);
+      this._io.sendProgress("Configuring Postgres Hooks...");
+      this.postGresHooksPromise = this.setupPostGresHooks();
       this._io.sendProgress("Copying Cordapps...");
-      await this.copyCordappsAndSetupNetwork();
+      await Promise.all([
+        this.postGresHooksPromise,
+        this.copyCordappsAndSetupNetwork()
+      ]);
       this._io.sendProgress("Configuring RPC Manager...");
       this.braid = new Braid(join(await BRAID_HOME, ".."), this._io);
+  }
+
+  setupPostGresHooks() {
+    return Promise.all(this.entities.map(async entity => {
+      const client = new Client({
+        user: "postgres",
+        host: "localhost",
+        database: entity.safeName,
+        password: "",
+        port: entity.dbPort
+      })
+    
+      await client.connect();
+      
+      await client.query(`create or replace function notify_subscribers()
+          returns trigger
+          language plpgsql
+        AS $$
+        begin
+          PERFORM pg_notify('my_events', '');
+          return null;
+        end
+        $$;
+    
+        DROP TRIGGER IF EXISTS mytrigger on public.vault_states;
+    
+        CREATE TRIGGER mytrigger
+        AFTER INSERT OR UPDATE ON vault_states
+        FOR EACH ROW
+        EXECUTE PROCEDURE notify_subscribers();`);
+    
+      // Listen for all pg_notify channel messages
+      client.on("notification", (msg) => {
+        this.emit("message", "send", "VAULT_DATA", msg);
+      });
+      
+      await client.query("LISTEN my_events");
+    
+      return client;
+    }));
   }
 
   async copyCordappsAndSetupNetwork() {
@@ -92,9 +139,18 @@ class NetworkManager extends EventEmitter {
       return Promise.all(promises);
   }
 
-  stop() {
+  async stop() {
     try {
-      this.pg && this.pg.stop();
+      if (this.postGresHooksPromise) {
+        const postGresHooksClient = await this.postGresHooksPromise;
+        try {
+          postGresHooksClient && await Promise.all(postGresHooksClient.map(client => client.end()));
+          this.postGresHooksPromise = null;
+        } catch(e) {
+          console.error(e);
+        }
+      }
+      this.pg && await this.pg.stop();
       this.pg = null;
     } catch(e) {
       console.error("Error occured while attempting to stop postgres...");

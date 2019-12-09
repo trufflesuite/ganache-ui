@@ -1,9 +1,7 @@
 import connect from "../../../../renderer/screens/helpers/connect";
 
-import { push } from "react-router-redux";
 import React, { Component } from "react";
-import btoa from "btoa";
-
+import CordAppLink from "../components/CordAppLink";
 
 class Cordapps extends Component {
   componentDidMount(){
@@ -20,23 +18,11 @@ class Cordapps extends Component {
 
   render() {
     return (
-      <div>
+      <div className="Nodes DataRows">
         <main>
-          <div>
-            <div>
-              CordApps
-            </div>
-            <ul>
-              {this.props.config.settings.workspace.projects.map(cordapp => {
-                const goToCordappDetails = () => {
-                  this.props.dispatch(
-                    push(`/corda/cordapps/${btoa(cordapp)}`),
-                  );
-                }
-                return (<li key={cordapp} onClick={goToCordappDetails}>{cordapp}</li>);
-              })}
-            </ul>
-          </div>
+          {this.props.config.settings.workspace.projects.map(cordapp => {
+            return (<CordAppLink key={cordapp} cordapp={cordapp} />);
+          })}
         </main>
       </div>
     );

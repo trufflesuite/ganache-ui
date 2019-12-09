@@ -1,9 +1,10 @@
 import connect from "../../../../renderer/screens/helpers/connect";
 
-import {Link, hashHistory } from "react-router";
+import { hashHistory } from "react-router";
 import React, { Component } from "react";
 import NodeLink from "../components/NodeLink";
-import btoa from "btoa";
+import CordAppLink from "../components/CordAppLink";
+import TransactionLink from "../components/TransactionLink";
 
 // this is taken from braid
 const VERSION_REGEX = /^(.*?)(?:-(?:(?:\d|\.)+))\.jar?$/;
@@ -49,7 +50,8 @@ class NodeDetails extends Component {
         .then(r => r.json())
         .then(async nodes => {
           const selfName = this.state.node.name.replace(/\s/g, "");
-          const notariesJson = await notariesProm;
+          const notaries = await notariesProm;
+          const notariesMap = new Set(notaries.map(notary => notary.owningKey));
           const nodesOnly = nodes.filter(node => {
             return node.legalIdentities.some(nodeIdent => {
               // filter out self
@@ -57,7 +59,7 @@ class NodeDetails extends Component {
                 return false;
               } else {
                 // filter out notaries
-                return !notariesJson.some(notary => nodeIdent.owningKey === notary.owningKey);
+                return !notariesMap.has(nodeIdent.owningKey);
               }
             });
           });
@@ -135,13 +137,16 @@ class NodeDetails extends Component {
 
     return (
       <div>
-        <main>
+        <div className="TitleBar">
           <button className="Button" onClick={hashHistory.goBack}>
             &larr; Back
           </button>
+          <h1 className="Title">
+            {this.state.node.name}
+          </h1>
+        </div>
+        <main>
           <div>
-            Node/Notary {this.state.node.name}
-            <hr />
 
             <div>Nodes</div>
             <div className="Nodes DataRows">
@@ -179,11 +184,9 @@ class NodeDetails extends Component {
                 {this.state.cordapps.map(cordapp => {
                   const workspaceCordapp = this.getWorkspaceCordapp(cordapp);
                   if (workspaceCordapp) {
-                    return (<div key={workspaceCordapp}>
-                      <Link to={`/corda/cordapps/${btoa(workspaceCordapp)})`}>{workspaceCordapp}</Link>
-                    </div>);
+                    return (<CordAppLink key={workspaceCordapp} cordapp={workspaceCordapp}>{workspaceCordapp}</CordAppLink>);
                   } else {
-                    return (<div></div>);
+                    return (<div key={`unknown-cordapp-${cordapp}`}>{cordapp}</div>);
                   }
                 })}
               </main>
@@ -194,9 +197,7 @@ class NodeDetails extends Component {
             <div className="Nodes DataRows">
               <main>
                 {transactionStates.map(transaction => {
-                  return (<div key={transaction.ref.txhash}>
-                    <Link to={`/corda/transactions/${this.state.node.safeName}/${transaction.ref.txhash}`}>{transaction.ref.txhash}</Link>
-                  </div>);
+                  return (<TransactionLink key={transaction.ref.txhash} tx={transaction} node={this.state.node} />);
                 })}
               </main>
             </div>
