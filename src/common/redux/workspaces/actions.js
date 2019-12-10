@@ -72,11 +72,11 @@ export const saveWorkspace = function(name) {
 };
 
 export const DELETE_WORKSPACE = `${prefix}/DELETE_WORKSPACE`;
-export const deleteWorkspace = function(name) {
+export const deleteWorkspace = function(name, flavor) {
   return function(dispatch) {
-    dispatch({ type: DELETE_WORKSPACE, name });
+    dispatch({ type: DELETE_WORKSPACE, name, flavor });
 
-    ipcRenderer.send(DELETE_WORKSPACE, name);
+    ipcRenderer.send(DELETE_WORKSPACE, name, flavor);
   };
 };
 
