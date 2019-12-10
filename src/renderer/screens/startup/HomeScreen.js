@@ -36,8 +36,9 @@ class HomeScreen extends Component {
     this.props.dispatch(openWorkspace(workspace.name, workspace.flavor));
   }
 
-  handleDeleteWorkspace(e) {
-    const workspaceName = e.currentTarget.previousSibling.innerText;
+  handleDeleteWorkspace(workspace, e) {
+    const workspaceName = workspace.name;
+    const workspaceFlavor = workspace.flavor;
     e.stopPropagation();
     e.preventDefault();
 
@@ -48,7 +49,7 @@ class HomeScreen extends Component {
       [
         {
           click: modal => {
-            this.props.dispatch(deleteWorkspace(workspaceName));
+            this.props.dispatch(deleteWorkspace(workspaceName, workspaceFlavor));
             modal.close();
           },
           value: "Remove",
@@ -90,7 +91,7 @@ class HomeScreen extends Component {
               <span>{workspaceInfo.name} ({workspaceInfo.flavor})</span>
               <div
                 className="DeleteWorkspace"
-                onClick={this.handleDeleteWorkspace.bind(this)}
+                onClick={(e) => this.handleDeleteWorkspace(workspaceInfo, e)}
               >
                 <TrashIcon />
               </div>

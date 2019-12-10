@@ -117,7 +117,7 @@ class ConfigScreen extends PureComponent {
       if (this.props.config.startupMode !== Config.STARTUP_MODE.NORMAL) {
         this.props.dispatch(closeWorkspace());
         this.props.dispatch(
-          deleteWorkspace(this.props.workspaces.current.name),
+          deleteWorkspace(this.props.workspaces.current.name, this.props.workspaces.current.flavor),
         );
       } else {
         hashHistory.goBack();

@@ -352,8 +352,8 @@ app.on('ready', () => {
     }
   });
   
-  ipcMain.on(DELETE_WORKSPACE, async (event, name) => {
-    const tempWorkspace = workspaceManager.get(name);
+  ipcMain.on(DELETE_WORKSPACE, async (event, name, flavor) => {
+    const tempWorkspace = workspaceManager.get(name, flavor);
     if (tempWorkspace) {
       tempWorkspace.delete();
 
