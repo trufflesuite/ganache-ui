@@ -14,7 +14,7 @@ class Braid {
     const name = entity.safeName;
     const exists = this.servers.get(name);
     if (!exists) {
-      const args = ["-Dfile.encoding=UTF8", "-jar", "braid-server.jar", `localhost:${entity.rpcPort}`, "user1", "letmein", entity.rpcPort + 10000, 3, ...entity.cordapps];
+      const args = ["-Dfile.encoding=UTF8", "-jar", "braid-server.jar", `localhost:${entity.rpcPort}`, "user1", "letmein", entity.rpcPort + 10000, 3, ...(entity.cordapps || [])];
       // current env PATH seems to be required for braid to actually work
       const braid = spawn(join(JAVA_HOME, "bin", "java"), args, { cwd : this.BRAID_HOME, env: {} });
 

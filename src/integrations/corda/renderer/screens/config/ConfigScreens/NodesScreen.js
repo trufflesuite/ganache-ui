@@ -19,6 +19,9 @@ class NodeModal extends Component{
     const canEditAll = this.props.canEditAll;
     const node = this.state;
     const isEditing = this.props.mode === modes.EDIT;
+    if (node.cordapps === undefined) {
+      node.cordapps = [];
+    }
     return (
       <Modal className="ErrorModal">
         <header>
@@ -36,20 +39,20 @@ class NodeModal extends Component{
           </input>
 
           <div>RPC Port</div>
-          <input type="text" onChange={(e) => {
-            this.setState({rpcPort: e.target.value});
+          <input type="number" min="0" max="65535" onChange={(e) => {
+            this.setState({rpcPort: parseInt(e.target.value, 10)});
           }} value={node.rpcPort||""}>
           </input>
 
           <div>Admin Port</div>
-          <input type="text" onChange={(e) => {
-            this.setState({adminPort: e.target.value});
+          <input type="number" min="0" max="65535" onChange={(e) => {
+            this.setState({adminPort: parseInt(e.target.value, 10)});
           }} value={node.adminPort||""}>
           </input>
 
           <div>P2P Port</div>
-          <input type="text" onChange={(e) => {
-            this.setState({p2pPort: e.target.value});
+          <input type="number" min="0" max="65535" onChange={(e) => {
+            this.setState({p2pPort: parseInt(e.target.value, 10)});
           }} value={node.p2pPort||""}>
           </input>
 
@@ -195,10 +198,9 @@ class NodesScreen extends Component {
           data.title = `Add New ${type}`;
           data.buttonText = "Add";
           data.node = {};
-          handleNodeUpdate= (node) => {
+          handleNodeUpdate = (node) => {
             nodes.push(node);
             node.safeName = node.name.toLowerCase().replace(/[^a-z]+/g,"_");
-            
           };
           break;
       }
