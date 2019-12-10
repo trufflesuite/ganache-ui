@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Modal from "../../../../../../renderer/components/modal/Modal";
 import ModalDetails from "../../../../../../renderer/components/modal/ModalDetails";
+import { STARTUP_MODE } from "../../../../../../common/redux/config/actions";
 
 const modes = {
   EDIT: "edit",
@@ -15,6 +16,7 @@ class NodeModal extends Component{
   }
 
   render() {
+    const canEditAll = this.props.canEditAll;
     const node = this.state;
     const isEditing = this.props.mode === modes.EDIT;
     return (
@@ -28,7 +30,7 @@ class NodeModal extends Component{
         </section>
         <section>
           <div>Legal Name</div>
-          <input type="text" disabled={isEditing} onChange={(e) => {
+          <input type="text" disabled={canEditAll ? false : isEditing} onChange={(e) => {
             this.setState({name: e.target.value});
           }} value={node.name||""}>
           </input>
@@ -202,6 +204,7 @@ class NodesScreen extends Component {
       }
       aModal = (
         <NodeModal
+          canEditAll={this.props.config.startupMode === STARTUP_MODE.NEW_WORKSPACE}
           allNodes={this.props.config.settings.workspace.nodes}
           allCordDapps={corDapps}
           closeModal={this.resetMode.bind(this)}

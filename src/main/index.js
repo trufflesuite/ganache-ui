@@ -470,7 +470,20 @@ app.on('ready', () => {
     );
 
     startupMode = STARTUP_MODE.NEW_WORKSPACE;
-    await integrations.startChain();
+    if (flavor === "ethereum") {
+      await integrations.startChain();
+    } else {
+      if (workspace) {
+        const globalSettings = global.getAll();
+        const workspaceSettings = workspace.settings.getAll();
+        mainWindow.webContents.send(
+          SET_SERVER_STARTED,
+          globalSettings,
+          workspaceSettings,
+          startupMode,
+        );
+      }
+    }
 
     // this sends the network interfaces to the renderer process for
     //  enumering in the config screen. it sends repeatedly
