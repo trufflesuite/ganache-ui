@@ -26,6 +26,7 @@
   "homepage": "https://github.com/trufflesuite/ganache#readme",
   "scripts": {
     "dev": "electron-webpack dev",
+    "start": "npm run dev",
     "compile": "electron-webpack",
     "lint": "eslint .",
     "sign-mac": "codesign --deep --force --verbose --sign 'Developer ID Application: Timothy Coulter (58RKXWC272)' ./dist/*.dmg",
