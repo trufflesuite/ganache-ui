@@ -66,6 +66,12 @@ import migration from "./init/migration.js";
 const migrationPromise = migration.migrate();
 migrationPromise.then(() => {
   migration.uninstallOld();
+}).catch(e => {
+  if (mainWindow) {
+    mainWindow.webContents.send(SET_SYSTEM_ERROR, e.stack || e);
+  } else {
+    console.error(e);
+  }
 });
 
 const isDevMode = process.execPath.match(/[\\/]electron/) !== null;
