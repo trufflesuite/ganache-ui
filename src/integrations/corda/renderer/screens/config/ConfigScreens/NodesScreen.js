@@ -120,6 +120,10 @@ class NodesScreen extends Component {
       this.state.selectedIdx = null;
     }
     const nodes = this._getAllNodes();
+    const node = nodes[idx];
+    node.nodes = [];
+    node.notaries = [];
+    this.updateNetworkMap(node);
     nodes.splice(idx, 1);
     this.forceUpdate();
   }

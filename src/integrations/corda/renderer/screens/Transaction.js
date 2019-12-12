@@ -76,7 +76,7 @@ class Transaction extends Component {
       return (<div>Couldn&apos;t locate transaction {this.props.params.txhash}</div>);
     }
     const tx = this.state.results[0].states[0];
-    const unconsumedTx = this.state.results.length > 1 && this.state.results[1].states.length !== 0 ? this.state.results[1].states[0] : null;
+    const consumedTx = this.state.results.length > 1 && this.state.results[1].states.length !== 0 ? this.state.results[1].states[0] : null;
     const meta = this.state.results[0].statesMetadata[0];
 
     // TODO: linearId deletion might be temporary
@@ -84,10 +84,12 @@ class Transaction extends Component {
     // We need to fix this here once https://www.npmjs.com/package/@seesemichaelj/react-json-view is fixed.
     const participants = tx.state.data.participants || [];
     const ignoreFields = ["@class", "participants", "linearId"];
-    ignoreFields.forEach(field => {
-      delete tx.state.data[field];
-    });
-    // const keys = Object.keys(tx.state.data).filter(key => !ignoreFields.includes(key));
+    const unconsumedState = Object.keys(tx.state.data).reduce((acc, key) => {
+      if(!ignoreFields.includes(key)){
+        acc[key] = tx.state.data[key];
+      }
+      return acc;
+    }, {});
     const workspaceNotary = this.getWorkspaceNotary(tx.state.notary.name);
     return (
       <div className="Nodes DataRows">
@@ -107,28 +109,10 @@ class Transaction extends Component {
             <div>Contract</div>
             <div>{tx.state.contract}</div>
           </div>
-          <div>Consumed</div>
-          <ReactJson
-            src={
-              tx.state.data
-            }
-            name={false}
-            theme={jsonTheme}
-            iconStyle="triangle"
-            edit={false}
-            add={false}
-            delete={false}
-            enableClipboard={false}
-            displayDataTypes={true}
-            displayObjectSize={true}
-            indentWidth={4}// indent by 4 because that's what Corda likes to do.
-            collapsed={1}
-            collapseStringsAfterLength={20}
-          />
           <div>Unconsumed</div>
           <ReactJson
             src={
-              unconsumedTx ? unconsumedTx.state.data : {}
+              unconsumedState
             }
             name={false}
             theme={jsonTheme}
@@ -143,37 +127,24 @@ class Transaction extends Component {
             collapsed={1}
             collapseStringsAfterLength={20}
           />
-          {/* <div>
-            <table>
-              <thead>
-                <tr><td colSpan={keys.length}>Input State</td></tr>
-                <tr>{keys.map(key => {
-                  return (<th key={"input-key"+key}>{key}</th>);
-                })}</tr>
-              </thead>
-              <tbody>
-                <tr>{keys.map(key => {
-                  return (<td key={"input-value_"+key}>{
-                    typeof tx.state.data[key] === "object" ? JSON.stringify(tx.state.data[key]) :tx.state.data[key]
-                    }</td>);
-                })}</tr>
-              </tbody>
-              <thead>
-                <tr><td colSpan={keys.length}>Output state</td></tr>
-                <tr>{keys.map(key => {
-                  return (<th key={"output-key"+key}>{key}</th>);
-                })}</tr>
-              </thead>
-              <tbody>
-                <tr>
-                  {keys.map(key => {
-                    return (<td key={"output-value_"+key}>...</td>);
-                  })}
-                </tr>
-              </tbody>
-
-            </table>
-          </div> */}
+          <div>Consumed</div>
+          <ReactJson
+            src={
+              consumedTx ? consumedTx.state.data : {}
+            }
+            name={false}
+            theme={jsonTheme}
+            iconStyle="triangle"
+            edit={false}
+            add={false}
+            delete={false}
+            enableClipboard={false}
+            displayDataTypes={true}
+            displayObjectSize={true}
+            indentWidth={4}// indent by 4 because that's what Corda likes to do.
+            collapsed={1}
+            collapseStringsAfterLength={20}
+          />
           <div>
             <div>Signers</div>
             <div>...</div>
