@@ -11,6 +11,7 @@ class Corda {
   }
 
   start(){
+    console.log(join(this.JAVA_HOME, "bin", "java"), ["-jar", "corda.jar"], {cwd: this.path, env: null});
     this.java = spawn(join(this.JAVA_HOME, "bin", "java"), ["-jar", "corda.jar"], {cwd: this.path, env: null});
 
     this.java.stderr.on('data', (data) => {
@@ -36,6 +37,7 @@ class Corda {
       this.java.once('close', rejectionHandler);
 
       this.java.stdout.on('data', function startUpListener(data) {
+        console.log(data.toString());
         if (data.toString().includes('" started up and registered in ')) {
           this.java.stdout.removeListener('data', startUpListener);
           this.java.removeListener('close', rejectionHandler);

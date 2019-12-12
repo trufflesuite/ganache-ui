@@ -14,16 +14,24 @@ class Braid {
     const name = entity.safeName;
     const exists = this.servers.get(name);
     if (!exists) {
-      const args = ["-Dfile.encoding=UTF8", "-jar", "braid-server.jar", `localhost:${entity.rpcPort}`, "user1", "letmein", entity.rpcPort + 10000, 3, ...(entity.cordapps || [])];
+      const args = ["\"-Dfile.encoding=UTF8\"", "-jar", "braid-server.jar", `localhost:${entity.rpcPort}`, "user1", "letmein", entity.rpcPort + 10000, 3, ...(entity.cordapps || [])];
       // current env PATH seems to be required for braid to actually work
-      const braid = spawn(join(JAVA_HOME, "bin", "java"), args, { cwd : this.BRAID_HOME, env: {} });
+      console.log(this.BRAID_HOME, join(JAVA_HOME, "bin", "java"), args, { cwd : this.BRAID_HOME, env: {} });
+      let braid;
+      try {
+        console.log(process.env);
+        braid = spawn(join(JAVA_HOME, "bin", "java"), args, { cwd : this.BRAID_HOME, env: {} });
+      } catch (err) {
+        console.log(err);
+      }
 
       braid.stderr.on('data', (error) => {
         // this.sendError(new Error(error.toString()));
-        console.error(`stderr:\n${error}`);
+        console.log(`stderr:\n${error}`);
       });
 
       braid.on("error", (error) => {
+        console.error(`stderr:\n${error}`);
         this._io.sendError(new Error(error.toString()));
       });
 
@@ -33,8 +41,8 @@ class Braid {
         braid.once('close', (code) => {
           // TODO: handle premature individual node shutdown
           /// close postgres, close other nodes, what do?
-          console.log(`child process exited with code ${code}`);
-          reject();
+          console.error(`child process exited with code ${code}`);
+          reject(`child process exited with code ${code}`);
         });
 
         braid.stdout.on('data', (data) => {

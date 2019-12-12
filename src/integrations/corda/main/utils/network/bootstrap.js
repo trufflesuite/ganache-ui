@@ -75,20 +75,21 @@ class CordaBootstrap {
     java.stdout.on('data', (data) => {
       this._io.sendStdOut(data);
       // this.emit("message", "stdout", data, this.entity.safeName);
-      console.error(`stdout:\n${data}`);
+      console.log(`stdout:\n${data}`);
     });
 
     return new Promise((resolve, reject) => {
       java.on('error', (error) => {
+        console.error(error);
         this._io.sendError(new Error(error.toString()))
       });
 
       java.on('close', (code) => {
-        console.log(`child process exited with code ${code}`);
+        console.error(`${CORDA_BOOTSTRAPPER} (${this.workspaceDirectory}): child process exited with code ${code} (JAVA_HOME: ${JAVA_HOME})`);
         if (code === 0) {
           resolve();
         } else {
-          reject(code);
+          reject(`child process exited with code ${code}`);
         }
       });
     });
