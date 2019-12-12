@@ -37,7 +37,8 @@ module.exports = (POSTGRES_PATH) => {
 
       // start it
       // console.log(`"${postgres_path}/bin/pg_ctl" -o "-F -p ${port}" -D "${dataDir}" -l logfile start -w`);
-      spawnSync(pgJoin("pg_ctl"), ["-o", `-F -p ${port}`, "-D", dataDir, "-l", "logfile", "-w", "start"], {env: null});
+      // TODO: figure out what psotgres needs on Windows from the process.env and only supply that.
+      spawnSync(pgJoin("pg_ctl"), ["-o", `-F -p ${port}`, "-D", dataDir, "-l", join(dataDir, "postgres-logfile.log"), "-w", "start"]);
       try {
         spawnSync(pgJoin("createuser"), ["--host", "127.0.0.1", "--port", port, "--createdb", "--username", "postgres", USER], {env: null});
         spawnSync(pgJoin("createuser"), ["--host", "127.0.0.1", "--port", port, "--username", "postgres", "corda"], {env: null});
