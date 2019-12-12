@@ -1,7 +1,7 @@
 {
   "name": "ganache",
   "productName": "Ganache",
-  "version": "2.2.1-alpha.0",
+  "version": "2.2.2-internal.1",
   "description": "Personal Blockchain for Ethereum",
   "repository": {
     "type": "git",
@@ -160,7 +160,7 @@
       "package.json"
     ],
     "win": {
-      "certificateSha1": "AF06A54A4EB31362AAF82F3559828ED7502918C6",
+      "certificateSha1": "B939C778B9E3033A74A7A253C1E01BB249FCBAA0",
       "icon": "static/icons/win/icon.ico",
       "verifyUpdateCodeSignature": false,
       "target": [
@@ -179,9 +179,9 @@
       ]
     },
     "appx": {
-      "identityName": "Ganache",
-      "publisher": "CN=Consensys Inc, O=Consensys Inc, L=New York, S=New York, C=US",
-      "publisherDisplayName": "Consensys Inc",
+      "identityName": "GanacheUI",
+      "publisher": "CN=\"Truffle Blockchain Group, Inc\", O=\"Truffle Blockchain Group, Inc\", L=Yakima, S=Washington, C=US",
+      "publisherDisplayName": "Truffle",
       "backgroundColor": "#34262A",
       "artifactName": "Ganache-${version}-${os}-${arch}.${ext}"
     },

@@ -14,11 +14,11 @@ cache:
 
 environment:
   CERT_ENCRYPTION_KEY:
-    secure: kMG4K6eKtrVcehlpLDdxX8DAe1gvzaKcdn0HR2IdtgG4+eFqczuddRdkq18ZSzqeDTA8/CxaY8p13NwRLP0EGNztobwSwE/WKq7Aa+MeRFc=
+    secure: +XDEI8knAE1BjGyX5zGCR+4X1gQQjOmCL+nASqdAj8PJeRuO/nWA2hk9pzYzO4ejdRQZBbOz0wN+c6gTm9KSS2i9BaZVieuIPF6vlCgcYhE=
   CERT_ENCRYPTION_SALT:
-    secure: 2v3yczKKH+sntflfb+0iakdCSb1B4QqNtkzXBe+H3DmWgrPxOAV54fKdOSPKowHDiokPjpDlX7yFpwGxpaO5Mg==
+    secure: IFHYfftML5rlXn+KPvgm6dUgqwwougOEcU3ocXtPTDO0R83vszq52TFyBWsxMu0P2DJaqgLczmM5jYsdfydF0w==
   CERT_PRIVATE_KEY_PASSWORD:
-    secure: 6HPJFbG4UcVgagENR42Pc1bshVrRsoMxt0xDKrR1eCs=
+    secure: Xi+zjxXImbLqIbAM4Xcnb4Ae+MzUDC6mD9sAje81pGg=
   GH_TOKEN:
     secure: S+Bnfbb+uco7s2X3jqmfP3vwxLIIZTmNmT0f8y982PaiUQB1AW8YNN7Acpi0JQOi
   matrix:
