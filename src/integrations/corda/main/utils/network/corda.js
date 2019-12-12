@@ -29,21 +29,33 @@ class Corda {
     this.java.on("error", console.error);
 
     return new Promise((resolve, reject) => {
-      const rejectionHandler = async (code) => {
+      const closeHandler = async (code) => {
         console.log(`child process exited with code ${code}`);
         await this.stop();
-        reject();
+        reject(new Error(`child process exited with code ${code}`));
       }
-      this.java.once('close', rejectionHandler);
-
-      this.java.stdout.on('data', function startUpListener(data) {
+      const startUpListener = (data) => {
         console.log(data.toString());
         if (data.toString().includes('" started up and registered in ')) {
           this.java.stdout.removeListener('data', startUpListener);
-          this.java.removeListener('close', rejectionHandler);
+          this.java.stderr.removeListener('data', errListener);
+          this.java.removeListener('close', closeHandler);
           resolve();
         }
-      }.bind(this));
+      }
+      const errListener = async (data) => {
+        if (data.toString().includes('CAPSULE EXCEPTION: Capsule not extracted.')) {
+          this.java.stdout.removeListener('data', startUpListener);
+          this.java.stderr.removeListener('data', errListener);
+          this.java.removeListener('close', closeHandler);
+          await this.stop();
+          this._io.sendStdErr("Recovering from CAPSULE EXCEPTION...", this.entity.safeName);
+          resolve(await this.start());
+        }
+      };
+      this.java.once("close", closeHandler);
+      this.java.stderr.on("data", errListener);
+      this.java.stdout.on('data', startUpListener);
     });
   }
 

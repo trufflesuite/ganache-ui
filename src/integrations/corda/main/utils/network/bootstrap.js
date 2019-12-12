@@ -89,7 +89,7 @@ class CordaBootstrap {
         if (code === 0) {
           resolve();
         } else {
-          reject(`child process exited with code ${code}`);
+          reject(new Error(`child process exited with code ${code}`));
         }
       });
     });

@@ -42,19 +42,19 @@ import GlobalSettings from "./types/settings/GlobalSettings";
 import GoogleAnalyticsService from "../common/services/GoogleAnalyticsService";
 import IntegrationManager from "../integrations/index.js";
 import pojofyError from "../common/utils/pojofyError";
-import migration from "./init/migration.js";
+//import migration from "./init/migration.js";
 
 // start a migration, if needed
-const migrationPromise = migration.migrate();
-migrationPromise.then(() => {
-  migration.uninstallOld();
-}).catch(e => {
-  if (mainWindow) {
-    mainWindow.webContents.send(SET_SYSTEM_ERROR, e.stack || e);
-  } else {
-    console.error(e);
-  }
-});
+// const migrationPromise = migration.migrate();
+// migrationPromise.then(() => {
+//   migration.uninstallOld();
+// }).catch(e => {
+//   if (mainWindow) {
+//     mainWindow.webContents.send(SET_SYSTEM_ERROR, e.stack || e);
+//   } else {
+//     console.error(e);
+//   }
+// });
 
 const isDevMode = process.execPath.match(/[\\/]electron/) !== null;
 const isDevelopment = process.env.NODE_ENV !== 'production';
@@ -184,10 +184,10 @@ app.on('ready', () => {
   mainWindow.on("closed", () => mainWindow = null);
 
   // we can't get our app settings until the migrate is complete...
-  const bootstrapPromise = migrationPromise.then(() => {
-    global.bootstrap();
-    workspaceManager.bootstrap();
-  });
+  // const bootstrapPromise = migrationPromise.then(() => {
+  //   global.bootstrap();
+  //   workspaceManager.bootstrap();
+  // });
 
   // if a user clicks a link to an external webpage, open it in the user's browser, not our app
   mainWindow.webContents.on("new-window", ensureExternalLinksAreOpenedInBrowser);
@@ -285,7 +285,7 @@ app.on('ready', () => {
 
     // We need to wait until we have finished our migration before
     // getting and then sending our settings and workspaces...
-    bootstrapPromise.then(() => {
+    //bootstrapPromise.then(() => {
       // make sure the store registers the settings ASAP in the event of a startup crash
       const globalSettings = global.getAll();
       mainWindow.webContents.send(SET_SETTINGS, globalSettings, {});
@@ -296,16 +296,7 @@ app.on('ready', () => {
       );
 
       initAutoUpdates(globalSettings, mainWindow);
-    });
-
-    // make sure the store registers the settings ASAP in the event of a startup crash
-    const globalSettings = global.getAll();
-    mainWindow.webContents.send(SET_SETTINGS, globalSettings, {});
-
-    mainWindow.webContents.send(
-      SET_WORKSPACES,
-      workspaceManager.getNonDefaultNames(),
-    );
+    //});
 
     integrations.on("start", async () => {
       if (workspace) {

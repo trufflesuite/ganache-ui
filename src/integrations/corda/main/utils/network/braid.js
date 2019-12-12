@@ -14,40 +14,39 @@ class Braid {
     const name = entity.safeName;
     const exists = this.servers.get(name);
     if (!exists) {
-      const args = ["\"-Dfile.encoding=UTF8\"", "-jar", "braid-server.jar", `localhost:${entity.rpcPort}`, "user1", "letmein", entity.rpcPort + 10000, 3, ...(entity.cordapps || [])];
-      // current env PATH seems to be required for braid to actually work
-      console.log(this.BRAID_HOME, join(JAVA_HOME, "bin", "java"), args, { cwd : this.BRAID_HOME, env: {} });
-      let braid;
-      try {
-        console.log(process.env);
-        braid = spawn(join(JAVA_HOME, "bin", "java"), args, { cwd : this.BRAID_HOME, env: {} });
-      } catch (err) {
-        console.log(err);
-      }
+      const args = ["-jar", "braid-server.jar", `localhost:${entity.rpcPort}`, "user1", "letmein", entity.rpcPort + 10000, 3, ...(entity.cordapps || [])];
+      // figure out which partsof teh env are actually needed...
+      const copyEnv = ["APPDATA", "COMSPEC", "HOME", "HOMEDRIVE", "HOMEPATH", "LANG", "LOCALAPPDATA", "OS", "ProgramData", "TEMP", "TMP", "WINDIR"];
+      const env = copyEnv.reduce((env, name) => (env[name] = process.env[name], env), {});
+      env.JAVA_TOOL_OPTIONS = "-Dfile.encoding=UTF8";
+      const braid = spawn(join(JAVA_HOME, "bin", "java"), args, { cwd : this.BRAID_HOME, env });
 
-      braid.stderr.on('data', (error) => {
-        // this.sendError(new Error(error.toString()));
-        console.log(`stderr:\n${error}`);
+      braid.stderr.on("data", (error) => {
+        console.error(`stderr:\n${error}`);
       });
 
       braid.on("error", (error) => {
-        console.error(`stderr:\n${error}`);
+        console.error(`error:\n${error}`);
         this._io.sendError(new Error(error.toString()));
+      });
+      braid.once("close", (code) => {
+        console.log(`child process exited with code ${code}`);
       });
 
       this.servers.set(name, {path, braid});
 
       return new Promise((resolve, reject) => {
-        braid.once('close', (code) => {
+        const close = (code) => {
           // TODO: handle premature individual node shutdown
           /// close postgres, close other nodes, what do?
-          console.error(`child process exited with code ${code}`);
-          reject(`child process exited with code ${code}`);
-        });
+          reject(new Error(`child process exited with code ${code}`));
+        }
+        braid.once("close", close);
 
-        braid.stdout.on('data', (data) => {
+        braid.stdout.on("data", (data) => {
           console.log(`${data}`);
           if (data.toString().includes(" - Braid server started successfully on ")) {
+            braid.removeListener("close", close);
             resolve();
           }
         });
