@@ -97,18 +97,18 @@ class GoogleAnalyticsService {
       }
 
       if (this.canSend()) {
-        let hostname = workspaceSettings.server.hostname;
-        if (hostname !== "127.0.0.1" && hostname !== "0.0.0.0") {
-          const localIp = /(^127\.)|(^10\.)|(^172\.1[6-9]\.)|(^172\.2[0-9]\.)|(^172\.3[0-1]\.)|(^192\.168\.)/;
-          if (localIp.exec(hostname)) {
-            hostname = "private";
-          } else {
-            hostname = "public";
-          }
-        }
-
         // TODO: ETHEREUM
         if (workspaceSettings.server) {
+          let hostname = workspaceSettings.server.hostname;
+          if (hostname !== "127.0.0.1" && hostname !== "0.0.0.0") {
+            const localIp = /(^127\.)|(^10\.)|(^172\.1[6-9]\.)|(^172\.2[0-9]\.)|(^172\.3[0-1]\.)|(^192\.168\.)/;
+            if (localIp.exec(hostname)) {
+              hostname = "private";
+            } else {
+              hostname = "public";
+            }
+          }
+          
           const config = {
             hostname,
             port: workspaceSettings.server.port,
