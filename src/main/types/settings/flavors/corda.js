@@ -36,6 +36,7 @@ module.exports = {
     "adminPort": 10010,
     "p2pPort": 10011,
     "dbPort": 5432,
-    "cordapps": []
+    "cordapps": [],
+    "nodes": ["partya", "partyb"]
   }]
 };

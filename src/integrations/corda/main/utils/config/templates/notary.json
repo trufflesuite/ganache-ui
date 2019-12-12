@@ -12,6 +12,7 @@
     "p2pAddress",
     "rpcSettings",
     "notary",
+    "rpcUsers",
     "devMode"
   ],
   "properties": {
