@@ -70,14 +70,15 @@ class Transaction extends Component {
   }
 
   render() {
-    if (this.state.results.length === 0) {
+    const results = this.state.results;
+    if (results.length === 0) {
       return (<div>Loading...</div>);
-    } else if (!this.state.results[0].states || this.state.results[0].states.length === 0) {
+    } else if (!results[0].states || results[0].states.length === 0) {
       return (<div>Couldn&apos;t locate transaction {this.props.params.txhash}</div>);
     }
-    const tx = this.state.results[0].states[0];
-    const consumedTx = this.state.results.length > 1 && this.state.results[1].states.length !== 0 ? this.state.results[1].states[0] : null;
-    const meta = this.state.results[0].statesMetadata[0];
+    const tx = results[0].states[0];
+    const consumedTx = results.length > 1 && results[1].states.length !== 0 ? results[1].states[0] : null;
+    const meta = results[0].statesMetadata[0];
 
     // TODO: linearId deletion might be temporary
     // I'm only removing it right now because it can contain a `null` which react-json-view can't handle (crashes)
