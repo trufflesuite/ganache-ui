@@ -82,7 +82,7 @@ class NodeDetails extends Component {
             body: JSON.stringify({
               "criteria" : {
                 "@class" : ".QueryCriteria$VaultQueryCriteria",
-                "status" : "UNCONSUMED",
+                "status" : "ALL",
                 // "contractStateTypes" : null,
                 // "stateRefs" : [{txhash: this.props.params.txhash}],
                 // "notary" : null,
@@ -186,7 +186,7 @@ class NodeDetails extends Component {
                   if (workspaceCordapp) {
                     return (<CordAppLink key={workspaceCordapp} cordapp={workspaceCordapp}>{workspaceCordapp}</CordAppLink>);
                   } else {
-                    return (<div key={`unknown-cordapp-${cordapp}`}>{cordapp}</div>);
+                    return ("");
                   }
                 })}
               </main>
