@@ -16,10 +16,17 @@ class Transactions extends Component {
 
   refresh() {
     this.props.config.settings.workspace.nodes.forEach((node) => {
-      fetch("https://localhost:" + (node.rpcPort + 10000) + "/api/rest/vault/vaultQuery", {
+      fetch("https://localhost:" + (node.rpcPort + 10000) + "/api/rest/vault/vaultQueryBy", {
+        method: "POST",
         headers: {
           "accept": "application/json"
-        }
+        },
+        body: JSON.stringify({
+          "criteria" : {
+            "@class" : ".QueryCriteria$VaultQueryCriteria",
+            "status" : "ALL"
+          }
+        })
       }).then(res => res.json())
       .then((json) => {
         this.setState({["node_" + node.safeName]: json});
@@ -41,6 +48,19 @@ class Transactions extends Component {
     const workspace = this.props.config.settings.workspace;
     const filteredNodes = this.state.selectedNode !== "" ? workspace.nodes.filter(node => node.safeName === this.state.selectedNode) : workspace.nodes;
     const seenTxs = new Set();
+    const txData = {states:[], statesMetadata: []};
+    filteredNodes.forEach((node) => {
+      const nodeData = this.state["node_" + node.safeName];
+      if (nodeData && nodeData.states) {
+        nodeData.states.forEach((state, i) => {
+          if (seenTxs.has(state.ref.txhash + "/" + state.ref.index)) return;
+          seenTxs.add(state.ref.txhash + "/" + state.ref.index);
+          state._node = node;
+          txData.states.push(state);
+          txData.statesMetadata.push(nodeData.statesMetadata[i]);
+        });
+      }
+    })
     return (
       <div>
         <select defaultValue={this.state.selectedNode} onChange={(e) => {this.setState({"selectedNode": e.target.value})}}>
@@ -51,19 +71,9 @@ class Transactions extends Component {
         </select>
         <div className="Nodes DataRows">
           <main>
-            {filteredNodes.map((node) => {
-              const txData = this.state["node_" + node.safeName]
-              if (txData && txData.states) {
-                return txData.states.map((state) => { 
-                  if (seenTxs.has(state.ref.txhash)) return;
-                  seenTxs.add(state.ref.txhash);
-
-                  return (<TransactionLink key={state.ref.txhash} tx={state} node={node} />);
-                });
-              } else {
-                return null;
-              }
-            })}
+              {TransactionLink.joinAndSort(txData.states, txData.statesMetadata).map((state) => {
+                return (<TransactionLink key={state.ref.txhash + "/" + state.ref.index} tx={state} node={state._node} />);
+              })}
           </main>
         </div>
       </div>

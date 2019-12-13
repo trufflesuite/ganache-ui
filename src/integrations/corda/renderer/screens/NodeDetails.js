@@ -37,6 +37,9 @@ class NodeDetails extends Component {
     if (prevProps.params.node !== this.props.params.node) {
       this.setState({node: this.findNodeFromProps(), nodes:[], notaries:[], cordapps:[], transactions: {}}, this.refresh.bind(this));
     }
+    if (prevProps.config.updated !== this.props.config.updated) {
+      this.refresh();
+    }
   }
 
   refresh() {
@@ -133,8 +136,8 @@ class NodeDetails extends Component {
       return (<div>Couldn&apos;t locate node {this.props.params.node}</div>);
     }
 
-    const transactionStates = this.state.transactions.states ? this.state.transactions.states : [];
-
+    const transactionStates = TransactionLink
+      .joinAndSort(this.state.transactions.states, this.state.transactions.statesMetadata);
     return (
       <div>
         <div className="TitleBar">
@@ -197,7 +200,7 @@ class NodeDetails extends Component {
             <div className="Nodes DataRows">
               <main>
                 {transactionStates.map(transaction => {
-                  return (<TransactionLink key={transaction.ref.txhash} tx={transaction} node={this.state.node} />);
+                  return (<TransactionLink key={transaction.ref.txhash + "/" + transaction.ref.index} tx={transaction} node={this.state.node} />);
                 })}
               </main>
             </div>

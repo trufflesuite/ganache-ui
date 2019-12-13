@@ -13,6 +13,12 @@ class Transaction extends Component {
     this.refresh();
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.config.updated !== this.props.config.updated) {
+      this.refresh();
+    }
+  }
+
   refresh() {
     const node = this.props.config.settings.workspace.nodes.find(node => node.safeName === this.props.params.node);
     if (!node) {
