@@ -19,8 +19,7 @@ class Transaction extends Component {
       this.setState({results: []});
       return;
     }
-    const requests = ["UNCONSUMED", "CONSUMED"].map((status) => {
-      return fetch("https://localhost:" + (node.rpcPort + 10000) + "/api/rest/vault/vaultQueryBy", {
+    const request = fetch("https://localhost:" + (node.rpcPort + 10000) + "/api/rest/vault/vaultQueryBy", {
         method: "POST",
         headers: {
           "accept": "application/json",
@@ -29,71 +28,54 @@ class Transaction extends Component {
         body: JSON.stringify({
           "criteria" : {
             "@class" : ".QueryCriteria$VaultQueryCriteria",
-            "status" : status,
-            // "contractStateTypes" : null,
-            "stateRefs" : [{txhash: this.props.params.txhash}],
-            // "notary" : null,
-            // "softLockingCondition" : null,
-            // "timeCondition" : {
-            //   "type" : "RECORDED",
-            //   "predicate" : {
-            //     "@class" : ".ColumnPredicate${'$'}Between",
-            //     "rightFromLiteral" : "2019-09-15T12:58:23.283Z",
-            //     "rightToLiteral" : "2019-10-15T12:58:23.283Z"
-            //   }
-            // },
-            // "relevancyStatus" : "ALL",
-            // "constraintTypes" : [ ],
-            // "constraints" : [ ],
-            // "participants" : null
-          },
-          // "paging" : {
-          //   "pageNumber" : -1,
-          //   "pageSize" : 200
-          // },
-          // "sorting" : {
-          //   "columns" : [ ]
-          // },
-          // "contractStateType" : "net.corda.core.contracts.ContractState"
+            "status" : "ALL",
+            "stateRefs" : [{txhash: this.props.params.txhash, index: parseInt(this.props.params.index || 0, 10)}]
+          }
         })
       })
       .then(res => res.json());
-    });
-    return Promise.all(requests).then(results => {
-      this.setState({results})
+    return request.then(result => {
+      this.setState({result})
     });
   }
   constructor(props) {
     super(props);
 
-    this.state = {results:[]};
+    this.state = {result:null};
+  }
+
+  getCleanStates(states) {
+    const ignoreFields = ["@class", "participants", "linearId"];
+    return states.map(({state}) => Object.keys(state.data).reduce((acc, key) => {
+      if(!ignoreFields.includes(key)) {
+        acc[key] = state.data[key];
+      }
+      return acc;
+    }, {}));
   }
 
   render() {
-    const results = this.state.results;
-    if (results.length === 0) {
+    const result = this.state.result;
+    if (!result) {
       return (<div>Loading...</div>);
     }
-    const unconsumedResult = results[0];
-    if (!unconsumedResult.states || unconsumedResult.states.length === 0) {
+
+    if (!result.states.length) {
       return (<div>Couldn&apos;t locate transaction {this.props.params.txhash}</div>);
     }
-    const tx = unconsumedResult.states[0];
-    const consumedTx = results.length > 1 && results[1].states.length !== 0 ? results[1].states[0] : null;
-    const meta = unconsumedResult.statesMetadata[0];
+    const txStates = result.states;
 
     // TODO: linearId deletion might be temporary
     // I'm only removing it right now because it can contain a `null` which react-json-view can't handle (crashes)
     // We need to fix this here once https://www.npmjs.com/package/@seesemichaelj/react-json-view is fixed.
+    const cleanData = this.getCleanStates(txStates);
+
+    // TODO: can there be more there more than one state per hash and index!?
+    const tx = txStates[0];
+    const txData = cleanData[0];
     const participants = tx.state.data.participants || [];
-    const ignoreFields = ["@class", "participants", "linearId"];
-    const unconsumedState = Object.keys(tx.state.data).reduce((acc, key) => {
-      if(!ignoreFields.includes(key)){
-        acc[key] = tx.state.data[key];
-      }
-      return acc;
-    }, {});
-    const workspaceNotary = this.getWorkspaceNotary(tx.state.notary.name);
+    const meta = result.statesMetadata[0];
+    const workspaceNotary = this.getWorkspaceNotary(tx.state.notary.owningKey);
     return (
       <div className="Nodes DataRows">
         <main>
@@ -112,10 +94,10 @@ class Transaction extends Component {
             <div>Contract</div>
             <div>{tx.state.contract}</div>
           </div>
-          <div>Unconsumed</div>
+          <div>{meta.status} State</div>
           <ReactJson
             src={
-              unconsumedState
+              txData
             }
             name={false}
             theme={jsonTheme}
@@ -130,43 +112,38 @@ class Transaction extends Component {
             collapsed={1}
             collapseStringsAfterLength={20}
           />
-          <div>Consumed</div>
-          <ReactJson
-            src={
-              consumedTx ? consumedTx.state.data : {}
-            }
-            name={false}
-            theme={jsonTheme}
-            iconStyle="triangle"
-            edit={false}
-            add={false}
-            delete={false}
-            enableClipboard={false}
-            displayDataTypes={true}
-            displayObjectSize={true}
-            indentWidth={4}// indent by 4 because that's what Corda likes to do.
-            collapsed={1}
-            collapseStringsAfterLength={20}
-          />
-          <div>
-            <div>Signers</div>
-            <div>...</div>
-          </div>
+          <br/>
+          {tx.state.data.exitKeys && tx.state.data.exitKeys.length ? (
+            <>
+              <div>Signers</div>
+              {tx.state.data.exitKeys.map(key => {
+                const workspaceNode = this.getWorkspaceNode(key);
+                if (workspaceNode) {
+                  return (<NodeLink key={"participant_" + workspaceNode.safeName} node={workspaceNode} />);
+                } else {
+                  return ("");
+                }
+              })}
+              <br/>
+            </>
+          ) : ("")}
           <div>
             <div>Notary</div>
             <div>{<NodeLink node={workspaceNotary} />}</div>
           </div>
+          <br/>
           <div>
             <div>Timestamp</div>
             <div>{meta.recordedTime}</div>
           </div>
+          <br/>
           <div>
             <div>Participants</div>
             <div>
               {participants.map(node => {
                 const workspaceNode = this.getWorkspaceNode(node.owningKey);
                 if (workspaceNode) {
-                return (<NodeLink key={"participant_" + workspaceNode.safeName} node={workspaceNode} />);
+                  return (<NodeLink key={"participant_" + workspaceNode.safeName} node={workspaceNode} />);
                 } else {
                   return ("");
                 }
@@ -180,8 +157,8 @@ class Transaction extends Component {
   getWorkspaceNode(owningKey) {
     return this.props.config.settings.workspace.nodes.find(node => owningKey === node.owningKey);
   }
-  getWorkspaceNotary(legalName) {
-    return this.props.config.settings.workspace.notaries.find(notary => legalName.replace(/\s/g, "") === notary.name.replace(/\s/g,""));
+  getWorkspaceNotary(owningKey) {
+    return this.props.config.settings.workspace.notaries.find(notary => owningKey === notary.owningKey);
   }
 }
 
