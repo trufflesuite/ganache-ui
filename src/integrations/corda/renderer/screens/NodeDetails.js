@@ -116,12 +116,12 @@ class NodeDetails extends Component {
     }
   }
 
-  getWorkspaceNode(legalName){
-    return this.props.config.settings.workspace.nodes.find(node => legalName.replace(/\s/g, "") === node.name.replace(/\s/g,""));
+  getWorkspaceNode(owningKey){
+    return this.props.config.settings.workspace.nodes.find(node => owningKey === node.owningKey);
   }
 
-  getWorkspaceNotary(legalName){
-    return this.props.config.settings.workspace.notaries.find(notary => legalName.replace(/\s/g, "") === notary.name.replace(/\s/g,""));
+  getWorkspaceNotary(owningKey){
+    return this.props.config.settings.workspace.notaries.find(notary => owningKey === notary.owningKey);
   }
 
   getWorkspaceCordapp(name) {
@@ -152,11 +152,11 @@ class NodeDetails extends Component {
             <div className="Nodes DataRows">
               <main>
                 {this.state.nodes.map(node => {
-                  const workspaceNode = this.getWorkspaceNode(node.legalIdentities[0].name);
+                  const workspaceNode = this.getWorkspaceNode(node.legalIdentities[0].owningKey);
                   if (workspaceNode) {
                     return (<NodeLink key={`node-${workspaceNode.safeName}`} node={workspaceNode} />);
                   } else {
-                    return (<div key={`unknown-node-${node.legalIdentities[0].name}`}>{node.name}</div>);
+                    return ("");
                   }
                 })}
               </main>
@@ -167,7 +167,7 @@ class NodeDetails extends Component {
             <div className="Nodes DataRows">
               <main>
                 {this.state.notaries.map(notary => {
-                  const workspaceNode = this.getWorkspaceNotary(notary.name);
+                  const workspaceNode = this.getWorkspaceNotary(notary.owningKey);
                   if (workspaceNode) {
                     return (<NodeLink key={`node-${workspaceNode.safeName}`} node={workspaceNode} />);
                   } else {

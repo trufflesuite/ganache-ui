@@ -164,8 +164,12 @@ class Transaction extends Component {
             <div>Participants</div>
             <div>
               {participants.map(node => {
-                const workspaceNode = this.getWorkspaceNode(node.name);
+                const workspaceNode = this.getWorkspaceNode(node.owningKey);
+                if (workspaceNode) {
                 return (<NodeLink key={"participant_" + workspaceNode.safeName} node={workspaceNode} />);
+                } else {
+                  return ("");
+                }
               })}
               </div>
           </div>
@@ -173,8 +177,8 @@ class Transaction extends Component {
       </div>
     );
   }
-  getWorkspaceNode(legalName) {
-    return this.props.config.settings.workspace.nodes.find(node => legalName.replace(/\s/g, "") === node.name.replace(/\s/g,""));
+  getWorkspaceNode(owningKey) {
+    return this.props.config.settings.workspace.nodes.find(node => owningKey === node.owningKey);
   }
   getWorkspaceNotary(legalName) {
     return this.props.config.settings.workspace.notaries.find(notary => legalName.replace(/\s/g, "") === notary.name.replace(/\s/g,""));
