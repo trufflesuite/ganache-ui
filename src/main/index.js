@@ -335,7 +335,7 @@ app.on('ready', () => {
         mainWindow.webContents.send(ADD_LOG_LINES, data.toString().split(/\n/g), context);
       } else {
         // eslint-disable-next-line
-        console.error(strData);
+        console.error(data.toString());
       }
     }
     integrations.on("stdout", addLogLines);
