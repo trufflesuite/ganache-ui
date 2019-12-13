@@ -99,6 +99,8 @@ class IntegrationManager extends EventEmitter {
     if (this.flavor && this.workspace) {
       const settings = this.workspace.settings.getAll();
       await this.flavor.startServer(settings, this.workspace.workspaceDirectory);
+      // ijust incase startServer mutates the settings (corda does), save them
+      this.workspace.settings.setAll(settings);
     }
   }
 

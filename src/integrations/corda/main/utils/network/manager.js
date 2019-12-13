@@ -6,6 +6,12 @@ const Braid = require("./braid");
 const Corda = require("./corda");
 const fse = require("fs-extra");
 const { Client } = require("pg");
+const fetch = require("node-fetch");
+
+const https = require("https");
+const agent = new https.Agent({
+  rejectUnauthorized: false
+});
 
 class IO {
   constructor(context){
@@ -133,6 +139,11 @@ class NetworkManager extends EventEmitter {
         const corda = new Corda(entity, currentPath, JAVA_HOME, this._io);
         this.processes.push(corda);
         await Promise.all([corda.start(), braidPromise]);
+        // we need to get the `owningKey` for this node so we can reference it in the front end
+        // eslint-disable-next-line require-atomic-updates
+        entity.owningKey = await fetch("https://localhost:" + (entity.rpcPort + 10000) + "/api/rest/network/nodes/self", {agent})
+          .then(r => r.json())
+          .then(self => self.legalIdentities[0].owningKey);
         this._io.sendProgress(`Corda node ${++startedNodes}/${entities.length} online...`)
       });
 
