@@ -1,7 +1,7 @@
 const { Extract } = require("unzip-stream");
 const { get } = require("follow-redirects/https");
-const { join, parse, resolve } = require("path");
-const { existsSync, createWriteStream, move, remove } = require("fs-extra");
+const { join, parse, resolve, dirname } = require("path");
+const { existsSync, createWriteStream, move, remove, mkdirp } = require("fs-extra");
 const patchUnzipStream = require("./patch-unzip-stream");
 const URL = require("url");
 const temp = require("temp");
@@ -81,8 +81,8 @@ class Downloader {
           reject(err);
         });
       });
-      this.cache.set(url, promise);
       promise.finally(() => this.cache.delete(url));
+      this.cache.set(url, promise);
     }
 
     return promise;
@@ -94,12 +94,14 @@ class Downloader {
    * @param {string} dest 
    */
   save(stream, dest) {
-    const file = createWriteStream(dest, { mode: 0o664 });
-    stream.pipe(file);
     return new Promise((resolve, reject) => {
-      file.on("finish", () => {
-        file.close(resolve);
-      }).on("error", reject);
+      mkdirp(dirname(dest)).then(() => {
+        const file = createWriteStream(dest, { mode: 0o664 });
+        stream.pipe(file);
+        file.on("finish", () => {
+          file.close(resolve);
+        }).on("error", reject);
+      });
     });
   }
 
@@ -117,6 +119,7 @@ class Downloader {
         .on("error", reject);
     });
   }
+
   downloadAll(urls, force) {
     return Promise.all(urls.map((url) => {
       return this.download(url, force);
