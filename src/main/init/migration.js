@@ -78,7 +78,7 @@ if (process.platform == "win32") {
     });
   }
 } else {
-  const noop = () => {};
+  const noop = () => Promise.resolve();
   migrate = uninstallOld = noop;
 }
 
