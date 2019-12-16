@@ -39,19 +39,19 @@ class NodeModal extends Component{
           </input>
 
           <div>RPC Port</div>
-          <input type="number" min="0" max="65535" onChange={(e) => {
+          <input type="number" min="1024" max="65535" onChange={(e) => {
             this.setState({rpcPort: parseInt(e.target.value, 10)});
           }} value={node.rpcPort||""}>
           </input>
 
           <div>Admin Port</div>
-          <input type="number" min="0" max="65535" onChange={(e) => {
+          <input type="number" min="1024" max="65535" onChange={(e) => {
             this.setState({adminPort: parseInt(e.target.value, 10)});
           }} value={node.adminPort||""}>
           </input>
 
           <div>P2P Port</div>
-          <input type="number" min="0" max="65535" onChange={(e) => {
+          <input type="number" min="1024" max="65535" onChange={(e) => {
             this.setState({p2pPort: parseInt(e.target.value, 10)});
           }} value={node.p2pPort||""}>
           </input>
@@ -154,10 +154,6 @@ class NodesScreen extends Component {
     }
   }
 
-  validateChange = (e) => {
-    this.props.validateChange(e, {});
-  }
-
   updateNetworkMap = (node) => {
     this.props.config.settings.workspace.nodes.forEach(other => {
       if (node.safeName === other.safeName) return;
@@ -218,7 +214,6 @@ class NodesScreen extends Component {
           data={data}
           handleNodeUpdate={(node) => {
             handleNodeUpdate(node);
-            node.dbPort = 5432;
             this.resetMode();
             this.updateNetworkMap(node);
             this.forceUpdate();

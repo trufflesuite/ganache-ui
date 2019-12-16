@@ -36,17 +36,17 @@ class NetworkManager extends EventEmitter {
     this.postGresHooksPromise = null;
   }
 
-  async bootstrap(nodes, notaries, port = 10000) {
+  async bootstrap(nodes, notaries, postgresPort) {
       const BRAID_HOME = this.config.corda.files.braidServer.download();
       const POSTGRES_HOME = this.config.corda.files.postgres.download();
       this._io.sendProgress("Writing configuration files...");
       const cordaBootstrap = new CordaBootstrap(this.workspaceDirectory, this._io);
-      const {nodesArr, notariesArr} = await cordaBootstrap.writeConfig(nodes, notaries, port);
+      const {nodesArr, notariesArr} = await cordaBootstrap.writeConfig(nodes, notaries, postgresPort);
       this.nodes = nodesArr;
       this.notaries = notariesArr;
       this.entities = this.nodes.concat(this.notaries);
       this._io.sendProgress("Configuring and starting PostgreSQL...");
-      this.pg = postgres(await POSTGRES_HOME).start(this.entities[0].dbPort, this.workspaceDirectory, this.entities, this.settings.isDefault);
+      this.pg = postgres(await POSTGRES_HOME).start(postgresPort, this.workspaceDirectory, this.entities, this.settings.isDefault);
       this._io.sendProgress("Bootstrapping network...");
       await cordaBootstrap.bootstrap(this.config);
       this._io.sendProgress("Configuring Postgres Hooks...");
@@ -67,7 +67,7 @@ class NetworkManager extends EventEmitter {
         host: "localhost",
         database: entity.safeName,
         password: "",
-        port: entity.dbPort
+        port: this.settings.postgresPort
       })
     
       await client.connect();

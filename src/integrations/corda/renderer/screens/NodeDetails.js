@@ -157,7 +157,7 @@ class NodeDetails extends Component {
                 {this.state.nodes.map(node => {
                   const workspaceNode = this.getWorkspaceNode(node.legalIdentities[0].owningKey);
                   if (workspaceNode) {
-                    return (<NodeLink key={`node-${workspaceNode.safeName}`} node={workspaceNode} />);
+                    return (<NodeLink key={`node-${workspaceNode.safeName}`} postgresPort={this.props.config.settings.workspace.postgresPort} node={workspaceNode} />);
                   } else {
                     return ("");
                   }
@@ -172,7 +172,7 @@ class NodeDetails extends Component {
                 {this.state.notaries.map(notary => {
                   const workspaceNode = this.getWorkspaceNotary(notary.owningKey);
                   if (workspaceNode) {
-                    return (<NodeLink key={`node-${workspaceNode.safeName}`} node={workspaceNode} />);
+                    return (<NodeLink key={`node-${workspaceNode.safeName}`} postgresPort={this.props.config.settings.workspace.postgresPort} node={workspaceNode} />);
                   } else {
                     return (<div key={`unknown-node-${notary.name}`}>{notary.name}</div>);
                   }

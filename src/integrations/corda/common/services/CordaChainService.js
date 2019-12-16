@@ -27,7 +27,7 @@ class CordaChainService extends EventEmitter {
     manager.on("message", this.emit.bind(this, "message"));
 
     console.log("bootstrapping...");
-    await manager.bootstrap(settings.nodes, settings.notaries);
+    await manager.bootstrap(settings.nodes, settings.notaries, settings.postgresPort);
     console.log("starting...");
     await manager.start();
     console.log("server started");

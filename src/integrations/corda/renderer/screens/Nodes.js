@@ -11,7 +11,7 @@ class Nodes extends Component {
     return (
       <div className="Nodes DataRows">
         <main>
-          {workspace[type].map((node) => (<NodeLink key={`node-${node.safeName}`} node={node} services={services} />))}
+          {workspace[type].map((node) => (<NodeLink key={`node-${node.safeName}`} postgresPort={workspace.postgresPort} node={node} services={services} />))}
         </main>
       </div>
     );

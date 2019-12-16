@@ -18,14 +18,14 @@ class CordaBootstrap {
     this._io = io;
   }
 
-  async writeConfig(nodes, notaries) {
+  async writeConfig(nodes, notaries, postgresPort) {
     const nodesArr = this.nodes = [];
     const notariesArr = this.notaries = [];
     
     const modifier = {
       postgres: {
-        port: 15433,
-        schema: undefined
+        schema: undefined,
+        port: undefined
       }
     }
     
@@ -38,7 +38,7 @@ class CordaBootstrap {
         const write = (val) => stream.write(`${val}\n`, "utf8");
         const mod = produceModifier(modifier, { write }, current);
         mod.postgres.schema = current.safeName;
-        mod.postgres.port = current.dbPort;
+        mod.postgres.port = postgresPort;
         generate(template, mod);
         const close = waitForClose(stream).catch(console.log);
         stream.end();

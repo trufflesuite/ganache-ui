@@ -125,7 +125,7 @@ class Transaction extends Component {
               {tx.state.data.exitKeys.map(key => {
                 const workspaceNode = this.getWorkspaceNode(key);
                 if (workspaceNode) {
-                  return (<NodeLink key={"participant_" + workspaceNode.safeName} node={workspaceNode} />);
+                  return (<NodeLink key={"participant_" + workspaceNode.safeName} postgresPort={this.props.config.settings.workspace.postgresPort} node={workspaceNode} />);
                 } else {
                   return ("");
                 }
@@ -135,7 +135,7 @@ class Transaction extends Component {
           ) : ("")}
           <div>
             <div>Notary</div>
-            <div>{<NodeLink node={workspaceNotary} />}</div>
+            <div>{<NodeLink node={workspaceNotary} postgresPort={this.props.config.settings.workspace.postgresPort} />}</div>
           </div>
           <br/>
           <div>
@@ -149,7 +149,7 @@ class Transaction extends Component {
               {participants.map(node => {
                 const workspaceNode = this.getWorkspaceNode(node.owningKey);
                 if (workspaceNode) {
-                  return (<NodeLink key={"participant_" + workspaceNode.safeName} node={workspaceNode} />);
+                  return (<NodeLink key={"participant_" + workspaceNode.safeName} postgresPort={this.props.config.settings.workspace.postgresPort} node={workspaceNode} />);
                 } else {
                   return ("");
                 }

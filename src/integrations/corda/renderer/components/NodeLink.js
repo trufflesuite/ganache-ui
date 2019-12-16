@@ -14,7 +14,7 @@ class NodeLink extends PureComponent {
         </div>
         <div>
           <div className="Label">DB Connection String</div>
-          <div className="Value">{node.dbPort}</div>
+          <div className="Value">{this.props.postgresPort}</div>
         </div>
         <div>
           <div className="Label">RPC Port</div>

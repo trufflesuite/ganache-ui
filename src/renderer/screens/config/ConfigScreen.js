@@ -24,6 +24,7 @@ import AdvancedScreen from "../../../integrations/ethereum/renderer/screens/conf
 // corda screens
 import CordaWorkspaceScreen from "../../../integrations/corda/renderer/screens/config/ConfigScreens/WorkspaceScreen";
 import NodesScreen from "../../../integrations/corda/renderer/screens/config/ConfigScreens/NodesScreen";
+import CordaAdvancedScreen from "../../../integrations/corda/renderer/screens/config/ConfigScreens/AdvancedScreen";
 
 import RestartIcon from "../../icons/restart.svg";
 import EjectIcon from "../../icons/eject.svg";
@@ -42,7 +43,7 @@ const CORDA_TABS = [
   { name: "Workspace", subRoute: "corda/workspace", component: CordaWorkspaceScreen },
   { name: "Nodes", subRoute: "corda/nodes", component: NodesScreen, data:{type: "nodes"} },
   { name: "Notaries", subRoute: "corda/notaries", component: NodesScreen, data:{type: "notaries"} },
-  { name: "Advanced", subRoute: "corda/advanced", component: AdvancedScreen }
+  { name: "Advanced", subRoute: "corda/advanced", component: CordaAdvancedScreen }
 ];
 
 const TABS = [

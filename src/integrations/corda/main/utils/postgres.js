@@ -49,7 +49,7 @@ module.exports = (POSTGRES_PATH) => {
       for (let i = 0, l = schemaNames.length; i < l; i++) {
         const schema = schemaNames[i];
         try {
-          spawnSync(pgJoin("createdb"), ["--host", "127.0.0.1", "--port", schema.dbPort, "--owner", USER, "--username", USER, schema.safeName], {env: null});
+          spawnSync(pgJoin("createdb"), ["--host", "127.0.0.1", "--port", port, "--owner", USER, "--username", USER, schema.safeName], {env: null});
         } catch(e) {
           // ignore
         }

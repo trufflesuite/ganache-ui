@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 
+import GoogleAnalytics from "../../../../../../renderer/components/google-analytics/GoogleAnalytics"
+
 import OnlyIf from "../../../../../../renderer/components/only-if/OnlyIf";
 import FilePicker from "../../../../../../renderer/components/file-picker/FilePicker";
 
@@ -104,7 +106,7 @@ class AdvancedScreen extends Component {
                 />
                 {this.props.validationErrors["logDirectory"] && (
                   <p className="ValidationError">
-                    Must select a directory or disable "Output Logs To File"
+                    Must select a directory or disable &quot;Output Logs To File&quot;
                   </p>
                 )}
               </div>
@@ -138,40 +140,7 @@ class AdvancedScreen extends Component {
             </div>
           </div>
         </section>
-        <h2>ANALYTICS</h2>
-        <section>
-          <h4>GOOGLE ANALYTICS</h4>
-          <div className="Row">
-            <div className="RowItem">
-              <div className="Switch">
-                <input
-                  type="checkbox"
-                  name="global.googleAnalyticsTracking"
-                  id="GoogleAnalyticsTracking"
-                  onChange={this.props.handleInputChange}
-                  checked={
-                    this.props.config.settings.global.googleAnalyticsTracking ==
-                    true
-                  }
-                />
-                <label htmlFor="GoogleAnalyticsTracking">
-                  GOOGLE ANALYTICS
-                </label>
-              </div>
-            </div>
-            <div className="RowItem">
-              <p>
-                We use Google Analytics to track Ganache usage. This information
-                helps us gain more insight into how Ganache is used. This
-                tracking is anonymous. We do not track personally identifiable
-                information, account data or private keys.
-                <br />
-                Note: This setting is global and will persist between
-                workspaces.
-              </p>
-            </div>
-          </div>
-        </section>
+        <GoogleAnalytics config={this.props.config} handleInputChange={this.props.handleInputChange} />
         {/* <section>
           <h4>CPU &amp; MEMORY PROFILING</h4>
           <div className="Row">
