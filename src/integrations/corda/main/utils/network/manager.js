@@ -113,7 +113,7 @@ class NetworkManager extends EventEmitter {
       const info = fse.readdirSync(currentDir).filter(file => file.startsWith("nodeInfo-")).reduce((p, name) => name, "");
       const knownNodesDir = join(currentDir, "additional-node-infos");
       const currentlyKnownNodes = fse.readdirSync(knownNodesDir).map(file => ({file, path: join(knownNodesDir, file)}));
-      networkMap.set(node.safeName, {nodes: node.nodes, info, currentlyKnownNodes});
+      networkMap.set(node.safeName, {nodes: node.nodes || [], info, currentlyKnownNodes});
     });
     networkMap.forEach((val, _key, nMap) => {
       const needed = new Set([val.info, ...val.nodes.map((node) => nMap.get(node).info)]);
