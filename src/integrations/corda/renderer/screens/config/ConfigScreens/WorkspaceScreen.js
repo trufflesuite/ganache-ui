@@ -125,7 +125,7 @@ class WorkspaceScreen extends Component {
           </div>
         </section>
         <section>
-          <h4>CORDAPPS</h4>
+          <h4>CorDapps</h4>
           <div className="Row">
             <div className="RowItem">
               {validationErrors && (
