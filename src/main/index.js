@@ -414,6 +414,8 @@ app.on('ready', () => {
     await integrations.setWorkspace(name, flavor);
     workspace = integrations.workspace;
 
+    global.set("last_flavor", flavor);
+
     const workspaceSettings = workspace.settings.getAll();
     GoogleAnalytics.setup(
       global.get("googleAnalyticsTracking") && !isDevMode,
@@ -468,6 +470,8 @@ app.on('ready', () => {
 
   ipcMain.on(OPEN_NEW_WORKSPACE_CONFIG, async (_event, flavor = "ethereum") => {
     await integrations.stopServer();
+
+    global.set("last_flavor", flavor);
 
     const defaultWorkspace = workspaceManager.get(null, flavor);
     const workspaceName = moniker.choose();

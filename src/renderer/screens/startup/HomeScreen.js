@@ -27,7 +27,7 @@ import TrashIcon from "../../icons/trash-icon.svg";
 class HomeScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = {flavor: "ethereum"};
+    this.state = {flavor: this.props.config.settings.global.last_flavor};
 
     this.handleFlavorChange = this.handleFlavorChange.bind(this);
   }
@@ -175,6 +175,10 @@ class HomeScreen extends Component {
                     <MenuIcon />
                     New Workspace
                   </button>
+                  <select value={this.state.flavor} onChange={this.handleFlavorChange}>
+                    <option value="ethereum">Ethereum</option>
+                    <option value="corda">Corda</option>
+                  </select>
                 </div>
               </section>
             </div>
@@ -199,4 +203,5 @@ export default connect(
   "workspaces",
   "core",
   "autoUpdate",
+  "config"
 );
