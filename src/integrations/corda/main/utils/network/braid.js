@@ -1,8 +1,6 @@
 const { spawn } = require("child_process");
 const { join } = require("path");
 
-// java -jar braid-server.jar localhost:10007 user1 letmein 8000 3 ./corda/party1/cordapps/
-
 class Braid {
   constructor(braid_home, io){
     this.BRAID_HOME = braid_home;
@@ -14,7 +12,7 @@ class Braid {
     const name = entity.safeName;
     const exists = this.servers.get(name);
     if (!exists) {
-      const args = ["-jar", "braid-server.jar", `localhost:${entity.rpcPort}`, "user1", "letmein", entity.rpcPort + 10000, 3, ...(entity.cordapps || [])];
+      const args = ["-jar", "braid-server.jar", `localhost:${entity.rpcPort}`, "user1", "letmein", entity.braidPort, 3, ...(entity.cordapps || [])];
       // figure out which partsof teh env are actually needed...
       const copyEnv = ["APPDATA", "COMSPEC", "HOME", "HOMEDRIVE", "HOMEPATH", "LANG", "LOCALAPPDATA", "OS", "ProgramData", "TEMP", "TMP", "WINDIR"];
       const env = copyEnv.reduce((env, name) => (env[name] = process.env[name], env), {});

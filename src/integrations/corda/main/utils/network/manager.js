@@ -7,6 +7,7 @@ const Corda = require("./corda");
 const fse = require("fs-extra");
 const { Client } = require("pg");
 const fetch = require("node-fetch");
+const GetPort = require("get-port");
 
 const https = require("https");
 const agent = new https.Agent({
@@ -34,6 +35,7 @@ class NetworkManager extends EventEmitter {
     this.processes = [];
     this._io = new IO(this);
     this.postGresHooksPromise = null;
+    this.blacklist = new Set();
   }
 
   async bootstrap(nodes, notaries, postgresPort) {
@@ -103,7 +105,11 @@ class NetworkManager extends EventEmitter {
   async copyCordappsAndSetupNetwork() {
     const promises = [];
     const networkMap = new Map();
-    this.entities.forEach((node) => {
+   this.entities.forEach((node) => {
+      this.blacklist.add(node.rpcPort);
+      this.blacklist.add(node.adminPort);
+      this.blacklist.add(node.p2pPort);
+
       const currentDir = join(this.workspaceDirectory, node.safeName);
       (node.cordapps || []).forEach(path => {
         const name = basename(path);
@@ -126,7 +132,17 @@ class NetworkManager extends EventEmitter {
     return Promise.all(promises);      
   }
 
+  async getPort(port){
+    while (this.blacklist.has(port)) port++;
+    do {
+      port = await GetPort({port});
+    } while (this.blacklist.has(port) && port++);
+    this.blacklist.add(port);
+    return port;
+  }
+
   async start(){
+    // TODO: Optimus prime
       const entities = this.entities;
       this._io.sendProgress("Loading JRE...");
       const JAVA_HOME = await this.config.corda.files.jre.download();
@@ -135,13 +151,15 @@ class NetworkManager extends EventEmitter {
       let startedNodes = 0;
       const promises = entities.map(async (entity) => {
         const currentPath = join(this.workspaceDirectory, entity.safeName);
+        // eslint-disable-next-line require-atomic-updates
+        entity.braidPort = await this.getPort(entity.rpcPort + 10000);
         const braidPromise = this.braid.start(entity, currentPath, JAVA_HOME);
         const corda = new Corda(entity, currentPath, JAVA_HOME, this._io);
         this.processes.push(corda);
         await Promise.all([corda.start(), braidPromise]);
         // we need to get the `owningKey` for this node so we can reference it in the front end
         // eslint-disable-next-line require-atomic-updates
-        entity.owningKey = await fetch("https://localhost:" + (entity.rpcPort + 10000) + "/api/rest/network/nodes/self", {agent})
+        entity.owningKey = await fetch("https://localhost:" + entity.braidPort + "/api/rest/network/nodes/self", {agent})
           .then(r => r.json())
           .then(self => self.legalIdentities[0].owningKey);
         this._io.sendProgress(`Corda node ${++startedNodes}/${entities.length} online...`)
