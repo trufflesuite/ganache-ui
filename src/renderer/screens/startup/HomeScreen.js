@@ -168,9 +168,9 @@ class HomeScreen extends Component {
                     <option value="ethereum">Ethereum</option>
                     <option value="corda">Corda</option>
                   </select>
-                  <button onClick={this.handleDownloadPress.bind(this)}>
+                  {/* <button onClick={this.handleDownloadPress.bind(this)}>
                     Download Corda
-                  </button>
+                  </button> */}
                   <button onClick={this.handleNewWorkspacePress.bind(this)}>
                     <MenuIcon />
                     New Workspace
