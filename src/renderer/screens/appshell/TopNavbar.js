@@ -64,7 +64,7 @@ class TopNavbar extends Component {
   }
 
   _handleClearLogs() {
-    this.props.dispatch(clearLogLines());
+    this.props.dispatch(clearLogLines(this.props.params.context || "default"));
   }
 
   handleSearchChange(e) {
@@ -161,11 +161,12 @@ class TopNavbar extends Component {
   }
 
   render() {
-    const isLogsPage = this.props.location.pathname === "/logs";
+    const isLogsPage = this.props.location.pathname.startsWith("/logs");
     const isNewVersionAvailable = this.props.autoUpdate.isNewVersionAvailable;
 
     let children;
-    switch (this.props.config.settings.workspace.flavor) {
+    const flavor = this.props.config.settings.workspace.flavor;
+    switch (flavor) {
       case "ethereum":
           children = this._generateEthereumChildren();
           break;
@@ -188,7 +189,7 @@ class TopNavbar extends Component {
             <OnlyIf test={isNewVersionAvailable}>
               <UpdateNotification />
             </OnlyIf>
-            <input
+            { flavor === "ethereum" ? <><input
               type="text"
               placeholder={children.searchText}
               title={children.searchText}
@@ -196,7 +197,7 @@ class TopNavbar extends Component {
               onChange={this.handleSearchChange.bind(this)}
               onKeyPress={this.handleSearchKeyPress.bind(this)}
             />
-            <SearchIcon />
+            <SearchIcon /></> : ""}
           </div>
         </main>
         <section className="StatusAndControls">
