@@ -152,7 +152,7 @@ class NodeDetails extends Component {
                     return ("");
                   }
                 })}
-                {this.state.nodes.length === 0 ? "" : <div>No Nodes</div>}
+                {this.state.nodes.length ? "" : <div>No Nodes</div>}
               </main>
             </div>
             <hr />
@@ -185,7 +185,7 @@ class NodeDetails extends Component {
                     return ("");
                   }
                 })}
-                {this.state.cordapps.length === 0 ? "" : <div>No CorDapps</div>}
+                {this.state.cordapps.length ? "" : <div>No CorDapps</div>}
               </main>
             </div>
             <hr />
@@ -196,7 +196,7 @@ class NodeDetails extends Component {
                 {this.state.transactions.map(transaction => {
                   return (<TransactionLink key={transaction.txhash} tx={transaction} />);
                 })}
-                {this.state.transactions.length === 0 ? "" : <div>No Transactions</div>}
+                {this.state.transactions.length ? "" : <div>No Transactions</div>}
               </main>
             </div>
           </div>
