@@ -193,7 +193,7 @@ class NodeDetails extends Component {
             <div>Transactions</div>
             <div className="Nodes DataRows">
               <main>
-                {this.state.transactions.map(transaction => {
+                {this.state.transactions.sort((a, b) => b.earliestRecordedTime - a.earliestRecordedTime).map(transaction => {
                   return (<TransactionLink key={transaction.txhash} tx={transaction} />);
                 })}
                 {this.state.transactions.length ? "" : <div>No Transactions</div>}

@@ -9,15 +9,17 @@ class Transactions extends Component {
     this.refresh();
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.config.updated !== this.props.config.updated) {
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.config.updated !== this.props.config.updated || prevState.selectedNode !== this.state.selectedNode) {
       this.refresh();
     }
   }
 
   async refresh() {
-    const nodes = this.props.config.settings.workspace.nodes;    
-    const transactions = await TransactionData.getAllTransactions(nodes, nodes, this.props.config.settings.workspace.postgresPort);
+    const workspace = this.props.config.settings.workspace;
+    const nodes = workspace.nodes;    
+    const filteredNodes = this.state.selectedNode !== "" ? nodes.filter(node => node.safeName === this.state.selectedNode) : nodes;
+    const transactions = await TransactionData.getAllTransactions(filteredNodes, nodes, workspace.postgresPort);
     this.setState({transactions});
   }
   constructor(props) {
@@ -35,21 +37,6 @@ class Transactions extends Component {
 
   render() {
     const workspace = this.props.config.settings.workspace;
-    const filteredNodes = this.state.selectedNode !== "" ? workspace.nodes.filter(node => node.safeName === this.state.selectedNode) : workspace.nodes;
-    const seenTxs = new Set();
-    const txData = {states:[], statesMetadata: []};
-    filteredNodes.forEach((node) => {
-      const nodeData = this.state["node_" + node.safeName];
-      if (nodeData && nodeData.states) {
-        nodeData.states.forEach((state, i) => {
-          if (seenTxs.has(state.ref.txhash + "/" + state.ref.index)) return;
-          seenTxs.add(state.ref.txhash + "/" + state.ref.index);
-          state._node = node;
-          txData.states.push(state);
-          txData.statesMetadata.push(nodeData.statesMetadata[i]);
-        });
-      }
-    })
     return (
       <div>
         <select defaultValue={this.state.selectedNode} onChange={(e) => {this.setState({"selectedNode": e.target.value})}}>
@@ -60,7 +47,7 @@ class Transactions extends Component {
         </select>
         <div className="Nodes DataRows">
           <main>
-              {this.state.transactions.sort((a, b) => b.recordedTime - a.recordedTime).map(tx => {
+              {this.state.transactions.sort((a, b) => b.earliestRecordedTime - a.earliestRecordedTime).map(tx => {
                 return (<TransactionLink key={tx.txhash} tx={tx} />);
               })}
           </main>

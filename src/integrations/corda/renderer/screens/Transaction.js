@@ -177,9 +177,11 @@ class Transaction extends Component {
             <div>
               TX {transaction.txhash}
             </div>
+            <hr />
             {states}
+            <hr />
             <div>
-              <div>Timestamp</div>
+              <h3>Timestamp</h3>
               <div>{transaction.earliestRecordedTime.toString()}</div>
             </div>
           </div>

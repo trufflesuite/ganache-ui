@@ -23,13 +23,17 @@ async function getConnectedClient(database, port) {
   await client.connect();
   return client;
 }
-async function queryForTxHashIndexes(txhash, node, port, canceller, client) {
+async function queryForTxHashIndexes(txhash, node, port, canceller) {
+  let res;
   const txId = convertTxHashToId(txhash);
-  const localClient = client || await getConnectedClient(node.safeName, port);
-  if (canceller.cancelled) return;
+  const client =  await getConnectedClient(node.safeName, port);
+  try {
+    if (canceller.cancelled) return;
 
-  const res = await localClient.query(`SELECT output_index FROM vault_states WHERE transaction_id = $1::text`, [txId]);
-  if (!client) localClient.end();
+    res = await client.query(`SELECT output_index FROM vault_states WHERE transaction_id = $1::text`, [txId]);
+  } finally {
+    client.end();
+  }
   return res.rows.map(r => r.output_index);
 }
 
@@ -38,10 +42,13 @@ async function getAllTransactions(nodes, allNodes, port, canceller = {cancelled:
   await Promise.all(nodes.map(async node => {
     const client = await getConnectedClient(node.safeName, port, canceller);
     if (canceller.cancelled) { client.end(); return; }
-
-    // get all transactions this client knows about
-    const res = await client.query(`SELECT distinct(transaction_id) transaction_id FROM vault_states GROUP BY transaction_id`);
-    client.end();
+    let res;
+    try {   
+      // get all transactions this client knows about
+      res = await client.query(`SELECT distinct(transaction_id) transaction_id FROM vault_states GROUP BY transaction_id`);
+    } finally {
+      client.end();
+    }
     if (canceller.cancelled) { return; }
 
     // iterate over all the found transactions, and make sure they are completely filled in from states from all
@@ -72,7 +79,7 @@ export default class TransactionData {
     const knownStateObservers = new Map();
     const resultPromises = nodes.map(async node => {
       // first, get all indexes from each node for each transaction...
-      const indexes = await TransactionData.queryForTxHashIndexes(txhash, node, port, canceller);
+      const indexes = await queryForTxHashIndexes(txhash, node, port, canceller);
       if (canceller.cancelled) return;
       
       // if we don't have any we just skip this node
@@ -131,7 +138,7 @@ export default class TransactionData {
         // each node has its own time, but we aren't currently goint to
         // reconcile competing node+index differences.
         const earliestRecordedTime = new Date(metaData.recordedTime);
-        const curRecordedTime = transaction.recordedTime;
+        const curRecordedTime = transaction.earliestRecordedTime;
         if (!curRecordedTime || earliestRecordedTime < curRecordedTime) {
           transaction.earliestRecordedTime = earliestRecordedTime;
         }
@@ -160,5 +167,4 @@ export default class TransactionData {
   }
 
   static getAllTransactions = getAllTransactions
-  static queryForTxHashIndexes = queryForTxHashIndexes
 }
