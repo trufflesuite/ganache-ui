@@ -117,6 +117,8 @@ class NodesScreen extends Component {
 
   removeNode = (idx) => {
     if (this.state.selectedIdx === idx) {
+      // ignoring this lint issue because we're going to force a re-render anyway...
+      // eslint-disable-next-line react/no-direct-mutation-state
       this.state.selectedIdx = null;
     }
     const nodes = this._getAllNodes();
@@ -184,15 +186,16 @@ class NodesScreen extends Component {
       const data = {};
       let handleNodeUpdate;
       switch (mode) {
-        case modes.EDIT:
-          const idx = this.state.editNode;
-          data.title = `Edit ${type}`;
-          data.buttonText = "Edit";
-          data.node = nodes[idx];
+        case modes.EDIT: {
+            const idx = this.state.editNode;
+            data.title = `Edit ${type}`;
+            data.buttonText = "Edit";
+            data.node = nodes[idx];
 
-          handleNodeUpdate = (node) => {
-            nodes[idx] = node;
-          };
+            handleNodeUpdate = (node) => {
+              nodes[idx] = node;
+            };
+          }
           break;
         case modes.ADD:
           data.title = `Add New ${type}`;
@@ -222,10 +225,16 @@ class NodesScreen extends Component {
       );
     }
 
+     /* 50 is totally arbitrary, but having a maximum of some value seems reasonable */
+     /*   50 nodes would consume about 50 GB of memory */
+    const ARBITRARY_MAXIMUM_NODES = 50;
+    const count = this.props.config.settings.workspace.nodes.length + + this.props.config.settings.workspace.notaries.length;
     return (
       <div>
         <h2>{pluralType.toUpperCase()}</h2>
         <section>
+          <p>Note: Recommended maximum number of Nodes + Notaries for your current hardware is {Math.min(ARBITRARY_MAXIMUM_NODES, Math.max(3, navigator.hardwareConcurrency - 2))}.</p>
+          <br />
           <div className="WorkspaceProjects">
             <div className="projectItemContainer">
               {
@@ -247,6 +256,7 @@ class NodesScreen extends Component {
           <div className="WorkspaceButtons">
             <button
               className="btn btn-primary"
+              disabled={count >= ARBITRARY_MAXIMUM_NODES}
               onClick={this.handleAddNodeClick}
             >
               ADD {type.toUpperCase()}

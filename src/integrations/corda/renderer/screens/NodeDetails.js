@@ -5,6 +5,7 @@ import React, { Component } from "react";
 import NodeLink from "../components/NodeLink";
 import CordAppLink from "../components/CordAppLink";
 import TransactionLink from "../components/TransactionLink";
+import TransactionData from "../transaction-data";
 
 // this is taken from braid
 const VERSION_REGEX = /^(.*?)(?:-(?:(?:\d|\.)+))\.jar?$/;
@@ -19,7 +20,7 @@ class NodeDetails extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {node: this.findNodeFromProps(), nodes:[], notaries:[], cordapps:[], transactions: {}};
+    this.state = {node: this.findNodeFromProps(), nodes:[], notaries:[], cordapps:[], transactions: []};
   }
 
   findNodeFromProps(){
@@ -35,7 +36,7 @@ class NodeDetails extends Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.params.node !== this.props.params.node) {
-      this.setState({node: this.findNodeFromProps(), nodes:[], notaries:[], cordapps:[], transactions: {}}, this.refresh.bind(this));
+      this.setState({node: this.findNodeFromProps(), nodes:[], notaries:[], cordapps:[], transactions: []}, this.refresh.bind(this));
     }
     if (prevProps.config.updated !== this.props.config.updated) {
       this.refresh();
@@ -86,35 +87,27 @@ class NodeDetails extends Component {
               "criteria" : {
                 "@class" : ".QueryCriteria$VaultQueryCriteria",
                 "status" : "ALL",
-                // "contractStateTypes" : null,
-                // "stateRefs" : [{txhash: this.props.params.txhash}],
-                // "notary" : null,
-                // "softLockingCondition" : null,
-                // "timeCondition" : {
-                //   "type" : "RECORDED",
-                //   "predicate" : {
-                //     "@class" : ".ColumnPredicate${'$'}Between",
-                //     "rightFromLiteral" : "2019-09-15T12:58:23.283Z",
-                //     "rightToLiteral" : "2019-10-15T12:58:23.283Z"
-                //   }
-                // },
-                // "relevancyStatus" : "ALL",
-                // "constraintTypes" : [ ],
-                // "constraints" : [ ],
                 "participants" : self.legalIdentities
-              },
-              // "paging" : {
-              //   "pageNumber" : -1,
-              //   "pageSize" : 200
-              // },
-              // "sorting" : {
-              //   "columns" : [ ]
-              // },
-              // "contractStateType" : "net.corda.core.contracts.ContractState"
+              }
             })
           })
           .then(res => res.json())
-          .then(transactions => this.setState({transactions}))
+          .then(json => {
+            const nodes = this.props.config.settings.workspace.nodes;
+            const postgresPort =  this.props.config.settings.workspace.postgresPort;
+            const transactionPromises = [];
+            const hashes = new Set();
+            json.states.forEach(state => {
+              hashes.add(state.ref.txhash);
+            });
+            hashes.forEach(hash => {
+              const tx = new TransactionData(hash);
+              transactionPromises.push(tx.update(nodes, postgresPort));
+            })
+            return Promise.all(transactionPromises);
+          }).then(transactions => {
+            this.setState({transactions});
+          })
         });
     }
   }
@@ -136,8 +129,6 @@ class NodeDetails extends Component {
       return (<div>Couldn&apos;t locate node {this.props.params.node}</div>);
     }
 
-    const transactionStates = TransactionLink
-      .joinAndSort(this.state.transactions.states, this.state.transactions.statesMetadata);
     return (
       <div>
         <div className="TitleBar">
@@ -199,8 +190,8 @@ class NodeDetails extends Component {
             <div>Transactions</div>
             <div className="Nodes DataRows">
               <main>
-                {transactionStates.map(transaction => {
-                  return (<TransactionLink key={transaction.ref.txhash + "/" + transaction.ref.index} tx={transaction} node={this.state.node} />);
+                {this.state.transactions.map(transaction => {
+                  return (<TransactionLink key={transaction.txhash} tx={transaction} />);
                 })}
               </main>
             </div>

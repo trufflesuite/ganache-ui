@@ -34,26 +34,25 @@ class TransactionLink extends Component {
     return this.props.config.settings.workspace.nodes.find(node => owningKey === node.owningKey);
   }
   render() {
-    const node = this.props.node;
-    const state = this.props.tx;
+    const tx = this.props.tx;
+    const observers = [];
+    for (let observer of tx.observers){
+      observers.push(<div key={observer.safeName}>{observer.name}</div>);
+    }
     return (
-      <Link to={`/corda/transactions/${node.safeName}/${state.ref.txhash}/${state.ref.index}`} className="DataRow">
-        <div>
+      <Link to={`/corda/transactions/${tx.txhash}`} className="DataRow">
+        <div className="RowItem">
           <div className="Label">Transaction Hash</div>
-          <div className="Value">{state.ref.txhash} ({state.ref.index})</div>
+          <div className="Value">{tx.txhash}</div>
         </div>
-        <div>
-          <div className="Label">Participants</div>
+        <div className="RowItem">
+          <div className="Label">Observers</div>
           <div className="Value">
-            {state.state.data.participants.map(node => {
-              const workspaceNode = this.getWorkspaceNode(node.owningKey);
-              if (workspaceNode) {
-                return (<div key={workspaceNode.safeName}>{workspaceNode.name}</div>)
-              } else {
-                return ("");
-              }
-            })}
+            {observers}
           </div>
+        </div>
+        <div className="RowItem">
+          {tx.notaries.size > 0 ? (<div className="TransactionTypeBadge ContractCallBadge">Notarized</div>) : ""}
         </div>
       </Link>
     );
