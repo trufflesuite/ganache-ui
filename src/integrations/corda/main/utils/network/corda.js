@@ -17,13 +17,13 @@ class Corda {
     this.java.stderr.on('data', (data) => {
       this._io.sendStdErr(data, this.entity.safeName);
       // this.emit("message", "stderr", data, this.entity.safeName);
-      console.error(`stderr:\n${data}`);
+      console.error(`corda stderr:\n${data}`);
     });
 
     this.java.stdout.on('data', (data) => {
       this._io.sendStdOut(data, this.entity.safeName);
       // this.emit("message", "stdout", data, this.entity.safeName);
-      console.error(`stdout:\n${data}`);
+      console.error(`corda stdout:\n${data}`);
     });
 
     this.java.on("error", console.error);
