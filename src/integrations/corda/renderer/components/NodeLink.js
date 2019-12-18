@@ -21,8 +21,7 @@ class NodeLink extends PureComponent {
           <div className="Value">{node.rpcPort}</div>
         </div>
         <div>
-          <div className="Label">Services</div>
-          {services.map((service) => <div key={`service-${service}`} className="Value">{service}</div>)}
+          {services.map((service) => <div className="TransactionTypeBadge ContractCallBadge" key={`service-${service}`}>{service}</div>)}
         </div>
       </Link>
     );

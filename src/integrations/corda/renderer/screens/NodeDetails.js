@@ -141,7 +141,6 @@ class NodeDetails extends Component {
         </div>
         <main>
           <div>
-
             <div>Nodes</div>
             <div className="Nodes DataRows">
               <main>
@@ -153,6 +152,7 @@ class NodeDetails extends Component {
                     return ("");
                   }
                 })}
+                {this.state.nodes.length === 0 ? "" : <div>No Nodes</div>}
               </main>
             </div>
             <hr />
@@ -161,6 +161,8 @@ class NodeDetails extends Component {
             <div className="Nodes DataRows">
               <main>
                 {this.state.notaries.map(notary => {
+                  if (notary.owningKey === this.state.node) return;
+
                   const workspaceNode = this.getWorkspaceNotary(notary.owningKey);
                   if (workspaceNode) {
                     return (<NodeLink key={`node-${workspaceNode.safeName}`} postgresPort={this.props.config.settings.workspace.postgresPort} node={workspaceNode} />);
@@ -183,6 +185,7 @@ class NodeDetails extends Component {
                     return ("");
                   }
                 })}
+                {this.state.cordapps.length === 0 ? "" : <div>No CorDapps</div>}
               </main>
             </div>
             <hr />
@@ -193,6 +196,7 @@ class NodeDetails extends Component {
                 {this.state.transactions.map(transaction => {
                   return (<TransactionLink key={transaction.txhash} tx={transaction} />);
                 })}
+                {this.state.transactions.length === 0 ? "" : <div>No Transactions</div>}
               </main>
             </div>
           </div>
