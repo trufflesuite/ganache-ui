@@ -25,7 +25,6 @@ import TxIcon from "../../icons/transactions.svg";
 import LogsIcon from "../../icons/console.svg";
 import ContractsIcon from "../../icons/contract-icon.svg";
 import EventsIcon from "../../icons/events-icon.svg";
-import MenuIcon from "../../icons/list.svg";
 import ChainIcon from "../../icons/chain.svg";
 
 import SettingsIcon from "../../icons/settings.svg";
@@ -242,17 +241,13 @@ class TopNavbar extends Component {
           <ChainIcon />
           Nodes
         </Link>
-        <Link to="/corda/notaries" activeClassName="Active">
-          <MenuIcon />
-          Notaries
+        <Link to="/corda/transactions" activeClassName="Active">
+          <TxIcon />
+          Transactions
         </Link>
         <Link to="/corda/cordapps" activeClassName="Active">
           <ContractsIcon />
           CorDapps
-        </Link>
-        <Link to="/corda/transactions" activeClassName="Active">
-          <TxIcon />
-          Transactions
         </Link>
       </>),
       searchText: "Search",
