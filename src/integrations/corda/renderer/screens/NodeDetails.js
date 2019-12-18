@@ -125,7 +125,8 @@ class NodeDetails extends Component {
   }
 
   render() {
-    if (!this.state.node) {
+    const node = this.state.node;
+    if (!node) {
       return (<div>Couldn&apos;t locate node {this.props.params.node}</div>);
     }
 
@@ -136,12 +137,18 @@ class NodeDetails extends Component {
             &larr; Back
           </button>
           <h1 className="Title">
-            {this.state.node.name}
+            {node.name}
           </h1>
         </div>
         <main>
           <div>
-            <div>Nodes</div>
+            <div>
+              <div className="Label">Postgres Connection</div>
+              <div className="Value">postgresql://corda@localhost:{this.props.config.settings.workspace.postgresPort}/{node.safeName}</div>
+            </div>
+          </div>
+          <div>
+            <div>Connected Nodes</div>
             <div className="Nodes DataRows">
               <main>
                 {this.state.nodes.map(node => {
