@@ -36,9 +36,16 @@ class NetworkManager extends EventEmitter {
     this._io = new IO(this);
     this.postGresHooksPromise = null;
     this.blacklist = new Set();
+    this._downloadPromise = null;
   }
 
   async bootstrap(nodes, notaries, postgresPort) {
+      // kick off downloading all the things ASAP! this is safe to do because
+      // each individual file that is downloaded is a singleton, returning the
+      // same promise for each file request, or it jsut returns immediately if
+      // the file is already downloaded
+      this._downloadPromise = this.config.corda.downloadAll();
+
       const BRAID_HOME = this.config.corda.files.braidServer.download();
       const POSTGRES_HOME = this.config.corda.files.postgres.download();
       this._io.sendProgress("Writing configuration files...");
@@ -165,7 +172,11 @@ class NetworkManager extends EventEmitter {
         this._io.sendProgress(`Corda node ${++startedNodes}/${entities.length} online...`)
       });
 
-      return Promise.all(promises);
+      await Promise.all(promises);
+      // _downloadPromise was started long ago, we just need to make sure all
+      //  deps are downloaded before we start up.
+      this._io.sendProgress(`Downloading remaining Corda dependencies...`);
+      await this._downloadPromise;
   }
 
   async stop() {
