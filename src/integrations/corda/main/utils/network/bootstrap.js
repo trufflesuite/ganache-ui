@@ -61,7 +61,7 @@ class CordaBootstrap {
     this._io.sendProgress("Loading Corda Network Bootstrapper...");
     const CORDA_BOOTSTRAPPER = await config.corda.files.cordaBoostrapper.download();
     // java on the PATH is required for bootstrapper
-    const spawnConfig = {env: {PATH: join(JAVA_HOME, "bin"), CAPSULE_CACHE_DIR: "./capsule"}};
+    const spawnConfig = {env: {PATH: join(JAVA_HOME, "bin"), CAPSULE_CACHE_DIR: "./capsule"}, cwd: this.workspaceDirectory};
     this._io.sendProgress("Starting Corda Network Bootstrapper...");
     const java = spawn("java", ["-jar", CORDA_BOOTSTRAPPER, "--dir", this.workspaceDirectory], spawnConfig);
 
