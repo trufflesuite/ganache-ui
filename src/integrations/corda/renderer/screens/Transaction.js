@@ -127,11 +127,14 @@ class Transaction extends Component {
             <br/>
           </>
         ) : ("")}
-        <div>
-          <h3>Notary</h3>
-          <div>{<NodeLink node={workspaceNotary} postgresPort={this.props.config.settings.workspace.postgresPort} />}</div>
-        </div>
-        <br/>
+        {!workspaceNotary ? "" : <>
+            <div>
+              <h3>Notary</h3>
+              <div>{<NodeLink node={workspaceNotary} postgresPort={this.props.config.settings.workspace.postgresPort} />}</div>
+            </div>
+            <br/>
+          </>
+        }
         <div>
           <h3>Timestamp</h3>
           <div>{meta.recordedTime}</div>
