@@ -137,7 +137,7 @@ export default class TransactionData {
         }
 
         // Keep the state specific observers list around
-        state.observers = knownStateObservers;
+        state.observers = knownStateObservers.get(index);
 
         // store the metaData on the state itself to make iterating over
         // states easier
