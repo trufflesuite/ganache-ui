@@ -251,8 +251,21 @@ class TopNavbar extends Component {
         </Link>
       </>),
       searchText: "Search",
-      status: (<>status</>),
-      action: (<>action</>),
+      status: (<>
+        <StatusIndicator
+            title="Total Nodes"
+            value={this.props.config.settings.workspace.nodes.length}
+        />
+        <StatusIndicator
+            title="Total Notaries"
+            value={this.props.config.settings.workspace.notaries.length}
+        />
+        <StatusIndicator
+            title="Total CorDapps"
+            value={this.props.config.settings.workspace.projects.length}
+        />
+      </>),
+      action: (<></>),
     }
   }
 

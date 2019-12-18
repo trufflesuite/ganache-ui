@@ -35,5 +35,6 @@ module.exports = {
     "p2pPort": 10011,
     "cordapps": [],
     "nodes": ["partya", "partyb", "partyc"]
-  }]
+  }],
+  projects: []
 };
