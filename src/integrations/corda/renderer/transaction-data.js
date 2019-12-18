@@ -1,3 +1,4 @@
+import { ipcRenderer } from "electron";
 import bs58 from "bs58";
 import { Client } from "pg";
 import { Buffer } from "safe-buffer";
@@ -75,6 +76,20 @@ export default class TransactionData {
 
   async update(nodes, port, canceller = {cancelled: false}) {
     const txhash = this.txhash;
+
+    // get the data that knows about attachments
+    const rawTransactionDataPromise = new Promise(resolve => {
+      ipcRenderer.on("CORDA_TRANSACTION_DATA", function msg(_event, msgTxhash, data) {
+        console.log(msgTxhash, data);
+        if (msgTxhash === txhash) {
+          ipcRenderer.removeListener("CORDA_TRANSACTION_DATA", msg);
+          resolve(data);
+        }
+      });
+    });
+    ipcRenderer.send("CORDA_REQUEST_TRANSACTION", txhash);
+
+    
     const transaction = this;
     const knownStateObservers = new Map();
     const resultPromises = nodes.map(async node => {
@@ -162,6 +177,12 @@ export default class TransactionData {
     // wait for everything before we render, otherwise we risk a janky
     // render as results come in from all the nodes and indexes
     await Promise.all(resultPromises);
+
+    // finally, wait for the raw transaction data
+    const rawTransactionData = await rawTransactionDataPromise;
+    if (rawTransactionData && rawTransactionData.attachments) {
+      transaction.attachments = rawTransactionData.attachments;
+    }
 
     return transaction;
   }

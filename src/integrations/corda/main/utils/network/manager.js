@@ -8,6 +8,7 @@ const fse = require("fs-extra");
 const { Client } = require("pg");
 const fetch = require("node-fetch");
 const GetPort = require("get-port");
+const BlobInspector = require("./blob-inspector");
 
 const https = require("https");
 const agent = new https.Agent({
@@ -37,6 +38,7 @@ class NetworkManager extends EventEmitter {
     this.postGresHooksPromise = null;
     this.blacklist = new Set();
     this._downloadPromise = null;
+    this.blobInspector = null;
   }
 
   async bootstrap(nodes, notaries, postgresPort) {
@@ -176,7 +178,7 @@ class NetworkManager extends EventEmitter {
       // _downloadPromise was started long ago, we just need to make sure all
       //  deps are downloaded before we start up.
       this._io.sendProgress(`Downloading remaining Corda dependencies...`);
-      await this._downloadPromise;
+      this.blobInspector = new BlobInspector(JAVA_HOME, await this.config.corda.files.blobInspector.download());
   }
 
   async stop() {
