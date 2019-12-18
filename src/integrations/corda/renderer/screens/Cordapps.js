@@ -21,7 +21,7 @@ class Cordapps extends Component {
       <div className="Nodes DataRows">
         <main>
           {this.props.config.settings.workspace.projects.map(cordapp => {
-            return (<CordAppLink key={cordapp} cordapp={cordapp} />);
+            return (<CordAppLink key={cordapp} cordapp={cordapp} workspace={this.props.config.settings.workspace} />);
           })}
         </main>
       </div>

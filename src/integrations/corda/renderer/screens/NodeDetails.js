@@ -180,7 +180,7 @@ class NodeDetails extends Component {
                 {this.state.cordapps.map(cordapp => {
                   const workspaceCordapp = this.getWorkspaceCordapp(cordapp);
                   if (workspaceCordapp) {
-                    return (<CordAppLink key={workspaceCordapp} cordapp={workspaceCordapp}>{workspaceCordapp}</CordAppLink>);
+                    return (<CordAppLink key={workspaceCordapp} cordapp={workspaceCordapp} workspace={this.props.config.settings.workspace}>{workspaceCordapp}</CordAppLink>);
                   } else {
                     return ("");
                   }
