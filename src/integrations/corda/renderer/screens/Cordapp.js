@@ -4,6 +4,7 @@ import React, { Component } from "react";
 import { hashHistory } from "react-router";
 import atob from "atob";
 import { basename } from "path"
+import NodeLink from "../components/NodeLink";
 
 // this is taken from braid
 const VERSION_REGEX = /^(.*?)(?:-(?:(?:\d|\.)+))\.jar?$/;
@@ -12,14 +13,16 @@ class Cordapp extends Component {
 
   constructor(props) {
     super(props);
-    this.state = Cordapp.getStateFromProps(this.state.props);
+    this.state = Cordapp.getStateFromProps(this.props);
   }
 
   componentDidMount(){
     this.refresh();
   }
 
-  refresh() { }
+  refresh() {
+    
+  }
 
   static getStateFromProps(props) {
     const cordapp = atob(props.params.cordapp);
@@ -30,13 +33,13 @@ class Cordapp extends Component {
   }
 
   static getDerivedStateFromProps(props) {
-    if (props.params.cordapp !== this.props.params.cordapp){
-      return Cordapp.getStateFromProps(props);
-    }
-    return null;
+    return Cordapp.getStateFromProps(props);
   }
 
   render() {
+    const cordapp = this.state.cordapp;
+    const nodes = this.props.config.settings.workspace.nodes.filter(node => node.cordapps.includes(cordapp));
+
     return (
       <div>
         <main>
@@ -53,6 +56,27 @@ class Cordapp extends Component {
           <div>
             <div>Path</div>
             <div>{this.state.cordapp}</div>
+          </div>
+          <div>
+            <div>
+              <div>Installed On</div>
+            </div>
+            <div>
+              {nodes.map(node => {
+                return (<NodeLink key={`node-${node.safeName}`} postgresPort={this.props.config.settings.workspace.postgresPort} node={node} />);
+              })}
+            </div>
+          </div>
+
+          <div>
+            <div>
+              <div>Transactions</div>
+            </div>
+            <div>
+              {nodes.map(node => {
+                return (<NodeLink key={`node-${node.safeName}`} postgresPort={this.props.config.settings.workspace.postgresPort} node={node} />);
+              })}
+            </div>
           </div>
         </div>
       </div>    

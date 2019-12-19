@@ -245,10 +245,10 @@ class TopNavbar extends Component {
           <TxIcon />
           Transactions
         </Link>
-        <Link to="/corda/cordapps" activeClassName="Active">
+        {/* <Link to="/corda/cordapps" activeClassName="Active">
           <ContractsIcon />
           CorDapps
-        </Link>
+        </Link> */}
       </>),
       searchText: "Search",
       status: (<>
