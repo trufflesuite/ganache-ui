@@ -46,7 +46,7 @@ class TransactionLink extends Component {
           <div className="Value">{tx.txhash}</div>
         </div>
         <div className="RowItem">
-          <div className="Label">Observers</div>
+          <div className="Label">Known By</div>
           <div className="Value">
             {observers}
           </div>
