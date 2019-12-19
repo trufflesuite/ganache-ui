@@ -161,17 +161,20 @@ class NetworkManager extends EventEmitter {
       const promises = entities.map(async (entity) => {
         const currentPath = join(this.workspaceDirectory, entity.safeName);
         // eslint-disable-next-line require-atomic-updates
-        entity.braidPort = await this.getPort(entity.rpcPort + 10000);
+        entity.braidPort = await this.getPort(entity.rpcPort + 20000);
         const braidPromise = this.braid.start(entity, currentPath, JAVA_HOME);
         const corda = new Corda(entity, currentPath, JAVA_HOME, this._io);
         this.processes.push(corda);
-        await Promise.all([corda.start(), braidPromise]);
+        const cordaProm = corda.start();
+        cordaProm.then(() => {
+          this._io.sendProgress(`Corda node ${++startedNodes}/${entities.length} online...`);
+        });
+        await Promise.all([cordaProm, braidPromise]);
         // we need to get the `owningKey` for this node so we can reference it in the front end
         // eslint-disable-next-line require-atomic-updates
         entity.owningKey = await fetch("https://localhost:" + entity.braidPort + "/api/rest/network/nodes/self", {agent})
           .then(r => r.json())
           .then(self => self.legalIdentities[0].owningKey);
-        this._io.sendProgress(`Corda node ${++startedNodes}/${entities.length} online...`)
       });
 
       await Promise.all(promises);

@@ -31,15 +31,19 @@ class EthereumChainService extends EventEmitter {
         switch (type) {
           case "process-started":
             this.emit("message", "start");
-          break;
+            return;
           case "server-started":
             this._serverStarted = true;
-          break;
+            this.emit(type, data);
+            return;
           case "server-stopped":
             this._serverStarted = false;
-          break;
+            this.emit(type, data);
+            return;
+          case "db-location":
+            this.emit(type, data);
+            return;
         }
-        this.emit(type, data);
         this.emit("message", type, data);
       });
       child.on("error", error => {
