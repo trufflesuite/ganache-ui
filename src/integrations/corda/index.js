@@ -38,6 +38,14 @@ class Corda extends Integrations {
                             const dataStr = data.slice(firstNewline + 1);
                             try {
                                 data = JSON.parse(dataStr);
+                                if (data.wire) {
+                                    if (data.wire.attachments && data.wire.attachments.length > 0) {
+                                        const result = await client.query("SELECT att_id AS attachment_id, filename FROM node_attachments WHERE att_id = ANY($1::text[])", [data.wire.attachments]);
+                                        data.wire.attachments = result.rows;
+                                    } else {
+                                        data.wire.attachments = [];
+                                    }
+                                }
                             } catch (e) {
                                 this.chain.emit("error", e);
                                 console.error(e);
@@ -48,7 +56,7 @@ class Corda extends Integrations {
                 }
             }
 
-            this.ipc.emit("CORDA_TRANSACTION_DATA", txhash, data);
+            this.send("CORDA_TRANSACTION_DATA", txhash, data);
         });
     }
 }

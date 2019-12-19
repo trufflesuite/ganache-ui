@@ -28,7 +28,7 @@ class Transaction extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {transaction: null};
+    this.state = {transaction: null, attachments: []};
   }
 
   componentWillUnmount() {
@@ -47,7 +47,7 @@ class Transaction extends Component {
     } else if (prevProps.params.txhash !== this.props.params.txhash) {
       // if the txhash has changed we first want to trigger the loading screen
       // by getting rid of the current `transaction` then we need to refresh our data
-      this.setState({transaction: null}, this.refresh.bind(this));
+      this.setState({transaction: null, attachments: []}, this.refresh.bind(this));
     }
   }
 
@@ -66,10 +66,18 @@ class Transaction extends Component {
     const txhash = this.props.params.txhash;
 
     const transaction = new TransactionData(txhash);
-    await transaction.update(nodes, port, canceller);
-    if (canceller.cancelled) return;
+    const updaterProm = transaction.update(nodes, port, canceller).then(() => {
+      if (canceller.cancelled) return;
+      this.setState({transaction});
+    });
+    transaction.fetchAttachments(nodes, port, false, canceller).then(async attachments => {
+      if (canceller.cancelled) return;
+      // we don't want to render attachments before the transaction is rendered...
+      await updaterProm;
+      if (canceller.cancelled) return;
 
-    this.setState({transaction});
+      this.setState({attachments});
+    });
   }
 
   render() {
@@ -178,12 +186,20 @@ class Transaction extends Component {
               TX {transaction.txhash}
             </div>
             <hr />
-            {states}
-            <hr />
             <div>
               <h3>Timestamp</h3>
               <div>{transaction.earliestRecordedTime.toString()}</div>
             </div>
+            <div>
+              <h3>Attachments</h3>
+              <div>
+                {this.state.attachments.length === 0 ? <div>No attachments</div> : this.state.attachments.map(attachment => {
+                  return (<div key={attachment.attachment_id}>{attachment.filename}</div>);
+                })}
+              </div>
+            </div>
+            <hr />
+            {states}
           </div>
         </main>
       </div>

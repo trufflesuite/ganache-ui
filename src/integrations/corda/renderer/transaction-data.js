@@ -74,13 +74,12 @@ export default class TransactionData {
     this.notaries = new Set();
   }
 
-  async update(nodes, port, canceller = {cancelled: false}) {
+  async fetchAttachments(){
     const txhash = this.txhash;
 
     // get the data that knows about attachments
     const rawTransactionDataPromise = new Promise(resolve => {
       ipcRenderer.on("CORDA_TRANSACTION_DATA", function msg(_event, msgTxhash, data) {
-        console.log(msgTxhash, data);
         if (msgTxhash === txhash) {
           ipcRenderer.removeListener("CORDA_TRANSACTION_DATA", msg);
           resolve(data);
@@ -89,7 +88,17 @@ export default class TransactionData {
     });
     ipcRenderer.send("CORDA_REQUEST_TRANSACTION", txhash);
 
-    
+
+    // finally, wait for the raw transaction data
+    const rawTransactionData = await rawTransactionDataPromise;
+    if (rawTransactionData && rawTransactionData.wire && rawTransactionData.wire.attachments) {
+      return rawTransactionData.wire.attachments;
+    }
+    return [];
+  }
+
+  async update(nodes, port, canceller = {cancelled: false}) {
+    const txhash = this.txhash;
     const transaction = this;
     const knownStateObservers = new Map();
     const resultPromises = nodes.map(async node => {
@@ -177,12 +186,6 @@ export default class TransactionData {
     // wait for everything before we render, otherwise we risk a janky
     // render as results come in from all the nodes and indexes
     await Promise.all(resultPromises);
-
-    // finally, wait for the raw transaction data
-    const rawTransactionData = await rawTransactionDataPromise;
-    if (rawTransactionData && rawTransactionData.attachments) {
-      transaction.attachments = rawTransactionData.attachments;
-    }
 
     return transaction;
   }
