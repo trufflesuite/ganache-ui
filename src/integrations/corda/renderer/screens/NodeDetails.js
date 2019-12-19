@@ -45,12 +45,12 @@ class NodeDetails extends Component {
 
   refresh() {
     if (this.state.node) {
-      const notariesProm = fetch("https://localhost:" + (this.state.node.rpcPort + 10000) + "/api/rest/network/notaries")
+      const notariesProm = fetch("https://localhost:" + (this.state.node.braidPort) + "/api/rest/network/notaries")
         .then(r => r.json());
 
       notariesProm.then(notaries => this.setState({notaries}));
 
-      fetch("https://localhost:" + (this.state.node.rpcPort + 10000) + "/api/rest/network/nodes")
+      fetch("https://localhost:" + (this.state.node.braidPort) + "/api/rest/network/nodes")
         .then(r => r.json())
         .then(async nodes => {
           const selfName = this.state.node.name.replace(/\s/g, "");
@@ -70,14 +70,14 @@ class NodeDetails extends Component {
           this.setState({nodes: nodesOnly});
         });
 
-      fetch("https://localhost:" + (this.state.node.rpcPort + 10000) + "/api/rest/cordapps")
+      fetch("https://localhost:" + (this.state.node.braidPort) + "/api/rest/cordapps")
         .then(r => r.json())
         .then(cordapps => this.setState({cordapps}));
 
-      fetch("https://localhost:" + (this.state.node.rpcPort + 10000) + "/api/rest/network/nodes/self")
+      fetch("https://localhost:" + (this.state.node.braidPort) + "/api/rest/network/nodes/self")
         .then(r => r.json())
         .then(self => {
-          fetch("https://localhost:" + (this.state.node.rpcPort + 10000) + "/api/rest/vault/vaultQueryBy", {
+          fetch("https://localhost:" + (this.state.node.braidPort) + "/api/rest/vault/vaultQueryBy", {
             method: "POST",
             headers: {
               "accept": "application/json",

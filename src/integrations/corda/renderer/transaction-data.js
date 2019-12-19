@@ -134,7 +134,7 @@ export default class TransactionData {
       if (nodeQueries.length === 0) return;
 
       // query the node's braid server for the states it has "claimed"
-      const res = await fetch("https://localhost:" + (node.rpcPort + 10000) + "/api/rest/vault/vaultQueryBy", {
+      const res = await fetch("https://localhost:" + (node.braidPort) + "/api/rest/vault/vaultQueryBy", {
         method: "POST",
         headers: {
           "accept": "application/json"
