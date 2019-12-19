@@ -1,16 +1,17 @@
 const { spawn } = require("child_process");
 const { join } = require("path");
-const temp = require("temp");
-const fse = require("fs-extra");
+const temp = require("temp").track();
+const { writeFile } = require("fs-extra");
 
 module.exports = class BlobInspector {
   constructor(JAVA_HOME, BLOB_INSPECTOR) {
     this.JAVA_HOME = JAVA_HOME;
     this.BLOB_INSPECTOR = BLOB_INSPECTOR;
   }
+
   async inspect(buf) {
     const tmpDest = temp.path();
-    await fse.writeFile(tmpDest, buf);
+    await writeFile(tmpDest, buf);
     this.java = spawn(join(this.JAVA_HOME, "bin", "java"), ["-jar", this.BLOB_INSPECTOR, "--format", "JSON", tmpDest], { cwd: this.path, env: null });
 
     this.java.stderr.on('data', (data) => {
@@ -20,8 +21,7 @@ module.exports = class BlobInspector {
 
     let data = Buffer.from([]);
     this.java.stdout.on('data', (stdout) => {
-      data = Buffer.concat([data, stdout]);
-      console.log(data.toString());
+      data = Buffer.concat([data, stdout], data.length + stdout.length);
     });
 
     this.java.on("error", console.error);
