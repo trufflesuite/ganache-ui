@@ -188,8 +188,6 @@ class NodeDetails extends Component {
                   const workspaceCordapp = this.getWorkspaceCordapp(cordapp);
                   if (workspaceCordapp) {
                     return (<CordAppLink key={workspaceCordapp} cordapp={workspaceCordapp} workspace={this.props.config.settings.workspace}>{workspaceCordapp}</CordAppLink>);
-                  } else {
-                    return ("");
                   }
                 })}
                 {this.state.cordapps.length ? "" : <div>No CorDapps</div>}

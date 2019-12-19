@@ -4,16 +4,8 @@ import React, { Component } from "react";
 import CordAppLink from "../components/CordAppLink";
 
 class Cordapps extends Component {
-  componentDidMount(){
-    this.refresh();
-  }
-
-  refresh() {
-  }
   constructor(props) {
     super(props);
-
-    this.state = {results:{}};
   }
 
   render() {
@@ -21,7 +13,7 @@ class Cordapps extends Component {
       <div className="Nodes DataRows">
         <main>
           {this.props.config.settings.workspace.projects.map(cordapp => {
-            return (<CordAppLink key={cordapp} cordapp={cordapp} workspace={this.props.config.settings.workspace} />);
+            return (<CordAppLink key={cordapp} cordapp={cordapp} workspace={this.props.config.settings.workspace}>{cordapp}</CordAppLink>);
           })}
         </main>
       </div>
