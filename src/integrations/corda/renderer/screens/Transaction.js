@@ -2,21 +2,18 @@ import connect from "../../../../renderer/screens/helpers/connect";
 import React, { Component } from "react";
 import { hashHistory } from "react-router";
 import jsonTheme from "../../../../common/utils/jsonTheme";
-import ReactJson from "@seesemichaelj/react-json-view";
+import ReactJson from "@ganache/react-json-view";
 import NodeLink from "../components/NodeLink";
 import TransactionData from "../transaction-data";
 
-
-// TODO: linearId deletion might be temporary
-// I'm only removing it right now because it can contain a `null` which react-json-view can't handle (crashes)
-// We need to fix this here once https://www.npmjs.com/package/@seesemichaelj/react-json-view is fixed.
-const IGNORE_FIELDS = ["@class", "participants", "linearId"];
+const IGNORE_FIELDS = new Set(["@class", "participants"]);
+// const IGNORE_FIELDS = new Set(["@class", "participants", "linearId"]);
 
 function getCleanState(state) {
   const data = state.state.data;
   const cleanState = {};
   for (const key in data) {
-    if (IGNORE_FIELDS.includes(key)) continue;
+    if (IGNORE_FIELDS.has(key)) continue;
     cleanState[key] = data[key];
   }
   return cleanState;

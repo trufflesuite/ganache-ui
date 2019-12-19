@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "@exponent/electron-cookies": "^2.0.0",
-    "@seesemichaelj/react-json-view": "^1.20.2",
+    "@ganache/react-json-view": "^1.20.2",
     "atob": "2.1.2",
     "bs58": "4.0.1",
     "btoa": "1.2.1",

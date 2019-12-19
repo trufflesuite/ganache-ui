@@ -2,7 +2,7 @@ import { shell } from "electron";
 const { app } = require("electron").remote;
 
 import jsonTheme from "../../../../../common/utils/jsonTheme";
-import ReactJson from "@seesemichaelj/react-json-view";
+import ReactJson from "@ganache/react-json-view";
 import React, { Component } from "react";
 import connect from "../../../../../renderer/screens/helpers/connect";
 import TxList from "../transactions/TxList";
