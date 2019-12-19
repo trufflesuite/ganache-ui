@@ -263,14 +263,14 @@ class NodesScreen extends Component {
             </button>
             <button
               className="btn btn-primary"
-              disabled={this.state.selectedIdx === null}
+              disabled={this.state.selectedIdx === ""}
               onClick={this.handleEditNodeClick}
             >
               EDIT {type.toUpperCase()}
             </button>
             <button
               className="btn btn-primary"
-              disabled={this.state.selectedIdx === null}
+              disabled={this.state.selectedIdx === ""}
               onClick={this.handleRemoveNodeClick}
             >
               REMOVE {type.toUpperCase()}
