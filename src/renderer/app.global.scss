@@ -150,6 +150,12 @@ textarea {
   color: var(--app-card-label);
   margin-bottom: .25rem;
   text-transform: uppercase;
+  > .Label-rightAligned {
+    float:right;
+    opacity: .7;
+    font-style: italic;
+    margin-right:1rem;
+  }
 }
 
 .Value {
@@ -291,4 +297,52 @@ h3.Label {
   & > div{
     width: 300px;
   }
+}
+
+.corda-transaction-details-info {
+  border-bottom: 0;
+}
+.corda-transaction-details-info > div{
+  width:50%;
+  align-self: start;
+}
+
+.corda-tabs {
+  position: relative;
+  border-bottom:solid 1px var(--app-panel-divider-color);
+  padding-left: .8rem;
+  display: flex;
+  font-size: 1.5em;
+  .corda-tab {
+    margin: 0;
+    display: inline-block;
+    cursor: pointer;
+    border:solid 2px var(--app-panel-divider-color);
+    border-bottom:0;
+    margin-top:4px;
+    margin-right:4px;
+    padding:8px 16px 4px;
+    text-transform: uppercase;
+    background:rgb(244,242,238);
+    border-radius: 4px 4px 0 0;
+    box-shadow: inset 0 -3px 3px rgba(0,0,0,.05);
+    transition: all .15s ease;
+    &.corda-tab-selected {
+      box-shadow: inset 0 -0 0 rgba(0,0,0,0);
+      margin-top:0;
+      color:var(--app-button-primary-background-color);
+      transform: translateY(2px);
+      z-index: 5;
+      position: relative;
+    }
+  }
+}
+
+.DataRows.corda-json-view{
+  padding:1.3rem
+}
+
+
+.copy-to-clipboard-container{
+  position: absolute;
 }

@@ -25,7 +25,7 @@ class Transaction extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {transaction: null, attachments: []};
+    this.state = {selectedIndex: 0, transaction: null, attachments: []};
   }
 
   componentWillUnmount() {
@@ -85,6 +85,7 @@ class Transaction extends Component {
       return (<div>Couldn&apos;t locate transaction {this.props.match.params.txhash}</div>);
     }
 
+    const tabs = [];
     const states = [];
     for (let [index, state] of txStates) {
       const txData = getCleanState(state);
@@ -92,75 +93,74 @@ class Transaction extends Component {
       const participants = state.state.data.participants || [];
       const workspaceNotary = this.getWorkspaceNotary(state.state.notary.owningKey);
       const meta = state.metaData;
+      tabs[index] = (<div onClick={this.setState.bind(this, {selectedIndex: index}, undefined)} className={(this.state.selectedIndex === index ? "corda-tab-selected" : "") + " corda-tab Label"}>Index {index}</div>);
+      if (this.state.selectedIndex !== index) continue;
       states.push(<div key={state + index}>
-        <hr />
-        <div>
-          <h3>Contract</h3>
-          <div>{state.state.contract}</div>
-        </div>
-        <h3>{meta.status} State ({index})</h3>
-        <ReactJson
-          src={
-            txData
-          }
-          name={false}
-          theme={jsonTheme}
-          iconStyle="triangle"
-          edit={false}
-          add={false}
-          delete={false}
-          enableClipboard={true}
-          displayDataTypes={true}
-          displayObjectSize={true}
-          indentWidth={4}// indent by 4 because that's what Corda likes to do.
-          collapsed={1}
-          collapseStringsAfterLength={36}
-        />
-        <br/>
-        {state.state.data.exitKeys && state.state.data.exitKeys.length !== 0 ? (
-          <>
-            <h3>Signers</h3>
-            {state.state.data.exitKeys.map(key => {
-              const workspaceNode = this.getWorkspaceNode(key);
-              if (workspaceNode) {
-                return (<NodeLink key={"participant_" + workspaceNode.safeName} postgresPort={this.props.config.settings.workspace.postgresPort} node={workspaceNode} />);
+        <div className="corda-details-section corda-transaction-details">
+          <h3 className="Label">
+            State {index} ({meta.status}) @ {meta.recordedTime}
+            <div className="Label-rightAligned">{state.state.contract}</div>
+          </h3>
+          <div className="Nodes DataRows corda-json-view">
+            <ReactJson
+              src={
+                txData
               }
-            })}
-            <br/>
-          </>
-        ) : ("")}
-        {!workspaceNotary ? "" : <>
-            <div>
-              <h3>Notary</h3>
-              <div>{<NodeLink node={workspaceNotary} postgresPort={this.props.config.settings.workspace.postgresPort} />}</div>
-            </div>
-            <br/>
-          </>
-        }
-        <div>
-          <h3>Timestamp</h3>
-          <div>{meta.recordedTime}</div>
+              name={false}
+              theme={jsonTheme}
+              iconStyle="triangle"
+              edit={false}
+              add={false}
+              delete={false}
+              enableClipboard={true}
+              displayDataTypes={true}
+              displayObjectSize={true}
+              indentWidth={4}// indent by 4 because that's what Corda likes to do.
+              collapsed={1}
+              collapseStringsAfterLength={36}
+            />
+          </div>
         </div>
-        <br/>
+        
+        {state.state.data.exitKeys && state.state.data.exitKeys.length !== 0 ? (
+          <div className="corda-details-section">
+            <h3 className="Label">Signers</h3>
+            <div className="DataRows">
+              {state.state.data.exitKeys.map(key => {
+                const workspaceNode = this.getWorkspaceNode(key);
+                if (workspaceNode) {
+                  return (<NodeLink key={"participant_" + workspaceNode.safeName} postgresPort={this.props.config.settings.workspace.postgresPort} node={workspaceNode} />);
+                }
+              })}
+            </div>
+          </div>
+        ) : ("")}
+        {!workspaceNotary ? "" :
+          <div className="corda-details-section">
+            <h3 className="Label">Notary</h3>
+            <div className="DataRows">{<NodeLink node={workspaceNotary} postgresPort={this.props.config.settings.workspace.postgresPort} />}</div>
+          </div>
+        }
+
         {!participants.length ? "" :
-        <div>
-          <h3>Participants</h3>
-          <div>
+        <div className="corda-details-section">
+          <h3 className="Label">Participants</h3>
+          <div className="DataRows">
             {participants.map(node => {
               const workspaceNode = this.getWorkspaceNode(node.owningKey);
               if (workspaceNode) {
                 return (<NodeLink key={"participant_" + workspaceNode.safeName} postgresPort={this.props.config.settings.workspace.postgresPort} node={workspaceNode} />);
               } else {
-                return (<div key={"participant_anon" + node.owningKey}>Anonymized Participant</div>);
+                return (<div className="DataRow" key={"participant_anon" + node.owningKey}><div className="Value"><em>Anonymized Participant</em></div></div>);
               }
             })}
           </div>
-          <br/>
         </div>}
+
         {!state.observers.size ? "" :
-          <div>
-            <h3>Known By</h3>
-            <div>
+          <div className="corda-details-section">
+            <h3 className="Label">Known By</h3>
+            <div className="DataRows">
               {[...state.observers].map(node => {
                 return (<NodeLink key={"participant_" + node.safeName} postgresPort={this.props.config.settings.workspace.postgresPort} node={node} />);
               })}
@@ -170,33 +170,38 @@ class Transaction extends Component {
       );
     }
     return (
-      <div className="Nodes DataRows">
-        <main>
-          <div>
-            <button className="Button" onClick={this.props.history.goBack}>
-              &larr; Back
-            </button>
+      <section className="BlockCard">
+        <header>
+          <button className="Button" onClick={this.props.history.goBack}>
+            &larr; Back
+          </button>
+          <h1 className="Title">
+          TX {transaction.txhash}
+          </h1>
+        </header>
+        
+        <main className="corda-details-container">
+          <div className="DataRow corda-details-section corda-transaction-details-info">
             <div>
-              TX {transaction.txhash}
-            </div>
-            <hr />
-            <div>
-              <h3>Timestamp</h3>
+              <h3 className="Label">Timestamp</h3>
               <div>{transaction.earliestRecordedTime.toString()}</div>
             </div>
             <div>
-              <h3>Attachments</h3>
+              <h3 className="Label">Attachments</h3>
               <div>
                 {this.state.attachments.length === 0 ? <div>No attachments</div> : this.state.attachments.map(attachment => {
                   return (<div key={attachment.attachment_id}>{attachment.filename}</div>);
                 })}
               </div>
             </div>
-            <hr />
-            {states}
           </div>
+
+          <div className="corda-tabs">
+            {tabs}
+          </div>
+          {states}
         </main>
-      </div>
+      </section>
     );
   }
   getWorkspaceNodeByType(type, owningKey) {
