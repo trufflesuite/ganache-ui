@@ -36,7 +36,7 @@ before_install:
     security import $CERT -k $CSC_KEYCHAIN -P $CSC_KEY_PASSWORD -T /usr/bin/codesign;
 
     echo "Setting key partition list";
-    security set-key-partition-list -S "apple-tool:,apple:"" -s -k $KEYCHAIN_PASS $CSC_KEYCHAIN >/dev/null 2>&1;
+    security set-key-partition-list -S "apple-tool:,apple:" -s -k $KEYCHAIN_PASS $CSC_KEYCHAIN >/dev/null 2>&1;
 
     rm $CERT;
     unset CERT;
