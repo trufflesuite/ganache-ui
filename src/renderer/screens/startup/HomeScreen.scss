@@ -179,39 +179,55 @@
             flex-basis: 0;
           }
 
-          button {
-            font-family: "Fira Sans SemiBold";
-            background: var(--app-button-primary-color);
-            display: block;
-            height: auto;
-            padding: 1.3rem 1.75rem;
-            font-size: 1.5em;
-            border-radius: .4rem;
-            color: var(--app-statusbar-background);
+          > div {
             flex-grow: 1;
             flex-basis: 0;
             max-width: 20rem;
             margin-bottom: 1rem;
             flex-shrink: 0;
+            display: flex;
+            text-align: center;
 
-            &:first-child {
+            &:first-child > button {
               margin-right: 0.5rem;
             }
-
-            &:last-child {
+            &:last-child > button {
               margin-left: 0.5rem;
             }
-
-            &:hover, &:focus, &:active {
+            > button {
+              display: flex;
+              align-items: center;
+              flex: 1;
+              font-family: "Fira Sans SemiBold";
+              background: var(--app-button-primary-color);
+              height: auto;
+              padding: 1.3rem 1.75rem;
+              font-size: 1.4em;
+              border-radius: .4rem;
               color: var(--app-statusbar-background);
-              filter: brightness(120%);
-            }
 
-            svg {
-              vertical-align: top;
-              height: 32px;
-              margin-right: .75rem;
-              fill:  var(--app-statusbar-background);
+              &:hover, &:focus, &:active {
+                color: var(--app-statusbar-background);
+                filter: brightness(120%);
+              }
+
+              svg {
+                vertical-align: top;
+                height: 28px;
+                margin-right: .75rem;
+                fill:  var(--app-statusbar-background);
+              }
+
+              > div {
+                display: inline-block;
+                white-space: nowrap;
+                
+                text-align: right;
+                margin-right: 15px;
+                display: flex;
+                flex-direction: column;
+                min-width:140px;
+              }
             }
           }
         }
@@ -229,6 +245,59 @@
         a {
           color: var(--app-button-primary-color);
         }
+      }
+    }
+
+    .flavor-label {
+      font-size:.7em;
+      line-height: .6em;
+      text-align: right;
+      font-style: italic;
+      margin-right:.2rem;
+      opacity: .85;
+    }
+    .flavor-buttons {
+      position: relative;
+    }
+    .homescreen-flavor-toggle-button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      padding:0 3px !important;
+      height: 100% !important;
+      width:auto !important;
+      overflow: hidden;
+      border-top-left-radius: 0 !important;
+      border-bottom-left-radius: 0 !important;
+      border-left: solid 1px rgba(0,0,0,.1);
+      text-align:center;
+    }
+    .flavor-buttons:last-child .homescreen-flavor-buttons {
+      transform: translateY(100%) translateX(.5em);
+    }
+    .homescreen-flavor-selected{
+      filter: brightness(120%);
+    }
+    .homescreen-flavor-buttons {
+      position: absolute;
+      bottom: 4px;
+      transform: translateY(100%);
+      border-top:solid 1px rgba(0,0,0,.1);
+      width:calc(100% - .5em);
+      background: var(--app-button-primary-color);
+      border-radius: 0 0 .4rem .4rem;
+      filter: brightness(95%);
+      > button {
+        width: 100%;
+        border-radius:0;
+        &:last-child {
+          border-radius: 0 0 .4rem .4rem;
+        }
+        &:hover {
+          color: var(--app-statusbar-background);
+          filter: brightness(120%);
+        }
+        border-bottom:solid 1px rgba(0,0,0,.1);
       }
     }
   }
