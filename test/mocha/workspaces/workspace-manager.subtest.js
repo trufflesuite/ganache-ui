@@ -18,10 +18,11 @@ describe("Workspace Manager", () => {
 
   it("loaded expected worksapces", async () => {
     let expectedWorkspaces = {
-      "Test 1": false,
-      "Test 2": false,
+      "Test 1:ethereum": false,
+      "Test 2:ethereum": false,
     };
-    expectedWorkspaces[null] = false; // default workspace
+    expectedWorkspaces[null + ":ethereum"] = false; // default ethereum workspace
+    expectedWorkspaces[null + ":corda"] = false; // default corda workspace
     const expectedWorkspaceNames = Object.keys(expectedWorkspaces);
     const numExpectedWorkspaces = expectedWorkspaceNames.length;
 
@@ -35,7 +36,7 @@ describe("Workspace Manager", () => {
     );
 
     for (let i = 0; i < workspaceManager.workspaces.length; i++) {
-      const name = workspaceManager.workspaces[i].name;
+      const name = workspaceManager.workspaces[i].name + ":" + workspaceManager.workspaces[i].flavor;
       if (name in expectedWorkspaces) {
         if (expectedWorkspaces[name] === true) {
           throw new Error("Found expected workspace more than once");
