@@ -55,18 +55,24 @@ class NodeDetails extends Component {
           const selfName = this.state.node.name.replace(/\s/g, "");
           const notaries = await notariesProm;
           const notariesMap = new Set(notaries.map(notary => notary.owningKey));
-          const nodesOnly = nodes.filter(node => {
+          const nodesMap = new Map();
+          nodes.forEach(node => {
             return node.legalIdentities.some(nodeIdent => {
+              // braid sometimes returns the same node multiple times
+              if (nodesMap.has(nodeIdent.owningKey)) return;
+
               // filter out self
               if (nodeIdent.name.replace(/\s/g,"") === selfName) {
                 return false;
               } else {
                 // filter out notaries
-                return !notariesMap.has(nodeIdent.owningKey);
+                if(!notariesMap.has(nodeIdent.owningKey)){
+                  nodesMap.set(nodeIdent.owningKey, node);
+                }
               }
             });
           });
-          this.setState({nodes: nodesOnly});
+          this.setState({nodes: [...nodesMap.values()]});
         });
 
       fetch("https://localhost:" + (this.state.node.braidPort) + "/api/rest/cordapps")
@@ -130,57 +136,39 @@ class NodeDetails extends Component {
     }
 
     return (
-      <div>
-        <div className="TitleBar">
+      <section className="BlockCard">
+        <header>
           <button className="Button" onClick={this.props.history.goBack}>
             &larr; Back
           </button>
           <h1 className="Title">
             {node.name}
           </h1>
-        </div>
-        <main>
-          <div>
+        </header>
+        <main className="corda-details-container corda-node-details">
+          <div className="DataRow corda-node-details-ports corda-details-section corda-details-padded">
+            <div>
+              <div className="Label">RPC Port</div>
+              <div className="Value">{node.rpcPort}</div>
+            </div>
+            <div>
+              <div className="Label">P2P Port</div>
+              <div className="Value">{node.p2pPort}</div>
+            </div>
+            <div>
+              <div className="Label">Admin Port</div>
+              <div className="Value">{node.adminPort}</div>
+            </div>
+          </div>
+          <div className="corda-details-section corda-details-padded">
             <div>
               <div className="Label">Postgres Connection</div>
               <div className="Value">postgresql://corda@localhost:{this.props.config.settings.workspace.postgresPort}/{node.safeName}</div>
             </div>
           </div>
-          <div>
-            <div>Connected Nodes</div>
-            <div className="Nodes DataRows">
-              <main>
-                {this.state.nodes.map(node => {
-                  const workspaceNode = this.getWorkspaceNode(node.legalIdentities[0].owningKey);
-                  if (workspaceNode) {
-                    return (<NodeLink key={`node-${workspaceNode.safeName}`} postgresPort={this.props.config.settings.workspace.postgresPort} node={workspaceNode} />);
-                  } else {
-                    return ("");
-                  }
-                })}
-                {this.state.nodes.length ? "" : <div>No Nodes</div>}
-              </main>
-            </div>
-            <hr />
 
-            <div>Notaries</div>
-            <div className="Nodes DataRows">
-              <main>
-                {this.state.notaries.map(notary => {
-                  if (notary.owningKey === this.state.node) return;
-
-                  const workspaceNode = this.getWorkspaceNotary(notary.owningKey);
-                  if (workspaceNode) {
-                    return (<NodeLink key={`node-${workspaceNode.safeName}`} postgresPort={this.props.config.settings.workspace.postgresPort} node={workspaceNode} />);
-                  } else {
-                    return (<div key={`unknown-node-${notary.name}`}>{notary.name}</div>);
-                  }
-                })}
-              </main>
-            </div>
-            <hr />
-
-            <div>CorDapps</div>
+          <div className="corda-details-section corda-details-invert-colors">
+            <div className="Label">CorDapps</div>
             <div className="Nodes DataRows">
               <main>
                 {this.state.cordapps.map(cordapp => {
@@ -192,9 +180,34 @@ class NodeDetails extends Component {
                 {this.state.cordapps.length ? "" : <div>No CorDapps</div>}
               </main>
             </div>
-            <hr />
+          </div>
 
-            <div>Transactions</div>
+          <div className="corda-details-section">
+            <div className="Label">Connected Nodes</div>
+            <div className="Nodes DataRows">
+              <main>
+                {this.state.nodes.map(node => {
+                  const workspaceNode = this.getWorkspaceNode(node.legalIdentities[0].owningKey);
+                  if (workspaceNode) {
+                    return (<NodeLink key={`node-${workspaceNode.safeName}`} postgresPort={this.props.config.settings.workspace.postgresPort} node={workspaceNode} />);
+                  } else {
+                    return ("");
+                  }
+                })}
+                {this.state.notaries.map(notary => {
+                  if (notary.owningKey === this.state.node) return;
+
+                  const workspaceNode = this.getWorkspaceNotary(notary.owningKey);
+                  if (workspaceNode) {
+                    return (<NodeLink key={`node-${workspaceNode.safeName}`} postgresPort={this.props.config.settings.workspace.postgresPort} node={workspaceNode} services={["Notary"]} />);
+                  }
+                })}
+              </main>
+            </div>
+          </div>
+
+          <div className="corda-details-section corda-details-invert-colors">
+            <div className="Label">Transactions</div>
             <div className="Nodes DataRows">
               <main>
                 {this.state.transactions.sort((a, b) => b.earliestRecordedTime - a.earliestRecordedTime).map(transaction => {
@@ -204,8 +217,9 @@ class NodeDetails extends Component {
               </main>
             </div>
           </div>
+
         </main>
-      </div>
+      </section>
     );
   }
 }
