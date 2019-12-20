@@ -25,7 +25,7 @@ class Transaction extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {selectedIndex: 0, transaction: null, attachments: []};
+    this.state = {selectedIndex: 0, transaction: null, attachments: null};
   }
 
   componentWillUnmount() {
@@ -44,7 +44,7 @@ class Transaction extends Component {
     } else if (prevProps.match.params.txhash !== this.props.match.params.txhash) {
       // if the txhash has changed we first want to trigger the loading screen
       // by getting rid of the current `transaction` then we need to refresh our data
-      this.setState({transaction: null, attachments: []}, this.refresh.bind(this));
+      this.setState({transaction: null, attachments: null}, this.refresh.bind(this));
     }
   }
 
@@ -77,12 +77,12 @@ class Transaction extends Component {
   render() {
     const transaction = this.state.transaction;
     if (!transaction) {
-      return (<div>Loading...</div>);
+      return (<div className="Waiting Waiting-Padded">Loading Transaction...</div>);
     }
 
     const txStates = transaction.states;
     if (txStates.size === 0) {
-      return (<div>Couldn&apos;t locate transaction {this.props.match.params.txhash}</div>);
+      return (<div className="Waiting Waiting-Padded">Couldn&apos;t locate transaction {this.props.match.params.txhash}</div>);
     }
 
     const tabs = [];
@@ -169,6 +169,17 @@ class Transaction extends Component {
         </div>
       );
     }
+    let attachments = null;
+    if (this.state.attachments === null){
+      attachments = (<div>Loading...</div>);
+    } else if (this.state.attachments.length === 0) {
+      attachments = (<div>No attachments</div>);
+    } else {
+      attachments = this.state.attachments.map(attachment => {
+        return (<div key={attachment.attachment_id}>{attachment.filename}</div>);
+      });
+    }
+
     return (
       <section className="BlockCard">
         <header>
@@ -189,9 +200,7 @@ class Transaction extends Component {
             <div>
               <h3 className="Label">Attachments</h3>
               <div>
-                {this.state.attachments.length === 0 ? <div>No attachments</div> : this.state.attachments.map(attachment => {
-                  return (<div key={attachment.attachment_id}>{attachment.filename}</div>);
-                })}
+                {attachments}
               </div>
             </div>
           </div>

@@ -3,25 +3,6 @@
   height: 100%;
   background: white;
 
-  .Waiting {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    flex-grow: 1;
-    font-family: RobotoCondensed-Bold;
-    text-transform: uppercase;
-    font-size: 1.3rem;
-    color: var(--app-page-intentionally-left-blank);
-
-    .spinner {
-      margin-left: 10px;
-      margin-bottom: 3px;
-    }
-  }
-
   .EventItem {
     font-family: "Fira Code Regular", monospaced;
     width: 100%;

@@ -130,7 +130,7 @@ class NodeDetails extends Component {
   }
 
   getCordapps(){
-    let cordapps = (<div>Loading CorDapps...</div>);
+    let cordapps = (<div className="Waiting Waiting-Padded">Loading CorDapps...</div>);
     if(this.state.cordapps) {
       cordapps = this.state.cordapps.reduce((acc, cordapp) => {
         const workspaceCordapp = this.getWorkspaceCordapp(cordapp);
@@ -140,15 +140,15 @@ class NodeDetails extends Component {
         return acc;
       }, []);
       if (cordapps.length === 0) {
-        cordapps = (<div>No CorDapps</div>);
+        cordapps = (<div className="Waiting Waiting-Padded">No CorDapps</div>);
       }
     }
     return cordapps;
   }
 
   getConnectedNodes(){
-    const loading = (<div>Loading Nodes &amp; Notaries...</div>);
-    const noPeers = (<div>No Node &amp; Notary peers...</div>);
+    const loading = (<div className="Waiting Waiting-Padded">Loading Nodes &amp; Notaries...</div>);
+    const noPeers = (<div className="Waiting Waiting-Padded">No Node &amp; Notary peers...</div>);
     let nodes = [];
     let hasNoPeers = (!!this.state.nodes && !!this.state.notaries);
     if (this.state.nodes) {
@@ -177,14 +177,14 @@ class NodeDetails extends Component {
     let txs;
     if (this.state.transactions){
       if (this.state.transactions.length === 0) {
-        noTxsOrLoading = (<div>No Transactions</div>);
+        noTxsOrLoading = (<div className="Waiting Waiting-Padded">No Transactions</div>);
       } else {
         txs = this.state.transactions.sort((a, b) => b.earliestRecordedTime - a.earliestRecordedTime).map(transaction => {
           return (<TransactionLink key={transaction.txhash} tx={transaction} />);
         });
       }
     } else {
-      noTxsOrLoading = (<div>Loading Transactions...</div>);
+      noTxsOrLoading = (<div className="Waiting Waiting-Padded">Loading Transactions...</div>);
     }
     return txs ? txs : noTxsOrLoading;
   }
@@ -192,7 +192,7 @@ class NodeDetails extends Component {
   render() {
     const node = this.state.node;
     if (!node) {
-      return (<div>Couldn&apos;t locate node {this.props.match.params.node}</div>);
+      return (<div className="Waiting Waiting-Padded">Couldn&apos;t locate node: {this.props.match.params.node}</div>);
     }
 
     return (

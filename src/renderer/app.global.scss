@@ -270,7 +270,7 @@ h3.Label {
 }
 
 .corda-details-container {
-  padding: 0 0 .8rem;
+  padding: 0;
 }
 .corda-details-section {
   border:solid var(--app-panel-divider-color);
@@ -289,6 +289,11 @@ h3.Label {
     background: rgba(158, 148, 132, .075);
     z-index: 5;
     border-bottom:solid 2px var(--app-panel-divider-color);
+  }
+}
+.corda-node-details {
+  .corda-details-section:last-child{
+    border-bottom: 0;
   }
 }
 .corda-node-details-ports {
@@ -345,4 +350,26 @@ h3.Label {
 
 .copy-to-clipboard-container{
   position: absolute;
+}
+
+.Waiting {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  font-family: RobotoCondensed-Bold;
+  text-transform: uppercase;
+  font-size: 1.3rem;
+  color: var(--app-page-intentionally-left-blank);
+
+  .spinner {
+    margin-left: 10px;
+    margin-bottom: 3px;
+  }
+  &.Waiting-Padded {
+    margin: 3rem 0;
+  }
 }
