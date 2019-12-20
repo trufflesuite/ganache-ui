@@ -35,7 +35,7 @@ class NodeDetails extends Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.match.params.node !== this.props.match.params.node) {
-      this.setState({node: this.findNodeFromProps(), nodes:[], notaries:[], cordapps:[], transactions: []}, this.refresh.bind(this));
+      this.setState({node: this.findNodeFromProps(), nodes:null, notaries:null, cordapps:null, transactions: null}, this.refresh.bind(this));
     }
     if (prevProps.config.updated !== this.props.config.updated) {
       this.refresh();
@@ -129,6 +129,66 @@ class NodeDetails extends Component {
     return this.props.config.settings.workspace.projects.find(cordapp => VERSION_REGEX.exec(cordapp)[1].toLowerCase().endsWith(name.toLowerCase()));
   }
 
+  getCordapps(){
+    let cordapps = (<div>Loading CorDapps...</div>);
+    if(this.state.cordapps) {
+      cordapps = this.state.cordapps.reduce((acc, cordapp) => {
+        const workspaceCordapp = this.getWorkspaceCordapp(cordapp);
+        if (workspaceCordapp) {
+          acc.push((<CordAppLink key={workspaceCordapp} cordapp={workspaceCordapp} workspace={this.props.config.settings.workspace}>{workspaceCordapp}</CordAppLink>));
+        }
+        return acc;
+      }, []);
+      if (cordapps.length === 0) {
+        cordapps = (<div>No CorDapps</div>);
+      }
+    }
+    return cordapps;
+  }
+
+  getConnectedNodes(){
+    const loading = (<div>Loading Nodes &amp; Notaries...</div>);
+    const noPeers = (<div>No Node &amp; Notary peers...</div>);
+    let nodes = [];
+    let hasNoPeers = (!!this.state.nodes && !!this.state.notaries);
+    if (this.state.nodes) {
+      nodes = this.state.nodes.reduce((acc, node) => {
+        const workspaceNode = this.getWorkspaceNode(node.legalIdentities[0].owningKey);
+        if (workspaceNode) {
+          acc.push((<NodeLink key={`node-${workspaceNode.safeName}`} postgresPort={this.props.config.settings.workspace.postgresPort} node={workspaceNode} />));
+        }
+        return acc;
+      }, []);
+    }
+    if (this.state.notaries) {
+      nodes = nodes.concat(this.state.notaries.reduce((acc, notary) => {
+         const workspaceNode = this.getWorkspaceNotary(notary.owningKey);
+        if (workspaceNode && notary.owningKey !== this.state.node) {
+          acc.push((<NodeLink key={`node-${workspaceNode.safeName}`} postgresPort={this.props.config.settings.workspace.postgresPort} node={workspaceNode} services={["Notary"]} />));
+        }
+        return acc;
+      }, []));
+    }
+    return nodes.length ? nodes : hasNoPeers ? noPeers : loading;
+  }
+
+  getTransactions(){
+    let noTxsOrLoading;
+    let txs;
+    if (this.state.transactions){
+      if (this.state.transactions.length === 0) {
+        noTxsOrLoading = (<div>No Transactions</div>);
+      } else {
+        txs = this.state.transactions.sort((a, b) => b.earliestRecordedTime - a.earliestRecordedTime).map(transaction => {
+          return (<TransactionLink key={transaction.txhash} tx={transaction} />);
+        });
+      }
+    } else {
+      noTxsOrLoading = (<div>Loading Transactions...</div>);
+    }
+    return txs ? txs : noTxsOrLoading;
+  }
+
   render() {
     const node = this.state.node;
     if (!node) {
@@ -173,51 +233,21 @@ class NodeDetails extends Component {
           <div className="corda-details-section">
             <h3 className="Label">CorDapps</h3>
             <div className="Nodes DataRows">
-              <main>
-                {this.state.cordapps.map(cordapp => {
-                  const workspaceCordapp = this.getWorkspaceCordapp(cordapp);
-                  if (workspaceCordapp) {
-                    return (<CordAppLink key={workspaceCordapp} cordapp={workspaceCordapp} workspace={this.props.config.settings.workspace}>{workspaceCordapp}</CordAppLink>);
-                  }
-                })}
-                {this.state.cordapps.length ? "" : <div>No CorDapps</div>}
-              </main>
+              <main>{this.getCordapps()}</main>
             </div>
           </div>
 
           <div className="corda-details-section">
             <h3 className="Label">Connected Nodes &amp; Notaries</h3>
             <div className="Nodes DataRows">
-              <main>
-                {this.state.nodes.map(node => {
-                  const workspaceNode = this.getWorkspaceNode(node.legalIdentities[0].owningKey);
-                  if (workspaceNode) {
-                    return (<NodeLink key={`node-${workspaceNode.safeName}`} postgresPort={this.props.config.settings.workspace.postgresPort} node={workspaceNode} />);
-                  } else {
-                    return ("");
-                  }
-                })}
-                {this.state.notaries.map(notary => {
-                  if (notary.owningKey === this.state.node) return;
-
-                  const workspaceNode = this.getWorkspaceNotary(notary.owningKey);
-                  if (workspaceNode) {
-                    return (<NodeLink key={`node-${workspaceNode.safeName}`} postgresPort={this.props.config.settings.workspace.postgresPort} node={workspaceNode} services={["Notary"]} />);
-                  }
-                })}
-              </main>
+              <main>{this.getConnectedNodes()}</main>
             </div>
           </div>
 
           <div className="corda-details-section">
             <h3 className="Label">Recent Transactions</h3>
             <div className="Nodes DataRows">
-              <main>
-                {this.state.transactions.sort((a, b) => b.earliestRecordedTime - a.earliestRecordedTime).map(transaction => {
-                  return (<TransactionLink key={transaction.txhash} tx={transaction} />);
-                })}
-                {this.state.transactions.length ? "" : <div>No Transactions</div>}
-              </main>
+              <main>{this.getTransactions()}</main>
             </div>
           </div>
         </main>
