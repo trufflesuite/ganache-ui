@@ -41,7 +41,7 @@ class TransactionLink extends Component {
     }
     return (
       <Link to={`/corda/transactions/${tx.txhash}`} className="DataRow corda-transaction-link">
-        <div className="corda-transaction-link-left">
+        <div className="corda-link-left">
           <div className="RowItem RowItemTopAligned corda-transaction-hash">
             <div className="Label">Transaction Hash</div>
             <div className="Value">{tx.txhash}</div>
@@ -53,7 +53,7 @@ class TransactionLink extends Component {
             </div>
           </div>
         </div>
-        <div className="RowItem corda-transaction-link-badge">
+        <div className="RowItem corda-link-right corda-transaction-link-badge">
           {tx.notaries.size > 0 ? (<div className="TransactionTypeBadge ContractCallBadge">Notarized</div>) : ""}
         </div>
       </Link>

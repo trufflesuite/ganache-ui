@@ -227,15 +227,34 @@ textarea {
   }
 }
 
+.DataRow .corda-link-left {
+  justify-content: left;
+  display: flex;
+}
+
 .corda-transaction-link {
-  .corda-transaction-link-left {
-    justify-content: left;
-    display: flex;
-  }
   .corda-transaction-hash {
     width:540px;
   }
   .corda-transaction-link-badge {
     justify-self: right;
+  }
+}
+
+.corda-node-link {
+  .corda-node-name-description {
+    width: 500px;
+  }
+  .corda-node-port-description {
+    width:210px;
+  }
+  .corda-link-right {
+    width: 100px;
+  }
+}
+
+.corda-cordapp-link {
+  .corda-cordapplink-installed-on{
+    padding-right:3em;
   }
 }

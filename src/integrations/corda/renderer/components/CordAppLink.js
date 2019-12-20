@@ -13,13 +13,13 @@ class CordAppLink extends PureComponent {
     const nodes = workspace.nodes.filter(node => node.cordapps.includes(cordapp));
     const length = nodes.length;
     return (
-      // <Link to={`/corda/cordapps/${btoa(cordapp)}`} className="DataRow">
-      <div className="DataRow">
+      // <Link to={`/corda/cordapps/${btoa(cordapp)}`} className="DataRow corda-cordapp-link">
+      <div className="DataRow corda-cordapp-link">
         <div>
           <div className="Label">Name</div>
           <div className="Value">{VERSION_REGEX.exec(basename(cordapp))[1].toLowerCase()}</div>
         </div>
-        <div>
+        <div className="corda-cordapplink-installed-on">
           <div className="Label">Installed On</div>
           <div className="Value">{length} node{length === 1 ? "" : "s"}</div>
         </div>
