@@ -209,13 +209,9 @@ class TopNavbar extends Component {
           </div>
           <div className="Actions">
             <OnlyIf test={this.props.workspaces.current.name === null}>
-              <button onClick={this.handleSaveWorkspacePress.bind(this)}>
-                <div>Save</div>
-              </button>
+              <button onClick={this.handleSaveWorkspacePress.bind(this)}>Save</button>
             </OnlyIf>
-            <button onClick={this.handleWorkspacesPress.bind(this)}>
-              <div>Switch</div>
-            </button>
+            <button onClick={this.handleWorkspacesPress.bind(this)}>Switch</button>
             <NavLink to="/config">
               <button>
                 <div className="settingsIconWrapper">
