@@ -13,12 +13,16 @@ class NodeLink extends PureComponent {
           <div className="Value">{node.name}</div>
         </div>
         <div>
-          <div className="Label">DB Connection String</div>
-          <div className="Value">{this.props.postgresPort}</div>
-        </div>
-        <div>
           <div className="Label">RPC Port</div>
           <div className="Value">{node.rpcPort}</div>
+        </div>
+        <div>
+          <div className="Label">P2P Port</div>
+          <div className="Value">{node.p2pPort}</div>
+        </div>
+        <div>
+          <div className="Label">Admin Port</div>
+          <div className="Value">{node.adminPort}</div>
         </div>
         <div>
           {services.map((service) => <div className="TransactionTypeBadge ContractCallBadge" key={`service-${service}`}>{service}</div>)}
