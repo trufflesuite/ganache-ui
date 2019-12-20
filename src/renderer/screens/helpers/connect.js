@@ -1,3 +1,4 @@
+import { compose } from "redux";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
 
@@ -7,7 +8,6 @@ export default function(component, ...reducers) {
   let connector = connect(
     state => {
       var props = {};
-
       reducers.forEach(name => {
         var value = state[name];
 
@@ -21,12 +21,7 @@ export default function(component, ...reducers) {
       });
 
       return props;
-    },
-    dispatch => {
-      return {
-        dispatch,
-      };
-    },
+    }
   );
-  return connector(withRouter(component));
+  return compose(withRouter, connector)(component);
 }

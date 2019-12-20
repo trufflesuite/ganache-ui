@@ -31,8 +31,6 @@ const render = () => {
   );
 };
 
-store.subscribe(render);
-
 render();
 
 if (module.hot) {

@@ -27,8 +27,6 @@ module.exports = function(config) {
     "cache-loader",
     imageRule.use
   ];
-  
-  config.output.pathinfo = false;
 
   // add our custom rules
   rules.push.apply(rules, [
@@ -71,7 +69,9 @@ module.exports = function(config) {
     config.resolve = {};
   }
   config.resolve.alias["@static"] = path.resolve(__dirname, '../static');
+
   config.resolve.symlinks = false;
+  config.output.pathinfo = false;
 
   return config;
 };
