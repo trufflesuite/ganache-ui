@@ -270,7 +270,10 @@
       border-top-left-radius: 0 !important;
       border-bottom-left-radius: 0 !important;
       border-left: solid 1px rgba(0,0,0,.1);
-      text-align:center;
+      text-align:center;;
+      &:focus, &:active {
+        filter: brightness(100%) !important;
+      }
     }
     .flavor-buttons:last-child .homescreen-flavor-buttons {
       transform: translateY(100%) translateX(.5em);
