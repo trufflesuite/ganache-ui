@@ -43,11 +43,11 @@ class TransactionLink extends Component {
       <Link to={`/corda/transactions/${tx.txhash}`} className="DataRow corda-transaction-link">
         <div className="corda-link-left">
           <div className="RowItem RowItemTopAligned corda-transaction-hash">
-            <div className="Label">Transaction Hash</div>
+            <div className="Label">Transaction Id</div>
             <div className="Value">{tx.txhash}</div>
           </div>
           <div className="RowItem RowItemTopAligned">
-            <div className="Label">Known By</div>
+            <div className="Label">In Vault Of</div>
             <div className="Value">
               {observers}
             </div>

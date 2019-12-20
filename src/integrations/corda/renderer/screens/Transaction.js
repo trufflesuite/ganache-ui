@@ -159,7 +159,7 @@ class Transaction extends Component {
 
         {!state.observers.size ? "" :
           <div className="corda-details-section">
-            <h3 className="Label">Known By</h3>
+            <h3 className="Label">In Vault Of</h3>
             <div className="DataRows">
               {[...state.observers].map(node => {
                 return (<NodeLink key={"participant_" + node.safeName} postgresPort={this.props.config.settings.workspace.postgresPort} node={node} />);
