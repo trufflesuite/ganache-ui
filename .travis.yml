@@ -3,7 +3,7 @@ node_js:
 # Use 12.9.0 because that is what Electron needs
 - "12.9.0"
 dist: bionic
-osx_image: xcode11
+osx_image: xcode11.3
 matrix:
   include:
   - os: osx
