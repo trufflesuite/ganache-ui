@@ -38,13 +38,18 @@ class Transactions extends Component {
   render() {
     const workspace = this.props.config.settings.workspace;
     return (
-      <div>
-        <select defaultValue={this.state.selectedNode} onChange={(e) => {this.setState({"selectedNode": e.target.value})}}>
-          <option value="">All nodes</option>
-          {workspace.nodes.map((node) => {
-            return <option key={node.safeName} value={node.safeName}>{node.name}</option>
-          })}
-        </select>
+      <div className="corda-transactions">
+        <div className="corda-transactions-filter">
+          <div className="corda-transactions-label">Filter</div>
+          <div className="StyledSelect">
+            <select defaultValue={this.state.selectedNode} onChange={(e) => {this.setState({"selectedNode": e.target.value})}}>
+              <option value="">All nodes</option>
+              {workspace.nodes.map((node) => {
+                return <option key={node.safeName} value={node.safeName}>{node.name}</option>
+              })}
+            </select>
+          </div>
+        </div>
         <div className="Nodes DataRows">
           <main>
               {this.state.transactions.sort((a, b) => b.earliestRecordedTime - a.earliestRecordedTime).map(tx => {

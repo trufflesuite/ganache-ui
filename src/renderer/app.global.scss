@@ -190,3 +190,52 @@ textarea {
     padding: 1.25rem;
   }
 }
+
+.RowItemTopAligned {
+  align-self: flex-start;
+}
+
+
+
+// TODO: move these corda styles to their own file:
+.corda-transactions {
+  .Label {
+    text-transform: uppercase;
+  }
+  .corda-transactions-filter {
+    padding: .5em 0;
+    display: flex;
+    align-items: center;
+    border-bottom:solid 1px var(--app-button-primary-background-color);
+    .corda-transactions-label {
+      color:rgba(0,0,0,.7);
+      float:left;
+      text-transform: uppercase;
+      font-weight: bold;
+      margin:0 1em;
+    }
+    .StyledSelect {
+      width:300px;
+      select {
+        width:100%;
+        border-color: var(--app-button-primary-background-color); 
+        border-width: 2px;
+        border-radius: 4px;
+        font-weight: bold;;
+      } 
+    }
+  }
+}
+
+.corda-transaction-link {
+  .corda-transaction-link-left {
+    justify-content: left;
+    display: flex;
+  }
+  .corda-transaction-hash {
+    width:540px;
+  }
+  .corda-transaction-link-badge {
+    justify-self: right;
+  }
+}

@@ -40,18 +40,20 @@ class TransactionLink extends Component {
       observers.push(<div key={observer.safeName}>{observer.name}</div>);
     }
     return (
-      <Link to={`/corda/transactions/${tx.txhash}`} className="DataRow">
-        <div className="RowItem">
-          <div className="Label">Transaction Hash</div>
-          <div className="Value">{tx.txhash}</div>
-        </div>
-        <div className="RowItem">
-          <div className="Label">Known By</div>
-          <div className="Value">
-            {observers}
+      <Link to={`/corda/transactions/${tx.txhash}`} className="DataRow corda-transaction-link">
+        <div className="corda-transaction-link-left">
+          <div className="RowItem RowItemTopAligned corda-transaction-hash">
+            <div className="Label">Transaction Hash</div>
+            <div className="Value">{tx.txhash}</div>
+          </div>
+          <div className="RowItem RowItemTopAligned">
+            <div className="Label">Known By</div>
+            <div className="Value">
+              {observers}
+            </div>
           </div>
         </div>
-        <div className="RowItem">
+        <div className="RowItem corda-transaction-link-badge">
           {tx.notaries.size > 0 ? (<div className="TransactionTypeBadge ContractCallBadge">Notarized</div>) : ""}
         </div>
       </Link>
