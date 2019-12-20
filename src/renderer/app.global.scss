@@ -198,6 +198,12 @@ textarea {
 
 
 
+h3.Label {
+  font-size: initial;
+  color: var(--app-button-primary-background-color); 
+  margin-left: 0;
+}
+
 // TODO: move these corda styles to their own file:
 .corda-transactions {
   .Label {
@@ -258,27 +264,31 @@ textarea {
 }
 
 .corda-details-container {
-  padding: 2em 0 1em;
+  padding: 0 0 .8rem;
 }
 .corda-details-section {
+  border:solid var(--app-panel-divider-color);
+  border-width: 1px 0;
   &.corda-details-padded, > .Label {
-    padding-left:1em;
-    padding-right:1em;
+    margin-top:0;
+    padding-left:.8rem;
+    padding-right:.8rem;
   }
   > .Label {
+    display: block;
     padding-top:1.3em;
+    padding-bottom:1em;
+    margin-bottom:-.2em;
+    position: relative;
+    background: rgba(158, 148, 132, .075);
+    z-index: 5;
+    border-bottom:solid 2px var(--app-panel-divider-color);
   }
-  margin: 0 0 1.3rem;
 }
 .corda-node-details-ports {
   justify-content: left;
-  padding-top:0;
   border: 0;
   & > div{
     width: 300px;
   }
-}
-
-.corda-details-invert-colors, .corda-details-invert-colors .DataRow {
-  background:white;
 }

@@ -146,29 +146,32 @@ class NodeDetails extends Component {
           </h1>
         </header>
         <main className="corda-details-container corda-node-details">
-          <div className="DataRow corda-node-details-ports corda-details-section corda-details-padded">
-            <div>
-              <div className="Label">RPC Port</div>
-              <div className="Value">{node.rpcPort}</div>
+          <div className="corda-details-section">
+            <h3 className="Label">Connection Details</h3>
+            <div className="DataRow corda-node-details-ports corda-details-section corda-details-padded">
+              <div>
+                <div className="Label">RPC Port</div>
+                <div className="Value">{node.rpcPort}</div>
+              </div>
+              <div>
+                <div className="Label">P2P Port</div>
+                <div className="Value">{node.p2pPort}</div>
+              </div>
+              <div>
+                <div className="Label">Admin Port</div>
+                <div className="Value">{node.adminPort}</div>
+              </div>
             </div>
-            <div>
-              <div className="Label">P2P Port</div>
-              <div className="Value">{node.p2pPort}</div>
-            </div>
-            <div>
-              <div className="Label">Admin Port</div>
-              <div className="Value">{node.adminPort}</div>
-            </div>
-          </div>
-          <div className="corda-details-section corda-details-padded">
-            <div>
-              <div className="Label">Postgres Connection</div>
-              <div className="Value">postgresql://corda@localhost:{this.props.config.settings.workspace.postgresPort}/{node.safeName}</div>
+            <div className="DataRow corda-details-section corda-details-padded">
+              <div>
+                <div className="Label">Postgres Connection</div>
+                <div className="Value">postgresql://corda@localhost:{this.props.config.settings.workspace.postgresPort}/{node.safeName}</div>
+              </div>
             </div>
           </div>
 
-          <div className="corda-details-section corda-details-invert-colors">
-            <div className="Label">CorDapps</div>
+          <div className="corda-details-section">
+            <h3 className="Label">CorDapps</h3>
             <div className="Nodes DataRows">
               <main>
                 {this.state.cordapps.map(cordapp => {
@@ -183,7 +186,7 @@ class NodeDetails extends Component {
           </div>
 
           <div className="corda-details-section">
-            <div className="Label">Connected Nodes</div>
+            <h3 className="Label">Connected Nodes &amp; Notaries</h3>
             <div className="Nodes DataRows">
               <main>
                 {this.state.nodes.map(node => {
@@ -206,8 +209,8 @@ class NodeDetails extends Component {
             </div>
           </div>
 
-          <div className="corda-details-section corda-details-invert-colors">
-            <div className="Label">Transactions</div>
+          <div className="corda-details-section">
+            <h3 className="Label">Recent Transactions</h3>
             <div className="Nodes DataRows">
               <main>
                 {this.state.transactions.sort((a, b) => b.earliestRecordedTime - a.earliestRecordedTime).map(transaction => {
@@ -217,7 +220,6 @@ class NodeDetails extends Component {
               </main>
             </div>
           </div>
-
         </main>
       </section>
     );
