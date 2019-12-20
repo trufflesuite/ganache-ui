@@ -4,6 +4,7 @@ import jsonTheme from "../../../../common/utils/jsonTheme";
 import ReactJson from "@ganache/react-json-view";
 import NodeLink from "../components/NodeLink";
 import TransactionData from "../transaction-data";
+import { CancellationToken } from "./utils";
 
 const IGNORE_FIELDS = new Set(["@class", "participants"]);
 // const IGNORE_FIELDS = new Set(["@class", "participants", "linearId"]);
@@ -19,7 +20,7 @@ function getCleanState(state) {
 }
 
 class Transaction extends Component {
-  refresher = {cancel: ()=>{}};
+  refresher = new CancellationToken();
 
   constructor(props) {
     super(props);
@@ -52,10 +53,7 @@ class Transaction extends Component {
     // so a little async canceller will have to do
     this.refresher.cancel();
 
-    let canceller = {cancelled: false};
-    this.refresher = {
-      cancel: () => {canceller.cancelled = true}
-    };
+    let canceller = this.refresher.getCanceller();
     
     const port = this.props.config.settings.workspace.postgresPort;
     const nodes = this.props.config.settings.workspace.nodes;
