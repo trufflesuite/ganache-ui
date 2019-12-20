@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import connect from "../helpers/connect";
 
 import LogContainerLazy from "./LogContainerLazy";
@@ -18,9 +18,9 @@ class Logs extends Component {
   render() {
     const links = [];
     if (this.props.config.settings.workspace.nodes) {
-      links.push(<Link to={`/logs`} key="default">General</Link>);
+      links.push(<NavLink title="General" exact activeClassName="corda-tab-selected" to={`/logs`} key="default" className="corda-tab">General</NavLink>);
       [...this.props.config.settings.workspace.nodes, ...this.props.config.settings.workspace.notaries].forEach((node => {
-        links.push(<Link key={node.safeName} to={`/logs/${node.safeName}`}>{node.name}</Link>);
+        links.push(<NavLink title={node.name} exact activeClassName="corda-tab-selected" key={node.safeName} to={`/logs/${node.safeName}`} className="corda-tab">{node.name}</NavLink>);
       }));
     }
     const context = this.props.match.params.context || "default";
@@ -38,7 +38,11 @@ class Logs extends Component {
 
     return (
       <div className="LogsScreen">
-        {links.length > 0 ? links : ""}
+        {links.length === 0 ? "" : (
+          <div className="corda-tabs">
+            {links}
+          </div>
+         )}
         <main><LogContainerLazy cache={logCache} context={context} /></main>
       </div>
     );

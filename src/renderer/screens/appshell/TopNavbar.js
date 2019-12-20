@@ -25,7 +25,6 @@ import TxIcon from "../../icons/transactions.svg";
 import LogsIcon from "../../icons/console.svg";
 import ContractsIcon from "../../icons/contract-icon.svg";
 import EventsIcon from "../../icons/events-icon.svg";
-import ChainIcon from "../../icons/chain.svg";
 
 import SettingsIcon from "../../icons/settings.svg";
 import SearchIcon from "../../icons/search.svg";
@@ -202,12 +201,12 @@ class TopNavbar extends Component {
         <section className="StatusAndControls">
           <div className="Status">
             {children.status}
+          </div>
+          <div className="Actions">
             <StatusIndicator
               title="WORKSPACE"
               value={this.props.config.settings.workspace.name}
             />
-          </div>
-          <div className="Actions">
             <OnlyIf test={this.props.workspaces.current.name === null}>
               <button onClick={this.handleSaveWorkspacePress.bind(this)}>Save</button>
             </OnlyIf>
@@ -234,7 +233,7 @@ class TopNavbar extends Component {
     return {
       menu: (<>
         <NavLink to="/corda/nodes" activeClassName="Active">
-          <ChainIcon />
+          <BlockIcon />
           Nodes
         </NavLink>
         <NavLink to="/corda/transactions" activeClassName="Active">
