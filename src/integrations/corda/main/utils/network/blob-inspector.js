@@ -12,26 +12,24 @@ module.exports = class BlobInspector {
   async inspect(buf) {
     const tmpDest = temp.path();
     await writeFile(tmpDest, buf);
-    this.java = spawn(join(this.JAVA_HOME, "bin", "java"), ["-jar", this.BLOB_INSPECTOR, "--format", "JSON", tmpDest], { cwd: this.path, env: null });
+    const java = spawn(join(this.JAVA_HOME, "bin", "java"), ["-jar", this.BLOB_INSPECTOR, "--format", "JSON", tmpDest], { cwd: this.path, env: null });
 
-    this.java.stderr.on('data', (data) => {
+    java.stderr.on('data', (data) => {
       this._io.sendStdErr(data);
       console.error(`blob stderr:\n${data}`);
     });
 
-    let data = Buffer.from([]);
-    this.java.stdout.on('data', (stdout) => {
-      data = Buffer.concat([data, stdout], data.length + stdout.length);
+    let data = Buffer.allocUnsafe(0);
+    let length = 0;
+    java.stdout.on("data", stdout => {
+      data = Buffer.concat([data, stdout], (length += stdout.length));
     });
 
-    this.java.on("error", console.error);
+    java.on("error", console.error);
 
     return new Promise((resolve) => {
-      const closeHandler = async (code) => {
-        console.log(code);
-        resolve(data);
-      }
-      this.java.once("close", closeHandler);
+      const closeHandler = () => resolve(data);
+      java.once("close", closeHandler);
     });
   }
 }
