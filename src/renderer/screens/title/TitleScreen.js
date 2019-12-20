@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { hashHistory } from "react-router";
 
 import * as pkg from "../../../../package.json";
 
@@ -19,10 +18,10 @@ class TitleScreen extends Component {
 
     const intervalId = setInterval(() => {
       if (this.state.firstRun === true) {
-        hashHistory.push("/first_run");
+        this.props.history.push("/first_run");
         clearInterval(intervalId);
       } else if (this.state.firstRun === false) {
-        hashHistory.push("/home");
+        this.props.history.push("/home");
         clearInterval(intervalId);
       }
     }, 1000);

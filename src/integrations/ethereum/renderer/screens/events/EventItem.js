@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 import Moment from "react-moment";
-import { push } from "react-router-redux";
+import { push } from "connected-react-router";
 
 import connect from "../../../../../renderer/screens/helpers/connect";
 

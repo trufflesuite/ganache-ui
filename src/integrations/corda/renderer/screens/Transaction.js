@@ -1,6 +1,5 @@
 import connect from "../../../../renderer/screens/helpers/connect";
 import React, { Component } from "react";
-import { hashHistory } from "react-router";
 import jsonTheme from "../../../../common/utils/jsonTheme";
 import ReactJson from "@ganache/react-json-view";
 import NodeLink from "../components/NodeLink";
@@ -41,7 +40,7 @@ class Transaction extends Component {
       // if the data has updated let's refresh the transaction just in case
       // things have changed.
       this.refresh();
-    } else if (prevProps.params.txhash !== this.props.params.txhash) {
+    } else if (prevProps.match.params.txhash !== this.props.match.params.txhash) {
       // if the txhash has changed we first want to trigger the loading screen
       // by getting rid of the current `transaction` then we need to refresh our data
       this.setState({transaction: null, attachments: []}, this.refresh.bind(this));
@@ -60,7 +59,7 @@ class Transaction extends Component {
     
     const port = this.props.config.settings.workspace.postgresPort;
     const nodes = this.props.config.settings.workspace.nodes;
-    const txhash = this.props.params.txhash;
+    const txhash = this.props.match.params.txhash;
 
     const transaction = new TransactionData(txhash);
     const updaterProm = transaction.update(nodes, port, canceller).then(() => {
@@ -85,7 +84,7 @@ class Transaction extends Component {
 
     const txStates = transaction.states;
     if (txStates.size === 0) {
-      return (<div>Couldn&apos;t locate transaction {this.props.params.txhash}</div>);
+      return (<div>Couldn&apos;t locate transaction {this.props.match.params.txhash}</div>);
     }
 
     const states = [];
@@ -176,7 +175,7 @@ class Transaction extends Component {
       <div className="Nodes DataRows">
         <main>
           <div>
-            <button className="Button" onClick={hashHistory.goBack}>
+            <button className="Button" onClick={this.props.history.goBack}>
               &larr; Back
             </button>
             <div>

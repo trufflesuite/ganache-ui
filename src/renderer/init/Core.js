@@ -1,5 +1,5 @@
 import { ipcRenderer } from "electron";
-import { replace } from "react-router-redux";
+import { replace } from "connected-react-router";
 
 import { setRPCProviderUrl } from "../../integrations/ethereum/common/redux/web3/actions";
 
@@ -76,7 +76,7 @@ export function initCore(store) {
         case STARTUP_MODE.NORMAL:
         default: {
           if (workspaceSettings.flavor === "corda") {
-            store.dispatch(replace("/corda"));  
+            store.dispatch(replace("/corda/nodes"));  
           } else {
             store.dispatch(replace("/accounts"));
           }

@@ -1,6 +1,5 @@
 import connect from "../../../../renderer/screens/helpers/connect";
 
-import { hashHistory } from "react-router";
 import React, { Component } from "react";
 import NodeLink from "../components/NodeLink";
 import CordAppLink from "../components/CordAppLink";
@@ -25,7 +24,7 @@ class NodeDetails extends Component {
 
   findNodeFromProps(){
     const workspace = this.props.config.settings.workspace;
-    const isNode = filterNodeBy(this.props.params.node);
+    const isNode = filterNodeBy(this.props.match.params.node);
     let matches = [...workspace.nodes, ...workspace.notaries].filter(isNode);
     return matches[0] || null;
   }
@@ -35,7 +34,7 @@ class NodeDetails extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.params.node !== this.props.params.node) {
+    if (prevProps.match.params.node !== this.props.match.params.node) {
       this.setState({node: this.findNodeFromProps(), nodes:[], notaries:[], cordapps:[], transactions: []}, this.refresh.bind(this));
     }
     if (prevProps.config.updated !== this.props.config.updated) {
@@ -127,13 +126,13 @@ class NodeDetails extends Component {
   render() {
     const node = this.state.node;
     if (!node) {
-      return (<div>Couldn&apos;t locate node {this.props.params.node}</div>);
+      return (<div>Couldn&apos;t locate node {this.props.match.params.node}</div>);
     }
 
     return (
       <div>
         <div className="TitleBar">
-          <button className="Button" onClick={hashHistory.goBack}>
+          <button className="Button" onClick={this.props.history.goBack}>
             &larr; Back
           </button>
           <h1 className="Title">

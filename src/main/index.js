@@ -169,13 +169,13 @@ app.on('ready', () => {
   }
 
   if (isDevelopment) {
-    mainWindow.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`)
+    mainWindow.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}/#title`)
   } else {
     mainWindow.loadURL(formatUrl({
       pathname: path.join(__dirname, "index.html"),
       protocol: 'file',
       slashes: true
-    }));
+    }) + "#/title");
   }
 
   mainWindow.on("closed", () => mainWindow = null);

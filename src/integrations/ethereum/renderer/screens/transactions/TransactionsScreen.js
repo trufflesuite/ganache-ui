@@ -15,8 +15,8 @@ class TransactionsScreen extends Component {
 
   render() {
     var content;
-    if (this.props.params.transactionHash != null) {
-      content = <TxCard transactionHash={this.props.params.transactionHash} />;
+    if (this.props.match.params.transactionHash != null) {
+      content = <TxCard transactionHash={this.props.match.params.transactionHash} />;
     } else {
       content = (
         <RecentTransactions scrollPosition={this.props.scrollPosition} />

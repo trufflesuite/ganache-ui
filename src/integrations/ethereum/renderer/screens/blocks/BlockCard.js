@@ -4,8 +4,6 @@ import * as Blocks from "../../../common/redux/blocks/actions";
 
 import Moment from "react-moment";
 
-import { hashHistory } from "react-router";
-
 import TxList from "../transactions/TxList";
 
 class BlockCard extends Component {
@@ -33,7 +31,7 @@ class BlockCard extends Component {
     return (
       <section className="BlockCard">
         <header className="Header">
-          <button className="Button" onClick={hashHistory.goBack}>
+          <button className="Button" onClick={this.props.history.goBack}>
             &larr; Back
           </button>
 

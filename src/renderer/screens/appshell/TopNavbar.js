@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { Link } from "react-router";
-import { push } from "react-router-redux";
+import { NavLink } from "react-router-dom";
+import { push } from "connected-react-router";
 
 import moniker from "moniker";
 
@@ -63,7 +63,7 @@ class TopNavbar extends Component {
   }
 
   _handleClearLogs() {
-    this.props.dispatch(clearLogLines(this.props.params.context || "default"));
+    this.props.dispatch(clearLogLines(this.props.match.params.context || "default"));
   }
 
   handleSearchChange(e) {
@@ -179,10 +179,10 @@ class TopNavbar extends Component {
         <main className="Main">
           <div className="Menu">
             {children.menu}
-            <Link to="/logs" activeClassName="Active">
+            <NavLink to="/logs" activeClassName="Active">
               <LogsIcon />
               Logs
-            </Link>
+            </NavLink>
           </div>
           <div className="NotificationAndSearchBar">
             <OnlyIf test={isNewVersionAvailable}>
@@ -209,20 +209,20 @@ class TopNavbar extends Component {
           </div>
           <div className="Actions">
             <OnlyIf test={this.props.workspaces.current.name === null}>
-              <Link onClick={this.handleSaveWorkspacePress.bind(this)}>
-                <button>Save</button>
-              </Link>
+              <button onClick={this.handleSaveWorkspacePress.bind(this)}>
+                <div>Save</div>
+              </button>
             </OnlyIf>
-            <Link onClick={this.handleWorkspacesPress.bind(this)}>
-              <button>Switch</button>
-            </Link>
-            <Link to="/config">
+            <button onClick={this.handleWorkspacesPress.bind(this)}>
+              <div>Switch</div>
+            </button>
+            <NavLink to="/config">
               <button>
                 <div className="settingsIconWrapper">
                   <SettingsIcon />
                 </div>
               </button>
-            </Link>
+            </NavLink>
             <OnlyIf test={isLogsPage}>
               <button onClick={this._handleClearLogs.bind(this)}>
                 Clear Logs
@@ -237,18 +237,18 @@ class TopNavbar extends Component {
   _generateCordaChildren(){
     return {
       menu: (<>
-        <Link to="/corda" activeClassName="Active">
+        <NavLink to="/corda/nodes" activeClassName="Active">
           <ChainIcon />
           Nodes
-        </Link>
-        <Link to="/corda/transactions" activeClassName="Active">
+        </NavLink>
+        <NavLink to="/corda/transactions" activeClassName="Active">
           <TxIcon />
           Transactions
-        </Link>
-        {/* <Link to="/corda/cordapps" activeClassName="Active">
+        </NavLink>
+        {/* <NavLink to="/corda/cordapps" activeClassName="Active">
           <ContractsIcon />
           CorDapps
-        </Link> */}
+        </NavLink> */}
       </>),
       searchText: "Search",
       status: (<>
@@ -284,26 +284,26 @@ class TopNavbar extends Component {
     return {
       menu: (
         <>
-          <Link to="/accounts" activeClassName="Active">
+          <NavLink to="/accounts" activeClassName="Active">
             <AccountIcon />
             Accounts
-          </Link>
-          <Link to="/blocks" activeClassName="Active">
+          </NavLink>
+          <NavLink to="/blocks" activeClassName="Active">
             <BlockIcon />
             Blocks
-          </Link>
-          <Link to="/transactions" activeClassName="Active">
+          </NavLink>
+          <NavLink to="/transactions" activeClassName="Active">
             <TxIcon />
             Transactions
-          </Link>
-          <Link to="/contracts" className={contractsClassname} activeClassName="Active">
+          </NavLink>
+          <NavLink to="/contracts" className={contractsClassname} activeClassName="Active">
             <ContractsIcon />
             Contracts
-          </Link>
-          <Link to="/events" activeClassName="Active">
+          </NavLink>
+          <NavLink to="/events" activeClassName="Active">
             <EventsIcon />
             Events
-          </Link>
+          </NavLink>
         </>
       ),
       searchText: "SEARCH FOR BLOCK NUMBERS OR TX HASHES",

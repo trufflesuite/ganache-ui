@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { push } from "react-router-redux";
+import { push } from "connected-react-router";
 
 import connect from "../helpers/connect";
 

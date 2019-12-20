@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import connect from "../helpers/connect";
 
 import LogContainerLazy from "./LogContainerLazy";
@@ -23,7 +23,7 @@ class Logs extends Component {
         links.push(<Link key={node.safeName} to={`/logs/${node.safeName}`}>{node.name}</Link>);
       }));
     }
-    const context = this.props.params.context || "default";
+    const context = this.props.match.params.context || "default";
 
     let logCache;
     if (this.caches.has(context)) {

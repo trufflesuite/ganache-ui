@@ -23,32 +23,36 @@ import UpdateReducer from "./auto-update/reducers";
 import NetworkReducer from "./network/reducers";
 import WorkspacesReducer from "./workspaces/reducers";
 import EventsReducer from "../../integrations/ethereum/common/redux/events/reducers";
+import { connectRouter } from 'connected-react-router';
 
-const appReducer = combineReducers({
-  appshell: AppShellReducer,
-  config: ConfigReducer,
-  core: function(state, action) {
-    const ethState = EthereumCoreReducer(state, action);
-    const coreState = CoreReducer(ethState, action);
-    return coreState;
-  },
-  web3: Web3Reducer,
-  accounts: AccountsReducer,
-  blocks: BlocksReducer,
-  transactions: TransactionsReducer,
-  logs: LogsReducer,
-  requestCache: RequestCacheReducer,
-  autoUpdate: UpdateReducer,
-  network: NetworkReducer,
-  workspaces: WorkspacesReducer,
-  events: EventsReducer,
-});
+export default (history) => {
+  const appReducer = combineReducers({
+    appshell: AppShellReducer,
+    config: ConfigReducer,
+    core: function(state, action) {
+      const ethState = EthereumCoreReducer(state, action);
+      const coreState = CoreReducer(ethState, action);
+      return coreState;
+    },
+    web3: Web3Reducer,
+    accounts: AccountsReducer,
+    blocks: BlocksReducer,
+    transactions: TransactionsReducer,
+    logs: LogsReducer,
+    requestCache: RequestCacheReducer,
+    autoUpdate: UpdateReducer,
+    network: NetworkReducer,
+    workspaces: WorkspacesReducer,
+    events: EventsReducer,
+    router: connectRouter(history),
+  });
 
-// This reducer is used to wipe all state on restart
-export default (state, action) => {
-  if (action.type === REQUEST_SERVER_RESTART) {
-    state = undefined;
-  }
+  // This reducer is used to wipe all state on restart
+  return (state, action) => {
+    if (action.type === REQUEST_SERVER_RESTART) {
+      state = undefined;
+    }
 
-  return appReducer(state, action);
+    return appReducer(state, action);
+  };
 };

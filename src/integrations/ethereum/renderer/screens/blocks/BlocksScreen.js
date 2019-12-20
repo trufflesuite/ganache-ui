@@ -15,8 +15,8 @@ class BlockContainer extends Component {
 
   render() {
     var content;
-    if (this.props.params.blockNumber != null) {
-      content = <BlockCard blockNumber={this.props.params.blockNumber} />;
+    if (this.props.match.params.blockNumber != null) {
+      content = <BlockCard blockNumber={this.props.match.params.blockNumber} />;
     } else {
       content = <BlockList scrollPosition={this.props.scrollPosition} />;
     }

@@ -9,7 +9,6 @@ import TxList from "../transactions/TxList";
 import FormattedEtherValue from "../../components/formatted-ether-value/FormattedEtherValue";
 import ChecksumAddress from "../../components/checksum-addresses/ChecksumAddress";
 import EventList from "../events/EventList";
-import { hashHistory } from "react-router";
 import {
   getContractDetails,
   clearShownContract,
@@ -22,10 +21,10 @@ class ContractDetails extends Component {
     super(props);
 
     const project = this.props.workspaces.current.projects[
-      this.props.params.projectIndex
+      this.props.match.params.projectIndex
     ];
     const filteredContracts = project.contracts.filter(
-      c => c.address === this.props.params.contractAddress,
+      c => c.address === this.props.match.params.contractAddress,
     );
     if (filteredContracts.length === 0) {
       // TODO: error
@@ -104,7 +103,7 @@ class ContractDetails extends Component {
     return (
       <div className="ContractDetailsScreen">
         <div className="TitleBar">
-          <button className="BackButton" onClick={hashHistory.goBack}>
+          <button className="BackButton" onClick={this.props.history.goBack}>
             &larr; Back
           </button>
           <h1 className="Title">{this.state.contract.contractName}</h1>

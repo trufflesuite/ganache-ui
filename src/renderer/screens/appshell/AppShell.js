@@ -14,7 +14,7 @@ import UpdateModal from "../auto-update/UpdateModal";
 import OnlyIf from "../../components/only-if/OnlyIf";
 
 ElectronCookies.enable({
-  origin: "https://truflesuite.com/ganache",
+  origin: "https://trufflesuite.com/ganache",
 });
 
 class AppShell extends Component {

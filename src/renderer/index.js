@@ -1,16 +1,19 @@
+
 import React from "react";
 import ReactDOM from "react-dom";
 import { AppContainer } from "react-hot-loader";
 import { Provider } from "react-redux";
-import { Router, hashHistory } from "react-router";
-import RootReducer from "../common/redux/reducer";
+import createRootReducer from "../common/redux/reducer";
+import { createHashHistory } from "history";
 import createStore from "./init/store/createStore";
 import { initRenderer } from "./init/index";
 import { ipcRenderer } from "electron";
-import routes from "./routes";
+import App from "./App";
 import "./css";
 
-const store = createStore(RootReducer);
+const hashHistory = createHashHistory();
+const rootReducer = createRootReducer(hashHistory);
+const store = createStore(rootReducer, hashHistory);
 initRenderer(store);
 
 ipcRenderer.on("navigate", (_, path) => {
@@ -21,7 +24,7 @@ const render = () => {
   ReactDOM.render(
     <AppContainer>
       <Provider store={store}>
-        <Router history={hashHistory} routes={routes} />
+        <App history={hashHistory} />
       </Provider>
     </AppContainer>,
     document.getElementById("app"),
@@ -31,3 +34,13 @@ const render = () => {
 store.subscribe(render);
 
 render();
+
+if (module.hot) {
+  module.hot.accept('./App', () => {
+    render()
+  });
+
+  module.hot.accept('../common/redux/reducer', () => {
+    store.replaceReducer(rootReducer(history))
+  })
+}

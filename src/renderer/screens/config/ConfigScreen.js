@@ -1,5 +1,4 @@
 import React, { PureComponent } from "react";
-import { hashHistory } from "react-router";
 import cloneDeep from "lodash.clonedeep";
 import isEqual from "lodash.isequal";
 import connect from "../helpers/connect";
@@ -80,7 +79,7 @@ class ConfigScreen extends PureComponent {
     if ("params" in this.props && "activeTab" in this.props.params) {
       const TABS = this.state.TABS
       for (let i = 0; i < TABS.length; i++) {
-        if (TABS[i].subRoute === this.props.params.activeTab) {
+        if (TABS[i].subRoute === this.props.match.params.activeTab) {
           this.state.activeIndex = i;
           break;
         }
@@ -121,7 +120,7 @@ class ConfigScreen extends PureComponent {
           deleteWorkspace(this.props.workspaces.current.name, this.props.workspaces.current.flavor),
         );
       } else {
-        hashHistory.goBack();
+        this.props.history.goBack();
       }
     }
   };

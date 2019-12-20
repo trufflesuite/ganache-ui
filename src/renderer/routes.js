@@ -1,5 +1,5 @@
-import React from "react";
-import { Route } from "react-router";
+import React, {Component} from "react";
+import { Redirect, Route, Switch } from "react-router";
 
 import AppShell from "./screens/appshell/AppShell";
 import ConfigScreen from "./screens/config/ConfigScreen";
@@ -25,22 +25,19 @@ import FirstRunScreen from "./screens/first-run/FirstRunScreen";
 import ContractsScreen from "../integrations/ethereum/renderer/screens/contracts/ContractsScreen";
 import LoaderScreen from "./screens/loader/LoaderScreen";
 
-const routes = (
-    <Route>
-      <Route path="/title" component={TitleScreen} />
-      <Route path="/home" component={HomeScreen} />
-      <Route path="/first_run" component={FirstRunScreen} />
-      <Route path="/loader" component={LoaderScreen} />
-      <Route path="/" component={AppShell}>
+class FlavorRoutes extends Component {
+  render() {
+    return <AppShell>
+      <Switch>
         <Route path="/accounts" component={AccountsScreen} />
-        <Route path="/blocks(/:blockNumber)" component={BlocksScreen} />
+        <Route path="/blocks/:blockNumber?" component={BlocksScreen} />
         <Route
-          path="/transactions(/:transactionHash)"
+          path="/transactions/:transactionHash?"
           component={TransactionsScreen}
         />
-        <Route path="/logs" component={LogsScreen} />
+        <Route exact path="/logs" component={LogsScreen} />
         <Route path="/logs/:context" component={LogsScreen} />
-        <Route path="/contracts" component={ContractsScreen} />
+        <Route exact path="/contracts" component={ContractsScreen} />
         <Route
           path="/contracts/:projectIndex/:contractAddress"
           component={ContractDetails}
@@ -51,16 +48,26 @@ const routes = (
           component={EventDetailsScreen}
         />
         <Route path="/notfound" component={NotFoundScreen} />
-        <Route path="/config(/:activeTab)" component={ConfigScreen} />
+        <Route path="/config/:activeTab?" component={ConfigScreen} />
 
-        <Route path="/corda" component={CordaNodes} />
+        <Route exact path="/corda">
+          <Redirect to="/corda/nodes" />
+        </Route>
+        <Route exact path="/corda/nodes" component={CordaNodes} />
         <Route path="/corda/nodes/:node" component={CordaNode} />
-        {/* <Route path="/corda/cordapps" component={CordaCordapps} />
+        {/* <Route exact path="/corda/cordapps" component={CordaCordapps} />
         <Route path="/corda/cordapps/:cordapp" component={CordaCordapp} /> */}
-        <Route path="/corda/transactions" component={CordaTransactions} />
+        <Route exact path="/corda/transactions" component={CordaTransactions} />
         <Route path="/corda/transactions/:txhash" component={CordaTransaction} />
-      </Route>
-    </Route>
-  );
+      </Switch>
+    </AppShell>
+  }
+}
 
-export default routes;
+export default (<Switch>
+  <Route exact path="/title" component={TitleScreen} />
+  <Route exact path="/home" component={HomeScreen} />
+  <Route exact path="/first_run" component={FirstRunScreen} />
+  <Route exact path="/loader" component={LoaderScreen} />
+  <Route path="/" component={FlavorRoutes} />
+</Switch>);

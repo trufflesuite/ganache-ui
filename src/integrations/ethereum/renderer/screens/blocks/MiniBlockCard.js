@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 import Moment from "react-moment";
 import Pluralize from "pluralize";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 
 import OnlyIf from "../../../../../renderer/components/only-if/OnlyIf";
 

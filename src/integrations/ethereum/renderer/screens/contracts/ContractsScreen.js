@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import path from "path";
 import connect from "../../../../../renderer/screens/helpers/connect";
 import ProjectContracts from "./ProjectContracts";

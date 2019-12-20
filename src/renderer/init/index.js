@@ -1,5 +1,3 @@
-import { showTitleScreen } from "../../common/redux/core/actions";
-
 import { initAutoUpdates } from "./AutoUpdate";
 import { initCore } from "./Core";
 import { initConfig } from "./Config";
@@ -12,9 +10,6 @@ import { initEvents } from "../../integrations/ethereum/renderer/init/Events";
 // you want here. The Redux Store is available at this point, so you can
 // dispatch any action you want
 export function initRenderer(store) {
-  // Load the first screen while we wait for the application to load
-  store.dispatch(showTitleScreen());
-
   initCore(store);
   initConfig(store);
   initLogs(store);

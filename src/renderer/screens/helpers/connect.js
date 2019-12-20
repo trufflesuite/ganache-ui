@@ -1,4 +1,5 @@
 import { connect } from "react-redux";
+import { withRouter } from "react-router";
 
 // Connect a component to specific reducer names.
 // e.g., connect(MyComponent, "core", "config")
@@ -27,5 +28,5 @@ export default function(component, ...reducers) {
       };
     },
   );
-  return connector(component);
+  return connector(withRouter(component));
 }

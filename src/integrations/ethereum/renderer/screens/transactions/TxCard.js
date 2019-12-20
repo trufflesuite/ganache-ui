@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { hashHistory } from "react-router";
 
 import connect from "../../../../../renderer/screens/helpers/connect";
 
@@ -90,7 +89,7 @@ class TxCard extends Component {
       <section className="TxCard">
         <div className="TxInfo">
           <header>
-            <button className="Button" onClick={hashHistory.goBack}>
+            <button className="Button" onClick={this.props.history.goBack}>
               &larr; Back
             </button>
 

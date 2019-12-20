@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import connect from "../../../../../renderer/screens/helpers/connect";
-import { hashHistory } from "react-router";
 
 import EncodedEventDetails from "./EncodedEventDetails";
 import DecodedEventDetails from "./DecodedEventDetails";
@@ -11,8 +10,8 @@ class EventDetailsScreen extends Component {
   componentDidMount() {
     this.props.dispatch(
       Events.getDecodedEvent(
-        this.props.params.transactionHash,
-        parseInt(this.props.params.logIndex),
+        this.props.match.params.transactionHash,
+        parseInt(this.props.match.params.logIndex),
       ),
     );
   }
@@ -56,7 +55,7 @@ class EventDetailsScreen extends Component {
     return (
       <div className="EventDetails">
         <div className="TitleBar">
-          <button className="BackButton" onClick={hashHistory.goBack}>
+          <button className="BackButton" onClick={this.props.history.goBack}>
             &larr; Back
           </button>
           <h1 className="Title">

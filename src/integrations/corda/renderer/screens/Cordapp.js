@@ -1,7 +1,6 @@
 import connect from "../../../../renderer/screens/helpers/connect";
 
 import React, { Component } from "react";
-import { hashHistory } from "react-router";
 import atob from "atob";
 import { basename } from "path"
 import NodeLink from "../components/NodeLink";
@@ -25,7 +24,7 @@ class Cordapp extends Component {
   }
 
   static getStateFromProps(props) {
-    const cordapp = atob(props.params.cordapp);
+    const cordapp = atob(props.match.params.cordapp);
     return {
       cordapp,
       nickname: VERSION_REGEX.exec(basename(cordapp))[1].toLowerCase()
@@ -44,7 +43,7 @@ class Cordapp extends Component {
       <div>
         <main>
           <div>
-            <button className="Button" onClick={hashHistory.goBack}>
+            <button className="Button" onClick={this.props.history.goBack}>
               &larr; Back
             </button>
             <div>
