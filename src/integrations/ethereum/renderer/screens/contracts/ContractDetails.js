@@ -157,7 +157,7 @@ class ContractDetails extends Component {
                 edit={false}
                 add={false}
                 delete={false}
-                enableClipboard={false}
+                enableClipboard={true}
                 displayDataTypes={true}
                 displayObjectSize={true}
                 indentWidth={2}

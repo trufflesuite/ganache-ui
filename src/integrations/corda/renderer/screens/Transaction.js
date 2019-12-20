@@ -111,12 +111,12 @@ class Transaction extends Component {
           edit={false}
           add={false}
           delete={false}
-          enableClipboard={false}
+          enableClipboard={true}
           displayDataTypes={true}
           displayObjectSize={true}
           indentWidth={4}// indent by 4 because that's what Corda likes to do.
           collapsed={1}
-          collapseStringsAfterLength={20}
+          collapseStringsAfterLength={36}
         />
         <br/>
         {state.state.data.exitKeys && state.state.data.exitKeys.length !== 0 ? (
