@@ -68,6 +68,7 @@ export default (<Switch>
   <Route exact path="/title" component={TitleScreen} />
   <Route exact path="/home" component={HomeScreen} />
   <Route exact path="/first_run" component={FirstRunScreen} />
+  <Route exact path="/" component={LoaderScreen} />
   <Route exact path="/loader" component={LoaderScreen} />
-  <Route path="/" component={FlavorRoutes} />
+  <Route component={FlavorRoutes} />
 </Switch>);

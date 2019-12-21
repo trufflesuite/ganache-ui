@@ -1,3 +1,4 @@
+import { showTitleScreen } from "../common/redux/core/actions";
 
 import React from "react";
 import ReactDOM from "react-dom";
@@ -32,6 +33,9 @@ const render = () => {
 };
 
 render();
+
+store.dispatch(showTitleScreen());
+
 
 if (module.hot) {
   module.hot.accept('./App', () => {
