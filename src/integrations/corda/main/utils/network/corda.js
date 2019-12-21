@@ -1,5 +1,7 @@
 const { spawn } = require("child_process");
 const { join } = require("path");
+const StreamingMessageHandler = require("./streaming-message-handler");
+const noop = () => {};
 
 class Corda {
   constructor(entity, path, JAVA_HOME, io) {
@@ -8,62 +10,56 @@ class Corda {
     this.JAVA_HOME = JAVA_HOME;
     this.java = null;
     this._io = io;
+
+    this.closeHandler = this.closeHandler.bind(this)
+
+    this._dataHandler = new StreamingMessageHandler();
+
+    this._awaiter = {resolve: noop, reject: noop};
   }
 
-  start(){
-    console.log(join(this.JAVA_HOME, "bin", "java"), ["-jar", "corda.jar"], {cwd: this.path, env: null});
-    this.java = spawn(join(this.JAVA_HOME, "bin", "java"), ["-jar", "corda.jar"], {cwd: this.path, env: null});
+  status = "stopped"
 
-    this.java.stderr.on('data', (data) => {
-      this._io.sendStdErr(data, this.entity.safeName);
-      // this.emit("message", "stderr", data, this.entity.safeName);
-      console.error(`corda stderr:\n${data}`);
-    });
-
-    this.java.stdout.on('data', (data) => {
-      this._io.sendStdOut(data, this.entity.safeName);
-      // this.emit("message", "stdout", data, this.entity.safeName);
-      console.error(`corda stdout:\n${data}`);
-    });
-
-    this.java.on("error", console.error);
+  start() {
+    if (this.status !== "stopped") throw new Error("Corda process must be stopped before starting");
 
     return new Promise((resolve, reject) => {
-      const closeHandler = async (code) => {
-        console.log(`child process exited with code ${code}`);
-        await this.stop();
-        reject(new Error(`child process exited with code ${code}`));
-      }
-      const startUpListener = (data) => {
-        console.log(data.toString());
-        if (data.toString().includes('" started up and registered in ')) {
-          this.java.stdout.removeListener('data', startUpListener);
-          this.java.stderr.removeListener('data', errListener);
-          this.java.removeListener('close', closeHandler);
-          resolve();
-        }
-      }
-      const errListener = async (data) => {
-        if (data.toString().includes('CAPSULE EXCEPTION: Capsule not extracted.')) {
-          this.java.stdout.removeListener('data', startUpListener);
-          this.java.stderr.removeListener('data', errListener);
-          this.java.removeListener('close', closeHandler);
-          await this.stop();
-          this._io.sendStdErr("Recovering from CAPSULE EXCEPTION...", this.entity.safeName);
-          resolve(await this.start());
-        }
-      };
-      this.java.once("close", closeHandler);
-      this.java.stderr.on("data", errListener);
-      this.java.stdout.on('data', startUpListener);
+      this._awaiter = {resolve, reject};
+      this.status = "starting";
+      this.java = spawn(join(this.JAVA_HOME, "bin", "java"), ["-jar", "corda.jar"], {cwd: this.path, env: null});
+
+      this._dataHandler.addErrHandler("CAPSULE EXCEPTION: Capsule not extracted.", this.handleCapsuleError.bind(this));
+      this._dataHandler.addOutHandler("Failed to bind on an address in ", this.handlePortBindError.bind(this));
+      this._dataHandler.addOutHandler('" started up and registered in ', this.handleStartUp.bind(this))
+
+      this._dataHandler.bind(this.java);
+
+      //#region Logging
+      /* eslint-disable no-console */
+      this.java.stderr.on("data", (data) => {
+        this._io.sendStdErr(data, this.entity.safeName);
+        console.error(`corda stderr:\n${data}`);
+      });
+      this.java.stdout.on("data", (data) => {
+        this._io.sendStdOut(data, this.entity.safeName);
+        console.error(`corda stdout:\n${data}`);
+      });
+      this.java.on("error", console.error);
+      /* eslint-enable no-console */
+      //#endregion
+
+      this.java.once("close", ()=>{ this.status = "stopped"; });
+
+      this.java.once("close", this.closeHandler);
     });
   }
 
   stop(){
+    this._dataHandler.unbind();
     return new Promise(resolve => {
       if (this.java) {
         if (this.java.exitCode === null) {
-          this.java.once("close", ()=>{
+          this.java.once("close", () => {
             this.java = null;
             resolve();
           });
@@ -78,6 +74,40 @@ class Corda {
         resolve();
       }
     });
+  }
+
+  async closeHandler(code){
+    console.log(`child process exited with code ${code}`);
+    await this.stop();
+    this._awaiter.reject(new Error(`corda.jar child process exited with code ${code}`));
+  }
+
+  handleStartUp() {
+    this.status = "started";
+
+    this._dataHandler.unbind();
+    this.java.off("close", this.closeHandler);
+    this._awaiter.resolve();
+  }
+
+  async handleCapsuleError() {
+    const resolve = this._awaiter.resolve
+    this.java.off("close", this.closeHandler);
+    this.stop().then(async () => {
+      this._io.sendStdErr("Recovering from CAPSULE EXCEPTION...", this.entity.safeName);
+      resolve(await this.start());
+    });
+    return true;
+  }
+
+  async handlePortBindError(data) {
+    const reject = this._awaiter.reject;
+    
+    this.java.off("close", this.closeHandler);
+    this.stop().then(() => {
+      reject(new Error(data.toString()));
+    })
+    return true;
   }
 }
 
