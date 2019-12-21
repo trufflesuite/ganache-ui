@@ -2,7 +2,7 @@ export default class CancellationToken {
   noop = () => void 0;
   constructor() {
     this.isActive = true;
-  this.canceller =  { cancel: this.noop };
+    this.canceller = { cancel: this.noop };
   }
   
   register(canceller){
