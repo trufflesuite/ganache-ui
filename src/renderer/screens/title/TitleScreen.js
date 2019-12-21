@@ -16,16 +16,22 @@ class TitleScreen extends Component {
       firstRun: undefined,
     };
 
-    const intervalId = setInterval(() => {
+    this.intervalId = setInterval(() => {
       if (this.state.firstRun === true) {
         this.props.history.push("/first_run");
-        clearInterval(intervalId);
+        clearInterval(this.intervalId);
       } else if (this.state.firstRun === false) {
         this.props.history.push("/home");
-        clearInterval(intervalId);
+        clearInterval(this.intervalId);
       }
     }, 1000);
   }
+
+  componentWillUnmount() {
+    clearInterval(this.intervalId);
+  }
+
+
 
   static getDerivedStateFromProps(nextProps) {
     if (
