@@ -4,6 +4,7 @@ import path from "path";
 import cloneDeep from "lodash.clonedeep";
 
 // https://github.com/electron/electron/blob/cd0aa4a956cb7a13cbe0e12029e6156c3e892924/docs/api/process.md#process-object
+// eslint-disable-next-line no-undef
 const CHAIN_PATH = path.join(__static, "node", "chain", "chain.js");
 const CHAIN_OPTIONS = {
   stdio: ["pipe", "pipe", "pipe", "ipc"],
@@ -34,6 +35,7 @@ class EthereumChainService extends EventEmitter {
             return;
           case "server-started":
             this._serverStarted = true;
+            this.emit(type, data);
             this.emit("message", type, data);
             return;
           case "server-stopped":
@@ -56,7 +58,7 @@ class EthereumChainService extends EventEmitter {
     }
   }
 
-  async startServer(settings, _workspaceDirectory) {
+  async startServer(settings) {
     if (this._child) {
       const options = this._ganacheCoreOptionsFromGanacheSettingsObject(settings);
       return new Promise((resolve, reject) => {

@@ -495,6 +495,7 @@ app.on('ready', () => {
     startupMode = STARTUP_MODE.NEW_WORKSPACE;
     if (flavor === "ethereum") {
       await integrations.startChain();
+      await integrations.startServer();
     } else {
       if (workspace) {
         const globalSettings = global.getAll();
