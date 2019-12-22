@@ -18,7 +18,7 @@ class Nodes extends Component {
   }
 
   emptyNetwork(){
-    return (<div>No nodes or notaries configured..</div>);
+    return (<div className="Waiting Waiting-Padded">No nodes or notaries configured..</div>);
   }
 
   render() {
