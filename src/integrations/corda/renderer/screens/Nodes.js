@@ -4,14 +4,30 @@ import NodeLink from "../components/NodeLink";
 import React, { Component } from "react";
 
 class Nodes extends Component {
-  render() {
-    const workspace = this.props.config.settings.workspace;
+  getNodes(workspace){
+    return workspace.nodes.map((node) => (<NodeLink key={`node-${node.safeName}`} postgresPort={workspace.postgresPort} node={node} />));
+  }
 
+  getNotaries(workspace){
+    return workspace.notaries.map((node) => (<NodeLink key={`node-${node.safeName}`} postgresPort={workspace.postgresPort} node={node} services={["Notary"]} />));
+  }
+
+  getEntities(){
+    const workspace = this.props.config.settings.workspace;
+    return this.getNodes(workspace).concat(this.getNotaries(workspace));
+  }
+
+  emptyNetwork(){
+    return (<div>No nodes or notaries configured..</div>);
+  }
+
+  render() {
+    const entities = this.getEntities();
+    const isEmptyNetwork = entities.length === 0;
     return (
       <div className="Nodes DataRows">
         <main>
-          {workspace.nodes.map((node) => (<NodeLink key={`node-${node.safeName}`} postgresPort={workspace.postgresPort} node={node} />))}
-          {workspace.notaries.map((node) => (<NodeLink key={`node-${node.safeName}`} postgresPort={workspace.postgresPort} node={node} services={["Notary"]} />))}
+          {isEmptyNetwork ? this.emptyNetwork() : entities}
         </main>
       </div>
     );
