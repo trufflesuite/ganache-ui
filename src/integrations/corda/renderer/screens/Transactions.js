@@ -22,12 +22,13 @@ class Transactions extends Component {
     const transactions = await TransactionData.getAllTransactions(filteredNodes, nodes, workspace.postgresPort);
     this.setState({transactions});
   }
+
   constructor(props) {
     super(props);
 
     const state = {
       selectedNode: "",
-      transactions: []
+      transactions: null
     };
     this.props.config.settings.workspace.nodes.forEach((node) => {
       state["node_" + node.safeName] = {};
@@ -35,8 +36,17 @@ class Transactions extends Component {
     this.state = state;
   }
 
+  getNodeRows() {
+    return this.state.transactions.sort((a, b) => b.earliestRecordedTime - a.earliestRecordedTime).map(tx => {
+      return (<TransactionLink key={tx.txhash} tx={tx} />);
+    })
+  }
+
   render() {
     const workspace = this.props.config.settings.workspace;
+    if (this.state.transactions === null) {
+      return (<div className="Waiting Waiting-Padded">Loading Transaction...</div>);
+    }
     return (
       <div className="corda-transactions">
         <div className="corda-transactions-filter">
@@ -51,11 +61,7 @@ class Transactions extends Component {
           </div>
         </div>
         <div className="Nodes DataRows">
-          <main>
-              {this.state.transactions.sort((a, b) => b.earliestRecordedTime - a.earliestRecordedTime).map(tx => {
-                return (<TransactionLink key={tx.txhash} tx={tx} />);
-              })}
-          </main>
+          <main> {this.getNodeRows()} </main>
         </div>
       </div>
     );
