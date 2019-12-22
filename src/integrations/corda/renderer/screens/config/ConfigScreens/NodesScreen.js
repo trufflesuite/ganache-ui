@@ -199,21 +199,26 @@ class NodesScreen extends Component {
   }
 
   updateNetworkMap = (node) => {
-    this.props.config.settings.workspace.nodes.forEach(other => {
-      if (node.safeName === other.safeName) return;
+    const nodeType = this.props.data.type;
+    ["nodes", "notaries"].forEach(type => {
+      this.props.config.settings.workspace[type].forEach(other => {
+        if (node.safeName === other.safeName) return;
+        if(!other[nodeType]) return;
+        if(!node[nodeType]) return;
 
-      const otherIndexOfNode = other.nodes.indexOf(node.safeName);
-      const otherHasConnection = otherIndexOfNode !== -1;
-      const nodeHasConnection = node.nodes.includes(other.safeName);
-      // if `other` has this `node`, but this `node` doesn't have `other`, we
-      // need update `other` to remove this `node`
-      if (otherHasConnection && !nodeHasConnection) {
-        other.nodes.splice(otherIndexOfNode, 1);
-      // if this `node` has `other`, but `other` doesn't have this `node`, we
-      // need to add this `node` to `other`
-      } else if(nodeHasConnection && !otherHasConnection) {
-        other.nodes.push(node.safeName);
-      }
+        const otherIndexOfNode = other[nodeType].indexOf(node.safeName);
+        const otherHasConnection = otherIndexOfNode !== -1;
+        const nodeHasConnection = node[nodeType].includes(other.safeName);
+        // if `other` has this `node`, but this `node` doesn't have `other`, we
+        // need update `other` to remove this `node`
+        if (otherHasConnection && !nodeHasConnection) {
+          other[nodeType].splice(otherIndexOfNode, 1);
+        // if this `node` has `other`, but `other` doesn't have this `node`, we
+        // need to add this `node` to `other`
+        } else if(nodeHasConnection && !otherHasConnection) {
+          other[nodeType].push(node.safeName);
+        }
+      });
     });
   }
 
