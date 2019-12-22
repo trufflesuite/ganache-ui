@@ -161,7 +161,7 @@ class NetworkManager extends EventEmitter {
       const promises = entities.map(async (entity) => {
         const currentPath = join(this.workspaceDirectory, entity.safeName);
         // eslint-disable-next-line require-atomic-updates
-        entity.braidPort = await this.getPort(entity.rpcPort + 20000);
+        entity.braidPort = await this.getPort(entity.rpcPort + 10000);
         const braidPromise = this.braid.start(entity, currentPath, JAVA_HOME);
         const corda = new Corda(entity, currentPath, JAVA_HOME, this._io);
         this.processes.push(corda);
