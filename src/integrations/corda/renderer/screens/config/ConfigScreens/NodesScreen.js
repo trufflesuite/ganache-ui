@@ -3,6 +3,44 @@ import Modal from "../../../../../../renderer/components/modal/Modal";
 import ModalDetails from "../../../../../../renderer/components/modal/ModalDetails";
 import { STARTUP_MODE } from "../../../../../../common/redux/config/actions";
 
+function legalNameValidator(stringName) {
+  const errors = [];
+  const requiredKeys = ["O", "L", "C"];
+  const requiredCheck = new Set();
+  const validKeys = [...requiredKeys, "CN", "OU", "ST"];
+  stringName.split(",").forEach(n => {
+    const eq = n.indexOf("=");
+    const key = (eq === -1 ? n : n.substring(0, eq)).trim();
+    const value = (eq === -1 ? "" : n.substring(eq + 1)).trim();
+    if (key.length===0) {
+      errors.push(`Invalid attribute format. Expected non-zero length string, found "=".`);
+      return;
+    }
+    const upperKey = key.toUpperCase();
+    if (!validKeys.includes(upperKey)) {
+      errors.push(`"${key}" is not a valid attribute. Valid attributes are: ${validKeys.join(", ")}.`);
+    } else if (value.length===0) {
+      errors.push(`"${key}" attribute must have a non-zero length value.`);
+    }
+
+    if (requiredKeys.includes(upperKey)) {
+      if (requiredCheck.has(upperKey)){
+        errors.push(`Duplicate attribute for "${upperKey}" detected.`);
+      } else {
+        requiredCheck.add(upperKey);
+      }
+    }
+
+    if (upperKey === "C" && value.length > 0 && value.length !== 2) {
+      errors.push(`"C" (Country) attribute must be a 2-letter country code, found "${value}".`);
+    }
+  });
+  if (requiredCheck.size < requiredKeys.length) {
+    errors.push(`Legal Name requires attributes: ${requiredKeys.join(", ")}.`);
+  }
+  return errors;
+}
+
 const modes = {
   EDIT: "edit",
   ADD: "add"
@@ -37,6 +75,10 @@ class NodeModal extends Component{
             this.setState({name: e.target.value});
           }} value={node.name||""}>
           </input>
+          <div className="error">{this.props.nodeErrors.legalName ? this.props.nodeErrors.legalName.map((error,i) => {
+              return (<div key={"name" + error + i}>{error}</div>);
+            }) : ""}
+          </div>
 
           <div>RPC Port</div>
           <input type="number" min="1024" max="65535" onChange={(e) => {
@@ -87,7 +129,7 @@ class NodeModal extends Component{
 class NodesScreen extends Component {
   constructor(props){
     super(props);
-    this.state = {mode: null, selectedIdx: null};
+    this.state = {mode: null, selectedIdx: null, nodeErrors: null};
   }
 
   handleNodeClick = idx => () => {
@@ -97,7 +139,7 @@ class NodesScreen extends Component {
   }
 
   resetMode = () => {
-    this.setState({mode: null});
+    this.setState({mode: null, nodeErrors: null});
   }
 
   handleAddNodeClick = () =>{
@@ -215,11 +257,17 @@ class NodesScreen extends Component {
           closeModal={this.resetMode.bind(this)}
           mode={mode}
           data={data}
+          nodeErrors={this.state.nodeErrors||{}}
           handleNodeUpdate={(node) => {
-            handleNodeUpdate(node);
-            this.resetMode();
-            this.updateNetworkMap(node);
-            this.forceUpdate();
+            const legalNameErrors = legalNameValidator(node.name);
+            if (legalNameErrors.length){
+              this.setState({nodeErrors: {legalName: legalNameErrors}});
+            } else {
+              handleNodeUpdate(node);
+              this.resetMode();
+              this.updateNetworkMap(node);
+              this.forceUpdate();
+            }
           }}
         />
       );
