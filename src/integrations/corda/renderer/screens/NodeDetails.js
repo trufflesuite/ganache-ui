@@ -153,7 +153,11 @@ class NodeDetails extends Component {
     let hasNoPeers = (!!this.state.nodes && !!this.state.notaries);
     if (this.state.nodes) {
       nodes = this.state.nodes.reduce((acc, node) => {
-        const workspaceNode = this.getWorkspaceNode(node.legalIdentities[0].owningKey);
+        const owningKey = node.legalIdentities[0].owningKey
+        // filter self
+        if (this.state.node.owningKey === owningKey) return acc;
+
+        const workspaceNode = this.getWorkspaceNode(owningKey);
         if (workspaceNode) {
           acc.push((<NodeLink key={`node-${workspaceNode.safeName}`} postgresPort={this.props.config.settings.workspace.postgresPort} node={workspaceNode} />));
         }
@@ -162,6 +166,10 @@ class NodeDetails extends Component {
     }
     if (this.state.notaries) {
       nodes = nodes.concat(this.state.notaries.reduce((acc, notary) => {
+        const owningKey = notary.owningKey
+        // filter self
+        if (this.state.node.owningKey === owningKey) return acc;
+
          const workspaceNode = this.getWorkspaceNotary(notary.owningKey);
         if (workspaceNode && notary.owningKey !== this.state.node) {
           acc.push((<NodeLink key={`node-${workspaceNode.safeName}`} postgresPort={this.props.config.settings.workspace.postgresPort} node={workspaceNode} services={["Notary"]} />));
