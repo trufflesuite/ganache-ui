@@ -46,6 +46,8 @@ class Transactions extends Component {
     const workspace = this.props.config.settings.workspace;
     if (this.state.transactions === null) {
       return (<div className="Waiting Waiting-Padded">Loading Transaction...</div>);
+    } else if (this.state.transactions.length === 0) {
+      return (<div className="Waiting Waiting-Padded">No Transactions</div>);
     }
     return (
       <div className="corda-transactions">
