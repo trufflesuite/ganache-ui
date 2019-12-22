@@ -56,7 +56,7 @@ async function getAllTransactions(nodes, allNodes, port, canceller = {cancelled:
     // nodes
     await Promise.all(res.rows.map(row => {
       const tx = new TransactionData(convertTransactionIdToHash(row.transaction_id));
-      if (transactions.has()) return;
+      if (transactions.has(tx.txhash)) return;
 
       transactions.set(tx.txhash, tx);
       return tx.update(allNodes, port, canceller);
