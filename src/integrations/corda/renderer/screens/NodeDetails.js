@@ -19,7 +19,7 @@ class NodeDetails extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {node: this.findNodeFromProps(), nodes:[], notaries:[], cordapps:[], transactions: []};
+    this.state = {node: this.findNodeFromProps(), nodes:null, notaries:null, cordapps: null, transactions: null};
   }
 
   findNodeFromProps(){
