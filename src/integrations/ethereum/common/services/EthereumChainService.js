@@ -68,7 +68,7 @@ class EthereumChainService extends EventEmitter {
         });
       });
     } else {
-      throw new Error("Can't stop server. Process not started.");
+      throw new Error("Can't start server. Process not started.");
     }
   }
 
