@@ -1,6 +1,6 @@
 import { ipcRenderer } from "electron";
 import bs58 from "bs58";
-import { Client } from "pg";
+import { Pool } from "pg";
 import { Buffer } from "safe-buffer";
 
 function convertTxHashToId(txhash) {
@@ -10,30 +10,40 @@ function convertTransactionIdToHash(transactionId) {
   const bytes = Buffer.from(transactionId, "hex");
   return bs58.encode(bytes);
 }
-function getClient(database, port) {
-  return new Client({
-    user: "postgres",
-    host: "localhost",
-    password: "",
-    database,
-    port
+const pools = new Map();
+function getConnectedClient(database, port) {
+  let pool;
+  const key = `${database}:${port}`;
+  if (!pools.has(key)){
+    pool = new Pool({
+      user: "postgres",
+      host: "localhost",
+      password: "",
+      database,
+      port
+    });
+    pools.set(key, pool);
+  } else {
+    pool = pools.get(key);
+  }
+  return new Promise((resolve, reject) => {
+    pool.connect((err, client, done) => {
+      if(err)  return reject(err);
+      resolve(client, done);
+    });
   });
 }
-async function getConnectedClient(database, port) {
-  const client = getClient(database, port);
-  await client.connect();
-  return client;
-}
+
 async function queryForTxHashIndexes(txhash, node, port, canceller) {
   let res;
   const txId = convertTxHashToId(txhash);
-  const client =  await getConnectedClient(node.safeName, port);
+  const client = await getConnectedClient(node.safeName, port);
   try {
-    if (canceller.cancelled) return;
+    if (canceller.cancelled) {return;}
 
     res = await client.query(`SELECT output_index FROM vault_states WHERE transaction_id = $1::text`, [txId]);
   } finally {
-    client.end();
+    client.release();
   }
   return res.rows.map(r => r.output_index);
 }
@@ -42,15 +52,16 @@ async function getAllTransactions(nodes, allNodes, port, canceller = {cancelled:
   const transactions = new Map();
   await Promise.all(nodes.map(async node => {
     const client = await getConnectedClient(node.safeName, port, canceller);
-    if (canceller.cancelled) { client.end(); return; }
     let res;
-    try {   
+    try {
+      if (canceller.cancelled) return;
+
       // get all transactions this client knows about
       res = await client.query(`SELECT distinct(transaction_id) transaction_id FROM vault_states GROUP BY transaction_id`);
     } finally {
-      client.end();
+      client.release();
     }
-    if (canceller.cancelled) { return; }
+    if (canceller.cancelled) return;
 
     // iterate over all the found transactions, and make sure they are completely filled in from states from all
     // nodes
@@ -183,6 +194,7 @@ export default class TransactionData {
         transaction.states.set(index, state);
       });
     });
+
     // wait for everything before we render, otherwise we risk a janky
     // render as results come in from all the nodes and indexes
     await Promise.all(resultPromises);

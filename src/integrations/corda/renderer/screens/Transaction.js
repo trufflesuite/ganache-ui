@@ -146,12 +146,12 @@ class Transaction extends Component {
         <div className="corda-details-section">
           <h3 className="Label">Participants</h3>
           <div className="DataRows">
-            {participants.map(node => {
+            {participants.map((node, i) => {
               const workspaceNode = this.getWorkspaceNode(node.owningKey);
               if (workspaceNode) {
                 return (<NodeLink key={"participant_" + workspaceNode.safeName} postgresPort={this.props.config.settings.workspace.postgresPort} node={workspaceNode} />);
               } else {
-                return (<div className="DataRow" key={"participant_anon" + node.owningKey}><div className="Value"><em>Anonymized Participant</em></div></div>);
+                return (<div className="DataRow" key={"participant_anon" + node.owningKey + i}><div className="Value"><em>Anonymized Participant</em></div></div>);
               }
             })}
           </div>

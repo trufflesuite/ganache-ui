@@ -5,7 +5,7 @@ const postgres = require("../postgres");
 const Braid = require("./braid");
 const Corda = require("./corda");
 const fse = require("fs-extra");
-const { Client } = require("pg");
+const { Pool } = require("pg");
 const fetch = require("node-fetch");
 const GetPort = require("get-port");
 const BlobInspector = require("./blob-inspector");
@@ -71,17 +71,29 @@ class NetworkManager extends EventEmitter {
       this.braid = new Braid(join(await BRAID_HOME, ".."), this._io);
   }
 
-  setupPostGresHooks() {
-    return Promise.all(this.entities.map(async entity => {
-      const client = new Client({
+  pools = new Map()
+  getConnectedClient(database, port) {
+    let pool;
+    const key = `${database}:${port}`;
+    if (!this.pools.has(key)){
+      pool = new Pool({
         user: "postgres",
         host: "localhost",
-        database: entity.safeName,
         password: "",
-        port: this.settings.postgresPort
-      })
+        database,
+        port
+      });
+      this.pools.set(key, pool);
+    } else {
+      pool = this.pools.get(key);
+    }
     
-      await client.connect();
+    return pool.connect();
+  }
+
+  setupPostGresHooks() {
+    return Promise.all(this.entities.map(async entity => {
+      const client = await this.getConnectedClient(entity.safeName, this.settings.postgresPort);
       
       await client.query(`create or replace function notify_subscribers()
           returns trigger
@@ -185,18 +197,20 @@ class NetworkManager extends EventEmitter {
   }
 
   async stop() {
-    try {
-      if (this.postGresHooksPromise) {
+    if (this.postGresHooksPromise) {
+      try {
         const postGresHooksClient = await this.postGresHooksPromise;
-        try {
-          postGresHooksClient && await Promise.all(postGresHooksClient.map(client => client.end()));
-          this.postGresHooksPromise = null;
-        } catch(e) {
-          console.error(e);
-        }
+        postGresHooksClient && await Promise.all(postGresHooksClient.map(client => client.end()));
+        this.postGresHooksPromise = null;
+      } catch(e) {
+        console.error("Error occured while attempting to stop postgres clients...");
+        console.error(e);
       }
-      this.pg && await this.pg.stop();
+    }
+    try {
+      const _pg = this.pg;
       this.pg = null;
+      _pg && await _pg.stop();
     } catch(e) {
       console.error("Error occured while attempting to stop postgres...");
       console.error(e);

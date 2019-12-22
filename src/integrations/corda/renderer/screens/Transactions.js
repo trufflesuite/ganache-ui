@@ -3,10 +3,17 @@ import connect from "../../../../renderer/screens/helpers/connect";
 import TransactionLink from "../components/TransactionLink";
 import React, { Component } from "react";
 import TransactionData from "../transaction-data";
+import { CancellationToken } from "./utils";
 
 class Transactions extends Component {
+  refresher = new CancellationToken();
+
   componentDidMount(){
     this.refresh();
+  }
+
+  componentWillUnmount() {
+    this.refresher.cancel();
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -16,10 +23,15 @@ class Transactions extends Component {
   }
 
   async refresh() {
+    this.refresher.cancel();
+
+    let canceller = this.refresher.getCanceller();
+    
     const workspace = this.props.config.settings.workspace;
     const nodes = workspace.nodes;    
     const filteredNodes = this.state.selectedNode !== "" ? nodes.filter(node => node.safeName === this.state.selectedNode) : nodes;
-    const transactions = await TransactionData.getAllTransactions(filteredNodes, nodes, workspace.postgresPort);
+    const transactions = await TransactionData.getAllTransactions(filteredNodes, nodes, workspace.postgresPort, canceller);
+    if (canceller.cancelled) return;
     this.setState({transactions});
   }
 
@@ -45,7 +57,7 @@ class Transactions extends Component {
   render() {
     const workspace = this.props.config.settings.workspace;
     if (this.state.transactions === null) {
-      return (<div className="Waiting Waiting-Padded">Loading Transaction...</div>);
+      return (<div className="Waiting Waiting-Padded">Loading Transactions...</div>);
     } else if (this.state.transactions.length === 0) {
       return (<div className="Waiting Waiting-Padded">No Transactions</div>);
     }
