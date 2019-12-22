@@ -369,7 +369,10 @@ h3.Label {
     margin-left: 10px;
     margin-bottom: 3px;
   }
-  &.Waiting-Padded {
+  &.Waiting-Margin {
     margin: 3rem 0;
+  }
+  &.Waiting-Padded {
+    padding: 3rem 0;
   }
 }
