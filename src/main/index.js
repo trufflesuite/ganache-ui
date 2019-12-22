@@ -295,12 +295,6 @@ app.on('ready', () => {
       initAutoUpdates(globalSettings, mainWindow);
     });
 
-    integrations.on("start", async () => {
-      if (workspace) {
-        integrations.startServer();
-      }
-    });
-
     integrations.on("start-error", err => {
       err.code = "CUSTOMERROR";
       err.key = "workspace.server.chain";
