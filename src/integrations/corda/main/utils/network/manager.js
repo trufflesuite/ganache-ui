@@ -223,17 +223,34 @@ class NetworkManager extends EventEmitter {
   }
 
   async stop() {
+    const promises = this.processes.map(cordaProcess => cordaProcess.stop());
+
+    if (this.braid) {
+      promises.push(this.braid.stop());
+    }
+
+    // wait until braid and corda are stopped
+    await Promise.all(promises);
+    
+    // then shut down all the postgress stuff...
+
     if (this.postGresHooksPromise) {
       try {
         const pgHookProm = this.postGresHooksPromise;
         this.postGresHooksPromise = null;
         const postGresHooksClient = await pgHookProm;
-        postGresHooksClient && await Promise.all(postGresHooksClient.map(client => client.end()));
+        postGresHooksClient && await Promise.all(postGresHooksClient.map(client => client.release()));
       } catch(e) {
         console.error("Error occured while attempting to stop postgres clients...");
         console.error(e);
       }
     }
+    const pools = this.pools;
+    for(let [,pool] of pools) {
+      await pool.end();
+    }
+    this.pools.clear();
+
     try {
       const _pg = this.pg;
       this.pg = null;
@@ -242,14 +259,6 @@ class NetworkManager extends EventEmitter {
       console.error("Error occured while attempting to stop postgres...");
       console.error(e);
     }
-
-    const promises = this.processes.map(cordaProcess => cordaProcess.stop());
-
-    if (this.braid) {
-      promises.push(this.braid.stop());
-    }
-
-    return Promise.all(promises);
   }
   
   getNodes(){
