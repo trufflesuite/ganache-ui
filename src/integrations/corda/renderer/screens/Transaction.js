@@ -153,7 +153,7 @@ class Transaction extends Component {
     let selectedState;
     [["Output", txStates], ["Input", this.state.inputs]].forEach(([type, states]) => {
       if (states === null) {
-        tabs.push(<div style={{order: 9999999}} ref={"tab_button_" + type + "_loading"} className="corda-tab Label">Loading {type} States...</div>);
+        tabs.push(<div style={{order: 9999999, cursor: "wait"}} ref={"tab_button_" + type + "_loading"} className="corda-tab Label">Loading {type} States...</div>);
         return;
       }
       for (let [index, state] of states) {
