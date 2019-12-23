@@ -77,6 +77,9 @@ async function getAllTransactions(nodes, allNodes, port, canceller = {cancelled:
 }
 
 export default class TransactionData {
+  static convertTxHashToId = convertTxHashToId
+  static convertTransactionIdToHash = convertTransactionIdToHash
+  
   constructor(txhash) {
     this.txhash = txhash;
     this.states = new Map();
@@ -85,7 +88,7 @@ export default class TransactionData {
     this.notaries = new Set();
   }
 
-  async fetchAttachments(){
+  async fetchDetails(){
     const txhash = this.txhash;
 
     // get the data that knows about attachments
@@ -99,11 +102,16 @@ export default class TransactionData {
     });
     ipcRenderer.send("CORDA_REQUEST_TRANSACTION", txhash);
 
-
     // finally, wait for the raw transaction data
     const rawTransactionData = await rawTransactionDataPromise;
-    if (rawTransactionData && rawTransactionData.wire && rawTransactionData.wire.attachments) {
-      return rawTransactionData.wire.attachments;
+    if (rawTransactionData && rawTransactionData.wire) {
+      if (!rawTransactionData.wire.attachments) {
+        rawTransactionData.wire.attachments = [];
+      }
+      if (!rawTransactionData.wire.inputs) {
+        rawTransactionData.wire.inputs = [];
+      }
+      return rawTransactionData.wire;
     }
     return [];
   }

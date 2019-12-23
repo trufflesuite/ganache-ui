@@ -98,15 +98,17 @@ class NodeModal extends Component{
           }} value={node.p2pPort||""}>
           </input>
 
-          <div>Network Map</div>
-          <select multiple={true} onChange={(e) => {
-            const selectedNodes = [...e.target.options].filter(o => o.selected).map(o => o.value);
-            this.setState({nodes: selectedNodes});
-          }} value={node.nodes}>
-            {this.props.allNodes.filter(n => n.safeName !== node.safeName).map(n => {
-              return <option key={n.safeName} value={n.safeName}>{n.name}</option>
-            })}
-          </select>
+          {this.props.type==="Notary" ? "" : (<>
+            <div>Network Map</div>
+            <select multiple={true} onChange={(e) => {
+              const selectedNodes = [...e.target.options].filter(o => o.selected).map(o => o.value);
+              this.setState({nodes: selectedNodes});
+            }} value={node.nodes}>
+              {this.props.allNodes.filter(n => n.safeName !== node.safeName).map(n => {
+                return <option key={n.safeName} value={n.safeName}>{n.name}</option>
+              })}
+            </select>
+          </>)}
 
           <div>CorDapps</div>
           <select multiple={true} onChange={(e) => {
@@ -200,25 +202,24 @@ class NodesScreen extends Component {
 
   updateNetworkMap = (node) => {
     const nodeType = this.props.data.type;
-    ["nodes", "notaries"].forEach(type => {
-      this.props.config.settings.workspace[type].forEach(other => {
-        if (node.safeName === other.safeName) return;
-        if(!other[nodeType]) return;
-        if(!node[nodeType]) return;
+    
+    // we don't currently support customizing the networkmap for notaries
+    if (nodeType === "notaries") return;
+    this.props.config.settings.workspace.nodes.forEach(other => {
+      if (node.safeName === other.safeName) return;
 
-        const otherIndexOfNode = other[nodeType].indexOf(node.safeName);
-        const otherHasConnection = otherIndexOfNode !== -1;
-        const nodeHasConnection = node[nodeType].includes(other.safeName);
-        // if `other` has this `node`, but this `node` doesn't have `other`, we
-        // need update `other` to remove this `node`
-        if (otherHasConnection && !nodeHasConnection) {
-          other[nodeType].splice(otherIndexOfNode, 1);
-        // if this `node` has `other`, but `other` doesn't have this `node`, we
-        // need to add this `node` to `other`
-        } else if(nodeHasConnection && !otherHasConnection) {
-          other[nodeType].push(node.safeName);
-        }
-      });
+      const otherIndexOfNode = other[nodeType].indexOf(node.safeName);
+      const otherHasConnection = otherIndexOfNode !== -1;
+      const nodeHasConnection = node[nodeType].includes(other.safeName);
+      // if `other` has this `node`, but this `node` doesn't have `other`, we
+      // need update `other` to remove this `node`
+      if (otherHasConnection && !nodeHasConnection) {
+        other[nodeType].splice(otherIndexOfNode, 1);
+      // if this `node` has `other`, but `other` doesn't have this `node`, we
+      // need to add this `node` to `other`
+      } else if(nodeHasConnection && !otherHasConnection) {
+        other[nodeType].push(node.safeName);
+      }
     });
   }
 
@@ -262,6 +263,7 @@ class NodesScreen extends Component {
           closeModal={this.resetMode.bind(this)}
           mode={mode}
           data={data}
+          type={type}
           nodeErrors={this.state.nodeErrors||{}}
           handleNodeUpdate={(node) => {
             const legalNameErrors = legalNameValidator(node.name);

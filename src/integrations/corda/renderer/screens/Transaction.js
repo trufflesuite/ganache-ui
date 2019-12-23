@@ -3,11 +3,11 @@ import React, { Component } from "react";
 import jsonTheme from "../../../../common/utils/jsonTheme";
 import ReactJson from "@ganache/react-json-view";
 import NodeLink from "../components/NodeLink";
+import { Link } from "react-router-dom";
 import TransactionData from "../transaction-data";
 import { CancellationToken } from "./utils";
 
 const IGNORE_FIELDS = new Set(["@class", "participants"]);
-// const IGNORE_FIELDS = new Set(["@class", "participants", "linearId"]);
 
 function getCleanState(state) {
   const data = state.state.data;
@@ -25,7 +25,7 @@ class Transaction extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {selectedIndex: 0, transaction: null, attachments: null};
+    this.state = {selectedIndex: null, transaction: null, attachments: null, inputs: null, commands: null};
   }
 
   componentWillUnmount() {
@@ -44,7 +44,7 @@ class Transaction extends Component {
     } else if (prevProps.match.params.txhash !== this.props.match.params.txhash) {
       // if the txhash has changed we first want to trigger the loading screen
       // by getting rid of the current `transaction` then we need to refresh our data
-      this.setState({transaction: null, attachments: null}, this.refresh.bind(this));
+      this.setState({selectedIndex: null, transaction: null, attachments: null, inputs: null, commands: null}, this.refresh.bind(this));
     }
   }
 
@@ -64,14 +64,77 @@ class Transaction extends Component {
       if (canceller.cancelled) return;
       this.setState({transaction});
     });
-    transaction.fetchAttachments(nodes, port, false, canceller).then(async attachments => {
+    transaction.fetchDetails(nodes, port, false, canceller).then(async details => {
       if (canceller.cancelled) return;
       // we don't want to render attachments before the transaction is rendered...
       await updaterProm;
       if (canceller.cancelled) return;
+      
+      this.setState({attachments: details.attachments, commands: details.commands});
+      
+      // allow the tabs to render what we do know while we fetch the remaining details
+      // from the other nodes
+      this.setState({inputs: new Map(
+        details.inputs.map(inState => [inState.index, {ref: {
+          txhash: TransactionData.convertTransactionIdToHash(inState.txhash),
+          index: inState.index
+        }}])
+      )});
 
-      this.setState({attachments});
+      const promises = details.inputs.map(async inState => {
+        const transaction = new TransactionData(TransactionData.convertTransactionIdToHash(inState.txhash));
+        // TODO: this gets too much data... we only care about the single index,
+        // not all of them. Also, we may be able to batch the requests by transaction
+        // as multiple output states from a single previous transaction can be used
+        // as input states for the next transaction
+        await transaction.update(nodes, port, canceller);
+        if (canceller.cancelled) return;
+        const txStates = transaction.states;
+        return [inState.index, txStates.get(inState.index)];
+      });
+      const inputs = new Map(await Promise.all(promises));
+      this.setState({inputs});
     });
+  }
+
+  renderStateHeader(state, type) {
+    const index = state.ref.index;
+    const txhash = state.ref.txhash;
+    const txData = getCleanState(state);
+    const meta = state.metaData;
+    return (
+      <div className="corda-details-section corda-transaction-details">
+        <h3 className="Label">
+          State {index} ({meta.status}) @ {meta.recordedTime}
+          <div className="Label-rightAligned corda-transaction-classname">{state.state.contract}</div>
+          {type === "Output" ? "" :
+            <div className="corda-transaction-details-tx-link"><em>TX 
+              <Link to={"/corda/transactions/" + txhash}>{txhash}</Link>
+            </em></div>
+          }
+        </h3>
+        
+        <div className="Nodes DataRows corda-json-view">
+          <ReactJson
+            src={
+              txData
+            }
+            name={false}
+            theme={jsonTheme}
+            iconStyle="triangle"
+            edit={false}
+            add={false}
+            delete={false}
+            enableClipboard={true}
+            displayDataTypes={true}
+            displayObjectSize={true}
+            indentWidth={4}// indent by 4 because that's what Corda likes to do.
+            collapsed={1}
+            collapseStringsAfterLength={36}
+          />
+        </div>
+      </div>
+    );
   }
 
   render() {
@@ -86,89 +149,92 @@ class Transaction extends Component {
     }
 
     const tabs = [];
-    const states = [];
-    for (let [index, state] of txStates) {
-      const txData = getCleanState(state);
+    let selectedIndex = this.state.selectedIndex;
+    let selectedState;
+    [["Output", txStates], ["Input", this.state.inputs]].forEach(([type, states]) => {
+      if (states === null) {
+        tabs.push(<div style={{order: 9999999}} ref={"tab_button_" + type + "_loading"} className="corda-tab Label">Loading {type} States...</div>);
+        return;
+      }
+      for (let [index, state] of states) {
+        const key = state.ref.txhash + state.ref.index;
+        if (selectedIndex === null) {
+          selectedIndex = key;
+        }
+        const order = (type==="Input" ? 1000 : 0) + index;
+        tabs.push(<div style={{order}} ref={"tab_button_" + key} onClick={this.setState.bind(this, {selectedIndex: key}, undefined)} className={(selectedIndex === key ? "corda-tab-selected" : "") + " corda-tab Label"}>{type} State {index + 1}</div>);
+        if (selectedIndex !== key) continue;
+        if (!state.state) {
+          selectedState = (<div className="Waiting Waiting-Padded">Loading State...</div>);
+          continue;
+        }
 
-      const participants = state.state.data.participants || [];
-      const workspaceNotary = this.getWorkspaceNotary(state.state.notary.owningKey);
-      const meta = state.metaData;
-      tabs[index] = (<div onClick={this.setState.bind(this, {selectedIndex: index}, undefined)} className={(this.state.selectedIndex === index ? "corda-tab-selected" : "") + " corda-tab Label"}>Index {index}</div>);
-      if (this.state.selectedIndex !== index) continue;
-      states.push(<div key={state + index}>
-        <div className="corda-details-section corda-transaction-details">
-          <h3 className="Label">
-            State {index} ({meta.status}) @ {meta.recordedTime}
-            <div className="Label-rightAligned">{state.state.contract}</div>
-          </h3>
-          <div className="Nodes DataRows corda-json-view">
-            <ReactJson
-              src={
-                txData
-              }
-              name={false}
-              theme={jsonTheme}
-              iconStyle="triangle"
-              edit={false}
-              add={false}
-              delete={false}
-              enableClipboard={true}
-              displayDataTypes={true}
-              displayObjectSize={true}
-              indentWidth={4}// indent by 4 because that's what Corda likes to do.
-              collapsed={1}
-              collapseStringsAfterLength={36}
-            />
-          </div>
-        </div>
-        
-        {state.state.data.exitKeys && state.state.data.exitKeys.length !== 0 ? (
+        const participants = state.state.data.participants || [];
+        const workspaceNotary = this.getWorkspaceNotary(state.state.notary.owningKey);
+
+        selectedState = (<div key={key}>
+          {this.renderStateHeader(state, type)}
+          
+          {state.state.data.exitKeys && state.state.data.exitKeys.length !== 0 ? (
+            <div className="corda-details-section">
+              <h3 className="Label">Signers</h3>
+              <div className="DataRows">
+                {state.state.data.exitKeys.map(nodeKey => {
+                  const workspaceNode = this.getWorkspaceNode(nodeKey);
+                  if (workspaceNode) {
+                    return (<NodeLink key={"participant_" + workspaceNode.safeName} postgresPort={this.props.config.settings.workspace.postgresPort} node={workspaceNode} />);
+                  }
+                })}
+              </div>
+            </div>
+          ) : ("")}
+          {!workspaceNotary ? "" :
+            <div className="corda-details-section">
+              <h3 className="Label">Notary</h3>
+              <div className="DataRows">{<NodeLink node={workspaceNotary} postgresPort={this.props.config.settings.workspace.postgresPort} />}</div>
+            </div>
+          }
+
+          {!participants.length ? "" :
           <div className="corda-details-section">
-            <h3 className="Label">Signers</h3>
+            <h3 className="Label">Participants</h3>
             <div className="DataRows">
-              {state.state.data.exitKeys.map(key => {
-                const workspaceNode = this.getWorkspaceNode(key);
+              {participants.map((node, i) => {
+                const workspaceNode = this.getWorkspaceNode(node.owningKey);
                 if (workspaceNode) {
                   return (<NodeLink key={"participant_" + workspaceNode.safeName} postgresPort={this.props.config.settings.workspace.postgresPort} node={workspaceNode} />);
+                } else {
+                  return (<div className="DataRow" key={"participant_anon" + node.owningKey + i}><div className="Value"><em>Anonymized Participant</em></div></div>);
                 }
               })}
             </div>
-          </div>
-        ) : ("")}
-        {!workspaceNotary ? "" :
-          <div className="corda-details-section">
-            <h3 className="Label">Notary</h3>
-            <div className="DataRows">{<NodeLink node={workspaceNotary} postgresPort={this.props.config.settings.workspace.postgresPort} />}</div>
-          </div>
-        }
-
-        {!participants.length ? "" :
-        <div className="corda-details-section">
-          <h3 className="Label">Participants</h3>
-          <div className="DataRows">
-            {participants.map((node, i) => {
-              const workspaceNode = this.getWorkspaceNode(node.owningKey);
-              if (workspaceNode) {
-                return (<NodeLink key={"participant_" + workspaceNode.safeName} postgresPort={this.props.config.settings.workspace.postgresPort} node={workspaceNode} />);
-              } else {
-                return (<div className="DataRow" key={"participant_anon" + node.owningKey + i}><div className="Value"><em>Anonymized Participant</em></div></div>);
-              }
-            })}
-          </div>
-        </div>}
-
-        {!state.observers.size ? "" :
-          <div className="corda-details-section">
-            <h3 className="Label">In Vault Of</h3>
-            <div className="DataRows">
-              {[...state.observers].map(node => {
-                return (<NodeLink key={"participant_" + node.safeName} postgresPort={this.props.config.settings.workspace.postgresPort} node={node} />);
-              })}
-            </div>
           </div>}
-        </div>
-      );
+
+          {!state.observers.size ? "" :
+            <div className="corda-details-section">
+              <h3 className="Label">In Vault Of</h3>
+              <div className="DataRows">
+                {[...state.observers].map(node => {
+                  return (<NodeLink key={"participant_" + node.safeName} postgresPort={this.props.config.settings.workspace.postgresPort} node={node} />);
+                })}
+              </div>
+            </div>}
+          </div>
+        );
+      }
+    });
+
+    let commands = null;
+    if (this.state.commands === null){
+      commands = (<div>Loading...</div>);
+    } else if (this.state.commands.length === 0) {
+      commands = (<div>No commands</div>);
+    } else {
+      commands = this.state.commands.map((command, i) => {
+        return (<div style={{marginBottom:".5em"}} key={"command" + command.value["@class"] + i}>{command.value["@class"].split(".").map(d=>(<>{d}<div style={{display:"inline-block"}}>.</div></>))}</div>);
+      });
     }
+
     let attachments = null;
     if (this.state.attachments === null){
       attachments = (<div>Loading...</div>);
@@ -176,12 +242,12 @@ class Transaction extends Component {
       attachments = (<div>No attachments</div>);
     } else {
       attachments = this.state.attachments.map(attachment => {
-        return (<div key={attachment.attachment_id}>{attachment.filename}</div>);
+        return (<div style={{marginBottom:".5em"}}  key={attachment.attachment_id}>{attachment.filename}</div>);
       });
     }
 
     return (
-      <section className="BlockCard">
+      <section className="BlockCard" style={{minHeight:"100%"}}>
         <header>
           <button className="Button" onClick={this.props.history.goBack}>
             &larr; Back
@@ -190,12 +256,13 @@ class Transaction extends Component {
           TX {transaction.txhash}
           </h1>
         </header>
-        
         <main className="corda-details-container">
           <div className="DataRow corda-details-section corda-transaction-details-info">
             <div>
-              <h3 className="Label">Timestamp</h3>
-              <div>{transaction.earliestRecordedTime.toString()}</div>
+              <h3 className="Label">Commands</h3>
+              <div>
+                {commands}
+              </div>
             </div>
             <div>
               <h3 className="Label">Attachments</h3>
@@ -204,11 +271,17 @@ class Transaction extends Component {
               </div>
             </div>
           </div>
+          <div className="DataRow corda-details-section corda-transaction-details-info">
+            <div>
+              <h3 className="Label">Timestamp</h3>
+              <div>{transaction.earliestRecordedTime.toString()}</div>
+            </div>
+          </div>
 
           <div className="corda-tabs">
             {tabs}
           </div>
-          {states}
+          {selectedState}
         </main>
       </section>
     );

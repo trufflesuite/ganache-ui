@@ -56,10 +56,13 @@ class Transactions extends Component {
 
   render() {
     const workspace = this.props.config.settings.workspace;
+    let txs;
     if (this.state.transactions === null) {
-      return (<div className="Waiting Waiting-Padded">Loading Transactions...</div>);
+      txs = (<div className="Waiting Waiting-Padded">Loading Transactions...</div>);
     } else if (this.state.transactions.length === 0) {
-      return (<div className="Waiting Waiting-Padded">No Transactions</div>);
+      txs = (<div className="Waiting Waiting-Padded">No Transactions</div>);
+    } else {
+      txs = this.getNodeRows();
     }
     return (
       <div className="corda-transactions">
@@ -74,8 +77,8 @@ class Transactions extends Component {
             </select>
           </div>
         </div>
-        <div className="Nodes DataRows">
-          <main> {this.getNodeRows()} </main>
+        <div className="corda-transactions-list Nodes DataRows">
+          <main> {txs} </main>
         </div>
       </div>
     );
