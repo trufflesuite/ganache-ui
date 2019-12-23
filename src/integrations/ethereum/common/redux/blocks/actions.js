@@ -112,7 +112,9 @@ export const showBlock = function(number) {
     );
     const receiptMap = {};
     receipts.forEach(receipt => {
-      receiptMap[receipt.transactionHash] = receipt;
+      if (receipt && receipt.transactionHash) {
+        receiptMap[receipt.transactionHash] = receipt;
+      }
     });
     block.receipts = receiptMap;
 
