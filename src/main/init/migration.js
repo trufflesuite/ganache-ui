@@ -1,5 +1,5 @@
 import { join } from "path";
-import { copy, exists, readdir } from "fs-extra";
+import { copy, pathExists as exists, readdir } from "fs-extra";
 import { exec } from "child_process";
 import * as pkg from "../../../package.json";
 
