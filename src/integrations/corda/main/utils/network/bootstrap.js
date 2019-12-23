@@ -65,20 +65,26 @@ class CordaBootstrap {
     this._io.sendProgress("Running Corda Network Bootstrapper...");
     const java = spawn("java", ["-jar", CORDA_BOOTSTRAPPER, "--dir", this.workspaceDirectory], spawnConfig);
 
+    var stderr = "";
     java.stderr.on('data', (data) => {
+      stderr += data.toString();
       this._io.sendStdErr(data);
       // this.emit("message", "stderr", data, this.entity.safeName);
       console.error(`stderr:\n${data}`);
     });
 
+    var stdout = "";
     java.stdout.on('data', (data) => {
+      stdout += data.toString();
       this._io.sendStdOut(data);
       // this.emit("message", "stdout", data, this.entity.safeName);
       console.log(`stdout:\n${data}`);
     });
 
+    var err = "";
     return new Promise((resolve, reject) => {
       java.on('error', (error) => {
+        err += error.toString();
         console.error(error);
         this._io.sendError(new Error(error.toString()))
       });
@@ -88,7 +94,7 @@ class CordaBootstrap {
         if (code === 0) {
           resolve();
         } else {
-          reject(new Error(`child process exited with code ${code}`));
+          reject(new Error(`child process exited with code ${code}.\n\nStderr:\n${stderr}\n\nStdout:\n${stdout}\n\nError:\n${err}\n\nconfig:${JSON.stringify(spawnConfig)}`));
         }
       });
     });
