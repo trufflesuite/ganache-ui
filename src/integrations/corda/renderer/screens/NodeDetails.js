@@ -44,6 +44,9 @@ class NodeDetails extends Component {
 
   refresh() {
     if (this.state.node) {
+      const nodes = this.props.config.settings.workspace.nodes;
+      const postgresPort =  this.props.config.settings.workspace.postgresPort;
+
       const notariesProm = fetch("https://localhost:" + (this.state.node.braidPort) + "/api/rest/network/notaries")
         .then(r => r.json());
 
@@ -98,8 +101,6 @@ class NodeDetails extends Component {
           })
           .then(res => res.json())
           .then(json => {
-            const nodes = this.props.config.settings.workspace.nodes;
-            const postgresPort =  this.props.config.settings.workspace.postgresPort;
             const transactionPromises = [];
             const hashes = new Set();
             json.states.forEach(state => {
@@ -111,9 +112,32 @@ class NodeDetails extends Component {
             })
             return Promise.all(transactionPromises);
           }).then(transactions => {
-            this.setState({transactions});
+            this.setState(state => {
+              return {transactions: [...state.transactions || [], ...transactions]};
+            });
           })
         });
+
+      TransactionData.getConnectedClient(this.state.node.safeName, this.props.config.settings.workspace.postgresPort)
+        .then(async client => {
+          try {
+            return await client.query("SELECT transaction_id FROM node_notary_committed_txs");
+          } finally {
+            client.release();
+          }
+        }).then(async res => {
+          const proms = Promise.all(res.rows.map(row => {
+            const tx = new TransactionData(TransactionData.convertTransactionIdToHash(row.transaction_id));
+            return tx.update(nodes, postgresPort);
+          }));
+          
+          const transactions = await proms;
+          this.setState(state => {
+            return {transactions: [...(state.transactions || []), ...transactions]};
+          });
+        }).catch(e => {
+          console.log("probably not a notary :-)", e);
+        })
     }
   }
 
@@ -183,11 +207,16 @@ class NodeDetails extends Component {
   getTransactions(){
     let noTxsOrLoading;
     let txs;
+    const seen = new Set();
     if (this.state.transactions){
       if (this.state.transactions.length === 0) {
         noTxsOrLoading = (<div className="Waiting Waiting-Padded">No Transactions</div>);
       } else {
         txs = this.state.transactions.sort((a, b) => b.earliestRecordedTime - a.earliestRecordedTime).map(transaction => {
+          if (seen.has(transaction.txhash)){
+            return
+          }
+          seen.add(transaction.txhash);
           return (<TransactionLink key={transaction.txhash} tx={transaction} />);
         });
       }

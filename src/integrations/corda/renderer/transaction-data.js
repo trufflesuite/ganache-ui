@@ -77,6 +77,7 @@ async function getAllTransactions(nodes, allNodes, port, canceller = {cancelled:
 }
 
 export default class TransactionData {
+  static getConnectedClient = getConnectedClient
   static convertTxHashToId = convertTxHashToId
   static convertTransactionIdToHash = convertTransactionIdToHash
   
