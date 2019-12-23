@@ -75,13 +75,13 @@ class Transaction extends Component {
       // allow the tabs to render what we do know while we fetch the remaining details
       // from the other nodes
       this.setState({inputs: new Map(
-        details.inputs.map(inState => [inState.index, {ref: {
+        details.inputs.map((inState, index) => [index, {ref: {
           txhash: TransactionData.convertTransactionIdToHash(inState.txhash),
           index: inState.index
         }}])
       )});
 
-      const promises = details.inputs.map(async inState => {
+      const promises = details.inputs.map(async (inState, index) => {
         const transaction = new TransactionData(TransactionData.convertTransactionIdToHash(inState.txhash));
         // TODO: this gets too much data... we only care about the single index,
         // not all of them. Also, we may be able to batch the requests by transaction
@@ -90,7 +90,7 @@ class Transaction extends Component {
         await transaction.update(nodes, port, canceller);
         if (canceller.cancelled) return;
         const txStates = transaction.states;
-        return [inState.index, txStates.get(inState.index)];
+        return [index, txStates.get(inState.index)];
       });
       const inputs = new Map(await Promise.all(promises));
       this.setState({inputs});
