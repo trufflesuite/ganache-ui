@@ -122,33 +122,54 @@ class NetworkManager extends EventEmitter {
       return client;
     }));
   }
-
+  addToBlackList = (node) => {
+    this.blacklist.add(node.rpcPort);
+    this.blacklist.add(node.adminPort);
+    this.blacklist.add(node.p2pPort);
+  }
   async copyCordappsAndSetupNetwork() {
+    // TODO this has become a mess. Spend some time to do it right one day :-D
     const promises = [];
     const networkMap = new Map();
-   this.entities.forEach((node) => {
-      this.blacklist.add(node.rpcPort);
-      this.blacklist.add(node.adminPort);
-      this.blacklist.add(node.p2pPort);
+    this.entities.forEach((node) => {
+      // track all entities' ports in a port blacklist so we don't try to bind 
+    // braid to it later.
+      this.addToBlackList(node);
 
+      // copy all cordapps where they are supposed to go
       const currentDir = join(this.workspaceDirectory, node.safeName);
       (node.cordapps || []).forEach(path => {
         const name = basename(path);
         const newPath = join(currentDir, "cordapps", name);
         promises.push(fse.copy(path, newPath));
       });
+    });
+    // for each notary, get it's node info file
+    const notaryInfoFileNames = this.notaries.map((node) => {
+      const currentDir = join(this.workspaceDirectory, node.safeName);
+      return fse.readdirSync(currentDir).filter(file => file.startsWith("nodeInfo-")).reduce((p, name) => name, "");
+    });
+    // for each node
+    this.nodes.forEach((node) => {
+      const currentDir = join(this.workspaceDirectory, node.safeName);
       const info = fse.readdirSync(currentDir).filter(file => file.startsWith("nodeInfo-")).reduce((p, name) => name, "");
       const knownNodesDir = join(currentDir, "additional-node-infos");
       const currentlyKnownNodes = fse.readdirSync(knownNodesDir).map(file => ({file, path: join(knownNodesDir, file)}));
       networkMap.set(node.safeName, {nodes: node.nodes || [], info, currentlyKnownNodes});
     });
     networkMap.forEach((val, _key, nMap) => {
-      const needed = new Set([val.info, ...val.nodes.map((node) => nMap.get(node).info)]);
+      const nodes = val.nodes.map((node) => nMap.get(node)).filter(n => n).map(n => n.info);
+      const needed = new Set([val.info, ...nodes]);
       val.currentlyKnownNodes.forEach(node => {
+        // if the file is a notary file we need it. so keep it!
+        if (notaryInfoFileNames.includes(node.file)) {
+          return;
+        }
+        // if the file isn't one of the ones we are supposed to have, toss it!
         if (!needed.has(node.file)) {
           promises.push(fse.remove(node.path));
         }
-    });
+      });
     });
     return Promise.all(promises);      
   }
@@ -189,7 +210,12 @@ class NetworkManager extends EventEmitter {
           .then(self => self.legalIdentities[0].owningKey);
       });
 
-      await Promise.all(promises);
+      try {
+        await Promise.all(promises);
+      } catch(e) {
+        await this.stop();
+        throw e;
+      }
       // _downloadPromise was started long ago, we just need to make sure all
       //  deps are downloaded before we start up.
       this._io.sendProgress(`Downloading remaining Corda dependencies...`);
@@ -199,9 +225,10 @@ class NetworkManager extends EventEmitter {
   async stop() {
     if (this.postGresHooksPromise) {
       try {
-        const postGresHooksClient = await this.postGresHooksPromise;
-        postGresHooksClient && await Promise.all(postGresHooksClient.map(client => client.end()));
+        const pgHookProm = this.postGresHooksPromise;
         this.postGresHooksPromise = null;
+        const postGresHooksClient = await pgHookProm;
+        postGresHooksClient && await Promise.all(postGresHooksClient.map(client => client.end()));
       } catch(e) {
         console.error("Error occured while attempting to stop postgres clients...");
         console.error(e);
