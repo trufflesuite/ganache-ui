@@ -56,8 +56,10 @@ class NetworkManager extends EventEmitter {
       this.nodes = nodesArr;
       this.notaries = notariesArr;
       this.entities = this.nodes.concat(this.notaries);
-      this._io.sendProgress("Configuring and starting PostgreSQL...");
-      this.pg = postgres(await POSTGRES_HOME).start(postgresPort, this.workspaceDirectory, this.entities, this.settings.isDefault);
+      this._io.sendProgress("Downloading PostgreSQL (this may take a few minutes)...");
+      const pgDownload = postgres(await POSTGRES_HOME);
+      this._io.sendProgress("Starting PostgreSQL...");
+      this.pg = await pgDownload.start(postgresPort, this.workspaceDirectory, this.entities, this.settings.isDefault);
       this._io.sendProgress("Bootstrapping network...");
       await cordaBootstrap.bootstrap(this.config);
       this._io.sendProgress("Configuring Postgres Hooks...");
