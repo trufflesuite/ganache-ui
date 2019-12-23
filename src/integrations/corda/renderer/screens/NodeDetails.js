@@ -48,12 +48,19 @@ class NodeDetails extends Component {
       const postgresPort =  this.props.config.settings.workspace.postgresPort;
 
       const notariesProm = fetch("https://localhost:" + (this.state.node.braidPort) + "/api/rest/network/notaries")
-        .then(r => r.json());
+        .then(r => r.json()).then(json => {
+          if(Array.isArray(json)) return json;
+          return [];
+        })
 
       notariesProm.then(notaries => this.setState({notaries}));
 
       fetch("https://localhost:" + (this.state.node.braidPort) + "/api/rest/network/nodes")
         .then(r => r.json())
+        .then(json => {
+          if(Array.isArray(json)) return json;
+          return [];
+        })
         .then(async nodes => {
           const selfName = this.state.node.name.replace(/\s/g, "");
           const notaries = await notariesProm;
@@ -80,6 +87,10 @@ class NodeDetails extends Component {
 
       fetch("https://localhost:" + (this.state.node.braidPort) + "/api/rest/cordapps")
         .then(r => r.json())
+        .then(json => {
+          if(Array.isArray(json)) return json;
+          return [];
+        })
         .then(cordapps => this.setState({cordapps}));
 
       fetch("https://localhost:" + (this.state.node.braidPort) + "/api/rest/network/nodes/self")
@@ -100,6 +111,10 @@ class NodeDetails extends Component {
             })
           })
           .then(res => res.json())
+          .then(json => {
+            if (json && Array.isArray(json.states)) return json;
+            return [];
+          })
           .then(json => {
             const transactionPromises = [];
             const hashes = new Set();
