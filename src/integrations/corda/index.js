@@ -21,6 +21,18 @@ class Corda extends Integrations {
   }
 
   async _listen() {
+    this.ipc.on("CORDA_DOWNLOAD_ATTACHMENT", async (_event, attachment_id, database, destination) => {
+      if (this.chain.manager.pg) {
+        const pgPort = this.chain.manager.settings.postgresPort;
+        const client = await this.chain.manager.getConnectedClient(database, pgPort);
+        try {
+          await client.query("SELECT lo_export(node_attachments.content, $2::text) FROM node_attachments WHERE att_id = $1", [attachment_id, destination]);
+          this.send("CORDA_DOWNLOAD_ATTACHMENT_SUCCESS", attachment_id, database, destination);
+        } finally{
+          client.release();
+        }
+      }
+    });
     this.ipc.on("CORDA_REQUEST_TRANSACTION", async (_event, txhash) => {
       let data = null;
       // pg could be null if the chain was stopped
@@ -44,7 +56,7 @@ class Corda extends Integrations {
                     data = JSON.parse(dataStr);
                     if (data.wire) {
                       if (data.wire.attachments && data.wire.attachments.length > 0) {
-                        const result = await client.query("SELECT att_id AS attachment_id, filename FROM node_attachments WHERE att_id = ANY($1::text[])", [data.wire.attachments]);
+                        const result = await client.query("SELECT att_id AS attachment_id, filename, $2::text AS database FROM node_attachments WHERE att_id = ANY($1::text[])", [data.wire.attachments, entity.safeName]);
                         data.wire.attachments = result.rows;
                       } else {
                         data.wire.attachments = [];

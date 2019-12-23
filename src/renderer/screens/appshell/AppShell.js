@@ -12,6 +12,7 @@ import ErrorModal from "../../components/modal/ErrorModal";
 import UpdateModal from "../auto-update/UpdateModal";
 
 import OnlyIf from "../../components/only-if/OnlyIf";
+import { setToast } from "../../../common/redux/network/actions";
 
 ElectronCookies.enable({
   origin: "https://trufflesuite.com/ganache",
@@ -20,7 +21,15 @@ ElectronCookies.enable({
 class AppShell extends Component {
   constructor(props) {
     super(props);
-    this.scrollDedupeTimeout = null;
+    this.scrollDedupeTimeout = null; 
+  }
+  componentDidUpdate(prevProps) {
+    if (prevProps.network.toast.date !== this.props.network.toast.date) {
+      clearTimeout(this.toastTimer);
+      this.toastTimer = setTimeout(() => {
+        this.props.dispatch(setToast(null));
+      }, 4000);
+    }
   }
 
   _handleScroll = values => {
@@ -50,6 +59,7 @@ class AppShell extends Component {
   onCloseFatalErrorModal = () => {};
 
   render() {
+    console.log(this.props);
     return (
       <div className="AppShell">
         <TopNavbar {...this.props} />
@@ -80,6 +90,12 @@ class AppShell extends Component {
         >
           <UpdateModal />
         </OnlyIf>
+        <OnlyIf
+          test={this.props.network.toast.message !== null}>
+            <div className="toast">
+              {this.props.network.toast.message}
+            </div>
+          </OnlyIf>
       </div>
     );
   }
@@ -92,4 +108,5 @@ export default connect(
   "config",
   "logs",
   "autoUpdate",
+  "network"
 );

@@ -202,7 +202,18 @@ textarea {
   align-self: flex-start;
 }
 
-
+.toast {
+  position: fixed;
+  left:50%;
+  transform: translateX(-50%);
+  padding:.8em 1em;
+  margin:1em;
+  background:rgba(0,0,0,.75);
+  color:#fff;
+  border-radius: 1em;
+  bottom:0;
+  box-shadow: 0 3px 5px rgba(0,0,0,.2);
+}
 
 h3.Label {
   font-size: initial;

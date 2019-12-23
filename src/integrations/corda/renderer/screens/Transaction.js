@@ -6,6 +6,7 @@ import NodeLink from "../components/NodeLink";
 import { Link } from "react-router-dom";
 import TransactionData from "../transaction-data";
 import { CancellationToken } from "./utils";
+import { setToast } from "../../../../common/redux/network/actions";
 
 const IGNORE_FIELDS = new Set(["@class", "participants"]);
 
@@ -46,6 +47,11 @@ class Transaction extends Component {
       // by getting rid of the current `transaction` then we need to refresh our data
       this.setState({selectedIndex: null, transaction: null, attachments: null, inputs: null, commands: null}, this.refresh.bind(this));
     }
+  }
+
+  async downloadAttachment(attachment) {
+    const result = await TransactionData.downloadAttachment(attachment.filename, attachment.attachment_id, attachment.database);
+    this.props.dispatch(setToast(result));
   }
 
   async refresh() {
@@ -108,8 +114,8 @@ class Transaction extends Component {
           State {index} ({meta.status}) @ {meta.recordedTime}
           <div className="Label-rightAligned corda-transaction-classname">{state.state.contract}</div>
           {type === "Output" ? "" :
-            <div className="corda-transaction-details-tx-link"><em>TX 
-              <Link to={"/corda/transactions/" + txhash}>{txhash}</Link>
+            <div className="corda-transaction-details-tx-link"><em>TX&nbsp;
+              <Link style={{textTransform: "none"}} to={"/corda/transactions/" + txhash}>{txhash}</Link>
             </em></div>
           }
         </h3>
@@ -242,7 +248,7 @@ class Transaction extends Component {
       attachments = (<div>No attachments</div>);
     } else {
       attachments = this.state.attachments.map(attachment => {
-        return (<div style={{marginBottom:".5em"}}  key={attachment.attachment_id}>{attachment.filename}</div>);
+        return (<div style={{marginBottom:".5em", cursor:"pointer"}} onClick={()=>{this.downloadAttachment(attachment)}} key={attachment.attachment_id}>{attachment.filename}</div>);
       });
     }
 

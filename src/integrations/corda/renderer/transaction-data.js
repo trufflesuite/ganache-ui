@@ -1,3 +1,6 @@
+import {remote} from "electron";
+const dialog = remote.dialog;
+import { resolve } from "path";
 import { ipcRenderer } from "electron";
 import bs58 from "bs58";
 import { Pool } from "pg";
@@ -87,6 +90,26 @@ export default class TransactionData {
     this.earliestRecordedTime = undefined;
     this.observers = new Set();
     this.notaries = new Set();
+  }
+
+  static async downloadAttachment(name, attachment_id, database) {
+    const toLocalPath = resolve(remote.app.getPath("downloads"), name);
+
+    const userChosenPath = await dialog.showSaveDialog({ defaultPath: toLocalPath });
+
+    if (userChosenPath && !userChosenPath.canceled) {
+      const destination = userChosenPath.filePath;
+      const downloadSuccessPromise = new Promise(resolve => {
+        ipcRenderer.on("CORDA_DOWNLOAD_ATTACHMENT_SUCCESS", function msg(_event, _attachment_id, _database, _destination) {
+          if (attachment_id == _attachment_id && database == _database && destination == _destination) {
+            ipcRenderer.removeListener("CORDA_DOWNLOAD_ATTACHMENT_SUCCESS", msg);
+            resolve("Download complete!");
+          }
+        });
+      });
+      ipcRenderer.send("CORDA_DOWNLOAD_ATTACHMENT", attachment_id, database, destination);
+      return downloadSuccessPromise;
+    }
   }
 
   async fetchDetails(){
