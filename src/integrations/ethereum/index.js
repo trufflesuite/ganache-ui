@@ -119,7 +119,7 @@ class Ethereum extends Integrations {
     projectIntegration.on("contract-transaction", data => {
       this.send(CONTRACT_TRANSACTION, data);
 
-      this.integrationManager.workspace.contractCache.addTransaction(
+      this._integrationManager.workspace.contractCache.addTransaction(
         data.contractAddress,
         data.transactionHash,
       );
@@ -128,7 +128,7 @@ class Ethereum extends Integrations {
     projectIntegration.on("contract-event", data => {
       this.send(CONTRACT_EVENT, data);
 
-      this.integrationManager.workspace.contractCache.addEvent(data.contractAddress, {
+      this._integrationManager.workspace.contractCache.addEvent(data.contractAddress, {
         transactionHash: data.transactionHash,
         logIndex: data.logIndex,
       });
