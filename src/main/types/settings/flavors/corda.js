@@ -9,7 +9,7 @@ module.exports = {
     "adminPort": 10001,
     "p2pPort": 10002,
     "cordapps": [],
-    "nodes": ["partyb", "partyc", "notary"]
+    "nodes": ["partyb", "partyc"]
   },{
     "name": "O=Party B,L=Paris,C=FR",
     "safeName" : "partyb",
@@ -17,7 +17,7 @@ module.exports = {
     "adminPort": 10004,
     "p2pPort": 10005,
     "cordapps": [],
-    "nodes": ["partya", "partyc", "notary"]
+    "nodes": ["partya", "partyc"]
   },{
     "name": "O=Party C,L=New York,C=US",
     "safeName" : "partyc",
@@ -25,7 +25,7 @@ module.exports = {
     "adminPort": 10007,
     "p2pPort": 10008,
     "cordapps": [],
-    "nodes": ["partya", "partyb", "notary"]
+    "nodes": ["partya", "partyb"]
   }],
   notaries : [{
     "name": "O=Notary Service,L=London,C=GB",
@@ -33,8 +33,7 @@ module.exports = {
     "rpcPort": 10009,
     "adminPort": 10010,
     "p2pPort": 10011,
-    "cordapps": [],
-    "nodes": ["partya", "partyb", "partyc"]
+    "cordapps": []
   }],
   projects: []
 };
