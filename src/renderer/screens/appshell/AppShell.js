@@ -59,7 +59,6 @@ class AppShell extends Component {
   onCloseFatalErrorModal = () => {};
 
   render() {
-    console.log(this.props);
     return (
       <div className="AppShell">
         <TopNavbar {...this.props} />
