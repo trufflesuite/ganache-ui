@@ -80,6 +80,7 @@ class ConfigScreen extends PureComponent {
       const TABS = this.state.TABS
       for (let i = 0; i < TABS.length; i++) {
         if (TABS[i].subRoute === this.props.match.params.activeTab) {
+          // eslint-disable-next-line react/no-direct-mutation-state
           this.state.activeIndex = i;
           break;
         }
@@ -89,6 +90,7 @@ class ConfigScreen extends PureComponent {
 
   restartServer = () => {
     this.props.dispatch(Config.clearAllSettingErrors());
+    // eslint-disable-next-line react/no-direct-mutation-state
     this.state.config.validationErrors = {};
 
     if (this.isDirty()) {
@@ -176,6 +178,7 @@ class ConfigScreen extends PureComponent {
     const newProjects = this.state.config.settings.workspace.projects.filter(
       x => x !== path,
     );
+    // eslint-disable-next-line react/no-direct-mutation-state
     this.state.config.settings.workspace.projects = newProjects;
     if (this.state.config.settings.workspace.flavor === "corda") {
       this.updateCordaNodes();
