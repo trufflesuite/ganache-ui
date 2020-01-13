@@ -17,7 +17,7 @@ class EventDetailsScreen extends Component {
   }
 
   render() {
-    const { logIndex, transactionHash } = this.props.params;
+    const { logIndex, transactionHash } = this.props.match.params;
 
     const shownEvent = this.props.events.shown;
 
