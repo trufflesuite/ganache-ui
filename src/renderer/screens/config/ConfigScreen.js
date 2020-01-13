@@ -76,7 +76,7 @@ class ConfigScreen extends PureComponent {
   }
 
   initActiveIndex = () => {
-    if ("params" in this.props && "activeTab" in this.props.params) {
+    if ("params" in this.props && "activeTab" in this.props.match.params) {
       const TABS = this.state.TABS
       for (let i = 0; i < TABS.length; i++) {
         if (TABS[i].subRoute === this.props.match.params.activeTab) {
