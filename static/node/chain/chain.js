@@ -112,7 +112,7 @@ async function startServer(options) {
     }
 
     const state = result ? result : server.provider.manager.state;
-    dbLocation = state.blockchain.data.db.directory
+    dbLocation = state.blockchain.data.directory;
 
     if (!state) {
       process.send({

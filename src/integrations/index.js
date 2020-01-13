@@ -59,8 +59,6 @@ class IntegrationManager extends EventEmitter {
   }
 
   async _saveWorkspace(_event, workspaceName, mnemonic) {
-    await this.flavor.stopServer();
-
     let workspace = this.workspace;
     let chaindataLocation = null;
     if (workspace) {
@@ -68,6 +66,8 @@ class IntegrationManager extends EventEmitter {
     } else {
       workspace = this.workspaceManager.get(null);
     }
+    
+    await this.flavor.stopServer();
 
     workspace.saveAs(
       workspaceName,
