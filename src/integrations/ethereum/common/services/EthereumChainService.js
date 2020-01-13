@@ -4,10 +4,10 @@ import path from "path";
 import cloneDeep from "lodash.clonedeep";
 
 // https://github.com/electron/electron/blob/cd0aa4a956cb7a13cbe0e12029e6156c3e892924/docs/api/process.md#process-object
-// eslint-disable-next-line no-undef
 const CHAIN_PATH = path.join(__static, "node", "chain", "chain.js");
 const CHAIN_OPTIONS = {
   stdio: ["pipe", "pipe", "pipe", "ipc"],
+  execArgv: process.env.NODE_ENV === "development" ? ["--inspect=40895"] : undefined
 };
 
 /**
@@ -26,8 +26,7 @@ class EthereumChainService extends EventEmitter {
     if (this._child) {
       this.emit("message", "start");
     } else {
-      const forkArgs = process.env.NODE_ENV === "development" ? ["--inspect", 5859] : [];
-      const child = this._child = fork(CHAIN_PATH, forkArgs, CHAIN_OPTIONS);
+      const child = this._child = fork(CHAIN_PATH, [], CHAIN_OPTIONS);
       child.on("message", ({type, data}) => {
         switch (type) {
           case "process-started":
