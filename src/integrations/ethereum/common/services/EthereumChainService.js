@@ -1,3 +1,5 @@
+/* global __static:readonly */
+
 import EventEmitter from "events";
 import { fork } from "child_process";
 import path from "path";

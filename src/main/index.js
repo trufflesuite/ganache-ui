@@ -1,3 +1,5 @@
+/* global __static:readonly */
+
 import path from "path";
 import * as os from "os";
 import merge from "lodash.merge";
@@ -328,7 +330,7 @@ app.on('ready', () => {
       if (mainWindow) {
         mainWindow.webContents.send(ADD_LOG_LINES, data.toString().split(/\n/g), context);
       } else {
-        // eslint-disable-next-line
+        // eslint-disable-next-line no-console
         console.error(data.toString());
       }
     }
@@ -404,7 +406,6 @@ app.on('ready', () => {
   ipcMain.on(OPEN_WORKSPACE, async (event, name, flavor = "ethereum") => {
     await integrations.stopServer();
 
-    // eslint-disable-next-line
     await integrations.setWorkspace(name, flavor);
     workspace = integrations.workspace;
 
@@ -636,8 +637,6 @@ function ensureExternalLinksAreOpenedInBrowser(event, url) {
 
 function getIconPath() {
   return process.platform === "win32"
-    // eslint-disable-next-line
     ? path.resolve(__static, "icons/win/icon.ico") // Windows, use an icon
-    // eslint-disable-next-line
     : path.resolve(__static, "icons/png/256x256.png"); // Mac & Linux, use an image
 }
