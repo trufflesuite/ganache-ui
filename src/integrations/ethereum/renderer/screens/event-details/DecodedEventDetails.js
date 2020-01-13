@@ -23,8 +23,6 @@ const DecodedEventDetails = ({ event }) => {
             <div className="Value">{contractAddress}</div>
           </div>
         </div>
-      </div>
-      <div className="DataSection">
         <div className="DataRow">
           <div className="DataPoint">
             <div className="Label">SIGNATURE (DECODED)</div>

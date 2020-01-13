@@ -1,16 +1,14 @@
 .DecodedEventDetails {
-  background: var(--app-card-default-background);
   margin: 0;
 
   .DataRow {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 1rem;
   }
 
   .DataSection {
-    padding: 1rem;
-    border-bottom: 1px solid #aaa;
+    background: var(--app-card-default-background);
+    border-bottom: 1px solid aaa;
   }
 
   .SectionHeading {
