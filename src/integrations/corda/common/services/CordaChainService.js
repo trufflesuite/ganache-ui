@@ -26,7 +26,13 @@ class CordaChainService extends EventEmitter {
     const manager = this.manager = new NetworkManager(this.config, settings, workspaceDirectory);
     manager.on("message", this.emit.bind(this, "message"));
 
+    if (!settings.postgresPort) {
+      // eslint-disable-next-line require-atomic-updates
+      settings.postgresPort = await manager.getPort(15432);
+    }
+
     console.log("bootstrapping...");
+    try {
     await manager.bootstrap(settings.nodes, settings.notaries, settings.postgresPort);
     console.log("starting...");
     await manager.start();
@@ -35,6 +41,10 @@ class CordaChainService extends EventEmitter {
     this._serverStarted = true;
     this.emit("server-started");
     this.emit("message", "server-started");
+    } catch(e) {
+      await manager.stop();
+      throw e;
+    }
   }
 
   async stopServer() {

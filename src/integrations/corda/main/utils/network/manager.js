@@ -5,7 +5,6 @@ const postgres = require("../postgres");
 const Braid = require("./braid");
 const Corda = require("./corda");
 const fse = require("fs-extra");
-const { Pool } = require("pg");
 const fetch = require("node-fetch");
 const GetPort = require("get-port");
 const BlobInspector = require("./blob-inspector");
@@ -44,7 +43,7 @@ class NetworkManager extends EventEmitter {
   async bootstrap(nodes, notaries, postgresPort) {
       // kick off downloading all the things ASAP! this is safe to do because
       // each individual file that is downloaded is a singleton, returning the
-      // same promise for each file request, or it jsut returns immediately if
+      // same promise for each file request, or it just resolves immediately if
       // the file is already downloaded
       this._downloadPromise = this.config.corda.downloadAll();
 
@@ -73,29 +72,9 @@ class NetworkManager extends EventEmitter {
       this.braid = new Braid(join(await BRAID_HOME, ".."), this._io);
   }
 
-  pools = new Map()
-  getConnectedClient(database, port) {
-    let pool;
-    const key = `${database}:${port}`;
-    if (!this.pools.has(key)){
-      pool = new Pool({
-        user: "postgres",
-        host: "localhost",
-        password: "",
-        database,
-        port
-      });
-      this.pools.set(key, pool);
-    } else {
-      pool = this.pools.get(key);
-    }
-    
-    return pool.connect();
-  }
-
   setupPostGresHooks() {
     return Promise.all(this.entities.map(async entity => {
-      const client = await this.getConnectedClient(entity.safeName, this.settings.postgresPort);
+      const client = await this.pg.getConnectedClient(entity.safeName, this.settings.postgresPort);
       
       await client.query(`create or replace function notify_subscribers()
           returns trigger
@@ -135,7 +114,7 @@ class NetworkManager extends EventEmitter {
     const networkMap = new Map();
     this.entities.forEach((node) => {
       // track all entities' ports in a port blacklist so we don't try to bind 
-    // braid to it later.
+      // braid to it later.
       this.addToBlackList(node);
 
       // copy all cordapps where they are supposed to go
@@ -173,7 +152,7 @@ class NetworkManager extends EventEmitter {
         }
       });
     });
-    return Promise.all(promises);      
+    return Promise.all(promises);
   }
 
   async getPort(port){
@@ -240,26 +219,18 @@ class NetworkManager extends EventEmitter {
       try {
         const pgHookProm = this.postGresHooksPromise;
         this.postGresHooksPromise = null;
-        const postGresHooksClient = await pgHookProm;
-        postGresHooksClient && await Promise.all(postGresHooksClient.map(client => client.release()));
+        const postGresHooksClients = await pgHookProm;
+        postGresHooksClients && postGresHooksClients.map(client => client.release());
       } catch(e) {
-        console.error("Error occured while attempting to stop postgres clients...");
-        console.error(e);
+        // eslint-disable-next-line no-console
+        console.error("Error occured while attempting to stop postgres clients...", e);
       }
     }
-    const pools = this.pools;
-    for(let [,pool] of pools) {
-      await pool.end();
-    }
-    this.pools.clear();
-
     try {
-      const _pg = this.pg;
-      this.pg = null;
-      _pg && await _pg.stop();
+      this.pg && await this.pg.shutdown();
     } catch(e) {
-      console.error("Error occured while attempting to stop postgres...");
-      console.error(e);
+      // eslint-disable-next-line no-console
+      console.error("Error occured while attempting to stop postgres...", e);
     }
   }
   

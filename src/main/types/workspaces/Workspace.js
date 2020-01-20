@@ -44,7 +44,7 @@ class Workspace {
       if (flavor === "ethereum") {
         return path.join(configDirectory, "default");
       } else {
-        return path.join(configDirectory, `default-${flavor}`);
+        return path.join(configDirectory, `default_${flavor}`);
       }
     } else {
       return path.join(configDirectory, "workspaces", sanitizedName);
