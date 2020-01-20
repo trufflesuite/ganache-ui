@@ -32,6 +32,9 @@ const format = (el, element, isPermissions) => {
       case "myLegalName":
         result = `${el} = "${modifiers.name}"`;
         break;
+      case "sshdPort":
+        result = `${el} = ${modifiers.sshdPort}`;
+        break;
       case "p2pPort":
         result = `${el} = "localhost:${modifiers.p2pPort}"`;
         break;

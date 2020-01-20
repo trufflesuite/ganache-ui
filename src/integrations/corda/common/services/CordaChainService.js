@@ -33,14 +33,14 @@ class CordaChainService extends EventEmitter {
 
     console.log("bootstrapping...");
     try {
-    await manager.bootstrap(settings.nodes, settings.notaries, settings.postgresPort);
-    console.log("starting...");
-    await manager.start();
-    console.log("server started");
+      await manager.bootstrap(settings.nodes, settings.notaries, settings.postgresPort);
+      console.log("starting...");
+      await manager.start();
+      console.log("server started");
 
-    this._serverStarted = true;
-    this.emit("server-started");
-    this.emit("message", "server-started");
+      this._serverStarted = true;
+      this.emit("server-started");
+      this.emit("message", "server-started");
     } catch(e) {
       await manager.stop();
       throw e;

@@ -13,9 +13,21 @@
     "rpcSettings",
     "notary",
     "rpcUsers",
-    "devMode"
+    "devMode",
+    "sshd"
   ],
   "properties": {
+    "sshd": {
+      "type": "object",
+      "required": [
+        "port"
+      ],
+      "properties": {
+        "port": {
+          "type": "sshdPort"
+        }
+      }
+    },
     "myLegalName": {
       "type": "myLegalName",
       "default": "O=Notary Service,OU=corda,L=London,C=GB",

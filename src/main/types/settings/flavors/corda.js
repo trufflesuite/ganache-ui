@@ -1,7 +1,7 @@
 module.exports = {
   name: "Quickstart",
   isDefault: true,
-  postgresPort: 15432,
+  postgresPort: null,
   nodes: [{
     "name": "O=Party A,L=London,C=GB",
     "safeName" : "partya",
@@ -9,7 +9,8 @@ module.exports = {
     "adminPort": 10001,
     "p2pPort": 10002,
     "cordapps": [],
-    "nodes": ["partyb", "partyc"]
+    "nodes": ["partyb", "partyc"],
+    "sshdPort": 11000
   },{
     "name": "O=Party B,L=Paris,C=FR",
     "safeName" : "partyb",
@@ -17,7 +18,8 @@ module.exports = {
     "adminPort": 10004,
     "p2pPort": 10005,
     "cordapps": [],
-    "nodes": ["partya", "partyc"]
+    "nodes": ["partya", "partyc"],
+    "sshdPort": 11003
   },{
     "name": "O=Party C,L=New York,C=US",
     "safeName" : "partyc",
@@ -25,7 +27,8 @@ module.exports = {
     "adminPort": 10007,
     "p2pPort": 10008,
     "cordapps": [],
-    "nodes": ["partya", "partyb"]
+    "nodes": ["partya", "partyb"],
+    "sshdPort": 11006
   }],
   notaries : [{
     "name": "O=Notary Service,L=London,C=GB",
@@ -33,7 +36,8 @@ module.exports = {
     "rpcPort": 10009,
     "adminPort": 10010,
     "p2pPort": 10011,
-    "cordapps": []
+    "cordapps": [],
+    "sshdPort": 11009
   }],
   projects: []
 };

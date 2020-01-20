@@ -10,9 +10,21 @@
     "p2pAddress",
     "rpcSettings",
     "rpcUsers",
-    "devMode"
+    "devMode",
+    "sshd"
   ],
   "properties": {
+    "sshd": {
+      "type": "object",
+      "required": [
+        "port"
+      ],
+      "properties": {
+        "port": {
+          "type": "sshdPort"
+        }
+      }
+    },
     "myLegalName": {
       "type": "myLegalName",
       "default": "O=Bank {{O}},L=London,C=GB",

@@ -1,5 +1,6 @@
 const { spawn } = require("child_process");
 const { join } = require("path");
+const node_ssh = require("node-ssh");
 const StreamingMessageHandler = require("./streaming-message-handler");
 const noop = () => {};
 
@@ -10,6 +11,7 @@ class Corda {
     this.JAVA_HOME = JAVA_HOME;
     this.java = null;
     this._io = io;
+    this.ssh = null;
 
     this.closeHandler = this.closeHandler.bind(this)
 
@@ -42,7 +44,7 @@ class Corda {
       });
       this.java.stdout.on("data", (data) => {
         this._io.sendStdOut(data, this.entity.safeName);
-        console.error(`corda stdout:\n${data}`);
+        console.log(`corda stdout:\n${data}`);
       });
       this.java.on("error", console.error);
       /* eslint-enable no-console */
@@ -54,39 +56,51 @@ class Corda {
     });
   }
 
-  stop(){
+  async stop() {
+    if (this.status !== "started") return;
+    this.status = "stopping";
     this._dataHandler.unbind();
-    return new Promise(resolve => {
-      if (this.java) {
+    if (this.ssh) {
+      await this.ssh.exec("run", ["gracefulShutdown"]);
+      this.ssh = null;
+    }
+    if (this.java) {
+      return new Promise(resolve => {
         if (this.java.exitCode === null) {
           this.java.once("close", () => {
             this.java = null;
             resolve();
           });
-          if(!this.java.killed) {
-            this.java.kill();      
+          if (!this.java.killed) {
+            this.java.kill();
           }
         } else {
           this.java = null;
           resolve();
         }
-      } else {
-        resolve();
-      }
-    });
+      });
+    }
   }
 
   async closeHandler(code){
-    console.log(`child process exited with code ${code}`);
+    console.log("corda", `child process exited with code ${code}`);
     await this.stop();
     this._awaiter.reject(new Error(`corda.jar child process exited with code ${code}`));
   }
 
-  handleStartUp() {
+  async handleStartUp() {
     this.status = "started";
+
+    this.ssh = new node_ssh();
 
     this._dataHandler.unbind();
     this.java.off("close", this.closeHandler);
+    await this.ssh.connect({
+      host: "127.0.0.1",
+      username: "user1",
+      password: "letmein",
+      port: this.entity.sshdPort
+    });
     this._awaiter.resolve();
   }
 

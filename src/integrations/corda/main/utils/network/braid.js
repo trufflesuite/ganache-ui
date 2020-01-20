@@ -28,7 +28,7 @@ class Braid {
         this._io.sendError(new Error(error.toString()));
       });
       braid.once("close", (code) => {
-        console.log(`child process exited with code ${code}`);
+        console.log("braid", `child process exited with code ${code}`);
       });
 
       this.servers.set(name, {path, braid});
@@ -72,8 +72,8 @@ class Braid {
             this.servers.delete(key);
             resolve();
           });
-          if(!braid.killed) {
-            braid.kill();      
+          if (!braid.killed) {
+            braid.kill();
           }
         } else {
           this.servers.delete(key);
