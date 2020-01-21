@@ -38,9 +38,11 @@ class NetworkManager extends EventEmitter {
     this.blacklist = new Set();
     this._downloadPromise = null;
     this.blobInspector = null;
+    this.cancelled = false;
   }
 
   async bootstrap(nodes, notaries, postgresPort) {
+    try {
       // kick off downloading all the things ASAP! this is safe to do because
       // each individual file that is downloaded is a singleton, returning the
       // same promise for each file request, or it just resolves immediately if
@@ -52,15 +54,19 @@ class NetworkManager extends EventEmitter {
       this._io.sendProgress("Writing configuration files...");
       const cordaBootstrap = new CordaBootstrap(this.workspaceDirectory, this._io);
       const {nodesArr, notariesArr} = await cordaBootstrap.writeConfig(nodes, notaries, postgresPort);
+      if (this.cancelled) return;
       this.nodes = nodesArr;
       this.notaries = notariesArr;
       this.entities = this.nodes.concat(this.notaries);
       this._io.sendProgress("Downloading PostgreSQL (this may take a few minutes)...");
       const pgDownload = postgres(await POSTGRES_HOME);
+      if (this.cancelled) return;
       this._io.sendProgress("Starting PostgreSQL...");
       this.pg = await pgDownload.start(postgresPort, this.workspaceDirectory, this.entities, this.settings.isDefault);
+      if (this.cancelled) return;
       this._io.sendProgress("Bootstrapping network...");
       await cordaBootstrap.bootstrap(this.config);
+      if (this.cancelled) return;
       this._io.sendProgress("Configuring Postgres Hooks...");
       this.postGresHooksPromise = this.setupPostGresHooks();
       this._io.sendProgress("Copying Cordapps...");
@@ -68,13 +74,20 @@ class NetworkManager extends EventEmitter {
         this.postGresHooksPromise,
         this.copyCordappsAndSetupNetwork()
       ]);
+      if (this.cancelled) return;
       this._io.sendProgress("Configuring RPC Manager...");
       this.braid = new Braid(join(await BRAID_HOME, ".."), this._io);
+    } catch(e){
+      // if this manager was stopped we don't care about errors anymore
+      if (this.cancelled) return;
+      throw e;
+    }
   }
 
   setupPostGresHooks() {
     return Promise.all(this.entities.map(async entity => {
       const client = await this.pg.getConnectedClient(entity.safeName, this.settings.postgresPort);
+      if (this.cancelled) return client;
       
       await client.query(`create or replace function notify_subscribers()
           returns trigger
@@ -97,6 +110,7 @@ class NetworkManager extends EventEmitter {
       client.on("notification", (msg) => {
         this.emit("message", "send", "VAULT_DATA", msg);
       });
+      if (this.cancelled) return client;
       
       await client.query("LISTEN my_events");
     
@@ -165,11 +179,12 @@ class NetworkManager extends EventEmitter {
     return port;
   }
 
-  async start(){
-    // TODO: Optimus prime
+  async start() {
+    try {
       const entities = this.entities;
       this._io.sendProgress("Loading JRE...");
       const JAVA_HOME = await this.config.corda.files.jre.download();
+      if (this.cancelled) return;
 
       this._io.sendProgress("Starting Corda Nodes...");
       let startedNodes = 0;
@@ -177,6 +192,7 @@ class NetworkManager extends EventEmitter {
         const currentPath = join(this.workspaceDirectory, entity.safeName);
         // eslint-disable-next-line require-atomic-updates
         entity.braidPort = await this.getPort(entity.rpcPort + 10000);
+        if (this.cancelled) return;
         const braidPromise = this.braid.start(entity, currentPath, JAVA_HOME);
         const corda = new Corda(entity, currentPath, JAVA_HOME, this._io);
         this.processes.push(corda);
@@ -185,6 +201,7 @@ class NetworkManager extends EventEmitter {
           this._io.sendProgress(`Corda node ${++startedNodes}/${entities.length} online...`);
         });
         await Promise.all([cordaProm, braidPromise]);
+        if (this.cancelled) return;
         // we need to get the `owningKey` for this node so we can reference it in the front end
         // eslint-disable-next-line require-atomic-updates
         entity.owningKey = await fetch("https://localhost:" + entity.braidPort + "/api/rest/network/nodes/self", {agent})
@@ -194,7 +211,8 @@ class NetworkManager extends EventEmitter {
 
       try {
         await Promise.all(promises);
-      } catch(e) {
+        if (this.cancelled) return;
+      } catch (e) {
         await this.stop();
         throw e;
       }
@@ -202,9 +220,15 @@ class NetworkManager extends EventEmitter {
       //  deps are downloaded before we start up.
       this._io.sendProgress(`Downloading remaining Corda dependencies...`);
       this.blobInspector = new BlobInspector(JAVA_HOME, await this.config.corda.files.blobInspector.download());
+    } catch(e){
+      // if this manager was stopped we don't care about errors anymore
+      if (this.cancelled) return;
+      throw e;
+    }
   }
 
   async stop() {
+    this.cancelled = true;
     const promises = this.processes.map(cordaProcess => cordaProcess.stop());
 
     if (this.braid) {
@@ -221,8 +245,8 @@ class NetworkManager extends EventEmitter {
         const pgHookProm = this.postGresHooksPromise;
         this.postGresHooksPromise = null;
         const postGresHooksClients = await pgHookProm;
-        postGresHooksClients && postGresHooksClients.map(client => client.release());
-      } catch(e) {
+        postGresHooksClients && await Promise.all(postGresHooksClients.map(client => (client.release(), client.end())));
+      } catch (e) {
         // eslint-disable-next-line no-console
         console.error("Error occured while attempting to stop postgres clients...", e);
       }

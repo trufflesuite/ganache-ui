@@ -18,7 +18,7 @@ module.exports = (POSTGRES_PATH) => {
   const CREATEUSER = pgJoin("createuser");
   const CREATEDB = pgJoin("createdb");
 
-  function getConnectedClient(database, port){
+  function getConnectedClient(database, port, idleTimeoutMillis = 10000) {
     let pool;
     const key = postgres._getClientPoolKey(database, port);
     if (!postgres.pools.has(key)){
@@ -27,7 +27,8 @@ module.exports = (POSTGRES_PATH) => {
         host: "localhost",
         password: "",
         database,
-        port
+        port,
+        idleTimeoutMillis
       });
       postgres.pools.set(key, pool);
     } else {
@@ -104,17 +105,7 @@ module.exports = (POSTGRES_PATH) => {
         shutdown: async () => {
           if (shuttingDown) return shuttingDown;
           shuttingDown = Promise.all(["postgres", ...schemaNames].map(async (database) => {
-              const key = postgres._getClientPoolKey(database, port);
-              let pool = postgres.pools.get(key);
-              if (pool) {
-                pool.on("error", () => {
-                  // swallow pool errors when shutting down because
-                  // they are probably caused by a connected client
-                  // that _has_ been released but not fully disconnected.
-                });
-                postgres.pools.delete(key);
-                await pool.end();
-              }
+            return postgres.endPool(database, port);
             })).then(stop);
           return shuttingDown;
         },
@@ -125,12 +116,26 @@ module.exports = (POSTGRES_PATH) => {
     _getClientPoolKey: (database, port) => {
       return `${database}:${port}`;
     },
+    endPool: (database, port) => {
+      const key = postgres._getClientPoolKey(database, port);
+      let pool = postgres.pools.get(key);
+      if (pool) {
+        pool.on("error", () => {
+          // swallow pool errors when shutting down because
+          // they are probably caused by a connected client
+          // that _has_ been released but not fully disconnected.
+        });
+        postgres.pools.delete(key);
+        return pool.end();
+      }
+    },
     stop: async (port) => {
       let client;
-      const key = postgres._getClientPoolKey("postgres", port);
       let res;
       try {
-        client = await getConnectedClient("postgres", port);
+        // timeout of 1ms because we know we are going to stop the pool
+        // right after using this client.
+        client = await getConnectedClient("postgres", port, 1);
         res = await client.query("show data_directory");
       } catch(e) {
         // if we are here it just means we don't have a db connected yet or we just can't connect to the database
@@ -139,10 +144,8 @@ module.exports = (POSTGRES_PATH) => {
         console.log(e);
       }
       finally {
-        client && client.release();
-        const pool = postgres.pools.get(key);
-        postgres.pools.delete(key);
-        pool && await pool.end();
+        client && client.release() && await client.end();
+        await postgres.endPool("postgres", port);
       }
 
       if (res && res.rows && res.rows.length > 0) {
