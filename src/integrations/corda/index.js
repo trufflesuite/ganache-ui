@@ -24,7 +24,7 @@ class Corda extends Integrations {
     this.ipc.on("CORDA_DOWNLOAD_ATTACHMENT", async (_event, attachment_id, database, destination) => {
       if (this.chain.manager.pg) {
         const pgPort = this.chain.manager.settings.postgresPort;
-        const client = await this.chain.manager.getConnectedClient(database, pgPort);
+        const client = await this.chain.manager.pg.getConnectedClient(database, pgPort);
         try {
           await client.query("SELECT lo_export(node_attachments.content, $2::text) FROM node_attachments WHERE att_id = $1", [attachment_id, destination]);
           this.send("CORDA_DOWNLOAD_ATTACHMENT_SUCCESS", attachment_id, database, destination);
@@ -39,7 +39,7 @@ class Corda extends Integrations {
       if (this.chain.manager.pg) {
         const pgPort = this.chain.manager.settings.postgresPort;
         for (let entity of this.chain.manager.entities) {
-          const client = await this.chain.manager.getConnectedClient(entity.safeName, pgPort);
+          const client = await this.chain.manager.pg.getConnectedClient(entity.safeName, pgPort);
           try {
             const txId = convertTxHashToId(txhash);
             const result = await client.query("SELECT lo_get(transaction_value) AS data FROM node_transactions WHERE tx_id = $1::text LIMIT 1", [txId]);
