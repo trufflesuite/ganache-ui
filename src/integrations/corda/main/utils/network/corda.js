@@ -98,6 +98,7 @@ class Corda {
     this._dataHandler.unbind();
     this.java.off("close", this.closeHandler);
     await this.ssh.connect({
+      keepaliveInterval: 10000,
       host: "127.0.0.1",
       username: "user1",
       password: "letmein",
