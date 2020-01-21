@@ -115,7 +115,9 @@ class Downloader {
       const extractor = new Extract({ path });
       patchUnzipStream(extractor);
       stream.pipe(extractor)
-        .on("close", resolve)
+        .on("close", () => {
+          Promise.all(extractor.promises).then(resolve);
+        })
         .on("error", reject);
     });
   }

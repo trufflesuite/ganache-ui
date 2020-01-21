@@ -1,4 +1,6 @@
-const { chmodSync } = require("fs");
+const fs = require("graceful-fs");
+const { promisify } = require("util");
+const chmod = promisify(fs.chmod.bind(fs));
 const { join } = require("path");
 
 const CENTRAL_DIRECTORY_FILE_HEADER_SUFFIX = 8
@@ -9,6 +11,7 @@ function patchUnzipStream(extractor) {
   const _decodeString = unzipStream._decodeString.bind(unzipStream);
   const _readExtraFields = unzipStream._readExtraFields.bind(unzipStream);
   const oldProcessDataChunk = unzipStream.processDataChunk;
+  const promises = extractor.promises = [];
   extractor.unzipStream.processDataChunk = function (chunk) {
     // we _must_ get the `state` here, as `oldProcessDataChunk` changes it
     const state = unzipStream.state;
@@ -50,11 +53,12 @@ function patchUnzipStream(extractor) {
         if (filePermissions !== 0o666) {
           // and finally, change our permissions
           const destPath = join(path, entryPath);
-          try {
-            chmodSync(destPath, filePermissions);
-          } catch (e) {
-            console.error(e);
-          }
+          // try {
+          //   chmodSync(destPath, filePermissions);
+          // } catch (e) {
+          //   console.error(e);
+          // }
+          promises.push(chmod(destPath, filePermissions));
         }
       }
     }
