@@ -98,6 +98,12 @@ class NodeModal extends Component{
           }} value={node.p2pPort||""}>
           </input>
 
+          <div>SSHD Port</div>
+          <input type="number" min="1024" max="65535" onChange={(e) => {
+            this.setState({sshdPort: parseInt(e.target.value, 10)});
+          }} value={node.sshdPort||""}>
+          </input>
+
           {this.props.type==="Notary" ? "" : (<>
             <div>Network Map</div>
             <select multiple={true} onChange={(e) => {

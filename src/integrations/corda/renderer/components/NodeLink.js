@@ -25,6 +25,10 @@ class NodeLink extends PureComponent {
             <div className="Label">Admin Port</div>
             <div className="Value">{node.adminPort}</div>
           </div>
+          <div className="corda-node-port-description">
+            <div className="Label">SSHD Port</div>
+            <div className="Value">{node.sshdPort}</div>
+          </div>
         </div>
         <div className="corda-link-right">
           {services.map((service) => <div className="TransactionTypeBadge ContractCallBadge" key={`service-${service}`}>{service}</div>)}

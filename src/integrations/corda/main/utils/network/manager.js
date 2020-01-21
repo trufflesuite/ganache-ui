@@ -106,6 +106,7 @@ class NetworkManager extends EventEmitter {
   addToBlackList = (node) => {
     this.blacklist.add(node.rpcPort);
     this.blacklist.add(node.adminPort);
+    this.blacklist.add(node.sshdPort);
     this.blacklist.add(node.p2pPort);
   }
   async copyCordappsAndSetupNetwork() {

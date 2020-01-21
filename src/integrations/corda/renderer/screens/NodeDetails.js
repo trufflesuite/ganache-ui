@@ -273,6 +273,20 @@ class NodeDetails extends Component {
                 <div className="Label">Admin Port</div>
                 <div className="Value">{node.adminPort}</div>
               </div>
+              <div>
+                <div className="Label">SSHD Port</div>
+                <div className="Value">{node.sshdPort}</div>
+              </div>
+            </div>
+            <div className="DataRow corda-node-details-ports corda-details-section corda-details-padded">
+              <div>
+                <div className="Label">Username</div>
+                <div className="Value">user1</div>
+              </div>
+              <div>
+                <div className="Label">Password</div>
+                <div className="Value">letmein</div>
+              </div>
             </div>
             <div className="DataRow corda-details-section corda-details-padded">
               <div>
