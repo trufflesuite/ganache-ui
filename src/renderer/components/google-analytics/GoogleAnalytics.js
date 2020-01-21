@@ -16,7 +16,7 @@ export default class HeaderBar extends PureComponent {
                   id="GoogleAnalyticsTracking"
                   onChange={this.props.handleInputChange}
                   checked={
-                    this.props.config.settings.global.googleAnalyticsTracking ==
+                    this.props.googleAnalyticsTracking ==
                     true
                   }
                 />

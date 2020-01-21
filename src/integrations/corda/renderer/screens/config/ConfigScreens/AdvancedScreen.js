@@ -38,7 +38,7 @@ class AdvancedScreen extends Component {
             </div>
           </div>
         </section>
-        <GoogleAnalytics config={this.props.config} handleInputChange={this.props.handleInputChange} />
+        <GoogleAnalytics googleAnalyticsTracking={this.props.config.settings.global.googleAnalyticsTracking} handleInputChange={this.props.handleInputChange} />
       </div>
     );
   }

@@ -24,9 +24,11 @@ class AdvancedScreen extends Component {
   toggleOutputToLogs = e => {
     if (this.state.logDirectory == null) {
       // this setting was turned off, turn it on
+      // eslint-disable-next-line react/no-direct-mutation-state
       this.state.logDirectory = "Select a Directory";
     } else {
       // this setting was turned on and set, turn it off by setting to null
+      // eslint-disable-next-line react/no-direct-mutation-state
       this.state.logDirectory = null;
     }
 
@@ -34,6 +36,7 @@ class AdvancedScreen extends Component {
   };
 
   changeLogDirectory = (value, e) => {
+    // eslint-disable-next-line react/no-direct-mutation-state
     this.state.logDirectory = value;
 
     this.validateChange(e);
@@ -140,7 +143,7 @@ class AdvancedScreen extends Component {
             </div>
           </div>
         </section>
-        <GoogleAnalytics config={this.props.config} handleInputChange={this.props.handleInputChange} />
+        <GoogleAnalytics googleAnalyticsTracking={this.props.config.settings.global.googleAnalyticsTracking} handleInputChange={this.props.handleInputChange} />
         {/* <section>
           <h4>CPU &amp; MEMORY PROFILING</h4>
           <div className="Row">
