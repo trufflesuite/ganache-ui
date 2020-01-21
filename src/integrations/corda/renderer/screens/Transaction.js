@@ -159,7 +159,7 @@ class Transaction extends Component {
     let selectedState;
     [["Output", txStates], ["Input", this.state.inputs]].forEach(([type, states]) => {
       if (states === null) {
-        tabs.push(<div style={{order: 9999999, cursor: "wait"}} ref={"tab_button_" + type + "_loading"} className="corda-tab Label">Loading {type} States...</div>);
+        tabs.push(<div key={"tab_button_" + type + "_loading"} style={{order: 9999999, cursor: "wait"}} ref={"tab_button_" + type + "_loading"} className="corda-tab Label">Loading {type} States...</div>);
         return;
       }
       for (let [index, state] of states) {
@@ -168,7 +168,7 @@ class Transaction extends Component {
           selectedIndex = key;
         }
         const order = (type==="Input" ? 1000 : 0) + index;
-        tabs.push(<div style={{order}} ref={"tab_button_" + key} onClick={this.setState.bind(this, {selectedIndex: key}, undefined)} className={(selectedIndex === key ? "corda-tab-selected" : "") + " corda-tab Label"}>{type} State {index + 1}</div>);
+        tabs.push(<div key={"tab_button_" + key} style={{order}} ref={"tab_button_" + key} onClick={this.setState.bind(this, {selectedIndex: key}, undefined)} className={(selectedIndex === key ? "corda-tab-selected" : "") + " corda-tab Label"}>{type} State {index + 1}</div>);
         if (selectedIndex !== key) continue;
         if (!state.state) {
           selectedState = (<div className="Waiting Waiting-Padded">Loading State...</div>);
@@ -178,7 +178,7 @@ class Transaction extends Component {
         const participants = state.state.data.participants || [];
         const workspaceNotary = this.getWorkspaceNotary(state.state.notary.owningKey);
 
-        selectedState = (<div key={key}>
+        selectedState = (<div>
           {this.renderStateHeader(state, type)}
           
           {state.state.data.exitKeys && state.state.data.exitKeys.length !== 0 ? (
