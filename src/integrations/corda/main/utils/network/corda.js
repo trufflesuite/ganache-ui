@@ -61,8 +61,10 @@ class Corda {
     this.status = "stopping";
     this._dataHandler.unbind();
     if (this.ssh) {
-      await this.ssh.exec("run", ["gracefulShutdown"]);
+      const ssh = this.ssh;
       this.ssh = null;
+      await ssh.exec("run", ["gracefulShutdown"]);
+      ssh.dispose();
     }
     if (this.java) {
       return new Promise(resolve => {
