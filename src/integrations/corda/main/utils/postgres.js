@@ -107,6 +107,11 @@ module.exports = (POSTGRES_PATH) => {
               const key = postgres._getClientPoolKey(database, port);
               let pool = postgres.pools.get(key);
               if (pool) {
+                pool.on("error", () => {
+                  // swallow pool errors when shutting down because
+                  // they are probably caused by a connected client
+                  // that _has_ been released but not fully disconnected.
+                });
                 postgres.pools.delete(key);
                 await pool.end();
               }
