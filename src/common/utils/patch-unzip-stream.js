@@ -1,6 +1,6 @@
 const fs = require("graceful-fs");
 const { promisify } = require("util");
-const chmod = promisify(fs.chmod.bind(fs));
+const chmod = promisify(fs.chmod);
 const { join } = require("path");
 
 const CENTRAL_DIRECTORY_FILE_HEADER_SUFFIX = 8
@@ -53,12 +53,9 @@ function patchUnzipStream(extractor) {
         if (filePermissions !== 0o666) {
           // and finally, change our permissions
           const destPath = join(path, entryPath);
-          // try {
-          //   chmodSync(destPath, filePermissions);
-          // } catch (e) {
-          //   console.error(e);
-          // }
-          promises.push(chmod(destPath, filePermissions));
+          // ignore errors. it IS somehow possible these files don't exist
+          // it seems like they will exist later though... just not yet. weird.
+          promises.push(chmod(destPath, filePermissions).catch(() => void 0));
         }
       }
     }
