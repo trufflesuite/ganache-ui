@@ -15,7 +15,7 @@ const agent = new https.Agent({
 });
 
 class IO {
-  constructor(context){
+  constructor(context) {
     const createMsgEmitter = (...args) => context.emit.bind(context, "message", ...args);
     this.sendProgress = createMsgEmitter("progress");
     this.sendError = createMsgEmitter("error");
@@ -25,7 +25,7 @@ class IO {
 }
 
 class NetworkManager extends EventEmitter {
-  constructor (config, settings, workspaceDirectory) {
+  constructor(config, settings, workspaceDirectory) {
     super();
     this.config = config;
     this.settings = settings;
@@ -53,7 +53,7 @@ class NetworkManager extends EventEmitter {
       const POSTGRES_HOME = this.config.corda.files.postgres.download();
       this._io.sendProgress("Writing configuration files...");
       const cordaBootstrap = new CordaBootstrap(this.workspaceDirectory, this._io);
-      const {nodesArr, notariesArr} = await cordaBootstrap.writeConfig(nodes, notaries, postgresPort);
+      const { nodesArr, notariesArr } = await cordaBootstrap.writeConfig(nodes, notaries, postgresPort);
       if (this.cancelled) return;
       this.nodes = nodesArr;
       this.notaries = notariesArr;
@@ -77,7 +77,7 @@ class NetworkManager extends EventEmitter {
       if (this.cancelled) return;
       this._io.sendProgress("Configuring RPC Manager...");
       this.braid = new Braid(join(await BRAID_HOME, ".."), this._io);
-    } catch(e){
+    } catch (e) {
       // if this manager was stopped we don't care about errors anymore
       if (this.cancelled) return;
       throw e;
@@ -88,7 +88,7 @@ class NetworkManager extends EventEmitter {
     return Promise.all(this.entities.map(async entity => {
       const client = await this.pg.getConnectedClient(entity.safeName, this.settings.postgresPort);
       if (this.cancelled) return client;
-      
+
       await client.query(`create or replace function notify_subscribers()
           returns trigger
           language plpgsql
@@ -105,15 +105,15 @@ class NetworkManager extends EventEmitter {
         AFTER INSERT OR UPDATE ON vault_states
         FOR EACH ROW
         EXECUTE PROCEDURE notify_subscribers();`);
-    
+
       // Listen for all pg_notify channel messages
       client.on("notification", (msg) => {
         this.emit("message", "send", "VAULT_DATA", msg);
       });
       if (this.cancelled) return client;
-      
+
       await client.query("LISTEN my_events");
-    
+
       return client;
     }));
   }
@@ -150,8 +150,8 @@ class NetworkManager extends EventEmitter {
       const currentDir = join(this.workspaceDirectory, node.safeName);
       const info = fse.readdirSync(currentDir).filter(file => file.startsWith("nodeInfo-")).reduce((p, name) => name, "");
       const knownNodesDir = join(currentDir, "additional-node-infos");
-      const currentlyKnownNodes = fse.readdirSync(knownNodesDir).map(file => ({file, path: join(knownNodesDir, file)}));
-      networkMap.set(node.safeName, {nodes: node.nodes || [], info, currentlyKnownNodes});
+      const currentlyKnownNodes = fse.readdirSync(knownNodesDir).map(file => ({ file, path: join(knownNodesDir, file) }));
+      networkMap.set(node.safeName, { nodes: node.nodes || [], info, currentlyKnownNodes });
     });
     networkMap.forEach((val, _key, nMap) => {
       const nodes = val.nodes.map((node) => nMap.get(node)).filter(n => n).map(n => n.info);
@@ -170,10 +170,10 @@ class NetworkManager extends EventEmitter {
     return Promise.all(promises);
   }
 
-  async getPort(port){
+  async getPort(port) {
     while (this.blacklist.has(port)) port++;
     do {
-      port = await GetPort({port});
+      port = await GetPort({ port });
     } while (this.blacklist.has(port) && port++);
     this.blacklist.add(port);
     return port;
@@ -204,7 +204,7 @@ class NetworkManager extends EventEmitter {
         if (this.cancelled) return;
         // we need to get the `owningKey` for this node so we can reference it in the front end
         // eslint-disable-next-line require-atomic-updates
-        entity.owningKey = await fetch("https://localhost:" + entity.braidPort + "/api/rest/network/nodes/self", {agent})
+        entity.owningKey = await fetch("https://localhost:" + entity.braidPort + "/api/rest/network/nodes/self", { agent })
           .then(r => r.json())
           .then(self => self.legalIdentities[0].owningKey);
       });
@@ -220,7 +220,7 @@ class NetworkManager extends EventEmitter {
       //  deps are downloaded before we start up.
       this._io.sendProgress(`Downloading remaining Corda dependencies...`);
       this.blobInspector = new BlobInspector(JAVA_HOME, await this.config.corda.files.blobInspector.download());
-    } catch(e){
+    } catch (e) {
       // if this manager was stopped we don't care about errors anymore
       if (this.cancelled) return;
       throw e;
@@ -237,9 +237,8 @@ class NetworkManager extends EventEmitter {
 
     // wait until braid and corda are stopped
     await Promise.all(promises);
-    
-    // then shut down all the postgress stuff...
 
+    // then shut down all the postgress stuff...
     if (this.postGresHooksPromise) {
       try {
         const pgHookProm = this.postGresHooksPromise;
@@ -253,17 +252,17 @@ class NetworkManager extends EventEmitter {
     }
     try {
       this.pg && await this.pg.shutdown();
-    } catch(e) {
+    } catch (e) {
       // eslint-disable-next-line no-console
       console.error("Error occured while attempting to stop postgres...", e);
     }
   }
-  
-  getNodes(){
+
+  getNodes() {
     return this.nodes;
   }
 
-  getNotaries(){
+  getNotaries() {
     return this.notaries;
   }
 }
