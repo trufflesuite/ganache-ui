@@ -4,8 +4,8 @@ const { join } = require("path");
 const { spawn } = require("promisify-child-process");
 const temp = require("temp");
 const { promisify } = require("util");
-const mkdir = promisify(temp.mkdir.bind(temp));
-const exists = promisify(fs.exists.bind(fs));
+const mkdir = promisify(temp.mkdir);
+const exists = promisify(fs.exists);
 
 const USER = "ganache";
 const DATA_DIR = "__ganache_pg_data_";
@@ -38,27 +38,21 @@ module.exports = (POSTGRES_PATH) => {
     return pool.connect();
   }
 
-  async function initSchema(port, schemaNames){
-    try {
-      const promises = [];
-      // create the "ganache" user:
-      const ganacheUserProm = spawn(CREATEUSER, ["--host", "127.0.0.1", "--port", port, "--createdb", "--username", "postgres", USER], config);
+  async function initSchema(port, schemaNames) {
+    const promises = [];
+    // create the "ganache" user:
+    const ganacheUserProm = spawn(CREATEUSER, ["--host", "127.0.0.1", "--port", port, "--createdb", "--username", "postgres", USER], config).catch(e=>e);
 
-      // create the "corda" user
-      promises.push(spawn(CREATEUSER, ["--host", "127.0.0.1", "--port", port, "--username", "postgres", "corda"], config));
+    // create the "corda" user
+    promises.push(spawn(CREATEUSER, ["--host", "127.0.0.1", "--port", port, "--username", "postgres", "corda"], config).catch(e=>e));
 
-      // create all of the databases for each node (these are owned by "ganache" so we have to wait till that user is created)
-      ganacheUserProm.then(() => {
-        schemaNames.forEach(schema => {
-          promises.push(spawn(CREATEDB, ["--host", "127.0.0.1", "--port", port, "--owner", USER, "--username", USER, schema.safeName], config));
-        })
-      });
-      await Promise.all(promises);
-    } catch(e) {
-      // if bad things happened, stop it
-      await stop().catch(e => e);
-      throw e;
-    }
+    // create all of the databases for each node (these are owned by "ganache" so we have to wait till that user is created)
+    schemaNames.forEach(schema => {
+      promises.push(ganacheUserProm.then(() => {
+        return spawn(CREATEDB, ["--host", "127.0.0.1", "--port", port, "--owner", USER, "--username", USER, schema.safeName], config).catch(e=>e);
+      }));
+    });
+    await Promise.all(promises);
   }
 
   const postgres = {
@@ -94,7 +88,13 @@ module.exports = (POSTGRES_PATH) => {
       // start the postgres server
       await spawn(PG_CTL, ["-o", `-F -p ${port}`, "-D", dataDir, "-l", join(dataDir, "postgres-logfile.log"), "-w", "start"]);
       
-      await initSchema(port, schemaNames);
+      try {
+        await initSchema(port, schemaNames);
+      } catch(e) {
+        // if bad things happened, stop it
+        await stop().catch(e => e);
+        throw e;
+      }
 
       let shuttingDown = false;
       return {
