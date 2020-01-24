@@ -55,14 +55,14 @@ if (process.platform == "win32") {
    * the old version's workspaces and global settings file over to the new 
    * workspace folder.
    */
-  migrate = async () => {
+  migrate = async (newGanache) => {
     if (!APP_DATA) return;
     const oldGanache = getOldGanachePath();
     
     if (!(await ganacheExists())) return;
 
-    const newGanache = join(APP_DATA, `/../Local/Packages/${pkg.build.appx.identityName}_5dg5pnz03psnj/LocalCache/Roaming/Ganache`);
-    return Promise.all([moveWorkspaces(oldGanache, newGanache), moveGlobalSettings(oldGanache, newGanache)]);
+    const newGanacheVirtualized = join(APP_DATA, `/../Local/Packages/${pkg.build.appx.identityName}_5dg5pnz03psnj/LocalCache/Roaming/Ganache`);
+    return Promise.all([moveWorkspaces(oldGanache, newGanache), moveGlobalSettings(oldGanache, newGanache), moveWorkspaces(newGanacheVirtualized, newGanache), moveGlobalSettings(newGanacheVirtualized, newGanache)]);
   };
 
   uninstallOld = async () => {

@@ -9,7 +9,7 @@ const exists = promisify(fs.exists);
 
 const USER = "ganache";
 const DATA_DIR = "__ganache_pg_data_";
-const config = {env: null, encoding: "utf8"};
+const config = {env: process.env, encoding: "utf8"};
 
 module.exports = (POSTGRES_PATH) => {
   const pgJoin = join.bind(null, join(POSTGRES_PATH, "bin"));
@@ -18,7 +18,7 @@ module.exports = (POSTGRES_PATH) => {
   const CREATEUSER = pgJoin("createuser");
   const CREATEDB = pgJoin("createdb");
 
-  function getConnectedClient(database, port, idleTimeoutMillis = 10000) {
+  function getConnectedClient(database, port) {
     let pool;
     const key = postgres._getClientPoolKey(database, port);
     if (!postgres.pools.has(key)){
@@ -27,8 +27,7 @@ module.exports = (POSTGRES_PATH) => {
         host: "localhost",
         password: "",
         database,
-        port,
-        idleTimeoutMillis
+        port
       });
       postgres.pools.set(key, pool);
     } else {
@@ -133,9 +132,7 @@ module.exports = (POSTGRES_PATH) => {
       let client;
       let res;
       try {
-        // timeout of 1ms because we know we are going to stop the pool
-        // right after using this client.
-        client = await getConnectedClient("postgres", port, 1);
+        client = await getConnectedClient("postgres", port);
         res = await client.query("show data_directory");
       } catch(e) {
         // if we are here it just means we don't have a db connected yet or we just can't connect to the database
@@ -144,7 +141,7 @@ module.exports = (POSTGRES_PATH) => {
         console.log(e);
       }
       finally {
-        client && client.release() && await client.end();
+        client && client.release();
         await postgres.endPool("postgres", port);
       }
 

@@ -57,30 +57,48 @@ class Corda {
   }
 
   async stop() {
-    if (this.status !== "started") return;
+    if (this.status !== "started" && this.status !== "starting") return;
     this.status = "stopping";
     this._dataHandler.unbind();
-    if (this.ssh) {
-      const ssh = this.ssh;
-      this.ssh = null;
-      await ssh.exec("run", ["gracefulShutdown"]);
-      ssh.dispose();
-    }
-    if (this.java) {
-      return new Promise(resolve => {
-        if (this.java.exitCode === null) {
-          this.java.once("close", () => {
-            this.java = null;
+    const java = this.java;
+    if (java) {
+      const prom = new Promise(resolve => {
+        if (java.exitCode === null) {
+          java.once("close", () => {
+            if (this.status === "stopping") {
+              this.status = "stopped";
+            }
+            if (this.java === java) {
+              this.java = null;
+            }
             resolve();
           });
-          if (!this.java.killed) {
-            this.java.kill();
-          }
         } else {
-          this.java = null;
+          if (this.java === java) {
+            this.java = null;
+          }
           resolve();
         }
+        if (this.ssh) {
+          const ssh = this.ssh;
+          this.ssh = null;
+          ssh.connection.on("error", () => {
+            // swallow the error
+            // this command causes a disconnect from the corda
+            // which causes an error on our side.
+          });
+          ssh.exec("run", ["gracefulShutdown"]).catch(e => e).then(() => {
+            if (!this.java.killed) {
+              this.java.kill();
+            }
+          })
+        } else if (!this.java.killed) {
+          this.java.kill();
+        }
       });
+      return prom;
+    } else {
+      this.status = "stopped";
     }
   }
 

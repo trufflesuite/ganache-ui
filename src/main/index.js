@@ -1,5 +1,6 @@
 /* global __static:readonly */
 
+const { spawn } = require("promisify-child-process");
 import path from "path";
 import * as os from "os";
 import merge from "lodash.merge";
@@ -46,18 +47,6 @@ import IntegrationManager from "../integrations/index.js";
 import pojofyError from "../common/utils/pojofyError";
 import migration from "./init/migration.js";
 
-// start a migration, if needed
-const migrationPromise = migration.migrate();
-migrationPromise.then(() => {
-  migration.uninstallOld();
-}).catch(e => {
-  if (mainWindow) {
-    mainWindow.webContents.send(SET_SYSTEM_ERROR, e.stack || e);
-  } else {
-    console.error(e);
-  }
-});
-
 const isDevMode = process.execPath.match(/[\\/]electron/) !== null;
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -84,13 +73,43 @@ if (isDevMode) {
   app.getVersion = () => version;
 }
 
-// https://github.com/sindresorhus/fix-path
-// GUI apps on macOS don't inherit the $PATH defined in your dotfiles (.bashrc/.bash_profile/.zshrc/etc)
-// i.e. opening app by clicking on icon in Finder, applications list screen
-// $PATH will be defined if you run from terminal (even in production) e.g: . /Applications/Ganache.app/Contents/MacOS/Ganache
-if (process.platform === "darwin") {
-  fixPath();
-  app.dock.setIcon(getIconPath());
+const USERDATA_PATH = app.getPath("userData");
+let migrationPromise;
+
+if (process.platform === "win32") {
+  // APPX packages use virtualized directories unless a real directory already exists at the same location.
+  // The virtualized directories don't permit running things like postgres.exe and java.exe in them because
+  // these applications use the the directory they're under to run other processes... and that directory doesn't
+  // actually exist on disk.
+  // So we we do here is create the REAL directory (if it doesn't exist already) so the appx will use it.
+  // We launch `cmd.exe` and then run (`/c` switch) `mkdir USERDATA_PATH` from it's context instead of our appx
+  // context.
+  // eslint-disable-next-line no-console
+  let userDataPromise = spawn("cmd.exe", ["/c", "mkdir", USERDATA_PATH]).catch(e => { console.error(e) });
+
+  // start a migration, if needed
+  migrationPromise = userDataPromise.then(() => migration.migrate(USERDATA_PATH));
+  migrationPromise.then(() => {
+    migration.uninstallOld();
+  }).catch(e => {
+    if (mainWindow) {
+      mainWindow.webContents.send(SET_SYSTEM_ERROR, e.stack || e);
+    } else {
+      // eslint-disable-next-line no-console
+      console.error(e);
+    }
+  });
+} else {
+  migrationPromise = Promise.resolve();
+
+  // https://github.com/sindresorhus/fix-path
+  // GUI apps on macOS don't inherit the $PATH defined in your dotfiles (.bashrc/.bash_profile/.zshrc/etc)
+  // i.e. opening app by clicking on icon in Finder, applications list screen
+  // $PATH will be defined if you run from terminal (even in production) e.g: . /Applications/Ganache.app/Contents/MacOS/Ganache
+  if (process.platform === "darwin") {
+    fixPath();
+    app.dock.setIcon(getIconPath());
+  }
 }
 
 const performShutdownTasks = async (integrations) => {
@@ -106,7 +125,6 @@ const performShutdownTasks = async (integrations) => {
 
 // create main BrowserWindow when electron is ready
 app.on('ready', () => {
-  const USERDATA_PATH = app.getPath("userData");
   const global = new GlobalSettings(path.join(USERDATA_PATH, "global"));
   const GoogleAnalytics = new GoogleAnalyticsService();
 

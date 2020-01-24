@@ -244,7 +244,7 @@ class NetworkManager extends EventEmitter {
         const pgHookProm = this.postGresHooksPromise;
         this.postGresHooksPromise = null;
         const postGresHooksClients = await pgHookProm;
-        postGresHooksClients && await Promise.all(postGresHooksClients.map(client => (client.release(), client.end())));
+        postGresHooksClients && await Promise.all(postGresHooksClients.map(client => client.end()));
       } catch (e) {
         // eslint-disable-next-line no-console
         console.error("Error occured while attempting to stop postgres clients...", e);
