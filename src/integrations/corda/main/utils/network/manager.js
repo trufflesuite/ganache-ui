@@ -209,8 +209,8 @@ class NetworkManager extends EventEmitter {
           .then(self => self.legalIdentities[0].owningKey);
       });
 
-        await Promise.all(promises);
-        if (this.cancelled) return;
+      await Promise.all(promises);
+      if (this.cancelled) return;
 
       // _downloadPromise was started long ago, we just need to make sure all
       //  deps are downloaded before we start up.
