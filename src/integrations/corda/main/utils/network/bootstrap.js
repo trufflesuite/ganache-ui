@@ -45,7 +45,6 @@ class CordaBootstrap {
       }
     }
 
-    this._io.sendProgress("Writing configuration files..");
     await writer(notaries, notariesArr, templates.notary);
     await writer(nodes, nodesArr, templates.node);
   
