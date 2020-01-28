@@ -9,7 +9,7 @@ import Logo from "../../components/logo/Logo";
 class LoaderScreen extends Component {
   constructor(props){
     super(props);
-    this.state = {progress: this.props.core.progress, lastProgressUpdateTime: Date.now()};
+    this.state = {progress: this.props.core.progress, minDuration: this.props.core.minDuration, lastProgressUpdateTime: Date.now()};
     this.queued = [];
     this.nextProgressUpdateTimer = null;
     this.MIN_TIME_EACH_PROGRESS_UPDATE = 2000;
@@ -18,7 +18,8 @@ class LoaderScreen extends Component {
 
   static defaultProps = {
     core: {
-      progress: ""
+      progress: "",
+      minDuration: null
     }
   }
 
@@ -31,7 +32,8 @@ class LoaderScreen extends Component {
    * @returns {boolean} `true` if `progress` was ready and set, `false` if not.
    */
   setProgressIfReady(nextProgress, now) {
-    const isReady = this.queued.length === 0 && (this.state.lastProgressUpdateTime + this.MIN_TIME_EACH_PROGRESS_UPDATE <= now);
+    const minTime = this.state.minDuration != null ? this.state.minDuration : this.MIN_TIME_EACH_PROGRESS_UPDATE;
+    const isReady = this.queued.length === 0 && (this.state.lastProgressUpdateTime + minTime <= now);
     if (isReady) this.setProgress(nextProgress, now);
     return isReady;
   }
@@ -46,10 +48,12 @@ class LoaderScreen extends Component {
     // we need to grab the first item in the queue without shifting it off 
     // because setState is asyncronous and we rely on the value of
     // `this.state.progress` to determine if we add to the queue or not
-    this.setProgress(this.queued[0], Date.now(), () => {
+    const next = this.queued[0];
+    this.setProgress(next, Date.now(), () => {
       this.queued.shift();
       if (this.queued.length === 0) return;
-      this.nextProgressUpdateTimer = setTimeout(this.updateProgressWithNextThenQueue, this.MIN_TIME_EACH_PROGRESS_UPDATE);
+      const minTime = next.minDuration != null ? next.minDuration : this.MIN_TIME_EACH_PROGRESS_UPDATE;
+      this.nextProgressUpdateTimer = setTimeout(this.updateProgressWithNextThenQueue, minTime);
     });
   }
 
@@ -60,14 +64,14 @@ class LoaderScreen extends Component {
    * @param {function} callback (optional)
    */
   setProgress(progress, lastProgressUpdateTime, callback) {
-    this.setState({ progress, lastProgressUpdateTime }, callback);
+    this.setState({ lastProgressUpdateTime, ...progress }, callback);
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     const currentProgress = this.state.progress;
+    const currentMinDuration = this.state.minDuration;
     const nextProgress = nextProps.core.progress;
-    if (nextProgress === currentProgress) return;
-
+    const nextMinDuration = nextProps.core.minDuration;
     // if this new progress is the same as our current progress, throw it out
     if (nextProgress === currentProgress) return;
 
@@ -78,14 +82,16 @@ class LoaderScreen extends Component {
 
     const now = Date.now();
 
-    if (this.setProgressIfReady(nextProgress, now)) return;
+    const next = {progress: nextProgress, minDuration: nextMinDuration};
+    if (this.setProgressIfReady(next, now)) return;
     
-    this.queued.push(nextProgress);
+    this.queued.push(next);
 
     // if there was already something in the queue we don't need to setTimeout here.
     if (notEmpty) return;
 
-    const waitFor = Math.min(now - this.state.lastProgressUpdateTime, this.MIN_TIME_EACH_PROGRESS_UPDATE);
+    const minTime = currentMinDuration != null ? currentMinDuration : this.MIN_TIME_EACH_PROGRESS_UPDATE;
+    const waitFor = Math.min(now - this.state.lastProgressUpdateTime, minTime);
     this.nextProgressUpdateTimer = setTimeout(this.updateProgressWithNextThenQueue, waitFor);
   }
 

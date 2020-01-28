@@ -86,8 +86,8 @@ export function initCore(store) {
     },
   );
 
-  ipcRenderer.on(SET_PROGRESS, (event, message) => {
-    store.dispatch(setProgress(message));
+  ipcRenderer.on(SET_PROGRESS, (event, message, minDuration) => {
+    store.dispatch(setProgress(message, minDuration));
   });
 
   // Block polling happens in the chain process, and is passed through

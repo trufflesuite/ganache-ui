@@ -24,6 +24,7 @@ export default function (state = initialState, action) {
     case Core.SET_PROGRESS:
       return Object.assign({}, state, {
         progress: action.message,
+        minDuration: action.minDuration
       });
     case Core.SET_MODAL_ERROR:
       return Object.assign({}, state, {
@@ -46,4 +47,4 @@ export default function (state = initialState, action) {
     default:
       return state;
   }
-};
+}

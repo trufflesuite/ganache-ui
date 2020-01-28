@@ -66,7 +66,7 @@ export const dismissBugModal = function() {
 };
 
 export const SET_PROGRESS = `${prefix}/PROGRESS`;
-export const setProgress = function(message) {
-  return { type: SET_PROGRESS, message };
+export const setProgress = function(message, minDuration = null) {
+  return { type: SET_PROGRESS, message, minDuration };
 };
 

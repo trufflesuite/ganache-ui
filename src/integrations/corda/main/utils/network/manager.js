@@ -58,7 +58,7 @@ class NetworkManager extends EventEmitter {
       this.nodes = nodesArr;
       this.notaries = notariesArr;
       this.entities = this.nodes.concat(this.notaries);
-      this._io.sendProgress("Downloading PostgreSQL (this may take a few minutes)...");
+      this._io.sendProgress("Downloading PostgreSQL (this may take a few minutes)...", 0);
       const pgDownload = postgres(await POSTGRES_HOME);
       if (this.cancelled) return;
       this._io.sendProgress("Starting PostgreSQL...");
@@ -67,9 +67,9 @@ class NetworkManager extends EventEmitter {
       this._io.sendProgress("Bootstrapping network...");
       await cordaBootstrap.bootstrap(this.config);
       if (this.cancelled) return;
-      this._io.sendProgress("Configuring Postgres Hooks...");
+      this._io.sendProgress("Configuring Postgres Hooks...", 0);
       this.postGresHooksPromise = this.setupPostGresHooks();
-      this._io.sendProgress("Copying Cordapps...");
+      this._io.sendProgress("Copying Cordapps...", 500);
       await Promise.all([
         this.postGresHooksPromise,
         this.copyCordappsAndSetupNetwork()
@@ -218,7 +218,7 @@ class NetworkManager extends EventEmitter {
       }
       // _downloadPromise was started long ago, we just need to make sure all
       //  deps are downloaded before we start up.
-      this._io.sendProgress(`Downloading remaining Corda dependencies...`);
+      this._io.sendProgress(`Downloading remaining Corda dependencies...`, 0);
       this.blobInspector = new BlobInspector(JAVA_HOME, await this.config.corda.files.blobInspector.download());
     } catch (e) {
       // if this manager was stopped we don't care about errors anymore

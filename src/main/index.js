@@ -139,8 +139,8 @@ app.on('ready', () => {
       }
     }
   });
-  integrations.on("progress", function(message) {
-    mainWindow.webContents.send(SET_PROGRESS, message);
+  integrations.on("progress", function(message, minDuration = null) {
+    mainWindow.webContents.send(SET_PROGRESS, message, minDuration);
   });
   
   const workspaceManager = integrations.workspaceManager;
