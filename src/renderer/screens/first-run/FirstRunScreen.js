@@ -71,7 +71,7 @@ class FirstRunScreen extends Component {
               </p>
               <p>Thanks for your help, and happy coding!</p>
               <p>
-                <i>-- The Truffle Team</i>
+                <i>– The Truffle Team</i>
               </p>
             </div>
             <div className="RightColumn">
