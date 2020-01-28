@@ -1,4 +1,4 @@
-const { spawn } = require("child_process");
+const { exec, spawn } = require("child_process");
 const { join } = require("path");
 const node_ssh = require("node-ssh");
 const StreamingMessageHandler = require("./streaming-message-handler");
@@ -13,29 +13,50 @@ class Corda {
     this._io = io;
     this.ssh = null;
 
-    this.closeHandler = this.closeHandler.bind(this)
+    this.earlyCloseHandler = this.earlyCloseHandler.bind(this)
 
     this._dataHandler = new StreamingMessageHandler();
+    this._dataHandler.addErrHandler("CAPSULE EXCEPTION: Capsule not extracted.", this.handleCapsuleError.bind(this));
+    this._dataHandler.addOutHandler("Failed to bind on an address in ", this.handlePortBindError.bind(this));
+    this._dataHandler.addOutHandler("Failed to bind on address ", this.handlePortBindError.bind(this));
+    this._dataHandler.addOutHandler('" started up and registered in ', this.handleStartUp.bind(this))
+
+    this._javaPath = join(this.JAVA_HOME, "bin", "java");
+    this._args = ["-jar", join(this.path, "corda.jar"), "--no-local-shell", "--log-to-console"]
+    this._opts = {
+      cwd: this.path,
+      env: null
+    };
+
+    if (process.platform === "win32") {
+      // on Windows node can't seem to kill the grandchild process via java.kill,
+      // it just orphans it :-/
+      this.kill = () => exec(`taskkill /pid ${this.java.pid} /t /f`);
+    } else {
+      this.kill = () => this.java.kill();
+    }
 
     this._awaiter = {resolve: noop, reject: noop};
   }
 
-  status = "stopped"
+  status = "stopped";
+  _startPromise = null;
+  _stopPromise = null;
 
-  start() {
-    if (this.status !== "stopped") throw new Error("Corda process must be stopped before starting");
+  async start() {
+    // if we are currently stopping, wait for that to finish before attempting to start
+    if (this.status === "stopping") await this._stopPromise;
 
-    return new Promise((resolve, reject) => {
-      this._awaiter = {resolve, reject};
+    // if we are already started or currently starting return the existing promise
+    if (this.status === "started" || this.status === "starting") return this._startPromise;
+
+    return this._startPromise = new Promise((resolve, reject) => {
       this.status = "starting";
-      this.java = spawn(join(this.JAVA_HOME, "bin", "java"), ["-jar", "corda.jar"], {cwd: this.path, env: null});
+      this._stopPromise = null;
+      this._awaiter = {resolve, reject};
 
-      this._dataHandler.addErrHandler("CAPSULE EXCEPTION: Capsule not extracted.", this.handleCapsuleError.bind(this));
-      this._dataHandler.addOutHandler("Failed to bind on an address in ", this.handlePortBindError.bind(this));
-      this._dataHandler.addOutHandler('" started up and registered in ', this.handleStartUp.bind(this))
-
+      this.java = spawn(this._javaPath, this._args, this._opts);
       this._dataHandler.bind(this.java);
-
       //#region Logging
       /* eslint-disable no-console */
       this.java.stderr.on("data", (data) => {
@@ -50,87 +71,124 @@ class Corda {
       /* eslint-enable no-console */
       //#endregion
 
-      this.java.once("close", ()=>{ this.status = "stopped"; });
+      this.java.once("close", this.earlyCloseHandler);
+    });
+  }
+  /**
+   * Stops the running corda node. If corda is currently "starting" it will
+   * wait for it to start up before shutting down.
+   * @param {*} failedStartup set to `true` if stop should be called without waiting for startup.
+   */
+  async stop(failedStartup = false) {
+    // if we are currently starting up, wait for that to finish before attempting to stop
+    if (!failedStartup && this.status === "starting") {
+      await this._startPromise
+        // ignore startup errors because we want to stop things anyway
+        .catch(e => e);
+    }
 
-      this.java.once("close", this.closeHandler);
+    // don't stop again if we are "stopping" or "stopped" already
+    if (this.status === "stopping" || this.status === "stopped") return this._stopPromise;
+
+    // clean up bound std handlers
+    this._dataHandler.unbind();
+    this._startPromise = null;
+    const java = this.java;
+
+    // we weren't started in the first place, just return right away
+    if (!java || java.exitCode !== null || java.signalCode !== null) {
+      this.status = "stopped";
+      this.java = null;
+      this.ssh = null;
+      return this._stopPromise = Promise.resolve();
+    }
+
+    this.status = "stopping";
+    return this._stopPromise = new Promise((resolve, reject) => {
+      const finish = () => {
+        clearTimeout(rejectTimeout);
+        clearTimeout(killTimer);
+        this.status = "stopped";
+        this.java = null;
+        this.ssh = null;
+        resolve();
+      };
+      java.once("close", finish);
+
+      let killTimer;
+      // if it hasn't died after 30 seconds kill it with fire
+      killTimer = setTimeout(this.kill.bind(this), 30000);
+      const rejectTimeout = setTimeout(() => {
+        // if we're in here this is REALLY bad. We couldn't stop corda after 120 seconds!
+        java.off("close", finish);
+        clearTimeout(killTimer);
+        reject(new Error(`Couldn't stop corda process chain with PID ${java.pid}. This like means you'll need to end processes manual or restart your computer. Please report this issue!`));
+      }, 120000);
+
+      // if ssh has started and has a connection
+      // use it to shutdown the node
+      const ssh = this.ssh;
+      if (ssh && ssh.connection) {
+        ssh.connection.once("error", () => {
+          // swallow the error
+          // this shutdown command causes a disconnect from the corda
+          // which results an error within the ssh connection logic.
+        });
+        ssh.exec("run", ["gracefulShutdown"]).catch(e => {
+          // eslint-disable-next-line no-console
+          console.error(e);
+          // didn't seem to work... send SIGINT
+          this.kill();
+        });
+      } else {
+        // somehow we got here without an ssh connection, which is weird, but
+        // technically possible if we DID have a connection that soon failed.
+        // So... just try killing the process now.
+        this.kill();
+      }
     });
   }
 
-  async stop() {
-    if (this.status !== "started" && this.status !== "starting") return;
-    this.status = "stopping";
-    this._dataHandler.unbind();
-    const java = this.java;
-    if (java) {
-      const prom = new Promise(resolve => {
-        if (java.exitCode === null) {
-          java.once("close", () => {
-            if (this.status === "stopping") {
-              this.status = "stopped";
-            }
-            if (this.java === java) {
-              this.java = null;
-            }
-            resolve();
-          });
-        } else {
-          if (this.java === java) {
-            this.java = null;
-          }
-          resolve();
-        }
-        if (this.ssh) {
-          const ssh = this.ssh;
-          this.ssh = null;
-          ssh.connection.on("error", () => {
-            // swallow the error
-            // this command causes a disconnect from the corda
-            // which causes an error on our side.
-          });
-          ssh.exec("run", ["gracefulShutdown"]).catch(e => e).then(() => {
-            if (!this.java.killed) {
-              this.java.kill();
-            }
-          })
-        } else if (!this.java.killed) {
-          this.java.kill();
-        }
-      });
-      return prom;
-    } else {
-      this.status = "stopped";
-    }
-  }
-
-  async closeHandler(code){
+  async earlyCloseHandler(code){
+    // eslint-disable-next-line no-console
     console.log("corda", `child process exited with code ${code}`);
-    await this.stop();
-    this._awaiter.reject(new Error(`corda.jar child process exited with code ${code}`));
+    const reject = this._awaiter.reject;
+
+    await this.stop(true).catch(e => e);
+    reject(new Error(`corda.jar child process exited with code ${code}`));
   }
 
   async handleStartUp() {
-    this.status = "started";
-
-    this.ssh = new node_ssh();
+    const {resolve, reject} = this._awaiter;
 
     this._dataHandler.unbind();
-    this.java.off("close", this.closeHandler);
-    await this.ssh.connect({
-      keepaliveInterval: 10000,
-      host: "127.0.0.1",
-      username: "user1",
-      password: "letmein",
-      port: this.entity.sshdPort
-    });
-    this._awaiter.resolve();
+
+    const ssh = new node_ssh();
+    try {
+      await ssh.connect({
+        keepaliveInterval: 10000,
+        host: "127.0.0.1",
+        username: "user1",
+        password: "letmein",
+        port: this.entity.sshdPort
+      })
+      this.ssh = ssh;
+      this.status = "started";
+      resolve(ssh);
+    } catch(e) {
+      await this.stop(true);
+      reject(e);
+    }
   }
 
   async handleCapsuleError() {
-    const resolve = this._awaiter.resolve
-    this.java.off("close", this.closeHandler);
-    this.stop().then(async () => {
+    const resolve = this._awaiter.resolve;
+
+    this.java.off("earlyCloseHandler", this.earlyCloseHandler);
+    this.stop(true).then(async () => {
       this._io.sendStdErr("Recovering from CAPSULE EXCEPTION...", this.entity.safeName);
-      resolve(await this.start());
+      const ssh = await this.start();
+      resolve(ssh);
     });
     return true;
   }
@@ -138,9 +196,9 @@ class Corda {
   async handlePortBindError(data) {
     const reject = this._awaiter.reject;
     
-    this.java.off("close", this.closeHandler);
-    this.stop().then(() => {
-      reject(new Error(data.toString()));
+    this.java.off("close", this.earlyCloseHandler);
+    this.stop(true).then(() => {
+      reject(new Error(data.toString().trim()));
     })
     return true;
   }
