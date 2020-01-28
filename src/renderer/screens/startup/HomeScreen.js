@@ -156,13 +156,13 @@ class HomeScreen extends Component {
         advanced setup options.
       </p>
     );
-    const learnMore = (
-      <p className="learnMoreText">
-        <a href="https://github.com/trufflesuite/ganache/releases/tag/v2.0.0">
-          Learn more about the update to version 2!
-        </a>
-      </p>
-    );
+    // const learnMore = (
+    //   <p className="learnMoreText">
+    //     <a href="https://github.com/trufflesuite/ganache/releases/tag/v2.0.0">
+    //       Learn more about the update to version 2!
+    //     </a>
+    //   </p>
+    // );
     const isNewVersionAvailable = this.props.autoUpdate.isNewVersionAvailable;
     const isCheckingForUpdate = this.props.autoUpdate.updateCheckInProgress;
 
@@ -236,7 +236,7 @@ class HomeScreen extends Component {
                 </div>
               </section>
             </div>
-            <div className="LearnMore">{learnMore}</div>
+            {/* <div className="LearnMore">{learnMore}</div> */}
           </div>
         </div>
         <OnlyIf test={this.props.core.modalError != null}>
