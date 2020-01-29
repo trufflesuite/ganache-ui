@@ -329,6 +329,11 @@ app.on('ready', () => {
         const globalSettings = global.getAll();
         const workspaceSettings = workspace.settings.getAll();
         mainWindow.webContents.send(
+          SET_CURRENT_WORKSPACE,
+          workspace,
+          workspace.contractCache.getAll(),
+        );
+        mainWindow.webContents.send(
           SET_SERVER_STARTED,
           globalSettings,
           workspaceSettings,
