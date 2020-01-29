@@ -53,7 +53,7 @@ class FirstRunScreen extends Component {
   render() {
     return (
       <div className="FirstRunScreen">
-        <div className="Card CardShadow">
+        <div className="Card">
           <div className="MainContent">
             <div className="LeftColumn">
               <Logo></Logo>

@@ -2,7 +2,6 @@ import "./styles/colors.scss";
 import "./styles/normalize.scss";
 import "./styles/buttons.scss";
 import "./styles/forms.scss";
-import "./styles/cards.scss";
 import "./styles/logo.scss";
 import "./app.global.scss";
 import "./components/status-indicator/StatusIndicator.scss";
