@@ -17,8 +17,7 @@ module.exports = {
     verbose: false,
     gasLimit: 6721975,
     gasPrice: 20000000000,
-    hardfork: "istanbul",
-    // hardfork: "muir-glacier",
+    hardfork: "muirGlacier",
     fork: null,
     fork_block_number: null
   },

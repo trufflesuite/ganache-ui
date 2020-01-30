@@ -3,7 +3,7 @@
         "@truffle/config": "1.1.21",
         "@truffle/decoder": "^3.0.13",
         "fs-extra": "8.1.0",
-        "ganache-core": "git+https://github.com/trufflesuite/ganache-core.git#fix/forking",
+        "ganache-core": "2.10.1",
         "lodash.clonedeep": "4.5.0",
         "lodash.merge": "4.6.2",
         "lodash.padstart": "4.6.1",
