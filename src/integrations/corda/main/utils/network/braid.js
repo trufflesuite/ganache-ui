@@ -37,7 +37,7 @@ class Braid {
         const close = (code) => {
           // TODO: handle premature individual node shutdown
           /// close postgres, close other nodes, what do?
-          reject(new Error(`child process exited with code ${code}`));
+          reject(new Error(`braid-server.jar child process exited with code ${code}`));
         }
         braid.once("close", close);
 

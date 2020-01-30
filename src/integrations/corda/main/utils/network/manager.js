@@ -1,3 +1,6 @@
+const temp = require("temp");
+const { promisify } = require("util");
+const mkdir = promisify(temp.mkdir);
 const { CordaBootstrap } = require("./bootstrap");
 const { EventEmitter } = require("events");
 const { basename, join } = require("path");
@@ -29,7 +32,16 @@ class NetworkManager extends EventEmitter {
     super();
     this.config = config;
     this.settings = settings;
-    this.workspaceDirectory = workspaceDirectory;
+    const CHAIN_DATA = "chaindata";
+    const isTemp = this.settings.isDefault;
+    if (isTemp) {
+      temp.track();
+      this.chaindataDirectory = mkdir(`__ganache_${CHAIN_DATA}_`);
+    } else {
+      const dir = join(workspaceDirectory, CHAIN_DATA);
+      this.chaindataDirectory = Promise.resolve(dir);
+    }
+
     this.nodes = [];
     this.notaries = [];
     this.processes = [];
@@ -48,11 +60,12 @@ class NetworkManager extends EventEmitter {
       // same promise for each file request, or it just resolves immediately if
       // the file is already downloaded
       this._downloadPromise = this.config.corda.downloadAll();
+      const chainDataDir = await this.chaindataDirectory;
 
       const BRAID_HOME = this.config.corda.files.braidServer.download();
       const POSTGRES_HOME = this.config.corda.files.postgres.download();
       this._io.sendProgress("Writing configuration files...");
-      const cordaBootstrap = new CordaBootstrap(this.workspaceDirectory, this._io);
+      const cordaBootstrap = new CordaBootstrap(chainDataDir, this._io);
       const { nodesArr, notariesArr } = await cordaBootstrap.writeConfig(nodes, notaries, postgresPort);
       if (this.cancelled) return;
       this.nodes = nodesArr;
@@ -62,7 +75,7 @@ class NetworkManager extends EventEmitter {
       const pgDownload = postgres(await POSTGRES_HOME);
       if (this.cancelled) return;
       this._io.sendProgress("Starting PostgreSQL...");
-      this.pg = await pgDownload.start(postgresPort, this.workspaceDirectory, this.entities, this.settings.isDefault);
+      this.pg = await pgDownload.start(postgresPort, chainDataDir, this.entities);
       if (this.cancelled) return;
       this._io.sendProgress("Bootstrapping network...");
       await cordaBootstrap.bootstrap(this.config);
@@ -127,13 +140,14 @@ class NetworkManager extends EventEmitter {
     // TODO this has become a mess. Spend some time to do it right one day :-D
     const promises = [];
     const networkMap = new Map();
+    const chaindataDir = await this.chaindataDirectory;
     this.entities.forEach((node) => {
       // track all entities' ports in a port blacklist so we don't try to bind 
       // braid to it later.
       this.addToBlackList(node);
 
       // copy all cordapps where they are supposed to go
-      const currentDir = join(this.workspaceDirectory, node.safeName);
+      const currentDir = join(chaindataDir, node.safeName);
       (node.cordapps || []).forEach(path => {
         const name = basename(path);
         const newPath = join(currentDir, "cordapps", name);
@@ -142,12 +156,12 @@ class NetworkManager extends EventEmitter {
     });
     // for each notary, get it's node info file
     const notaryInfoFileNames = this.notaries.map((node) => {
-      const currentDir = join(this.workspaceDirectory, node.safeName);
+      const currentDir = join(chaindataDir, node.safeName);
       return fse.readdirSync(currentDir).filter(file => file.startsWith("nodeInfo-")).reduce((p, name) => name, "");
     });
     // for each node
     this.nodes.forEach((node) => {
-      const currentDir = join(this.workspaceDirectory, node.safeName);
+      const currentDir = join(chaindataDir, node.safeName);
       const info = fse.readdirSync(currentDir).filter(file => file.startsWith("nodeInfo-")).reduce((p, name) => name, "");
       const knownNodesDir = join(currentDir, "additional-node-infos");
       const currentlyKnownNodes = fse.readdirSync(knownNodesDir).map(file => ({ file, path: join(knownNodesDir, file) }));
@@ -181,6 +195,7 @@ class NetworkManager extends EventEmitter {
 
   async start() {
     try {
+      const chaindataDir = await this.chaindataDirectory;
       const entities = this.entities;
       this._io.sendProgress("Loading JRE...");
       const JAVA_HOME = await this.config.corda.files.jre.download();
@@ -189,7 +204,7 @@ class NetworkManager extends EventEmitter {
       this._io.sendProgress("Starting Corda Nodes...");
       let startedNodes = 0;
       const promises = entities.map(async (entity) => {
-        const currentPath = join(this.workspaceDirectory, entity.safeName);
+        const currentPath = join(chaindataDir, entity.safeName);
         // eslint-disable-next-line require-atomic-updates
         entity.braidPort = await this.getPort(entity.rpcPort + 10000);
         if (this.cancelled) return;

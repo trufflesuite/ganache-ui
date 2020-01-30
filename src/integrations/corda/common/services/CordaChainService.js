@@ -57,9 +57,7 @@ class CordaChainService extends EventEmitter {
   }
 
   getDbLocation() {
-    return new Promise(resolve => {
-      resolve(undefined);
-    });
+    return this.manager ? this.manager.chaindataDirectory : Promise.resolve(null);
   }
 }
 

@@ -93,7 +93,7 @@ class CordaBootstrap {
         if (code === 0) {
           resolve();
         } else {
-          reject(new Error(`child process exited with code ${code}.\n\nStderr:\n${stderr}\n\nStdout:\n${stdout}\n\nError:\n${err}\n\nconfig:${JSON.stringify(spawnConfig)}`));
+          reject(new Error(`corda bootstrapper child process exited with code ${code}.\n\nStderr:\n${stderr}\n\nStdout:\n${stdout}\n\nError:\n${err}\n\nconfig:${JSON.stringify(spawnConfig)}`));
         }
       });
     });

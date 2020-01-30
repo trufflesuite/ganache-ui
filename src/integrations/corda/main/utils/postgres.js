@@ -2,13 +2,10 @@ const { Pool } = require("pg");
 const fs = require("graceful-fs");
 const { join } = require("path");
 const { spawn } = require("promisify-child-process");
-const temp = require("temp");
 const { promisify } = require("util");
-const mkdir = promisify(temp.mkdir);
 const exists = promisify(fs.exists);
 
 const USER = "ganache";
-const DATA_DIR = "__ganache_pg_data_";
 const config = {env: process.env, encoding: "utf8"};
 
 module.exports = (POSTGRES_PATH) => {
@@ -17,6 +14,8 @@ module.exports = (POSTGRES_PATH) => {
   const PG_CTL = pgJoin("pg_ctl");
   const CREATEUSER = pgJoin("createuser");
   const CREATEDB = pgJoin("createdb");
+
+  const POSTGRES_DATA_DIR = "__ganache__postgres_data";
 
   function getConnectedClient(database, port) {
     let pool;
@@ -55,17 +54,9 @@ module.exports = (POSTGRES_PATH) => {
   }
 
   const postgres = {
-    start: async (port, safeWorkspaceName, schemaNames, isTemp = false) => {
-      let dataDir;
-      let doesExist = false;
-
-      if (isTemp) {
-        temp.track();
-        dataDir = await mkdir(DATA_DIR);
-      } else {
-        dataDir = join(safeWorkspaceName, DATA_DIR);
-        doesExist = await exists(dataDir);
-      }
+    start: async (port, safeWorkspaceName, schemaNames) => {
+      const dataDir = join(safeWorkspaceName, POSTGRES_DATA_DIR);
+      const doesExist = await exists(dataDir);
 
       const stop = () => spawn(PG_CTL, ["stop" ,"-D", dataDir], config);
 
@@ -147,7 +138,7 @@ module.exports = (POSTGRES_PATH) => {
 
       if (res && res.rows && res.rows.length > 0) {
         const connectedDataDir = res.rows[0].data_directory;
-        if (connectedDataDir.includes(DATA_DIR)) {
+        if (connectedDataDir.includes(POSTGRES_DATA_DIR)) {
           try {
             await spawn(pgJoin("pg_ctl"), ["-D", connectedDataDir, "stop"], config);
           } catch(e) {
