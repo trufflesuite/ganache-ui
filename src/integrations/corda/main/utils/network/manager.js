@@ -19,11 +19,24 @@ const agent = new https.Agent({
 
 class IO {
   constructor(context) {
-    const createMsgEmitter = (...args) => context.emit.bind(context, "message", ...args);
-    this.sendProgress = createMsgEmitter("progress");
-    this.sendError = createMsgEmitter("error");
-    this.sendStdErr = createMsgEmitter("stderr");
-    this.sendStdOut = createMsgEmitter("stdout");
+    this._context = context;
+    this._init();
+  }
+
+  _init(){
+    this.sendProgress = this.createMsgEmitter("progress");
+    this.sendError = this.createMsgEmitter("error");
+    this.sendStdErr = this.createMsgEmitter("stderr");
+    this.sendStdOut = this.createMsgEmitter("stdout");
+    this.sendSSHData = this.createMsgEmitter("sshData");
+  }
+
+  createMsgEmitter(token){
+    return this._context.emit.bind(this._context, "message", token);
+  }
+
+  emit(token, ...args){
+    this._context.emit.call(this._context, "message", token, ...args);
   }
 }
 
