@@ -1,7 +1,8 @@
-const { exec, spawn } = require("child_process");
-const { join } = require("path");
-const node_ssh = require("node-ssh");
 const StreamingMessageHandler = require("./streaming-message-handler");
+const { exec,spawn } = require("child_process");
+const { ipcMain } = require("electron");
+const { join } = require("path");
+const SSH = require("./ssh");
 const noop = () => {};
 
 class Corda {
@@ -12,6 +13,7 @@ class Corda {
     this.java = null;
     this._io = io;
     this.ssh = null;
+    this.shell = null;
 
     this.earlyCloseHandler = this.earlyCloseHandler.bind(this)
 
@@ -100,6 +102,7 @@ class Corda {
       this.status = "stopped";
       this.java = null;
       this.ssh = null;
+      this.shell = null;
       return this._stopPromise = Promise.resolve();
     }
 
@@ -111,6 +114,7 @@ class Corda {
         this.status = "stopped";
         this.java = null;
         this.ssh = null;
+        this.shell = null;
         resolve();
       };
       java.once("close", finish);
@@ -127,19 +131,11 @@ class Corda {
 
       // if ssh has started and has a connection
       // use it to shutdown the node
-      const ssh = this.ssh;
-      if (ssh && ssh.connection) {
-        ssh.connection.once("error", () => {
-          // swallow the error
-          // this shutdown command causes a disconnect from the corda
-          // which results an error within the ssh connection logic.
-        });
-        ssh.exec("run", ["gracefulShutdown"]).catch(e => {
-          // eslint-disable-next-line no-console
-          console.error(e);
-          // didn't seem to work... send SIGINT
-          this.kill();
-        });
+      if (this.ssh && this.ssh.hasConnection()) {
+        if (this.shell) {
+          this.shell.disconnect();
+        }
+        this.ssh.gracefulShutdown(this.kill);
       } else {
         // somehow we got here without an ssh connection, which is weird, but
         // technically possible if we DID have a connection that soon failed.
@@ -149,7 +145,7 @@ class Corda {
     });
   }
 
-  async earlyCloseHandler(code){
+  async earlyCloseHandler(code) {
     // eslint-disable-next-line no-console
     console.log("corda", `child process exited with code ${code}`);
     const reject = this._awaiter.reject;
@@ -159,23 +155,33 @@ class Corda {
   }
 
   async handleStartUp() {
-    const {resolve, reject} = this._awaiter;
+    const { resolve, reject } = this._awaiter;
 
     this._dataHandler.unbind();
 
-    const ssh = new node_ssh();
+    this.ssh = new SSH(this.entity.sshdPort);
+    this.shell = new SSH(this.entity.sshdPort);
     try {
-      await ssh.connect({
-        keepaliveInterval: 10000,
-        host: "127.0.0.1",
-        username: "user1",
-        password: "letmein",
-        port: this.entity.sshdPort
-      })
-      this.ssh = ssh;
+      const [conn] = await Promise.all([this.ssh.connect(), this.shell.connect(true)]);
+      ipcMain.on("xtermData", (_event, {
+        node,
+        data
+      }) => {
+        if (node !== this.entity.safeName) return;
+        this.shell.write(data);
+        // this.ssh.write(data);
+      });
+      this.shell.on("data", data => {
+        // this.ssh.on("data", data => {
+        this._io.sendSSHData({
+          node: this.entity.safeName,
+          data: data.toString("utf-8")
+        });
+      });
+
       this.status = "started";
-      resolve(ssh);
-    } catch(e) {
+      resolve(conn);
+    } catch (e) {
       await this.stop(true);
       reject(e);
     }
