@@ -93,7 +93,8 @@
     "unzip-stream": "0.3.0",
     "web3": "1.2.1",
     "web3-providers-http": "1.2.1",
-    "web3-providers-ws": "1.2.1"
+    "web3-providers-ws": "1.2.1",
+    "xterm": "^4.4.0"
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.5.5",
