@@ -240,6 +240,10 @@ class TopNavbar extends Component {
           <TxIcon />
           Transactions
         </NavLink>
+        <NavLink to="/corda/shells" activeClassName="Active">
+          <TxIcon />
+          Shells
+        </NavLink>
         {/* <NavLink to="/corda/cordapps" activeClassName="Active">
           <ContractsIcon />
           CorDapps
