@@ -1,11 +1,10 @@
 import connect from "../../../../renderer/screens/helpers/connect";
-
-import React, { Component } from "react";
-import NodeLink from "../components/NodeLink";
-import CordAppLink from "../components/CordAppLink";
 import TransactionLink from "../components/TransactionLink";
+import CordAppLink from "../components/CordAppLink";
 import TransactionData from "../transaction-data";
 import { CancellationToken } from "../screens/utils";
+import NodeLink from "../components/NodeLink";
+import React, { Component } from "react";
 
 // this is taken from braid
 const VERSION_REGEX = /^(.*?)(?:-(?:(?:\d|\.)+))\.jar?$/;
