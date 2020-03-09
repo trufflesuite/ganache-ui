@@ -30,6 +30,7 @@ import "../integrations/ethereum/renderer/screens/transactions/TxList.scss";
 import "../integrations/ethereum/renderer/screens/transactions/TxCard.scss";
 import "../integrations/ethereum/renderer/screens/transactions/TransactionTypeBadge.scss";
 import "../integrations/ethereum/renderer/screens/transactions/MiniTxCard.scss";
+import "../integrations/corda/renderer/screens/Shells.scss";
 import "./screens/title/TitleScreen.scss";
 import "./screens/auto-update/UpdateModal.scss";
 import "./screens/auto-update/UpdateNotification.scss";
