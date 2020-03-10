@@ -51,6 +51,7 @@ const isDevMode = process.execPath.match(/[\\/]electron/) !== null;
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 let mainWindow = null;
+const { default: installExtension, REDUX_DEVTOOLS, REACT_DEVELOPER_TOOLS } = require('electron-devtools-installer');
 
 process.on("uncaughtException", err => {
   if (mainWindow && err) {
@@ -184,8 +185,11 @@ app.on('ready', () => {
 
   // Open the DevTools.
   if (isDevMode) {
-    //installExtension(REACT_DEVELOPER_TOOLS);
-    //mainWindow.webContents.openDevTools();
+    installExtension(REACT_DEVELOPER_TOOLS).then(() => {
+      installExtension(REDUX_DEVTOOLS).then(() => {
+        mainWindow.webContents.openDevTools();
+      });
+    });
   }
 
   if (isDevelopment) {
