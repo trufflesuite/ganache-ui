@@ -10,6 +10,7 @@ import { combineReducers } from "redux";
 import { REQUEST_SERVER_RESTART } from "./core/actions";
 
 import AppShellReducer from "./appshell/reducers";
+import CordaShellReducer from "./cordashell/reducers";
 import ConfigReducer from "./config/reducers";
 import CoreReducer from "../../common/redux/core/reducers";
 import EthereumCoreReducer from "../../integrations/ethereum/common/redux/core/reducers";
@@ -28,6 +29,7 @@ import { connectRouter } from 'connected-react-router';
 export default (history) => {
   const appReducer = combineReducers({
     appshell: AppShellReducer,
+    cordashell: CordaShellReducer,
     config: ConfigReducer,
     core: function(state, action) {
       const ethState = EthereumCoreReducer(state, action);
