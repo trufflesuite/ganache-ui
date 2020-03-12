@@ -40,7 +40,7 @@ class Shell extends Component {
         <ul>
           {context}
         </ul>
-        <div ref={this.xtermRef}></div>
+        <div ref={this.xtermRef} className="xtermContainer"></div>
       </div>
     );
   }
