@@ -5,6 +5,7 @@ import NodeLink from "../components/NodeLink";
 import CordAppLink from "../components/CordAppLink";
 import TransactionLink from "../components/TransactionLink";
 import TransactionData from "../transaction-data";
+import { CancellationToken } from "../screens/utils";
 
 // this is taken from braid
 const VERSION_REGEX = /^(.*?)(?:-(?:(?:\d|\.)+))\.jar?$/;
@@ -16,10 +17,16 @@ function filterNodeBy(nodeToMatch) {
 }
 
 class NodeDetails extends Component {
+  refresher = new CancellationToken();
+
   constructor(props) {
     super(props);
 
     this.state = {node: this.findNodeFromProps(), nodes:null, notaries:null, cordapps: null, transactions: null};
+  }
+
+  componentWillUnmount() {
+    this.refresher.cancel();
   }
 
   findNodeFromProps(){
@@ -43,6 +50,10 @@ class NodeDetails extends Component {
   }
 
   refresh() {
+    this.refresher.cancel();
+
+    let canceller = this.refresher.getCanceller();
+
     if (this.state.node) {
       const nodes = this.props.config.settings.workspace.nodes;
       const postgresPort =  this.props.config.settings.workspace.postgresPort;
@@ -53,7 +64,10 @@ class NodeDetails extends Component {
           return [];
         })
 
-      notariesProm.then(notaries => this.setState({notaries}));
+      notariesProm.then(notaries => {
+        if (canceller.cancelled) return;
+        this.setState({notaries});
+      });
 
       fetch("https://localhost:" + (this.state.node.braidPort) + "/api/rest/network/nodes")
         .then(r => r.json())
@@ -62,8 +76,12 @@ class NodeDetails extends Component {
           return [];
         })
         .then(async nodes => {
+          if (canceller.cancelled) return;
+
           const selfName = this.state.node.name.replace(/\s/g, "");
           const notaries = await notariesProm;
+
+          if (canceller.cancelled) return;
           const notariesMap = new Set(notaries.map(notary => notary.owningKey));
           const nodesMap = new Map();
           nodes.forEach(node => {
@@ -88,6 +106,8 @@ class NodeDetails extends Component {
       fetch("https://localhost:" + (this.state.node.braidPort) + "/api/rest/cordapps")
         .then(r => r.json())
         .then(json => {
+          if (canceller.cancelled) return;
+
           if(Array.isArray(json)) return json;
           return [];
         })
@@ -96,6 +116,8 @@ class NodeDetails extends Component {
       fetch("https://localhost:" + (this.state.node.braidPort) + "/api/rest/network/nodes/self")
         .then(r => r.json())
         .then(self => {
+          if (canceller.cancelled) return;
+
           fetch("https://localhost:" + (this.state.node.braidPort) + "/api/rest/vault/vaultQueryBy", {
             method: "POST",
             headers: {
@@ -112,10 +134,14 @@ class NodeDetails extends Component {
           })
           .then(res => res.json())
           .then(json => {
+            if (canceller.cancelled) return;
+
             if (json && Array.isArray(json.states)) return json;
             return [];
           })
           .then(json => {
+            if (canceller.cancelled) return;
+
             const transactionPromises = [];
             const hashes = new Set();
             json.states.forEach(state => {
@@ -127,6 +153,8 @@ class NodeDetails extends Component {
             })
             return Promise.all(transactionPromises);
           }).then(transactions => {
+            if (canceller.cancelled) return;
+
             this.setState(state => {
               return {transactions: [...state.transactions || [], ...transactions]};
             });
@@ -135,18 +163,24 @@ class NodeDetails extends Component {
 
       TransactionData.getConnectedClient(this.state.node.safeName, this.props.config.settings.workspace.postgresPort)
         .then(async client => {
+          if (canceller.cancelled) return;
+
           try {
             return await client.query("SELECT transaction_id FROM node_notary_committed_txs");
           } finally {
             client.release();
           }
         }).then(async res => {
+          if (canceller.cancelled) return;
+
           const proms = Promise.all(res.rows.map(row => {
             const tx = new TransactionData(TransactionData.convertTransactionIdToHash(row.transaction_id));
             return tx.update(nodes, postgresPort);
           }));
           
           const transactions = await proms;
+          if (canceller.cancelled) return;
+
           this.setState(state => {
             return {transactions: [...(state.transactions || []), ...transactions]};
           });
