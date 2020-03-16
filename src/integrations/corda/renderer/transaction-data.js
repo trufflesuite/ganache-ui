@@ -196,7 +196,7 @@ export default class TransactionData {
       const json = await res.json();
       if (canceller.cancelled) return;
       
-      json.states.forEach((state, i) => {
+      Array.isArray(json.states) && json.states.forEach((state, i) => {
         const index = state.ref.index;
         const metaData = json.statesMetadata[i];
 

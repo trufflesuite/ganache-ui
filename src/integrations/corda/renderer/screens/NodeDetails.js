@@ -59,7 +59,8 @@ class NodeDetails extends Component {
       const postgresPort =  this.props.config.settings.workspace.postgresPort;
 
       const notariesProm = fetch("https://localhost:" + (this.state.node.braidPort) + "/api/rest/network/notaries")
-        .then(r => r.json()).then(json => {
+        .then(r => r.json())
+        .then(json => {
           if(Array.isArray(json)) return json;
           return [];
         })
