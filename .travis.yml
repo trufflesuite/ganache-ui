@@ -38,7 +38,7 @@ before_install:
 
     echo "Setting key partition list";
     security set-key-partition-list -S "apple-tool:,apple:,codesign:" -s -k $KEYCHAIN_PASS $CSC_KEYCHAIN >/dev/null 2>&1;
-    xcode-select -s /Applications/Xcode.app;
+    xcode-select -r
 
     rm $CERT;
     unset CERT;
