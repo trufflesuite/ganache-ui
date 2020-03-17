@@ -1,8 +1,10 @@
 import JsonStorage from "../../../../../main/types/json/JsonStorage";
+const temp = require("temp");
 
 class ContractCache {
   constructor(directory) {
-    this.storage = new JsonStorage(directory, "ContractCache");
+    const dir = directory || temp.path();
+    this.storage = new JsonStorage(dir, "ContractCache");
 
     let obj = this.storage.getAll();
     if (obj === null || typeof obj !== "object") {

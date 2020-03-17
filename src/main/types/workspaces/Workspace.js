@@ -19,7 +19,7 @@ class Workspace {
       flavor
     );
 
-    this.contractCache = new ContractCache(this.workspaceDirectory);
+    this.contractCache = new ContractCache(this.chaindataDirectory);
   }
 
   init(configDirectory) {

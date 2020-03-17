@@ -48,14 +48,18 @@ export const getContractDetails = function(data) {
         "getTransaction",
         [transactions[i]],
       );
-      shownTransactions.push(transaction);
-      const receipt = await web3ActionCreator(
-        dispatch,
-        getState,
-        "getTransactionReceipt",
-        [transactions[i]],
-      );
-      shownReceipts[transactions[i]] = receipt;
+
+      // if a transaction is null it's likely because of a rollback
+      if (transaction !== null) {
+        shownTransactions.push(transaction);
+        const receipt = await web3ActionCreator(
+          dispatch,
+          getState,
+          "getTransactionReceipt",
+          [transactions[i]],
+        );
+        shownReceipts[transactions[i]] = receipt;
+      }
     }
 
     // I was going to use the blocks inView here by just dispatching `requestPage`
