@@ -95,6 +95,13 @@ class WorkspaceScreen extends Component {
     }
   };
 
+  projectIsSaved(selectedIdx){
+    const projectPath = this.props.config.settings.workspace.projects[
+      selectedIdx
+    ];
+    return this.props.workspaces.current.projects.some(project => path.dirname(projectPath) === project.configFile)
+  }
+
   toggleErrorDetails = () =>
     this.setState({ showErrorDetails: !this.state.showErrorDetails });
 
@@ -173,7 +180,7 @@ class WorkspaceScreen extends Component {
                 </button>
                 <button
                   className="btn btn-primary"
-                  disabled={this.state.selectedIdx === null}
+                  disabled={this.state.selectedIdx === null || this.projectIsSaved(this.state.selectedIdx)}
                   onClick={this.handleRemoveProject}
                 >
                   REMOVE CORDAPP
