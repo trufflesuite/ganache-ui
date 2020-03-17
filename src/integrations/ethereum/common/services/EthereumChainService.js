@@ -25,11 +25,16 @@ class EthereumChainService extends EventEmitter {
   }
 
   start() {
-    if (this._child) {
+    if (this._child && this._child.connected) {
       this.emit("message", "start");
     } else {
       const child = this._child = fork(CHAIN_PATH, [], CHAIN_OPTIONS);
-      child.on("message", ({type, data}) => {
+      child.on("message", (msg) => {
+        if (!msg || !msg.type){
+          return;
+        }
+
+        const {type, data} = msg || {};
         switch (type) {
           case "process-started":
             this.emit("message", "start");
