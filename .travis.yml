@@ -2,12 +2,12 @@ language: node_js
 node_js:
 # Use 12.9.0 because that is what Electron needs
 - "12.9.0"
-dist: bionic
-osx_image: xcode11
 matrix:
   include:
   - os: osx
+    osx_image: "xcode11.3"
   - os: linux
+    dist: bionic
 cache:
   directories:
   - "$HOME/.npm"
@@ -34,6 +34,7 @@ before_install:
     security default-keychain -s $CSC_KEYCHAIN;
     security unlock-keychain -p $KEYCHAIN_PASS $CSC_KEYCHAIN;
     security import $CERT -k $CSC_KEYCHAIN -P $CSC_KEY_PASSWORD -T /usr/bin/codesign;
+    security set-keychain-settings $CSC_KEYCHAIN;
 
     echo "Setting key partition list";
     security set-key-partition-list -S "apple-tool:,apple:,codesign:" -s -k $KEYCHAIN_PASS $CSC_KEYCHAIN >/dev/null 2>&1;
