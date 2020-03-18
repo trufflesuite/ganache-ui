@@ -19,8 +19,9 @@ class Shells extends Component {
     }
     const context = this.props.match.params.context;
     if(!context){
+      const redirectContext = this.props.cordashell[Symbol.for("lastShell")] || this.props.config.settings.workspace.nodes[0].safeName;
       return (
-        <Redirect to={"/corda/shells/" + this.props.config.settings.workspace.nodes[0].safeName } />
+        <Redirect to={"/corda/shells/" + redirectContext } />
       );
     }
     return (
@@ -39,4 +40,5 @@ class Shells extends Component {
 export default connect(
   Shells,
   "config",
+  "cordashell"
 );
