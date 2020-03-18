@@ -2,6 +2,7 @@ const StreamingMessageHandler = require("./streaming-message-handler");
 const { exec,spawn } = require("child_process");
 const { ipcMain } = require("electron");
 const { join } = require("path");
+const { SSH_RESIZE } = require("../../../../../common/redux/cordashell/actions");
 const SSH = require("./ssh");
 const noop = () => {};
 
@@ -107,7 +108,8 @@ class Corda {
     }
 
     this.status = "stopping";
-    return this._stopPromise = new Promise((resolve, reject) => {
+    // eslint-disable-next-line no-async-promise-executor
+    return this._stopPromise = new Promise(async (resolve, reject) => {
       const finish = () => {
         clearTimeout(rejectTimeout);
         clearTimeout(killTimer);
@@ -133,7 +135,7 @@ class Corda {
       // use it to shutdown the node
       if (this.ssh && this.ssh.hasConnection()) {
         if (this.shell) {
-          this.shell.disconnect();
+          await this.shell.disconnect();
         }
         this.ssh.gracefulShutdown(this.kill);
       } else {
@@ -162,21 +164,63 @@ class Corda {
     this.ssh = new SSH(this.entity.sshdPort);
     this.shell = new SSH(this.entity.sshdPort);
     try {
-      const [conn] = await Promise.all([this.ssh.connect(), this.shell.connect(true)]);
-      ipcMain.on("xtermData", (_event, {
-        node,
-        data
-      }) => {
-        if (node !== this.entity.safeName) return;
-        this.shell.write(data);
-        // this.ssh.write(data);
+      const [conn] = await Promise.all([this.ssh.connect()]);
+      let shellConnectResolver;
+      let shellProm = new Promise((resolve)=>{
+        shellConnectResolver = resolve;
       });
-      this.shell.on("data", data => {
-        // this.ssh.on("data", data => {
-        this._io.sendSSHData({
-          node: this.entity.safeName,
-          data: data.toString("utf-8")
-        });
+
+
+      ipcMain.on("startShell", (_event, {node}) => {
+        if (node === this.entity.safeName) {
+          if (!this.shell) {
+            this.shell = new SSH(this.entity.sshdPort);
+          }
+          this.shell.connect(true).then(() => {
+            shellConnectResolver();
+            this.shell.onData( data => {
+              // this.ssh.on("data", data => {
+              this._io.sendSSHData({
+                node: this.entity.safeName,
+                data: data.toString("utf-8")
+              });
+            });
+            const xtermData = (_event, { node, data }) => {
+              if (node !== this.entity.safeName) return;
+
+              shellProm.then(() => {
+                this.shell.write(data);
+              });
+            };
+            ipcMain.on("xtermData", xtermData);
+            this.shell.on("close", () => {
+              ipcMain.removeListener("xtermData", xtermData);
+              this.shell = new SSH(this.entity.sshdPort);
+              shellProm = new Promise(resolve => {
+                shellConnectResolver = resolve;
+              });
+              ipcMain.emit("startShell", null, {node: this.entity.safeName});
+              this.emitClear = true;
+            });
+            if (this.shellDimensions) {
+              shellProm.then(() => this.shell.resize(this.shellDimensions));
+            }
+            if (this.emitClear) {
+              this.emitClear = false;
+              this._io.sendClearTerm({
+                node: this.entity.safeName
+              });
+            }
+          }).catch((reason) => {
+            console.log(reason);
+          });
+        }
+      });
+
+
+      ipcMain.on(SSH_RESIZE, (_event, data) => {
+        this.shellDimensions = data;
+        shellProm.then(() => this.shell.resize(data));
       });
 
       this.status = "started";
