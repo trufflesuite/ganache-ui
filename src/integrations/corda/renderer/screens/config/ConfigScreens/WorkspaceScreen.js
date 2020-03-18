@@ -99,7 +99,7 @@ class WorkspaceScreen extends Component {
     const projectPath = this.props.config.settings.workspace.projects[
       selectedIdx
     ];
-    return this.props.workspaces.current.projects.some(project => path.dirname(projectPath) === project.configFile)
+    return this.props.workspaces.current.projects.some(project => projectPath === project)
   }
 
   toggleErrorDetails = () =>
