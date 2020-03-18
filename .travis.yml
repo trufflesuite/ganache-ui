@@ -2,12 +2,12 @@ language: node_js
 node_js:
 # Use 12.9.0 because that is what Electron needs
 - "12.9.0"
-dist: bionic
-osx_image: "xcode9.4"
-jobs:
+matrix:
   include:
   - os: osx
+    osx_image: "xcode11.3"
   - os: linux
+    dist: bionic
 cache:
   directories:
   - "$HOME/.npm"

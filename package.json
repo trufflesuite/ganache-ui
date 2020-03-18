@@ -106,6 +106,7 @@
     "electron": "^6.0.9",
     "electron-builder": "^21.2.0",
     "electron-updater": "4.2.0",
+    "electron-notarize": "0.2.1",
     "electron-webpack": "^2.7.4",
     "eslint": "^6.3.0",
     "eslint-config-prettier": "^6.3.0",
@@ -162,6 +163,7 @@
   "build": {
     "npmRebuild": false,
     "appId": "org.trufflesuite.ganache",
+    "afterSign": "./afterSignHook.js",
     "files": [
       "src/**/*",
       "node_modules/**/*",
@@ -201,6 +203,8 @@
     },
     "mac": {
       "icon": "static/icons/mac/icon.icns",
+      "hardenedRuntime": true,
+      "entitlements": "./build/dmg/entitlements.mac.inherit.plist",
       "category": "public.app-category.developer-tools"
     },
     "dmg": {
