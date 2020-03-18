@@ -22,7 +22,7 @@ environment:
   GH_TOKEN:
     secure: S+Bnfbb+uco7s2X3jqmfP3vwxLIIZTmNmT0f8y982PaiUQB1AW8YNN7Acpi0JQOi
   matrix:
-    - nodejs_version: 12.9.0
+    - nodejs_version: 12.13.1
 
 install:
   - ps: $env:package_version = (Get-Content -Raw -Path package.json | ConvertFrom-Json).version 
