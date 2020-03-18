@@ -22,6 +22,10 @@ module.exports = async function (params) {
 
     console.log(`Notarizing ${appId} found at ${appPath}`);
 
+    const interval = setInterval(() => {
+        console.log("...");
+    }, 10000);
+
     try {
         await electron_notarize.notarize({
             appBundleId: appId,
@@ -31,6 +35,8 @@ module.exports = async function (params) {
         });
     } catch (error) {
         console.error(error);
+    } finally {
+        clearInterval(interval);
     }
 
     console.log(`Done notarizing ${appId}`);
