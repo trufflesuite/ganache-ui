@@ -2,7 +2,6 @@ const node_ssh = require("node-ssh");
 
 class SSH {
   constructor (port) {
-    this.ssh = new node_ssh();
     this.port = port;
     this._status = "stopped";
     this.shell = null;
@@ -22,21 +21,21 @@ class SSH {
         this.ssh = new node_ssh();
       }
       if (this._status === "stopped") {
-    await this.ssh.connect({
-      keepaliveInterval: 10000,
-      host: "127.0.0.1",
-      username: "user1",
-      password: "letmein",
-      port: this.port
-    })
+        await this.ssh.connect({
+          keepaliveInterval: 10000,
+          host: "127.0.0.1",
+          username: "user1",
+          password: "letmein",
+          port: this.port
+        })
         this.ssh.connection.on("end", () => {
           this._status = "stopped";
         })
       }
       if (requestShell && !this.shell) {
-      await this.requestShell();
-    }
-    this._status = "started";
+        await this.requestShell();
+      }
+      this._status = "started";
 
       resolve(this.ssh);
     });
@@ -50,12 +49,23 @@ class SSH {
     this.shell.write(data);
   }
 
-  on(...args){
-    this.shell.on(...args);
+  onData(listener){
+    this.shell.on("data", listener);
   }
 
-  once(...args){
-    this.shell.once(...args);
+  resize(data){
+    if (this.shell && !this.shell.setWindow(data.rows, data.cols)) { // setup initial window size
+      // Returns false if we should wait for the continue event before sending more traffic.
+      return new Promise( resolve => this.once('continue', resolve));
+    }
+  }
+
+  on(token, listener){
+    this.shell && this.shell.on(token, listener);
+  }
+
+  once(token, listener){
+    this.shell.once(token, listener);
   }
 
   gracefulShutdown(callback){
@@ -72,10 +82,16 @@ class SSH {
     });
   }
 
-  disconnect(){
-    this.ssh.dispose();
-    this.ssh = new node_ssh();
-    this.shell = null;
+  async disconnect(){
+    await this.connectingPromise;
+    if (this.shell) {
+      this.shell.removeAllListeners();
+      this.shell = null;
+    }
+  if (this.ssh && this.ssh.removeAllListeners) {
+      this.ssh.removeAllListeners();
+      this.ssh.dispose();
+    }
     this._status = "stopped";
   }
 
