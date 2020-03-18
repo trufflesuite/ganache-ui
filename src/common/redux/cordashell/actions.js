@@ -6,6 +6,7 @@ export const getTerminal = function(safeName) {
 };
 
 export const SSH_DATA = `${prefix}/SSH_DATA`;
+export const CLEAR_TERM = `${prefix}/CLEAR_TERM`;
 
 export const SSH_RESIZE = `${prefix}/SSH_RESIZE`;
 

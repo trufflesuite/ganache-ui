@@ -11,6 +11,7 @@ const fse = require("fs-extra");
 const fetch = require("node-fetch");
 const GetPort = require("get-port");
 const BlobInspector = require("./blob-inspector");
+const { SSH_DATA, CLEAR_TERM } = require("../../../../../common/redux/cordashell/actions");
 
 const https = require("https");
 const agent = new https.Agent({
@@ -28,11 +29,12 @@ class IO {
     this.sendError = this.createMsgEmitter("error");
     this.sendStdErr = this.createMsgEmitter("stderr");
     this.sendStdOut = this.createMsgEmitter("stdout");
-    this.sendSSHData = this.createMsgEmitter("sshData");
+    this.sendSSHData = this.createMsgEmitter("send", SSH_DATA);
+    this.sendClearTerm = this.createMsgEmitter("send", CLEAR_TERM);
   }
 
-  createMsgEmitter(token){
-    return this._context.emit.bind(this._context, "message", token);
+  createMsgEmitter(...token){
+    return this._context.emit.bind(this._context, "message", ...token);
   }
 
   emit(token, ...args){

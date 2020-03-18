@@ -35,6 +35,11 @@ export default function(state = {}, action) {
         state[action.node].write(action.data);
       }
       return state;
+    case CordaShell.CLEAR_TERM:
+      if (Object.prototype.hasOwnProperty.call(state, action.node)) {
+        state[action.node].clear();
+      }
+      return state;
     default:
       return state;
   }
