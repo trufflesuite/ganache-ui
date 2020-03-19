@@ -64,7 +64,7 @@ process.on("unhandledRejection", err => {
   }
 })
 
-app.setName("Ganache");
+app.name = "Ganache";
 if (isDevMode) {
   // electron can't get the version from our package.json when
   // launched via `webpack-electron dev`. This makes electron-updater
