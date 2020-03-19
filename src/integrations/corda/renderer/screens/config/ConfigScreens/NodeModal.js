@@ -59,12 +59,10 @@ export class NodeModal extends Component {
     const portHtmls = Object.entries(PORT_FIELDS).map(portInfo => {
       const key = portInfo[0];
       return (
-        <label key={key} style={{ width: "100%" }}>
+        <label key={key}>
           <span>{portInfo[1]}</span>
           <input type="number" min={this.PORT_MIN} max={this.PORT_MAX} onChange={this.portChangeHandler(key)} value={node[key] || ""}>
           </input>
-          {errors[key] ? <div className="ValidationError">{errors[key]}</div> : ""}
-          {nodeErrors[key] ? <div className="ValidationError">{nodeErrors[key]}</div> : ""}
         </label>
       )
     });
@@ -75,7 +73,7 @@ export class NodeModal extends Component {
           <button onClick={this.props.closeModal}>×</button>
         </header>
         <section>
-          <label style={{ width: "100%" }}>
+          <label>
             <span>Legal Name</span>
             <input type="text" disabled={canEditAll ? false : isEditing} onChange={(e) => {
               this.setState({node: {...this.state.node, name: e.target.value }});
@@ -89,10 +87,23 @@ export class NodeModal extends Component {
             }
           </label>
 
-          {portHtmls}
+          <div className="portFields">
+            <div className="portData">
+              {portHtmls}
+            </div>
+            {
+                Object.entries(PORT_FIELDS).map(portInfo => {
+                  const key = portInfo[0];
+                  return (<>
+                    {errors[key] ? <div className="ValidationError">{errors[key]}</div> : ""}
+                    {nodeErrors[key] ? <div className="ValidationError">{nodeErrors[key]}</div> : ""}
+                  </>);
+                })
+              }
+          </div>
 
           {this.props.type === "Notary" ? "" : (<>
-            <label style={{ width: "100%" }}>
+            <label>
               <span>Network Map</span>
               <select multiple={true} onChange={(e) => {
                 const selectedNodes = [...e.target.options].filter(o => o.selected).map(o => o.value);
@@ -105,9 +116,9 @@ export class NodeModal extends Component {
             </label>
           </>)}
 
-          <label style={{ width: "100%" }}>
+          <label>
             <span>CorDapps</span>
-            <select width={{width: "100%"}} multiple={true} onChange={(e) => {
+            <select multiple={true} onChange={(e) => {
               const selectedCoreDapps = [...e.target.options].filter(o => o.selected).map(o => o.value);
               this.setState({node: {...this.state.node, cordapps: selectedCoreDapps }});
             }} value={isEditing ? node.cordapps : this.props.allCordDapps}>

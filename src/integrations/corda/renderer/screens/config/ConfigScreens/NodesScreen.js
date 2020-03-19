@@ -6,7 +6,7 @@ import { STARTUP_MODE } from "../../../../../../common/redux/config/actions";
 function portValidator(node, allNodes) {
   const errors = {};
   const portFields = Object.keys(PORT_FIELDS);
-  allNodes.forEach(otherNode => { 
+  [...allNodes, node].forEach(otherNode => { 
     portFields.forEach(nodeField => {
       const nodeFieldValue = node[nodeField];
       portFields.forEach(otherNodeField => {
