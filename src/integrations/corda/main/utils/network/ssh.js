@@ -83,12 +83,12 @@ class SSH {
   }
 
   async disconnect(){
-    // await this.connectingPromise;
-  if (this.shell) {
-    this.shell.removeAllListeners();
-    this.shell = null;
-  }
-  if (this.ssh && this.ssh.removeAllListeners) {
+    this.connectingPromise && await this.connectingPromise;
+    if (this.shell) {
+      this.shell.removeAllListeners();
+      this.shell = null;
+    }
+    if (this.ssh && this.ssh.removeAllListeners) {
       this.ssh.removeAllListeners();
       this.ssh.dispose();
     }

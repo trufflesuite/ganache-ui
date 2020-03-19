@@ -17,6 +17,9 @@ class Corda {
     this.shell = null;
 
     this.earlyCloseHandler = this.earlyCloseHandler.bind(this)
+    this.handleStartShell = this.handleStartShell.bind(this)
+    this.handleXtermData = this.handleXtermData.bind(this)
+    this.handleSshResize = this.handleSshResize.bind(this)
 
     this._dataHandler = new StreamingMessageHandler();
     this._dataHandler.addErrHandler("CAPSULE EXCEPTION: Capsule not extracted.", this.handleCapsuleError.bind(this));
@@ -93,6 +96,9 @@ class Corda {
     // don't stop again if we are "stopping" or "stopped" already
     if (this.status === "stopping" || this.status === "stopped") return this._stopPromise;
 
+    ipcMain.off("startShell", this.handleStartShell);
+    ipcMain.off("xtermData", this.handleXtermData);
+    ipcMain.off(SSH_RESIZE, this.handleSshResize);
     // clean up bound std handlers
     this._dataHandler.unbind();
     this._startPromise = null;
@@ -156,6 +162,59 @@ class Corda {
     reject(new Error(`corda.jar child process exited with code ${code}`));
   }
 
+  handleSshResize (_event, data){
+    this.shellDimensions = data;
+    this._shellProm.then((shell) => shell.resize(data));
+  }
+
+  handleXtermData(_event, { node, data }){
+    if (node !== this.entity.safeName) return;
+
+    this._shellProm.then(shell => {
+      shell.write(data);
+    });
+  }
+
+  async handleStartShell(_event, {node}) {
+    if (node === this.entity.safeName) {
+      ipcMain.off("startShell", this.handleStartShell);
+
+      let shell = this.shell;
+      if (!shell) {
+        shell = this.shell = new SSH(this.entity.sshdPort);
+      }
+      shell.connect(true).then(() => {
+        this._shellConnectResolver(shell);
+        shell.onData( data => {
+          this._io.sendSSHData({
+            node: this.entity.safeName,
+            data: data.toString("utf-8")
+          });
+        });
+        ipcMain.on("xtermData", this.handleXtermData);
+        shell.on("close", () => {
+          ipcMain.removeListener(SSH_RESIZE, this.handleSshResize);
+          ipcMain.removeListener("xtermData", this.handleXtermData);
+          this.shell = new SSH(this.entity.sshdPort);
+          this._shellProm = new Promise(resolve => {
+            this._shellConnectResolver = resolve;
+          });
+          this._io.sendClearTerm({
+            node: this.entity.safeName
+          });
+          this.handleStartShell(null, {node: this.entity.safeName});
+        });
+        if (this.shellDimensions) {
+          this._shellProm.then(shell => shell.resize(this.shellDimensions));
+        }
+      }).catch((reason) => {
+        console.log(reason);
+      });
+    }
+  }
+
+  _shellProm = Promise.resolve();
+  _shellConnectResolver = ()=>{};
   async handleStartUp() {
     const { resolve, reject } = this._awaiter;
 
@@ -165,63 +224,12 @@ class Corda {
     this.shell = new SSH(this.entity.sshdPort);
     try {
       const [conn] = await Promise.all([this.ssh.connect()]);
-      let shellConnectResolver;
-      let shellProm = new Promise((resolve)=>{
-        shellConnectResolver = resolve;
+      this._shellProm = new Promise((resolve)=>{
+        this._shellConnectResolver = resolve;
       });
 
-
-      ipcMain.on("startShell", (_event, {node}) => {
-        if (node === this.entity.safeName) {
-          if (!this.shell) {
-            this.shell = new SSH(this.entity.sshdPort);
-          }
-          this.shell.connect(true).then(() => {
-            shellConnectResolver();
-            this.shell.onData( data => {
-              // this.ssh.on("data", data => {
-              this._io.sendSSHData({
-                node: this.entity.safeName,
-                data: data.toString("utf-8")
-              });
-            });
-            const xtermData = (_event, { node, data }) => {
-              if (node !== this.entity.safeName) return;
-
-              shellProm.then(() => {
-                this.shell.write(data);
-              });
-            };
-            ipcMain.on("xtermData", xtermData);
-            this.shell.on("close", () => {
-              ipcMain.removeListener("xtermData", xtermData);
-              this.shell = new SSH(this.entity.sshdPort);
-              shellProm = new Promise(resolve => {
-                shellConnectResolver = resolve;
-              });
-              ipcMain.emit("startShell", null, {node: this.entity.safeName});
-              this.emitClear = true;
-            });
-            if (this.shellDimensions) {
-              shellProm.then(() => this.shell.resize(this.shellDimensions));
-            }
-            if (this.emitClear) {
-              this.emitClear = false;
-              this._io.sendClearTerm({
-                node: this.entity.safeName
-              });
-            }
-          }).catch((reason) => {
-            console.log(reason);
-          });
-        }
-      });
-
-
-      ipcMain.on(SSH_RESIZE, (_event, data) => {
-        this.shellDimensions = data;
-        shellProm.then(() => this.shell.resize(data));
-      });
+      ipcMain.on("startShell", this.handleStartShell);
+      ipcMain.on(SSH_RESIZE, this.handleSshResize);
 
       this.status = "started";
       resolve(conn);
