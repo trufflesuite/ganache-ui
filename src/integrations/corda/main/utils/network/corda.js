@@ -1,8 +1,10 @@
 const { exec, spawn } = require("child_process");
 const { join } = require("path");
+const { ipcMain } = require("electron");
 const node_ssh = require("node-ssh");
 const StreamingMessageHandler = require("./streaming-message-handler");
 const noop = () => {};
+
 
 class Corda {
   constructor(entity, path, JAVA_HOME, io) {
@@ -31,9 +33,9 @@ class Corda {
     if (process.platform === "win32") {
       // on Windows node can't seem to kill the grandchild process via java.kill,
       // it just orphans it :-/
-      this.kill = () => exec(`taskkill /pid ${this.java.pid} /t /f`);
+      this.kill = (java) => exec(`taskkill /pid ${java.pid} /t /f`);
     } else {
-      this.kill = () => this.java.kill();
+      this.kill = (java) => java.kill();
     }
 
     this._awaiter = {resolve: noop, reject: noop};
@@ -117,7 +119,7 @@ class Corda {
 
       let killTimer;
       // if it hasn't died after 30 seconds kill it with fire
-      killTimer = setTimeout(this.kill.bind(this), 30000);
+      killTimer = setTimeout(this.kill.bind(this, java), 30000);
       const rejectTimeout = setTimeout(() => {
         // if we're in here this is REALLY bad. We couldn't stop corda after 120 seconds!
         java.off("close", finish);
@@ -138,24 +140,35 @@ class Corda {
           // eslint-disable-next-line no-console
           console.error(e);
           // didn't seem to work... send SIGINT
-          this.kill();
+          this.kill(java);
         });
       } else {
         // somehow we got here without an ssh connection, which is weird, but
         // technically possible if we DID have a connection that soon failed.
         // So... just try killing the process now.
-        this.kill();
+        this.kill(java);
       }
     });
   }
 
-  async earlyCloseHandler(code){
-    // eslint-disable-next-line no-console
-    console.log("corda", `child process exited with code ${code}`);
-    const reject = this._awaiter.reject;
+  async earlyCloseHandler(code) {
+    if (this.status === "started") {
+      // looks like the user shut this down.
+      await this.stop();
+      this._io.emit("send", "NODE_STOPPED", this.entity.safeName);
+      ipcMain.once("START_NODE:" + this.entity.safeName, async () => {
+        this._io.emit("send", "NODE_STARTING", this.entity.safeName);
+        await this.start(this);
+        this._io.emit("send", "NODE_STARTED", this.entity.safeName);
+      });
+    } else {
+      // eslint-disable-next-line no-console
+      console.log("corda", `child process exited with code ${code}`);
+      const reject = this._awaiter.reject;
 
-    await this.stop(true).catch(e => e);
-    reject(new Error(`corda.jar child process exited with code ${code}`));
+      await this.stop(true).catch(e => e);
+      reject(new Error(`corda.jar child process exited with code ${code}`));
+    }
   }
 
   async handleStartUp() {

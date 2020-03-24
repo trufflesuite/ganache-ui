@@ -6,6 +6,7 @@ import CordAppLink from "../components/CordAppLink";
 import TransactionLink from "../components/TransactionLink";
 import TransactionData from "../transaction-data";
 import { CancellationToken } from "../screens/utils";
+import { startNode } from "../../../../common/redux/config/actions";
 
 // this is taken from braid
 const VERSION_REGEX = /^(.*?)(?:-(?:(?:\d|\.)+))\.jar?$/;
@@ -282,6 +283,29 @@ class NodeDetails extends Component {
       return (<div className="Waiting Waiting-Padded">Couldn&apos;t locate node: {this.props.match.params.node}</div>);
     }
 
+    let restartButton = <></>;
+    const status = this.props.config.cordaNodeStatus[node.safeName];
+    const style = {
+      position: "absolute",
+      right: "1.5rem",
+      top: "50%",
+      transform: "translateY(-50%)"
+    };
+    if (status === "stopped") {
+      restartButton = (<div style={style}>
+        <span>Node is stopped!</span> <button style={{marginLeft: "1rem"}} onClick={()=>this.props.dispatch(startNode(node.safeName))}>Restart</button>
+      </div>);
+    } else if (status === "starting") {
+      restartButton = (<div style={{
+          position: "absolute",
+          right: "1.5rem",
+          top: "50%",
+          transform: "translateY(-50%)"
+        }}>
+          <span>Node is starting...</span>
+        </div>);
+    }
+
     return (
       <section className="BlockCard">
         <header>
@@ -294,7 +318,13 @@ class NodeDetails extends Component {
         </header>
         <main className="corda-details-container corda-node-details">
           <div className="corda-details-section">
-            <h3 className="Label">Connection Details</h3>
+            <h3 className="Label">
+              Connection Details
+
+              {
+                restartButton
+              }
+            </h3>
             <div className="DataRow corda-node-details-ports corda-details-section corda-details-padded">
               <div>
                 <div className="Label">RPC Port</div>
