@@ -1,5 +1,6 @@
 import path from "path";
 import fse from "fs-extra";
+import temp from "temp";
 
 import WorkspaceSettings from "../settings/WorkspaceSettings";
 import ContractCache from "../../../integrations/ethereum/main/types/contracts/ContractCache";
@@ -18,6 +19,13 @@ class Workspace {
       this.chaindataDirectory,
       flavor
     );
+
+    // migrate to new contract cache location (in `chaindataDirectory):
+    const oldLocation = path.join(this.workspaceDirectory, ContractCache.KEY);
+    if (fse.existsSync(oldLocation)){
+      const newLocation = path.join(this.chaindataDirectory, ContractCache.KEY);
+      fse.moveSync(oldLocation, newLocation)
+    }
 
     this.contractCache = new ContractCache(this.chaindataDirectory);
   }
@@ -53,7 +61,7 @@ class Workspace {
 
   generateChaindataDirectory() {
     if (this.name === null) {
-      return null;
+      return temp.path();
     } else {
       return path.join(this.workspaceDirectory, "chaindata");
     }
@@ -86,12 +94,18 @@ class Workspace {
     this.settings.set("randomizeMnemonicOnStart", false);
     this.settings.set("server.mnemonic", mnemonic);
 
-    this.contractCache.setDirectory(this.workspaceDirectory);
-    this.contractCache.setAll(this.contractCache.getAll());
-
+    // make sure contractCache is in the right location:
     if (chaindataDirectory && chaindataDirectory !== this.chaindataDirectory) {
       fse.copySync(chaindataDirectory, this.chaindataDirectory);
     }
+    const currentContractCachePath = path.join(this.contractCache.storage.directory, this.contractCache.storage.name);
+    const desiredContractCachePath = path.join(this.chaindataDirectory, this.contractCache.storage.name);
+    if (currentContractCachePath !== desiredContractCachePath && fse.existsSync(currentContractCachePath)) {
+      fse.copySync(currentContractCachePath, desiredContractCachePath);
+    }
+
+    this.contractCache.setDirectory(this.chaindataDirectory);
+    this.contractCache.setAll(this.contractCache.getAll());
   }
 
   addProject(project) {
@@ -123,6 +137,11 @@ class Workspace {
       // were issues, etc.). Don't really have time right now for
       // a solution here
     }
+    this.bootstrap();
+    // make sure the directory is correct
+    this.contractCache.setDirectory(this.chaindataDirectory);
+    // and then make sure we cleat the contract cache storage
+    this.contractCache.setAll({});
   }
 }
 
