@@ -7,8 +7,8 @@ const SSH = require("./ssh");
 const noop = () => {};
 
 
-class Corda {
-  constructor(entity, path, JAVA_HOME, CORDA_JAR, io) {
+class CordaNode {
+    constructor(entity, path, JAVA_HOME, CORDA_JAR, io) {
     this.entity = entity;
     this.path = path;
     this.JAVA_HOME = JAVA_HOME;
@@ -316,4 +316,4 @@ class Corda {
   }
 }
 
-module.exports = Corda;
+module.exports = CordaNode;
