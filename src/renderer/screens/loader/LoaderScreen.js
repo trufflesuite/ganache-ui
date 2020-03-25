@@ -122,7 +122,6 @@ class LoaderScreen extends Component {
         >
           <BugModal
             systemError={this.props.core.systemError}
-            logs={this.props.logs}
           />
         </OnlyIf>
       </div>
