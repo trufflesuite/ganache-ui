@@ -29,10 +29,16 @@ class WorkspaceManager {
           if (sanitizedName !== file) {
             // apparently the Settings file has a name that is not equal to the directory,
             //   we need to move the directory
-            fse.moveSync(
-              path.join(workspacesDirectory, file),
-              path.join(workspacesDirectory, sanitizedName),
-            );
+            try {
+              fse.moveSync(
+                path.join(workspacesDirectory, file),
+                path.join(workspacesDirectory, sanitizedName),
+              );
+            } catch(e) {
+              // It's okay that we ignore move errors, promise!
+              // They sometimes happen and i don't know why
+              console.log(e);
+            }
           }
           const flavor = settings.get("flavor");
           return new Workspace(name, this.directory, flavor);
