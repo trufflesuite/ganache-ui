@@ -360,4 +360,5 @@ class TopNavbar extends Component {
 export default connect(
   TopNavbar,
   "workspaces",
+  "config"
 );

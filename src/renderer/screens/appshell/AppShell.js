@@ -80,7 +80,6 @@ class AppShell extends Component {
         >
           <BugModal
             systemError={this.props.core.systemError}
-            logs={this.props.logs}
           />
         </OnlyIf>
         <OnlyIf test={this.props.core.modalError != null}>
@@ -110,8 +109,6 @@ export default connect(
   AppShell,
   "appshell",
   "core",
-  "config",
-  "logs",
   "autoUpdate",
   "network"
 );

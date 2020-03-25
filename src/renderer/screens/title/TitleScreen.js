@@ -55,7 +55,6 @@ class TitleScreen extends Component {
         <OnlyIf test={this.props.core.systemError != null}>
           <BugModal
             systemError={this.props.core.systemError}
-            logs={this.props.logs}
           />
         </OnlyIf>
       </div>
@@ -66,6 +65,5 @@ class TitleScreen extends Component {
 export default connect(
   TitleScreen,
   "config",
-  "core",
-  "logs",
+  "core"
 );
