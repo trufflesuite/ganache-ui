@@ -354,6 +354,11 @@ h3.Label {
     // when transitioning beween a selected tab and a non-selected tab the 
     // height remains constant
     content: "!";
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    font-size: .75rem;
+    font-family: "RobotoCondensed-Regular";
+    font-weight: 800;
     visibility: hidden;
     width:0px !important;
     min-width:0px !important;
