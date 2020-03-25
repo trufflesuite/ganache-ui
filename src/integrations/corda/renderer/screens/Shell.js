@@ -23,9 +23,6 @@ class Shell extends Component {
       this.props.dispatch(getTerminal(this.props.context));
     } else {
       const term = this.props.cordashell[this.props.context];
-      while (this.xtermRef.current && this.xtermRef.current.lastElementChild) {
-        this.xtermRef.current.removeChild(this.xtermRef.current.lastElementChild);
-      }
       this.xtermRef.current.appendChild(term.div);
       if (!term._isOpened) {
         term.open(term.div);
@@ -51,6 +48,9 @@ class Shell extends Component {
 
   componentDidUpdate(prevProps){
     if (this.props.context !== prevProps.context || this.props.cordashell[this.props.context] !== prevProps.cordashell[this.props.context]) {
+      while (this.xtermRef.current && this.xtermRef.current.lastElementChild) {
+        this.xtermRef.current.removeChild(this.xtermRef.current.lastElementChild);
+      }
       this.setup();
     }
   }
@@ -58,7 +58,7 @@ class Shell extends Component {
   render() {
     return (
       <div className="LogContainer">
-        <div ref={this.xtermRef} className="xtermContainer"><div style={{color:"#fff", fontFeatureSettings: '"liga" 0', fontFamily: "courier-new, courier, monospace"}}>Connecting...</div></div>
+        <div ref={this.xtermRef} className="xtermContainer"></div>
       </div>
     );
   }
