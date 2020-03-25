@@ -9,8 +9,8 @@ import CordaNodes from "../integrations/corda/renderer/screens/Nodes";
 import CordaNode from "../integrations/corda/renderer/screens/NodeDetails";
 import CordaTransactions from "../integrations/corda/renderer/screens/Transactions";
 import CordaTransaction from "../integrations/corda/renderer/screens/Transaction";
-// import CordaCordapps from "../integrations/corda/renderer/screens/Cordapps";
-// import CordaCordapp from "../integrations/corda/renderer/screens/Cordapp";
+import CordaCordapps from "../integrations/corda/renderer/screens/Cordapps";
+import CordaCordapp from "../integrations/corda/renderer/screens/Cordapp";
 
 import BlocksScreen from "../integrations/ethereum/renderer/screens/blocks/BlocksScreen";
 import TransactionsScreen from "../integrations/ethereum/renderer/screens/transactions/TransactionsScreen";
@@ -55,8 +55,8 @@ class FlavorRoutes extends Component {
         </Route>
         <Route exact path="/corda/nodes" component={CordaNodes} />
         <Route path="/corda/nodes/:node" component={CordaNode} />
-        {/* <Route exact path="/corda/cordapps" component={CordaCordapps} />
-        <Route path="/corda/cordapps/:cordapp" component={CordaCordapp} /> */}
+        <Route exact path="/corda/cordapps" component={CordaCordapps} />
+        <Route path="/corda/cordapps/:cordapp" component={CordaCordapp} />
         <Route exact path="/corda/transactions" component={CordaTransactions} />
         <Route path="/corda/transactions/:txhash" component={CordaTransaction} />
       </Switch>
