@@ -8,12 +8,15 @@ const { EventEmitter } = require("events");
 const { basename, join } = require("path");
 const postgres = require("../postgres");
 const Braid = require("./braid");
-const Corda = require("./corda");
+const CordaNode = require("./corda-node");
 const fse = require("fs-extra");
 const fetch = require("node-fetch");
 const GetPort = require("get-port");
+const chokidar = require('chokidar');
 const BlobInspector = require("./blob-inspector");
+const { REFRESH_CORDAPP, refreshCordapp } = require("../../../../../common/redux/corda-core/actions");
 const { SSH_DATA, CLEAR_TERM } = require("../../../../../common/redux/cordashell/actions");
+const CORDAPP_DELAY = 1000;
 
 const chunk = (arr, size) => Array.from({
   length: Math.ceil(arr.length / size)
@@ -36,6 +39,7 @@ class IO {
     this.sendStdOut = this.createMsgEmitter("stdout");
     this.sendSSHData = this.createMsgEmitter("send", SSH_DATA);
     this.sendClearTerm = this.createMsgEmitter("send", CLEAR_TERM);
+    this.sendRefreshCordapps = this.createMsgEmitter("send", REFRESH_CORDAPP);
   }
 
   createMsgEmitter(...token){
@@ -62,6 +66,7 @@ class NetworkManager extends EventEmitter {
       this.chaindataDirectory = Promise.resolve(dir);
     }
 
+    this.cordappQueue = [];
     this.nodes = [];
     this.notaries = [];
     this.processes = [];
@@ -109,6 +114,7 @@ class NetworkManager extends EventEmitter {
         this.copyCordappsAndSetupNetwork(),
         this.hashCordapps()
       ]);
+      this.addCordappListeners();
       if (this.cancelled) return;
       this._io.sendProgress("Configuring RPC Manager...");
       this.braid = new Braid(join(await BRAID_HOME, ".."), this._io);
@@ -181,11 +187,33 @@ class NetworkManager extends EventEmitter {
     this.blacklist.add(node.sshdPort);
     this.blacklist.add(node.p2pPort);
   }
+
+  addCordappListeners(){
+    if (this.allCordapps) {
+      this.watcher = chokidar.watch([...this.allCordapps]);
+      this.watcher.on("change", (path) => {
+        if (this.cordappWatcher) {
+          clearTimeout(this.cordappWatcher);
+        }
+        this.cordappQueue.push(path);
+        // start timer
+        this.cordappWatcher = setTimeout(() => {
+          const queue = this.cordappQueue;
+          // clear queue
+          this.cordappQueue = [];
+          // alert user
+          this._io.sendRefreshCordapps(refreshCordapp(queue));
+        }, CORDAPP_DELAY);
+      });
+    }
+  }
+
   async copyCordappsAndSetupNetwork() {
     // TODO this has become a mess. Spend some time to do it right one day :-D
     const promises = [];
     const networkMap = new Map();
     const chaindataDir = await this.chaindataDirectory;
+    this.allCordapps = new Set();
     this.entities.forEach((node) => {
       // track all entities' ports in a port blacklist so we don't try to bind 
       // braid to it later.
@@ -197,6 +225,7 @@ class NetworkManager extends EventEmitter {
         const name = basename(path);
         const newPath = join(currentDir, "cordapps", name);
         promises.push(fse.copy(path, newPath));
+        this.allCordapps.add(path);
       });
     });
     // for each notary, get it's node info file
@@ -268,7 +297,7 @@ class NetworkManager extends EventEmitter {
           if (this.cancelled) return;
           const braidPromise = this.braid.start(entity, currentPath, JAVA_HOME);
           const CORDA_HOME = await this.config.corda.files[`corda${entity.version || "4_4"}`].download();
-          const corda = new Corda(entity, currentPath, JAVA_HOME, CORDA_HOME, this._io);
+          const corda = new CordaNode(entity, currentPath, JAVA_HOME, CORDA_HOME, this._io);
           this.processes.push(corda);
           const cordaProm = corda.start().then(() => {
             this._io.sendProgress(`Corda node ${++startedNodes}/${entities.length} online...`);
