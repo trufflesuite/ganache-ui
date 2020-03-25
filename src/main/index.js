@@ -40,6 +40,7 @@ import {
   GET_CONTRACT_DETAILS,
   OPEN_NEW_WORKSPACE_CONFIG,
   PROJECT_UPDATED,
+  CLONE_WORKSPACE,
 } from "../common/redux/workspaces/actions";
 
 import {
@@ -479,6 +480,20 @@ app.on('ready', () => {
         SET_WORKSPACES,
         workspaceManager.getNonDefaultNames(),
       );
+    });
+
+    ipcMain.on(CLONE_WORKSPACE, async (event, name, cloneName) => {
+      const sourceWorkspace = workspaceManager.get(name);
+      if (sourceWorkspace) {
+        sourceWorkspace.clone(cloneName);
+
+        workspaceManager.bootstrap();
+
+        mainWindow.webContents.send(
+          SET_WORKSPACES,
+          workspaceManager.getNonDefaultNames(),
+        );
+      }
     });
 
     ipcMain.on(DELETE_WORKSPACE, async (event, name) => {

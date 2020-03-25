@@ -1,5 +1,6 @@
 import path from "path";
 import fse from "fs-extra";
+import UUID from "uuid";
 
 import WorkspaceSettings from "../settings/WorkspaceSettings";
 import ContractCache from "../contracts/ContractCache";
@@ -116,6 +117,40 @@ class Workspace {
       // were issues, etc.). Don't really have time right now for
       // a solution here
     }
+  }
+
+  clone(cloneName) {
+    const sanitizedName = Workspace.getSanitizedName(cloneName);
+    const configDirectory = path.join(this.workspaceDirectory, "..", "..");
+    const cloneDirectory = path.join(
+      configDirectory,
+      "workspaces",
+      sanitizedName,
+    );
+
+    try {
+      // copy workspace directory, make sure not to overwrite any existing data
+      fse.copySync(this.workspaceDirectory, cloneDirectory, {
+        overwrite: false,
+        errorOnExist: true,
+      });
+    } catch (e) {
+      // Failed to copy directory. Most likely target already exists
+      // TODO: Handle this error more gracefully/provide user feedback
+      return;
+    }
+
+    // update settings of cloned workspace to match new location
+    const db_path = path.join(cloneDirectory, "chaindata");
+    let settings = new WorkspaceSettings(cloneDirectory, db_path);
+    settings.bootstrap();
+    // set new db_path
+    settings.set("server.db_path", db_path);
+    // generate new uuid
+    settings.set("uuid", UUID.v4());
+    // set new name
+    settings.set("name", cloneName);
+    return new Workspace(cloneName, configDirectory);
   }
 }
 
