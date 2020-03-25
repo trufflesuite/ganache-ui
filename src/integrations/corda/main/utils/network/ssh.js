@@ -16,26 +16,31 @@ class SSH {
 
   async connect(requestShell = false){
     // eslint-disable-next-line no-async-promise-executor
-    return this.connectingPromise = new Promise(async (resolve) => {
-      if (!this.ssh) {
-        this.ssh = new node_ssh();
+    return this.connectingPromise = new Promise(async (resolve, reject) => {
+      try {
+        if (!this.ssh) {
+          this.ssh = new node_ssh();
+        }
+        if (this._status === "stopped") {
+          await this.ssh.connect({
+            keepaliveInterval: 10000,
+            host: "127.0.0.1",
+            username: "user1",
+            password: "letmein",
+            port: this.port
+          })
+          this.ssh.connection.on("end", () => {
+            this._status = "stopped";
+          })
+        }
+        if (requestShell && !this.shell) {
+          await this.requestShell();
+        }
+        this._status = "started";
+      } catch(e){
+        reject(e);
+        return;
       }
-      if (this._status === "stopped") {
-        await this.ssh.connect({
-          keepaliveInterval: 10000,
-          host: "127.0.0.1",
-          username: "user1",
-          password: "letmein",
-          port: this.port
-        })
-        this.ssh.connection.on("end", () => {
-          this._status = "stopped";
-        })
-      }
-      if (requestShell && !this.shell) {
-        await this.requestShell();
-      }
-      this._status = "started";
 
       resolve(this.ssh);
     });

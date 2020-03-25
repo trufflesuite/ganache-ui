@@ -24,11 +24,13 @@ class AppShell extends Component {
     this.scrollDedupeTimeout = null; 
   }
   componentDidUpdate(prevProps) {
-    if (prevProps.network.toast.date !== this.props.network.toast.date) {
+    if (prevProps.network.toast.date !== this.props.network.toast.date && this.props.network.toast.message !== null) {
       clearTimeout(this.toastTimer);
-      this.toastTimer = setTimeout(() => {
-        this.props.dispatch(setToast(null));
-      }, 4000);
+      if (!this.props.network.toast.infinite) {
+        this.toastTimer = setTimeout(() => {
+          this.props.dispatch(setToast(null));
+        }, 4000);
+      }
     }
   }
 
@@ -93,6 +95,10 @@ class AppShell extends Component {
           test={this.props.network.toast.message !== null}>
             <div className="toast">
               {this.props.network.toast.message}
+              {
+                this.props.network.toast.buttonText === null ? "" :
+                <button style={{marginLeft:"1rem"}} onClick={this.props.network.toast.toastOnClick}>{this.props.network.toast.buttonText}</button>
+              }
             </div>
           </OnlyIf>
       </div>

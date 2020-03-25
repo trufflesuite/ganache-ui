@@ -1,7 +1,26 @@
 import React, { Component } from "react";
-import Modal from "../../../../../../renderer/components/modal/Modal";
+import {NodeModal, MODES, PORT_FIELDS} from "./NodeModal";
 import ModalDetails from "../../../../../../renderer/components/modal/ModalDetails";
 import { STARTUP_MODE } from "../../../../../../common/redux/config/actions";
+
+function portValidator(node, allNodes) {
+  const errors = {};
+  const portFields = Object.keys(PORT_FIELDS);
+  [...allNodes, node].forEach(otherNode => { 
+    portFields.forEach(nodeField => {
+      const nodeFieldValue = node[nodeField];
+      portFields.forEach(otherNodeField => {
+        if (otherNode.safeName === node.safeName && otherNodeField === nodeField) return;
+
+        const otherNodeFieldValue = otherNode[otherNodeField];
+        if (nodeFieldValue === otherNodeFieldValue){
+          errors[nodeField] = `${PORT_FIELDS[nodeField]} value ${nodeFieldValue} conflicts with ${PORT_FIELDS[otherNodeField]} value for "${otherNode.name}".`;
+        }
+      });
+    })
+  });
+  return errors;
+}
 
 function legalNameValidator(stringName) {
   const errors = [];
@@ -41,127 +60,6 @@ function legalNameValidator(stringName) {
   return errors;
 }
 
-const modes = {
-  EDIT: "edit",
-  ADD: "add"
-}
-class NodeModal extends Component {
-  portFields = { "rpcPort": "RPC Port", "adminPort": "Admin Port", "p2pPort": "P2P Port", "sshdPort": "SSHD Port" };
-  PORT_MIN = 1024;
-  PORT_MAX = 65536;
-  constructor(props) {
-    super(props);
-    const node = { ...this.props.data.node };
-    node.cordapps = node.cordapps ? [...node.cordapps] : [];
-    this.state = {
-      node,
-      errors: this.validate(node)
-    };
-  }
-
-  validate = (node) => {
-    const errors = {};
-    Object.keys(this.portFields).forEach(portField => {
-      const value = node[portField];
-      if (value < this.PORT_MIN || value > this.PORT_MAX) {
-        errors[portField] = `Port must be a value from ${this.PORT_MIN} to ${this.PORT_MAX}`;
-      }
-    });
-    return errors;
-  }
-
-  save = () => {
-    const errors = this.validate(this.state.node);
-    if (Object.keys(errors).length === 0) {
-      this.props.handleNodeUpdate(this.state);
-    } else {
-      this.setState({ errors });
-    }
-  }
-
-  portChangeHandler = (name) => {
-    return (e) => {
-      const value = parseInt(e.target.value, 10);
-      if (value > this.PORT_MAX) return;
-      this.setState({node: {...this.state.node, [name]: value }});
-    };
-  }
-
-  render() {
-    const canEditAll = this.props.canEditAll;
-    const node = this.state.node;
-    const errors = this.state.errors;
-    const isEditing = this.props.mode === modes.EDIT;
-
-    const portHtmls = Object.entries(this.portFields).map(portInfo => {
-      const key = portInfo[0];
-      return (
-        <label key={key} style={{ width: "100%" }}>
-          <span>{portInfo[1]}</span>
-          <input type="number" min={this.PORT_MIN} max={this.PORT_MAX} onChange={this.portChangeHandler(key)} value={node[key] || ""}>
-          </input>
-          {errors[key] ? <div className="ValidationError">{errors[key]}</div> : ""}
-        </label>
-      )
-    });
-    return (
-      <Modal className="ErrorModal">
-        <header>
-          <h4>{this.props.data.title}</h4>
-          <button onClick={this.props.closeModal}>×</button>
-        </header>
-        <section>
-          <label style={{ width: "100%" }}>
-            <span>Legal Name</span>
-            <input type="text" disabled={canEditAll ? false : isEditing} onChange={(e) => {
-              this.setState({node: {...this.state.node, name: e.target.value }});
-            }} value={node.name || ""}>
-            </input>
-            { !this.props.nodeErrors.legalName || this.props.nodeErrors.legalName.length === 0 ? "" :
-              <div className="ValidationError">{this.props.nodeErrors.legalName.map((error, i) => {
-                  return (<div key={"name" + error + i}>{error}</div>);
-                })}
-              </div>
-            }
-          </label>
-
-          {portHtmls}
-
-          {this.props.type === "Notary" ? "" : (<>
-            <label style={{ width: "100%" }}>
-              <span>Network Map</span>
-              <select multiple={true} onChange={(e) => {
-                const selectedNodes = [...e.target.options].filter(o => o.selected).map(o => o.value);
-                this.setState({ nodes: selectedNodes });
-              }} value={node.nodes}>
-                {this.props.allNodes.filter(n => n.safeName !== node.safeName).map(n => {
-                  return <option key={n.safeName} value={n.safeName}>{n.name}</option>
-                })}
-              </select>
-            </label>
-          </>)}
-
-          <label style={{ width: "100%" }}>
-            <span>CorDapps</span>
-            <select width={{width: "100%"}} multiple={true} onChange={(e) => {
-              const selectedCoreDapps = [...e.target.options].filter(o => o.selected).map(o => o.value);
-              this.setState({ cordapps: selectedCoreDapps });
-            }} value={isEditing ? node.cordapps : this.props.allCordDapps}>
-              {this.props.allCordDapps.map(corDapp => {
-                return <option key={corDapp}>{corDapp}</option>
-              })}
-            </select>
-          </label>
-          <footer>
-            <button onClick={this.save}>Save</button>
-            <button onClick={this.props.closeModal}>Cancel</button>
-          </footer>
-        </section>
-      </Modal>
-    );
-  }
-}
-
 class NodesScreen extends Component {
   constructor(props) {
     super(props);
@@ -179,13 +77,13 @@ class NodesScreen extends Component {
   }
 
   handleAddNodeClick = () => {
-    this.setState({ mode: modes.ADD });
+    this.setState({ mode: MODES.ADD });
   }
 
   handleEditNodeClick = () => {
     const idx = this.state.selectedIdx;
     if (idx !== null) {
-      this.setState({ mode: modes.EDIT, editNode: idx });
+      this.setState({ mode: MODES.EDIT, editNode: idx });
     }
   }
 
@@ -264,11 +162,12 @@ class NodesScreen extends Component {
     const corDapps = this.props.config.settings.workspace.projects.slice();
     let nodeModal;
     const mode = this.state.mode;
+    const nodesAndNotaries = [...this.props.config.settings.workspace.nodes, ...this.props.config.settings.workspace.notaries];
     if (mode) {
       const data = {};
       let handleNodeUpdate;
       switch (mode) {
-        case modes.EDIT: {
+        case MODES.EDIT: {
           const idx = this.state.editNode;
           data.title = `Edit ${type}`;
           data.node = nodes[idx];
@@ -278,7 +177,7 @@ class NodesScreen extends Component {
           };
         }
           break;
-        case modes.ADD:
+        case MODES.ADD:
           data.title = `Add New ${type}`;
           data.node = {};
           handleNodeUpdate = (node) => {
@@ -298,8 +197,11 @@ class NodesScreen extends Component {
           type={type}
           nodeErrors={this.state.nodeErrors || {}}
           handleNodeUpdate={({ node }) => {
+            const portErrors = portValidator(node, nodesAndNotaries);
             const legalNameErrors = legalNameValidator(node.name);
-            if (legalNameErrors.length) {
+            if (Object.keys(portErrors).length) {
+              this.setState({ nodeErrors: { ...portErrors } });
+            } else if (legalNameErrors.length) {
               this.setState({ nodeErrors: { legalName: legalNameErrors } });
             } else {
               handleNodeUpdate(node);

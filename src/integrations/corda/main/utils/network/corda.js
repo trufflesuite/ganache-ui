@@ -6,6 +6,7 @@ const { SSH_RESIZE } = require("../../../../../common/redux/cordashell/actions")
 const SSH = require("./ssh");
 const noop = () => {};
 
+
 class Corda {
   constructor(entity, path, JAVA_HOME, io) {
     this.entity = entity;
@@ -15,6 +16,7 @@ class Corda {
     this._io = io;
     this.ssh = null;
     this.shell = null;
+    this.shuttingDown = false;
 
     this.earlyCloseHandler = this.earlyCloseHandler.bind(this)
     this.handleStartShell = this.handleStartShell.bind(this)
@@ -37,9 +39,9 @@ class Corda {
     if (process.platform === "win32") {
       // on Windows node can't seem to kill the grandchild process via java.kill,
       // it just orphans it :-/
-      this.kill = () => exec(`taskkill /pid ${this.java.pid} /t /f`);
+      this.kill = (java) => exec(`taskkill /pid ${java.pid} /t /f`);
     } else {
-      this.kill = () => this.java.kill();
+      this.kill = (java) => java.kill();
     }
 
     this._awaiter = {resolve: noop, reject: noop};
@@ -58,6 +60,7 @@ class Corda {
 
     return this._startPromise = new Promise((resolve, reject) => {
       this.status = "starting";
+      this.shuttingDown = false;
       this._stopPromise = null;
       this._awaiter = {resolve, reject};
 
@@ -107,6 +110,7 @@ class Corda {
     // we weren't started in the first place, just return right away
     if (!java || java.exitCode !== null || java.signalCode !== null) {
       this.status = "stopped";
+      this.shuttingDown = false;
       this.java = null;
       this.ssh = null;
       this.shell = null;
@@ -114,12 +118,14 @@ class Corda {
     }
 
     this.status = "stopping";
+    this.shuttingDown = false;
     // eslint-disable-next-line no-async-promise-executor
     return this._stopPromise = new Promise(async (resolve, reject) => {
       const finish = () => {
         clearTimeout(rejectTimeout);
         clearTimeout(killTimer);
         this.status = "stopped";
+        this.shuttingDown = false;
         this.java = null;
         this.ssh = null;
         this.shell = null;
@@ -129,7 +135,7 @@ class Corda {
 
       let killTimer;
       // if it hasn't died after 30 seconds kill it with fire
-      killTimer = setTimeout(this.kill.bind(this), 30000);
+      killTimer = setTimeout(this.kill.bind(this, java), 30000);
       const rejectTimeout = setTimeout(() => {
         // if we're in here this is REALLY bad. We couldn't stop corda after 120 seconds!
         java.off("close", finish);
@@ -148,30 +154,45 @@ class Corda {
         // somehow we got here without an ssh connection, which is weird, but
         // technically possible if we DID have a connection that soon failed.
         // So... just try killing the process now.
-        this.kill();
+        this.kill(java);
       }
     });
   }
 
   async earlyCloseHandler(code) {
-    // eslint-disable-next-line no-console
-    console.log("corda", `child process exited with code ${code}`);
-    const reject = this._awaiter.reject;
+    if (this.status === "started") {
+      // looks like the user shut this node down. tell the UI about it.
+      await this.stop();
+      this._io.emit("send", "NODE_STOPPED", this.entity.safeName);
+      ipcMain.once("START_NODE:" + this.entity.safeName, async () => {
+        this._io.emit("send", "NODE_STARTING", this.entity.safeName);
+        await this.start(this);
+        await this._io.sendClearTerm({
+          node: this.entity.safeName
+        });
+        this.handleStartShell(null, {node: this.entity.safeName});
+        this._io.emit("send", "NODE_STARTED", this.entity.safeName);
+      });
+    } else {
+      // eslint-disable-next-line no-console
+      console.log("corda", `child process exited with code ${code}`);
+      const reject = this._awaiter.reject;
 
-    await this.stop(true).catch(e => e);
-    reject(new Error(`corda.jar child process exited with code ${code}`));
+      await this.stop(true).catch(e => e);
+      reject(new Error(`corda.jar child process exited with code ${code}`));
+    }
   }
 
   handleSshResize (_event, data){
     this.shellDimensions = data;
-    this._shellProm.then((shell) => shell.resize(data));
+    this._shellProm.then((shell) => shell && shell.resize(data));
   }
 
   handleXtermData(_event, { node, data }){
     if (node !== this.entity.safeName) return;
 
     this._shellProm.then(shell => {
-      shell.write(data);
+      shell && shell.write(data);
     });
   }
 
@@ -195,22 +216,32 @@ class Corda {
         shell.on("close", () => {
           ipcMain.removeListener(SSH_RESIZE, this.handleSshResize);
           ipcMain.removeListener("xtermData", this.handleXtermData);
-          this.shell = new SSH(this.entity.sshdPort);
-          this._shellProm = new Promise(resolve => {
-            this._shellConnectResolver = resolve;
-          });
-          this._io.sendClearTerm({
-            node: this.entity.safeName
-          });
-          this.handleStartShell(null, {node: this.entity.safeName});
+          // if the node is shutting down don't restart!
+          if (this.shuttingDown) {
+            this.shell = null;
+            this._shellProm = Promise.resolve();
+          } else {
+            this.shell = new SSH(this.entity.sshdPort);
+            this._shellProm = new Promise(resolve => {
+              this._shellConnectResolver = resolve;
+            });
+            this._io.sendClearTerm({
+              node: this.entity.safeName
+            });
+            this.handleStartShell(null, {node: this.entity.safeName});
+          }
         });
         if (this.shellDimensions) {
-          this._shellProm.then(shell => shell.resize(this.shellDimensions));
+          this._shellProm.then(shell => shell && shell.resize(this.shellDimensions));
         }
       }).catch((reason) => {
         console.log(reason);
       });
     }
+  }
+
+  async shuttingDownHandler(){
+    this.shuttingDown = true;
   }
 
   _shellProm = Promise.resolve();
@@ -219,6 +250,9 @@ class Corda {
     const { resolve, reject } = this._awaiter;
 
     this._dataHandler.unbind();
+    this._dataHandler.addOutHandler("Waiting for pending flows to complete before shutting down.", this.shuttingDownHandler.bind(this));
+    this._dataHandler.addOutHandler("Executing command \"run shutdown\"", this.shuttingDownHandler.bind(this));
+    this._dataHandler.bind(this.java);
 
     this.ssh = new SSH(this.entity.sshdPort);
     this.shell = new SSH(this.entity.sshdPort);
@@ -232,6 +266,7 @@ class Corda {
       ipcMain.on(SSH_RESIZE, this.handleSshResize);
 
       this.status = "started";
+      this.shuttingDown = false;
       resolve(conn);
     } catch (e) {
       await this.stop(true);

@@ -17,7 +17,6 @@ const https = require("https");
 const agent = new https.Agent({
   rejectUnauthorized: false
 });
-
 class IO {
   constructor(context) {
     this._context = context;
