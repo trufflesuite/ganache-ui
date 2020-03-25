@@ -11,7 +11,9 @@ export default function(state = {}, action) {
         return state;
       }
       fitAddon = new FitAddon();
-      term = new Terminal();
+      term = new Terminal({
+        'theme': { background: "#333" }
+      });
       term.onData(data => {
         ipcRenderer.send("xtermData", {node: action.safeName, data});
       });

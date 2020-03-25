@@ -29,7 +29,7 @@ class Shells extends Component {
       );
     }
     return (
-      <div className="Shells">
+      <div className="LogsScreen">
         {links.length === 0 ? "" : (
           <div className="corda-tabs">
             {links}

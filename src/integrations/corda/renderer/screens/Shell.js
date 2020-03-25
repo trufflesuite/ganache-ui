@@ -4,7 +4,6 @@ import { getTerminal, SSH_RESIZE } from "../../../../common/redux/cordashell/act
 import { ipcRenderer } from "electron";
 require("xterm/css/xterm.css");
 
-const aVar = "";
 class Shell extends Component {
   constructor(props){
     super(props);
@@ -12,7 +11,7 @@ class Shell extends Component {
   }
 
   sshResizeListener(){
-    const term = this.props.cordashell[this.props.context + aVar];
+    const term = this.props.cordashell[this.props.context];
     if (term) {
       term.fitAddon.fit();
       ipcRenderer.send(SSH_RESIZE, {rows: term.rows, cols: term.cols});
@@ -20,10 +19,10 @@ class Shell extends Component {
   }
 
   setup() {
-    if (!Object.prototype.hasOwnProperty.call(this.props.cordashell, this.props.context + aVar)) {
-      this.props.dispatch(getTerminal(this.props.context + aVar));
+    if (!Object.prototype.hasOwnProperty.call(this.props.cordashell, this.props.context)) {
+      this.props.dispatch(getTerminal(this.props.context));
     } else {
-      const term = this.props.cordashell[this.props.context + aVar];
+      const term = this.props.cordashell[this.props.context];
       this.xtermRef.current.appendChild(term.div);
       if (!term._isOpened) {
         term.open(term.div);
@@ -48,8 +47,7 @@ class Shell extends Component {
   }
 
   componentDidUpdate(prevProps){
-    if (this.props.context !== prevProps.context || this.props.cordashell[this.props.context + aVar] !== prevProps.cordashell[this.props.context+aVar]) {
-      // this.xtermRef.current.hasChildNodes()
+    if (this.props.context !== prevProps.context || this.props.cordashell[this.props.context] !== prevProps.cordashell[this.props.context]) {
       while (this.xtermRef.current && this.xtermRef.current.lastElementChild) {
         this.xtermRef.current.removeChild(this.xtermRef.current.lastElementChild);
       }
@@ -58,12 +56,8 @@ class Shell extends Component {
   }
 
   render() {
-    const { context } = this.props;
     return (
       <div className="LogContainer">
-        <ul>
-          {context}
-        </ul>
         <div ref={this.xtermRef} className="xtermContainer"></div>
       </div>
     );
@@ -72,6 +66,5 @@ class Shell extends Component {
 
 export default connect(
   Shell,
-  "config",
   "cordashell"
 );
