@@ -206,11 +206,8 @@ class Corda {
       }
       shell.connect(true).then(() => {
         this._shellConnectResolver(shell);
-        shell.onData( data => {
-          this._io.sendSSHData({
-            node: this.entity.safeName,
-            data: data.toString("utf-8")
-          });
+        shell.onData(data => {
+          this._io.sendSSHData({ node, data });
         });
         ipcMain.on("xtermData", this.handleXtermData);
         shell.on("close", () => {
