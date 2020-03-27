@@ -49,6 +49,8 @@ class FlavorRoutes extends Component {
           component={EventDetailsScreen}
         />
         <Route path="/notfound" component={NotFoundScreen} />
+        
+        <Route path="/config/corda/:activeTab?" component={ConfigScreen} />
         <Route path="/config/:activeTab?" component={ConfigScreen} />
 
         <Route exact path="/corda">
