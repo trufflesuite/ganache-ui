@@ -10,7 +10,7 @@ class CordAppLink extends PureComponent {
   render() {
     const cordapp = this.props.cordapp;
     const workspace = this.props.workspace;
-    const nodes = workspace.nodes.filter(node => node.cordapps.includes(cordapp));
+    const nodes = [...workspace.nodes, ...workspace.notaries].filter(node => (node.cordapps || []).includes(cordapp));
     const length = nodes.length;
     return (
       <Link to={`/corda/cordapps/${btoa(cordapp)}`} className="DataRow corda-cordapp-link">

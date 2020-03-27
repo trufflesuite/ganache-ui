@@ -272,8 +272,11 @@ class Corda {
 
       this.status = "started";
       this.shuttingDown = false;
+
+      await this.ssh.exec("output-format", ["set", "json"]);
+      this.entity.cordaDiagnosticInfo = await this.ssh.exec("run", ["nodeDiagnosticInfo"]);
       resolve(conn);
-    } catch (e) {
+    } catch(e) {
       await this.stop(true);
       reject(e);
     }

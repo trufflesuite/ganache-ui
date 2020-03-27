@@ -37,7 +37,8 @@ class Cordapp extends Component {
   }
 
   getNodes(){
-    return this.props.config.settings.workspace.nodes.filter(node => node.cordapps.includes(this.state.cordapp))
+    const workspace = this.props.config.settings.workspace;
+    return [...workspace.nodes, ...workspace.notaries].filter(node => (node.cordapps || []).includes(this.state.cordapp));
   }
 
   async refresh() {
