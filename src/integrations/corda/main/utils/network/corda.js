@@ -218,12 +218,17 @@ class Corda {
     return true;
   }
 
-  async handlePortBindError(data) {
+  async handlePortBindError() {
     const reject = this._awaiter.reject;
     
     this.java.off("close", this.earlyCloseHandler);
     this.stop(true).then(() => {
-      reject(new Error(data.toString().trim()));
+      const error = new Error("There was a port issue!");
+      error.code = "CUSTOMERROR";
+      error.tab = "nodes";
+      error.key = "nodes.nodeConfig";
+      error.value = "Could not start Corda nodes - a port is already in use. Fix conflict or edit node configuration before restarting.";
+      reject(error);
     })
     return true;
   }
