@@ -28,12 +28,18 @@ module.exports = (POSTGRES_PATH) => {
         database,
         port
       });
+      // swallow errors because we're (probably) just shutting down:
+      pool.on("error", console.log);
       postgres.pools.set(key, pool);
     } else {
       pool = postgres.pools.get(key);
     }
     
-    return pool.connect();
+    return pool.connect().then(client => {
+      // swallow errors because we're (probably) just shutting down:
+      client.on("error", console.log);
+      return client;
+    });
   }
 
   async function initSchema(port, schemaNames) {
@@ -129,8 +135,6 @@ module.exports = (POSTGRES_PATH) => {
       } catch(e) {
         // if we are here it just means we don't have a db connected yet or we just can't connect to the database
         // that is running on this port :-/
-        // eslint-disable-next-line no-console
-        console.log(e);
       }
       finally {
         client && client.release();
