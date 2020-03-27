@@ -85,13 +85,13 @@ class IntegrationManager extends EventEmitter {
 
   async startChain() {
     if (this.flavor) {
-      await this.flavor.start();
+      return this.flavor.start();
     }
   }
 
   async stopChain() {
     if (this.flavor) {
-      await this.flavor.stop();
+      return this.flavor.stop();
     }
   }
 
@@ -104,8 +104,10 @@ class IntegrationManager extends EventEmitter {
         this.workspace.settings.setAll(settings);
   
         this.emit("server-started");
+        return true;
       } catch (e) {
-        this.emit('error', e);
+        this.emit("error", e);
+        return false;
       }
     }
   }
