@@ -210,6 +210,10 @@ class Corda {
           this._io.sendSSHData({ node, data });
         });
         ipcMain.on("xtermData", this.handleXtermData);
+        shell.on("error", (e) => {
+          // swallow errors because we're (probably) just shutting down:
+          console.log(e);
+        });
         shell.on("close", () => {
           ipcMain.removeListener(SSH_RESIZE, this.handleSshResize);
           ipcMain.removeListener("xtermData", this.handleXtermData);
