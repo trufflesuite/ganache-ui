@@ -89,6 +89,9 @@ class Corda {
    * @param {*} failedStartup set to `true` if stop should be called without waiting for startup.
    */
   async stop(failedStartup = false) {
+    // make sure us stopping a node early doesn't trigger an early close error
+    this.java && this.java.off("earlyCloseHandler", this.earlyCloseHandler);
+
     // if we are currently starting up, wait for that to finish before attempting to stop
     if (!failedStartup && this.status === "starting") {
       await this._startPromise
@@ -149,7 +152,7 @@ class Corda {
         if (this.shell) {
           await this.shell.disconnect();
         }
-        this.ssh.gracefulShutdown(this.kill);
+        this.ssh.gracefulShutdown(this.kill.bind(this, java));
       } else {
         // somehow we got here without an ssh connection, which is weird, but
         // technically possible if we DID have a connection that soon failed.
@@ -232,6 +235,7 @@ class Corda {
           this._shellProm.then(shell => shell && shell.resize(this.shellDimensions));
         }
       }).catch((reason) => {
+        // eslint-disable-next-line no-console
         console.log(reason);
       });
     }
@@ -285,11 +289,21 @@ class Corda {
 
   async handlePortBindError(data) {
     const reject = this._awaiter.reject;
+     // We're goin to reject soon enough.
+     // so make rejection a `noop` if anything else fails before we do
+    this._awaiter.reject = noop;
     
     this.java.off("close", this.earlyCloseHandler);
-    this.stop(true).then(() => {
-      reject(new Error(data.toString().trim()));
-    })
+    this
+      .stop(true)
+      .catch(noop).then(() => {
+        const error = new Error("There was a port issue!");
+        error.code = "CUSTOMERROR";
+        error.tab = "nodes";
+        error.key = "nodes.nodeConfig";
+        error.value = `Could not start Corda node ${this.entity.safeName} - a port is already in use. Fix conflict or edit node configuration before restarting. Details: \n${data.toString().trim()}`;
+        reject(error);
+      });
     return true;
   }
 }

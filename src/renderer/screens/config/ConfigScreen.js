@@ -76,10 +76,14 @@ class ConfigScreen extends PureComponent {
   }
 
   initActiveIndex = () => {
-    if ("params" in this.props && "activeTab" in this.props.match.params) {
+    if ("params" in this.props.match && "activeTab" in this.props.match.params) {
       const TABS = this.state.TABS
       for (let i = 0; i < TABS.length; i++) {
-        if (TABS[i].subRoute === this.props.match.params.activeTab) {
+        // Get the tab name, no matter if the subroute has a flavor prefix.
+        let subRoute = TABS[i].subRoute;
+        let tabName = subRoute.substring(subRoute.indexOf("/") + 1);
+
+        if (tabName === this.props.match.params.activeTab) {
           // eslint-disable-next-line react/no-direct-mutation-state
           this.state.activeIndex = i;
           break;
