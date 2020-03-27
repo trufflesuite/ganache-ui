@@ -98,11 +98,15 @@ class IntegrationManager extends EventEmitter {
   async startServer() {
     if (this.flavor && this.workspace) {
       const settings = this.workspace.settings.getAll();
-      await this.flavor.startServer(settings, this.workspace.workspaceDirectory);
-      // just incase startServer mutates the settings (corda does), save them
-      this.workspace.settings.setAll(settings);
-
-      this.emit("server-started");
+      try {
+        await this.flavor.startServer(settings, this.workspace.workspaceDirectory);
+        // just incase startServer mutates the settings (corda does), save them
+        this.workspace.settings.setAll(settings);
+  
+        this.emit("server-started");
+      } catch (e) {
+        this.emit('error', e);
+      }
     }
   }
 
