@@ -91,6 +91,9 @@ class Corda {
    * @param {*} failedStartup set to `true` if stop should be called without waiting for startup.
    */
   async stop(failedStartup = false) {
+    // make sure us stopping a node early doesn't trigger an early close error
+    this.java && this.java.off("earlyCloseHandler", this.earlyCloseHandler);
+
     // if we are currently starting up, wait for that to finish before attempting to stop
     if (!failedStartup && this.status === "starting") {
       await this._startPromise
@@ -218,18 +221,23 @@ class Corda {
     return true;
   }
 
-  async handlePortBindError() {
+  async handlePortBindError(data) {
     const reject = this._awaiter.reject;
+     // We're goin to reject soon enough.
+     // so make rejection a `noop` if anything else fails before we do
+    this._awaiter.reject = noop;
     
     this.java.off("close", this.earlyCloseHandler);
-    this.stop(true).then(() => {
-      const error = new Error("There was a port issue!");
-      error.code = "CUSTOMERROR";
-      error.tab = "nodes";
-      error.key = "nodes.nodeConfig";
-      error.value = "Could not start Corda nodes - a port is already in use. Fix conflict or edit node configuration before restarting.";
-      reject(error);
-    })
+    this
+      .stop(true)
+      .catch(noop).then(() => {
+        const error = new Error("There was a port issue!");
+        error.code = "CUSTOMERROR";
+        error.tab = "nodes";
+        error.key = "nodes.nodeConfig";
+        error.value = `Could not start Corda node ${this.entity.safeName} - a port is already in use. Fix conflict or edit node configuration before restarting. Details: \n${data.toString().trim()}`;
+        reject(error);
+      });
     return true;
   }
 }

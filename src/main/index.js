@@ -482,11 +482,11 @@ app.on('ready', () => {
     );
 
     startupMode = STARTUP_MODE.NORMAL;
-    await integrations.startServer();
-
-    // this sends the network interfaces to the renderer process for
-    //  enumering in the config screen. it sends repeatedly
-    continuouslySendNetworkInterfaces();
+    if (await integrations.startServer()){
+      // this sends the network interfaces to the renderer process for
+      //  enumering in the config screen. it sends repeatedly
+      continuouslySendNetworkInterfaces();
+    }
   });
 
   ipcMain.on(OPEN_NEW_WORKSPACE_CONFIG, async (_event, flavor = "ethereum") => {
@@ -529,7 +529,9 @@ app.on('ready', () => {
 
     if (flavor === "ethereum") {
       await integrations.startChain();
-      await integrations.startServer();
+      if (!(await integrations.startServer())) {
+        return;
+      }
     } else {
       if (workspace) {
         const globalSettings = global.getAll();
@@ -617,10 +619,10 @@ app.on('ready', () => {
 
       startupMode = STARTUP_MODE.NORMAL;
 
-      await integrations.startServer();
-
-      // send the interfaces again once on restart
-      sendNetworkInterfaces();
+      if (await integrations.startServer()){
+        // send the interfaces again once on restart
+        sendNetworkInterfaces();
+      }
     }
   });
 
