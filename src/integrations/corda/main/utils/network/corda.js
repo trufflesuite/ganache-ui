@@ -187,6 +187,9 @@ class Corda {
       })
       this.ssh = ssh;
       this.status = "started";
+
+      await ssh.exec("output-format", ["set", "json"]);
+      this.entity.cordaDiagnosticInfo = await ssh.exec("run", ["nodeDiagnosticInfo"]);
       resolve(ssh);
     } catch(e) {
       await this.stop(true);

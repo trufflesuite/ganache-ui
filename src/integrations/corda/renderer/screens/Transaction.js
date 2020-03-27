@@ -7,6 +7,10 @@ import { Link } from "react-router-dom";
 import TransactionData from "../transaction-data";
 import { CancellationToken } from "./utils";
 import { setToast } from "../../../../common/redux/network/actions";
+// import { basename } from "path"
+
+// this is taken from braid
+// const VERSION_REGEX = /^(.*?)(?:-(?:(?:\d|\.)+))\.jar?$/;
 
 const IGNORE_FIELDS = new Set(["@class", "participants"]);
 
@@ -26,7 +30,7 @@ class Transaction extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {selectedIndex: null, transaction: null, attachments: null, inputs: null, commands: null};
+    this.state = {selectedIndex: null, transaction: null, attachments: null, inputs: null, commands: null, cordapps: null};
   }
 
   componentWillUnmount() {
@@ -45,7 +49,7 @@ class Transaction extends Component {
     } else if (prevProps.match.params.txhash !== this.props.match.params.txhash) {
       // if the txhash has changed we first want to trigger the loading screen
       // by getting rid of the current `transaction` then we need to refresh our data
-      this.setState({selectedIndex: null, transaction: null, attachments: null, inputs: null, commands: null}, this.refresh.bind(this));
+      this.setState({selectedIndex: null, transaction: null, attachments: null, inputs: null, commands: null, cordapps: null}, this.refresh.bind(this));
     }
   }
 
@@ -55,8 +59,6 @@ class Transaction extends Component {
   }
 
   async refresh() {
-    // I not ready to commit to redux thunks for this stuff just yet
-    // so a little async canceller will have to do
     this.refresher.cancel();
 
     let canceller = this.refresher.getCanceller();
@@ -87,7 +89,7 @@ class Transaction extends Component {
         }}])
       )});
 
-      const promises = details.inputs.map(async (inState, index) => {
+      const statePromises = details.inputs.map(async (inState, index) => {
         const transaction = new TransactionData(TransactionData.convertTransactionIdToHash(inState.txhash));
         // TODO: this gets too much data... we only care about the single index,
         // not all of them. Also, we may be able to batch the requests by transaction
@@ -98,8 +100,100 @@ class Transaction extends Component {
         const txStates = transaction.states;
         return [index, txStates.get(inState.index)];
       });
-      const inputs = new Map(await Promise.all(promises));
-      this.setState({inputs});
+      Promise.all(statePromises).then(results => {
+        const inputs = new Map(results);
+        this.setState({inputs});
+      })
+
+      // const workspace = this.props.config.settings.workspace;
+      // const projects = workspace.projects;
+      // const braidNames = new Map();
+
+
+      // TODO:
+      // Compute the SHA256 hash of each `project` in `workspace.projects`
+      // query ssh for run nodeDiagnosticInfo
+      //   * get the "jarHash" for each Contract
+      // query postgres for public.node_attachments_contracts by "jarHash" from above
+      //   * get the `contract_class_name` value
+      // Truncate each command in `details.command` at the first "$", then match
+      //   the value against the `contract_class_name` from above.
+      // Use the mapping from "jarHash" -> command -> "contract_class_name" to find
+      //   the the matching project hash in `workspace.projects`
+      // You've found the originating contract involved in this TX!
+      // EZPZ.
+
+
+
+
+      // const txFlows = details.commands.map(command => command.value["@class"].replace(/\$/g, "_"));
+      // projects.filter(project => project != undefined).forEach(cordapp => {
+      //   braidNames.set(VERSION_REGEX.exec(basename(cordapp))[1], cordapp);
+      // });
+      // const allNodes = [...workspace.nodes, ...workspace.notaries];
+      // Promise.all(allNodes.map(node => {
+      //   return fetch(`https://localhost:${node.braidPort}/api/rest/cordapps`).then(r => r.json())
+      //     .then(array => {
+      //       if (Array.isArray(array)) return {node, array};
+      //       return {node, array :[]};
+      //     });
+      // })).then(results => {
+      //   const uniqueCordapps = new Map();
+      //   results.forEach(r =>{
+      //     r.array
+      //       .filter(value => braidNames.has(value))
+      //       .forEach(value => {
+      //         uniqueCordapps.set(value, r.node);
+      //       });
+      //   });
+      //   const cordappPromises = [];
+      //   uniqueCordapps.forEach((node, cordapp) => {
+      //     // TODO: replace with parsing swagger.json
+      //     // we need to look for the "command" in the `components.schemas` of
+      //     // this JSON
+      //     const req = fetch(`https://localhost:${node.braidPort}/swagger.json`)
+      //       .then(r => r.json())
+      //       .then(swagger => {
+      //           if (swagger && swagger.components && Array.isArray(swagger.components.schemas)){
+      //             return {cordapp, schemas: swagger.components.schemas};
+      //           } else {
+      //             return {cordapp, schemas: []};
+      //           }
+      //         })
+      //     // const req = fetch(`https://localhost:${node.braidPort}/api/rest/cordapps/${cordapp}/flows`).then(r => r.json())
+      //     //   .then(array => {
+      //     //     if (Array.isArray(array)) return {cordapp, array};
+      //     //     return {cordapp, array: []};
+      //     //   });
+      //     cordappPromises.push(req);
+      //   });
+      //   return Promise.all(cordappPromises);
+      // })
+      // .then(schemases => {
+      //   const uniques = new Set();
+      //   schemases.forEach(({cordapp, schemas}) => {
+
+      //     let txFlow;
+      //     do {
+      //       txFlow = txFlows.pop();
+      //     } while(txFlow);
+      //   }).map(({cordapp}) => {
+      //     return braidNames.get(cordapp);
+      //   }));
+      // }).then(cordapps => {
+      //   this.setState({cordapps});
+      // })
+        
+      // }).then(cordappsInfos => {
+      //   return new Set(cordappsInfos.filter(({array}) => {
+      //     console.log(txFlows, array);
+      //     return txFlows.some(flow => array.includes(flow));
+      //   }).map(({cordapp}) => {
+      //     return braidNames.get(cordapp);
+      //   }));
+      // }).then(cordapps => {
+      //   this.setState({cordapps});
+      // })
     });
   }
 
@@ -281,6 +375,17 @@ class Transaction extends Component {
             <div>
               <h3 className="Label">Timestamp</h3>
               <div>{transaction.earliestRecordedTime.toString()}</div>
+            </div>
+          </div>
+          <div className="DataRow corda-details-section corda-transaction-details-info">
+            <div>
+              <h3 className="Label">Cordapps</h3>
+              <div>{
+                !this.state.cordapps ? "" :
+                  [...this.state.cordapps].map(cordapp => {
+                    return <div key={cordapp}>{cordapp}</div>
+                  })
+              }</div>
             </div>
           </div>
 
