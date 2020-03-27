@@ -225,6 +225,11 @@ class NodesScreen extends Component {
         <section>
           <p>Note: Recommended maximum number of Nodes + Notaries for your current hardware is {Math.min(ARBITRARY_MAXIMUM_NODES, Math.max(3, navigator.hardwareConcurrency - 2))}.</p>
           <br />
+          {this.props.config.validationErrors["nodes.nodeConfig"] && (
+            <p className="ValidationError">
+              {this.props.config.validationErrors["nodes.nodeConfig"]}
+            </p>
+          )}
           <div className="WorkspaceProjects">
             <div className="projectItemContainer">
               {
