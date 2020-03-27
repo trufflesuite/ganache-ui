@@ -68,7 +68,8 @@ class Nodes extends Component {
         },
         length: 200,
         selectionWidth: 0,
-        width: 2
+        width: 2,
+        smooth: true
       },
       physics: {
         stabilization: {
@@ -77,7 +78,6 @@ class Nodes extends Component {
           updateInterval: 25
         }
       },
-      smoothCurves: true,
       nodes : {
         shape: 'dot',
         size: 25,
