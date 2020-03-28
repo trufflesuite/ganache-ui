@@ -46,11 +46,26 @@ class Cordapp extends Component {
 
     let canceller = this.refresher.getCanceller();
 
-    const workspace = this.props.config.settings.workspace;
+    const cordapp = this.state.cordapp;
+    const settings = this.props.config.settings
+    const workspace = settings.workspace;
+    const port = workspace.postgresPort;
     const nodes = workspace.nodes;    
+    const cordappHashMap = workspace.cordappHashMap;
     const filteredNodes = this.getNodes();
-    const transactions = await TransactionData.getAllTransactions(filteredNodes, nodes, workspace.postgresPort, canceller);
+    const allTransactions = await TransactionData.getAllTransactions(filteredNodes, nodes, port, canceller);
     if (canceller.cancelled) return;
+    await Promise.all(allTransactions.map(tx => {
+      return tx.fetchDetails(nodes, port, cordappHashMap).then(details => {
+        tx.details = details;
+      })
+    }));
+    const transactions = allTransactions.filter(({details}) => {
+      if (details && details.commands && details.commands.length) {
+        return details.commands.some(({contractFile}) => contractFile.includes(cordapp));
+      }
+      return false;
+    });
     this.setState({transactions});
   }
 

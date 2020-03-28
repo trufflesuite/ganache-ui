@@ -7,10 +7,7 @@ import { Link } from "react-router-dom";
 import TransactionData from "../transaction-data";
 import { CancellationToken } from "./utils";
 import { setToast } from "../../../../common/redux/network/actions";
-// import { basename } from "path"
-
-// this is taken from braid
-// const VERSION_REGEX = /^(.*?)(?:-(?:(?:\d|\.)+))\.jar?$/;
+import ContractsIcon from "../../../../renderer/icons/contract-icon.svg";
 
 const IGNORE_FIELDS = new Set(["@class", "participants"]);
 
@@ -63,6 +60,7 @@ class Transaction extends Component {
 
     let canceller = this.refresher.getCanceller();
     
+    const cordappHashMap = this.props.config.settings.workspace.cordappHashMap;
     const port = this.props.config.settings.workspace.postgresPort;
     const nodes = this.props.config.settings.workspace.nodes;
     const txhash = this.props.match.params.txhash;
@@ -72,7 +70,7 @@ class Transaction extends Component {
       if (canceller.cancelled) return;
       this.setState({transaction});
     });
-    transaction.fetchDetails(nodes, port, false, canceller).then(async details => {
+    transaction.fetchDetails(nodes, port, cordappHashMap).then(async details => {
       if (canceller.cancelled) return;
       // we don't want to render attachments before the transaction is rendered...
       await updaterProm;
@@ -104,96 +102,6 @@ class Transaction extends Component {
         const inputs = new Map(results);
         this.setState({inputs});
       })
-
-      // const workspace = this.props.config.settings.workspace;
-      // const projects = workspace.projects;
-      // const braidNames = new Map();
-
-
-      // TODO:
-      // Compute the SHA256 hash of each `project` in `workspace.projects`
-      // query ssh for run nodeDiagnosticInfo
-      //   * get the "jarHash" for each Contract
-      // query postgres for public.node_attachments_contracts by "jarHash" from above
-      //   * get the `contract_class_name` value
-      // Truncate each command in `details.command` at the first "$", then match
-      //   the value against the `contract_class_name` from above.
-      // Use the mapping from "jarHash" -> command -> "contract_class_name" to find
-      //   the the matching project hash in `workspace.projects`
-      // You've found the originating contract involved in this TX!
-      // EZPZ.
-
-
-
-
-      // const txFlows = details.commands.map(command => command.value["@class"].replace(/\$/g, "_"));
-      // projects.filter(project => project != undefined).forEach(cordapp => {
-      //   braidNames.set(VERSION_REGEX.exec(basename(cordapp))[1], cordapp);
-      // });
-      // const allNodes = [...workspace.nodes, ...workspace.notaries];
-      // Promise.all(allNodes.map(node => {
-      //   return fetch(`https://localhost:${node.braidPort}/api/rest/cordapps`).then(r => r.json())
-      //     .then(array => {
-      //       if (Array.isArray(array)) return {node, array};
-      //       return {node, array :[]};
-      //     });
-      // })).then(results => {
-      //   const uniqueCordapps = new Map();
-      //   results.forEach(r =>{
-      //     r.array
-      //       .filter(value => braidNames.has(value))
-      //       .forEach(value => {
-      //         uniqueCordapps.set(value, r.node);
-      //       });
-      //   });
-      //   const cordappPromises = [];
-      //   uniqueCordapps.forEach((node, cordapp) => {
-      //     // TODO: replace with parsing swagger.json
-      //     // we need to look for the "command" in the `components.schemas` of
-      //     // this JSON
-      //     const req = fetch(`https://localhost:${node.braidPort}/swagger.json`)
-      //       .then(r => r.json())
-      //       .then(swagger => {
-      //           if (swagger && swagger.components && Array.isArray(swagger.components.schemas)){
-      //             return {cordapp, schemas: swagger.components.schemas};
-      //           } else {
-      //             return {cordapp, schemas: []};
-      //           }
-      //         })
-      //     // const req = fetch(`https://localhost:${node.braidPort}/api/rest/cordapps/${cordapp}/flows`).then(r => r.json())
-      //     //   .then(array => {
-      //     //     if (Array.isArray(array)) return {cordapp, array};
-      //     //     return {cordapp, array: []};
-      //     //   });
-      //     cordappPromises.push(req);
-      //   });
-      //   return Promise.all(cordappPromises);
-      // })
-      // .then(schemases => {
-      //   const uniques = new Set();
-      //   schemases.forEach(({cordapp, schemas}) => {
-
-      //     let txFlow;
-      //     do {
-      //       txFlow = txFlows.pop();
-      //     } while(txFlow);
-      //   }).map(({cordapp}) => {
-      //     return braidNames.get(cordapp);
-      //   }));
-      // }).then(cordapps => {
-      //   this.setState({cordapps});
-      // })
-        
-      // }).then(cordappsInfos => {
-      //   return new Set(cordappsInfos.filter(({array}) => {
-      //     console.log(txFlows, array);
-      //     return txFlows.some(flow => array.includes(flow));
-      //   }).map(({cordapp}) => {
-      //     return braidNames.get(cordapp);
-      //   }));
-      // }).then(cordapps => {
-      //   this.setState({cordapps});
-      // })
     });
   }
 
@@ -331,7 +239,13 @@ class Transaction extends Component {
       commands = (<div>No commands</div>);
     } else {
       commands = this.state.commands.map((command, i) => {
-        return (<div style={{marginBottom:".5em"}} key={"command" + command.value["@class"] + i}>{command.value["@class"].split(".").map(d=>(<>{d}<div style={{display:"inline-block"}}>.</div></>))}</div>);
+        let link = "";
+        if (command.contractFile) {
+          link = (<Link title={command.contractFile} to={`/corda/cordapps/${btoa(command.contractFile)}`} style={{marginLeft:".25rem"}}><ContractsIcon style={{width:"18px", height:"18px", "color": "#333"}}/></Link>);
+        }
+        return (<div style={{marginBottom:".5em"}} key={"command" + command.value["@class"] + i}>
+          {command.value["@class"].split(".").map(d=>(<>{d}<div style={{display:"inline-block"}}>.</div></>))}
+        {link}</div>);
       });
     }
 

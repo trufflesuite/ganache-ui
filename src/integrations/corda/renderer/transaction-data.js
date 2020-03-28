@@ -112,7 +112,7 @@ export default class TransactionData {
     }
   }
 
-  async fetchDetails(){
+  async fetchDetails(nodes, port, cordappHashMap) {
     const txhash = this.txhash;
 
     // get the data that knows about attachments
@@ -134,6 +134,39 @@ export default class TransactionData {
       }
       if (!rawTransactionData.wire.inputs) {
         rawTransactionData.wire.inputs = [];
+      }
+      const wire = rawTransactionData.wire;
+      const commandClasses = wire.commands.map(command => {
+        return command && command.value ? command.value["@class"].split("$")[0] : null;
+      });
+
+      if (commandClasses.length) {
+        const hashes = [];
+        await Promise.all(nodes.map(async node => {
+          const client = await getConnectedClient(node.safeName, port);
+          try {
+            const result = await client.query("SELECT att_id AS hash, contract_class_name AS name FROM node_attachments_contracts WHERE contract_class_name = ANY($1::text[])", [commandClasses.filter(c => c !== null)])
+            if (result.rows.length) {
+              result.rows.forEach(row => {
+                if (hashes.some(({hash, name}) => row.hash === hash && row.name === name)){
+                  return;
+                }
+                hashes.push(row);
+              });
+            }
+          } finally {
+            client.release();
+          }
+        }));
+        commandClasses.forEach((commandClass, i) => {
+          hashes
+            .filter(({name}) => commandClass === name)
+            .map(({hash}) => cordappHashMap[hash])
+            .filter(file => file != null)
+            .forEach(file => {
+              wire.commands[i].contractFile = file;
+            });
+        });
       }
       return rawTransactionData.wire;
     }
