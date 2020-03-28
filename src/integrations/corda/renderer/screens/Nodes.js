@@ -68,8 +68,7 @@ class Nodes extends Component {
         },
         length: 200,
         selectionWidth: 0,
-        width: 2,
-        smooth: true
+        width: 2
       },
       physics: {
         stabilization: {
