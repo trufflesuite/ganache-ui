@@ -8,10 +8,11 @@ const noop = () => {};
 
 
 class Corda {
-  constructor(entity, path, JAVA_HOME, io) {
+  constructor(entity, path, JAVA_HOME, CORDA_JAR, io) {
     this.entity = entity;
     this.path = path;
     this.JAVA_HOME = JAVA_HOME;
+    this.CORDA_JAR = CORDA_JAR;
     this.java = null;
     this._io = io;
     this.ssh = null;
@@ -30,7 +31,7 @@ class Corda {
     this._dataHandler.addOutHandler('" started up and registered in ', this.handleStartUp.bind(this))
 
     this._javaPath = join(this.JAVA_HOME, "bin", "java");
-    this._args = ["-jar", join(this.path, "corda.jar"), "--no-local-shell", "--log-to-console"]
+    this._args = ["-jar", this.CORDA_JAR, "--base-directory", this.path, "--no-local-shell", "--log-to-console"]
     this._opts = {
       cwd: this.path,
       env: null

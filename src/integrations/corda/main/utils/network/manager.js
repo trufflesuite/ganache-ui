@@ -74,14 +74,15 @@ class NetworkManager extends EventEmitter {
       // each individual file that is downloaded is a singleton, returning the
       // same promise for each file request, or it just resolves immediately if
       // the file is already downloaded
-      this._downloadPromise = this.config.corda.downloadAll();
+      this._downloadPromise = this.config.corda.downloadRequired();
       const chainDataDir = await this.chaindataDirectory;
 
       const BRAID_HOME = this.config.corda.files.braidServer.download();
       const POSTGRES_HOME = this.config.corda.files.postgres.download();
+      const POSTGRES_DRIVER = this.config.corda.files.postgresDriver.download();
       this._io.sendProgress("Writing configuration files...");
       const cordaBootstrap = new CordaBootstrap(chainDataDir, this._io);
-      const { nodesArr, notariesArr } = await cordaBootstrap.writeConfig(nodes, notaries, postgresPort);
+      const { nodesArr, notariesArr } = await cordaBootstrap.writeConfig(nodes, notaries, postgresPort, await POSTGRES_DRIVER);
       if (this.cancelled) return;
       this.nodes = nodesArr;
       this.notaries = notariesArr;
@@ -247,7 +248,8 @@ class NetworkManager extends EventEmitter {
         entity.braidPort = await this.getPort(entity.rpcPort + 10000);
         if (this.cancelled) return;
         const braidPromise = this.braid.start(entity, currentPath, JAVA_HOME);
-        const corda = new Corda(entity, currentPath, JAVA_HOME, this._io);
+        const CORDA_HOME = await this.config.corda.files[`corda${entity.version || "4_4"}`].download();
+        const corda = new Corda(entity, currentPath, JAVA_HOME, CORDA_HOME, this._io);
         this.processes.push(corda);
         const cordaProm = corda.start().then(() => {
           this._io.sendProgress(`Corda node ${++startedNodes}/${entities.length} online...`);

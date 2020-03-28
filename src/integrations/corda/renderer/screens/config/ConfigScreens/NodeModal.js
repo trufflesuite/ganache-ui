@@ -66,6 +66,7 @@ export class NodeModal extends Component {
         </label>
       )
     });
+    const unsavedNodeVersionNum = parseFloat((this.props.data.node.version || "4_4").replace("_", "."));
     return (
       <Modal className="ErrorModal">
         <header>
@@ -73,6 +74,15 @@ export class NodeModal extends Component {
           <button onClick={this.props.closeModal}>×</button>
         </header>
         <section>
+          <label>
+            <span>Corda Version</span>
+            <select defaultValue={node.version || "4_4"} onChange={(e) => this.setState({node: {...this.state.node, "version": e.target.value }})}>
+              <option value="4_0" disabled={!canEditAll && unsavedNodeVersionNum > 4.0}>Corda 4.0</option>
+              <option value="4_1" disabled={!canEditAll && unsavedNodeVersionNum > 4.1}>Corda 4.1</option>
+              <option value="4_3" disabled={!canEditAll && unsavedNodeVersionNum > 4.3}>Corda 4.3</option>
+              <option value="4_4" disabled={!canEditAll && unsavedNodeVersionNum > 4.4}>Corda 4.4</option>
+            </select>
+          </label>
           <label>
             <span>Legal Name</span>
             <input type="text" disabled={canEditAll ? false : isEditing} onChange={(e) => {

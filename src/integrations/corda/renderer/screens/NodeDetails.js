@@ -312,7 +312,7 @@ class NodeDetails extends Component {
             &larr; Back
           </button>
           <h1 className="Title">
-            {node.name}
+            {node.name} (Corda {(node.version || "4_4").replace("_", ".")})
           </h1>
         </header>
         <main className="corda-details-container corda-node-details">

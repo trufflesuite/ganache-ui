@@ -1,6 +1,6 @@
 const {generate, templates} = require("../config");
-const { createWriteStream } = require("fs");
-const { join } = require("path");
+const { createWriteStream, appendFileSync } = require("fs");
+const { dirname, join } = require("path");
 const { spawn } = require('child_process');
 
 const waitForEvent = ( stream, event ) => new Promise( resolve  => {
@@ -18,7 +18,7 @@ class CordaBootstrap {
     this._io = io;
   }
 
-  async writeConfig(nodes, notaries, postgresPort) {
+  async writeConfig(nodes, notaries, postgresPort, POSTGRES_DRIVER) {
     const nodesArr = this.nodes = [];
     const notariesArr = this.notaries = [];
     
@@ -34,14 +34,19 @@ class CordaBootstrap {
         const current = arr[i];
         const name = `${current.safeName}`;
         out.push(current);
-        const stream = createWriteStream(join(this.workspaceDirectory, `${name}_node.conf`));
+        const path = join(this.workspaceDirectory, `${name}_node.conf`)
+        const stream = createWriteStream(path);
         const write = (val) => stream.write(`${val}\n`, "utf8");
         const mod = produceModifier(modifier, { write }, current);
         mod.postgres.schema = current.safeName;
         generate(template, mod);
         const close = waitForClose(stream).catch(console.log);
         stream.end();
+
+        // I can't figure out how to use this config generator to save my life.
+        // I'm just going to write what I want to the file here:
         await close;
+        appendFileSync(path, `jarDirs=["${dirname(POSTGRES_DRIVER)}"]`);
       }
     }
 
@@ -62,7 +67,7 @@ class CordaBootstrap {
     // java on the PATH is required for bootstrapper
     const spawnConfig = {env: {PATH: join(JAVA_HOME, "bin"), CAPSULE_CACHE_DIR: "./capsule"}, cwd: this.workspaceDirectory};
     this._io.sendProgress("Running Corda Network Bootstrapper...");
-    const java = spawn("java", ["-jar", CORDA_BOOTSTRAPPER, "--dir", this.workspaceDirectory], spawnConfig);
+    const java = spawn("java", ["-jar", CORDA_BOOTSTRAPPER, "--dir", this.workspaceDirectory, "--minimum-platform-version", "1"], spawnConfig);
 
     var stderr = "";
     java.stderr.on('data', (data) => {

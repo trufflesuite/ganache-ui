@@ -383,7 +383,7 @@ app.on('ready', () => {
         flavor
       });
       try {
-        await extras.downloadAll(true);
+        await extras.downloadRequired(true);
         mainWindow.webContents.send(DOWNLOAD_EXTRAS, {
           status: "success",
           flavor
