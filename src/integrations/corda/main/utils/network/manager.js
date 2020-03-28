@@ -233,7 +233,6 @@ class NetworkManager extends EventEmitter {
   }
 
   async start() {
-    try {
       const chaindataDir = await this.chaindataDirectory;
       const entities = this.entities;
       this._io.sendProgress("Loading JRE...");
@@ -250,8 +249,7 @@ class NetworkManager extends EventEmitter {
         const braidPromise = this.braid.start(entity, currentPath, JAVA_HOME);
         const corda = new Corda(entity, currentPath, JAVA_HOME, this._io);
         this.processes.push(corda);
-        const cordaProm = corda.start();
-        cordaProm.then(() => {
+        const cordaProm = corda.start().then(() => {
           this._io.sendProgress(`Corda node ${++startedNodes}/${entities.length} online...`);
         });
         await Promise.all([cordaProm, braidPromise]);
@@ -263,18 +261,13 @@ class NetworkManager extends EventEmitter {
           .then(self => self.legalIdentities[0].owningKey);
       });
 
-      await Promise.all(promises);
-      if (this.cancelled) return;
+    await Promise.all(promises);
+    if (this.cancelled) return;
 
-      // _downloadPromise was started long ago, we just need to make sure all
-      //  deps are downloaded before we start up.
-      this._io.sendProgress(`Downloading remaining Corda dependencies...`, 0);
-      this.blobInspector = new BlobInspector(JAVA_HOME, await this.config.corda.files.blobInspector.download());
-    } catch (e) {
-      await this.stop();
-      
-      throw e;
-    }
+    // _downloadPromise was started long ago, we just need to make sure all
+    //  deps are downloaded before we start up.
+    this._io.sendProgress(`Downloading remaining Corda dependencies...`, 0);
+    this.blobInspector = new BlobInspector(JAVA_HOME, await this.config.corda.files.blobInspector.download());
   }
 
   async stop() {

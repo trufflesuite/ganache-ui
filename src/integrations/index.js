@@ -85,24 +85,30 @@ class IntegrationManager extends EventEmitter {
 
   async startChain() {
     if (this.flavor) {
-      await this.flavor.start();
+      return this.flavor.start();
     }
   }
 
   async stopChain() {
     if (this.flavor) {
-      await this.flavor.stop();
+      return this.flavor.stop();
     }
   }
 
   async startServer() {
     if (this.flavor && this.workspace) {
       const settings = this.workspace.settings.getAll();
-      await this.flavor.startServer(settings, this.workspace.workspaceDirectory);
-      // just incase startServer mutates the settings (corda does), save them
-      this.workspace.settings.setAll(settings);
-
-      this.emit("server-started");
+      try {
+        await this.flavor.startServer(settings, this.workspace.workspaceDirectory);
+        // just incase startServer mutates the settings (corda does), save them
+        this.workspace.settings.setAll(settings);
+  
+        this.emit("server-started");
+        return true;
+      } catch (e) {
+        this.emit("error", e);
+        return false;
+      }
     }
   }
 
