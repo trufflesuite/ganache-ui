@@ -108,10 +108,6 @@ class Workspace {
     this.contractCache.setAll(this.contractCache.getAll());
   }
 
-  addProject(project) {
-    this.projects.push(project);
-  }
-
   delete() {
     try {
       fse.removeSync(this.workspaceDirectory);

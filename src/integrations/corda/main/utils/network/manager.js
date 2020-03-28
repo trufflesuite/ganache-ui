@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const temp = require("temp");
 const { promisify } = require("util");
 const mkdir = promisify(temp.mkdir);
@@ -96,7 +97,8 @@ class NetworkManager extends EventEmitter {
       this._io.sendProgress("Copying Cordapps...", 500);
       await Promise.all([
         this.postGresHooksPromise,
-        this.copyCordappsAndSetupNetwork()
+        this.copyCordappsAndSetupNetwork(),
+        this.hashCordapps()
       ]);
       if (this.cancelled) return;
       this._io.sendProgress("Configuring RPC Manager...");
@@ -106,6 +108,29 @@ class NetworkManager extends EventEmitter {
       if (this.cancelled) return;
       throw e;
     }
+  }
+
+  async hashCordapps(){   
+    const projects = this.settings.projects || [];
+    const cordappHashMap = this.settings.cordappHashMap || {};
+    const promises = projects.map((path) => {
+      return new Promise((resolve => {
+        const sha256 = crypto.createHash("sha256");
+        const fileStream = fse.ReadStream(path);
+        fileStream.on("data", (data) => {
+          sha256.update(data);
+        });
+        fileStream.on("end", () => {
+          const hash = sha256.digest("hex");
+          const htf = new Set(cordappHashMap[hash] || []);
+          htf.add(path);
+          cordappHashMap[hash.toUpperCase()] = [...htf];
+          resolve();
+        });
+      }));
+    });
+    await Promise.all(promises);
+    this.settings.cordappHashMap = cordappHashMap;
   }
 
   setupPostGresHooks() {
