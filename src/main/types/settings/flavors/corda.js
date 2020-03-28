@@ -39,5 +39,6 @@ module.exports = {
     "cordapps": [],
     "sshdPort": 11009
   }],
-  projects: []
+  projects: [],
+  cordappHashMap: {}
 };
