@@ -9,13 +9,19 @@ class Cordapps extends Component {
   }
 
   render() {
+    let cordapps;
+    const projects = this.props.config.settings.workspace.projects;
+    if (projects.length === 0) {
+      cordapps = (<div className="Waiting Waiting-Padded">No CorDapps</div>);
+    } else {
+      cordapps = projects.map(cordapp => {
+        return (<CordAppLink key={cordapp} cordapp={cordapp} workspace={this.props.config.settings.workspace}>{cordapp}</CordAppLink>);
+      });
+    }
+    
     return (
       <div className="Nodes DataRows">
-        <main>
-          {this.props.config.settings.workspace.projects.map(cordapp => {
-            return (<CordAppLink key={cordapp} cordapp={cordapp} workspace={this.props.config.settings.workspace}>{cordapp}</CordAppLink>);
-          })}
-        </main>
+        <main>{ cordapps }</main>
       </div>
     );
   }
