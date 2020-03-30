@@ -113,6 +113,7 @@ export class NodeModal extends Component {
                   return <option key={n.safeName} value={n.safeName}>{n.name}</option>
                 })}
               </select>
+              <em><small style={{color:"#666", margin: "-.9rem 0 .9rem", "display": "block"}}>{process.platform === "darwin" ? "Command ⌘" : "Ctrl"}+Click to select multiple</small></em>
             </label>
           </>)}
 
@@ -126,6 +127,7 @@ export class NodeModal extends Component {
                 return <option key={corDapp}>{corDapp}</option>
               })}
             </select>
+            <em><small style={{color:"#666", margin: "-.9rem 0 .9rem", "display": "block"}}>{process.platform === "darwin" ? "Command ⌘" : "Ctrl"}+Click to select multiple</small></em>
           </label>
           <footer>
             <button onClick={this.save}>Save</button>
