@@ -61,7 +61,7 @@ class Transaction extends Component {
       // allow the tabs to render what we do know while we fetch the remaining details
       // from the other nodes
       this.setState({inputs: new Map(
-        details.inputs.map((inState, index) => [index, {ref: {
+        details.inputs.map((inState, index) => [index + 1, {ref: {
           txhash: TransactionData.convertTransactionIdToHash(inState.txhash),
           index: inState.index
         }}])
@@ -76,7 +76,7 @@ class Transaction extends Component {
         await transaction.update(nodes, port, canceller);
         if (canceller.cancelled) return;
         const txStates = transaction.states;
-        return [index, txStates.get(inState.index)];
+        return [index + 1, txStates.get(inState.index)];
       });
       Promise.all(statePromises).then(results => {
         const inputs = new Map(results);

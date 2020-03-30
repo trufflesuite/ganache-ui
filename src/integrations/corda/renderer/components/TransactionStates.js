@@ -92,13 +92,13 @@ class TransactionStates extends Component {
         tabs.push(<div key={"tab_button_" + type + "_loading"} style={{order: 9999999, cursor: "wait"}} ref={"tab_button_" + type + "_loading"} className="corda-tab Label">Loading {type} States...</div>);
         return;
       }
-      for (let [, state] of states) {
+      for (let [index, state] of states) {
         const key = state.ref.txhash + state.ref.index;
         if (selectedIndex === null) {
           selectedIndex = key;
         }
-        const order = (type==="Input" ? 1000 : 0) + state.ref.index;
-        tabs.push(<div key={"tab_button_" + key} style={{order}} ref={"tab_button_" + key} onClick={this.setState.bind(this, {selectedIndex: key}, undefined)} className={(selectedIndex === key ? "corda-tab-selected" : "") + " corda-tab Label"}>{type} State {state.ref.index}</div>);
+        const order = (type==="Input" ? 1000 : 0) + index;
+        tabs.push(<div key={"tab_button_" + key} style={{order}} ref={"tab_button_" + key} onClick={this.setState.bind(this, {selectedIndex: key}, undefined)} className={(selectedIndex === key ? "corda-tab-selected" : "") + " corda-tab Label"}>{type} State {index}</div>);
         if (selectedIndex !== key) continue;
         if (!state.state) {
           selectedState = (<div className="Waiting Waiting-Padded">Loading State...</div>);
