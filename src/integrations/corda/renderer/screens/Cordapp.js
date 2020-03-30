@@ -128,9 +128,13 @@ class Cordapp extends Component {
             <h3 className="Label">Installed On</h3>
             <div className="Nodes DataRows">
               <main>
-                {nodes.map(node => {
-                  return (<NodeLink key={`node-${node.safeName}`} postgresPort={this.props.config.settings.workspace.postgresPort} node={node} />);
-                })}
+                {
+                  nodes.length === 0
+                    ? (<div className="Waiting Waiting-Padded">Not Installed</div>)
+                    : nodes.map(node => {
+                      return (<NodeLink key={`node-${node.safeName}`} postgresPort={this.props.config.settings.workspace.postgresPort} node={node} />);
+                    })
+                }
               </main>
             </div>
           </div>
