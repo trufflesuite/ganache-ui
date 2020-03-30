@@ -168,7 +168,7 @@ export default class TransactionData {
             });
         });
       }
-      return rawTransactionData.wire;
+      return wire;
     }
     return [];
   }
