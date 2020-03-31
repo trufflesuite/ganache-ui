@@ -66,7 +66,6 @@ class NetworkManager extends EventEmitter {
       this.chaindataDirectory = Promise.resolve(dir);
     }
 
-    this.cordappQueue = [];
     this.nodes = [];
     this.notaries = [];
     this.processes = [];
@@ -191,35 +190,17 @@ class NetworkManager extends EventEmitter {
   addCordappListeners(){
     if (this.allCordapps) {
       this.watcher = chokidar.watch([...this.allCordapps]);
-      const listener = (path, stat) => {
+      const listener = () => {
         if (this.cordappWatcher) {
           clearTimeout(this.cordappWatcher);
         }
-        this.cordappQueue.push(path);
         // start timer
         this.cordappWatcher = setTimeout(() => {
-          const queue = this.cordappQueue.flatMap((val) => {
-            if (val.toLowerCase().endsWith(".jar") && !stat?.isDirectory()) {
-              return val;
-            } else {
-              if (fse.existsSync(path)) {
-                const files = fse.readdirSync(path);
-                return files.reduce((arr, file) => {
-                  if (val.toLowerCase().endsWith(".jar")) {
-                    arr.push(join(path, file));
-                  }
-                }, []);
-              }
-              return path;
-            }
-          });
-          // clear queue
-          this.cordappQueue = [];
           // alert user
-          this._io.sendRefreshCordapps(sendRefreshCordapp(queue));
+          this._io.sendRefreshCordapps(sendRefreshCordapp());
         }, CORDAPP_DELAY);
       };
-      const unlinkDirListener = (path, stat) => {
+      const unlinkDirListener = (path) => {
         // check if the root project exists
         if (fse.existsSync(join(path, "../../"))) {
           // if it exists ensuredir
@@ -228,9 +209,9 @@ class NetworkManager extends EventEmitter {
           // if it doesnt - stop watching this dir
           this.watcher.unwatch(path);
         }
-        listener(path, stat);
+        listener();
       };
-      const unlinkListener = (path, stat) => {
+      const unlinkListener = (path) => {
         // file must be a .jar we've already validated
         // check if the directory exists
         const jarRoot = join(path, "..");
@@ -238,7 +219,7 @@ class NetworkManager extends EventEmitter {
           // if it doesnt - stop watching this dir
           this.watcher.unwatch(path);
         }
-        listener(path, stat);
+        listener();
       };
       this.watcher.on("ready", () => {
         this.watcher.on("add", listener);
