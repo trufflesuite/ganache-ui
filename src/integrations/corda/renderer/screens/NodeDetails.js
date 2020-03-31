@@ -209,7 +209,7 @@ class NodeDetails extends Component {
   }
 
   getWorkspaceCordapp(name) {
-    return this.props.config.settings.workspace.jars.find(cordapp => cordaNickname(cordapp).endsWith(name.toLowerCase()));
+    return this.props.config.settings.workspace.projects.find(cordapp => cordaNickname(cordapp).endsWith(name.toLowerCase()));
   }
 
   getCordapps(){
