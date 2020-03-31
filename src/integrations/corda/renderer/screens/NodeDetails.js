@@ -6,9 +6,7 @@ import { CancellationToken } from "../screens/utils";
 import NodeLink from "../components/NodeLink";
 import React, { Component } from "react";
 import { startNode } from "../../../../common/redux/config/actions";
-
-// this is taken from braid
-const VERSION_REGEX = /^(.*?)(?:-(?:(?:\d|\.)+))\.jar?$/;
+import { cordaNickname } from "../utils/nickname";
 
 function filterNodeBy(nodeToMatch) {
   return (node) => {
@@ -200,7 +198,7 @@ class NodeDetails extends Component {
   }
 
   getWorkspaceCordapp(name) {
-    return this.props.config.settings.workspace.projects.find(cordapp => VERSION_REGEX.exec(cordapp)[1].toLowerCase().endsWith(name.toLowerCase()));
+    return this.props.config.settings.workspace.projects.find(cordapp => cordaNickname(cordapp).endsWith(name.toLowerCase()));
   }
 
   getCordapps(){
