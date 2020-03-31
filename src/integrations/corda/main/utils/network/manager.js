@@ -1,3 +1,4 @@
+const os = require('os')
 const crypto = require('crypto');
 const temp = require("temp");
 const { promisify } = require("util");
@@ -13,6 +14,10 @@ const fetch = require("node-fetch");
 const GetPort = require("get-port");
 const BlobInspector = require("./blob-inspector");
 const { SSH_DATA, CLEAR_TERM } = require("../../../../../common/redux/cordashell/actions");
+
+const chunk = (arr, size) => Array.from({
+  length: Math.ceil(arr.length / size)
+}, (v, i) => arr.slice(i * size, i * size + size));
 
 const https = require("https");
 const agent = new https.Agent({
@@ -79,7 +84,7 @@ class NetworkManager extends EventEmitter {
 
       const BRAID_HOME = this.config.corda.files.braidServer.download();
       const POSTGRES_HOME = this.config.corda.files.postgres.download();
-      const POSTGRES_DRIVER = this.config.corda.files.postgresDriver.download();
+      const POSTGRES_DRIVER = this.config.corda.files.cordaDrivers.download();
       this._io.sendProgress("Writing configuration files...");
       const cordaBootstrap = new CordaBootstrap(chainDataDir, this._io);
       const { nodesArr, notariesArr } = await cordaBootstrap.writeConfig(nodes, notaries, postgresPort, await POSTGRES_DRIVER);
@@ -234,42 +239,78 @@ class NetworkManager extends EventEmitter {
   }
 
   async start() {
-      const chaindataDir = await this.chaindataDirectory;
-      const entities = this.entities;
-      this._io.sendProgress("Loading JRE...");
-      const JAVA_HOME = await this.config.corda.files.jre.download();
-      if (this.cancelled) return;
-
-      this._io.sendProgress("Starting Corda Nodes...");
-      let startedNodes = 0;
-      const promises = entities.map(async (entity) => {
-        const currentPath = join(chaindataDir, entity.safeName);
-        // eslint-disable-next-line require-atomic-updates
-        entity.braidPort = await this.getPort(entity.rpcPort + 10000);
-        if (this.cancelled) return;
-        const braidPromise = this.braid.start(entity, currentPath, JAVA_HOME);
-        const CORDA_HOME = await this.config.corda.files[`corda${entity.version || "4_4"}`].download();
-        const corda = new Corda(entity, currentPath, JAVA_HOME, CORDA_HOME, this._io);
-        this.processes.push(corda);
-        const cordaProm = corda.start().then(() => {
-          this._io.sendProgress(`Corda node ${++startedNodes}/${entities.length} online...`);
-        });
-        await Promise.all([cordaProm, braidPromise]);
-        if (this.cancelled) return;
-        // we need to get the `owningKey` for this node so we can reference it in the front end
-        // eslint-disable-next-line require-atomic-updates
-        entity.owningKey = await fetch("https://localhost:" + entity.braidPort + "/api/rest/network/nodes/self", { agent })
-          .then(r => r.json())
-          .then(self => self.legalIdentities[0].owningKey);
-      });
-
-    await Promise.all(promises);
+    const chaindataDir = await this.chaindataDirectory;
+    const entities = this.entities;
+    this._io.sendProgress("Loading JRE...");
+    const JAVA_HOME = await this.config.corda.files.jre.download();
     if (this.cancelled) return;
+
+    this._io.sendProgress("Starting Corda Nodes...");
+    let startedNodes = 0;
+    // we're working around 2 limitations here: CPU and Memory...
+    // CPU: use up to 3/4 of the user's CPUs to start their corda nodes,
+    //  but no fewer than 2 at a time.
+    // Memory: A node at rest consumes about .6-.9 GB of memory, a node during
+    // start up can consume up to 2GB of memory
+    const chunkSize = Math.max(2, Math.floor(os.cpus().length * .75));
+    const chunks = chunk(entities, chunkSize);
+    const NODE_STARTUP_USAGE = 2000000000;
+    
+    for (var i = 0; i < chunks.length; i++) {
+      const freeMemory = os.freemem(); // bytes
+      const size = Math.max(1, Math.floor(freeMemory / NODE_STARTUP_USAGE));
+      const subChunks = chunk(chunks[i], size);
+      for (var j = 0; j < subChunks.length; j++) {
+        const promises = subChunks[j].map(async (entity) => {
+          const currentPath = join(chaindataDir, entity.safeName);
+          // eslint-disable-next-line require-atomic-updates
+          entity.braidPort = await this.getPort(entity.rpcPort + 10000);
+          if (this.cancelled) return;
+          const braidPromise = this.braid.start(entity, currentPath, JAVA_HOME);
+          const CORDA_HOME = await this.config.corda.files[`corda${entity.version || "4_4"}`].download();
+          const corda = new Corda(entity, currentPath, JAVA_HOME, CORDA_HOME, this._io);
+          this.processes.push(corda);
+          const cordaProm = corda.start().then(() => {
+            this._io.sendProgress(`Corda node ${++startedNodes}/${entities.length} online...`);
+          });
+          await Promise.all([cordaProm, braidPromise]);
+          if (this.cancelled) return;
+          // we need to get the `owningKey` for this node so we can reference it in the front end
+          // eslint-disable-next-line require-atomic-updates
+          entity.owningKey = await this.getOwningKey(entity);
+        });
+        
+        await Promise.all(promises);
+        if (this.cancelled) return;
+      }
+    }
 
     // _downloadPromise was started long ago, we just need to make sure all
     //  deps are downloaded before we start up.
     this._io.sendProgress(`Downloading remaining Corda dependencies...`, 0);
     this.blobInspector = new BlobInspector(JAVA_HOME, await this.config.corda.files.blobInspector.download());
+    await this._downloadPromise;
+  }
+
+  // on slow machines or just big networks braid requests will sometimes timeout
+  // so we create retry for a bit
+  async getOwningKey(entity, attempt = 0){
+    try {
+      return fetch("https://localhost:" + entity.braidPort + "/api/rest/network/nodes/self", { agent })
+            .then(r => r.json())
+            .then(self => self.legalIdentities[0].owningKey)
+    } catch(e) {
+      if (attempt > 10 || this.cancelled) {
+        throw e;
+      } else {
+        attempt++;
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            this.getOwningKey(entity, attempt).then(resolve).catch(reject);
+          }, attempt * 1000); // backoff
+        });
+      }
+    }
   }
 
   async stop() {

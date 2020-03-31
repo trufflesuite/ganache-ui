@@ -53,7 +53,7 @@ module.exports = {
       blobInspector: new File(`corda-tools-blob-inspector-4.4.jar`),
       postgres: new File(`postgresql-9.6.15-2-${platform}-${arch}-binaries.zip`),
       jre: new File(`OpenJDK8U-jre_${arch}_${platform}_hotspot_8u232b09.zip`),
-      postgresDriver: new File("postgresql-42.2.8.jar")
+      cordaDrivers: new File("corda-drivers.zip")
     };
     const extras = {
       downloader: downloader,

@@ -82,7 +82,8 @@ module.exports = (POSTGRES_PATH) => {
 
       // TODO: figure out what postgres needs on Windows from the process.env and only supply that.
       // start the postgres server
-      await spawn(PG_CTL, ["-o", `-F -p ${port}`, "-D", dataDir, "-l", join(dataDir, "postgres-logfile.log"), "-w", "start"]);
+      const maxConnections = Math.min(Math.max(100, schemaNames.length * schemaNames.length), 10000);
+      await spawn(PG_CTL, ["-o", `-F -p ${port} -N ${maxConnections}`, "-D", dataDir, "-l", join(dataDir, "postgres-logfile.log"), "-w", "start"]);
       
       try {
         await initSchema(port, schemaNames);
