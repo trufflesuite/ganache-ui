@@ -19,16 +19,18 @@ class WorkspaceScreen extends Component {
 
   handleAddProjectClick = async () => {
     const pathArray = await remote.dialog.showOpenDialog({
-      properties: ["openFile"],
-      filters: [{ name: "CorDapp Jar", extensions: ["jar"] }],
+      properties: ["openFile", "multiSelections"],
+      filters: [
+        { name: "CorDapp.jar, build.gradle", extensions: ["jar", "gradle"] },
+        // { name: "Project", extensions: ["*"] }
+      ],
     });
 
     if (
       pathArray &&
-      pathArray.filePaths.length > 0 &&
-      path.basename(pathArray.filePaths[0]).match(/\.jar$/)
+      pathArray.filePaths.length > 0
     ) {
-      this.props.addWorkspaceProject(pathArray.filePaths[0]);
+      this.props.addWorkspaceProject(pathArray.filePaths);
       this.setState({ selectedIdx: null });
     }
   };
