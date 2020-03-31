@@ -17,13 +17,9 @@ class WorkspaceScreen extends Component {
     });
   };
 
-  handleAddProjectClick = async () => {
+  handleAddDirectoryClick = async () => {
     const pathArray = await remote.dialog.showOpenDialog({
-      properties: ["openFile", "multiSelections"],
-      filters: [
-        { name: "CorDapp.jar, build.gradle", extensions: ["jar", "gradle"] },
-        // { name: "Project", extensions: ["*"] }
-      ],
+      properties: ["openDirectory", "multiSelections"]
     });
 
     if (
@@ -176,9 +172,9 @@ class WorkspaceScreen extends Component {
               <div className="WorkspaceButtons">
                 <button
                   className="btn btn-primary"
-                  onClick={this.handleAddProjectClick}
+                  onClick={this.handleAddDirectoryClick}
                 >
-                  ADD CORDAPP
+                  ADD DIRECTORY
                 </button>
                 <button
                   className="btn btn-primary"
