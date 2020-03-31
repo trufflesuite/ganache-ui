@@ -166,11 +166,18 @@ class ConfigScreen extends PureComponent {
   }
 
   addWorkspaceProject = path => {
+    const update = (_path) => {
     const alreadyExists = this.state.config.settings.workspace.projects.includes(
-      path,
+        _path
     );
     if (!alreadyExists) {
-      this.state.config.settings.workspace.projects.push(path);
+        this.state.config.settings.workspace.projects.push(_path);
+      }
+    }
+    if (Array.isArray(path)) {
+      path.forEach(update);
+    } else {
+      update(path);
     }
     if (this.state.config.settings.workspace.flavor === "corda") {
       this.updateCordaNodes();
