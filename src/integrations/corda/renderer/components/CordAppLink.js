@@ -7,7 +7,7 @@ class CordAppLink extends PureComponent {
   render() {
     const cordapp = this.props.cordapp;
     const workspace = this.props.workspace;
-    const nodes = [...workspace.nodes, ...workspace.notaries].filter(node => (node.cordapps || []).includes(cordapp));
+    const nodes = [...workspace.nodes, ...workspace.notaries].filter(node => (node.jars || []).includes(cordapp));
     const length = nodes.length;
     const filename = cordaNickname(cordapp);
     return (

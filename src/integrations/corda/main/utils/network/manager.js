@@ -23,6 +23,18 @@ const chunk = (arr, size) => Array.from({
 }, (v, i) => arr.slice(i * size, i * size + size));
 
 const https = require("https");
+
+const aggregateJars = (path) => {
+  const files = fse.readdirSync(path);
+  return files.reduce((arr, curr) => {
+    const fName = join(path, curr.toLowerCase());
+    if (fName.endsWith(".jar")) {
+      this.allCordapps.add(fName);
+      arr.push(fName);
+    }
+  }, []);
+};
+
 const agent = new https.Agent({
   rejectUnauthorized: false
 });
@@ -243,13 +255,50 @@ class NetworkManager extends EventEmitter {
 
       // copy all cordapps where they are supposed to go
       const currentDir = join(chaindataDir, node.safeName);
-      (node.cordapps || []).forEach(path => {
+      node.jars = (node.cordapps || []).flatMap(path => {
+        if (!fse.existsSync(path)) {
+          return [];
+        }
+        if (!path.toLowerCase().endsWith(".jar")) {
+          const stat = fse.statSync(path);
+          if (stat.isDirectory()) {
+            // check for build.gradle
+            const buildGradle = join(path, "build.gradle");
+            if (fse.existsSync(buildGradle)) {
+              if (fse.readFileSync(buildGradle).toString().includes("corda")) {
+                // get or make build/libs/
+                const buildLibs = join(path, "build/libs");
+                fse.ensureDirSync(buildLibs);
+                // add to list for chokidar
+                this.allCordapps.add(buildLibs);
+                // add all jars in list
+                
+                return fse.readdirSync(buildLibs).reduce((arr, jar) => {
+                  const jarPath = jar.toLowerCase();
+                  if (jarPath.endsWith(".jar")) {
+                    arr.push(join(buildLibs, jarPath));
+                  }
+                  return arr;
+                }, []);
+              }
+            }
+            return aggregateJars(path);
+          }
+          // flatMap will filter this out
+          return [];
+        }
+        this.allCordapps.add(path);
+        return path;
+      });
+
+      // go brr
+      node.jars.forEach(path => {
         const name = basename(path);
         const newPath = join(currentDir, "cordapps", name);
         promises.push(fse.copy(path, newPath));
-        this.allCordapps.add(path);
       });
     });
+    this.settings.jars = [... new Set(this.entities.flatMap(node => node.jars))];
     // for each notary, get it's node info file
     const notaryInfoFileNames = this.notaries.map((node) => {
       const currentDir = join(chaindataDir, node.safeName);
