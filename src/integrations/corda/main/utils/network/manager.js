@@ -14,7 +14,7 @@ const fetch = require("node-fetch");
 const GetPort = require("get-port");
 const chokidar = require('chokidar');
 const BlobInspector = require("./blob-inspector");
-const { REFRESH_CORDAPP, refreshCordapp } = require("../../../../../common/redux/corda-core/actions");
+const { REFRESH_CORDAPP, sendRefreshCordapp } = require("../../../../../common/redux/corda-core/actions");
 const { SSH_DATA, CLEAR_TERM } = require("../../../../../common/redux/cordashell/actions");
 const CORDAPP_DELAY = 1000;
 
@@ -191,19 +191,60 @@ class NetworkManager extends EventEmitter {
   addCordappListeners(){
     if (this.allCordapps) {
       this.watcher = chokidar.watch([...this.allCordapps]);
-      this.watcher.on("change", (path) => {
+      const listener = (path, stat) => {
         if (this.cordappWatcher) {
           clearTimeout(this.cordappWatcher);
         }
         this.cordappQueue.push(path);
         // start timer
         this.cordappWatcher = setTimeout(() => {
-          const queue = this.cordappQueue;
+          const queue = this.cordappQueue.flatMap((val) => {
+            if (val.toLowerCase().endsWith(".jar") && !stat?.isDirectory()) {
+              return val;
+            } else {
+              if (fse.existsSync(path)) {
+                const files = fse.readdirSync(path);
+                return files.reduce((arr, file) => {
+                  if (val.toLowerCase().endsWith(".jar")) {
+                    arr.push(join(path, file));
+                  }
+                }, []);
+              }
+              return path;
+            }
+          });
           // clear queue
           this.cordappQueue = [];
           // alert user
-          this._io.sendRefreshCordapps(refreshCordapp(queue));
+          this._io.sendRefreshCordapps(sendRefreshCordapp(queue));
         }, CORDAPP_DELAY);
+      };
+      const unlinkDirListener = (path, stat) => {
+        // check if the root project exists
+        if (fse.existsSync(join(path, "../../"))) {
+          // if it exists ensuredir
+          // fse.ensureDirSync(path);
+        } else {
+          // if it doesnt - stop watching this dir
+          this.watcher.unwatch(path);
+        }
+        listener(path, stat);
+      };
+      const unlinkListener = (path, stat) => {
+        // file must be a .jar we've already validated
+        // check if the directory exists
+        const jarRoot = join(path, "..");
+        if (!fse.existsSync(jarRoot)) {
+          // if it doesnt - stop watching this dir
+          this.watcher.unwatch(path);
+        }
+        listener(path, stat);
+      };
+      this.watcher.on("ready", () => {
+        this.watcher.on("add", listener);
+        this.watcher.on("change", listener);
+        this.watcher.on("unlink", unlinkListener);
+        this.watcher.on("unlinkDir", unlinkDirListener);
       });
     }
   }
