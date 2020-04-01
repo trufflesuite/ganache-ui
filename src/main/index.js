@@ -66,6 +66,7 @@ process.on("unhandledRejection", err => {
 })
 
 app.name = "Ganache";
+app.allowRendererProcessReuse = true;
 if (isDevMode) {
   // electron can't get the version from our package.json when
   // launched via `webpack-electron dev`. This makes electron-updater
@@ -471,6 +472,7 @@ app.on('ready', () => {
     let tempWorkspace = {};
     merge(tempWorkspace, { projects }, workspace);
     delete tempWorkspace.contractCache;
+    delete tempWorkspace.settings;
 
     mainWindow.webContents.send(
       SET_CURRENT_WORKSPACE,
@@ -482,7 +484,7 @@ app.on('ready', () => {
     mainWindow.webContents.send(
       SET_SETTINGS,
       globalSettings,
-      tempWorkspace.settings.getAll(),
+      workspace.settings.getAll(),
     );
 
     startupMode = STARTUP_MODE.NORMAL;
@@ -516,6 +518,7 @@ app.on('ready', () => {
     let tempWorkspace = {};
     merge(tempWorkspace, {}, workspace);
     delete tempWorkspace.contractCache;
+    delete tempWorkspace.settings;
 
     mainWindow.webContents.send(
       SET_CURRENT_WORKSPACE,
@@ -595,6 +598,7 @@ app.on('ready', () => {
       let tempWorkspace = {};
       merge(tempWorkspace, { projects }, workspace);
       delete tempWorkspace.contractCache;
+      delete tempWorkspace.settings;
 
       mainWindow.webContents.send(
         SET_WORKSPACES,
