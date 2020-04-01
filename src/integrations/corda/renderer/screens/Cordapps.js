@@ -10,7 +10,7 @@ class Cordapps extends Component {
 
   render() {
     let cordapps;
-    const projects = this.props.config.settings.workspace.projects;
+    const projects = this.props.config.settings.workspace.jars
     if (projects.length === 0) {
       cordapps = (<div className="Waiting Waiting-Padded">No CorDapps</div>);
     } else {
