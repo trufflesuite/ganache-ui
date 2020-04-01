@@ -120,9 +120,9 @@ class NetworkManager extends EventEmitter {
       this._io.sendProgress("Configuring Postgres Hooks...", 0);
       this.postGresHooksPromise = this.setupPostGresHooks();
       this._io.sendProgress("Copying Cordapps...", 500);
+      await this.copyCordappsAndSetupNetwork();
       await Promise.all([
         this.postGresHooksPromise,
-        this.copyCordappsAndSetupNetwork(),
         this.hashCordapps()
       ]);
       this.addCordappListeners();
@@ -137,7 +137,7 @@ class NetworkManager extends EventEmitter {
   }
 
   async hashCordapps(){   
-    const projects = this.settings.projects || [];
+    const projects = this.settings.jars || [];
     const cordappHashMap = this.settings.cordappHashMap || {};
     const promises = projects.map((path) => {
       return new Promise((resolve => {
