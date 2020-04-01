@@ -7,7 +7,6 @@ export const sendRefreshCordapp = function() {
   return { type: REFRESH_CORDAPP };
 };
 
-
 export const refreshCordapp = function() {
   return function(dispatch) {
     dispatch(setToast("Your cordapp(s) have changed. Would you like to restart Ganache?", true, "Restart", () => {

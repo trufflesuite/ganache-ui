@@ -24,17 +24,6 @@ const chunk = (arr, size) => Array.from({
 
 const https = require("https");
 
-const aggregateJars = (path) => {
-  const files = fse.readdirSync(path);
-  return files.reduce((arr, curr) => {
-    const fName = join(path, curr.toLowerCase());
-    if (fName.endsWith(".jar")) {
-      this.allCordapps.add(fName);
-      arr.push(fName);
-    }
-  }, []);
-};
-
 const agent = new https.Agent({
   rejectUnauthorized: false
 });
@@ -259,36 +248,39 @@ class NetworkManager extends EventEmitter {
         if (!fse.existsSync(path)) {
           return [];
         }
-        if (!path.toLowerCase().endsWith(".jar")) {
-          const stat = fse.statSync(path);
-          if (stat.isDirectory()) {
-            // check for build.gradle
-            const buildGradle = join(path, "build.gradle");
-            if (fse.existsSync(buildGradle)) {
-              if (fse.readFileSync(buildGradle).toString().includes("corda")) {
-                // get or make build/libs/
-                const buildLibs = join(path, "build/libs");
-                fse.ensureDirSync(buildLibs);
-                // add to list for chokidar
-                this.allCordapps.add(buildLibs);
-                // add all jars in list
-                
-                return fse.readdirSync(buildLibs).reduce((arr, jar) => {
-                  const jarPath = jar.toLowerCase();
-                  if (jarPath.endsWith(".jar")) {
-                    arr.push(join(buildLibs, jarPath));
-                  }
-                  return arr;
-                }, []);
-              }
+        const stat = fse.statSync(path);
+        if (stat.isDirectory()) { // SANITY CHECK
+          // check for build.gradle
+          const buildGradle = join(path, "build.gradle");
+          if (fse.existsSync(buildGradle)) {
+            if (fse.readFileSync(buildGradle).toString().includes("corda")) {
+              // get or make build/libs/
+              const buildLibs = join(path, "build/libs");
+              fse.ensureDirSync(buildLibs);
+              // add to list for chokidar
+              this.allCordapps.add(buildLibs);
+              // add all jars in list
+              
+              return fse.readdirSync(buildLibs).reduce((arr, jar) => {
+                const jarPath = jar.toLowerCase();
+                if (jarPath.endsWith(".jar")) {
+                  arr.push(join(buildLibs, jarPath));
+                }
+                return arr;
+              }, []);
             }
-            return aggregateJars(path);
           }
-          // flatMap will filter this out
-          return [];
+          const files = fse.readdirSync(path);
+          return files.reduce((arr, curr) => {
+            const fName = join(path, curr);
+            if (fName.endsWith(".jar")) {
+              this.allCordapps.add(fName);
+              arr.push(fName);
+            }
+            return arr;
+          }, []);
         }
-        this.allCordapps.add(path);
-        return path;
+        throw `Path must point to a directory:  ${path}`;
       });
 
       // go brr
