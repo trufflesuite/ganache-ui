@@ -405,6 +405,8 @@ app.on('ready', () => {
   });
   
   ipcMain.on(DELETE_WORKSPACE, async (event, name, flavor) => {
+    await integrations.stopServer();
+
     const tempWorkspace = workspaceManager.get(name, flavor);
     if (tempWorkspace) {
       tempWorkspace.delete();
