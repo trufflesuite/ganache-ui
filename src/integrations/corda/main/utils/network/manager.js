@@ -270,11 +270,11 @@ class NetworkManager extends EventEmitter {
               }, []);
             }
           }
+          this.allCordapps.add(path);
           const files = fse.readdirSync(path);
           return files.reduce((arr, curr) => {
             const fName = join(path, curr);
             if (fName.endsWith(".jar")) {
-              this.allCordapps.add(fName);
               arr.push(fName);
             }
             return arr;
