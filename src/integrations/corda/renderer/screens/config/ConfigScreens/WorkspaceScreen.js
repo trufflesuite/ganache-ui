@@ -3,6 +3,9 @@ import { remote } from "electron";
 import path from "path";
 import ModalDetails from "../../../../../../renderer/components/modal/ModalDetails";
 import SyntaxHighlighter from "react-syntax-highlighter";
+import { readFileSync, existsSync } from "fs-extra";
+import { join } from "path";
+import { setToast } from "../../../../../../common/redux/network/actions";
 
 class WorkspaceScreen extends Component {
   state = { selectedIdx: null };
@@ -22,14 +25,22 @@ class WorkspaceScreen extends Component {
       properties: ["openDirectory", "multiSelections"]
     });
 
-    if (
-      pathArray &&
-      pathArray.filePaths.length > 0
-    ) {
+    if (pathArray?.filePaths?.length > 0) {
+      const notFound = pathArray.filePaths.filter((path) => {
+        const buildGradle = join(path, "build.gradle");
+        return !(existsSync(buildGradle) && readFileSync(buildGradle).toString().includes("corda"));
+        // SEND TOAST
+      });
+      const len = notFound.length;
+      if (len) {
+        const y = len > 1 ? "ies" : "y";
+        this.props.dispatch(setToast(`Unable to find a valid build.gradle in ${notFound.join(", ")}.  Watching director${y} for cordApp jars.`));
+      }
       this.props.addWorkspaceProject(pathArray.filePaths);
       this.setState({ selectedIdx: null });
     }
   };
+
 
   removeProject = projectPath => {
     this.props.removeWorkspaceProject(projectPath);
