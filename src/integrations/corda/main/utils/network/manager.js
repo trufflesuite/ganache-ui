@@ -189,8 +189,8 @@ class NetworkManager extends EventEmitter {
   }
 
   addCordappListeners(){
-    if (this.allCordapps) {
-      this.watcher = chokidar.watch([...this.allCordapps]);
+    if (this.allProjects) {
+      this.watcher = chokidar.watch([...this.allProjects]);
       const listener = () => {
         if (this.cordappWatcher) {
           clearTimeout(this.cordappWatcher);
@@ -236,7 +236,7 @@ class NetworkManager extends EventEmitter {
     const promises = [];
     const networkMap = new Map();
     const chaindataDir = await this.chaindataDirectory;
-    this.allCordapps = new Set();
+    this.allProjects = new Set();
     this.entities.forEach((node) => {
       // track all entities' ports in a port blacklist so we don't try to bind 
       // braid to it later.
@@ -258,7 +258,7 @@ class NetworkManager extends EventEmitter {
               const buildLibs = join(path, "build/libs");
               fse.ensureDirSync(buildLibs);
               // add to list for chokidar
-              this.allCordapps.add(buildLibs);
+              this.allProjects.add(buildLibs);
               // add all jars in list
               
               return fse.readdirSync(buildLibs).reduce((arr, jar) => {
@@ -270,7 +270,7 @@ class NetworkManager extends EventEmitter {
               }, []);
             }
           }
-          this.allCordapps.add(path);
+          this.allProjects.add(path);
           const files = fse.readdirSync(path);
           return files.reduce((arr, curr) => {
             const fName = join(path, curr);
