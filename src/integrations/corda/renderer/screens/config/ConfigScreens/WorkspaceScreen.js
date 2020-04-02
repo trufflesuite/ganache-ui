@@ -34,7 +34,7 @@ class WorkspaceScreen extends Component {
       const len = notFound.length;
       if (len) {
         const y = len > 1 ? "ies" : "y";
-        this.props.dispatch(setToast(`Unable to find a valid build.gradle in ${notFound.join(", ")}.  Watching director${y} for cordApp jars.`));
+        this.props.dispatch(setToast(`Unable to find a valid build.gradle in: ${notFound.join(",\n")}. Watching director${y} for cordApp jars.`));
       }
       this.props.addWorkspaceProject(pathArray.filePaths);
       this.setState({ selectedIdx: null });
@@ -141,7 +141,7 @@ class WorkspaceScreen extends Component {
           </div>
         </section>
         <section>
-          <h4>CorDapps</h4>
+          <h4>Projects</h4>
           <div className="Row">
             <div className="RowItem">
               {validationErrors && (
@@ -185,14 +185,14 @@ class WorkspaceScreen extends Component {
                   className="btn btn-primary"
                   onClick={this.handleAddDirectoryClick}
                 >
-                  ADD DIRECTORY
+                  ADD PROJECT
                 </button>
                 <button
                   className="btn btn-primary"
                   disabled={this.state.selectedIdx === null || this.projectIsSaved(this.state.selectedIdx)}
                   onClick={this.handleRemoveProject}
                 >
-                  REMOVE CORDAPP
+                  REMOVE PROJECT
                 </button>
               </div>
             </div>

@@ -244,7 +244,7 @@ class NetworkManager extends EventEmitter {
 
       // copy all cordapps where they are supposed to go
       const currentDir = join(chaindataDir, node.safeName);
-      node.jars = (node.cordapps || []).flatMap(path => {
+      node.jars = (node.projects || []).flatMap(path => {
         if (!fse.existsSync(path)) {
           return [];
         }

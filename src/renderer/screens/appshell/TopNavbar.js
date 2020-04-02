@@ -260,7 +260,7 @@ class TopNavbar extends Component {
             value={this.props.config.settings.workspace.notaries.length}
         />
         <StatusIndicator
-            title="Total CorDapps"
+            title="Total Projects"
             value={this.props.config.settings.workspace.projects.length}
         />
       </>),

@@ -158,10 +158,10 @@ class ConfigScreen extends PureComponent {
   updateCordaNodes = () => {
     const projects = this.state.config.settings.workspace.projects;
     this.state.config.settings.workspace.nodes.forEach(node => {
-      node.cordapps = projects.slice();
+      node.projects = projects.slice();
     });
     this.state.config.settings.workspace.notaries.forEach(node => {
-      node.cordapps = projects.slice();
+      node.projects = projects.slice();
     });
   }
 

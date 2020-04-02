@@ -14,7 +14,7 @@ export class NodeModal extends Component {
   constructor(props) {
     super(props);
     const node = { ...this.props.data.node };
-    node.cordapps = node.cordapps ? [...node.cordapps] : [];
+    node.projects = node.projects ? [...node.projects] : [];
     this.state = {
       node,
       errors: this.validate(node)
@@ -132,7 +132,7 @@ export class NodeModal extends Component {
             <select multiple={true} onChange={(e) => {
               const selectedCoreDapps = [...e.target.options].filter(o => o.selected).map(o => o.value);
               this.setState({node: {...this.state.node, cordapps: selectedCoreDapps }});
-            }} value={isEditing ? node.cordapps : this.props.allCordDapps}>
+            }} value={isEditing ? node.projects : this.props.allCordDapps}>
               {this.props.allCordDapps.map(corDapp => {
                 return <option key={corDapp}>{corDapp}</option>
               })}

@@ -20,7 +20,7 @@ class NodeDetails extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {node: this.findNodeFromProps(), nodes:null, notaries:null, jars: null, transactions: null};
+    this.state = {node: this.findNodeFromProps(), nodes:null, notaries:null, cordapps: null, transactions: null};
   }
 
   componentWillUnmount() {
@@ -40,7 +40,7 @@ class NodeDetails extends Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.match.params.node !== this.props.match.params.node) {
-      this.setState({node: this.findNodeFromProps(), nodes:null, notaries:null, jars:null, transactions: null}, this.refresh.bind(this));
+      this.setState({node: this.findNodeFromProps(), nodes:null, notaries:null, cordapps:null, transactions: null}, this.refresh.bind(this));
     }
     if (prevProps.config.updated !== this.props.config.updated) {
       this.refresh();
@@ -198,13 +198,13 @@ class NodeDetails extends Component {
   }
 
   getWorkspaceCordapp(name) {
-    return this.props.config.settings.workspace.projects.find(cordapp => cordaNickname(cordapp).endsWith(name.toLowerCase()));
+    return this.props.config.settings.workspace.jars.find(cordapp => cordaNickname(cordapp).endsWith(name.toLowerCase()));
   }
 
   getCordapps(){
     let cordapps = (<div className="Waiting Waiting-Padded">Loading CorDapps...</div>);
-    if(this.state.jars) {
-      cordapps = this.state.jars.reduce((acc, cordapp) => {
+    if(this.state.cordapps) {
+      cordapps = this.state.cordapps.reduce((acc, cordapp) => {
         const workspaceCordapp = this.getWorkspaceCordapp(cordapp);
         if (workspaceCordapp) {
           acc.push((<CordAppLink key={workspaceCordapp} cordapp={workspaceCordapp} workspace={this.props.config.settings.workspace}>{workspaceCordapp}</CordAppLink>));
