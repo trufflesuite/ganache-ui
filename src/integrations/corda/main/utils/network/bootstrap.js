@@ -16,6 +16,7 @@ class CordaBootstrap {
   constructor(workspaceDirectory, io){
     this.workspaceDirectory = workspaceDirectory;
     this._io = io;
+    this.handleClose = this.handleClose.bind(this);
   }
 
   async writeConfig(nodes, notaries, postgresPort) {
@@ -57,46 +58,56 @@ class CordaBootstrap {
   async bootstrap(config) {
     this._io.sendProgress("Loading JRE...");
     const JAVA_HOME = await config.corda.files.jre.download();
+    this.JAVA_HOME = JAVA_HOME;
     this._io.sendProgress("Loading Corda Network Bootstrapper...");
-    const CORDA_BOOTSTRAPPER = await config.corda.files.cordaBoostrapper.download();
+    this.CORDA_BOOTSTRAPPER = await config.corda.files.cordaBoostrapper.download();
     // java on the PATH is required for bootstrapper
-    const spawnConfig = {env: {PATH: join(JAVA_HOME, "bin"), CAPSULE_CACHE_DIR: "./capsule"}, cwd: this.workspaceDirectory};
+    this.spawnConfig = {env: {PATH: join(JAVA_HOME, "bin"), CAPSULE_CACHE_DIR: "./capsule"}, cwd: this.workspaceDirectory};
     this._io.sendProgress("Running Corda Network Bootstrapper...");
-    const java = spawn("java", ["-jar", CORDA_BOOTSTRAPPER, "--dir", this.workspaceDirectory], spawnConfig);
+    const java = spawn("java", ["-jar", this.CORDA_BOOTSTRAPPER, "--dir", this.workspaceDirectory], this.spawnConfig);
 
-    var stderr = "";
+    this.stderr = "";
     java.stderr.on('data', (data) => {
-      stderr += data.toString();
+      const strData = data.toString();
+      if (strData.includes("CAPSULE EXCEPTION: Capsule not extracted.")){
+        java.off('close', this.handleClose);
+        const {resolve, reject} = this.awaiter;
+        this.bootstrap(config).then(resolve).catch(reject);
+      }
+      this.stderr += strData;
       this._io.sendStdErr(data);
       // this.emit("message", "stderr", data, this.entity.safeName);
       console.error(`stderr:\n${data}`);
     });
 
-    var stdout = "";
+    this.stdout = "";
     java.stdout.on('data', (data) => {
-      stdout += data.toString();
+      this.stdout += data.toString();
       this._io.sendStdOut(data);
       // this.emit("message", "stdout", data, this.entity.safeName);
       console.log(`stdout:\n${data}`);
     });
 
-    var err = "";
+    this.err = "";
+    this.awaiter = {resolve:()=>{}, reject:()=>{}};
     return new Promise((resolve, reject) => {
+      this.awaiter = {resolve, reject};
       java.on('error', (error) => {
-        err += error.toString();
+        this.err += error.toString();
         console.error(error);
         this._io.sendError(new Error(error.toString()))
       });
 
-      java.on('close', (code) => {
-        console.error(`${CORDA_BOOTSTRAPPER} (${this.workspaceDirectory}): child process exited with code ${code} (JAVA_HOME: ${JAVA_HOME})`);
-        if (code === 0) {
-          resolve();
-        } else {
-          reject(new Error(`corda bootstrapper child process exited with code ${code}.\n\nStderr:\n${stderr}\n\nStdout:\n${stdout}\n\nError:\n${err}\n\nconfig:${JSON.stringify(spawnConfig)}`));
-        }
-      });
+      java.on('close', this.handleClose);
     });
+  }
+  handleClose (code) {
+    console.error(`${this.CORDA_BOOTSTRAPPER} (${this.workspaceDirectory}): child process exited with code ${code} (JAVA_HOME: ${this.JAVA_HOME})`);
+    if (code === 0) {
+      this.awaiter.resolve();
+    } else {
+      this.awaiter.reject(new Error(`corda bootstrapper child process exited with code ${code}.\n\nStderr:\n${this.stderr}\n\nStdout:\n${this.stdout}\n\nError:\n${this.err}\n\nconfig:${JSON.stringify(this.spawnConfig)}`));
+    }
   }
 }
 
