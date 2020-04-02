@@ -60,13 +60,22 @@ class Corda {
       this.java = spawn(this._javaPath, this._args, this._opts);
       this._dataHandler.bind(this.java);
       //#region Logging
+      this.recordStd = true;
+      this.stderr = "";
+      this.stdout = "";
       /* eslint-disable no-console */
       this.java.stderr.on("data", (data) => {
         this._io.sendStdErr(data, this.entity.safeName);
+        if (this.recordStd) {
+          this.stderr += data.toString();
+        }
         console.error(`corda stderr:\n${data}`);
       });
       this.java.stdout.on("data", (data) => {
         this._io.sendStdOut(data, this.entity.safeName);
+        if (this.recordStd) {
+          this.stdout += data.toString();
+        }
         console.log(`corda stdout:\n${data}`);
       });
       this.java.on("error", console.error);
@@ -167,7 +176,7 @@ class Corda {
       const reject = this._awaiter.reject;
 
       await this.stop(true).catch(e => e);
-      reject(new Error(`corda.jar child process exited with code ${code}`));
+      reject(new Error(`corda.jar child process exited with code ${code}.\n\nStderr:\n${this.stderr}\n\nStdout:\n${this.stdout}`));
     }
   }
 
