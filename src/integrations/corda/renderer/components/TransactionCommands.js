@@ -7,9 +7,9 @@ class TransactionCommands extends Component {
     const commands = this.props.commands;
     let elements = null;
     if (commands === null){
-      elements = (<div>Loading...</div>);
+      elements = [<div key="loading">Loading...</div>];
     } else if (commands.length === 0) {
-      elements = (<div>No commands</div>);
+    elements = [<div key="no-command">No commands</div>];
     } else {
       elements = commands.map((command, i) => {
         let link = "";

@@ -112,12 +112,12 @@ class NetworkManager extends EventEmitter {
       this._io.sendProgress("Configuring Postgres Hooks...", 0);
       this.postGresHooksPromise = this.setupPostGresHooks();
       this._io.sendProgress("Copying Cordapps...", 500);
-      await this.copyCordappsAndSetupNetwork();
       await Promise.all([
+        this.copyCordappsAndSetupNetwork(),
         this.postGresHooksPromise,
-        this.hashCordapps()
+        this.hashCordapps(),
+        this.addCordappListeners()
       ]);
-      this.addCordappListeners();
       if (this.cancelled) return;
       this._io.sendProgress("Configuring RPC Manager...");
       this.braid = new Braid(join(await BRAID_HOME, ".."), this._io);
@@ -129,9 +129,9 @@ class NetworkManager extends EventEmitter {
   }
 
   async hashCordapps(){   
-    const projects = this.settings.jars || [];
+    const jars = this.settings.jars || [];
     const cordappHashMap = this.settings.cordappHashMap || {};
-    const promises = projects.map((path) => {
+    const promises = jars.map(path => {
       return new Promise((resolve => {
         const sha256 = crypto.createHash("sha256");
         const fileStream = fse.ReadStream(path);
@@ -245,8 +245,16 @@ class NetworkManager extends EventEmitter {
       // braid to it later.
       this.addToBlackList(node);
 
+      
+      const currentDir = join(chaindataDir, node.safeName, "cordapps");
+      try {
+        fse.removeSync(currentDir);
+      } catch(e) {
+        // ignore
+        console.log(e);
+      }
+
       // copy all cordapps where they are supposed to go
-      const currentDir = join(chaindataDir, node.safeName);
       node.jars = (node.projects || []).flatMap(path => {
         if (!fse.existsSync(path)) {
           return [];
@@ -289,7 +297,7 @@ class NetworkManager extends EventEmitter {
       // go brr
       node.jars.forEach(path => {
         const name = basename(path);
-        const newPath = join(currentDir, "cordapps", name);
+        const newPath = join(currentDir, name);
         promises.push(fse.copy(path, newPath));
       });
     });

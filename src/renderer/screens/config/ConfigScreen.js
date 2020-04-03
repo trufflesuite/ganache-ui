@@ -163,7 +163,7 @@ class ConfigScreen extends PureComponent {
     const workspace = this.state.config.settings.workspace;
     const nodes = [...workspace.nodes, ...workspace.notaries];
     nodes.forEach(node => {
-      const projects = node.projects;
+      const projects = node.projects || [];
       if (remove) {
         const index = projects.indexOf(path);
         if (index !== -1) {
@@ -172,16 +172,18 @@ class ConfigScreen extends PureComponent {
       } else {
         projects.push(path);
       }
+      node.projects = projects;
     });
   }
 
   addWorkspaceProject = path => {
     const update = (_path) => {
-    const alreadyExists = this.state.config.settings.workspace.projects.includes(
-        _path
-    );
-    if (!alreadyExists) {
+      const alreadyExists = this.state.config.settings.workspace.projects.includes(_path);
+      if (!alreadyExists) {
         this.state.config.settings.workspace.projects.push(_path);
+      }
+      if (this.state.config.settings.workspace.flavor === "corda") {
+        this.updateCordaNodes(_path);
       }
     }
     if (Array.isArray(path)) {
