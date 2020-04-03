@@ -91,6 +91,9 @@ class Workspace {
     this.settings.setDirectory(this.workspaceDirectory);
     this.settings.set("name", name);
     this.settings.set("isDefault", false);
+    if (this.flavor === "corda") {
+      this.settings.set("runBootstrap", true);
+    }
     this.settings.set("randomizeMnemonicOnStart", false);
     this.settings.set("server.mnemonic", mnemonic);
 
