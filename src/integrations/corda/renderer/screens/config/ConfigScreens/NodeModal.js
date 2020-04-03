@@ -128,10 +128,10 @@ export class NodeModal extends Component {
           </>)}
 
           <label>
-            <span>CorDapps</span>
+            <span>Projects</span>
             <select multiple={true} onChange={(e) => {
               const selectedCoreDapps = [...e.target.options].filter(o => o.selected).map(o => o.value);
-              this.setState({node: {...this.state.node, cordapps: selectedCoreDapps }});
+              this.setState({node: {...this.state.node, projects: selectedCoreDapps }});
             }} value={isEditing ? node.projects : this.props.allCordDapps}>
               {this.props.allCordDapps.map(corDapp => {
                 return <option key={corDapp}>{corDapp}</option>
