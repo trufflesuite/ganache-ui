@@ -28,10 +28,11 @@ class CordaNode {
     this._dataHandler.addErrHandler("CAPSULE EXCEPTION: Capsule not extracted.", this.handleCapsuleError.bind(this));
     this._dataHandler.addOutHandler("Failed to bind on an address in ", this.handlePortBindError.bind(this));
     this._dataHandler.addOutHandler("Failed to bind on address ", this.handlePortBindError.bind(this));
+    this._dataHandler.addOutHandler("is installed multiple times on the node.", this.handleDuplicateCordappError.bind(this));
     this._dataHandler.addOutHandler('" started up and registered in ', this.handleStartUp.bind(this))
 
     this._javaPath = join(this.JAVA_HOME, "bin", "java");
-    this._args = ["-jar", this.CORDA_JAR, "--base-directory", this.path, "--no-local-shell", "--log-to-console"]
+    this._args = ["-jar", this.CORDA_JAR, "--base-directory", this.path, "--no-local-shell", "--log-to-console", "--dev-mode"]
     this._opts = {
       cwd: this.path,
       env: null
@@ -305,6 +306,26 @@ class CordaNode {
     return true;
   }
 
+  async handleDuplicateCordappError(data) {
+    const reject = this._awaiter.reject;
+     // We're goin to reject soon enough.
+     // so make rejection a `noop` if anything else fails before we do
+    this._awaiter.reject = noop;
+    
+    this.java.off("close", this.earlyCloseHandler);
+    this
+      .stop(true)
+      .catch(noop).then(() => {
+        const error = new Error("There was a cordapp issue!");
+        error.code = "CUSTOMERROR";
+        error.tab = "server";
+        error.key = "workspace.project";
+        error.message = error.value = `Could not start Corda node ${this.entity.safeName} - duplicate cordapp jar detected. Details: \n${data.toString().trim()}`;
+        reject(error);
+      });
+    return true;
+  }
+
   async handlePortBindError(data) {
     const reject = this._awaiter.reject;
      // We're goin to reject soon enough.
@@ -319,7 +340,7 @@ class CordaNode {
         error.code = "CUSTOMERROR";
         error.tab = "nodes";
         error.key = "nodes.nodeConfig";
-        error.value = `Could not start Corda node ${this.entity.safeName} - a port is already in use. Fix conflict or edit node configuration before restarting. Details: \n${data.toString().trim()}`;
+        error.message = error.value = `Could not start Corda node ${this.entity.safeName} - a port is already in use. Fix conflict or edit node configuration before restarting. Details: \n${data.toString().trim()}`;
         reject(error);
       });
     return true;
