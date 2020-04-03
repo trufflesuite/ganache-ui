@@ -126,9 +126,9 @@ class NetworkManager extends EventEmitter {
   }
 
   async hashCordapps(){   
-    const projects = this.settings.jars || [];
+    const jars = this.settings.jars || [];
     const cordappHashMap = this.settings.cordappHashMap || {};
-    const promises = projects.map((path) => {
+    const promises = jars.map(path => {
       return new Promise((resolve => {
         const sha256 = crypto.createHash("sha256");
         const fileStream = fse.ReadStream(path);
