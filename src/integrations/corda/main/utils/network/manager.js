@@ -242,8 +242,16 @@ class NetworkManager extends EventEmitter {
       // braid to it later.
       this.addToBlackList(node);
 
+      
+      const currentDir = join(chaindataDir, node.safeName, "cordapps");
+      try {
+        fse.removeSync(currentDir);
+      } catch(e) {
+        // ignore
+        console.log(e);
+      }
+
       // copy all cordapps where they are supposed to go
-      const currentDir = join(chaindataDir, node.safeName);
       node.jars = (node.projects || []).flatMap(path => {
         if (!fse.existsSync(path)) {
           return [];
@@ -286,7 +294,7 @@ class NetworkManager extends EventEmitter {
       // go brr
       node.jars.forEach(path => {
         const name = basename(path);
-        const newPath = join(currentDir, "cordapps", name);
+        const newPath = join(currentDir, name);
         promises.push(fse.copy(path, newPath));
       });
     });
