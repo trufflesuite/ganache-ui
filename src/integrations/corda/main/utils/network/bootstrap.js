@@ -1,6 +1,6 @@
 const {generate, templates} = require("../config");
 const { createWriteStream, appendFileSync } = require("fs");
-const { dirname, join } = require("path");
+const { join } = require("path");
 const { spawn } = require('child_process');
 
 const waitForEvent = ( stream, event ) => new Promise( resolve  => {
@@ -48,7 +48,7 @@ class CordaBootstrap {
         // I can't figure out how to use this config generator to save my life.
         // I'm just going to write what I want to the file here:
         await close;
-        appendFileSync(path, `jarDirs=["${dirname(POSTGRES_DRIVER)}"]`);
+        appendFileSync(path, `jarDirs=["${POSTGRES_DRIVER}"]`);
       }
     }
 
