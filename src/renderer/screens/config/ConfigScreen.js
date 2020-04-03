@@ -151,13 +151,19 @@ class ConfigScreen extends PureComponent {
     });
   };
 
-  updateCordaNodes = () => {
-    const projects = this.state.config.settings.workspace.projects;
-    this.state.config.settings.workspace.nodes.forEach(node => {
-      node.cordapps = projects.slice();
-    });
-    this.state.config.settings.workspace.notaries.forEach(node => {
-      node.cordapps = projects.slice();
+  updateCordaNodes = (path, remove = false) => {
+    const workspace = this.state.config.settings.workspace;
+    const nodes = [...workspace.nodes, ...workspace.notaries];
+    nodes.forEach(node => {
+      const cordapps = node.cordapps;
+      if (remove) {
+        const index = cordapps.indexOf(path);
+        if (index !== -1) {
+          cordapps.splice(index, 1);
+        }
+      } else {
+        cordapps.push(path);
+      }
     });
   }
 
@@ -169,7 +175,7 @@ class ConfigScreen extends PureComponent {
       this.state.config.settings.workspace.projects.push(path);
     }
     if (this.state.config.settings.workspace.flavor === "corda") {
-      this.updateCordaNodes();
+      this.updateCordaNodes(path);
     }
     this.forceUpdate();
   };
@@ -181,7 +187,7 @@ class ConfigScreen extends PureComponent {
     // eslint-disable-next-line react/no-direct-mutation-state
     this.state.config.settings.workspace.projects = newProjects;
     if (this.state.config.settings.workspace.flavor === "corda") {
-      this.updateCordaNodes();
+      this.updateCordaNodes(path, true);
     }
     this.forceUpdate();
   };
