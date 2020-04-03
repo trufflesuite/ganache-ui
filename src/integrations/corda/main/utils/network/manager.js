@@ -109,12 +109,12 @@ class NetworkManager extends EventEmitter {
       this._io.sendProgress("Configuring Postgres Hooks...", 0);
       this.postGresHooksPromise = this.setupPostGresHooks();
       this._io.sendProgress("Copying Cordapps...", 500);
-      await this.copyCordappsAndSetupNetwork();
       await Promise.all([
+        this.copyCordappsAndSetupNetwork(),
         this.postGresHooksPromise,
-        this.hashCordapps()
+        this.hashCordapps(),
+        this.addCordappListeners()
       ]);
-      this.addCordappListeners();
       if (this.cancelled) return;
       this._io.sendProgress("Configuring RPC Manager...");
       this.braid = new Braid(join(await BRAID_HOME, ".."), this._io);
