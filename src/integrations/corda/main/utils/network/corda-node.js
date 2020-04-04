@@ -284,9 +284,6 @@ class CordaNode {
 
       this.status = "started";
       this.shuttingDown = false;
-
-      await conn.exec("output-format", ["set", "json"]);
-      this.entity.cordaDiagnosticInfo = await conn.exec("run", ["nodeDiagnosticInfo"]);
       resolve(conn);
     } catch(e) {
       await this.stop(true);

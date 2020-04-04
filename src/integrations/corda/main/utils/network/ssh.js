@@ -76,10 +76,10 @@ class SSH {
   gracefulShutdown(callback){
     this.ssh.connection.once("error", () => {
       // swallow the error
-      // this shutdown command causes a disconnect from the corda
+      // this shutdown command causes a disconnect from corda
       // which results an error within the ssh connection logic.
     });
-    this.ssh.exec("run", ["gracefulShutdown"]).catch(e => {
+    this.ssh.execCommand("run gracefulShutdown").catch(e => {
       // eslint-disable-next-line no-console
       console.error(e);
       // didn't seem to work... send SIGINT
