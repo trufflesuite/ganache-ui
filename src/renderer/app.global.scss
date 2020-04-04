@@ -363,6 +363,7 @@ h3.Label {
     width:0px !important;
     min-width:0px !important;
     overflow: hidden;
+    order: 99999999;
   }
   &::after, .corda-tab {
     margin: 0;
