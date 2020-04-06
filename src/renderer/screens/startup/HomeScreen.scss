@@ -134,7 +134,7 @@
                   margin-bottom: 0;
                 }
     
-                .DeleteWorkspace {
+                .EditSettings, .DeleteWorkspace {
                   opacity: 0;
                   width: 1.3rem;
                   vertical-align: middle;
@@ -142,12 +142,18 @@
                   position: absolute;
                   right: 1rem;
                 }
-    
+                
+                .EditSettings{
+                  right: 4rem;
+                  svg {
+                    fill: var(--app-button-primary-color);
+                  }
+                }
                 &:hover, &:focus, &:active {
                   color: #fbf1ec;
                   background: #5f474e;
     
-                  .DeleteWorkspace {
+                  .EditSettings, .DeleteWorkspace {
                     opacity: 1;
     
                     &:hover, &:focus {

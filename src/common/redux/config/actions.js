@@ -72,7 +72,7 @@ export const clearAllSettingErrors = function() {
 export const STARTUP_MODE = {
   NORMAL: 0,
   NEW_WORKSPACE: 1,
-  SAVING_WORKSPACE: 2,
+  EDIT_WORKSPACE: 2
 };
 
 export const SET_STARTUP_MODE = `${prefix}/SET_STARTUP_MODE`;
