@@ -116,7 +116,7 @@ class ConfigScreen extends PureComponent {
       // restart application without saving settings if the user hit cancel
       this.props.dispatch(Core.requestServerRestart());
     } else {
-      if (this.props.config.startupMode !== Config.STARTUP_MODE.NORMAL) {
+      if (this.props.config.startupMode === Config.STARTUP_MODE.NEW_WORKSPACE) {
         this.props.dispatch(closeWorkspace());
         this.props.dispatch(
           deleteWorkspace(this.props.workspaces.current.name, this.props.workspaces.current.flavor),

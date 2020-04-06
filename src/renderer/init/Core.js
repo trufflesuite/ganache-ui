@@ -68,7 +68,7 @@ export function initCore(store) {
 
       store.dispatch(setStartupMode(startupMode));
       switch (startupMode) {
-        case STARTUP_MODE.SAVING_WORKSPACE:
+        case STARTUP_MODE.EDIT_WORKSPACE:
         case STARTUP_MODE.NEW_WORKSPACE: {
           store.dispatch(replace("/config"));
           break;

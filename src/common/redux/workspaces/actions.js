@@ -58,6 +58,14 @@ export const openNewWorkspaceConfig = function(flavor = "ethereum") {
   };
 };
 
+export const OPEN_WORKSPACE_CONFIG = `${prefix}/OPEN_WORKSPACE_CONFIG`;
+export const openWorkspaceConfig = function(workspaceName, flavor) {
+  return function(dispatch) {
+    dispatch(push("/loader"));
+    ipcRenderer.send(OPEN_WORKSPACE_CONFIG, workspaceName, flavor);
+  };
+};
+
 export const SAVE_WORKSPACE = `${prefix}/SAVE_WORKSPACE`;
 export const saveWorkspace = function(name) {
   return function(dispatch, getState) {

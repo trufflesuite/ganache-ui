@@ -56,7 +56,9 @@ class NodeDetails extends Component {
     let canceller = this.refresher.getCanceller();
 
     if (this.state.node) {
-      const nodes = this.props.config.settings.workspace.nodes;
+      const nodes = this.props.config.settings.workspace.nodes.filter(node => {
+        return this.props.config.cordaNodeStatus[node.safeName] !== "stopped";
+      });
       const postgresPort =  this.props.config.settings.workspace.postgresPort;
 
       const notariesProm = fetch("https://localhost:" + (this.state.node.braidPort) + "/api/rest/network/notaries")
@@ -68,6 +70,10 @@ class NodeDetails extends Component {
 
       notariesProm.then(notaries => {
         if (canceller.cancelled) return;
+        notaries = notaries.filter(notary => {
+          const workspaceNode = this.getWorkspaceNotary(notary.owningKey);
+          return this.props.config.cordaNodeStatus[workspaceNode.safeName] !== "stopped";
+        });
         this.setState({notaries});
       });
 
@@ -96,8 +102,11 @@ class NodeDetails extends Component {
                 return false;
               } else {
                 // filter out notaries
-                if(!notariesMap.has(nodeIdent.owningKey)){
-                  nodesMap.set(nodeIdent.owningKey, node);
+                if (!notariesMap.has(nodeIdent.owningKey)) {
+                  const workspaceNode = this.getWorkspaceNode(nodeIdent.owningKey);
+                  if (this.props.config.cordaNodeStatus[workspaceNode.safeName] !== "stopped") {
+                    nodesMap.set(nodeIdent.owningKey, node);
+                  }
                 }
               }
             });
@@ -223,7 +232,7 @@ class NodeDetails extends Component {
 
   getConnectedNodes(){
     const loading = (<div className="Waiting Waiting-Padded">Loading Nodes &amp; Notaries...</div>);
-    const noPeers = (<div className="Waiting Waiting-Padded">No Node &amp; Notary peers...</div>);
+    const noPeers = (<div className="Waiting Waiting-Padded">No Connected Nodes or Notaries</div>);
     let nodes = [];
     let hasNoPeers = (!!this.state.nodes && !!this.state.notaries);
     if (this.state.nodes) {

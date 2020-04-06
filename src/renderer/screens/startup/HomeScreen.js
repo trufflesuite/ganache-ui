@@ -8,6 +8,7 @@ import {
   openWorkspace,
   openDefaultWorkspace,
   openNewWorkspaceConfig,
+  openWorkspaceConfig,
   deleteWorkspace,
   downloadExtras
 } from "../../../common/redux/workspaces/actions";
@@ -23,6 +24,7 @@ import Logo from "../../icons/logo.svg";
 import ChainIcon from "../../icons/chain.svg";
 import MenuIcon from "../../icons/list.svg";
 import TrashIcon from "../../icons/trash-icon.svg";
+import SettingsIcon from "../../icons/settings.svg";
 
 class HomeScreen extends Component {
   constructor(props) {
@@ -35,6 +37,16 @@ class HomeScreen extends Component {
 
   selectWorkspace(workspace) {
     this.props.dispatch(openWorkspace(workspace.name, workspace.flavor));
+  }
+  handleEditWorkspaceSettings(workspace, e) {
+    const workspaceName = workspace.name;
+    const workspaceFlavor = workspace.flavor;
+    e.stopPropagation();
+    e.preventDefault();
+
+    document.activeElement.blur();
+
+    this.props.dispatch(openWorkspaceConfig(workspaceName, workspaceFlavor));
   }
 
   handleDeleteWorkspace(workspace, e) {
@@ -132,6 +144,12 @@ class HomeScreen extends Component {
           <li key={workspaceInfo.name + workspaceInfo.flavor}>
             <button onClick={()=>this.selectWorkspace(workspaceInfo)}>
               <span>{workspaceInfo.name} ({workspaceInfo.flavor})</span>
+              <div
+                className="EditSettings"
+                onClick={(e) => this.handleEditWorkspaceSettings(workspaceInfo, e)}
+              >
+                <SettingsIcon />
+              </div>
               <div
                 className="DeleteWorkspace"
                 onClick={(e) => this.handleDeleteWorkspace(workspaceInfo, e)}

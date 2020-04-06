@@ -32,6 +32,7 @@ import {
   DELETE_WORKSPACE,
   SET_CURRENT_WORKSPACE,
   OPEN_NEW_WORKSPACE_CONFIG,
+  OPEN_WORKSPACE_CONFIG,
   DOWNLOAD_EXTRAS,
 } from "../common/redux/workspaces/actions";
 import {
@@ -494,12 +495,19 @@ app.on('ready', () => {
   });
 
   ipcMain.on(OPEN_NEW_WORKSPACE_CONFIG, async (_event, flavor = "ethereum") => {
+    ipcMain.emit(OPEN_WORKSPACE_CONFIG, _event, null, flavor);
+  });
+
+  ipcMain.on(OPEN_WORKSPACE_CONFIG, async (_event, workspaceName, flavor) => {
     await integrations.stopServer();
 
     global.set("last_flavor", flavor);
 
-    const defaultWorkspace = workspaceManager.get(null, flavor);
-    const workspaceName = moniker.choose();
+    startupMode = workspaceName ? STARTUP_MODE.EDIT_WORKSPACE : STARTUP_MODE.NEW_WORKSPACE;
+    const defaultWorkspace = workspaceManager.get(workspaceName || null, flavor);
+    if (!workspaceName) {
+      workspaceName = moniker.choose();
+    }
     const wallet = new ethagen({ entropyBits: 128 });
     defaultWorkspace.saveAs(
       workspaceName,
@@ -524,7 +532,6 @@ app.on('ready', () => {
       workspace.contractCache.getAll(),
     );
 
-    startupMode = STARTUP_MODE.NEW_WORKSPACE;
     if (flavor === "ethereum") {
       await integrations.startChain();
       await integrations.startServer();
