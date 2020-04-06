@@ -197,6 +197,11 @@ class Corda {
         password: "letmein",
         port: this.entity.sshdPort
       })
+      ssh.connection.once("error", () => {
+        // swallow the error
+        // this shutdown command causes a disconnect from corda
+        // which results an error within the ssh connection logic.
+      });
       this.ssh = ssh;
       this.status = "started";
 
