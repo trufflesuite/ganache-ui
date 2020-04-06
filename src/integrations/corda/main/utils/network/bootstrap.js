@@ -33,6 +33,7 @@ class CordaBootstrap {
     const writer = async (arr, out, template) => {
       for (let i = 0; i < arr.length; i++) {
         const current = arr[i];
+        current.sshdPort = current.sshdPort || (current.rpcPort + 1000);
         const name = `${current.safeName}`;
         out.push(current);
         const path = join(this.workspaceDirectory, `${name}_node.conf`)
