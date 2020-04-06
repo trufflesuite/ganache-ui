@@ -292,6 +292,11 @@ h3.Label {
   display: flex;
   flex-direction: column;
 }
+
+.variable-value > div {
+  background-color: rgb(245, 245, 245) !important;
+}
+
 .corda-details-section {
   border:solid var(--app-panel-divider-color);
   border-width: 1px 0;
