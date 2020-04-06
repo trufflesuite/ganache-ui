@@ -200,7 +200,8 @@ app.on('ready', () => {
     frame: true,
     icon: getIconPath(),
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      enableRemoteModule:true
     }
   });
 
