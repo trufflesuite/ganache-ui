@@ -29,6 +29,10 @@ class SSH {
             password: "letmein",
             port: this.port
           })
+          this.ssh.connection.on("error", () => {
+            // ignore connection errors, because we're probably
+            // just shutting down anyway
+          });
           this.ssh.connection.on("end", () => {
             this._status = "stopped";
           })
