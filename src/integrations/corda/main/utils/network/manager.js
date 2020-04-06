@@ -106,7 +106,7 @@ class NetworkManager extends EventEmitter {
       this._io.sendProgress("Bootstrapping network...");
       if (this.settings.runBootstrap) {
         await cordaBootstrap.bootstrap(this.config);
-        this.settings.runBootstrap = this.settings.name === "Quickstart" ? true : false;
+        this.settings.runBootstrap = this.settings.name === "Quickstart";
       } else {
         this._io.sendProgress("Skipping; network already bootstrapped.", 250);
       }
