@@ -125,6 +125,17 @@ const performShutdownTasks = async (integrations) => {
   }
 };
 
+function addLogLines(data, context = undefined) {
+  // `mainWindow` can be null/undefined here if the process is killed
+  // (common when developing)
+  if (mainWindow) {
+    mainWindow.webContents.send(ADD_LOG_LINES, data.toString().split(/\n/g), context);
+  } else {
+    // eslint-disable-next-line no-console
+    console.error(data.toString());
+  }
+}
+
 // create main BrowserWindow when electron is ready
 app.on('ready', () => {
   const global = new GlobalSettings(path.join(USERDATA_PATH, "global"));
@@ -143,6 +154,7 @@ app.on('ready', () => {
   });
   integrations.on("progress", function(message, minDuration = null) {
     mainWindow.webContents.send(SET_PROGRESS, message, minDuration);
+    addLogLines(message + "\n");
   });
   
   const workspaceManager = integrations.workspaceManager;
@@ -355,16 +367,6 @@ app.on('ready', () => {
       }
     });
 
-    function addLogLines(data, context) {
-      // `mainWindow` can be null/undefined here if the process is killed
-      // (common when developing)
-      if (mainWindow) {
-        mainWindow.webContents.send(ADD_LOG_LINES, data.toString().split(/\n/g), context);
-      } else {
-        // eslint-disable-next-line no-console
-        console.error(data.toString());
-      }
-    }
     integrations.on("stdout", addLogLines);
     integrations.on("stderr", addLogLines);
     integrations.on("error", async _error => {
