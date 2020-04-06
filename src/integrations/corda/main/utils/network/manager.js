@@ -106,7 +106,7 @@ class NetworkManager extends EventEmitter {
       if (this.settings.runBootstrap) {
         this._io.sendProgress("Bootstrapping network...");
         await cordaBootstrap.bootstrap(this.config);
-        this.settings.runBootstrap = false;
+        this.settings.runBootstrap = this.settings.name === "Quickstart" ? true : false;
       }
       if (this.cancelled) return;
       this._io.sendProgress("Configuring Postgres Hooks...", 0);
