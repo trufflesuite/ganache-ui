@@ -245,6 +245,7 @@ class NetworkManager extends EventEmitter {
         entity.braidPort = await this.getPort(entity.rpcPort + 10000);
         if (this.cancelled) return;
         const braidPromise = this.braid.start(entity, currentPath, JAVA_HOME);
+        entity.version = entity.version || "4_3";
         const corda = new Corda(entity, currentPath, JAVA_HOME, this._io);
         this.processes.push(corda);
         const cordaProm = corda.start();
