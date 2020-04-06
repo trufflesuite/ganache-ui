@@ -372,7 +372,11 @@ class NetworkManager extends EventEmitter {
           entity.braidPort = await this.getPort(entity.rpcPort + 10000);
           if (this.cancelled) return;
           const braidPromise = this.braid.start(entity, currentPath, JAVA_HOME);
-          const CORDA_HOME = await this.config.corda.files[`corda${entity.version || "4_4"}`].download();
+          entity.version = entity.version || "4_4";
+          if (!this.config.corda.files[`corda${entity.version}`]) {
+            entity.version = "4_4";
+          }
+          const CORDA_HOME = await this.config.corda.files[`corda${entity.version}`].download();
           const corda = new CordaNode(entity, currentPath, JAVA_HOME, CORDA_HOME, this._io);
           this.processes.push(corda);
           const cordaProm = corda.start().then(() => {
