@@ -18,12 +18,12 @@
   right: 0;
   height: 100%;
   width: 100%;
-  z-index: 4;
   background-color: rgba(117, 127, 134, 0.9);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  z-index: 5;
 
   header {
     background: var(--app-navbar-background);
