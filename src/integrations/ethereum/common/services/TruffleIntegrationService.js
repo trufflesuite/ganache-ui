@@ -113,11 +113,11 @@ class TruffleIntegrationService extends EventEmitter {
 
   async getProjectDetails(projectConfigFile, networkId) {
     return new Promise((resolve, reject) => {
-      this.once("project-details-response", details => {
-        resolve(details);
-      });
-
       if (this.child !== null && this.child.connected) {
+        this.once("project-details-response", details => {
+          resolve(details);
+        });
+        
         this.child.send({
           type: "project-details-request",
           data: {
@@ -142,15 +142,15 @@ class TruffleIntegrationService extends EventEmitter {
 
   async getContractState(contract, contracts, block) {
     return new Promise((resolve, reject) => {
-      this.once("decode-contract-response", state => {
-        if (typeof state === "object") {
-          resolve(state);
-        } else {
-          reject(state);
-        }
-      });
-
       if (this.child !== null && this.child.connected) {
+        this.once("decode-contract-response", state => {
+          if (typeof state === "object") {
+            resolve(state);
+          } else {
+            reject(state);
+          }
+        });
+
         this.child.send({
           type: "decode-contract-request",
           data: { contract, contracts, block },
@@ -163,15 +163,14 @@ class TruffleIntegrationService extends EventEmitter {
 
   async getDecodedEvent(contract, contracts, log) {
     return new Promise((resolve, reject) => {
-      this.once("decode-event-response", data => {
-        if (typeof data === "object") {
-          resolve(data);
-        } else {
-          reject(data);
-        }
-      });
-
       if (this.child !== null && this.child.connected) {
+        this.once("decode-event-response", data => {
+          if (typeof data === "object") {
+            resolve(data);
+          } else {
+            reject(data);
+          }
+        });
         this.child.send({
           type: "decode-event-request",
           data: { contract, contracts, log },
@@ -184,15 +183,15 @@ class TruffleIntegrationService extends EventEmitter {
 
   async getDecodedTransaction(contract, contracts, transaction) {
     return new Promise((resolve, reject) => {
-      this.once("decode-transaction-response", data => {
-        if (typeof data === "object") {
-          resolve(data);
-        } else {
-          reject(data);
-        }
-      });
-
       if (this.child !== null && this.child.connected) {
+        this.once("decode-transaction-response", data => {
+          if (typeof data === "object") {
+            resolve(data);
+          } else {
+            reject(data);
+          }
+        });
+
         this.child.send({
           type: "decode-transaction-request",
           data: { contract, contracts, transaction },
