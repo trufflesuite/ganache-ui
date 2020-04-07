@@ -23,7 +23,7 @@ class NodeDetails extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {node: this.findNodeFromProps(), nodes:null, notaries:null, cordapps: null, transactions: null};
+    this.state = {node: this.findNodeFromProps(), nodes:null, notaries:null, cordapps: null, transactions: null, collapse:{}};
   }
 
   componentWillUnmount() {
@@ -43,7 +43,7 @@ class NodeDetails extends Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.match.params.node !== this.props.match.params.node) {
-      this.setState({node: this.findNodeFromProps(), nodes:null, notaries:null, cordapps:null, transactions: null}, this.refresh.bind(this));
+      this.setState({node: this.findNodeFromProps(), nodes:null, notaries:null, cordapps:null, transactions: null, collapse: {}}, this.refresh.bind(this));
     }
     if (prevProps.config.updated !== this.props.config.updated) {
       this.refresh();
@@ -264,6 +264,12 @@ class NodeDetails extends Component {
     return nodes.length ? nodes : hasNoPeers ? noPeers : loading;
   }
 
+  collapseSection = (key) => {
+    this.setState({
+      collapse: { ...this.state.collapse, [key]: !this.state.collapse[key]}
+    });
+  };
+
   getTransactions(){
     let noTxsOrLoading;
     let txs;
@@ -327,13 +333,15 @@ class NodeDetails extends Component {
         </header>
         <main className="corda-details-container corda-node-details">
           <div className="corda-details-section">
-            <h3 className="Label">
+            <h3 className="Label" onClick={() => this.collapseSection("details")}>
               Connection Details
 
               {
                 restartButton
               }
             </h3>
+            {this.state.collapse.details ? null :
+            <div>
             <div className="DataRow corda-node-details-ports corda-details-section corda-details-padded">
               <div>
                 <div className="Label">RPC Port</div>
@@ -367,27 +375,28 @@ class NodeDetails extends Component {
                 <div className="Label">Postgres Connection</div>
                 <div className="Value">postgresql://corda@localhost:{this.props.config.settings.workspace.postgresPort}/{node.safeName}</div>
               </div>
+            </div> 
+            </div>
+          }
+          </div>
+          <div className="corda-details-section">
+            <h3 className="Label" onClick={() => this.collapseSection("cordapps")}>CorDapps</h3>
+            <div className="Nodes DataRows">
+              {this.state.collapse.cordapps ? null : <main>{this.getCordapps()}</main>}
             </div>
           </div>
 
           <div className="corda-details-section">
-            <h3 className="Label">CorDapps</h3>
+            <h3 className="Label" onClick={() => this.collapseSection("nodes")}>Connected Nodes &amp; Notaries</h3>
             <div className="Nodes DataRows">
-              <main>{this.getCordapps()}</main>
+              {this.state.collapse.nodes ? null : <main>{this.getConnectedNodes()}</main>}
             </div>
           </div>
 
           <div className="corda-details-section">
-            <h3 className="Label">Connected Nodes &amp; Notaries</h3>
+            <h3 className="Label" onClick={() => this.collapseSection("transactions")}>Recent Transactions</h3>
             <div className="Nodes DataRows">
-              <main>{this.getConnectedNodes()}</main>
-            </div>
-          </div>
-
-          <div className="corda-details-section">
-            <h3 className="Label">Recent Transactions</h3>
-            <div className="Nodes DataRows">
-              <main>{this.getTransactions()}</main>
+              {this.state.collapse.transactions ? null : <main>{this.getTransactions()}</main>}
             </div>
           </div>
         </main>
