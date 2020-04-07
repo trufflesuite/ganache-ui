@@ -48,7 +48,7 @@ class CordaBootstrap {
         // I can't figure out how to use this config generator to save my life.
         // I'm just going to write what I want to the file here:
         await close;
-        appendFileSync(path, `jarDirs=["${POSTGRES_DRIVER}"]`);
+        appendFileSync(path, `jarDirs=["${POSTGRES_DRIVER.replace(/\\/g, "\\\\")}"]`);
       }
     }
 
