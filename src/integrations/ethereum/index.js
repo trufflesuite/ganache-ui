@@ -37,8 +37,17 @@ class Ethereum extends Integrations {
     this.chain.on("message", this.emit.bind(this, "message"));
   }
 
+  _ipcListeners = []
+  onIpc(event, callback){
+    this._ipcListeners.push({event, callback});
+    return this.ipc.on(event, callback);
+  }
+  offIpc() {
+    this._ipcListeners.forEach(({event, callback}) => this.ipc.off(event, callback));
+    this._ipcListeners = [];
+  }
   async _listenToIPC() {
-    this.ipc.on(
+    this.onIpc(
       GET_CONTRACT_DETAILS,
       async (event, contract, contracts, block) => {
         const state = await this.projectIntegration.getContractState(
@@ -50,11 +59,11 @@ class Ethereum extends Integrations {
       },
     );
 
-    this.ipc.on("web3-provider", (event, url) => {
+    this.onIpc("web3-provider", (event, url) => {
       this.projectIntegration.setWeb3(url);
     });
 
-    this.ipc.on(GET_DECODED_EVENT, async (event, contract, contracts, log) => {
+    this.onIpc(GET_DECODED_EVENT, async (event, contract, contracts, log) => {
       try {
         const decodedLog = await this.projectIntegration.getDecodedEvent(
           contract,
@@ -69,7 +78,7 @@ class Ethereum extends Integrations {
       }
     });
 
-    this.ipc.on(
+    this.onIpc(
       GET_DECODED_TRANSACTION_INPUT,
       async (event, contract, contracts, transaction) => {
         try {
@@ -146,6 +155,7 @@ class Ethereum extends Integrations {
     return this.chain.startServer(workspaceSettings);
   }
   async stop() {
+    this.offIpc();
     await this.stopServer();
     return Promise.all([
       this.chain.stop(),
