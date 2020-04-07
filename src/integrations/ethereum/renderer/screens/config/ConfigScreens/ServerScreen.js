@@ -30,13 +30,13 @@ const VALIDATIONS = {
   },
 };
 
-const FORK_URLS = {
-  mainnet: "wss://mainnet.infura.io/ws/v3/f6194ba837b640bba3db3d29cc658b07",
-  ropsten: "wss://ropsten.infura.io/ws/v3/f6194ba837b640bba3db3d29cc658b07",
-  kovan: "wss://kovan.infura.io/ws/v3/f6194ba837b640bba3db3d29cc658b07",
-  rinkeby: "wss://rinkeby.infura.io/ws/v3/f6194ba837b640bba3db3d29cc658b07",
-  goerli: "wss://goerli.infura.io/ws/v3/f6194ba837b640bba3db3d29cc658b07",
-};
+// const FORK_URLS = {
+//   mainnet: "wss://mainnet.infura.io/ws/v3/f6194ba837b640bba3db3d29cc658b07",
+//   ropsten: "wss://ropsten.infura.io/ws/v3/f6194ba837b640bba3db3d29cc658b07",
+//   kovan: "wss://kovan.infura.io/ws/v3/f6194ba837b640bba3db3d29cc658b07",
+//   rinkeby: "wss://rinkeby.infura.io/ws/v3/f6194ba837b640bba3db3d29cc658b07",
+//   goerli: "wss://goerli.infura.io/ws/v3/f6194ba837b640bba3db3d29cc658b07",
+// };
 class ServerScreen extends Component {
   constructor(props) {
     super(props);
@@ -164,7 +164,7 @@ class ServerScreen extends Component {
               </StyledSelect>
               {this.props.validationErrors["workspace.server.hostname"] && (
                 <p className="ValidationError">
-                  Must be a valid IP address or "localhost"
+                  Must be a valid IP address or &quote;localhost&quote;
                 </p>
               )}
               {!("workspace.server.hostname" in this.props.validationErrors) &&
@@ -321,7 +321,7 @@ class ServerScreen extends Component {
               <div className="RowItem">
                 <p>
                   When transactions fail, throw an error. If disabled,
-                  transaction failures will only be detectable via the "status"
+                  transaction failures will only be detectable via the &quote;status&quote;
                   flag in the transaction receipt. Disabling this feature will
                   make Ganache handle transaction failures like other Ethereum
                   clients.
@@ -367,7 +367,7 @@ class ServerScreen extends Component {
             </section>
             <OnlyIf test={this.state.forking}>
               <section>
-              <h4>SELECT CHAIN</h4>
+              {/* <h4>SELECT CHAIN</h4>
               <div className="Row">
                 <div className="RowItem">
                   <div className="Radio">
@@ -425,11 +425,11 @@ class ServerScreen extends Component {
                     </label>
                   </div>
                 </div>
-                <div className="RowItem">
-                  <p>Note: Chain forking is an advanced feature and is still in active development. Please let the Truffle team know if you run into any issues.</p>
-                </div>
+              </div> */}
+              <div className="RowItem">
+                <p>Note: Chain forking is an advanced feature and is still in active development. Please let the Truffle team know if you run into any issues.</p>
               </div>
-              <h4>OR CUSTOM URL</h4>
+              <h4>ENTER CUSTOM URL</h4>
               <div className="Row">
                 <div className="RowItem">
                   <input
@@ -440,7 +440,7 @@ class ServerScreen extends Component {
                   />
                 </div>
                 <div className="RowItem">
-                  <p>The URL of the existing chain&apos;s RPC server, e.g., https://beta-mainnet.trufflesuite.com</p>
+                  <p>The URL of the existing chain&apos;s RPC server.</p>
                 </div>
               </div>
               <h4>BLOCK NUMBER</h4>
@@ -452,7 +452,7 @@ class ServerScreen extends Component {
                     value={this.props.config.settings.workspace.server.fork_block_number || ""}
                     onChange={this.validateChange.bind(this)}
                   />
-                </div>
+                </div> 
                 <div className="RowItem">
                   <p>The URL of the block number to fork from, e.g., 56789</p>
                 </div>
