@@ -45,6 +45,12 @@ class ReduxWeb3Provider extends EventEmitter {
         this.dispatch(RPCRequestSucceeded(payload, response.result));
       }
 
+      // if the workspace was closed in the middle of a response
+      // just don't resolve
+      if (!this.getState().web3.web3Instance) {
+        return callback(new Error("No workspace"));
+      }
+
       callback(err, response);
     });
   }
