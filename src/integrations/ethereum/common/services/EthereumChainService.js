@@ -68,7 +68,7 @@ class EthereumChainService extends EventEmitter {
     if (this._child) {
       const options = this._ganacheCoreOptionsFromGanacheSettingsObject(settings);
       return new Promise((resolve, reject) => {
-        this.once("start-server", resolve);
+        this.once("server-started", resolve);
         this.once("error", reject);
         this._child.send({
           type: "start-server",
