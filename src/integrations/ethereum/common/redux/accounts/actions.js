@@ -9,14 +9,15 @@ export const getAccounts = function() {
     var currentAddresses = getState().accounts.addresses;
 
     // Only save accounts if they've changed
-    if (addresses.length > currentAddresses.length) {
+    if (addresses && currentAddresses && addresses.length > currentAddresses.length) {
       dispatch({ type: GET_ACCOUNTS, addresses });
     }
-
-    addresses.forEach(address => {
-      dispatch(getAccountBalance(address));
-      dispatch(getAccountNonce(address));
-    });
+    if (addresses) {
+      addresses.forEach(address => {
+        dispatch(getAccountBalance(address));
+        dispatch(getAccountNonce(address));
+      });
+    }
   };
 };
 
