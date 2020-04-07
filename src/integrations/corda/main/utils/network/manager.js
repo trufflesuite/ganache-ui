@@ -114,8 +114,8 @@ class NetworkManager extends EventEmitter {
       this._io.sendProgress("Configuring Postgres Hooks...", 0);
       this.postGresHooksPromise = this.setupPostGresHooks();
       this._io.sendProgress("Copying Cordapps...", 500);
+      await this.copyCordappsAndSetupNetwork();
       await Promise.all([
-        this.copyCordappsAndSetupNetwork(),
         this.postGresHooksPromise,
         this.hashCordapps(),
         this.addCordappListeners()
