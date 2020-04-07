@@ -193,12 +193,6 @@ app.on('ready', () => {
     }
   });
 
-  // Open the DevTools.
-  if (isDevMode) {
-    //installExtension(REACT_DEVELOPER_TOOLS);
-    //mainWindow.webContents.openDevTools();
-  }
-
   if (isDevelopment) {
     mainWindow.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`)
   } else {
