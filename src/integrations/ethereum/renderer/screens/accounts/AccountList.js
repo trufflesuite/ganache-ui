@@ -34,6 +34,7 @@ class AccountList extends Component {
   _renderAccounts = () => {
     const self = this;
     return this.props.accounts.map((account, index) => {
+      const balance = this.props.balances[account];
       return (
         <div className="AccountCard" key={`account-card-${index}`}>
           <div className="AddressAndBalance">
@@ -46,9 +47,9 @@ class AccountList extends Component {
             <div className="AccountBalance">
               <div className="Label">BALANCE</div>
               <div className="Value">
-                <FormattedEtherValue
-                  value={this.props.balances[account].toString()}
-                />
+                { balance ? <FormattedEtherValue
+                  value={balance.toString()}
+                /> : "" }
               </div>
             </div>
           </div>
