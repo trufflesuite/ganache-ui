@@ -32,7 +32,14 @@ async function stopServer() {
   if (server) {
     return new Promise((resolve, reject) => {
       server.close((err) => {
-        if (err) reject(err);
+        if (err) {
+          if (err.code === "ERR_SERVER_NOT_RUNNING"){
+            process.send({ type: "server-stopped" });
+            resolve();
+          } else {
+            reject(err);
+          }
+        }
         else resolve();
       });
     })
