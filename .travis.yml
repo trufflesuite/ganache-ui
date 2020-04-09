@@ -26,6 +26,7 @@ before_install:
 - if [ "$TRAVIS_OS_NAME" = "osx" ] && [ "$TRAVIS_SECURE_ENV_VARS" = "true" ] && [ "$TRAVIS_PULL_REQUEST" = "false" ]; then
     echo "Configuring keychain...";
     export CERT=certs/osx.p12;
+    export NOTARIZE=true;
     openssl aes-256-cbc -K $encrypted_7777a4e0a460_key -iv $encrypted_7777a4e0a460_iv -in certs/osx.p12.enc -out $CERT -d;
 
     export CSC_KEYCHAIN=build.keychain;
