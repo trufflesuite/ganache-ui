@@ -504,14 +504,19 @@ app.on('ready', () => {
     const defaultWorkspace = workspaceManager.get(workspaceName || null, flavor);
     if (!workspaceName) {
       workspaceName = moniker.choose();
+      const wallet = new ethagen({ entropyBits: 128 });
+      // make sure we don't start with any projects for new workspaces
+      defaultWorkspace.settings.set("projects", []);
+      defaultWorkspace.saveAs(
+        workspaceName,
+        null,
+        workspaceManager.directory,
+        wallet.mnemonic,
+      );
+    } else {
+      const workspaceSettings = defaultWorkspace.settings.getAll();
+      defaultWorkspace.projects = workspaceSettings.projects;
     }
-    const wallet = new ethagen({ entropyBits: 128 });
-    defaultWorkspace.saveAs(
-      workspaceName,
-      null,
-      workspaceManager.directory,
-      wallet.mnemonic,
-    );
 
     workspaceManager.bootstrap();
 
@@ -552,9 +557,6 @@ app.on('ready', () => {
     continuouslySendNetworkInterfaces();
 
     const globalSettings = global.getAll();
-
-    // make sure we don't start with any projects for new workspaces
-    workspace.settings.set("projects", []);
 
     const workspaceSettings = workspace.settings.getAll();
     mainWindow.webContents.send(
