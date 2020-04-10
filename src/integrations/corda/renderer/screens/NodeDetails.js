@@ -7,6 +7,7 @@ import NodeLink from "../components/NodeLink";
 import React, { Component } from "react";
 import { startNode } from "../../../../common/redux/config/actions";
 import { cordaNickname } from "../utils/nickname";
+import DetailSection from "../components/DetailSection";
 
 function filterNodeBy(nodeToMatch) {
   return (node) => {
@@ -300,22 +301,17 @@ class NodeDetails extends Component {
     const style = {
       position: "absolute",
       right: "1.5rem",
-      top: "50%",
+      top: "5%",
       transform: "translateY(-50%)"
     };
     if (status === "stopped") {
-      restartButton = (<div style={style}>
-        <span>Node is stopped!</span> <button style={{marginLeft: "1rem"}} onClick={()=>this.props.dispatch(startNode(node.safeName))}>Restart</button>
-      </div>);
+      restartButton = (<span style={style}>
+        <span>Node is stopped!</span> <button style={{marginLeft: "1rem", padding:"1em"}} onClick={()=>this.props.dispatch(startNode(node.safeName))}>Restart</button>
+      </span>);
     } else if (status === "starting") {
-      restartButton = (<div style={{
-          position: "absolute",
-          right: "1.5rem",
-          top: "50%",
-          transform: "translateY(-50%)"
-        }}>
-          <span>Node is starting...</span>
-        </div>);
+      restartButton = (<span style={style}>
+        <span>Node is starting...</span>
+      </span>);
     }
 
     return (
@@ -325,20 +321,11 @@ class NodeDetails extends Component {
             &larr; Back
           </button>
           <h1 className="Title">
-            {node.name} (Corda {(node.version || "4_4").replace("_", ".")})
+            {node.name}(Corda {(node.version || "4_4").replace("_", ".")}) {restartButton}
           </h1>
         </header>
         <main className="corda-details-container corda-node-details">
-          <div className="corda-details-section">
-            <h3 className="Label" onClick={() => this.collapseSection("details")}>
-              Connection Details
-
-              {
-                restartButton
-              }
-            </h3>
-            {this.state.collapse.details ? null :
-            <div>
+          <DetailSection label={<span>Connection Details</span>}>
             <div className="DataRow corda-node-details-ports corda-details-section corda-details-padded">
               <div>
                 <div className="Label">RPC Port</div>
@@ -373,29 +360,19 @@ class NodeDetails extends Component {
                 <div className="Value">postgresql://corda@localhost:{this.props.config.settings.workspace.postgresPort}/{node.safeName}</div>
               </div>
             </div> 
-            </div>
-          }
-          </div>
-          <div className="corda-details-section">
-            <h3 className="Label" onClick={() => this.collapseSection("cordapps")}>CorDapps</h3>
-            <div className="Nodes DataRows">
-              {this.state.collapse.cordapps ? null : <main>{this.getCordapps()}</main>}
-            </div>
-          </div>
+          </DetailSection>
 
-          <div className="corda-details-section">
-            <h3 className="Label" onClick={() => this.collapseSection("nodes")}>Connected Nodes &amp; Notaries</h3>
-            <div className="Nodes DataRows">
-              {this.state.collapse.nodes ? null : <main>{this.getConnectedNodes()}</main>}
-            </div>
-          </div>
+          <DetailSection label="CorDapps">
+            {this.state.collapse.cordapps ? null : <main>{this.getCordapps()}</main>}
+          </DetailSection>
 
-          <div className="corda-details-section">
-            <h3 className="Label" onClick={() => this.collapseSection("transactions")}>Recent Transactions</h3>
-            <div className="Nodes DataRows">
+          <DetailSection label="Connected Nodes &amp; Notaries">
+            {this.state.collapse.nodes ? null : <main>{this.getConnectedNodes()}</main>}
+          </DetailSection>
+
+          <DetailSection label="Recent Transaction">
               {this.state.collapse.transactions ? null : <main>{this.getTransactions()}</main>}
-            </div>
-          </div>
+          </DetailSection>
         </main>
       </section>
     );
