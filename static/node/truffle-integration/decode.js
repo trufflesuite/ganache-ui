@@ -10,20 +10,20 @@ async function getContractState(
     block = "latest";
   }
 
-  const decoder = TruffleDecoder.forContract(
+  const decoder = await TruffleDecoder.forDeployedArtifact(
     truffleContract,
-    inheritedContracts,
     web3Host,
+    inheritedContracts,
   );
-  await decoder.init();
 
-  let contractState;
+  let contractState = await decoder.state(block);
+  let variableState;
   try {
-    contractState = await decoder.state(block);
-  } catch (e) {
-    contractState = {};
-    contractState.error = e.stack || e.toString();
+    variableState = await decoder.variables(block);
+  } catch(e){
+    //TODO: ?
   }
+  // TODO: combine variableState and contractState
 
   return contractState;
 }
@@ -34,12 +34,11 @@ async function getDecodedEvent(
   web3Host,
   log,
 ) {
-  const decoder = TruffleDecoder.forContract(
+  const decoder = await TruffleDecoder.forDeployedArtifact(
     truffleContract,
-    inheritedContracts,
     web3Host,
+    inheritedContracts,
   );
-  await decoder.init();
 
   const decodedLog = await decoder.decodeLog(log);
 
@@ -52,12 +51,11 @@ async function getDecodedTransaction(
   web3Host,
   transaction,
 ) {
-  const decoder = TruffleDecoder.forContract(
+  const decoder = await TruffleDecoder.forDeployedArtifact(
     truffleContract,
-    inheritedContracts,
     web3Host,
+    inheritedContracts,
   );
-  await decoder.init();
 
   const decodedData = await decoder.decodeTransaction(transaction);
 
