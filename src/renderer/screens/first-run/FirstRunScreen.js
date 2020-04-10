@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { push } from "react-router-redux";
+import { push } from "connected-react-router";
 
 import connect from "../helpers/connect";
 
@@ -53,7 +53,7 @@ class FirstRunScreen extends Component {
   render() {
     return (
       <div className="FirstRunScreen">
-        <div className="Card CardShadow">
+        <div className="Card">
           <div className="MainContent">
             <div className="LeftColumn">
               <Logo></Logo>
@@ -71,7 +71,7 @@ class FirstRunScreen extends Component {
               </p>
               <p>Thanks for your help, and happy coding!</p>
               <p>
-                <i>-- The Truffle Team</i>
+                <i>– The Truffle Team</i>
               </p>
             </div>
             <div className="RightColumn">

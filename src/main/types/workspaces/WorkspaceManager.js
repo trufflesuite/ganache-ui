@@ -29,16 +29,24 @@ class WorkspaceManager {
           if (sanitizedName !== file) {
             // apparently the Settings file has a name that is not equal to the directory,
             //   we need to move the directory
-            fse.moveSync(
-              path.join(workspacesDirectory, file),
-              path.join(workspacesDirectory, sanitizedName),
-            );
+            try {
+              fse.moveSync(
+                path.join(workspacesDirectory, file),
+                path.join(workspacesDirectory, sanitizedName),
+              );
+            } catch(e) {
+              // It's okay that we ignore move errors, promise!
+              // They sometimes happen and i don't know why
+              console.log(e);
+            }
           }
-          return new Workspace(name, this.directory);
+          const flavor = settings.get("flavor");
+          return new Workspace(name, this.directory, flavor);
         });
     }
 
-    this.workspaces.push(new Workspace(null, this.directory));
+    this.workspaces.push(new Workspace(null, this.directory, "ethereum"));
+    this.workspaces.push(new Workspace(null, this.directory, "corda"));
   }
 
   bootstrap() {
@@ -51,11 +59,19 @@ class WorkspaceManager {
   getNonDefaultNames() {
     return this.workspaces
       .filter(workspace => workspace.name !== null)
-      .map(workspace => workspace.name);
+      .map(workspace => ({name: workspace.name, flavor: workspace.flavor}));
   }
 
-  get(name) {
-    return this.workspaces.find(workspace => name === workspace.name);
+  get(name, flavor = "ethereum") {
+    return this.workspaces.find(workspace => name === workspace.name && isFlavor(workspace.flavor, flavor));
+  }
+}
+
+function isFlavor(flavorA, flavorB){
+  if (flavorA === undefined && flavorB === "ethereum") {
+    return true;
+  } else {
+    return flavorA === flavorB;
   }
 }
 

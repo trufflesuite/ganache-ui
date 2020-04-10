@@ -3,17 +3,20 @@ import { ipcRenderer } from "electron";
 import {
   SET_WORKSPACES,
   SET_CURRENT_WORKSPACE,
-  CONTRACT_DEPLOYED,
-  CONTRACT_TRANSACTION,
-  CONTRACT_EVENT,
-  PROJECT_UPDATED,
   setWorkspaces,
-  setCurrentWorkspace,
-  contractDeployed,
-  contractTransaction,
-  contractEvent,
-  projectUpdated,
+  setCurrentWorkspace
 } from "../../common/redux/workspaces/actions";
+
+import {
+    PROJECT_UPDATED,
+    CONTRACT_DEPLOYED,
+    CONTRACT_EVENT,
+    CONTRACT_TRANSACTION,
+    contractDeployed,
+    contractTransaction,
+    contractEvent,
+    projectUpdated
+} from "../../integrations/ethereum/common/redux/workspaces/actions";
 
 export function initWorkspaces(store) {
   ipcRenderer.on(SET_WORKSPACES, (event, workspaceNames) => {

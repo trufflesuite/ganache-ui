@@ -9,6 +9,9 @@ $switch-width: 60px;
 $switch-height: 30px;
 
 .Switch {
+  :hover, :focus {
+    filter: brightness(105%);
+  }
   display: flex;
   align-items: center;
 

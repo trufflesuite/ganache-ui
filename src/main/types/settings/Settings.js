@@ -1,4 +1,5 @@
 import merge from "lodash.merge";
+import assign from "lodash.assign";
 import JsonStorage from "../json/JsonStorage";
 import UUID from "uuid";
 
@@ -72,7 +73,7 @@ class Settings {
     // where the current values take precedence.
     let currentSettings = this._getAllRaw();
 
-    currentSettings = merge({}, this.initialSettings, currentSettings);
+    currentSettings = assign({}, this.initialSettings, currentSettings);
 
     // Add any non-additive settings changes here by creating a function which
     // handles the settings change in question.

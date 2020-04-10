@@ -11,6 +11,7 @@ import {
   clearSettingError,
   clearAllSettingErrors,
   setSettings,
+  setVaultDataUpdated,
 } from "../../common/redux/config/actions";
 
 export function initConfig(store) {
@@ -33,4 +34,8 @@ export function initConfig(store) {
   ipcRenderer.on(SET_SETTINGS, (event, globalSettings, workspaceSettings) => {
     store.dispatch(setSettings(globalSettings, workspaceSettings));
   });
+
+  ipcRenderer.on("VAULT_DATA", (event, message) => {
+    store.dispatch(setVaultDataUpdated());
+  })
 }

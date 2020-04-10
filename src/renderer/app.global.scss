@@ -142,3 +142,289 @@ textarea {
   color: red !important;
   font-size: .65em !important;
 }
+
+.Label {
+  font-size: .75rem;
+  font-family: "RobotoCondensed-Regular";
+  font-weight: 800;
+  color: var(--app-card-label);
+  margin-bottom: .25rem;
+  text-transform: uppercase;
+  > .Label-rightAligned {
+    float:right;
+    opacity: .7;
+    font-style: italic;
+    margin-right:1rem;
+  }
+}
+
+.Value {
+  font-size: 1.125rem;
+  font-family: "Fira Code Regular";
+  color: var(--app-card-value);
+  word-break: break-all;
+}
+
+.DataRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.3rem .8rem;
+  background-color: var(--app-card-default-background);
+  position: relative;
+  border-bottom: 1px solid #aaa;
+}
+
+.TitleBar {
+  font-family: "Fira Code Regular", monospaced;
+  background: var(--app-card-default-background);
+  word-wrap: break-word;
+
+  display: flex;
+  align-items: center;
+  height: 64px;
+  background: #fff;
+  border-bottom: 1px solid #aaa;
+
+  .BackButton {
+    height: 100%;
+    border-radius: 0;
+  }
+
+  .Title {
+    font-size: 1.5rem;
+    padding: 1.25rem;
+  }
+}
+
+.RowItemTopAligned {
+  align-self: flex-start;
+}
+
+.toast {
+  position: fixed;
+  left:50%;
+  transform: translateX(-50%);
+  padding:.8em 1em;
+  margin:1em;
+  background:#222;
+  color:#fff;
+  border-radius: 1em;
+  bottom:0;
+  z-index: 5;
+  box-shadow: 0 3px 5px rgba(0,0,0,.2);
+  border: solid 1px rgba(255,255,255,.1);
+}
+
+h3.Label {
+  font-size: initial;
+  color: var(--app-button-primary-background-color); 
+  margin-left: 0;
+}
+
+// TODO: move these corda styles to their own file:
+.corda-transactions {
+  height: 100%;
+  .Label {
+    text-transform: uppercase;
+  }
+  .corda-transactions-list{
+    flex:1;
+  }
+  .corda-transactions-filter {
+    padding: .5em 0;
+    display: flex;
+    align-items: center;
+    border-bottom:solid 1px var(--app-button-primary-background-color);
+    .corda-transactions-label {
+      color:rgba(0,0,0,.7);
+      float:left;
+      text-transform: uppercase;
+      font-weight: bold;
+      margin:0 1em;
+    }
+    .StyledSelect {
+      width:300px;
+      select {
+        width:100%;
+        border-color: var(--app-button-primary-background-color); 
+        border-width: 2px;
+        border-radius: 4px;
+        font-weight: bold;;
+      } 
+    }
+  }
+}
+
+.DataRow .corda-link-left {
+  justify-content: left;
+  display: flex;
+}
+
+.corda-transaction-link {
+  .corda-transaction-hash {
+    width:540px;
+  }
+  .corda-transaction-link-badge {
+    justify-self: right;
+  }
+}
+
+.corda-node-link {
+  .corda-node-name-description {
+    width: 500px;
+  }
+  .corda-node-port-description {
+    width:150px;
+  }
+}
+
+.corda-cordapp-link {
+  .corda-cordapplink-installed-on{
+    padding-right:3em;
+  }
+}
+
+.corda-details-container {
+  flex: 1;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.variable-value > div {
+  background-color: rgb(245, 245, 245) !important;
+}
+
+.corda-details-section {
+  border:solid var(--app-panel-divider-color);
+  border-width: 1px 0;
+  &.corda-details-padded, > .Label {
+    margin-top:0;
+    padding-left:.8rem;
+    padding-right:.8rem;
+  }
+  > .Label {
+    display: block;
+    padding-top:1.3em;
+    padding-bottom:1em;
+    margin-bottom:-.2em;
+    position: relative;
+    background: rgba(158, 148, 132, .075);
+    z-index: 5;
+    border-bottom:solid 2px var(--app-panel-divider-color);
+  }
+}
+.corda-node-details {
+  .corda-details-section:last-child{
+    border-bottom: 0;
+  }
+}
+.corda-node-details-ports {
+  justify-content: left;
+  border: 0;
+  & > div{
+    width: 300px;
+  }
+}
+
+.corda-transaction-classname {
+  text-transform: none;
+}
+.corda-transaction-details-tx-link {
+  margin-top:.5em;
+  font-size:.9em;
+  &, a {
+    color: var(--app-button-primary-background-color);
+    opacity: .9;
+  }
+}
+.corda-transaction-details-info {
+  border-bottom: 0;
+}
+.corda-transaction-details-info > div{
+  width:50%;
+  align-self: start;
+}
+
+.corda-tabs {
+  position: relative;
+  border-bottom:solid 1px var(--app-panel-divider-color);
+  padding-left: .8rem;
+  display: flex;
+  font-size: 1.5em;
+  &::after {
+    // this hidden pseudo-element is just here to take up vertical space so that
+    // when transitioning beween a selected tab and a non-selected tab the 
+    // height remains constant
+    content: "!";
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    font-size: .75rem;
+    font-family: "RobotoCondensed-Regular";
+    font-weight: 800;
+    visibility: hidden;
+    width:0px !important;
+    min-width:0px !important;
+    overflow: hidden;
+    order: 99999999;
+  }
+  &::after, .corda-tab {
+    margin: 0;
+    display: inline-block;
+    cursor: pointer;
+    border:solid 2px var(--app-panel-divider-color);
+    border-bottom:0;
+    margin-top:4px;
+    margin-right:4px;
+    padding:8px 16px 4px;
+    text-transform: uppercase;
+    background:rgb(244,242,238);
+    border-radius: 4px 4px 0 0;
+    box-shadow: inset 0 -3px 3px rgba(0,0,0,.05);
+    transition: all .15s ease;
+  }
+  .corda-tab.corda-tab-selected {
+    box-shadow: inset 0 -0 0 rgba(0,0,0,0);
+    margin-top:0;
+    color:var(--app-button-primary-background-color);
+    transform: translateY(2px);
+    z-index: 5;
+    position: relative;
+  }
+}
+
+.DataRows.corda-json-view{
+  padding:1.3rem
+}
+
+
+.copy-to-clipboard-container{
+  position: absolute;
+}
+
+.Waiting {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  font-family: RobotoCondensed-Bold;
+  text-transform: uppercase;
+  font-size: 1.3rem;
+  color: var(--app-page-intentionally-left-blank);
+
+  .spinner {
+    margin-left: 10px;
+    margin-bottom: 3px;
+  }
+  &.Waiting-Margin {
+    margin: 3rem 0;
+  }
+  &.Waiting-Padded {
+    padding: 3rem 0;
+  }
+}

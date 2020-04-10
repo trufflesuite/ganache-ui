@@ -1,0 +1,24 @@
+.DecodedEventDetails {
+  margin: 0;
+
+  .DataRow {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .DataSection {
+    background: var(--app-card-default-background);
+    border-bottom: 1px solid aaa;
+  }
+
+  .SectionHeading {
+    background: #fff;
+    padding: 1rem;
+    border-bottom: 1px solid #aaa;
+
+    h1 {
+      font-size: 1.25rem;
+      margin: 0;
+    }
+  }
+}

@@ -1,157 +1,65 @@
-import EventEmitter from "events";
-import { fork } from "child_process";
-import path from "path";
-import cloneDeep from "lodash.clonedeep";
+// import EventEmitter from "events";
+// import EthereumChainService from "../../integrations/ethereum/common/services/EthereumChainService";
+// import CordaChainService from "../../integrations/corda/common/services/CordaChainService";
 
-// https://github.com/electron/electron/blob/cd0aa4a956cb7a13cbe0e12029e6156c3e892924/docs/api/process.md#process-object
+// class ChainService extends EventEmitter {
+//   constructor(config) {
+//     super();
+//     this._chainService = null;
+//     this.flavor = null;
+//     this._config = config;
+//     this._child = null;
+//     this.setMaxListeners(1);
+//   }
 
-/**
- * Provides an API to Ganache for managing the blockchain, encapsulating the
- * concerns of managing and monitoring of the child blockchain process,
- * interpreting messages from that child process, and solving any data
- * representation mismatches between Ganache and the child process.
- */
-class ChainService extends EventEmitter {
-  constructor() {
-    super();
-    this.child = null;
-    this.serverStarted = false;
-    this.setMaxListeners(1);
-  }
+//   async start(flavor) {
+//     let chainService;
 
-  start() {
-    if (this.child === null) {
-      let chainPath = path.join(__static, "node", "chain", "chain.js");
-      const options = {
-        stdio: ["pipe", "pipe", "pipe", "ipc"],
-      };
-      const forkArgs = process.env.NODE_ENV === "development" ? ["--inspect", 5859] : [];
-      this.child = fork(chainPath, forkArgs, options);
-      this.child.on("message", message => {
-        if (message.type == "process-started") {
-          this.emit("start");
-        }
-        if (message.type == "server-started") {
-          this.serverStarted = true;
-        }
-        if (message.type == "server-stopped") {
-          this.serverStarted = false;
-        }
-        this.emit(message.type, message.data);
-      });
-      this.child.on("error", error => {
-        this.emit("error", error);
-      });
-      this.child.on("exit", this._exitHandler);
-      this.child.stdout.on("data", data => {
-        // Remove all \r's and the final line ending
-        this.emit(
-          "stdout",
-          data
-            .toString()
-            .replace(/\r/g, "")
-            .replace(/\n$/, ""),
-        );
-      });
-      this.child.stderr.on("data", data => {
-        // Remove all \r's and the final line ending
-        this.emit(
-          "stderr",
-          data
-            .toString()
-            .replace(/\r/g, "")
-            .replace(/\n$/, ""),
-        );
-      });
-    } else {
-      this.emit("start");
-    }
-  }
+//     // if we need to start a new service, stop the old one
+//     if (this.flavor !== flavor) {
+//       switch (flavor) {
+//         case "ethereum":
+//           chainService = new EthereumChainService(this._config);
+//           break;
+//         case "corda":
+//           chainService = new CordaChainService(this._config);
+//           break;
+//         default:
+//           throw new Error("Invalid flavor: " + flavor);
+//       }
+//       if (this._chainService) {
+//         await this._chainService.stopServer();
+//       }
+//       this._chainService = chainService;
+//     }
 
-  startServer(settings) {
-    if (this.child !== null) {
-      let options = this._ganacheCoreOptionsFromGanacheSettingsObject(settings);
-      this.child.send({
-        type: "start-server",
-        data: options,
-      });
-    }
-  }
+//     this.flavor = flavor;
+//     this._chainService.once("start", this.emit.bind(this, "start"));
+//     this._chainService.start();
+//   }
 
-  stopServer() {
-    return new Promise(resolve => {
-      this.once("server-stopped", () => {
-        resolve();
-      });
-      if (this.child !== null) {
-        this.child.send({
-          type: "stop-server",
-        });
-      } else {
-        resolve();
-      }
-    });
-  }
+//   startServer(settings, workspaceDirectory) {
+//     if (this._chainService) {
+//       this._chainService.once("server-started", this.emit.bind(this, "server-started"));
+//       this._chainService.startServer(settings, workspaceDirectory);
+//     }
+//   }
 
-  getDbLocation() {
-    return new Promise(resolve => {
-      this.once("db-location", location => {
-        resolve(location);
-      });
-      if (this.child !== null) {
-        this.child.send({
-          type: "get-db-location",
-        });
-      } else {
-        resolve(undefined);
-      }
-    });
-  }
+//   stopServer() {
+//     this._chainService && this._chainService.stopServer();
+//   }
 
-  stopProcess() {
-    if (this.child !== null) {
-      this.child.removeListener("exit", this._exitHandler);
-      if (this.child) {
-        this.child.kill("SIGINT");
-      }
-    }
-  }
+//   getDbLocation() {
+//     this._chainService && this._chainService.getDbLocation();
+//   }
 
-  isServerStarted() {
-    return this.serverStarted;
-  }
+//   stopProcess() {
+//     this._chainService && this._chainService.stopProcess();
+//   }
 
-  /**
-   * Returns an options object to be used by ganache-core from Ganache settings
-   * model. Should be broken out to call multiple functions if it becomes even
-   * moderately complex.
-   */
-  _ganacheCoreOptionsFromGanacheSettingsObject(settings) {
-    // clone to avoid mutating the settings object in case it's sent elsewhere
-    let options = cloneDeep(settings.server);
+//   isServerStarted() {
+//     return false; // return this._chainService ? this._chainService.isServerStarted() : false;
+//   }
+// }
 
-    if (settings.randomizeMnemonicOnStart) {
-      delete options.mnemonic;
-    }
-
-    options.logDirectory = settings.logDirectory;
-
-    return options;
-  }
-
-  _exitHandler(code, signal) {
-    if (code != null) {
-      this.emit(
-        "error",
-        `Blockchain process exited prematurely with code '${code}', due to signal '${signal}'.`,
-      );
-    } else {
-      this.emit(
-        "error",
-        `Blockchain process exited prematurely due to signal '${signal}'.`,
-      );
-    }
-  }
-}
-
-export default ChainService;
+// export default ChainService;

@@ -1,7 +1,7 @@
 language: node_js
 node_js:
-# Use 12.9.0 because that is what Electron needs
-- "12.9.0"
+# Use 12.13.1 because that is what Electron needs
+- "12.13.1"
 matrix:
   include:
   - os: osx
@@ -26,6 +26,7 @@ before_install:
 - if [ "$TRAVIS_OS_NAME" = "osx" ] && [ "$TRAVIS_SECURE_ENV_VARS" = "true" ] && [ "$TRAVIS_PULL_REQUEST" = "false" ]; then
     echo "Configuring keychain...";
     export CERT=certs/osx.p12;
+    export NOTARIZE=true;
     openssl aes-256-cbc -K $encrypted_7777a4e0a460_key -iv $encrypted_7777a4e0a460_iv -in certs/osx.p12.enc -out $CERT -d;
 
     export CSC_KEYCHAIN=build.keychain;
@@ -37,7 +38,7 @@ before_install:
     security set-keychain-settings $CSC_KEYCHAIN;
 
     echo "Setting key partition list";
-    security set-key-partition-list -S "apple-tool:,apple:,codesign:" -s -k $KEYCHAIN_PASS $CSC_KEYCHAIN >/dev/null 2>&1;
+    security set-key-partition-list -S "apple-tool:,apple:,codesign:" -s -k $KEYCHAIN_PASS $CSC_KEYCHAIN;
 
     rm $CERT;
     unset CERT;
@@ -46,4 +47,4 @@ before_install:
   fi
 script:
 - if [ "$TRAVIS_OS_NAME" = "linux" ]; then npm run build-linux; fi
-- if [ "$TRAVIS_OS_NAME" = "osx" ]; then npm run build-mac; fi
+- if [ "$TRAVIS_OS_NAME" = "osx" ]; then travis_wait npm run build-mac; fi

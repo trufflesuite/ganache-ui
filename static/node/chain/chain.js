@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 //var ganacheLib = require("../../../../ganache-core"); // for easy testing
-var ganacheLib = require("ganache-core");
-var logging = require("./logging");
+const ganacheLib = require("ganache-core");
+const logging = require("./logging");
 
 if (!process.send) {
   console.log("Not running as child process. Throwing.");
@@ -22,163 +22,154 @@ process.on("uncaughtException", err => {
   process.send({ type: "error", data: copyErrorFields(err) });
 });
 
-var server;
-var blockInterval;
-var dbLocation;
+let server;
+let blockInterval;
+let dbLocation;
 
-function stopServer(callback) {
-  callback = callback || function() {};
-
+async function stopServer() {
   clearInterval(blockInterval);
 
   if (server) {
-    server.close(callback);
+    return new Promise((resolve, reject) => {
+      server.close((err) => {
+        if (err) {
+          if (err.code === "ERR_SERVER_NOT_RUNNING"){
+            process.send({ type: "server-stopped" });
+            resolve();
+          } else {
+            reject(err);
+          }
+        }
+        else resolve();
+      });
+    })
   } else {
     process.send({ type: "server-stopped" });
-    callback();
   }
 }
 
-function startServer(options) {
-  stopServer(function() {
-    let sanitizedOptions = Object.assign({}, options);
-    delete sanitizedOptions.mnemonic;
+async function startServer(options) {
+  await stopServer();
+  
+  let sanitizedOptions = Object.assign({}, options);
+  delete sanitizedOptions.mnemonic;
 
-    const logToFile =
-      options.logDirectory !== null && typeof options.logDirectory === "string";
+  const logToFile =
+    options.logDirectory !== null && typeof options.logDirectory === "string";
 
-    if (typeof options.logger === "undefined") {
-      if (logToFile) {
-        logging.generateLogFilePath(options.logDirectory);
-
-        options.logger = {
-          log: message => {
-            if (typeof message === "string") {
-              logging.logToFile(message);
-            }
-          },
-        };
-      } else {
-        // The TestRPC's logging system is archaic. We'd like more control
-        // over what's logged. For now, the really important stuff all has
-        // a space on the front of it. So let's only log the stuff with a
-        // space on the front. ¯\_(ツ)_/¯
-
-        options.logger = {
-          log: message => {
-            if (
-              typeof message === "string" &&
-              (options.verbose || message.indexOf(" ") == 0)
-            ) {
-              console.log(message);
-            }
-          },
-        };
-      }
-    }
-
-    // log startup options without logging user's mnemonic
-    const startingMessage = `Starting server with initial configuration: ${JSON.stringify(sanitizedOptions)}`;
-    console.log(startingMessage);
+  if (typeof options.logger === "undefined") {
     if (logToFile) {
-      logging.logToFile(startingMessage);
+      logging.generateLogFilePath(options.logDirectory);
+
+      options.logger = {
+        log: message => {
+          if (typeof message === "string") {
+            logging.logToFile(message);
+          }
+        },
+      };
+    } else {
+      // The TestRPC's logging system is archaic. We'd like more control
+      // over what's logged. For now, the really important stuff all has
+      // a space on the front of it. So let's only log the stuff with a
+      // space on the front. ¯\_(ツ)_/¯
+
+      options.logger = {
+        log: message => {
+          if (
+            typeof message === "string" &&
+            (options.verbose || message.indexOf(" ") == 0)
+          ) {
+            console.log(message);
+          }
+        },
+      };
+    }
+  }
+
+  // log startup options without logging user's mnemonic
+  const startingMessage = `Starting server with initial configuration: ${JSON.stringify(sanitizedOptions)}`;
+  console.log(startingMessage);
+  if (logToFile) {
+    logging.logToFile(startingMessage);
+  }
+
+  server = ganacheLib.server(options);
+
+  // We'll also log all methods that aren't marked internal by Ganache
+  var oldSend = server.provider.send.bind(server.provider);
+  server.provider.send = (payload, callback) => {
+    if (payload.internal !== true) {
+      if (Array.isArray(payload)) {
+        payload.forEach(function(item) {
+          console.log(item.method);
+        });
+      } else {
+        console.log(payload.method);
+      }
     }
 
-    server = ganacheLib.server(options);
+    oldSend(payload, callback);
+  };
 
-    // We'll also log all methods that aren't marked internal by Ganache
-    var oldSend = server.provider.send.bind(server.provider);
-    server.provider.send = function(payload, callback) {
-      if (payload.internal !== true) {
-        if (Array.isArray(payload)) {
-          payload.forEach(function(item) {
-            console.log(item.method);
-          });
-        } else {
-          console.log(payload.method);
-        }
-      }
+  server.listen(options.port, options.hostname, (err, result) => {
+    if (err) {
+      process.send({ type: "start-error", data: {code: err.code, stack: err.stack, message: err.message} });
+      return;
+    }
 
-      oldSend(payload, callback);
-    };
+    const state = result ? result : server.provider.manager.state;
+    dbLocation = state.blockchain.data.directory;
 
-    server.listen(options.port, options.hostname, function(err, result) {
-      if (err) {
-        process.send({ type: "start-error", data: {code: err.code, stack: err.stack, message: err.message} });
-        return;
-      }
-
-      var state = result ? result : server.provider.manager.state;
-
-      try {
-        let db = state.blockchain.data.db;
-        // This is kind of a hack until https://github.com/trufflesuite/ganache-core/pull/271 is released
-        // dbLocation = db.directory
-        do {
-          dbLocation = db.location;
-          if (db.db) {
-            db = db.db;
-          }
-        } while (!dbLocation && db && (db.location || db.db));
-      } catch (e) {
-        console.error(
-          "Couldn't access location of chaindata. You will be unable to create a workspace from this session.",
-        );
-      }
-
-      if (!state) {
-        process.send({
-          type: "start-error",
-          data: "Couldn't get a reference to TestRPC's StateManager.",
-        });
-        return;
-      }
-
-      let privateKeys = {};
-
-      var accounts = state.accounts;
-      var addresses = Object.keys(accounts);
-
-      addresses.forEach(function(address) {
-        privateKeys[address] = accounts[address].secretKey.toString("hex");
+    if (!state) {
+      process.send({
+        type: "start-error",
+        data: "Couldn't get a reference to TestRPC's StateManager.",
       });
+      return;
+    }
 
-      let data = Object.assign({}, server.provider.options);
+    const privateKeys = {};
 
-      // delete anything which might've been in the ganache-core options object
-      // that we don't want to pass on to the main process
-      delete data.logger;
-      delete data.vm;
-      delete data.state;
-      delete data.trie;
+    const accounts = state.accounts;
+    const addresses = Object.keys(accounts);
 
-      // ensure certain fields are present for backward compatibility with old
-      // versions of ganache-core
-      data.hdPath = data.hdPath || state.wallet_hdpath;
-      data.mnemonic = data.mnemonic || state.mnemonic;
-      data.privateKeys = privateKeys;
-
-      process.send({ type: "server-started", data: data });
-
-      console.log("Ganache started successfully!");
-      console.log("Waiting for requests...");
+    addresses.forEach((address) => {
+      privateKeys[address] = accounts[address].secretKey.toString("hex");
     });
 
-    server.on("close", function() {
-      process.send({ type: "server-stopped" });
-    });
+    const data = Object.assign({}, server.provider.options);
+
+    // delete anything which might've been in the ganache-core options object
+    // that we don't want to pass on to the main process
+    delete data.logger;
+    delete data.vm;
+    delete data.state;
+    delete data.trie;
+
+    // ensure certain fields are present for backward compatibility with old
+    // versions of ganache-core
+    data.hdPath = data.hdPath || state.wallet_hdpath;
+    data.mnemonic = data.mnemonic || state.mnemonic;
+    data.privateKeys = privateKeys;
+
+    process.send({ type: "server-started", data: data });
+
+    console.log("Ganache started successfully!");
+    console.log("Waiting for requests...");
+  });
+
+  server.on("close", () => {
+    server = null;
+    process.send({ type: "server-stopped" });
   });
 }
 
 function getDbLocation() {
-  if (dbLocation) {
-    process.send({ type: "db-location", data: dbLocation });
-  } else {
-    process.send({ type: "db-location", data: null });
-  }
+  process.send({ type: "db-location", data: dbLocation || null });
 }
 
-process.on("message", function(message) {
+process.on("message", (message) => {
   //console.log("CHILD RECEIVED", message)
   switch (message.type) {
     case "start-server":
@@ -207,8 +198,3 @@ function copyErrorFields(e) {
 }
 
 process.send({ type: "process-started" });
-
-// If you want to test out an error being thrown here
-// setTimeout(function() {
-//   throw new Error("Error from chain process!")
-// }, 4000)

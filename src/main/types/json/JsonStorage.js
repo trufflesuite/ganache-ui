@@ -11,7 +11,7 @@ class JsonStorage {
 
   setStorageDirectory(directory) {
     this.directory = directory;
-    this.storage = new LocalStorage(this.directory);
+    this.storage = new LocalStorage(this.directory, Infinity);
   }
 
   getFromStorage() {

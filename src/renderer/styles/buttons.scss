@@ -4,7 +4,6 @@ button,
   padding: 0;
   resize: none;
   border: 0;
-  outline: 0;
   background-color: var(--app-button-primary-color);
   height: 32px;
   padding: 0 20px;
@@ -27,8 +26,8 @@ button,
   }
 
   &:hover {
-    background-color: color(var(--app-button-primary-color) tint(10%));
+    filter: brightness(108%);
     color: color(var(--app-button-primary-background-color) shade(20%));
-    box-shadow: 0;
+    box-shadow: none;
   }
 }

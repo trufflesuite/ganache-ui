@@ -1,5 +1,6 @@
 import { ipcRenderer } from "electron";
-import { push } from "react-router-redux";
+import { push } from "connected-react-router";
+import { setToast } from "../../../common/redux/network/actions";
 
 const prefix = "SETTINGS";
 
@@ -19,6 +20,32 @@ export const setSettings = function(globalSettings, workspaceSettings) {
     });
   };
 };
+
+// #region corda
+export function setVaultDataUpdated() {
+  return { type: "VAULT_DATA" };
+}
+export function setNodeStarted(safeName) {
+  return { type: "NODE_STARTED", safeName };
+}
+export function setNodeStopped(safeName) {
+  return function(dispatch) {
+    dispatch(setToast(safeName + " has stopped. Restart?", true, "Restart", () => {
+      startNode(safeName)(dispatch);
+    }));
+    dispatch({ type: "NODE_STOPPED", safeName });
+  };
+}
+export function setNodeStarting(safeName) {
+  return { type: "NODE_STARTING", safeName };
+}
+export function startNode(safeName){
+  return function(dispatch) {
+    ipcRenderer.send("START_NODE:" + safeName);
+    dispatch(setToast("Restarting node..."));
+  }
+}
+// #endregion corda
 
 export const REQUEST_SAVE_SETTINGS = `${prefix}/REQUEST_SAVE_SETTINGS`;
 export const requestSaveSettings = function(globalSettings, workspaceSettings) {
@@ -46,6 +73,7 @@ export const STARTUP_MODE = {
   NORMAL: 0,
   NEW_WORKSPACE: 1,
   SAVING_WORKSPACE: 2,
+  EDIT_WORKSPACE: 3
 };
 
 export const SET_STARTUP_MODE = `${prefix}/SET_STARTUP_MODE`;

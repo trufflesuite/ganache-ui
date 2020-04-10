@@ -1,21 +1,20 @@
-import { createStore, applyMiddleware } from "redux";
+import { createStore, applyMiddleware, compose } from "redux";
 import thunk from "redux-thunk";
-import { hashHistory } from "react-router";
-import { routerMiddleware } from "react-router-redux";
+import { routerMiddleware } from 'connected-react-router';
 import {
   processAction,
   processPage,
 } from "../../../common/redux/middleware/analytics/index";
 
-const router = routerMiddleware(hashHistory);
+export default function configureStore(reducers, history, initialState) {
+  const router = routerMiddleware(history);
 
-const enhancer = applyMiddleware(thunk, router, processAction);
+  const enhancer = compose(applyMiddleware(thunk, router, processAction));
 
-export default function configureStore(reducers, initialState) {
-  const store = createStore(reducers, initialState, enhancer); // eslint-disable-line
+  const store = createStore(reducers, initialState, enhancer);
 
-  hashHistory.listen(location =>
-    processPage(location.pathname, store.getState()),
+  // add google analytics to production
+  history.listen(location => processPage(location.pathname, store.getState())
   );
 
   return store;
