@@ -2,14 +2,12 @@ import connect from "../../../../renderer/screens/helpers/connect";
 
 import React, { Component } from "react";
 import atob from "atob";
-import { basename } from "path"
 import NodeLink from "../components/NodeLink";
 import TransactionLink from "../components/TransactionLink";
 import TransactionData from "../transaction-data";
 import { CancellationToken } from "./utils";
-
-// this is taken from braid
-const VERSION_REGEX = /^(.*?)(?:-(?:(?:\d|\.)+))\.jar?$/;
+import { cordaNickname } from "../utils/nickname";
+import DetailSection from "../components/DetailSection";
 
 class Cordapp extends Component {
   refresher = new CancellationToken();
@@ -95,7 +93,7 @@ class Cordapp extends Component {
     const cordapp = atob(props.match.params.cordapp);
     return {
       cordapp,
-      nickname: VERSION_REGEX.exec(basename(cordapp))[1].toLowerCase()
+      nickname: cordaNickname(cordapp)
     };
   }
 
@@ -124,27 +122,18 @@ class Cordapp extends Component {
                 <div className="Value">{cordapp}</div>
             </div>
           </div>
-          <div className="corda-details-section">
-            <h3 className="Label">Installed On</h3>
-            <div className="Nodes DataRows">
-              <main>
-                {
-                  nodes.length === 0
-                    ? (<div className="Waiting Waiting-Padded">Not Installed</div>)
-                    : nodes.map(node => {
-                      return (<NodeLink key={`node-${node.safeName}`} postgresPort={this.props.config.settings.workspace.postgresPort} node={node} />);
-                    })
-                }
-              </main>
-            </div>
-          </div>
+          <DetailSection label="Installed On">
+            {
+              !nodes.length ? (<div className="Waiting Waiting-Padded">Not Installed</div>) :
+                nodes.map(node => {
+                  return (<NodeLink key={`node-${node.safeName}`} postgresPort={this.props.config.settings.workspace.postgresPort} node={node} />);
+                })
+            }
+          </DetailSection>
 
-          <div className="corda-details-section">
-            <h3 className="Label">Transactions</h3>
-            <div className="Nodes DataRows">
-              <main>{this.getTransactions()}</main>
-            </div>
-          </div>
+          <DetailSection label="Transactions">
+            <main>{this.getTransactions()}</main>
+          </DetailSection>
         </main>
       </section>    
     );

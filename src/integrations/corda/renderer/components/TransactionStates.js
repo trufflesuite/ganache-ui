@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import jsonTheme from "../../../../common/utils/jsonTheme";
 import ReactJson from "@ganache/react-json-view";
 import { Link } from "react-router-dom";
+import DetailSection from "./DetailSection";
 
 const IGNORE_FIELDS = new Set(["@class", "participants"]);
 
@@ -108,33 +109,24 @@ class TransactionStates extends Component {
         const participants = state.state.data.participants || [];
         const workspaceNotary = this.getWorkspaceNotary(state.state.notary.owningKey);
 
-        selectedState = (<div>
-          {this.renderStateHeader(state, type)}
-          
-          {state.state.data.exitKeys && state.state.data.exitKeys.length !== 0 ? (
-            <div className="corda-details-section">
-              <h3 className="Label">Signers</h3>
-              <div className="DataRows">
-                {state.state.data.exitKeys.map(nodeKey => {
-                  const workspaceNode = this.getWorkspaceNode(nodeKey);
-                  if (workspaceNode) {
-                    return (<NodeLink key={"participant_" + workspaceNode.safeName} postgresPort={this.props.postgresPort} node={workspaceNode} />);
-                  }
-                })}
-              </div>
-            </div>
-          ) : ("")}
-          {!workspaceNotary ? "" :
-            <div className="corda-details-section">
-              <h3 className="Label">Notary</h3>
-              <div className="DataRows">{<NodeLink node={workspaceNotary} postgresPort={this.props.postgresPort} />}</div>
-            </div>
-          }
+        selectedState = (
+          <div>
+            {this.renderStateHeader(state, type)}
 
-          {!participants.length ? "" :
-          <div className="corda-details-section">
-            <h3 className="Label">Participants</h3>
-            <div className="DataRows">
+            <DetailSection label="Signers" hide={!state.state.data.exitKeys?.length}>
+              {state.state.data.exitKeys.map(nodeKey => {
+                const workspaceNode = this.getWorkspaceNode(nodeKey);
+                if (workspaceNode) {
+                  return (<NodeLink key={"participant_" + workspaceNode.safeName} postgresPort={this.props.postgresPort} node={workspaceNode} />);
+                }
+              })}
+            </DetailSection>
+
+            <DetailSection label="Notary" hide={!workspaceNotary}>
+              <NodeLink node={workspaceNotary} postgresPort={this.props.postgresPort} />
+            </DetailSection>   
+
+            <DetailSection label="Participants" hide={!participants.length}>
               {participants.map((node, i) => {
                 const workspaceNode = this.getWorkspaceNode(node.owningKey);
                 if (workspaceNode) {
@@ -143,18 +135,13 @@ class TransactionStates extends Component {
                   return (<div className="DataRow" key={"participant_anon" + node.owningKey + i}><div className="Value"><em>Anonymized Participant</em></div></div>);
                 }
               })}
-            </div>
-          </div>}
+            </DetailSection>
 
-          {!state.observers.size ? "" :
-            <div className="corda-details-section">
-              <h3 className="Label">In Vault Of</h3>
-              <div className="DataRows">
-                {[...state.observers].map(node => {
-                  return (<NodeLink key={"participant_" + node.safeName} postgresPort={this.props.postgresPort} node={node} />);
-                })}
-              </div>
-            </div>}
+            <DetailSection label="In Vault Of" hide={!state.observers.size}>
+              {[...state.observers].map(node => {
+                return (<NodeLink key={"participant_" + node.safeName} postgresPort={this.props.postgresPort} node={node} />);
+              })}
+            </DetailSection>
           </div>
         );
       }
