@@ -452,6 +452,16 @@ app.on('ready', () => {
       // the projects should trigger the REQUEST_SERVER_RESTART
       // logic
       workspace.settings.set("projects", []);
+      workspace.saveAs(
+        "Quickstart",
+        null,
+        workspaceManager.directory,
+        null,
+        true,
+      );
+      workspace.settings.set("isDefault", true);
+      await integrations.setWorkspace("Quickstart", flavor);
+      workspace = integrations.workspace;
     } else {
       for (let i = 0; i < workspaceSettings.projects.length; i++) {
         projects.push(
@@ -510,6 +520,7 @@ app.on('ready', () => {
         null,
         workspaceManager.directory,
         wallet.mnemonic,
+        true,
       );
     } else {
       const workspaceSettings = defaultWorkspace.settings.getAll();

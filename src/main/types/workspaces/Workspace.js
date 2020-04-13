@@ -1,6 +1,5 @@
 import path from "path";
 import fse from "fs-extra";
-import temp from "temp";
 
 import WorkspaceSettings from "../settings/WorkspaceSettings";
 import ContractCache from "../../../integrations/ethereum/main/types/contracts/ContractCache";
@@ -60,11 +59,7 @@ class Workspace {
   }
 
   generateChaindataDirectory() {
-    if (this.name === null) {
-      return temp.path();
-    } else {
-      return path.join(this.workspaceDirectory, "chaindata");
-    }
+    return path.join(this.workspaceDirectory, "chaindata");
   }
 
   // creates the directory if needed (recursively)
@@ -83,12 +78,9 @@ class Workspace {
     this.settings.bootstrap();
   }
 
-  saveAs(name, chaindataDirectory, configDirectory, mnemonic) {
+  saveAs(name, chaindataDirectory, configDirectory, mnemonic, updateLocations) {
     this.name = name;
-    this.init(configDirectory);
-    this.bootstrapDirectory();
-
-    this.settings.setDirectory(this.workspaceDirectory);
+    
     this.settings.set("name", name);
     this.settings.set("isDefault", false);
     if (this.flavor === "corda") {
@@ -97,18 +89,27 @@ class Workspace {
     this.settings.set("randomizeMnemonicOnStart", false);
     this.settings.set("server.mnemonic", mnemonic);
 
-    // make sure contractCache is in the right location:
-    if (chaindataDirectory && chaindataDirectory !== this.chaindataDirectory) {
-      fse.copySync(chaindataDirectory, this.chaindataDirectory);
-    }
-    const currentContractCachePath = path.join(this.contractCache.storage.directory, this.contractCache.storage.name);
-    const desiredContractCachePath = path.join(this.chaindataDirectory, this.contractCache.storage.name);
-    if (currentContractCachePath !== desiredContractCachePath && fse.existsSync(currentContractCachePath)) {
-      fse.copySync(currentContractCachePath, desiredContractCachePath);
+    if (updateLocations) {
+      this.init(configDirectory);
+      this.bootstrapDirectory();
+      this.settings.setDirectory(this.workspaceDirectory);
+
+      // make sure contractCache is in the right location:
+      if (chaindataDirectory && chaindataDirectory !== this.chaindataDirectory) {
+        fse.copySync(chaindataDirectory, this.chaindataDirectory);
+      }
+      const currentContractCachePath = path.join(this.contractCache.storage.directory, this.contractCache.storage.name);
+      const desiredContractCachePath = path.join(this.chaindataDirectory, this.contractCache.storage.name);
+      if (currentContractCachePath !== desiredContractCachePath && fse.existsSync(currentContractCachePath)) {
+        fse.copySync(currentContractCachePath, desiredContractCachePath);
+      }
+      
+      this.contractCache.setDirectory(this.chaindataDirectory);
+      this.contractCache.setAll(this.contractCache.getAll());
+      this.settings.chaindataDirectory = this.chaindataDirectory;
+      this.settings.set("server.db_path", this.chaindataDirectory);
     }
 
-    this.contractCache.setDirectory(this.chaindataDirectory);
-    this.contractCache.setAll(this.contractCache.getAll());
   }
 
   delete() {

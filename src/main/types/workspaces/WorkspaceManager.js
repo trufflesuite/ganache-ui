@@ -14,16 +14,24 @@ class WorkspaceManager {
     if (fse.existsSync(workspacesDirectory)) {
       this.workspaces = fse
         .readdirSync(workspacesDirectory)
-        .filter(file => {
-          return fse.lstatSync(path.join(workspacesDirectory, file))
-            .isDirectory;
-        })
-        .map(file => {
+        .flatMap(file => {
+          if (!fse.lstatSync(path.join(workspacesDirectory, file)).isDirectory) {
+            return [];
+          }
           let settings = new WorkspaceSettings(
             path.join(workspacesDirectory, file),
             path.join(workspacesDirectory, file, "chaindata"),
           );
           settings.bootstrap();
+
+          const isDefault = settings.get("isDefault");
+          if (isDefault) {
+            // the default workspace shouldn't be in the "workspaces" directory,
+            // delete it.
+            fse.remove(settings.settings.directory).catch(e => e);
+            return [];
+          }
+
           const name = settings.get("name");
           const sanitizedName = Workspace.getSanitizedName(name);
           if (sanitizedName !== file) {
@@ -41,7 +49,7 @@ class WorkspaceManager {
             }
           }
           const flavor = settings.get("flavor");
-          return new Workspace(name, this.directory, flavor);
+          return [new Workspace(name, this.directory, flavor)];
         });
     }
 

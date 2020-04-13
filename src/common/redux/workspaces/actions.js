@@ -71,8 +71,6 @@ export const saveWorkspace = function(name) {
   return function(dispatch, getState) {
     const mnemonic = getState().core.mnemonic;
 
-    cleanupWorkspace(dispatch, getState);
-
     dispatch({ type: SAVE_WORKSPACE, name, mnemonic: mnemonic });
 
     ipcRenderer.send(SAVE_WORKSPACE, name, mnemonic);
