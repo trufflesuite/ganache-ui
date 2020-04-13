@@ -11,9 +11,11 @@ const ICON = {
     position: "relative",
     top: "-.5em"
   },
-  CLASS : "TransactionTypeBadge ContractCallBadge"
+  CLASS : [
+    "TransactionTypeBadge",
+    "ContractCallBadge"
+  ].join(" ")
 }
-
 
 class DetailSection extends Component {
   constructor(props){
@@ -24,17 +26,11 @@ class DetailSection extends Component {
     };
   }
 
-  collapseSection = () => {
-    this.setState({
-      collapse: !this.state.collapse
-    });
-  };
+  collapseSection = () => this.setState({ collapse: !this.state.collapse });
 
   collapseIcon = () => {
-    if (this.state.collapse) {
-      return (<span className={ICON.CLASS} style={ICON.STYLE}> +</span>);
-    }
-    return (<span className={ICON.CLASS} style={ICON.STYLE}> -</span>);
+    const icon = this.state.collapse ? "+" : "-";
+    return (<span className={ICON.CLASS} style={ICON.STYLE}>{icon}</span>);
   }
 
   render() {
