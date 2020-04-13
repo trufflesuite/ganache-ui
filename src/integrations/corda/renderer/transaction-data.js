@@ -25,6 +25,7 @@ function getConnectedClient(database, port) {
       database,
       port
     });
+    pool.on("error", console.log);
     pools.set(key, pool);
   } else {
     pool = pools.get(key);

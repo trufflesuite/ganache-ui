@@ -7,14 +7,14 @@ class TransactionCommands extends Component {
     const commands = this.props.commands;
     let elements = null;
     if (commands === null){
-      elements = (<div>Loading...</div>);
+      elements = [<div style={{marginBottom:".5em"}} key="loading">Loading...</div>];
     } else if (commands.length === 0) {
-      elements = (<div>No commands</div>);
+      elements = [<div style={{marginBottom:".5em"}} key="no-command">No commands</div>];
     } else {
       elements = commands.map((command, i) => {
         let link = "";
         if (command.contractFile) {
-          link = (<Link title={command.contractFile} to={`/corda/cordapps/${btoa(command.contractFile)}`} style={{marginLeft:".25rem"}}><ContractsIcon style={{width:"18px", height:"18px", "color": "#333"}}/></Link>);
+          link = (<Link title={command.contractFile} to={`/corda/cordapps/${btoa(command.contractFile)}`} style={{position: "absolute", marginLeft:".25rem"}}><ContractsIcon style={{width:"18px", height:"18px", "color": "#333"}}/></Link>);
         }
         return (<div style={{marginBottom:".5em"}} key={"command" + command.value["@class"] + i}>
           {command.value["@class"].split(".").map(d=>(<>{d}<div style={{display:"inline-block"}}>.</div></>))}

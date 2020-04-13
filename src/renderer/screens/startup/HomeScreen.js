@@ -137,7 +137,7 @@ class HomeScreen extends Component {
 
   render() {
     let workspaces;
-    const hasWorkspaces = this.props.workspaces.info.length;
+    const hasWorkspaces = this.props.workspaces.info && this.props.workspaces.info.length;
     if (hasWorkspaces) {
       workspaces = this.props.workspaces.info.map(workspaceInfo => {
         return (

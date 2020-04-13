@@ -58,6 +58,7 @@ class Cordapp extends Component {
         tx.details = details;
       })
     }));
+    if (canceller.cancelled) return;
     const transactions = allTransactions.filter(({details}) => {
       if (details && details.commands && details.commands.length) {
         return details.commands.some(({contractFile}) => contractFile.includes(cordapp));

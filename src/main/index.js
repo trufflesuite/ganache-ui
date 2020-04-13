@@ -482,11 +482,11 @@ app.on('ready', () => {
     );
 
     startupMode = STARTUP_MODE.NORMAL;
-    await integrations.startServer();
-
-    // this sends the network interfaces to the renderer process for
-    //  enumering in the config screen. it sends repeatedly
-    continuouslySendNetworkInterfaces();
+    if (await integrations.startServer()){
+      // this sends the network interfaces to the renderer process for
+      //  enumering in the config screen. it sends repeatedly
+      continuouslySendNetworkInterfaces();
+    }
   });
 
   ipcMain.on(OPEN_NEW_WORKSPACE_CONFIG, async (_event, flavor = "ethereum") => {
@@ -502,14 +502,19 @@ app.on('ready', () => {
     const defaultWorkspace = workspaceManager.get(workspaceName || null, flavor);
     if (!workspaceName) {
       workspaceName = moniker.choose();
+      const wallet = new ethagen({ entropyBits: 128 });
+      // make sure we don't start with any projects for new workspaces
+      defaultWorkspace.settings.set("projects", []);
+      defaultWorkspace.saveAs(
+        workspaceName,
+        null,
+        workspaceManager.directory,
+        wallet.mnemonic,
+      );
+    } else {
+      const workspaceSettings = defaultWorkspace.settings.getAll();
+      defaultWorkspace.projects = workspaceSettings.projects;
     }
-    const wallet = new ethagen({ entropyBits: 128 });
-    defaultWorkspace.saveAs(
-      workspaceName,
-      null,
-      workspaceManager.directory,
-      wallet.mnemonic,
-    );
 
     workspaceManager.bootstrap();
 
@@ -529,7 +534,9 @@ app.on('ready', () => {
 
     if (flavor === "ethereum") {
       await integrations.startChain();
-      await integrations.startServer();
+      if (!(await integrations.startServer())) {
+        return;
+      }
     } else {
       if (workspace) {
         const globalSettings = global.getAll();
@@ -548,9 +555,6 @@ app.on('ready', () => {
     continuouslySendNetworkInterfaces();
 
     const globalSettings = global.getAll();
-
-    // make sure we don't start with any projects for new workspaces
-    workspace.settings.set("projects", []);
 
     const workspaceSettings = workspace.settings.getAll();
     mainWindow.webContents.send(
@@ -617,10 +621,10 @@ app.on('ready', () => {
 
       startupMode = STARTUP_MODE.NORMAL;
 
-      await integrations.startServer();
-
-      // send the interfaces again once on restart
-      sendNetworkInterfaces();
+      if (await integrations.startServer()){
+        // send the interfaces again once on restart
+        sendNetworkInterfaces();
+      }
     }
   });
 
