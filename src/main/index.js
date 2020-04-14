@@ -34,7 +34,6 @@ import {
   SET_CURRENT_WORKSPACE,
   OPEN_NEW_WORKSPACE_CONFIG,
   OPEN_WORKSPACE_CONFIG,
-  DOWNLOAD_EXTRAS,
 } from "../common/redux/workspaces/actions";
 import {
   SET_SETTINGS,
@@ -368,35 +367,6 @@ app.on('ready', () => {
     });
   }
 
-
-  ipcMain.on(DOWNLOAD_EXTRAS, async (event, flavor) => {
-    if (integrations.config[flavor]) {
-      const extras = integrations.config[flavor];
-      mainWindow.webContents.send(DOWNLOAD_EXTRAS, {
-        status: "downloading",
-        flavor
-      });
-      try {
-        await extras.downloadAll(true);
-        mainWindow.webContents.send(DOWNLOAD_EXTRAS, {
-          status: "success",
-          flavor
-        });
-      } catch (e) {
-        mainWindow.webContents.send(DOWNLOAD_EXTRAS, {
-          status: "failed",
-          error: e,
-          flavor
-        });
-      }
-    } else {
-      mainWindow.webContents.send(DOWNLOAD_EXTRAS, {
-        status: "failed",
-        flavor
-      });
-    }
-  });
-  
   ipcMain.on(DELETE_WORKSPACE, async (event, name, flavor) => {
     await integrations.stopServer();
 
