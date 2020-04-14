@@ -98,10 +98,10 @@ class Workspace {
       
       this.contractCache.setDirectory(this.chaindataDirectory);
       this.contractCache.setAll(this.contractCache.getAll());
-      this.settings.chaindataDirectory = this.chaindataDirectory;
-      this.settings.set("server.db_path", this.chaindataDirectory);
     }
-
+    
+    this.settings.chaindataDirectory = this.chaindataDirectory;
+    this.settings.set("server.db_path", this.chaindataDirectory);
     this.settings.set("name", name);
     this.settings.set("isDefault", false);
     if (this.flavor === "corda") {

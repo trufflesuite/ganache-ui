@@ -453,6 +453,7 @@ app.on('ready', () => {
       // the projects should trigger the REQUEST_SERVER_RESTART
       // logic
       workspace.settings.set("projects", []);
+      const randomizeMnemonicOnStart = workspace.settings.get("randomizeMnemonicOnStart");
       workspace.saveAs(
         "Quickstart",
         null,
@@ -464,6 +465,7 @@ app.on('ready', () => {
       workspaceManager.bootstrap();
       // saveAs overwrites "isDefault", so we need to put it back
       workspace.settings.set("isDefault", true);
+      workspace.settings.set("randomizeMnemonicOnStart", randomizeMnemonicOnStart);
       await integrations.setWorkspace("Quickstart", flavor);
       workspace = integrations.workspace;
     } else {
@@ -658,8 +660,9 @@ app.on('ready', () => {
             clonedSettings.server.db_path = defaultWorkspace.settings.get("server.db_path");
           }
           defaultWorkspace.settings.setAll(clonedSettings);
+          workspace.resetChaindata();
         }
-
+        workspaceSettings.randomizeMnemonicOnStart = false;
         workspace.settings.setAll(workspaceSettings);
       }
 
