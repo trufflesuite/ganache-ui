@@ -24,7 +24,7 @@ class Workspace {
     const oldLocation = path.join(this.workspaceDirectory, ContractCache.KEY);
     if (fse.existsSync(oldLocation)){
       const newLocation = path.join(this.chaindataDirectory, ContractCache.KEY);
-      fse.moveSync(oldLocation, newLocation)
+      fse.moveSync(oldLocation, newLocation, {overwrite: true});
     }
 
     this.contractCache = new ContractCache(this.chaindataDirectory);
