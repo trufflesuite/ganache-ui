@@ -81,14 +81,6 @@ class Workspace {
   saveAs(name, chaindataDirectory, configDirectory, mnemonic, updateLocations) {
     this.name = name;
     
-    this.settings.set("name", name);
-    this.settings.set("isDefault", false);
-    if (this.flavor === "corda") {
-      this.settings.set("runBootstrap", true);
-    }
-    this.settings.set("randomizeMnemonicOnStart", false);
-    this.settings.set("server.mnemonic", mnemonic);
-
     if (updateLocations) {
       this.init(configDirectory);
       this.bootstrapDirectory();
@@ -110,6 +102,13 @@ class Workspace {
       this.settings.set("server.db_path", this.chaindataDirectory);
     }
 
+    this.settings.set("name", name);
+    this.settings.set("isDefault", false);
+    if (this.flavor === "corda") {
+      this.settings.set("runBootstrap", true);
+    }
+    this.settings.set("randomizeMnemonicOnStart", false);
+    this.settings.set("server.mnemonic", mnemonic);
   }
 
   delete() {

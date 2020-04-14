@@ -22,15 +22,15 @@ class WorkspaceManager {
             path.join(workspacesDirectory, file),
             path.join(workspacesDirectory, file, "chaindata"),
           );
-          settings.bootstrap();
-
-          const isDefault = settings.get("isDefault");
-          if (isDefault) {
+          
+          const isQuickstart = settings.get("isDefault");
+          if (isQuickstart) {
             // the default workspace shouldn't be in the "workspaces" directory,
             // delete it.
             fse.remove(settings.settings.directory).catch(e => e);
             return [];
           }
+          settings.bootstrap();
 
           const name = settings.get("name");
           const sanitizedName = Workspace.getSanitizedName(name);
