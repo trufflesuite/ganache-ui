@@ -36,7 +36,7 @@ export const closeWorkspace = function() {
 export const OPEN_WORKSPACE = `${prefix}/OPEN_WORKSPACE`;
 export const openWorkspace = function(name, flavor = "ethereum") {
   return function(dispatch) {
-    dispatch(push("/loader"));
+    dispatch(push(`/loader?flavor=${flavor}`));
     dispatch({ type: OPEN_WORKSPACE, name, flavor});
     ipcRenderer.send(OPEN_WORKSPACE, name, flavor);
   };
@@ -44,7 +44,7 @@ export const openWorkspace = function(name, flavor = "ethereum") {
 
 export const openDefaultWorkspace = function(flavor = "ethereum") {
   return function(dispatch) {
-    dispatch(push("/loader"));
+    dispatch(push(`/loader?flavor=${flavor}`));
     dispatch({ type: OPEN_WORKSPACE, name: null, flavor });
     ipcRenderer.send(OPEN_WORKSPACE, null, flavor);
   };
@@ -53,7 +53,7 @@ export const openDefaultWorkspace = function(flavor = "ethereum") {
 export const OPEN_NEW_WORKSPACE_CONFIG = `${prefix}/OPEN_NEW_WORKSPACE_CONFIG`;
 export const openNewWorkspaceConfig = function(flavor = "ethereum") {
   return function(dispatch) {
-    dispatch(push("/loader"));
+    dispatch(push(`/loader?flavor=${flavor}`));
     ipcRenderer.send(OPEN_NEW_WORKSPACE_CONFIG, flavor);
   };
 };
@@ -61,7 +61,7 @@ export const openNewWorkspaceConfig = function(flavor = "ethereum") {
 export const OPEN_WORKSPACE_CONFIG = `${prefix}/OPEN_WORKSPACE_CONFIG`;
 export const openWorkspaceConfig = function(workspaceName, flavor) {
   return function(dispatch) {
-    dispatch(push("/loader"));
+    dispatch(push(`/loader?flavor=${flavor}`));
     ipcRenderer.send(OPEN_WORKSPACE_CONFIG, workspaceName, flavor);
   };
 };
