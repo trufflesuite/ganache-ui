@@ -14,8 +14,9 @@ export default function configureStore(reducers, history, initialState) {
   const store = createStore(reducers, initialState, enhancer);
 
   // add google analytics to production
-  history.listen(location => processPage(location.pathname, store.getState())
-  );
+  history.listen(location => {
+    processPage(location.pathname + (location.search ? location.search : ""), store.getState())
+  });
 
   return store;
 }
