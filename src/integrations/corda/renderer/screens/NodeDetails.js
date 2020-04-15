@@ -22,7 +22,7 @@ class NodeDetails extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {node: this.findNodeFromProps(), nodes:null, notaries:null, cordapps: null, transactions: null, collapse:{}};
+    this.state = {node: this.findNodeFromProps(), nodes:null, notaries:null, cordapps: null, transactions: null};
   }
 
   componentWillUnmount() {
@@ -42,7 +42,7 @@ class NodeDetails extends Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.match.params.node !== this.props.match.params.node) {
-      this.setState({node: this.findNodeFromProps(), nodes:null, notaries:null, cordapps:null, transactions: null, collapse: {}}, this.refresh.bind(this));
+      this.setState({node: this.findNodeFromProps(), nodes:null, notaries:null, cordapps:null, transactions: null}, this.refresh.bind(this));
     }
     if (prevProps.config.updated !== this.props.config.updated) {
       this.refresh();
@@ -263,12 +263,6 @@ class NodeDetails extends Component {
     return nodes.length ? nodes : hasNoPeers ? noPeers : loading;
   }
 
-  collapseSection = (key) => {
-    this.setState({
-      collapse: { ...this.state.collapse, [key]: !this.state.collapse[key]}
-    });
-  };
-
   getTransactions(){
     let noTxsOrLoading;
     let txs;
@@ -316,7 +310,7 @@ class NodeDetails extends Component {
     }
 
     return (
-      <section className="BlockCard">
+      <section className="BlockCard" style={{height: "100%"}}>
         <header>
           <button className="Button" onClick={this.props.history.goBack}>
             &larr; Back
@@ -364,15 +358,15 @@ class NodeDetails extends Component {
           </DetailSection>
 
           <DetailSection label="CorDapps">
-            {this.state.collapse.cordapps ? null : <main>{this.getCordapps()}</main>}
+            <main>{this.getCordapps()}</main>
           </DetailSection>
 
           <DetailSection label="Connected Nodes &amp; Notaries">
-            {this.state.collapse.nodes ? null : <main>{this.getConnectedNodes()}</main>}
+            <main>{this.getConnectedNodes()}</main>
           </DetailSection>
 
           <DetailSection label="Recent Transaction">
-              {this.state.collapse.transactions ? null : <main>{this.getTransactions()}</main>}
+              <main>{this.getTransactions()}</main>
           </DetailSection>
         </main>
       </section>
