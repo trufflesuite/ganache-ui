@@ -117,6 +117,7 @@
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-react": "^7.14.3",
     "eslint-plugin-react-hooks": "^2.1.0",
+    "execa": "4.0.0",
     "ganache-core": "2.10.2",
     "html-loader": "1.0.0-alpha.0",
     "husky": "^3.0.5",
@@ -167,7 +168,8 @@
   "build": {
     "npmRebuild": false,
     "appId": "org.trufflesuite.ganache",
-    "afterSign": "./afterSignHook.js",
+    "afterSign": "./scripts/build/afterSignHook.js",
+    "afterPack": "./scripts/build/afterPackHook.js",
     "files": [
       "src/**/*",
       "node_modules/**/*",
