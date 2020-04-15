@@ -1,0 +1,13 @@
+diff --git a/node_modules/app-builder-lib/out/targets/LinuxTargetHelper.js b/node_modules/app-builder-lib/out/targets/LinuxTargetHelper.js
+index 6e674b9..bead734 100755
+--- a/node_modules/app-builder-lib/out/targets/LinuxTargetHelper.js
++++ b/node_modules/app-builder-lib/out/targets/LinuxTargetHelper.js
+@@ -140,7 +140,7 @@ class LinuxTargetHelper {
+ 
+     const desktopMeta = Object.assign(Object.assign({
+       Name: appInfo.productName,
+-      Exec: exec,
++      Exec: exec + " --no-sandbox",
+       Terminal: "false",
+       Type: "Application",
+       Icon: packager.executableName,
