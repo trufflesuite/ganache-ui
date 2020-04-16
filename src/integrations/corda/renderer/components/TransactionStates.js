@@ -4,6 +4,8 @@ import jsonTheme from "../../../../common/utils/jsonTheme";
 import ReactJson from "@ganache/react-json-view";
 import { Link } from "react-router-dom";
 import DetailSection from "./DetailSection";
+import TransactionData from "../transaction-data";
+import TransactionLink from "./TransactionLink";
 
 const IGNORE_FIELDS = new Set(["@class", "participants"]);
 
@@ -16,7 +18,8 @@ class TransactionStates extends Component {
     this.state = {
       selectedIndex: null,
       nodes,
-      notaries
+      notaries,
+      txs: new Map()
     };
   }
 
@@ -82,6 +85,35 @@ class TransactionStates extends Component {
     return this.getWorkspaceNodeByType("notaries", owningKey);
   }
 
+  componentWillReceiveProps = async(props) => {
+    if (props !== this.props) {
+      const nds = this.state.nodes.concat(this.state.notaries).slice();
+      const transactions = await TransactionData.getAllTransactions(nds, nds, this.props.postgresPort);
+      const linkedTransactions = new Map(this.state.txs);
+      for (const tx of transactions) {
+        for (const [, state] of tx.states) {
+          const hash = state.ref.txhash;
+          const key = hash + state.ref.index;
+          const linearId = state?.state?.data?.linearId?.id;
+          if (linearId) {
+            const link = (<TransactionLink key={key} tx={tx} />);
+            const txs = linkedTransactions.get(linearId);
+            if(txs) {
+              if (!txs.has(key)) {
+                txs.set(key, link);
+              }
+            } else {
+              linkedTransactions.set(linearId, new Map([[key, link]]));
+            }
+          }
+        }
+      }
+      this.setState({
+        txs: linkedTransactions
+      });
+    }
+  }
+
   render() {
     const tabs = [];
     let selectedIndex = this.state.selectedIndex;
@@ -95,6 +127,7 @@ class TransactionStates extends Component {
       }
       for (let [index, state] of states) {
         const key = state.ref.txhash + state.ref.index;
+        const linearId = state?.state?.data?.linearId?.id;
         if (selectedIndex === null) {
           selectedIndex = key;
         }
@@ -109,12 +142,14 @@ class TransactionStates extends Component {
         const participants = state.state.data.participants || [];
         const workspaceNotary = this.getWorkspaceNotary(state.state.notary.owningKey);
 
+        const linkedTxs = [...(this.state.txs?.get(linearId)?.values() || [])];
+
         selectedState = (
           <div>
             {this.renderStateHeader(state, type)}
 
-            <DetailSection label="Signers" hide={!state.state.data.exitKeys?.length}>
-              {state.state.data.exitKeys.map(nodeKey => {
+            <DetailSection label="Signers" hide={!state?.state?.data?.exitKeys?.length}>
+              {state?.state?.data?.exitKeys?.map(nodeKey => {
                 const workspaceNode = this.getWorkspaceNode(nodeKey);
                 if (workspaceNode) {
                   return (<NodeLink key={"participant_" + workspaceNode.safeName} postgresPort={this.props.postgresPort} node={workspaceNode} />);
@@ -141,6 +176,10 @@ class TransactionStates extends Component {
               {[...state.observers].map(node => {
                 return (<NodeLink key={"participant_" + node.safeName} postgresPort={this.props.postgresPort} node={node} />);
               })}
+            </DetailSection>
+
+            <DetailSection label="Linear State History" hide={linkedTxs.length < 2}>
+              {linkedTxs}
             </DetailSection>
           </div>
         );
