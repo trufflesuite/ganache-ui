@@ -169,7 +169,7 @@
     "npmRebuild": false,
     "appId": "org.trufflesuite.ganache",
     "afterSign": "./scripts/build/afterSignHook.js",
-    "afterPack": "./scripts/build/afterPackHook.js",
+    "afterPack": "./scripts/build/afterPack.js",
     "files": [
       "src/**/*",
       "node_modules/**/*",
