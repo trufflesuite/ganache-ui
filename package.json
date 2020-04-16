@@ -128,6 +128,7 @@
     "prettier": "^1.18.2",
     "react-svg-loader": "^3.0.3",
     "sass-loader": "^8.0.0",
+    "sudo-prompt": "9.1.1",
     "temp": "0.9.1",
     "webpack": "4.41.4"
   },
@@ -169,6 +170,7 @@
     "npmRebuild": false,
     "appId": "org.trufflesuite.ganache",
     "afterSign": "./scripts/build/afterSignHook.js",
+    "afterPack": "./scripts/build/afterPack.js",
     "files": [
       "src/**/*",
       "node_modules/**/*",
