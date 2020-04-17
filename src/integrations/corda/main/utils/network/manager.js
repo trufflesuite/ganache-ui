@@ -1,7 +1,4 @@
 const crypto = require('crypto');
-const temp = require("temp");
-const { promisify } = require("util");
-const mkdir = promisify(temp.mkdir);
 const { CordaBootstrap } = require("./bootstrap");
 const { EventEmitter } = require("events");
 const { basename, join } = require("path");
@@ -45,14 +42,8 @@ class NetworkManager extends EventEmitter {
     this.config = config;
     this.settings = settings;
     const CHAIN_DATA = "chaindata";
-    const isTemp = this.settings.isDefault;
-    if (isTemp) {
-      temp.track();
-      this.chaindataDirectory = mkdir(`__ganache_${CHAIN_DATA}_`);
-    } else {
-      const dir = join(workspaceDirectory, CHAIN_DATA);
-      this.chaindataDirectory = Promise.resolve(dir);
-    }
+    const dir = join(workspaceDirectory, CHAIN_DATA);
+    this.chaindataDirectory = Promise.resolve(dir);
 
     this.nodes = [];
     this.notaries = [];
