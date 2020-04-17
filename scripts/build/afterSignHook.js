@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const electron_notarize = require('electron-notarize');
-const pkg = require("./package.json");
+const pkg = require("../../package.json");
 
 module.exports = async function (params) {
     // Only notarize the app on Mac OS only.

@@ -61,6 +61,25 @@ class AppShell extends Component {
   onCloseFatalErrorModal = () => {};
 
   render() {
+    let toastButton = "";
+    
+    if (this.props.network.toast.buttonText !== null) {
+      toastButton = (
+      <button style={
+        {
+          padding: 0,
+          margin: 0,
+          background: "none",
+          lineHeight: "normal",
+          color: "var(--app-button-primary-color)",
+          height: "auto",
+          textTransform: "none",
+          fontSize: "1em",
+          fontWeight: "normal",
+          fontFamily: '"Fira Sans", sans-serif'
+        }
+      } onClick={this.props.network.toast.toastOnClick}>{this.props.network.toast.buttonText}</button>);
+    }
     return (
       <div className="AppShell">
         <TopNavbar {...this.props} />
@@ -92,12 +111,9 @@ class AppShell extends Component {
         </OnlyIf>
         <OnlyIf
           test={this.props.network.toast.message !== null}>
-            <div className="toast">
-              {this.props.network.toast.message}
-              {
-                this.props.network.toast.buttonText === null ? "" :
-                <button style={{marginLeft:"1rem"}} onClick={this.props.network.toast.toastOnClick}>{this.props.network.toast.buttonText}</button>
-              }
+            <div className="toast" style={{display: "flex", alignItems: "center"}}>
+              <div>{this.props.network.toast.message} {toastButton}</div>
+              <button style={{color:"#fff", fontSize:"1.5em", background:"transparent", padding:0, margin:"0 0 0 1rem", lineHeight: "20px", width:"20px", height:"20px"}} onClick={() => this.props.dispatch(setToast(null))}>×</button>
             </div>
           </OnlyIf>
       </div>

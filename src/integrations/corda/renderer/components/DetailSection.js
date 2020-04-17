@@ -3,13 +3,17 @@ import React, { Component } from "react";
 
 const ICON = {
   STYLE : {
-    "font-size":".8em",
-    float: "right",
-    "align-items": "center",
-    "background-color": "rgba(107, 107, 107, 1.000)",
-    "user-select" : "none",
-    position: "relative",
-    top: "-.5em"
+    fontSize: "1.2em",
+    background: "none",
+    color: "var(--app-button-primary-background-color)",
+    userSelect: "none",
+    position: "absolute",
+    right: 0,
+    top: "50%",
+    transform: "translate(-100%, -50%)",
+    height: "auto",
+    padding: 0,
+    borderRadius: 0,
   },
   CLASS : [
     "TransactionTypeBadge",
@@ -29,8 +33,9 @@ class DetailSection extends Component {
   collapseSection = () => this.setState({ collapse: !this.state.collapse });
 
   collapseIcon = () => {
-    const icon = this.state.collapse ? "+" : "-";
-    return (<span className={ICON.CLASS} style={ICON.STYLE}>{icon}</span>);
+    const icon = this.state.collapse ? "▼" : "▲";
+    const title = this.state.collapse ? "Expand section" : "Collapse section";
+    return (<span title={title} className={ICON.CLASS} style={ICON.STYLE}>{icon}</span>);
   }
 
   render() {
@@ -40,7 +45,7 @@ class DetailSection extends Component {
         <h3 className="Label" onClick={this.collapseSection}>
           {this.props.label} {this.collapseIcon()}
         </h3>
-        <div className="Nodes DataRows">
+        <div className="Nodes DataRows" style={{overflow: "hidden", height: this.state.collapse ? "1px" : "auto"}}>
           {this.state.collapse ? null : this.props.children}
         </div>
       </div>

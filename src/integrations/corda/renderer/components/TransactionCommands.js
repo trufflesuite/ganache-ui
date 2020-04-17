@@ -9,7 +9,7 @@ class TransactionCommands extends Component {
     if (commands === null){
       elements = [<div style={{marginBottom:".5em"}} key="loading">Loading...</div>];
     } else if (commands.length === 0) {
-    elements = [<div style={{marginBottom:".5em"}} key="no-command">No commands</div>];
+      elements = [<div style={{marginBottom:".5em"}} key="no-command">No commands</div>];
     } else {
       elements = commands.map((command, i) => {
         let link = "";
