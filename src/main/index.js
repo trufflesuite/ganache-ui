@@ -4,6 +4,7 @@ const { spawn } = require("promisify-child-process");
 import path from "path";
 import * as os from "os";
 import merge from "lodash.merge";
+import clonedeep from "lodash.clonedeep";
 import ethagen from "ethagen/wallet";
 import moniker from "moniker";
 import fixPath from "fix-path"
@@ -33,7 +34,6 @@ import {
   SET_CURRENT_WORKSPACE,
   OPEN_NEW_WORKSPACE_CONFIG,
   OPEN_WORKSPACE_CONFIG,
-  DOWNLOAD_EXTRAS,
 } from "../common/redux/workspaces/actions";
 import {
   SET_SETTINGS,
@@ -367,35 +367,6 @@ app.on('ready', () => {
     });
   }
 
-
-  ipcMain.on(DOWNLOAD_EXTRAS, async (event, flavor) => {
-    if (integrations.config[flavor]) {
-      const extras = integrations.config[flavor];
-      mainWindow.webContents.send(DOWNLOAD_EXTRAS, {
-        status: "downloading",
-        flavor
-      });
-      try {
-        await extras.downloadAll(true);
-        mainWindow.webContents.send(DOWNLOAD_EXTRAS, {
-          status: "success",
-          flavor
-        });
-      } catch (e) {
-        mainWindow.webContents.send(DOWNLOAD_EXTRAS, {
-          status: "failed",
-          error: e,
-          flavor
-        });
-      }
-    } else {
-      mainWindow.webContents.send(DOWNLOAD_EXTRAS, {
-        status: "failed",
-        flavor
-      });
-    }
-  });
-  
   ipcMain.on(DELETE_WORKSPACE, async (event, name, flavor) => {
     await integrations.stopServer();
 
@@ -452,6 +423,21 @@ app.on('ready', () => {
       // the projects should trigger the REQUEST_SERVER_RESTART
       // logic
       workspace.settings.set("projects", []);
+      const randomizeMnemonicOnStart = workspace.settings.get("randomizeMnemonicOnStart");
+      workspace.saveAs(
+        "Quickstart",
+        null,
+        workspaceManager.directory,
+        null,
+        true,
+      );
+      // this loads the default workspace
+      workspaceManager.bootstrap();
+      // saveAs overwrites "isDefault", so we need to put it back
+      workspace.settings.set("isDefault", true);
+      workspace.settings.set("randomizeMnemonicOnStart", randomizeMnemonicOnStart);
+      await integrations.setWorkspace("Quickstart", flavor);
+      workspace = integrations.workspace;
     } else {
       for (let i = 0; i < workspaceSettings.projects.length; i++) {
         projects.push(
@@ -510,6 +496,7 @@ app.on('ready', () => {
         null,
         workspaceManager.directory,
         wallet.mnemonic,
+        true,
       );
     } else {
       const workspaceSettings = defaultWorkspace.settings.getAll();
@@ -634,6 +621,18 @@ app.on('ready', () => {
       global.setAll(globalSettings);
 
       if (workspace && workspaceSettings) {
+        // if the current workspace is a "default workspace", make sure
+        // we update the original default workspace as well!
+        if (workspace.settings.get("isDefault")) {
+          const defaultWorkspace = workspaceManager.get(null, workspace.flavor);
+          const clonedSettings = clonedeep(workspaceSettings);
+          if (clonedSettings.server && clonedSettings.server.db_path) {
+            clonedSettings.server.db_path = defaultWorkspace.settings.get("server.db_path");
+          }
+          defaultWorkspace.settings.setAll(clonedSettings);
+          workspace.resetChaindata();
+        }
+        workspaceSettings.randomizeMnemonicOnStart = false;
         workspace.settings.setAll(workspaceSettings);
       }
 

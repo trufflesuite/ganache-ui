@@ -30,7 +30,7 @@ export function setNodeStarted(safeName) {
 }
 export function setNodeStopped(safeName) {
   return function(dispatch) {
-    dispatch(setToast(safeName + " has stopped. Restart?", true, "Restart", () => {
+    dispatch(setToast(safeName + " has stopped.", true, "Restart.", () => {
       startNode(safeName)(dispatch);
     }));
     dispatch({ type: "NODE_STOPPED", safeName });

@@ -89,8 +89,13 @@ class NetworkManager extends EventEmitter {
       this._io.sendProgress("Starting PostgreSQL...");
       this.pg = await pgDownload.start(postgresPort, chainDataDir, this.entities);
       if (this.cancelled) return;
-      this._io.sendProgress("Bootstrapping network...");
-      await cordaBootstrap.bootstrap(this.config);
+      if (this.settings.runBootstrap) {
+        this._io.sendProgress("Bootstrapping network...");
+        await cordaBootstrap.bootstrap(this.config);
+        this.settings.runBootstrap = this.settings.name === "Quickstart";
+      } else {
+        this._io.sendProgress("Skipping; network already bootstrapped.", 250);
+      }
       if (this.cancelled) return;
       this._io.sendProgress("Configuring Postgres Hooks...", 0);
       this.postGresHooksPromise = this.setupPostGresHooks();

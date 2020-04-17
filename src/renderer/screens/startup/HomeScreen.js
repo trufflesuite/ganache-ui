@@ -9,8 +9,7 @@ import {
   openDefaultWorkspace,
   openNewWorkspaceConfig,
   openWorkspaceConfig,
-  deleteWorkspace,
-  downloadExtras
+  deleteWorkspace
 } from "../../../common/redux/workspaces/actions";
 import UpdateNotification from "../auto-update/UpdateNotification";
 import ErrorModal from "../../components/modal/ErrorModal";
@@ -80,10 +79,6 @@ class HomeScreen extends Component {
 
   handleQuickstartPress() {
     this.props.dispatch(openDefaultWorkspace(this.state.flavor));
-  }
-
-  handleDownloadPress() {
-    this.props.dispatch(downloadExtras("corda"));
   }
 
   handleNewWorkspacePress() {
@@ -237,9 +232,6 @@ class HomeScreen extends Component {
                     {quickstartMenuButton}
                     {quickstartButtons}
                   </div>
-                  {/* <button onClick={this.handleDownloadPress.bind(this)}>
-                    Download Corda
-                  </button> */}
                   <div className="flavor-buttons">
                     <button onClick={this.handleNewWorkspacePress.bind(this)}>
                       <MenuIcon />
@@ -252,6 +244,7 @@ class HomeScreen extends Component {
                     {workspaceButtons}
                   </div>
                 </div>
+                {this.state.flavor === "corda" ? <div style={{height:"0", overflow:"visible", color:"#aaa"}}><small><em>Note: Corda networks may utilize significant CPU and Memory during startup.</em></small></div> : ""}
               </section>
             </div>
             {/* <div className="LearnMore">{learnMore}</div> */}

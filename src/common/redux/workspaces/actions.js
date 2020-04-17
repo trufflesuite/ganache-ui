@@ -71,8 +71,6 @@ export const saveWorkspace = function(name) {
   return function(dispatch, getState) {
     const mnemonic = getState().core.mnemonic;
 
-    cleanupWorkspace(dispatch, getState);
-
     dispatch({ type: SAVE_WORKSPACE, name, mnemonic: mnemonic });
 
     ipcRenderer.send(SAVE_WORKSPACE, name, mnemonic);
@@ -91,12 +89,4 @@ export const deleteWorkspace = function(name, flavor) {
 export const SET_CURRENT_WORKSPACE = `${prefix}/SET_CURRENT_WORKSPACE`;
 export const setCurrentWorkspace = function(workspace, contractCache) {
   return { type: SET_CURRENT_WORKSPACE, workspace, contractCache };
-};
-
-export const DOWNLOAD_EXTRAS = `${prefix}/DOWNLOAD_EXTRAS`;
-export const downloadExtras = function(flavor) {
-  return function(dispatch) {
-    dispatch({ type: DOWNLOAD_EXTRAS, flavor });
-    ipcRenderer.send(DOWNLOAD_EXTRAS, flavor);
-  };
 };

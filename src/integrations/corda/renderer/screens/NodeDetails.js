@@ -7,9 +7,8 @@ import TransactionLink from "../components/TransactionLink";
 import TransactionData from "../transaction-data";
 import { CancellationToken } from "../screens/utils";
 import { startNode } from "../../../../common/redux/config/actions";
-
-// this is taken from braid
-const VERSION_REGEX = /^(.*?)(?:-(?:(?:\d|\.)+))\.jar?$/;
+import { cordaNickname } from "../utils/nickname";
+import DetailSection from "../components/DetailSection";
 
 function filterNodeBy(nodeToMatch) {
   return (node) => {
@@ -210,7 +209,7 @@ class NodeDetails extends Component {
   }
 
   getWorkspaceCordapp(name) {
-    return this.props.config.settings.workspace.projects.find(cordapp => VERSION_REGEX.exec(cordapp)[1].toLowerCase().endsWith(name.toLowerCase()));
+    return this.props.config.settings.workspace.projects.find(cordapp => cordaNickname(cordapp).endsWith(name.toLowerCase()));
   }
 
   getCordapps(){
@@ -297,43 +296,31 @@ class NodeDetails extends Component {
     const style = {
       position: "absolute",
       right: "1.5rem",
-      top: "50%",
+      top: "5%",
       transform: "translateY(-50%)"
     };
     if (status === "stopped") {
-      restartButton = (<div style={style}>
-        <span>Node is stopped!</span> <button style={{marginLeft: "1rem"}} onClick={()=>this.props.dispatch(startNode(node.safeName))}>Restart</button>
-      </div>);
+      restartButton = (<span style={style}>
+        <span>Node is stopped!</span> <button style={{marginLeft: "1rem", padding:"1em"}} onClick={()=>this.props.dispatch(startNode(node.safeName))}>Restart</button>
+      </span>);
     } else if (status === "starting") {
-      restartButton = (<div style={{
-          position: "absolute",
-          right: "1.5rem",
-          top: "50%",
-          transform: "translateY(-50%)"
-        }}>
-          <span>Node is starting...</span>
-        </div>);
+      restartButton = (<span style={style}>
+        <span>Node is starting...</span>
+      </span>);
     }
 
     return (
-      <section className="BlockCard">
+      <section className="BlockCard" style={{height: "100%"}}>
         <header>
           <button className="Button" onClick={this.props.history.goBack}>
             &larr; Back
           </button>
           <h1 className="Title">
-            {node.name}
+            {node.name}(Corda {(node.version || "4_4").replace("_", ".")}) {restartButton}
           </h1>
         </header>
         <main className="corda-details-container corda-node-details">
-          <div className="corda-details-section">
-            <h3 className="Label">
-              Connection Details
-
-              {
-                restartButton
-              }
-            </h3>
+          <DetailSection label={<span>Connection Details</span>}>
             <div className="DataRow corda-node-details-ports corda-details-section corda-details-padded">
               <div>
                 <div className="Label">RPC Port</div>
@@ -367,29 +354,20 @@ class NodeDetails extends Component {
                 <div className="Label">Postgres Connection</div>
                 <div className="Value">postgresql://corda@localhost:{this.props.config.settings.workspace.postgresPort}/{node.safeName}</div>
               </div>
-            </div>
-          </div>
+            </div> 
+          </DetailSection>
 
-          <div className="corda-details-section">
-            <h3 className="Label">CorDapps</h3>
-            <div className="Nodes DataRows">
-              <main>{this.getCordapps()}</main>
-            </div>
-          </div>
+          <DetailSection label="CorDapps">
+            <main>{this.getCordapps()}</main>
+          </DetailSection>
 
-          <div className="corda-details-section">
-            <h3 className="Label">Connected Nodes &amp; Notaries</h3>
-            <div className="Nodes DataRows">
-              <main>{this.getConnectedNodes()}</main>
-            </div>
-          </div>
+          <DetailSection label="Connected Nodes &amp; Notaries">
+            <main>{this.getConnectedNodes()}</main>
+          </DetailSection>
 
-          <div className="corda-details-section">
-            <h3 className="Label">Recent Transactions</h3>
-            <div className="Nodes DataRows">
+          <DetailSection label="Recent Transaction">
               <main>{this.getTransactions()}</main>
-            </div>
-          </div>
+          </DetailSection>
         </main>
       </section>
     );
