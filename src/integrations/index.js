@@ -66,8 +66,6 @@ class IntegrationManager extends EventEmitter {
     } else {
       workspace = this.workspaceManager.get(null);
     }
-    
-    await this.flavor.stopServer();
 
     workspace.saveAs(
       workspaceName,
@@ -76,11 +74,9 @@ class IntegrationManager extends EventEmitter {
       mnemonic
     );
 
-    await this.workspaceManager.bootstrap();
-
     await this.setWorkspace(workspaceName, workspace.flavor);
 
-    await this.startServer();
+    this.emit("server-started");
   }
 
   async startChain() {

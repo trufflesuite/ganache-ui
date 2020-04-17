@@ -207,7 +207,7 @@ class TopNavbar extends Component {
               title="WORKSPACE"
               value={this.props.config.settings.workspace.name}
             />
-            <OnlyIf test={this.props.workspaces.current.name === null}>
+            <OnlyIf test={this.props.config.settings.workspace.isDefault}>
               <button onClick={this.handleSaveWorkspacePress.bind(this)}>Save</button>
             </OnlyIf>
             <button onClick={this.handleWorkspacesPress.bind(this)}>Switch</button>

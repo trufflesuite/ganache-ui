@@ -1,6 +1,7 @@
 module.exports = {
   name: "Quickstart",
   isDefault: true,
+  runBootstrap: true,
   postgresPort: null,
   nodes: [{
     "name": "O=Party A,L=London,C=GB",
