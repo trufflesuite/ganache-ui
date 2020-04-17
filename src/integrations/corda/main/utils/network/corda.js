@@ -207,6 +207,8 @@ class Corda {
 
       await ssh.exec("output-format", ["set", "json"]);
       this.entity.cordaDiagnosticInfo = await ssh.exec("run", ["nodeDiagnosticInfo"]);
+      this.recordStd = false;
+      this.stdout = this.stderr = "";
       resolve(ssh);
     } catch(e) {
       await this.stop(true);
