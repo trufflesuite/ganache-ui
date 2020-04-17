@@ -93,16 +93,17 @@ class TransactionStates extends Component {
       for (const tx of transactions) {
         for (const [, state] of tx.states) {
           const hash = state.ref.txhash;
-          const key = hash + state.ref.index;
+          const key = hash;
           const linearId = state?.state?.data?.linearId?.id;
           if (linearId) {
-            const link = (<TransactionLink key={key} tx={tx} />);
             const txs = linkedTransactions.get(linearId);
-            if(txs) {
+            if (txs) {
               if (!txs.has(key)) {
+                const link = (<TransactionLink key={key} tx={tx} />);
                 txs.set(key, link);
               }
             } else {
+              const link = (<TransactionLink key={key} tx={tx} />);
               linkedTransactions.set(linearId, new Map([[key, link]]));
             }
           }
@@ -142,7 +143,9 @@ class TransactionStates extends Component {
         const participants = state.state.data.participants || [];
         const workspaceNotary = this.getWorkspaceNotary(state.state.notary.owningKey);
 
-        const linkedTxs = [...(this.state.txs?.get(linearId)?.values() || [])];
+        const linkedTxs = [...(this.state.txs?.get(linearId)?.values() || [])].filter(({key}) => {
+            return key !== this.props.transaction.txhash
+          });
 
         selectedState = (
           <div>
@@ -178,7 +181,7 @@ class TransactionStates extends Component {
               })}
             </DetailSection>
 
-            <DetailSection label="Linear State History" hide={linkedTxs.length < 2}>
+            <DetailSection label="Linear State History" hide={linkedTxs.length < 1}>
               {linkedTxs}
             </DetailSection>
           </div>
