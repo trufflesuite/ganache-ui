@@ -91,9 +91,9 @@ class NetworkManager extends EventEmitter {
       this._io.sendProgress("Configuring Postgres Hooks...", 0);
       this.postGresHooksPromise = this.setupPostGresHooks();
       this._io.sendProgress("Copying Cordapps...", 500);
+      await this.copyCordappsAndSetupNetwork();
       await Promise.all([
         this.postGresHooksPromise,
-        this.copyCordappsAndSetupNetwork(),
         this.hashCordapps()
       ]);
       if (this.cancelled) return;
@@ -180,10 +180,10 @@ class NetworkManager extends EventEmitter {
 
       // copy all cordapps where they are supposed to go
       const currentDir = join(chaindataDir, node.safeName);
-      (node.cordapps || []).forEach(path => {
+      (node.cordapps || []).forEach(async (path) => {
         const name = basename(path);
         const newPath = join(currentDir, "cordapps", name);
-        promises.push(fse.copy(path, newPath));
+        fse.copySync(path, newPath);
       });
     });
     // for each notary, get it's node info file
