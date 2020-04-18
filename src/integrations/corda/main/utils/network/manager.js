@@ -1,7 +1,4 @@
 const crypto = require('crypto');
-const temp = require("temp");
-const { promisify } = require("util");
-const mkdir = promisify(temp.mkdir);
 const { CordaBootstrap } = require("./bootstrap");
 const { EventEmitter } = require("events");
 const { basename, join } = require("path");
@@ -45,14 +42,8 @@ class NetworkManager extends EventEmitter {
     this.config = config;
     this.settings = settings;
     const CHAIN_DATA = "chaindata";
-    const isTemp = this.settings.isDefault;
-    if (isTemp) {
-      temp.track();
-      this.chaindataDirectory = mkdir(`__ganache_${CHAIN_DATA}_`);
-    } else {
-      const dir = join(workspaceDirectory, CHAIN_DATA);
-      this.chaindataDirectory = Promise.resolve(dir);
-    }
+    const dir = join(workspaceDirectory, CHAIN_DATA);
+    this.chaindataDirectory = Promise.resolve(dir);
 
     this.nodes = [];
     this.notaries = [];
@@ -100,9 +91,9 @@ class NetworkManager extends EventEmitter {
       this._io.sendProgress("Configuring Postgres Hooks...", 0);
       this.postGresHooksPromise = this.setupPostGresHooks();
       this._io.sendProgress("Copying Cordapps...", 500);
+      await this.copyCordappsAndSetupNetwork();
       await Promise.all([
         this.postGresHooksPromise,
-        this.copyCordappsAndSetupNetwork(),
         this.hashCordapps()
       ]);
       if (this.cancelled) return;
@@ -189,10 +180,10 @@ class NetworkManager extends EventEmitter {
 
       // copy all cordapps where they are supposed to go
       const currentDir = join(chaindataDir, node.safeName);
-      (node.cordapps || []).forEach(path => {
+      (node.cordapps || []).forEach(async (path) => {
         const name = basename(path);
         const newPath = join(currentDir, "cordapps", name);
-        promises.push(fse.copy(path, newPath));
+        fse.copySync(path, newPath);
       });
     });
     // for each notary, get it's node info file
