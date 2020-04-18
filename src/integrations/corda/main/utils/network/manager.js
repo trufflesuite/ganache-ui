@@ -1,8 +1,5 @@
 const os = require('os')
 const crypto = require('crypto');
-const temp = require("temp");
-const { promisify } = require("util");
-const mkdir = promisify(temp.mkdir);
 const { CordaBootstrap } = require("./bootstrap");
 const { EventEmitter } = require("events");
 const { basename, join } = require("path");
@@ -58,14 +55,8 @@ class NetworkManager extends EventEmitter {
     this.config = config;
     this.settings = settings;
     const CHAIN_DATA = "chaindata";
-    const isTemp = this.settings.isDefault;
-    if (isTemp) {
-      temp.track();
-      this.chaindataDirectory = mkdir(`__ganache_${CHAIN_DATA}_`);
-    } else {
-      const dir = join(workspaceDirectory, CHAIN_DATA);
-      this.chaindataDirectory = Promise.resolve(dir);
-    }
+    const dir = join(workspaceDirectory, CHAIN_DATA);
+    this.chaindataDirectory = Promise.resolve(dir);
 
     this.nodes = [];
     this.notaries = [];
@@ -246,15 +237,8 @@ class NetworkManager extends EventEmitter {
       // track all entities' ports in a port blacklist so we don't try to bind 
       // braid to it later.
       this.addToBlackList(node);
-
       
       const currentDir = join(chaindataDir, node.safeName, "cordapps");
-      try {
-        fse.removeSync(currentDir);
-      } catch(e) {
-        // ignore
-        console.log(e);
-      }
 
       // copy all cordapps where they are supposed to go
       node.jars = (node.projects || []).flatMap(path => {
@@ -300,7 +284,7 @@ class NetworkManager extends EventEmitter {
       node.jars.forEach(path => {
         const name = basename(path);
         const newPath = join(currentDir, name);
-        promises.push(fse.copy(path, newPath));
+        fse.copySync(path, newPath);
       });
     });
     this.settings.jars = [... new Set(this.entities.flatMap(node => node.jars))];

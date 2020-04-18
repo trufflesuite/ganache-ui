@@ -632,7 +632,8 @@ app.on('ready', () => {
             clonedSettings.server.db_path = defaultWorkspace.settings.get("server.db_path");
           }
           defaultWorkspace.settings.setAll(clonedSettings);
-          workspace.resetChaindata();
+          integrations.stopServer().then(() => workspace.resetChaindata())
+          
         }
         workspaceSettings.randomizeMnemonicOnStart = false;
         workspace.settings.setAll(workspaceSettings);

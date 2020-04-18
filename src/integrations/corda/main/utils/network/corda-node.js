@@ -284,6 +284,8 @@ class CordaNode {
 
       this.status = "started";
       this.shuttingDown = false;
+      this.recordStd = false;
+      this.stdout = this.stderr = "";
       resolve(conn);
     } catch(e) {
       await this.stop(true);
