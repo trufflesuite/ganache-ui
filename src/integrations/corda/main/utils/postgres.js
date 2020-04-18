@@ -64,7 +64,11 @@ module.exports = (POSTGRES_PATH) => {
       const dataDir = join(safeWorkspaceName, POSTGRES_DATA_DIR);
       const doesExist = await exists(dataDir);
 
-      const stop = () => spawn(PG_CTL, ["stop" ,"-D", dataDir], config);
+      const stop = () => {
+        return spawn(PG_CTL, ["stop" ,"-D", dataDir], config).catch(e => {
+          console.log(e);
+        });
+      };
 
       if (doesExist) {
         try {
