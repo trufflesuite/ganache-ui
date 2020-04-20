@@ -76,10 +76,14 @@ class ConfigScreen extends PureComponent {
   }
 
   initActiveIndex = () => {
-    if ("params" in this.props && "activeTab" in this.props.match.params) {
+    if ("params" in this.props.match && "activeTab" in this.props.match.params) {
       const TABS = this.state.TABS
       for (let i = 0; i < TABS.length; i++) {
-        if (TABS[i].subRoute === this.props.match.params.activeTab) {
+        // Get the tab name, no matter if the subroute has a flavor prefix.
+        let subRoute = TABS[i].subRoute;
+        let tabName = subRoute.substring(subRoute.indexOf("/") + 1);
+
+        if (tabName === this.props.match.params.activeTab) {
           // eslint-disable-next-line react/no-direct-mutation-state
           this.state.activeIndex = i;
           break;
@@ -159,24 +163,33 @@ class ConfigScreen extends PureComponent {
     const workspace = this.state.config.settings.workspace;
     const nodes = [...workspace.nodes, ...workspace.notaries];
     nodes.forEach(node => {
-      const cordapps = node.cordapps;
+      const projects = node.projects || [];
       if (remove) {
-        const index = cordapps.indexOf(path);
+        const index = projects.indexOf(path);
         if (index !== -1) {
-          cordapps.splice(index, 1);
+          projects.splice(index, 1);
         }
       } else {
-        cordapps.push(path);
+        projects.push(path);
       }
+      node.projects = projects;
     });
   }
 
   addWorkspaceProject = path => {
-    const alreadyExists = this.state.config.settings.workspace.projects.includes(
-      path,
-    );
-    if (!alreadyExists) {
-      this.state.config.settings.workspace.projects.push(path);
+    const update = (_path) => {
+      const alreadyExists = this.state.config.settings.workspace.projects.includes(_path);
+      if (!alreadyExists) {
+        this.state.config.settings.workspace.projects.push(_path);
+      }
+      if (this.state.config.settings.workspace.flavor === "corda") {
+        this.updateCordaNodes(_path);
+      }
+    }
+    if (Array.isArray(path)) {
+      path.forEach(update);
+    } else {
+      update(path);
     }
     if (this.isCorda()) {
       this.updateCordaNodes(path);

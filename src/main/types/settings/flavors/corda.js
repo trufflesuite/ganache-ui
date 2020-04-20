@@ -12,7 +12,7 @@ module.exports = {
     "cordapps": [],
     "nodes": ["partyb", "partyc"],
     "sshdPort": 11000,
-    "version": "4_3"
+    "version": "4_4"
   },{
     "name": "O=Party B,L=Paris,C=FR",
     "safeName" : "partyb",
@@ -22,7 +22,7 @@ module.exports = {
     "cordapps": [],
     "nodes": ["partya", "partyc"],
     "sshdPort": 11003,
-    "version": "4_3"
+    "version": "4_4"
   },{
     "name": "O=Party C,L=New York,C=US",
     "safeName" : "partyc",
@@ -32,7 +32,7 @@ module.exports = {
     "cordapps": [],
     "nodes": ["partya", "partyb"],
     "sshdPort": 11006,
-    "version": "4_3"
+    "version": "4_4"
   }],
   notaries : [{
     "name": "O=Notary Service,L=London,C=GB",
@@ -42,7 +42,7 @@ module.exports = {
     "p2pPort": 10011,
     "cordapps": [],
     "sshdPort": 11009,
-    "version": "4_3"
+    "version": "4_4"
   }],
   projects: [],
   cordappHashMap: {}

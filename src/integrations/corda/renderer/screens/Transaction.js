@@ -117,6 +117,17 @@ class Transaction extends Component {
               <div>{transaction.earliestRecordedTime.toString()}</div>
             </div>
           </div>
+          <div className="DataRow corda-details-section corda-transaction-details-info">
+            <div>
+              <h3 className="Label">Cordapps</h3>
+              <div>{
+                !this.state.cordapps ? "" :
+                  [...this.state.cordapps].map(cordapp => {
+                    return <div key={cordapp}>{cordapp}</div>
+                  })
+              }</div>
+            </div>
+          </div>
 
           <TransactionStates postgresPort={this.props.config.settings.workspace.postgresPort} nodes={this.props.config.settings.workspace.nodes} notaries={this.props.config.settings.workspace.notaries} transaction={transaction} inputs={this.state.inputs} />
         </main>

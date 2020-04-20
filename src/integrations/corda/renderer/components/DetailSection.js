@@ -46,7 +46,7 @@ class DetailSection extends Component {
           {this.props.label} {this.collapseIcon()}
         </h3>
         <div className="Nodes DataRows" style={{overflow: "hidden", height: this.state.collapse ? "1px" : "auto"}}>
-          {this.props.children}
+          {this.state.collapse ? null : this.props.children}
         </div>
       </div>
     );

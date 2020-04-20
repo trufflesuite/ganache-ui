@@ -1,6 +1,8 @@
 import { initAutoUpdates } from "./AutoUpdate";
 import { initCore } from "./Core";
 import { initConfig } from "./Config";
+import { initCordaCore } from "./CordaCore";
+import { initCorda } from "./CordaShell";
 import { initLogs } from "./Logs";
 import { initNetwork } from "./Network";
 import { initWorkspaces } from "./Workspaces";
@@ -18,5 +20,7 @@ export function initRenderer(store) {
   initAutoUpdates(store);
   initWorkspaces(store);
   initEvents(store);
+  initCordaCore(store);
+  initCorda(store);
   initCordaShutdown(store);
 }

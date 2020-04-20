@@ -1,11 +1,10 @@
 import connect from "../../../../renderer/screens/helpers/connect";
-
-import React, { Component } from "react";
-import NodeLink from "../components/NodeLink";
-import CordAppLink from "../components/CordAppLink";
 import TransactionLink from "../components/TransactionLink";
+import CordAppLink from "../components/CordAppLink";
 import TransactionData from "../transaction-data";
 import { CancellationToken } from "../screens/utils";
+import NodeLink from "../components/NodeLink";
+import React, { Component } from "react";
 import { startNode } from "../../../../common/redux/config/actions";
 import { cordaNickname } from "../utils/nickname";
 import DetailSection from "../components/DetailSection";
@@ -22,7 +21,7 @@ class NodeDetails extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {node: this.findNodeFromProps(), nodes:null, notaries:null, cordapps: null, transactions: null};
+    this.state = {node: this.findNodeFromProps(), nodes:null, notaries:null, cordapps: null, transactions: null, collapse:{}};
   }
 
   componentWillUnmount() {
@@ -42,7 +41,7 @@ class NodeDetails extends Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.match.params.node !== this.props.match.params.node) {
-      this.setState({node: this.findNodeFromProps(), nodes:null, notaries:null, cordapps:null, transactions: null}, this.refresh.bind(this));
+      this.setState({node: this.findNodeFromProps(), nodes:null, notaries:null, cordapps:null, transactions: null, collapse: {}}, this.refresh.bind(this));
     }
     if (prevProps.config.updated !== this.props.config.updated) {
       this.refresh();
@@ -209,7 +208,7 @@ class NodeDetails extends Component {
   }
 
   getWorkspaceCordapp(name) {
-    return this.props.config.settings.workspace.projects.find(cordapp => cordaNickname(cordapp).endsWith(name.toLowerCase()));
+    return this.props.config.settings.workspace.jars.find(cordapp => cordaNickname(cordapp).endsWith(name.toLowerCase()));
   }
 
   getCordapps(){
@@ -262,6 +261,12 @@ class NodeDetails extends Component {
     }
     return nodes.length ? nodes : hasNoPeers ? noPeers : loading;
   }
+
+  collapseSection = (key) => {
+    this.setState({
+      collapse: { ...this.state.collapse, [key]: !this.state.collapse[key]}
+    });
+  };
 
   getTransactions(){
     let noTxsOrLoading;
@@ -316,7 +321,7 @@ class NodeDetails extends Component {
             &larr; Back
           </button>
           <h1 className="Title">
-            {node.name}(Corda {(node.version || "4_4").replace("_", ".")}) {restartButton}
+            {node.name} (Corda {(node.version || "4_4").replace("_", ".")}) {restartButton}
           </h1>
         </header>
         <main className="corda-details-container corda-node-details">

@@ -45,7 +45,8 @@ class Downloader {
       const parsedUri = parseUrl(url);
       const ext = parsedUri.ext;
       const isZip = ext.toLowerCase() === ".zip";
-      const dest = join(this.saveLocation, isZip ? parsedUri.name : parsedUri.base);
+      const loc = isZip ? parsedUri.name : join(parsedUri.name, parsedUri.base);
+      const dest = join(this.saveLocation, loc);
       // if the file/folder already exists don't download it again unless we are `force`d to
       const exists = existsSync(dest);
       let pendingMove;

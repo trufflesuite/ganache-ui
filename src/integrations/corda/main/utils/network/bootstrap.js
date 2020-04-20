@@ -1,5 +1,5 @@
 const {generate, templates} = require("../config");
-const { createWriteStream } = require("fs");
+const { createWriteStream, appendFileSync } = require("fs");
 const { join } = require("path");
 const { spawn } = require('child_process');
 
@@ -19,7 +19,7 @@ class CordaBootstrap {
     this.handleClose = this.handleClose.bind(this);
   }
 
-  async writeConfig(nodes, notaries, postgresPort) {
+  async writeConfig(nodes, notaries, postgresPort, POSTGRES_DRIVER) {
     const nodesArr = this.nodes = [];
     const notariesArr = this.notaries = [];
     
@@ -36,14 +36,20 @@ class CordaBootstrap {
         current.sshdPort = current.sshdPort || (current.rpcPort + 1000);
         const name = `${current.safeName}`;
         out.push(current);
-        const stream = createWriteStream(join(this.workspaceDirectory, `${name}_node.conf`));
+        const path = join(this.workspaceDirectory, `${name}_node.conf`)
+        const stream = createWriteStream(path);
         const write = (val) => stream.write(`${val}\n`, "utf8");
         const mod = produceModifier(modifier, { write }, current);
         mod.postgres.schema = current.safeName;
         generate(template, mod);
+        // eslint-disable-next-line no-console
         const close = waitForClose(stream).catch(console.log);
         stream.end();
+
+        // I can't figure out how to use this config generator to save my life.
+        // I'm just going to write what I want to the file here:
         await close;
+        appendFileSync(path, `jarDirs=["${POSTGRES_DRIVER.replace(/\\/g, "\\\\")}"]`);
       }
     }
 
@@ -65,7 +71,7 @@ class CordaBootstrap {
     // java on the PATH is required for bootstrapper
     this.spawnConfig = {env: {PATH: join(JAVA_HOME, "bin"), CAPSULE_CACHE_DIR: "./capsule"}, cwd: this.workspaceDirectory};
     this._io.sendProgress("Running Corda Network Bootstrapper...");
-    const java = spawn("java", ["-jar", this.CORDA_BOOTSTRAPPER, "--dir", this.workspaceDirectory], this.spawnConfig);
+    const java = spawn("java", ["-jar", this.CORDA_BOOTSTRAPPER, "--dir", this.workspaceDirectory, "--minimum-platform-version", "1"], this.spawnConfig);
 
     this.stderr = "";
     java.stderr.on('data', (data) => {
@@ -78,6 +84,7 @@ class CordaBootstrap {
       this.stderr += strData;
       this._io.sendStdErr(data);
       // this.emit("message", "stderr", data, this.entity.safeName);
+      // eslint-disable-next-line no-console
       console.error(`stderr:\n${data}`);
     });
 
@@ -86,6 +93,7 @@ class CordaBootstrap {
       this.stdout += data.toString();
       this._io.sendStdOut(data);
       // this.emit("message", "stdout", data, this.entity.safeName);
+      // eslint-disable-next-line no-console
       console.log(`stdout:\n${data}`);
     });
 
@@ -95,6 +103,7 @@ class CordaBootstrap {
       this.awaiter = {resolve, reject};
       java.on('error', (error) => {
         this.err += error.toString();
+        // eslint-disable-next-line no-console
         console.error(error);
         this._io.sendError(new Error(error.toString()))
       });
@@ -103,6 +112,7 @@ class CordaBootstrap {
     });
   }
   handleClose (code) {
+    // eslint-disable-next-line no-console
     console.error(`${this.CORDA_BOOTSTRAPPER} (${this.workspaceDirectory}): child process exited with code ${code} (JAVA_HOME: ${this.JAVA_HOME})`);
     if (code === 0) {
       this.awaiter.resolve();

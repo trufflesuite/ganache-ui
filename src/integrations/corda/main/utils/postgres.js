@@ -80,13 +80,13 @@ module.exports = (POSTGRES_PATH) => {
         // initialize a postgres database
         await spawn(INITDB, ["--pgdata", dataDir, "--username", "postgres"], config);
       }
-      
+
       // make sure there are no databases of ours running on this port...
       await postgres.stop(port);
-      
+
       // TODO: figure out what postgres needs on Windows from the process.env and only supply that.
       // start the postgres server
-      const maxConnections = Math.min(Math.max(100, schemaNames.length * 10), 1000);
+      const maxConnections = Math.min(Math.max(100, schemaNames.length * schemaNames.length), 10000);
       await spawn(PG_CTL, ["-o", `-F -p ${port} -N ${maxConnections}`, "-D", dataDir, "-l", join(dataDir, "postgres-logfile.log"), "-w", "start"]);
       
       try {

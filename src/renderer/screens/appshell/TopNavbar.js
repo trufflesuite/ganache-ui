@@ -244,6 +244,10 @@ class TopNavbar extends Component {
           <ContractsIcon />
           CorDapps
         </NavLink>
+        <NavLink to="/corda/shells" activeClassName="Active">
+          <TxIcon />
+          Shells
+        </NavLink>
       </>),
       searchText: "Search",
       status: (<>
@@ -256,7 +260,7 @@ class TopNavbar extends Component {
             value={this.props.config.settings.workspace.notaries.length}
         />
         <StatusIndicator
-            title="Total CorDapps"
+            title="Total Projects"
             value={this.props.config.settings.workspace.projects.length}
         />
       </>),
