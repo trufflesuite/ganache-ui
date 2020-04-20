@@ -11,6 +11,8 @@ const fetch = require("node-fetch");
 const GetPort = require("get-port");
 const chokidar = require('chokidar');
 const BlobInspector = require("./blob-inspector");
+const { compareSemVer } = require("semver-parser");
+const { version: APP_VERSION } = require("../../../../../../package.json");
 const { REFRESH_CORDAPP, sendRefreshCordapp } = require("../../../../../common/redux/corda-core/actions");
 const { SSH_DATA, CLEAR_TERM } = require("../../../../../common/redux/cordashell/actions");
 const CORDAPP_DELAY = 1000;
@@ -94,9 +96,13 @@ class NetworkManager extends EventEmitter {
       this._io.sendProgress("Starting PostgreSQL...");
       this.pg = await pgDownload.start(postgresPort, chainDataDir, this.entities);
       if (this.cancelled) return;
-      if (this.settings.runBootstrap) {
+      // assume v2.3.1 if no settings were set
+      const settingsVersion = this.settings.version || "2.3.1";
+      const settingsAreOld = compareSemVer(settingsVersion, APP_VERSION) < 0;
+      if (this.settings.runBootstrap || settingsAreOld) {
         this._io.sendProgress("Bootstrapping network...");
         await cordaBootstrap.bootstrap(this.config);
+        this.settings.version = APP_VERSION;
         this.settings.runBootstrap = this.settings.name === "Quickstart";
       } else {
         this._io.sendProgress("Skipping; network already bootstrapped.", 250);

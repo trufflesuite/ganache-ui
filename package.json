@@ -87,6 +87,7 @@
     "redux-logger": "^2.7.4",
     "redux-thunk": "^2.3.0",
     "safe-buffer": "^5.0.1",
+    "semver-parser": "3.0.4",
     "shebang-loader": "^0.0.1",
     "source-map-support": "^0.5.13",
     "truffle": "5.1.20",
