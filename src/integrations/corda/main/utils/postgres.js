@@ -6,7 +6,7 @@ const { promisify } = require("util");
 const exists = promisify(fs.exists);
 
 const USER = "ganache";
-const config = {env: process.env, encoding: "utf8"};
+const config = {env: null, encoding: "utf8"};
 
 module.exports = (POSTGRES_PATH) => {
   const pgJoin = join.bind(null, join(POSTGRES_PATH, "bin"));
@@ -83,10 +83,8 @@ module.exports = (POSTGRES_PATH) => {
       
       // make sure there are no databases of ours running on this port...
       await postgres.stop(port);
-      
-      // TODO: figure out what postgres needs on Windows from the process.env and only supply that.
-      // start the postgres server
-      const maxConnections = Math.min(Math.max(100, schemaNames.length * 10), 1000);
+
+      const maxConnections = Math.min(Math.max(100, schemaNames.length * schemaNames.length), 10000);
       await spawn(PG_CTL, ["-o", `-F -p ${port} -N ${maxConnections}`, "-D", dataDir, "-l", join(dataDir, "postgres-logfile.log"), "-w", "start"]);
       
       try {
