@@ -87,7 +87,14 @@ if (process.platform === "win32") {
   // We launch `cmd.exe` and then run (`/c` switch) `mkdir USERDATA_PATH` from it's context instead of our appx
   // context.
   // eslint-disable-next-line no-console
-  let userDataPromise = spawn("cmd.exe", ["/c", "mkdir", USERDATA_PATH]).catch(e => { console.error(e) });
+  let userDataPromise = spawn("cmd.exe", ["/c", "mkdir", USERDATA_PATH])
+    .then(()=> {
+      return spawn("cmd.exe", ["/c", "mkdir", path.join(USERDATA_PATH, "extras")])
+    })
+    .then(()=> {
+      return spawn("cmd.exe", ["/c", "mkdir", path.join(USERDATA_PATH, "workspaces")])
+    })
+    .catch(e => { console.error(e) });
 
   // start a migration, if needed
   migrationPromise = userDataPromise.then(() => migration.migrate(USERDATA_PATH));
