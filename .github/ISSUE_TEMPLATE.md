@@ -3,7 +3,8 @@
 <!--
 *************************************************************************************
 *************************************************************************************
-  Make sure you are running the latest version of Ganache before you open an issue.  
+  Make sure you are running the latest version of Ganache before you open an issue.
+        Download the latest release from https://www.trufflesuite.com/ganache
 *************************************************************************************
 *************************************************************************************
 -->
