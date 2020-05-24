@@ -22,6 +22,7 @@ class EthereumChainService extends EventEmitter {
   constructor(config) {
     super();
     this.config = config;
+    console.log(config)
   }
 
   start() {
@@ -149,12 +150,12 @@ class EthereumChainService extends EventEmitter {
   _exitHandler(code, signal) {
     this._child = null;
     if (code != null) {
-      this.emit("message", 
+      this.emit("message",
         "error",
         `Blockchain process exited prematurely with code '${code}', due to signal '${signal}'.`,
       );
     } else {
-      this.emit("message", 
+      this.emit("message",
         "error",
         `Blockchain process exited prematurely due to signal '${signal}'.`,
       );
@@ -163,7 +164,7 @@ class EthereumChainService extends EventEmitter {
 
   _stdHandler (stdio, data) {
     // Remove all \r's and the final line ending
-    this.emit("message", 
+    this.emit("message",
       stdio,
       data
         .toString()

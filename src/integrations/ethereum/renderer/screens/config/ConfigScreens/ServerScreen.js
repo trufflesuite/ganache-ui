@@ -247,6 +247,35 @@ class ServerScreen extends Component {
         </section>
 
         <section>
+          <h4>CONNECT TO SERVER</h4>
+          <div className="Row">
+            <div className="RowItem">
+              <div className="Switch">
+                <input
+                  type="checkbox"
+                  name="workspace.server.connectToServer"
+                  id="workspace.server.connectToServer"
+                  defaultChecked={
+                    this.props.config.settings.workspace.server
+                      .connectToServer
+                  }
+                  onChange={this.props.handleInputChange}
+                />
+                <label htmlFor="workspace.server.connectToServer">
+                  ENABLED
+                </label>
+              </div>
+            </div>
+            <div className="RowItem">
+              <p>
+                Connect to server specified above, or start a server with those settings.
+                Enabling this feature expects that you have a ganace server running.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section>
           <h4>AUTOMINE</h4>
           <div className="Row">
             <div className="RowItem">
@@ -330,7 +359,7 @@ class ServerScreen extends Component {
             </div>
           </section>
         </OnlyIf>
-      
+
         <section>
           <h2>CHAIN FORKING</h2>
           <OnlyIf test={!enabled}>
@@ -372,54 +401,54 @@ class ServerScreen extends Component {
                 <div className="RowItem">
                   <div className="Radio">
                     <label>
-                      <input type="radio" 
-                        value={FORK_URLS.mainnet} 
+                      <input type="radio"
+                        value={FORK_URLS.mainnet}
                         name="workspace.server.fork"
-                        checked={this.props.config.settings.workspace.server.fork === FORK_URLS.mainnet} 
-                        onChange={this.validateChange.bind(this)} 
+                        checked={this.props.config.settings.workspace.server.fork === FORK_URLS.mainnet}
+                        onChange={this.validateChange.bind(this)}
                       />
                       Main Ethereum Network
                     </label>
                   </div>
                   <div className="Radio">
                     <label>
-                      <input type="radio" 
+                      <input type="radio"
                         value={FORK_URLS.ropsten}
                         name="workspace.server.fork"
-                        checked={this.props.config.settings.workspace.server.fork === FORK_URLS.ropsten} 
-                        onChange={this.validateChange.bind(this)} 
+                        checked={this.props.config.settings.workspace.server.fork === FORK_URLS.ropsten}
+                        onChange={this.validateChange.bind(this)}
                       />
                       Ropsten
                     </label>
                   </div>
                   <div className="Radio">
                     <label>
-                      <input type="radio" 
-                        value={FORK_URLS.kovan} 
+                      <input type="radio"
+                        value={FORK_URLS.kovan}
                         name="workspace.server.fork"
-                        checked={this.props.config.settings.workspace.server.fork === FORK_URLS.kovan} 
-                        onChange={this.validateChange.bind(this)} 
+                        checked={this.props.config.settings.workspace.server.fork === FORK_URLS.kovan}
+                        onChange={this.validateChange.bind(this)}
                       />
                       Kovan
                     </label>
                   </div>
                   <div className="Radio">
                     <label>
-                      <input type="radio" 
-                        value={FORK_URLS.rinkeby} 
+                      <input type="radio"
+                        value={FORK_URLS.rinkeby}
                         name="workspace.server.fork"
-                        checked={this.props.config.settings.workspace.server.fork === FORK_URLS.rinkeby} 
-                        onChange={this.validateChange.bind(this)} 
+                        checked={this.props.config.settings.workspace.server.fork === FORK_URLS.rinkeby}
+                        onChange={this.validateChange.bind(this)}
                       />
                       Rinkeby
                     </label>
                   </div><div className="Radio">
                     <label>
-                      <input type="radio" 
-                        value={FORK_URLS.goerli} 
+                      <input type="radio"
+                        value={FORK_URLS.goerli}
                         name="workspace.server.fork"
-                        checked={this.props.config.settings.workspace.server.fork === FORK_URLS.goerli} 
-                        onChange={this.validateChange.bind(this)} 
+                        checked={this.props.config.settings.workspace.server.fork === FORK_URLS.goerli}
+                        onChange={this.validateChange.bind(this)}
                       />
                       Görli
                     </label>
@@ -452,13 +481,13 @@ class ServerScreen extends Component {
                     value={this.props.config.settings.workspace.server.fork_block_number || ""}
                     onChange={this.validateChange.bind(this)}
                   />
-                </div> 
+                </div>
                 <div className="RowItem">
                   <p>The URL of the block number to fork from, e.g., 56789</p>
                 </div>
-              </div> 
+              </div>
             </section>
-            </OnlyIf>         
+            </OnlyIf>
           </OnlyIf>
         </section>
       </div>
