@@ -22,7 +22,6 @@ class EthereumChainService extends EventEmitter {
   constructor(config) {
     super();
     this.config = config;
-    console.log(config)
   }
 
   start() {
