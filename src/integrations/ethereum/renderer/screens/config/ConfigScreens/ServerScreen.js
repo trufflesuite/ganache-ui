@@ -269,7 +269,7 @@ class ServerScreen extends Component {
             <div className="RowItem">
               <p>
                 Connect to server specified above, or start a server with those settings.
-                Enabling this feature expects that you have a ganace server running.
+                Enabling this feature expects that you have a Ganache server running.
               </p>
             </div>
           </div>
