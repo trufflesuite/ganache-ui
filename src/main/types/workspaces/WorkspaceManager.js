@@ -15,13 +15,18 @@ class WorkspaceManager {
       this.workspaces = fse
         .readdirSync(workspacesDirectory)
         .flatMap(file => {
-          if (!fse.lstatSync(path.join(workspacesDirectory, file)).isDirectory) {
-            return [];
-          }
           // if an osx user navigates to the workspaces directory osx will put a
-          // .DS_Store folder there, ignore these.
-          if (file === ".DS_Store") {
-            return []
+          // .DS_Store folder there, ignore and delete these. If the file isn't
+          // a directory, also delete it.
+          if (file === ".DS_Store" || !fse.lstatSync(path.join(workspacesDirectory, file)).isDirectory()) {
+            try {
+              // remove files and folders that aren't allow in the workspaces
+              // directory
+              fse.removeSync(path.join(workspacesDirectory, file));
+            } catch{
+              // ignore
+            }
+            return [];
           }
 
           let settings = new WorkspaceSettings(
