@@ -18,6 +18,12 @@ class WorkspaceManager {
           if (!fse.lstatSync(path.join(workspacesDirectory, file)).isDirectory) {
             return [];
           }
+          // if an osx user navigates to the workspaces directory osx will put a
+          // .DS_Store folder there, ignore these.
+          if (file === ".DS_Store") {
+            return []
+          }
+
           let settings = new WorkspaceSettings(
             path.join(workspacesDirectory, file),
             path.join(workspacesDirectory, file, "chaindata"),
