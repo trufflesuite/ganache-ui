@@ -44,7 +44,11 @@ class WorkspaceManager {
               );
             } catch(e) {
               // It's okay that we ignore move errors, promise!
-              // They sometimes happen and i don't know why
+              // This happens because a user tried to name two or more
+              // workspaces with the same name. We only name workspace folders
+              // by name because it is a little easier for us to debug.
+              // We should *probably* just append the uuid of the workspace
+              // to the dir name, to ensure uniqueness.
               console.log(e);
             }
           }
