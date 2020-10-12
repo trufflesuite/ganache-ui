@@ -43,7 +43,7 @@ class Workspace {
   static getSanitizedName(name) {
     return name === null
       ? null
-      : name.replace(/\s/g, "-").replace(/[^a-zA-Z0-9\-_.]/g, "");
+      : (name.replace(/\s/g, "-").replace(/[^a-zA-Z0-9\-_.]/g, "_") || "_");
   }
 
   static generateDirectoryPath(sanitizedName, configDirectory, flavor = "ethereum") {
