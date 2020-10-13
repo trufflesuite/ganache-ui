@@ -94,6 +94,12 @@ if (process.platform === "win32") {
     .then(()=> {
       return spawn("cmd.exe", ["/c", "mkdir", path.join(USERDATA_PATH, "workspaces")])
     })
+    .then(()=> {
+      return spawn("cmd.exe", ["/c", "mkdir", path.join(USERDATA_PATH, "default")])
+    })
+    .then(()=> {
+      return spawn("cmd.exe", ["/c", "mkdir", path.join(USERDATA_PATH, "global")])
+    })
     .catch(e => { console.error(e) });
 
   // start a migration, if needed
