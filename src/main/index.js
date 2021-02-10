@@ -75,6 +75,10 @@ if (isDevMode) {
   app.getVersion = () => version;
 }
 
+if (isDevelopment) {
+  app.commandLine.appendSwitch("remote-debugging-port", "9222");
+}
+
 const USERDATA_PATH = app.getPath("userData");
 let migrationPromise;
 
@@ -150,12 +154,12 @@ function addLogLines(data, context = undefined) {
 }
 
 // create main BrowserWindow when electron is ready
-app.on('ready', () => {
+app.on('ready', async () => {
   const global = new GlobalSettings(path.join(USERDATA_PATH, "global"));
   const GoogleAnalytics = new GoogleAnalyticsService();
 
   const integrations = new IntegrationManager(USERDATA_PATH, ipcMain, isDevMode);
-  // allow interations to communicate with the mainWindow by emitting a 
+  // allow integrations to communicate with the mainWindow by emitting a
   // `"send"` event
   integrations.on("send", function(){
     if (mainWindow) {
@@ -169,7 +173,7 @@ app.on('ready', () => {
     mainWindow.webContents.send(SET_PROGRESS, message, minDuration);
     addLogLines(message + "\n");
   });
-  
+
   const workspaceManager = integrations.workspaceManager;
   let workspace;
   let startupMode = STARTUP_MODE.NORMAL;
@@ -196,13 +200,13 @@ app.on('ready', () => {
   Menu.setApplicationMenu(null)
 
   app.commandLine.appendSwitch("ignore-certificate-errors", "true");
-  
+
   app.on('certificate-error', (event, _webContents, _url, _error, _certificate, callback) => {
     // On certificate error we disable default behaviour (stop loading the page)
     // and we then say "it is all fine - true" to the callback
     event.preventDefault();
     callback(true);
-});
+  });
 
   mainWindow = new BrowserWindow({
     show: false,
@@ -219,7 +223,7 @@ app.on('ready', () => {
   });
 
   if (isDevelopment) {
-    mainWindow.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`)
+    mainWindow.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`);
   } else {
     mainWindow.loadURL(formatUrl({
       pathname: path.join(__dirname, "index.html"),
@@ -329,6 +333,12 @@ app.on('ready', () => {
     mainWindow.show();
     mainWindow.focus();
     mainWindow.setTitle("Ganache");
+
+    if (isDevelopment) {
+      await mainWindow.webContents.debugger.attach("1.1");
+      await mainWindow.webContents.debugger.sendCommand("Debugger.enable");
+      console.log("Renderer debugger is listening on port 9222");
+    }
 
     // We need to wait until we have finished our migration before
     // getting and then sending our settings and workspaces...
@@ -646,7 +656,6 @@ app.on('ready', () => {
           }
           defaultWorkspace.settings.setAll(clonedSettings);
           integrations.stopServer().then(() => workspace.resetChaindata())
-          
         }
         workspaceSettings.randomizeMnemonicOnStart = false;
         workspace.settings.setAll(workspaceSettings);
