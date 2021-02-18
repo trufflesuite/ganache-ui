@@ -33,7 +33,7 @@ class WorkspaceManager {
             path.join(workspacesDirectory, file),
             path.join(workspacesDirectory, file, "chaindata"),
           );
-          
+
           const isQuickstart = settings.get("isDefault");
           if (isQuickstart) {
             // the default workspace shouldn't be in the "workspaces" directory,
@@ -70,6 +70,7 @@ class WorkspaceManager {
 
     this.workspaces.push(new Workspace(null, this.directory, "ethereum"));
     this.workspaces.push(new Workspace(null, this.directory, "corda"));
+    this.workspaces.push(new Workspace(null, this.directory, "filecoin"));
   }
 
   bootstrap() {

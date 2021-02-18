@@ -45,6 +45,9 @@ const CORDA_TABS = [
   { name: "Advanced", subRoute: "corda/advanced", component: CordaAdvancedScreen }
 ];
 
+const FILECOIN_TABS = [
+];
+
 const TABS = [
   { name: "About", subRoute: "about", component: AboutScreen }
 ];
@@ -55,12 +58,18 @@ class ConfigScreen extends PureComponent {
 
     let tabs;
     switch(props.config.settings.workspace.flavor){
-      case "ethereum":
+      case "ethereum": {
         tabs = ETHEREUM_TABS;
-      break;
-      case "corda":
+        break;
+      }
+      case "corda": {
         tabs = CORDA_TABS;
-      break;
+        break;
+      }
+      case "filecoin": {
+        tabs = FILECOIN_TABS;
+        break;
+      }
     }
     tabs = tabs.concat(TABS);
 
@@ -198,6 +207,8 @@ class ConfigScreen extends PureComponent {
   };
 
   isCorda = () => this.state.config.settings.workspace.flavor === "corda";
+
+  isFilecoin = () => this.state.config.settings.workspace.flavor === "filecoin";
 
   removeWorkspaceProject = path => {
     const newProjects = this.state.config.settings.workspace.projects.filter(
@@ -369,7 +380,7 @@ class ConfigScreen extends PureComponent {
         dispatch: this.props.dispatch,
       },
     );
-    
+
     return (
       <main className="ConfigScreen">
         <div className="Tabs">

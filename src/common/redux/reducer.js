@@ -27,6 +27,8 @@ import WorkspacesReducer from "./workspaces/reducers";
 import EventsReducer from "../../integrations/ethereum/common/redux/events/reducers";
 import { connectRouter } from 'connected-react-router';
 
+import FilecoinReducer from "../../integrations/filecoin/common/redux/reducer";
+
 export default (history) => {
   const appReducer = combineReducers({
     appshell: AppShellReducer,
@@ -49,6 +51,8 @@ export default (history) => {
     workspaces: WorkspacesReducer,
     events: EventsReducer,
     router: connectRouter(history),
+
+    filecoin: FilecoinReducer,
   });
 
   // This reducer is used to wipe all state on restart

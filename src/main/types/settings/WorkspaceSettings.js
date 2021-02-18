@@ -5,19 +5,27 @@ const oldDefaultMnemonic = "candy maple cake sugar pudding cream honey rich smoo
 
 const ethereumInitialSettings = require("./flavors/ethereum");
 const cordaInitialSettings = require("./flavors/corda");
+const filecoinInitialSettings = require("./flavors/filecoin");
 
 class WorkspaceSettings extends Settings {
   constructor(directory, chaindataDirectory, flavor = "ethereum") {
     let initialSettings;
     switch(flavor){
-      case "ethereum":
-          initialSettings = ethereumInitialSettings
-      break;
-      case "corda":
-          initialSettings = cordaInitialSettings
-      break;
-      default:
+      case "ethereum": {
+        initialSettings = ethereumInitialSettings;
+        break;
+      }
+      case "corda": {
+        initialSettings = cordaInitialSettings;
+        break;
+      }
+      case "filecoin": {
+        initialSettings = filecoinInitialSettings;
+        break;
+      }
+      default: {
         throw new Error("Invalid flavor: " + flavor);
+      }
     }
     super(directory, merge({}, initialSettings, {flavor}));
 

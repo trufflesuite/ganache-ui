@@ -3,6 +3,8 @@ import { replace } from "connected-react-router";
 
 import { setRPCProviderUrl } from "../../integrations/ethereum/common/redux/web3/actions";
 
+import { setRPCProviderUrl as setFilecoinRPCProviderUrl } from "../../integrations/filecoin/common/redux/lotus/actions";
+
 import {
   SET_SERVER_STARTED,
   SET_SYSTEM_ERROR,
@@ -25,7 +27,15 @@ import {
   setBlockNumberToLatest,
 } from "../../integrations/ethereum/common/redux/core/actions";
 
+import {
+  SET_TIPSET_NUMBER,
+  getTipsetSubscription,
+  setTipsetNumberToLatest,
+} from "../../integrations/filecoin/common/redux/core/actions";
+
 import { getAccounts } from "../../integrations/ethereum/common/redux/accounts/actions";
+
+import { getAccounts as getFilecoinAccounts } from "../../integrations/ethereum/common/redux/accounts/actions";
 
 import {
   setSettings,
@@ -46,7 +56,7 @@ export function initCore(store) {
       // Ensure web3 is set
       // 0.0.0.0 doesn't work the same as it does on other platforms, so we need to replace it
       // with localhost. Note: we don't want to update the _stored_ hostname, as 0.0.0.0 a valid concept.
-      if (workspaceSettings.flavor === "ethereum") {
+      if (workspaceSettings.flavor == "ethereum") {
         const hostname = workspaceSettings.server.hostname.replace(
           "0.0.0.0",
           "localhost",
@@ -64,6 +74,22 @@ export function initCore(store) {
         store.dispatch(getBlockSubscription());
 
         store.dispatch(setServerStarted());
+      } else if (workspaceSettings.flavor === "filecoin") {
+        const hostname = workspaceSettings.server.hostname.replace(
+          "0.0.0.0",
+          "localhost",
+        );
+        const url = `ws://${hostname}:${workspaceSettings.server.port}`;
+
+        ipcRenderer.send("lotus-provider", url);
+        store.dispatch(setFilecoinRPCProviderUrl(url));
+
+        store.dispatch(setTipsetNumberToLatest());
+        store.dispatch(getFilecoinAccounts());
+
+        store.dispatch(getTipsetSubscription());
+
+        store.dispatch(setServerStarted());
       }
 
       store.dispatch(setStartupMode(startupMode));
@@ -77,7 +103,7 @@ export function initCore(store) {
         case STARTUP_MODE.NORMAL:
         default: {
           if (workspaceSettings.flavor === "corda") {
-            store.dispatch(replace("/corda/nodes"));  
+            store.dispatch(replace("/corda/nodes"));
           } else {
             store.dispatch(replace("/accounts"));
           }
@@ -94,6 +120,12 @@ export function initCore(store) {
   // Block polling happens in the chain process, and is passed through
   // the main process to the render process when there's a new block.
   ipcRenderer.on(SET_BLOCK_NUMBER, (event, number) => {
+    store.dispatch(setBlockNumber(number));
+  });
+
+  // Block polling happens in the chain process, and is passed through
+  // the main process to the render process when there's a new block.
+  ipcRenderer.on(SET_TIPSET_NUMBER, (event, number) => {
     store.dispatch(setBlockNumber(number));
   });
 

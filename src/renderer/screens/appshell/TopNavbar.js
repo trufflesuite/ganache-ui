@@ -165,12 +165,18 @@ class TopNavbar extends Component {
     let children;
     const flavor = this.props.config.settings.workspace.flavor;
     switch (flavor) {
-      case "ethereum":
-          children = this._generateEthereumChildren();
-          break;
-      case "corda":
-          children = this._generateCordaChildren();
+      case "ethereum": {
+        children = this._generateEthereumChildren();
         break;
+      }
+      case "corda": {
+        children = this._generateCordaChildren();
+        break;
+      }
+      case "filecoin": {
+        children = this._generateFilecoinChildren();
+        break;
+      }
     }
 
     return (
@@ -229,6 +235,18 @@ class TopNavbar extends Component {
       </nav>
     );
   }
+
+  _generateFilecoinChildren(){
+    return {
+      menu: (<>
+      </>),
+      searchText: "Search",
+      status: (<>
+      </>),
+      action: (<></>),
+    }
+  }
+
   _generateCordaChildren(){
     return {
       menu: (<>

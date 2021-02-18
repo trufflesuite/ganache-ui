@@ -94,11 +94,12 @@ class HomeScreen extends Component {
     const lowered = flavor.toLowerCase();
     return (<button onClick={this.handleFlavorChange.bind(this, lowered)} className={lastFlavor === lowered ? "homescreen-flavor-selected" : ""}>{flavor}</button>);
   }
-  getButtons(buttonState) {   
+  getButtons(buttonState) {
     if (this.state.buttonState === buttonState) {
       return (<div ref={(node) => this.wrapperRef=node} className="homescreen-flavor-buttons">
         {this.createButton("Ethereum")}
         {this.createButton("Corda")}
+        {this.createButton("Filecoin")}
       </div>);
     } else {
       if (this.state.buttonState === null){

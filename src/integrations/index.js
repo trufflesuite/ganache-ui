@@ -1,6 +1,7 @@
 import path from "path";
 import ethereum from "./ethereum";
 import corda from "./corda";
+import filecoin from "./filecoin";
 import EventEmitter from "events";
 import WorkspaceManager from "../main/types/workspaces/WorkspaceManager";
 import extras from "../common/extras";
@@ -19,7 +20,8 @@ class IntegrationManager extends EventEmitter {
     this.ipc = ipc;
     this.integrations = {
       ethereum,
-      corda
+      corda,
+      filecoin
     };
     this.workspaceManager = new WorkspaceManager(userDataPath);
     this._listen();
@@ -98,7 +100,7 @@ class IntegrationManager extends EventEmitter {
         await this.flavor.startServer(settings, this.workspace.workspaceDirectory);
         // just incase startServer mutates the settings (corda does), save them
         this.workspace.settings.setAll(settings);
-  
+
         this.emit("server-started");
         return true;
       } catch (e) {
