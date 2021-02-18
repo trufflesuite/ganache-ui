@@ -28,6 +28,7 @@ import CordaAdvancedScreen from "../../../integrations/corda/renderer/screens/co
 import RestartIcon from "../../icons/restart.svg";
 import EjectIcon from "../../icons/eject.svg";
 import SaveIcon from "../../icons/save-icon.svg";
+import StartIcon from "../../icons/start.svg";
 import OnlyIf from "../../components/only-if/OnlyIf";
 
 const ETHEREUM_TABS = [
@@ -101,7 +102,7 @@ class ConfigScreen extends PureComponent {
     }
   };
 
-  restartServer = () => {
+  saveWorkspace = () => {
     this.props.dispatch(Config.clearAllSettingErrors());
     // eslint-disable-next-line react/no-direct-mutation-state
     this.state.config.validationErrors = {};
@@ -118,7 +119,12 @@ class ConfigScreen extends PureComponent {
         ),
       );
     }
-    this.props.dispatch(Core.requestServerRestart());
+
+    if (this.props.config.startupMode !== Config.STARTUP_MODE.EDIT_WORKSPACE) {
+      this.props.dispatch(Core.requestServerRestart());
+    } else {
+      this.props.dispatch(Core.showHomeScreen());
+    }
   };
 
   isDirty() {
@@ -396,16 +402,24 @@ class ConfigScreen extends PureComponent {
               </button>
               <button
                 className="btn btn-primary"
-                onClick={this.restartServer}
+                onClick={this.saveWorkspace}
                 disabled={this.invalidConfig()}
               >
                 <OnlyIf
                   test={
-                    this.props.config.startupMode !== Config.STARTUP_MODE.NORMAL
+                    this.props.config.startupMode === Config.STARTUP_MODE.EDIT_WORKSPACE
                   }
                 >
                   <SaveIcon className="save-icon" /*size={18}*/ />
                   SAVE WORKSPACE
+                </OnlyIf>
+                <OnlyIf
+                  test={
+                    this.props.config.startupMode === Config.STARTUP_MODE.NEW_WORKSPACE
+                  }
+                >
+                  <StartIcon className="start-icon" /*size={18}*/ />
+                  START
                 </OnlyIf>
                 <OnlyIf
                   test={
