@@ -239,6 +239,26 @@ class TopNavbar extends Component {
   _generateFilecoinChildren(){
     return {
       menu: (<>
+        <NavLink to="/accounts" activeClassName="Active">
+          <AccountIcon />
+          Accounts
+        </NavLink>
+        <NavLink to="/tipsets" activeClassName="Active">
+          <BlockIcon />
+          Tipsets
+        </NavLink>
+        <NavLink to="/messages" activeClassName="Active">
+          <TxIcon />
+          Messages
+        </NavLink>
+        <NavLink to="/deals" activeClassName="Active">
+          <ContractsIcon />
+          Deals
+        </NavLink>
+        <NavLink to="/files" activeClassName="Active">
+          <EventsIcon />
+          Files
+        </NavLink>
       </>),
       searchText: "Search",
       status: (<>

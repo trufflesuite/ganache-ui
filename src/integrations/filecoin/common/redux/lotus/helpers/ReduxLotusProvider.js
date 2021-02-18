@@ -19,19 +19,22 @@ class ReduxLotusProvider extends EventEmitter {
   async initialize() {
     await this.provider.connect();
     if (this.isWebsocket) {
-      this.provider.ws.on("data", this.emit.bind(this, "data"));
+      // we need to monkey patch here since BrowserProvider already monkey patched
+      this.provider.ws.onmessage = event => {
+        this.provider.receive(event);
+        this.emit("data", event.data);
+      };
     } else {
       delete this.on;
       delete this.once;
     }
   }
 
-  send(payload, callback) {
+  async send(payload) {
     const cached = RequestCache.checkCache(payload, this.getState);
 
     if (cached) {
-      callback(null, cached);
-      return;
+      return cached;
     }
 
     // Mark payload as an internal request
@@ -41,9 +44,11 @@ class ReduxLotusProvider extends EventEmitter {
 
     this.dispatch(RPCRequestStarted(payload));
 
-    this.provider.send(payload, (err, response) => {
-      if (err || response.error) {
-        this.dispatch(RPCRequestFailed(payload, response, err));
+    try {
+      const response = await this.provider.send(payload);
+      if (response.error) {
+        this.dispatch(RPCRequestFailed(payload, response, null));
+        return null;
       } else {
         this.dispatch(RequestCache.cacheRequest(payload, response));
         this.dispatch(RPCRequestSucceeded(payload, response.result));
@@ -51,12 +56,45 @@ class ReduxLotusProvider extends EventEmitter {
 
       // if the workspace was closed in the middle of a response
       // just don't resolve
-      if (!this.getState().web3.web3Instance) {
-        return callback(new Error("No workspace"));
+      if (!this.getState().filecoin.lotus.lotusInstance) {
+        this.dispatch(RPCRequestFailed(payload, null, "No Workspace"));
+        return null;
       }
 
-      callback(err, response);
-    });
+      return response;
+    } catch (err) {
+      this.dispatch(RPCRequestFailed(payload, null, err));
+      return null;
+    }
+  }
+
+  // we don't use the subscriptionCb passed by lotus-client-rpc (3rd arg)
+  async sendSubscription (request, schemaMethod) {
+    const emitter = new EventEmitter();
+
+    const [unsubscribe, promise] = this.provider.sendSubscription(
+      request,
+      schemaMethod,
+      (data) => emitter.emit("data", data)
+    );
+
+    await promise;
+
+    emitter.on("unsubscribe", () => unsubscribe());
+
+    return emitter;
+  }
+
+  async connect() {
+    return this.provider.connect();
+  }
+
+  async importFile(body) {
+    return this.provider.importFile(body)
+  }
+
+  async destroy() {
+    await this.provider.destroy()
   }
 }
 

@@ -3,7 +3,7 @@ import { replace } from "connected-react-router";
 
 import { setRPCProviderUrl } from "../../integrations/ethereum/common/redux/web3/actions";
 
-import { setRPCProviderUrl as setFilecoinRPCProviderUrl } from "../../integrations/filecoin/common/redux/lotus/actions";
+import { createLotusInstance, setLotusInstance } from "../../integrations/filecoin/common/redux/lotus/actions";
 
 import {
   SET_SERVER_STARTED,
@@ -35,8 +35,6 @@ import {
 
 import { getAccounts } from "../../integrations/ethereum/common/redux/accounts/actions";
 
-import { getAccounts as getFilecoinAccounts } from "../../integrations/ethereum/common/redux/accounts/actions";
-
 import {
   setSettings,
   setStartupMode,
@@ -49,7 +47,7 @@ export function initCore(store) {
   // Wait for the server to start...
   ipcRenderer.on(
     SET_SERVER_STARTED,
-    (sender, globalSettings, workspaceSettings, startupMode) => {
+    async (sender, globalSettings, workspaceSettings, startupMode) => {
       // Get current settings into the store
       store.dispatch(setSettings(globalSettings, workspaceSettings));
 
@@ -79,13 +77,13 @@ export function initCore(store) {
           "0.0.0.0",
           "localhost",
         );
-        const url = `ws://${hostname}:${workspaceSettings.server.port}`;
+        const url = `ws://${hostname}:${workspaceSettings.server.port}/rpc/v0`;
 
         ipcRenderer.send("lotus-provider", url);
-        store.dispatch(setFilecoinRPCProviderUrl(url));
+        const lotusInstance = await createLotusInstance(store.dispatch, store.getState, url, workspaceSettings.server.schema);
+        store.dispatch(setLotusInstance(lotusInstance));
 
         store.dispatch(setTipsetNumberToLatest());
-        store.dispatch(getFilecoinAccounts());
 
         store.dispatch(getTipsetSubscription());
 

@@ -9,12 +9,9 @@ export function setLotusInstance(lotusInstance) {
   return { type: SET_LOTUS_INSTANCE, lotusInstance };
 }
 
-export const SET_RPC_PROVIDER_URL = `${prefix}/SET_RPC_PROVIDER_URL`;
-export function setRPCProviderUrl(url) {
-  return async function(dispatch, getState) {
-    const provider = new ReduxLotusProvider(url, dispatch, getState);
-    await provider.initialize();
-    const lotusInstance = new LotusRPC(provider, { schema: provider.Schema });
-    dispatch(setLotusInstance(lotusInstance));
-  };
+export async function createLotusInstance(dispatch, getState, url, schema) {
+  const reduxProvider = new ReduxLotusProvider(url, dispatch, getState);
+  await reduxProvider.initialize();
+  const lotusInstance = new LotusRPC(reduxProvider, { schema });
+  return lotusInstance;
 }

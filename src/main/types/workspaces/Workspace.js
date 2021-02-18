@@ -80,7 +80,7 @@ class Workspace {
 
   saveAs(name, chaindataDirectory, configDirectory, mnemonic, updateLocations) {
     this.name = name;
-    
+
     if (updateLocations) {
       this.init(configDirectory);
       this.bootstrapDirectory();
@@ -95,20 +95,31 @@ class Workspace {
       if (currentContractCachePath !== desiredContractCachePath && fse.existsSync(currentContractCachePath)) {
         fse.copySync(currentContractCachePath, desiredContractCachePath);
       }
-      
+
       this.contractCache.setDirectory(this.chaindataDirectory);
       this.contractCache.setAll(this.contractCache.getAll());
     }
-    
+
     this.settings.chaindataDirectory = this.chaindataDirectory;
-    this.settings.set("server.db_path", this.chaindataDirectory);
+
+    if (this.flavor === "filecoin") {
+      this.settings.set("server.database.dbPath", this.chaindataDirectory);
+    } else {
+      this.settings.set("server.db_path", this.chaindataDirectory);
+    }
+
     this.settings.set("name", name);
     this.settings.set("isDefault", false);
     if (this.flavor === "corda") {
       this.settings.set("runBootstrap", true);
     }
+
     this.settings.set("randomizeMnemonicOnStart", false);
-    this.settings.set("server.mnemonic", mnemonic);
+    if (this.flavor === "filecoin") {
+      this.settings.set("server.wallet.mnemonic", mnemonic);
+    } else {
+      this.settings.set("server.mnemonic", mnemonic);
+    }
   }
 
   delete() {

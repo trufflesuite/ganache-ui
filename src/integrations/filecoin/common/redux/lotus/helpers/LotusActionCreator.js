@@ -9,6 +9,8 @@ export async function lotusActionCreator(dispatch, getState, name, args) {
   const lotusInstance = getState().filecoin.lotus.lotusInstance;
   if (lotusInstance) {
     return await lotusRequest(name, args, lotusInstance);
+  } else {
+    return null;
   }
 }
 

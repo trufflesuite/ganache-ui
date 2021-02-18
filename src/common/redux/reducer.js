@@ -52,7 +52,7 @@ export default (history) => {
     events: EventsReducer,
     router: connectRouter(history),
 
-    filecoin: FilecoinReducer,
+    filecoin: FilecoinReducer(),
   });
 
   // This reducer is used to wipe all state on restart

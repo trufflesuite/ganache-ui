@@ -1,5 +1,5 @@
 import { lotusActionCreator } from "../../../common/redux/lotus/helpers/LotusActionCreator";
-import { isEqual } from "lodash.isequal";
+import isEqual from "lodash.isequal";
 import FilecoinPrefix from "../prefix";
 
 const prefix = `${FilecoinPrefix}/ACCOUNTS`;
