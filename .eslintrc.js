@@ -8,7 +8,7 @@ module.exports = {
     "react-hooks/exhaustive-deps": "warn"
   },
   parserOptions: {
-    "ecmaVersion": 8,
+    "ecmaVersion": 2020,
     "sourceType": "module"
   },
   env: {
