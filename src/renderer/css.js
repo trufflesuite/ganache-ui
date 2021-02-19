@@ -47,3 +47,9 @@ import "../integrations/ethereum/renderer/screens/event-details/EncodedEventDeta
 import "../integrations/ethereum/renderer/screens/event-details/DecodedEventDetails.scss";
 import "./screens/startup/HomeScreen.scss";
 import "./screens/loader/LoaderScreen.scss";
+
+import "../integrations/filecoin/renderer/screens/accounts/AccountsScreen.scss";
+import "../integrations/filecoin/renderer/screens/accounts/AccountList.scss";
+import "../integrations/filecoin/renderer/screens/accounts/KeyModal.scss";
+import "../integrations/filecoin/renderer/screens/accounts/AccountsBanner.scss";
+import "../integrations/filecoin/renderer/screens/accounts/SeedInfoModal.scss";

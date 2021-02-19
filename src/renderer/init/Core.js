@@ -3,7 +3,7 @@ import { replace } from "connected-react-router";
 
 import { setRPCProviderUrl } from "../../integrations/ethereum/common/redux/web3/actions";
 
-import { createLotusInstance, setLotusInstance } from "../../integrations/filecoin/common/redux/lotus/actions";
+import { createLotusInstance, setLotusInstance, setLotusSchema, SET_LOTUS_SCHEMA } from "../../integrations/filecoin/common/redux/lotus/actions";
 
 import {
   SET_SERVER_STARTED,
@@ -29,8 +29,12 @@ import {
 
 import {
   SET_TIPSET_NUMBER,
+  SET_KEY_DATA as FILECOIN_SET_KEY_DATA,
   getTipsetSubscription,
   setTipsetNumberToLatest,
+  setKeyData as filecoinSetKeyData,
+  SET_IPFS_URL,
+  setIPFSUrl,
 } from "../../integrations/filecoin/common/redux/core/actions";
 
 import { getAccounts } from "../../integrations/ethereum/common/redux/accounts/actions";
@@ -80,7 +84,7 @@ export function initCore(store) {
         const url = `ws://${hostname}:${workspaceSettings.server.port}/rpc/v0`;
 
         ipcRenderer.send("lotus-provider", url);
-        const lotusInstance = await createLotusInstance(store.dispatch, store.getState, url, workspaceSettings.server.schema);
+        const lotusInstance = await createLotusInstance(store.dispatch, store.getState, url);
         store.dispatch(setLotusInstance(lotusInstance));
 
         store.dispatch(setTipsetNumberToLatest());
@@ -102,6 +106,8 @@ export function initCore(store) {
         default: {
           if (workspaceSettings.flavor === "corda") {
             store.dispatch(replace("/corda/nodes"));
+          } else if (workspaceSettings.flavor === "filecoin") {
+            store.dispatch(replace("/filecoin/accounts"));
           } else {
             store.dispatch(replace("/accounts"));
           }
@@ -138,6 +144,19 @@ export function initCore(store) {
   // The server will send a second message that sets the mnemonic and hdpath
   ipcRenderer.on(SET_KEY_DATA, (event, data) => {
     store.dispatch(setKeyData(data.mnemonic, data.hdPath, data.privateKeys));
+  });
+
+  // The server will send a second message that sets the mnemonic and hdpath
+  ipcRenderer.on(FILECOIN_SET_KEY_DATA, (event, data) => {
+    store.dispatch(filecoinSetKeyData(data.seed, data.privateKeys));
+  });
+
+  ipcRenderer.on(SET_IPFS_URL, (event, data) => {
+    store.dispatch(setIPFSUrl(data.url));
+  });
+
+  ipcRenderer.on(SET_LOTUS_SCHEMA, (event, data) => {
+    store.dispatch(setLotusSchema(data.schema));
   });
 
   ipcRenderer.on(SHOW_HOME_SCREEN, () => {

@@ -151,9 +151,27 @@ class TopNavbar extends Component {
   }
 
   _renderMiningTime() {
-    if (this.props.config.settings.workspace.server.blockTime) {
+    const workspaceSettings = this.props.config.settings.workspace;
+
+    if (workspaceSettings.flavor === "filecoin") {
+      if (workspaceSettings.server.miner) {
+        // TODO: miner.mine should not be read from options but current state
+        // need to update once the api methods exist
+        if (workspaceSettings.server.miner.mine === false) {
+          return "Stopped";
+        } else if (workspaceSettings.server.miner.blockTime > 0) {
+          return `${
+            workspaceSettings.server.miner.blockTime
+          } SEC block time`;
+        }
+      }
+
+      return "Automining";
+    }
+
+    if (workspaceSettings.server.blockTime) {
       return `${
-        this.props.config.settings.workspace.server.blockTime
+        workspaceSettings.server.blockTime
       } SEC block time`;
     } else {
       return "Automining";
@@ -238,18 +256,18 @@ class TopNavbar extends Component {
     );
   }
 
-  _generateFilecoinChildren(){
+  _generateFilecoinChildren() {
     return {
       menu: (<>
-        <NavLink to="/accounts" activeClassName="Active">
+        <NavLink to="/filecoin/accounts" activeClassName="Active">
           <AccountIcon />
           Accounts
         </NavLink>
-        <NavLink to="/tipsets" activeClassName="Active">
+        <NavLink to="/filecoin/tipsets" activeClassName="Active">
           <BlockIcon />
           Tipsets
         </NavLink>
-        <NavLink to="/messages" activeClassName="Active">
+        <NavLink to="/filecoin/messages" activeClassName="Active">
           <TxIcon />
           Messages
         </NavLink>
@@ -264,6 +282,13 @@ class TopNavbar extends Component {
       </>),
       searchText: "Search",
       status: (<>
+        <StatusIndicator title="CURRENT TIPSET" value={this.props.filecoin.core.latestTipset} />
+        <StatusIndicator title="LOTUS SERVER" value={this.props.filecoin.lotus.lotusInstance.provider.provider.url} upper={false} />
+        <StatusIndicator title="IPFS SERVER" value={this.props.filecoin.core.ipfsUrl} upper={false} />
+          <StatusIndicator
+            title="MINING STATUS"
+            value={this._renderMiningTime()}
+          />
       </>),
       action: (<></>),
     }
@@ -400,5 +425,6 @@ class TopNavbar extends Component {
 export default connect(
   TopNavbar,
   "workspaces",
-  "config"
+  "config",
+  "filecoin"
 );

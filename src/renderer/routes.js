@@ -26,6 +26,8 @@ import FirstRunScreen from "./screens/first-run/FirstRunScreen";
 import ContractsScreen from "../integrations/ethereum/renderer/screens/contracts/ContractsScreen";
 import LoaderScreen from "./screens/loader/LoaderScreen";
 
+import FilecoinAccountsScreen from "../integrations/filecoin/renderer/screens/accounts/AccountsScreen";
+
 class FlavorRoutes extends Component {
   render() {
     return <AppShell>
@@ -49,7 +51,7 @@ class FlavorRoutes extends Component {
           component={EventDetailsScreen}
         />
         <Route path="/notfound" component={NotFoundScreen} />
-        
+
         <Route path="/config/corda/:activeTab?" component={ConfigScreen} />
         <Route path="/config/:activeTab?" component={ConfigScreen} />
 
@@ -64,6 +66,11 @@ class FlavorRoutes extends Component {
         <Route path="/corda/shells/:context" component={CordaShells} />
         <Route exact path="/corda/transactions" component={CordaTransactions} />
         <Route path="/corda/transactions/:txhash" component={CordaTransaction} />
+
+        <Route exact path="/filecoin">
+          <Redirect to="/filecoin/accounts" />
+        </Route>
+        <Route exact path="/filecoin/accounts" component={FilecoinAccountsScreen} />
       </Switch>
     </AppShell>
   }
