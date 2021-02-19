@@ -1,9 +1,8 @@
 #!/usr/bin/env node
 
 const ganacheLib = require("ganache");
-// const ganacheLib = require("@ganache/core");
+const FilecoinProvider = require("@ganache/filecoin").Provider;
 const logging = require("./logging");
-require("regenerator-runtime/runtime");
 
 if (!process.send) {
   console.log("Not running as child process. Throwing.");
@@ -151,6 +150,7 @@ async function startServer(options) {
   const data = Object.assign({}, server.provider.getOptions());
 
   data.privateKeys = privateKeys;
+  data.schema = FilecoinProvider.Schema;
 
   process.send({ type: "server-started", data: data });
 

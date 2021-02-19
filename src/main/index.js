@@ -447,6 +447,8 @@ app.on('ready', async () => {
       // the projects should trigger the REQUEST_SERVER_RESTART
       // logic
       workspace.settings.set("projects", []);
+
+      workspace.resetChaindata();
     } else {
       for (let i = 0; i < workspaceSettings.projects.length; i++) {
         projects.push(

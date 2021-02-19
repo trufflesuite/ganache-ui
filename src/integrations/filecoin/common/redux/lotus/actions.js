@@ -9,9 +9,15 @@ export function setLotusInstance(lotusInstance) {
   return { type: SET_LOTUS_INSTANCE, lotusInstance };
 }
 
-export async function createLotusInstance(dispatch, getState, url, schema) {
+export const SET_LOTUS_SCHEMA = `${prefix}/SET_LOTUS_SCHEMA`;
+export function setLotusSchema(schema) {
+  return { type: SET_LOTUS_SCHEMA, schema };
+}
+
+export async function createLotusInstance(dispatch, getState, url) {
   const reduxProvider = new ReduxLotusProvider(url, dispatch, getState);
   await reduxProvider.initialize();
+  const schema = getState().filecoin.lotus.schema;
   const lotusInstance = new LotusRPC(reduxProvider, { schema });
   return lotusInstance;
 }

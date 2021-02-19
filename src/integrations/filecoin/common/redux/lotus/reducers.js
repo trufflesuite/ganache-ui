@@ -2,6 +2,7 @@ import * as LotusAction from "./actions";
 
 const initialState = {
   lotusInstance: null,
+  schema: {}
 };
 
 export default function(state = initialState, action) {
@@ -9,6 +10,11 @@ export default function(state = initialState, action) {
     case LotusAction.SET_LOTUS_INSTANCE:
       return Object.assign({}, state, {
         lotusInstance: action.lotusInstance,
+      });
+
+    case LotusAction.SET_LOTUS_SCHEMA:
+      return Object.assign({}, state, {
+        schema: action.schema,
       });
 
     default:

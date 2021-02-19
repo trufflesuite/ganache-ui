@@ -44,7 +44,7 @@ export const getAccountNonce = function(address) {
     const nonce = await lotusActionCreator(
       dispatch,
       getState,
-      "mpoolGetNonce",
+      "MpoolGetNonce",
       [address],
     );
     const currentNonce = getState().accounts.nonces[address];

@@ -137,8 +137,8 @@ class FilecoinChainService extends EventEmitter {
     // clone to avoid mutating the settings object in case it's sent elsewhere
     let options = cloneDeep(settings.server);
 
-    if (settings.randomizeMnemonicOnStart) {
-      delete options.mnemonic;
+    if (settings.randomizeSeedOnStart && options.wallet && options.wallet.seed) {
+      delete options.wallet.seed;
     }
 
     options.logDirectory = settings.logDirectory;

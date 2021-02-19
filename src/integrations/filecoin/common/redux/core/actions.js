@@ -7,8 +7,13 @@ import FilecoinPrefix from "../prefix";
 const prefix = `${FilecoinPrefix}/CORE`;
 
 export const SET_KEY_DATA = `${prefix}/SET_KEY_DATA`;
-export function setKeyData(mnemonic, hdPath, privateKeys) {
-  return { type: SET_KEY_DATA, mnemonic, hdPath, privateKeys };
+export function setKeyData(seed, privateKeys) {
+  return { type: SET_KEY_DATA, seed, privateKeys };
+}
+
+export const SET_IPFS_URL = `${prefix}/SET_IPFS_URL`;
+export function setIPFSUrl(url) {
+  return { type: SET_IPFS_URL, url };
 }
 
 export const setTipsetNumberToLatest = function() {
@@ -16,7 +21,7 @@ export const setTipsetNumberToLatest = function() {
     const tipset = await lotusActionCreator(
       dispatch,
       getState,
-      "chainHead",
+      "ChainHead",
       [],
     );
 
@@ -41,15 +46,19 @@ export const getTipsetSubscription = function() {
     const subscription = await lotusActionCreator(
       dispatch,
       getState,
-      "chainNotify",
+      "ChainNotify",
       []
     );
 
-    subscription.on("data", tipset => {
+    subscription.on("data", headChanges => {
       const currentTipsetHeight = getState().core.latestTipset;
 
-      if (tipset.Height != currentTipsetHeight) {
-        dispatch(setTipsetNumber(tipset.Height));
+      const receivedHeight = headChanges.reduce((maxHeight, cur) => {
+        return Math.max(maxHeight, cur.Val.Height);
+      }, 0);
+
+      if (receivedHeight != currentTipsetHeight) {
+        dispatch(setTipsetNumber(receivedHeight));
       }
     });
   };

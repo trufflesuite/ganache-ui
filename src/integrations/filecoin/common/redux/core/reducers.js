@@ -3,8 +3,8 @@ const Core = require("./actions");
 const initialState = {
   flavor: "filecoin",
   isMining: true,
-  mnemonic: "",
-  hdPath: "",
+  seed: "",
+  ipfsUrl: "",
   privateKeys: {},
   latestTipset: 0, // Tipset the current chain is on
   tipsets: [],
@@ -16,9 +16,13 @@ export default function(state = initialState, action) {
   switch (action.type) {
     case Core.SET_KEY_DATA:
       return Object.assign({}, state, {
-        mnemonic: action.mnemonic, // TODO: are we supporting these?
-        hdPath: action.hdPath,
+        seed: action.seed,
         privateKeys: action.privateKeys,
+      });
+
+    case Core.SET_IPFS_URL:
+      return Object.assign({}, state, {
+        ipfsUrl: action.url
       });
 
     case Core.SET_TIPSET_NUMBER:
