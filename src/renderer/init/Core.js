@@ -35,6 +35,9 @@ import {
   setKeyData as filecoinSetKeyData,
   SET_IPFS_URL,
   setIPFSUrl,
+  SET_CURRENT_OPTIONS,
+  setCurrentOptions,
+  getMinerEnabledSubscription,
 } from "../../integrations/filecoin/common/redux/core/actions";
 
 import { getAccounts } from "../../integrations/ethereum/common/redux/accounts/actions";
@@ -90,6 +93,8 @@ export function initCore(store) {
         store.dispatch(setTipsetNumberToLatest());
 
         store.dispatch(getTipsetSubscription());
+
+        store.dispatch(getMinerEnabledSubscription());
 
         store.dispatch(setServerStarted());
       }
@@ -157,6 +162,10 @@ export function initCore(store) {
 
   ipcRenderer.on(SET_LOTUS_SCHEMA, (event, data) => {
     store.dispatch(setLotusSchema(data.schema));
+  });
+
+  ipcRenderer.on(SET_CURRENT_OPTIONS, (event, data) => {
+    store.dispatch(setCurrentOptions(data.options));
   });
 
   ipcRenderer.on(SHOW_HOME_SCREEN, () => {

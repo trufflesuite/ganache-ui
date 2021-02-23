@@ -16,6 +16,11 @@ export function setIPFSUrl(url) {
   return { type: SET_IPFS_URL, url };
 }
 
+export const SET_CURRENT_OPTIONS = `${prefix}/SET_CURRENT_OPTIONS`;
+export function setCurrentOptions(options) {
+  return { type: SET_CURRENT_OPTIONS, options };
+}
+
 export const setTipsetNumberToLatest = function() {
   return async function(dispatch, getState) {
     const tipset = await lotusActionCreator(
@@ -60,6 +65,29 @@ export const getTipsetSubscription = function() {
       if (receivedHeight != currentTipsetHeight) {
         dispatch(setTipsetNumber(receivedHeight));
       }
+    });
+  };
+};
+
+export const SET_MINER_ENABLED = `${prefix}/SET_MINER_ENABLED`;
+export const setMinerEnabled = function(minerEnabled) {
+  return function(dispatch) {
+    dispatch({ type: SET_MINER_ENABLED, minerEnabled });
+  };
+};
+
+export const GET_MINER_ENABLED_SUBSCRIPTION = `${prefix}/GET_MINER_ENABLED_SUBSCRIPTION`;
+export const getMinerEnabledSubscription = function() {
+  return async function(dispatch, getState) {
+    const subscription = await lotusActionCreator(
+      dispatch,
+      getState,
+      "GanacheMinerEnabledNotify",
+      []
+    );
+
+    subscription.on("data", minerEnabled => {
+      dispatch(setMinerEnabled(minerEnabled));
     });
   };
 };

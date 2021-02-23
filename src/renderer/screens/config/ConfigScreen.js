@@ -15,8 +15,8 @@ import AboutScreen from "./ConfigScreens/AboutScreen";
 
 // ethereum screens
 import EthereumWorkspaceScreen from "../../../integrations/ethereum/renderer/screens/config/ConfigScreens/WorkspaceScreen";
-import ServerScreen from "../../../integrations/ethereum/renderer/screens/config/ConfigScreens/ServerScreen";
-import AccountsScreen from "../../../integrations/ethereum/renderer/screens/config/ConfigScreens/AccountsScreen";
+import EthereumServerScreen from "../../../integrations/ethereum/renderer/screens/config/ConfigScreens/ServerScreen";
+import EthereumAccountsScreen from "../../../integrations/ethereum/renderer/screens/config/ConfigScreens/AccountsScreen";
 import ChainScreen from "../../../integrations/ethereum/renderer/screens/config/ConfigScreens/ChainScreen";
 import AdvancedScreen from "../../../integrations/ethereum/renderer/screens/config/ConfigScreens/AdvancedScreen";
 
@@ -24,6 +24,12 @@ import AdvancedScreen from "../../../integrations/ethereum/renderer/screens/conf
 import CordaWorkspaceScreen from "../../../integrations/corda/renderer/screens/config/ConfigScreens/WorkspaceScreen";
 import NodesScreen from "../../../integrations/corda/renderer/screens/config/ConfigScreens/NodesScreen";
 import CordaAdvancedScreen from "../../../integrations/corda/renderer/screens/config/ConfigScreens/AdvancedScreen";
+
+// filecoin screens
+import FilecoinWorkspaceScreen from "../../../integrations/filecoin/renderer/screens/config/ConfigScreens/WorkspaceScreen";
+import FilecoinServerScreen from "../../../integrations/filecoin/renderer/screens/config/ConfigScreens/ServerScreen";
+import FilecoinAccountsScreen from "../../../integrations/filecoin/renderer/screens/config/ConfigScreens/AccountsScreen";
+import FilecoinMinerScreen from "../../../integrations/filecoin/renderer/screens/config/ConfigScreens/MinerScreen";
 
 import RestartIcon from "../../icons/restart.svg";
 import EjectIcon from "../../icons/eject.svg";
@@ -33,8 +39,8 @@ import OnlyIf from "../../components/only-if/OnlyIf";
 
 const ETHEREUM_TABS = [
   { name: "Workspace", subRoute: "workspace", component: EthereumWorkspaceScreen },
-  { name: "Server", subRoute: "server", component: ServerScreen },
-  { name: "Accounts & Keys", subRoute: "accounts-keys", component: AccountsScreen },
+  { name: "Server", subRoute: "server", component: EthereumServerScreen },
+  { name: "Accounts & Keys", subRoute: "accounts-keys", component: EthereumAccountsScreen },
   { name: "Chain", subRoute: "chain", component: ChainScreen },
   { name: "Advanced", subRoute: "advanced", component: AdvancedScreen }
 ];
@@ -47,6 +53,10 @@ const CORDA_TABS = [
 ];
 
 const FILECOIN_TABS = [
+  { name: "Workspace", subRoute: "workspace", component: FilecoinWorkspaceScreen },
+  { name: "Server", subRoute: "server", component: FilecoinServerScreen },
+  { name: "Accounts & Keys", subRoute: "accounts-keys", component: FilecoinAccountsScreen },
+  { name: "Miner", subRoute: "miner", component: FilecoinMinerScreen },
 ];
 
 const TABS = [

@@ -1,6 +1,6 @@
 import Integrations from "../integrations";
 import FilecoinChainService from "./common/services/FilecoinChainService";
-import { SET_IPFS_URL, SET_KEY_DATA } from "./common/redux/core/actions";
+import { SET_CURRENT_OPTIONS, SET_IPFS_URL, SET_KEY_DATA } from "./common/redux/core/actions";
 import { SET_LOTUS_SCHEMA } from "./common/redux/lotus/actions";
 
 class Filecoin extends Integrations {
@@ -15,7 +15,7 @@ class Filecoin extends Integrations {
   async _listen() {
     this._listenToIPC();
 
-    this.chain.on("server-started", (data) => {
+    this.chain.on("server-started-data", (data) => {
       this.send(SET_LOTUS_SCHEMA, {
         schema: data.schema
       });
@@ -27,6 +27,16 @@ class Filecoin extends Integrations {
 
       this.send(SET_IPFS_URL, {
         url: `http://${data.chain.ipfsHost}:${data.chain.ipfsPort}`
+      });
+
+      this.send(SET_CURRENT_OPTIONS, {
+        options: {
+          chain: data.chain,
+          database: data.database,
+          logging: data.logging,
+          miner: data.miner,
+          wallet: data.wallet
+        }
       });
     });
 

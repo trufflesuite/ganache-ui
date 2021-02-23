@@ -6,6 +6,11 @@ module.exports = {
   logsDirectory: null,
   server: {
     hostname: "127.0.0.1",
-    port: 7777
+    port: 7777,
+    chain: {},
+    database: {},
+    logging: {},
+    miner: {},
+    wallet: {}
   }
 }

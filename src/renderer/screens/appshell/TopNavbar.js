@@ -157,7 +157,8 @@ class TopNavbar extends Component {
       if (workspaceSettings.server.miner) {
         // TODO: miner.mine should not be read from options but current state
         // need to update once the api methods exist
-        if (workspaceSettings.server.miner.mine === false) {
+        const minerEnabled = this.props["filecoin.core"].minerEnabled !== null ? this.props["filecoin.core"].minerEnabled : workspaceSettings.server.miner.mine;
+        if (minerEnabled === false) {
           return "Stopped";
         } else if (workspaceSettings.server.miner.blockTime > 0) {
           return `${
@@ -424,6 +425,7 @@ class TopNavbar extends Component {
 
 export default connect(
   TopNavbar,
+  "filecoin.core",
   "workspaces",
   "config",
   "filecoin"
