@@ -20,8 +20,8 @@ class Ethereum extends Integrations {
   async _listen() {
     this._listenToIPC();
     this._listenToTruffle();
-    
-    this.chain.on("server-started", (data) => {
+
+    this.chain.on("server-started-data", (data) => {
       const workspace = this._integrationManager.workspace;
       this.send(SET_KEY_DATA, {
         privateKeys: data.privateKeys,
