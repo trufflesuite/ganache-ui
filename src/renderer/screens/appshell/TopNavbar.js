@@ -24,6 +24,8 @@ import BlockIcon from "../../icons/blocks.svg";
 import TxIcon from "../../icons/transactions.svg";
 import LogsIcon from "../../icons/console.svg";
 import ContractsIcon from "../../icons/contract-icon.svg";
+import DealsIcon from "../../icons/deals-icon.svg";
+import FilesIcon from "../../icons/file-icon.svg";
 import EventsIcon from "../../icons/events-icon.svg";
 
 import SettingsIcon from "../../icons/settings.svg";
@@ -251,12 +253,12 @@ class TopNavbar extends Component {
           <TxIcon />
           Messages
         </NavLink>
-        <NavLink to="/deals" activeClassName="Active">
-          <ContractsIcon />
+        <NavLink to="/filecoin/deals" activeClassName="Active">
+          <DealsIcon />
           Deals
         </NavLink>
-        <NavLink to="/files" activeClassName="Active">
-          <EventsIcon />
+        <NavLink to="/filecoin/files" activeClassName="Active">
+          <FilesIcon />
           Files
         </NavLink>
       </>),
