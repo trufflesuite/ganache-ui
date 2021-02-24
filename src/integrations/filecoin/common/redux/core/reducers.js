@@ -8,10 +8,7 @@ const initialState = {
   options: {},
   privateKeys: {},
   latestTipset: 0, // Tipset the current chain is on
-  minerEnabled: null,
-  tipsets: [],
-  blocks: [],
-  messages: []
+  minerEnabled: null
 };
 
 export default function(state = initialState, action) {

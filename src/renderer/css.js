@@ -53,3 +53,8 @@ import "../integrations/filecoin/renderer/screens/accounts/AccountList.scss";
 import "../integrations/filecoin/renderer/screens/accounts/KeyModal.scss";
 import "../integrations/filecoin/renderer/screens/accounts/AccountsBanner.scss";
 import "../integrations/filecoin/renderer/screens/accounts/SeedInfoModal.scss";
+import "../integrations/filecoin/renderer/screens/tipsets/TipsetsScreen.scss";
+import "../integrations/filecoin/renderer/screens/tipsets/TipsetList.scss";
+import "../integrations/filecoin/renderer/screens/tipsets/MiniTipsetCard.scss";
+import "../integrations/filecoin/renderer/screens/tipsets/TipsetCard.scss";
+import "../integrations/filecoin/renderer/screens/tipsets/MiniBlockCard.scss";

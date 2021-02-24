@@ -18,8 +18,8 @@ export const cacheRequest = function(payload, response) {
 };
 
 export const checkCache = function(payload, getState) {
-  // Never cache "eth_blockNumber"
-  if (payload.method == "eth_blockNumber") {
+  // Never cache "Filecoin.ChainHead"
+  if (payload.method == "Filecoin.ChainHead") {
     return null;
   }
 

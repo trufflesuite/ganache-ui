@@ -27,6 +27,7 @@ import ContractsScreen from "../integrations/ethereum/renderer/screens/contracts
 import LoaderScreen from "./screens/loader/LoaderScreen";
 
 import FilecoinAccountsScreen from "../integrations/filecoin/renderer/screens/accounts/AccountsScreen";
+import FilecoinTipsetsScreen from "../integrations/filecoin/renderer/screens/tipsets/TipsetsScreen";
 
 class FlavorRoutes extends Component {
   render() {
@@ -71,6 +72,8 @@ class FlavorRoutes extends Component {
           <Redirect to="/filecoin/accounts" />
         </Route>
         <Route exact path="/filecoin/accounts" component={FilecoinAccountsScreen} />
+        <Route exact path="/filecoin/tipsets" component={FilecoinTipsetsScreen} />
+        <Route exact path="/filecoin/tipsets/:tipsetHeight" component={FilecoinTipsetsScreen} />
       </Switch>
     </AppShell>
   }
