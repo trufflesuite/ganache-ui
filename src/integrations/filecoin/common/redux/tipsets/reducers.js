@@ -7,6 +7,7 @@ const initialState = {
   inViewGasUsed: {},
   requested: {},
   currentTipsetDetails: null,
+  currentBlock: null,
 };
 
 // Note: This sorts in reverse; higher tipset first
@@ -64,6 +65,11 @@ export default function(state = initialState, action) {
     case Tipsets.SET_CURRENT_TIPSET_SHOWN:
       return Object.assign({}, state, {
         currentTipsetDetails: action.tipsetDetails,
+      });
+
+    case Tipsets.SET_CURRENT_BLOCK_SHOWN:
+      return Object.assign({}, state, {
+        currentBlock: action.block,
       });
 
     default:

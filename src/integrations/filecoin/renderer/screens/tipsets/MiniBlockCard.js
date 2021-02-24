@@ -19,7 +19,7 @@ export default class MiniBlockCard extends PureComponent {
     }, 0);
 
     return (
-      <Link to={`/filecoin/blocks/${cid}`} className="Link">
+      <Link to={`/filecoin/tipsets/blocks/${cid}`} className="Link">
         <section className={cardStyles} key={`block_${cid}_detail`}>
           <div className="RowItem">
             <div className="BlockNumber">

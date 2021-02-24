@@ -28,6 +28,7 @@ import LoaderScreen from "./screens/loader/LoaderScreen";
 
 import FilecoinAccountsScreen from "../integrations/filecoin/renderer/screens/accounts/AccountsScreen";
 import FilecoinTipsetsScreen from "../integrations/filecoin/renderer/screens/tipsets/TipsetsScreen";
+import FilecoinBlockCard from "../integrations/filecoin/renderer/screens/tipsets/BlockCard";
 
 class FlavorRoutes extends Component {
   render() {
@@ -74,6 +75,7 @@ class FlavorRoutes extends Component {
         <Route exact path="/filecoin/accounts" component={FilecoinAccountsScreen} />
         <Route exact path="/filecoin/tipsets" component={FilecoinTipsetsScreen} />
         <Route exact path="/filecoin/tipsets/:tipsetHeight" component={FilecoinTipsetsScreen} />
+        <Route exact path="/filecoin/tipsets/blocks/:blockCid" component={FilecoinBlockCard} />
       </Switch>
     </AppShell>
   }

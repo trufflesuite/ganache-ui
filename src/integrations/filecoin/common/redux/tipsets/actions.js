@@ -163,6 +163,22 @@ export const showTipset = function(height) {
   };
 };
 
-export const clearBlockShown = function() {
+export const clearTipsetShown = function() {
   return { type: SET_CURRENT_TIPSET_SHOWN, tipsetDetails: null };
+};
+
+export const SET_CURRENT_BLOCK_SHOWN = `${prefix}/SET_CURRENT_BLOCK_SHOWN`;
+export const showBlock = function(cid) {
+  return async function(dispatch, getState) {
+    const tipset = getState().filecoin.tipsets.currentTipsetDetails.tipset;
+    const blockIdx = tipset.Cids.findIndex(rootCid => rootCid["/"] === cid);
+    if (blockIdx >= 0) {
+      const block = tipset.Blocks[blockIdx];
+      dispatch({ type: SET_CURRENT_BLOCK_SHOWN, block });
+    }
+  };
+};
+
+export const clearBlockShown = function() {
+  return { type: SET_CURRENT_BLOCK_SHOWN, block: null };
 };

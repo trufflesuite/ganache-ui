@@ -58,3 +58,7 @@ import "../integrations/filecoin/renderer/screens/tipsets/TipsetList.scss";
 import "../integrations/filecoin/renderer/screens/tipsets/MiniTipsetCard.scss";
 import "../integrations/filecoin/renderer/screens/tipsets/TipsetCard.scss";
 import "../integrations/filecoin/renderer/screens/tipsets/MiniBlockCard.scss";
+import "../integrations/filecoin/renderer/screens/tipsets/BlockCard.scss";
+import "../integrations/filecoin/renderer/screens/messages/MessageList.scss";
+import "../integrations/filecoin/renderer/screens/messages/MiniMessageCard.scss";
+import "../integrations/filecoin/renderer/screens/messages/MessageTypeBadge.scss";
