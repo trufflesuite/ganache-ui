@@ -108,10 +108,20 @@ export const getMessagesForTipsets = function(
 export const SET_CURRENT_MESSAGE_SHOWN = `${prefix}/SET_CURRENT_MESSAGE_SHOWN`;
 export const showMessage = function(cid) {
   return async function(dispatch, getState) {
-    const lotusInstance = getState().filecoin.lotus.lotusInstance;
-    const message = await lotusRequest("ChainGetMessage", [{
-      "/": cid
-    }], lotusInstance);
+    const state = getState();
+    const currentBlock = state.filecoin.tipsets.currentBlock;
+
+    let message;
+    if (currentBlock) {
+      message = currentBlock.AdjustedBlockMessages.find(m => m.cid["/"] === cid);
+    }
+
+    if (!message) {
+      const lotusInstance = state.filecoin.lotus.lotusInstance;
+      message = await lotusRequest("ChainGetMessage", [{
+        "/": cid
+      }], lotusInstance);
+    }
 
     dispatch({
       type: SET_CURRENT_MESSAGE_SHOWN,

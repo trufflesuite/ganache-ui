@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 
 import connect from "../../../../../renderer/screens/helpers/connect";
+import OnlyIf from "../../../../../renderer/components/only-if/OnlyIf";
 
 import * as Messages from "../../../common/redux/messages/actions";
 import MessageTypeBadge from "./MessageTypeBadge";
@@ -81,15 +82,19 @@ class MessageCard extends Component {
               <div className="Value">{message.GasPremium}</div>
             </div>
 
-            {/* <div>
-              <div className="Label">MINED IN TIPSET</div>
-              <div className="Value">{message.tipsetHeight}</div>
-            </div>
+            <OnlyIf test={message.tipsetHeight}>
+              <div>
+                <div className="Label">MINED IN TIPSET</div>
+                <div className="Value">{message.tipsetHeight}</div>
+              </div>
+            </OnlyIf>
 
-            <div>
-              <div className="Label">MINED IN BLOCK</div>
-              <div className="Value">{abbreviateCid(message.blockCid["/"])}</div>
-            </div> */}
+            <OnlyIf test={message.blockCid}>
+              <div>
+                <div className="Label">MINED IN BLOCK</div>
+                <div className="Value">{abbreviateCid(message.blockCid["/"], 4)}</div>
+              </div>
+            </OnlyIf>
           </section>
         </div>
       </section>
