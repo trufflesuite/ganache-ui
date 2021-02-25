@@ -62,3 +62,6 @@ import "../integrations/filecoin/renderer/screens/tipsets/BlockCard.scss";
 import "../integrations/filecoin/renderer/screens/messages/MessageList.scss";
 import "../integrations/filecoin/renderer/screens/messages/MiniMessageCard.scss";
 import "../integrations/filecoin/renderer/screens/messages/MessageTypeBadge.scss";
+import "../integrations/filecoin/renderer/screens/messages/MessagesScreen.scss";
+import "../integrations/filecoin/renderer/screens/messages/RecentMessages.scss";
+import "../integrations/filecoin/renderer/screens/messages/MessageCard.scss";

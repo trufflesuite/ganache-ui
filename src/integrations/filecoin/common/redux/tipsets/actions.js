@@ -84,7 +84,7 @@ export const addTipsetsToView = function(startTipsetHeight, endTipsetHeight) {
   };
 };
 
-const getTipset = async function(height, lotusInstance, dispatch, getState) {
+export const getTipset = async function(height, lotusInstance, dispatch, getState) {
   // this call returns the tipset with the blocks filled
   const tipset = await lotusRequest("ChainGetTipSetByHeight", [height], lotusInstance);
 
@@ -96,7 +96,8 @@ const getTipset = async function(height, lotusInstance, dispatch, getState) {
 
     // we add the block messages to the block for accessibility
     // ease later on. These will be the `Message` of each block
-    // message (no `SignedMessage`s) with an injected `cid` field
+    // message (no `SignedMessage`s) with an injected `cid` field.
+    // we also add the tipset height for sorting the messages screen
     block.AdjustedBlockMessages = []
 
     // since we have included block headers, we technically can cache
@@ -118,6 +119,8 @@ const getTipset = async function(height, lotusInstance, dispatch, getState) {
       gasUsed += message.GasLimit;
       block.AdjustedBlockMessages.push({
         cid: messageCid,
+        tipsetHeight: tipset.Height,
+        blockCid,
         ...message
       });
 
@@ -137,6 +140,7 @@ const getTipset = async function(height, lotusInstance, dispatch, getState) {
       gasUsed += secpkMessage.Message.GasLimit;
       block.AdjustedBlockMessages.push({
         cid: secpkMessageCid,
+        tipsetHeight: tipset.Height,
         ...secpkMessage.Message
       });
 

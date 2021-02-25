@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 
 import MessageTypeBadge from "./MessageTypeBadge";
+import FormattedFILValue from "../../components/formatted-fil-value/FormattedFILValue";
 
 export default class MiniMessageCard extends Component {
   render() {
@@ -10,7 +11,7 @@ export default class MiniMessageCard extends Component {
     const cid = message.cid["/"];
 
     return (
-      <Link to={`/messages/${cid}`} className="Link">
+      <Link to={`/filecoin/messages/${cid}`} className="Link">
         <div className="MiniMessageCard">
           <div className="Row Top">
             <div className="RowItem">
@@ -51,7 +52,7 @@ export default class MiniMessageCard extends Component {
               <div className="RowItem">
                 <div className="Value">
                   <div className="Label">VALUE</div>
-                  <div className="Value">{message.Value}</div>
+                  <div className="Value">{<FormattedFILValue value={message.Value} />}</div>
                 </div>
               </div>
             </div>
