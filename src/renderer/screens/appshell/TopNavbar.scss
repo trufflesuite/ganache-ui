@@ -44,6 +44,7 @@
         width: 36px;
         height: 36px;
         stroke: var(--app-navbar-icon-color);
+        fill: var(--app-navbar-icon-color);
         margin-right: 0.5em;
       }
 
@@ -52,10 +53,12 @@
 
         svg {
           stroke: var(--primary-color) !important;
+          fill: var(--primary-color) !important;
         }
 
         use > symbol > * {
           stroke: var(--primary-color) !important;
+          fill: var(--primary-color) !important;
         }
       }
 
@@ -63,7 +66,8 @@
         color: white;
 
         svg {
-          stroke: white;
+          stroke: white !important;
+          fill: white !important;
           cursor: pointer;
         }
       }
@@ -99,7 +103,7 @@
       &:focus {
         min-width: 374px;
         position: absolute;
-        
+
       transition: all .25s;
       }
 

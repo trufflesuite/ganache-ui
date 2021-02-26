@@ -3,6 +3,7 @@ import {
 } from "../lotus/helpers/LotusActionCreator";
 import { getAccounts } from "../accounts/actions";
 import FilecoinPrefix from "../prefix";
+import { updateDealInView } from "../deals/actions";
 
 const prefix = `${FilecoinPrefix}/CORE`;
 
@@ -19,6 +20,11 @@ export function setIPFSUrl(url) {
 export const SET_CURRENT_OPTIONS = `${prefix}/SET_CURRENT_OPTIONS`;
 export function setCurrentOptions(options) {
   return { type: SET_CURRENT_OPTIONS, options };
+}
+
+export const SET_STORAGE_DEAL_STATUS_ENUM = `${prefix}/SET_STORAGE_DEAL_STATUS_ENUM`;
+export function setStorageDealStatusEnum(StorageDealStatus) {
+  return { type: SET_STORAGE_DEAL_STATUS_ENUM, StorageDealStatus };
 }
 
 export const setTipsetNumberToLatest = function() {
@@ -56,7 +62,7 @@ export const getTipsetSubscription = function() {
     );
 
     subscription.on("data", headChanges => {
-      const currentTipsetHeight = getState().core.latestTipset;
+      const currentTipsetHeight = getState().filecoin.core.latestTipset;
 
       const receivedHeight = headChanges.reduce((maxHeight, cur) => {
         return Math.max(maxHeight, cur.Val.Height);
@@ -88,6 +94,35 @@ export const getMinerEnabledSubscription = function() {
 
     subscription.on("data", minerEnabled => {
       dispatch(setMinerEnabled(minerEnabled));
+    });
+  };
+};
+
+export const SET_LATEST_DEAL_ID = `${prefix}/SET_LATEST_DEAL_ID`;
+export const setLatestDealId = function(id) {
+  return function(dispatch) {
+    dispatch({ type: SET_LATEST_DEAL_ID, id });
+  };
+};
+
+export const GET_DEAL_SUBSCRIPTION = `${prefix}/GET_DEAL_SUBSCRIPTION`;
+export const getDealSubscription = function() {
+  return async function(dispatch, getState) {
+    const subscription = await lotusActionCreator(
+      dispatch,
+      getState,
+      "ClientGetDealUpdates",
+      []
+    );
+
+    subscription.on("data", deal => {
+      const latestDeal = getState().filecoin.core.latestDeal;
+
+      if (deal.DealID > latestDeal) {
+        dispatch(setLatestDealId(deal.DealID));
+      }
+
+      dispatch(updateDealInView(deal));
     });
   };
 };

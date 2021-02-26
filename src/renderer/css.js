@@ -65,3 +65,7 @@ import "../integrations/filecoin/renderer/screens/messages/MessageTypeBadge.scss
 import "../integrations/filecoin/renderer/screens/messages/MessagesScreen.scss";
 import "../integrations/filecoin/renderer/screens/messages/RecentMessages.scss";
 import "../integrations/filecoin/renderer/screens/messages/MessageCard.scss";
+import "../integrations/filecoin/renderer/screens/deals/DealsScreen.scss";
+import "../integrations/filecoin/renderer/screens/deals/DealList.scss";
+import "../integrations/filecoin/renderer/screens/deals/MiniDealCard.scss";
+import "../integrations/filecoin/renderer/screens/deals/DealStatusBadge.scss";

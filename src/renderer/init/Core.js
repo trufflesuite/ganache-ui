@@ -38,6 +38,9 @@ import {
   SET_CURRENT_OPTIONS,
   setCurrentOptions,
   getMinerEnabledSubscription,
+  SET_STORAGE_DEAL_STATUS_ENUM,
+  setStorageDealStatusEnum,
+  getDealSubscription,
 } from "../../integrations/filecoin/common/redux/core/actions";
 
 import { getAccounts } from "../../integrations/ethereum/common/redux/accounts/actions";
@@ -95,6 +98,8 @@ export function initCore(store) {
         store.dispatch(getTipsetSubscription());
 
         store.dispatch(getMinerEnabledSubscription());
+
+        store.dispatch(getDealSubscription());
 
         store.dispatch(setServerStarted());
       }
@@ -166,6 +171,10 @@ export function initCore(store) {
 
   ipcRenderer.on(SET_CURRENT_OPTIONS, (event, data) => {
     store.dispatch(setCurrentOptions(data.options));
+  });
+
+  ipcRenderer.on(SET_STORAGE_DEAL_STATUS_ENUM, (event, data) => {
+    store.dispatch(setStorageDealStatusEnum(data.StorageDealStatus));
   });
 
   ipcRenderer.on(SHOW_HOME_SCREEN, () => {

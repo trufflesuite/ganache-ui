@@ -8,7 +8,9 @@ const initialState = {
   options: {},
   privateKeys: {},
   latestTipset: 0, // Tipset the current chain is on
-  minerEnabled: null
+  minerEnabled: null,
+  latestDeal: 0,
+  StorageDealStatus: {}
 };
 
 export default function(state = initialState, action) {
@@ -37,6 +39,16 @@ export default function(state = initialState, action) {
     case Core.SET_MINER_ENABLED:
       return Object.assign({}, state, {
         minerEnabled: action.minerEnabled
+      });
+
+    case Core.SET_LATEST_DEAL_ID:
+      return Object.assign({}, state, {
+        latestDeal: action.id
+      });
+
+    case Core.SET_STORAGE_DEAL_STATUS_ENUM:
+      return Object.assign({}, state, {
+        StorageDealStatus: action.StorageDealStatus
       });
 
     default:

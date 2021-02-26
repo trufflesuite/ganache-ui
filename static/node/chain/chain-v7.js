@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 
 const ganacheLib = require("ganache");
-const FilecoinProvider = require("@ganache/filecoin").Provider;
+const Filecoin = require("@ganache/filecoin");
+const FilecoinProvider = Filecoin.Provider;
+const StorageDealStatus = Filecoin.StorageDealStatus;
 const logging = require("./logging");
 
 if (!process.send) {
@@ -143,6 +145,11 @@ async function startServer(options) {
 
   data.privateKeys = privateKeys;
   data.schema = FilecoinProvider.Schema;
+
+  // We inject this enum from the `main` process to not
+  // have to deal with webpacking @ganache/filecoin into
+  // the renderer process
+  data.StorageDealStatus = StorageDealStatus;
 
   process.send({ type: "server-started", data: data });
 

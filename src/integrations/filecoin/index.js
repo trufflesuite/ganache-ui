@@ -1,6 +1,6 @@
 import Integrations from "../integrations";
 import FilecoinChainService from "./common/services/FilecoinChainService";
-import { SET_CURRENT_OPTIONS, SET_IPFS_URL, SET_KEY_DATA } from "./common/redux/core/actions";
+import { SET_CURRENT_OPTIONS, SET_IPFS_URL, SET_KEY_DATA, SET_STORAGE_DEAL_STATUS_ENUM } from "./common/redux/core/actions";
 import { SET_LOTUS_SCHEMA } from "./common/redux/lotus/actions";
 
 class Filecoin extends Integrations {
@@ -37,6 +37,10 @@ class Filecoin extends Integrations {
           miner: data.miner,
           wallet: data.wallet
         }
+      });
+
+      this.send(SET_STORAGE_DEAL_STATUS_ENUM, {
+        StorageDealStatus: data.StorageDealStatus
       });
     });
 
