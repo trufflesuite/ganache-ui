@@ -3,7 +3,7 @@ import { lotusRequest } from "../lotus/helpers/LotusActionCreator";
 import { getTipset } from "../tipsets/actions";
 
 const prefix = `${FilecoinPrefix}/MESSAGES`;
-const PAGE_SIZE = 10;
+export const PAGE_SIZE = 10;
 
 export const CLEAR_MESSAGES_IN_VIEW = `${prefix}/CLEAR_MESSAGES_IN_VIEW`;
 export const clearMessagesInView = function() {

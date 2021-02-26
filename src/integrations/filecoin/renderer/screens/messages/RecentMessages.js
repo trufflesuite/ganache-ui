@@ -23,11 +23,13 @@ class RecentMessages extends Component {
     // No change in scroll position?
     const tipsetsRequested = Object.keys(prevProps.messages.tipsetsRequested);
     const latestTipsetRequested = Math.max.apply(Math, tipsetsRequested.concat(-1));
-    if (
-      prevProps.appshell.scrollPosition == "top" &&
-      prevProps.core.latestTipset > latestTipsetRequested
-    ) {
-      this.props.dispatch(Messages.requestPreviousPage());
+    const earliestTipsetRequested = Math.min.apply(Math, tipsetsRequested);
+    if (!this.props.messages.loading && prevProps.appshell.scrollPosition == "top") {
+      if (earliestTipsetRequested > 0 && this.props.messages.inView.length <= Messages.PAGE_SIZE) {
+        this.props.dispatch(Messages.requestNextPage());
+      } else if (this.props.core.latestTipset > latestTipsetRequested) {
+        this.props.dispatch(Messages.requestPreviousPage());
+      }
     }
   }
 
