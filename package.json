@@ -129,6 +129,7 @@
     "ganache-core": "2.13.1",
     "html-loader": "1.0.0-alpha.0",
     "husky": "^3.0.5",
+    "ipfs-http-client": "^49.0.2",
     "jest": "^24.9.0",
     "js-scrypt": "^0.2.0",
     "lint-staged": "^9.2.5",
