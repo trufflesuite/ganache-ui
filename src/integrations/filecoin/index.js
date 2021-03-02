@@ -26,7 +26,7 @@ class Filecoin extends Integrations {
       });
 
       this.send(SET_IPFS_URL, {
-        url: `https://${data.chain.ipfsHost}:${data.chain.ipfsPort}`
+        url: `http://${data.chain.ipfsHost}:${data.chain.ipfsPort}`
       });
     });
 
