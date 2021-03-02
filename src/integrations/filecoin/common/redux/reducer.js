@@ -7,6 +7,7 @@ import RequestCacheReducer from "./request-cache/reducers";
 import TipsetsReducer from "./tipsets/reducers";
 import MessagesReducer from "./messages/reducers";
 import DealsReducer from "./deals/reducers";
+import FilesReducer from "./files/reducers";
 
 export default () => {
   const appReducer = combineReducers({
@@ -17,6 +18,7 @@ export default () => {
     tipsets: TipsetsReducer,
     messages: MessagesReducer,
     deals: DealsReducer,
+    files: FilesReducer,
   });
 
   return appReducer;

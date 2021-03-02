@@ -1,0 +1,75 @@
+.MiniFileCard {
+  width: 100%;
+  background: var(--app-card-default-background);
+  word-wrap: break-word;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  transition: all .3s;
+  border-bottom: 1px solid #aaa;
+
+  &:first-child {
+    border-top: 1px solid #aaa;
+  }
+
+  &:hover {
+  }
+
+  .Link {
+    text-decoration: none;
+    width: 100%;
+  }
+
+  .RowItem {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .PrimaryItems {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    width: 100%;
+  }
+
+  .Name,
+  .Size {
+    .Label {
+      font-size: .625rem;
+      letter-spacing: 1.2px;
+    }
+
+    .Value {
+      font-size: .825rem;
+    }
+  }
+
+  .Download {
+    button.Error {
+      background-color: var(--error);
+    }
+
+    button.Complete {
+      background-color: var(--subtle-green);
+    }
+
+    span {
+      font-size: 1rem;
+    }
+
+    svg {
+      margin-left: 0.5rem;
+      width: 1rem;
+      vertical-align: text-bottom;
+      fill: var(--app-button-primary-background-color);
+    }
+
+    .ProgressBarOuter {
+      height: 0.3rem;
+      border-width: 0;
+    }
+  }
+}

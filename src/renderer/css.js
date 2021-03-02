@@ -69,3 +69,6 @@ import "../integrations/filecoin/renderer/screens/deals/DealsScreen.scss";
 import "../integrations/filecoin/renderer/screens/deals/DealList.scss";
 import "../integrations/filecoin/renderer/screens/deals/MiniDealCard.scss";
 import "../integrations/filecoin/renderer/screens/deals/DealStatusBadge.scss";
+import "../integrations/filecoin/renderer/screens/files/FilesScreen.scss";
+import "../integrations/filecoin/renderer/screens/files/FileList.scss";
+import "../integrations/filecoin/renderer/screens/files/MiniFileCard.scss";
