@@ -53,8 +53,8 @@ class AccountList extends Component {
             </div>
           </div>
           <div className="SecondaryInfo">
-            <div className="TransactionCount">
-              <div className="Label">TX COUNT</div>
+            <div className="MessageCount">
+              <div className="Label">MSG COUNT</div>
               <div className="Value">{this.props.nonces[account]}</div>
             </div>
             <div className="AccountIndex">
