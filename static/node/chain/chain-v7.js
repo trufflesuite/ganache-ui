@@ -84,17 +84,9 @@ async function startServer(options) {
         },
       };
     } else {
-      // The TestRPC's logging system is archaic. We'd like more control
-      // over what's logged. For now, the really important stuff all has
-      // a space on the front of it. So let's only log the stuff with a
-      // space on the front. ¯\_(ツ)_/¯
-
       options.logging.logger = {
         log: message => {
-          if (
-            typeof message === "string" &&
-            (options.logging.verbose || message.indexOf(" ") == 0)
-          ) {
+          if (typeof message === "string") {
             console.log(message);
           }
         },
