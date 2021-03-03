@@ -113,7 +113,7 @@ class TopNavbar extends Component {
       } else if (value.toLowerCase() === "loader") {
         this.props.dispatch(push("/loader"));
       } else {
-        this.props.dispatch(Search.query(value));
+        this.props.dispatch(Search.query(value, this.props.config.settings.workspace.flavor));
       }
 
       this.setState({
@@ -200,6 +200,8 @@ class TopNavbar extends Component {
       }
     }
 
+    const hasSearch = flavor === "ethereum" || flavor === "filecoin";
+
     return (
       <nav className="TopNavBar">
         <main className="Main">
@@ -214,7 +216,7 @@ class TopNavbar extends Component {
             <OnlyIf test={isNewVersionAvailable}>
               <UpdateNotification />
             </OnlyIf>
-            { flavor === "ethereum" ? <><input
+            { hasSearch ? <><input
               type="text"
               placeholder={children.searchText}
               title={children.searchText}

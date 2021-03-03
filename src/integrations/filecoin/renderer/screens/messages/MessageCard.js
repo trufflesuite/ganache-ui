@@ -92,7 +92,7 @@ class MessageCard extends Component {
             <OnlyIf test={message.blockCid}>
               <div>
                 <div className="Label">MINED IN BLOCK</div>
-                <div className="Value">{abbreviateCid(message.blockCid["/"], 4)}</div>
+                <div className="Value">{message.blockCid && abbreviateCid(message.blockCid["/"], 4)}</div>
               </div>
             </OnlyIf>
           </section>
