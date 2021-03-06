@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import OnlyIf from "../../../../../../renderer/components/only-if/OnlyIf";
 import connect from "../../../../../../renderer/screens/helpers/connect";
+import { FilecoinOptionsConfig } from "@ganache/filecoin-options";
 
 const VALIDATIONS = {
   "workspace.server.miner.blockTime": {
@@ -17,18 +18,22 @@ class MinerScreen extends Component {
     const mineDefined = typeof props.config.settings.workspace.server.miner.mine !== "undefined";
     const blockTimeDefined = typeof props.config.settings.workspace.server.miner.blockTime !== "undefined";
 
+    const hasProviderOptions = Object.keys(props.core.options).length > 1;
+    const defaults = FilecoinOptionsConfig.normalize({});
+    const blockTime = this.props.config.settings.workspace.server.miner.blockTime || (hasProviderOptions ? this.props.core.options.miner.blockTime : defaults.miner.blockTime);
     this.state = {
       mineDefined,
       blockTimeDefined,
-      mine: mineDefined ? props.config.settings.workspace.server.miner.mine : props.core.options.miner.mine,
-      autoMine: blockTimeDefined ? (props.config.settings.workspace.server.miner.blockTime === 0) : (props.core.options.miner.blockTime === 0),
+      defaultMinerMine: defaults.miner.mine,
+      mine: this.props.config.settings.workspace.server.miner.mine || (hasProviderOptions ? this.props.core.options.miner.mine : defaults.miner.mine),
+      autoMine: blockTime === 0,
     };
   }
 
   toggleMine = () => {
     const newValue = !this.state.mine;
 
-    if (!this.state.mineDefined && newValue === this.props.core.options.miner.mine) {
+    if (!this.state.mineDefined && newValue === this.state.defaultMinerMine) {
       // if our current `Settings` file doesn't specify the `mine` field,
       // and we're reverting a change, then we should still act as if
       // we're not defining it (and therefore using @ganache/filecoin-option's defaults)

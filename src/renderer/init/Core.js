@@ -90,18 +90,21 @@ export function initCore(store) {
         const url = `ws://${hostname}:${workspaceSettings.server.port}/rpc/v0`;
 
         ipcRenderer.send("lotus-provider", url);
-        const lotusInstance = await createLotusInstance(store.dispatch, store.getState, url);
-        store.dispatch(setLotusInstance(lotusInstance));
 
-        store.dispatch(setTipsetNumberToLatest());
+        if (startupMode === STARTUP_MODE.NORMAL) {
+          const lotusInstance = await createLotusInstance(store.dispatch, store.getState, url);
+          store.dispatch(setLotusInstance(lotusInstance));
 
-        store.dispatch(getTipsetSubscription());
+          store.dispatch(setTipsetNumberToLatest());
 
-        store.dispatch(getMinerEnabledSubscription());
+          store.dispatch(getTipsetSubscription());
 
-        store.dispatch(getDealSubscription());
+          store.dispatch(getMinerEnabledSubscription());
 
-        store.dispatch(setServerStarted());
+          store.dispatch(getDealSubscription());
+
+          store.dispatch(setServerStarted());
+        }
       }
 
       store.dispatch(setStartupMode(startupMode));

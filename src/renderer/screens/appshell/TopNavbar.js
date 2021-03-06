@@ -286,7 +286,7 @@ class TopNavbar extends Component {
       searchText: "Search",
       status: (<>
         <StatusIndicator title="CURRENT TIPSET" value={this.props.filecoin.core.latestTipset} />
-        <StatusIndicator title="LOTUS SERVER" value={this.props.filecoin.lotus.lotusInstance.provider.provider.url} upper={false} />
+        <StatusIndicator title="LOTUS SERVER" value={this.props.filecoin.lotus.lotusInstance && this.props.filecoin.lotus.lotusInstance.provider.provider.url} upper={false} />
         <StatusIndicator title="IPFS SERVER" value={this.props.filecoin.core.ipfsUrl} upper={false} />
           <StatusIndicator
             title="MINING STATUS"

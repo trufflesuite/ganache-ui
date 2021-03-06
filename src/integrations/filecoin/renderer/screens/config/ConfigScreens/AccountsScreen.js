@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import OnlyIf from "../../../../../../renderer/components/only-if/OnlyIf";
 import { STARTUP_MODE } from "../../../../../../common/redux/config/actions";
 import connect from "../../../../../../renderer/screens/helpers/connect";
+import { FilecoinOptionsConfig } from "@ganache/filecoin-options";
 
 const VALIDATIONS = {
   "workspace.server.wallet.totalAccounts": {
@@ -62,6 +63,8 @@ class AccountsScreen extends Component {
     const enabled =
       this.props.config.settings.workspace.isDefault ||
       this.props.config.startupMode === STARTUP_MODE.NEW_WORKSPACE;
+    const hasProviderOptions = Object.keys(this.props.core.options).length > 1;
+    const defaults = FilecoinOptionsConfig.normalize({});
     return (
       <div>
         <h2>ACCOUNTS &amp; KEYS</h2>
@@ -81,7 +84,7 @@ class AccountsScreen extends Component {
                   type="text"
                   data-type="number"
                   value={this.cleanNumber(
-                    this.props.config.settings.workspace.server.wallet.defaultBalance || this.props.core.options.wallet.defaultBalance
+                    this.props.config.settings.workspace.server.wallet.defaultBalance || (hasProviderOptions ? this.props.core.options.wallet.defaultBalance : defaults.wallet.defaultBalance)
                   )}
                   onChange={this.validateChange}
                 />
@@ -108,7 +111,7 @@ class AccountsScreen extends Component {
                   type="text"
                   data-type="number"
                   value={this.cleanNumber(
-                    this.props.config.settings.workspace.server.wallet.totalAccounts || this.props.core.options.wallet.totalAccounts
+                    this.props.config.settings.workspace.server.wallet.totalAccounts || (hasProviderOptions ? this.props.core.options.wallet.totalAccounts : defaults.wallet.totalAccounts)
                   )}
                   onChange={this.validateChange}
                 />
@@ -160,7 +163,7 @@ class AccountsScreen extends Component {
                     placeholder="Enter Seed to use"
                     name="workspace.server.wallet.seed"
                     value={
-                      this.props.config.settings.workspace.server.wallet.seed || this.props.core.options.wallet.seed
+                      this.props.config.settings.workspace.server.wallet.seed || (hasProviderOptions ? this.props.core.options.wallet.seed : defaults.wallet.seed)
                     }
                     onChange={this.validateChange}
                   />

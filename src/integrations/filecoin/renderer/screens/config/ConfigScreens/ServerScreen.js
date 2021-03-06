@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import StyledSelect from "../../../../../../renderer/components/styled-select/StyledSelect";
 import connect from "../../../../../../renderer/screens/helpers/connect";
+import { FilecoinOptionsConfig } from "@ganache/filecoin-options";
 
 const VALIDATIONS = {
   "workspace.server.hostname": {
@@ -40,6 +41,8 @@ class ServerScreen extends Component {
   };
 
   render() {
+    const hasProviderOptions = Object.keys(this.props.core.options).length > 1;
+    const defaults = FilecoinOptionsConfig.normalize({});
     return (
       <div>
         {this.props.config.validationErrors["workspace.server.chain"] && (
@@ -144,7 +147,7 @@ class ServerScreen extends Component {
               <StyledSelect
                 name="workspace.server.chain.ipfsHost"
                 defaultValue={
-                  this.props.core.options.chain.ipfsHost
+                  this.props.config.settings.workspace.server.chain.ipfsHost || (hasProviderOptions ? this.props.core.options.chain.ipfsHost : defaults.chain.ipfsHost)
                 }
                 changeFunction={this.validateChange}
               >
@@ -199,7 +202,7 @@ class ServerScreen extends Component {
                 type="text"
                 data-type="number"
                 value={this.cleanNumber(
-                  this.props.config.settings.workspace.server.chain.ipfsPort || this.props.core.options.chain.ipfsPort,
+                  this.props.config.settings.workspace.server.chain.ipfsPort || (hasProviderOptions ? this.props.core.options.chain.ipfsPort : defaults.chain.ipfsPort)
                 )}
                 onChange={e => {
                   // this.props.appCheckPort(e.target.value)
