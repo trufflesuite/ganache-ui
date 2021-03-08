@@ -74,6 +74,8 @@ if (isDevMode) {
   app.getVersion = () => version;
 }
 
+// This allows us to debug the renderer process in VS Code
+// The `remote-debugging-port` is a chromium option
 if (isDevelopment) {
   app.commandLine.appendSwitch("remote-debugging-port", "9222");
 }
@@ -333,6 +335,9 @@ app.on('ready', async () => {
     mainWindow.focus();
     mainWindow.setTitle("Ganache");
 
+    // This allows us to debug the renderer process in VS Code
+    // These are commands we send to the renderer process once it's
+    // up to enable the chromium debugger to attach to VS Code
     if (isDevelopment) {
       await mainWindow.webContents.debugger.attach("1.1");
       await mainWindow.webContents.debugger.sendCommand("Debugger.enable");
