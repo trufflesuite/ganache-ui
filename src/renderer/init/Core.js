@@ -130,20 +130,12 @@ export function initCore(store) {
     },
   );
 
+  /**
+   * Common IPC Handlers
+   */
+
   ipcRenderer.on(SET_PROGRESS, (event, message, minDuration) => {
     store.dispatch(setProgress(message, minDuration));
-  });
-
-  // Block polling happens in the chain process, and is passed through
-  // the main process to the render process when there's a new block.
-  ipcRenderer.on(SET_BLOCK_NUMBER, (event, number) => {
-    store.dispatch(setBlockNumber(number));
-  });
-
-  // Block polling happens in the chain process, and is passed through
-  // the main process to the render process when there's a new block.
-  ipcRenderer.on(SET_TIPSET_NUMBER, (event, number) => {
-    store.dispatch(setBlockNumber(number));
   });
 
   ipcRenderer.on(SET_SYSTEM_ERROR, (event, error) => {
@@ -154,9 +146,35 @@ export function initCore(store) {
     handleError(store, error);
   });
 
+  ipcRenderer.on(SHOW_HOME_SCREEN, () => {
+    store.dispatch(showHomeScreen());
+  });
+
+
+  /**
+   * Ethereum IPC Handlers
+   */
+
+  // Block polling happens in the chain process, and is passed through
+  // the main process to the render process when there's a new block.
+  ipcRenderer.on(SET_BLOCK_NUMBER, (event, number) => {
+    store.dispatch(setBlockNumber(number));
+  });
+
   // The server will send a second message that sets the mnemonic and hdpath
   ipcRenderer.on(SET_KEY_DATA, (event, data) => {
     store.dispatch(setKeyData(data.mnemonic, data.hdPath, data.privateKeys));
+  });
+
+
+  /**
+   * Filecoin IPC Handlers
+   */
+
+  // Block polling happens in the chain process, and is passed through
+  // the main process to the render process when there's a new block.
+  ipcRenderer.on(SET_TIPSET_NUMBER, (event, number) => {
+    store.dispatch(setBlockNumber(number));
   });
 
   // The server will send a second message that sets the mnemonic and hdpath
@@ -178,9 +196,5 @@ export function initCore(store) {
 
   ipcRenderer.on(SET_STORAGE_DEAL_STATUS_ENUM, (event, data) => {
     store.dispatch(setStorageDealStatusEnum(data.StorageDealStatus));
-  });
-
-  ipcRenderer.on(SHOW_HOME_SCREEN, () => {
-    store.dispatch(showHomeScreen());
   });
 }
