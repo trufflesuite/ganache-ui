@@ -28,19 +28,23 @@ class DealList extends Component {
       return;
     }
 
-    // No change in scroll position? If a new block has been added,
-    // request the previous page
-    if (prevProps.deals.inView.length == 0) {
-      return;
-    }
-
-    const latestDealInView = prevProps.deals.inView[0].DealID;
-    if (
-      prevProps.appshell.scrollPosition == "top" &&
-      prevProps.core.latestDeal > latestDealInView &&
-      !latestRequested
-    ) {
-      this.props.dispatch(Deals.requestPreviousPage());
+    // No change in scroll position? If a new deal has been added,
+    // request the previous page. Be sure not to try to rerequest
+    // if we already requested pages
+    if (!latestRequested) {
+      if (prevProps.deals.inView.length == 0) {
+        if (this.props.core.latestDeal > 0) {
+          this.props.dispatch(Deals.requestPreviousPage());
+        }
+      } else {
+        const latestDealInView = prevProps.deals.inView[0].DealID;
+        if (
+          prevProps.appshell.scrollPosition === "top" &&
+          this.props.core.latestDeal > latestDealInView
+        ) {
+          this.props.dispatch(Deals.requestPreviousPage());
+        }
+      }
     }
   }
 
