@@ -35,6 +35,14 @@
     width: 100%;
   }
 
+  .Name {
+    min-width: 15rem;
+  }
+
+  .Size {
+    min-width: 7rem;
+  }
+
   .Name,
   .Size {
     .Label {
