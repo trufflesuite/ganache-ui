@@ -12,6 +12,8 @@ export function handleError(store, error) {
   let activeConfigTab = "";
   let category = "generic";
   let detail = "";
+  const portMatch = /:([0-9]+)/.exec(error.message);
+  const portStr = portMatch ? portMatch[1] + " " : "";
 
   if (typeof error === "object" && "code" in error) {
     switch (error.code) {
@@ -27,7 +29,7 @@ export function handleError(store, error) {
         store.dispatch(
           setSettingError(
             "workspace.server.port",
-            "The port is used by another application; please change it",
+            `The port ${portStr}is used by another application; please change it`,
           ),
         );
         activeConfigTab = "server";
