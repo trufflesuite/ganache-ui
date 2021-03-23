@@ -8,7 +8,7 @@ export default class StatusIndicator extends Component {
       <div className="StatusIndicator">
         <div className="Metric">
           <h4>{this.props.title}</h4>
-          <span title={this.props.tooltip}>{this.props.value}</span>
+          <span className={this.props.upper === false ? "" : "upper"} title={this.props.tooltip}>{this.props.value}</span>
         </div>
         <OnlyIf test={this.props.children}>
           <div className="Indicator">{this.props.children}</div>

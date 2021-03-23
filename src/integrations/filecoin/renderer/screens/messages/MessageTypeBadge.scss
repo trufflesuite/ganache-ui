@@ -1,0 +1,13 @@
+.MessageTypeBadge {
+  font-size: .75rem;
+  padding: 8px;
+  height: 28px;
+  border-radius: 25px;
+  font-weight: bold;
+  min-width: 7.5rem;
+
+  &.ValueTransferBadge {
+    background-color: var(--truffle-green);
+    color: white;
+  }
+}
