@@ -3,7 +3,7 @@ import { remote } from "electron";
 import ModalDetails from "../../../../../../renderer/components/modal/ModalDetails";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { readFileSync, existsSync } from "fs-extra";
-import { join } from "path";
+import path from "path";
 import { setToast } from "../../../../../../common/redux/network/actions";
 
 class WorkspaceScreen extends Component {
@@ -25,8 +25,8 @@ class WorkspaceScreen extends Component {
     });
 
     if (pathArray?.filePaths?.length > 0) {
-      const notFound = pathArray.filePaths.filter((path) => {
-        const buildGradle = join(path, "build.gradle");
+      const notFound = pathArray.filePaths.filter((filePath) => {
+        const buildGradle = path.join(filePath, "build.gradle");
         return !(existsSync(buildGradle) && readFileSync(buildGradle).toString().includes("corda"));
         // SEND TOAST
       });
@@ -138,7 +138,7 @@ class WorkspaceScreen extends Component {
                         </div>
                       )}
                       </>
-                    } 
+                    }
                   </div>
                   <br />
                 </div>

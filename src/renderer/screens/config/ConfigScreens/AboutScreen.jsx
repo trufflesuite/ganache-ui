@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import * as pkg from "../../../../../package.json";
-import Logo from "../../../components/logo/Logo.js";
+import Logo from "../../../components/logo/Logo";
 
 class AccountsScreen extends Component {
   render() {

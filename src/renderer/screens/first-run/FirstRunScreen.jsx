@@ -4,7 +4,7 @@ import { push } from "connected-react-router";
 import connect from "../helpers/connect";
 
 import * as Config from "../../../common/redux/config/actions";
-import Logo from "../../components/logo/Logo.js";
+import Logo from "../../components/logo/Logo";
 
 class FirstRunScreen extends Component {
   constructor(props) {

@@ -4,7 +4,7 @@ import corda from "./corda";
 import filecoin from "./filecoin";
 import EventEmitter from "events";
 import WorkspaceManager from "../main/types/workspaces/WorkspaceManager";
-import extras from "../common/extras";
+import { init } from "../common/extras";
 
 import {
   SAVE_WORKSPACE
@@ -15,7 +15,7 @@ class IntegrationManager extends EventEmitter {
     super();
 
     this.userDataPath = userDataPath;
-    this.config = extras.init(path.join(userDataPath, "extras"));
+    this.config = init(path.join(userDataPath, "extras"));
     this.isDevMode = isDevMode;
     this.ipc = ipc;
     this.integrations = {

@@ -17,7 +17,7 @@ import {
   screen,
   clipboard,
 } from "electron"
-import { initAutoUpdates, getAutoUpdateService } from "./init/AutoUpdate.js";
+import { initAutoUpdates, getAutoUpdateService } from "./init/AutoUpdate";
 import {
   REQUEST_SERVER_RESTART,
   SET_SERVER_STARTED,
@@ -43,9 +43,9 @@ import { SET_INTERFACES } from "../common/redux/network/actions";
 import { ADD_LOG_LINES } from "../common/redux/logs/actions";
 import GlobalSettings from "./types/settings/GlobalSettings";
 import GoogleAnalyticsService from "../common/services/GoogleAnalyticsService";
-import IntegrationManager from "../integrations/index.js";
+import IntegrationManager from "../integrations/index";
 import pojofyError from "../common/utils/pojofyError";
-import migration from "./init/migration.js";
+import migration from "./init/migration";
 
 const isDevMode = process.execPath.match(/[\\/]electron/) !== null;
 const isDevelopment = process.env.NODE_ENV !== 'production';

@@ -1,9 +1,3 @@
-const {CordaBootstrap} = require("./bootstrap");
-const NetworkManager = require("./manager");
-const port = require("./port");
-
-module.exports = {
-  NetworkManager,
-  CordaBootstrap,
-  port
-}
+export const port = require("./port");
+export const CordaBootstrap = require("./bootstrap").CordaBootstrap;
+export const NetworkManager = require("./manager");

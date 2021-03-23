@@ -2,7 +2,7 @@
 
 import EventEmitter from "events";
 import { fork } from "child_process";
-import { join } from "path";
+import path from "path";
 import { app } from "electron";
 
 // https://github.com/electron/electron/blob/cd0aa4a956cb7a13cbe0e12029e6156c3e892924/docs/api/process.md#process-object
@@ -19,7 +19,7 @@ class TruffleIntegrationService extends EventEmitter {
     if (this.child) {
       this.emit("start");
     } else {
-      let chainPath = join(
+      let chainPath = path.join(
         __static,
         "node",
         "truffle-integration",
@@ -69,7 +69,7 @@ class TruffleIntegrationService extends EventEmitter {
   async stopWatching() {
     if (this.stopWatcherPromise) return this.stopWatcherPromise;
     return this.stopWatcherPromise = new Promise(resolve => {
-      
+
       if (this.child !== null && this.child.connected) {
         this.once("watcher-stopped", ()=>{
           this.stopWatcherPromise = null;
@@ -117,7 +117,7 @@ class TruffleIntegrationService extends EventEmitter {
         this.once("project-details-response", details => {
           resolve(details);
         });
-        
+
         this.child.send({
           type: "project-details-request",
           data: {

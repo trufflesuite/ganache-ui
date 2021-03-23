@@ -3,7 +3,7 @@ import { shell } from "electron";
 const { app } = require("electron").remote;
 
 import connect from "../helpers/connect";
-import { sanitizeError, sanitizePaths } from "../helpers/sanitize.js";
+import { sanitizeError, sanitizePaths } from "../helpers/sanitize";
 
 import * as Workspaces from "../../../common/redux/workspaces/actions";
 
@@ -73,7 +73,7 @@ class BugModal extends Component {
     let unsanitizedSystemError =
       this.props.systemError.stack || this.props.systemError;
     let sanitizedSystemError = "";
-    
+
     if (unsanitizedSystemError) {
       sanitizedSystemError = sanitizeError(unsanitizedSystemError);
     }

@@ -4,7 +4,7 @@ import * as pkg from "../../../../package.json";
 
 import connect from "../helpers/connect";
 
-import Logo from "../../components/logo/Logo.js";
+import Logo from "../../components/logo/Logo";
 import OnlyIf from "../../components/only-if/OnlyIf";
 import BugModal from "../appshell/BugModal";
 

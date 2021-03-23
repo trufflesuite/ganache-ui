@@ -24,15 +24,16 @@
     "truffle"
   ],
   "homepage": "https://github.com/trufflesuite/ganache#readme",
+  "main": "src/main/index.js",
   "scripts": {
     "dev": "electron-webpack dev",
     "start": "npm run dev",
-    "compile": "electron-webpack",
+    "compile": "electron-builder build --config electron-builder.config.js",
     "lint": "eslint .",
     "sign-mac": "codesign --deep --force --verbose --sign 'Developer ID Application: Timothy Coulter (58RKXWC272)' ./dist/*.dmg",
-    "build-linux": "npm run compile && electron-builder --linux",
-    "build-mac": "npm run compile && electron-builder --mac",
-    "build-windows": "npm run compile && electron-builder --win",
+    "build-linux": "electron-builder --config electron-builder.config.js --linux",
+    "build-mac": "electron-builder --config electron-builder.config.js --mac",
+    "build-windows": "electron-builder --config electron-builder.config.js --win",
     "test": "npm run test-mocha && npm run test-jest",
     "test-jest": "jest __tests__/.*.test.js",
     "test-mocha": "cross-env GANACHE_DEV_MODE=true ELECTRON_APP_PATH=./ mocha --require @babel/register --check-leaks 'test/mocha/**/*.test.js'",
@@ -109,16 +110,16 @@
     "@filecoin-shipyard/lotus-client-rpc": "github:seesemichaelj/js-lotus-client-rpc#feat/support-other-namespaces",
     "@ganache/filecoin": "0.1.3",
     "@ganache/filecoin-options": "0.1.2",
+    "@vitejs/plugin-react-refresh": "^1.3.1",
     "babel-eslint": "10.0.3",
     "cache-loader": "4.1.0",
     "chokidar": "3.3.1",
     "cross-env": "^6.0.0",
-    "electron": "8.5.5",
-    "electron-builder": "22.4.1",
+    "electron": "12.0.1",
+    "electron-builder": "22.10.5",
     "electron-fetch": "1.7.3",
-    "electron-notarize": "0.3.0",
-    "electron-updater": "4.2.0",
-    "electron-webpack": "^2.7.4",
+    "electron-notarize": "1.0.0",
+    "electron-updater": "4.3.8",
     "eslint": "^6.3.0",
     "eslint-config-prettier": "^6.3.0",
     "eslint-plugin-jest": "^22.17.0",
@@ -136,17 +137,11 @@
     "node-sass": "^4.13.1",
     "prettier": "^1.18.2",
     "react-svg-loader": "^3.0.3",
+    "sass": "^1.32.8",
     "sass-loader": "^8.0.0",
     "temp": "0.9.1",
-    "webpack": "4.41.4"
-  },
-  "electronWebpack": {
-    "main": {
-      "webpackConfig": "webpack/webpack.main.js"
-    },
-    "renderer": {
-      "webpackConfig": "webpack/webpack.renderer.js"
-    }
+    "vite": "^2.1.2",
+    "vite-plugin-react-svg": "^0.2.0"
   },
   "babel": {
     "plugins": [
@@ -175,91 +170,7 @@
       "pre-commit": "lint-staged"
     }
   },
-  "build": {
-    "npmRebuild": false,
-    "appId": "org.trufflesuite.ganache",
-    "afterSign": "./scripts/build/afterSignHook.js",
-    "afterPack": "./scripts/build/afterPack.js",
-    "files": [
-      "src/**/*",
-      "node_modules/**/*",
-      "package.json"
-    ],
-    "win": {
-      "certificateSha1": "14E886EF4F6AA9CFC5752D8FA34FB142DA4DEF44",
-      "icon": "static/icons/win/icon.ico",
-      "verifyUpdateCodeSignature": false,
-      "target": [
-        {
-          "target": "nsis",
-          "arch": [
-            "x64"
-          ]
-        },
-        {
-          "target": "appx",
-          "arch": [
-            "x64"
-          ]
-        }
-      ]
-    },
-    "appx": {
-      "identityName": "GanacheUI",
-      "publisher": "CN=\"Truffle Blockchain Group, Inc\", O=\"Truffle Blockchain Group, Inc\", L=Yakima, S=Washington, C=US",
-      "publisherDisplayName": "Truffle",
-      "backgroundColor": "#34262A",
-      "artifactName": "Ganache-${version}-${os}-${arch}.${ext}"
-    },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "deleteAppDataOnUninstall": true,
-      "artifactName": "Ganache-${version}-${os}-${arch}-setup.${ext}"
-    },
-    "mac": {
-      "icon": "static/icons/mac/icon.icns",
-      "hardenedRuntime": true,
-      "entitlements": "./build/dmg/entitlements.mac.inherit.plist",
-      "category": "public.app-category.developer-tools"
-    },
-    "dmg": {
-      "background": "build/dmg/background.tiff",
-      "contents": [
-        {
-          "x": 219,
-          "y": 358,
-          "type": "dir",
-          "name": "Ganache.app"
-        },
-        {
-          "x": 439,
-          "y": 358,
-          "type": "link",
-          "name": "Applications",
-          "path": "/Applications"
-        }
-      ],
-      "format": "ULFO",
-      "sign": true,
-      "artifactName": "Ganache-${version}-${os}.${ext}"
-    },
-    "linux": {
-      "target": [
-        {
-          "target": "AppImage",
-          "arch": [
-            "x64"
-          ]
-        }
-      ],
-      "icon": "static/icons/png/",
-      "category": "Development",
-      "executableName": "Ganache",
-      "artifactName": "ganache-${version}-${os}-${arch}.${ext}"
-    }
-  },
   "engines": {
-    "node": "12.13.1"
+    "node": "^12.13.0"
   }
 }

@@ -1,4 +1,4 @@
-module.exports = function pojofyError(_error) {
+export default function pojofyError(_error) {
   let error;
   if (_error instanceof Error) {
     // JSON.stringify can't serialize error objects

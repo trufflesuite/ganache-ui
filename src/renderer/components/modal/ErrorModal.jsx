@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 
 import Modal from "./Modal";
-import ModalDetails from "./ModalDetails.js";
+import ModalDetails from "./ModalDetails";
 import connect from "../../screens/helpers/connect";
 
 // TODO: make an actual warning and error icons

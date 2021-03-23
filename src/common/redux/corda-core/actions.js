@@ -1,6 +1,6 @@
 const prefix = "CORDA_CORE";
 import { setToast } from "../../../common/redux/network/actions";
-import { requestServerRestart } from "../../../common/redux/core/actions.js";
+import { requestServerRestart } from "../../../common/redux/core/actions";
 
 export const REFRESH_CORDAPP = `${prefix}/REFRESH_CORDAPP`;
 export const sendRefreshCordapp = function() {

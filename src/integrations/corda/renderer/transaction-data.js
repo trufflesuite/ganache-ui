@@ -1,6 +1,6 @@
 import {remote} from "electron";
 const dialog = remote.dialog;
-import { resolve } from "path";
+import path from "path";
 import { ipcRenderer } from "electron";
 import bs58 from "bs58";
 import { Pool } from "pg";
@@ -84,7 +84,7 @@ export default class TransactionData {
   static getConnectedClient = getConnectedClient
   static convertTxHashToId = convertTxHashToId
   static convertTransactionIdToHash = convertTransactionIdToHash
-  
+
   constructor(txhash) {
     this.txhash = txhash;
     this.states = new Map();
@@ -94,7 +94,7 @@ export default class TransactionData {
   }
 
   static async downloadAttachment(name, attachment_id, database) {
-    const toLocalPath = resolve(remote.app.getPath("downloads"), name);
+    const toLocalPath = path.resolve(remote.app.getPath("downloads"), name);
 
     const userChosenPath = await dialog.showSaveDialog(remote.getCurrentWindow(), { defaultPath: toLocalPath });
 
@@ -182,7 +182,7 @@ export default class TransactionData {
       // first, get all indexes from each node for each transaction...
       const indexes = await queryForTxHashIndexes(txhash, node, port, canceller);
       if (canceller.cancelled) return;
-      
+
       // if we don't have any we just skip this node
       if (indexes.length === 0) return;
 
@@ -229,7 +229,7 @@ export default class TransactionData {
 
       const json = await res.json();
       if (canceller.cancelled) return;
-      
+
       Array.isArray(json.states) && json.states.forEach((state, i) => {
         const index = state.ref.index;
         const metaData = json.statesMetadata[i];
