@@ -1,4 +1,4 @@
-const Downloader = require("../utils/downloader");
+import Downloader from "../utils/downloader";
 
 function getOsInfo() {
   let platform;

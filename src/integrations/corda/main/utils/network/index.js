@@ -1,3 +1,9 @@
-export const port = require("./port");
-export const CordaBootstrap = require("./bootstrap").CordaBootstrap;
-export const NetworkManager = require("./manager");
+const port = require("./port");
+const CordaBootstrap = require("./bootstrap").CordaBootstrap;
+const NetworkManager = require("./manager");
+
+export default {
+  port,
+  CordaBootstrap,
+  NetworkManager
+};

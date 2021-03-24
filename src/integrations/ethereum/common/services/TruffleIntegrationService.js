@@ -1,5 +1,3 @@
-/* global __static:readonly */
-
 import EventEmitter from "events";
 import { fork } from "child_process";
 import path from "path";
@@ -20,7 +18,7 @@ class TruffleIntegrationService extends EventEmitter {
       this.emit("start");
     } else {
       let chainPath = path.join(
-        __static,
+        "@static",
         "node",
         "truffle-integration",
         "index.js",

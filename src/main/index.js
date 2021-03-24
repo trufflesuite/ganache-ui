@@ -1,5 +1,3 @@
-/* global __static:readonly */
-
 const { spawn } = require("promisify-child-process");
 import path from "path";
 import * as os from "os";
@@ -681,6 +679,6 @@ function ensureExternalLinksAreOpenedInBrowser(event, url) {
 
 function getIconPath() {
   return process.platform === "win32"
-    ? path.resolve(__static, "icons/win/icon.ico") // Windows, use an icon
-    : path.resolve(__static, "icons/png/256x256.png"); // Mac & Linux, use an image
+    ? path.resolve("@static", "icons/win/icon.ico") // Windows, use an icon
+    : path.resolve("@static", "icons/png/256x256.png"); // Mac & Linux, use an image
 }

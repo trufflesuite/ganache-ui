@@ -1,11 +1,11 @@
 import Settings from "./Settings";
 import merge from "lodash.merge";
 
-const oldDefaultMnemonic = "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat";
+import ethereumInitialSettings from "./flavors/ethereum";
+import cordaInitialSettings from "./flavors/corda";
+import filecoinInitialSettings from "./flavors/filecoin";
 
-const ethereumInitialSettings = require("./flavors/ethereum");
-const cordaInitialSettings = require("./flavors/corda");
-const filecoinInitialSettings = require("./flavors/filecoin");
+const oldDefaultMnemonic = "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat";
 
 class WorkspaceSettings extends Settings {
   constructor(directory, chaindataDirectory, flavor = "ethereum") {

@@ -24,10 +24,13 @@
     "truffle"
   ],
   "homepage": "https://github.com/trufflesuite/ganache#readme",
-  "main": "src/main/index.js",
+  "main": "src/main/dist/index.cjs",
   "scripts": {
     "dev": "electron-webpack dev",
     "start": "npm run dev",
+    "build.vite": "yarn build.vite.main && yarn build.vite.renderer",
+    "build.vite.main": "vite build --config vite/vite.main.config.js",
+    "build.vite.renderer": "vite build --config vite/vite.renderer.config.js",
     "compile": "electron-builder build --config electron-builder.config.js",
     "lint": "eslint .",
     "sign-mac": "codesign --deep --force --verbose --sign 'Developer ID Application: Timothy Coulter (58RKXWC272)' ./dist/*.dmg",
@@ -49,6 +52,7 @@
     "btoa": "1.2.1",
     "connected-react-router": "6.6.1",
     "electron-log": "^3.0.7",
+    "electron-updater": "4.3.8",
     "ethagen": "0.1.2",
     "ethereumjs-units": "^0.2.0",
     "filesize": "^3.6.1",
@@ -119,7 +123,6 @@
     "electron-builder": "22.10.5",
     "electron-fetch": "1.7.3",
     "electron-notarize": "1.0.0",
-    "electron-updater": "4.3.8",
     "eslint": "^6.3.0",
     "eslint-config-prettier": "^6.3.0",
     "eslint-plugin-jest": "^22.17.0",
@@ -139,6 +142,7 @@
     "react-svg-loader": "^3.0.3",
     "sass": "^1.32.8",
     "sass-loader": "^8.0.0",
+    "spawn-sync": "^2.0.0",
     "temp": "0.9.1",
     "vite": "^2.1.2",
     "vite-plugin-react-svg": "^0.2.0"

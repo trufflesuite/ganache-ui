@@ -10,7 +10,6 @@ const PACKAGE_ROOT = path.resolve(__dirname, "..", "src", "renderer");
  */
 export default defineConfig({
   root: PACKAGE_ROOT,
-  mode: "development",
   resolve: {
     alias: {
       "@static": path.resolve(__dirname, '../static')
@@ -33,10 +32,13 @@ export default defineConfig({
     outDir: "dist",
     minify: process.env.MODE === "development" ? false : undefined, // undefined must set default value
     rollupOptions: {
-      // this is necessary because of the hackery in
-      // @ganache/filecoin-options/index.ts that tries to load `./src`
-      // for dev and fallsback to the minified built version
-      external: ["./src"]
+      external: [
+        "electron",
+        // this is necessary because of the hackery in
+        // @ganache/filecoin-options/index.ts that tries to load `./src`
+        // for dev and fallsback to the minified built version
+        "./src"
+      ]
     },
     emptyOutDir: true,
   },

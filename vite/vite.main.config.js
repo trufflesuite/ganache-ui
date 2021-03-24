@@ -2,7 +2,7 @@ import externalPackages from "./external-packages.config";
 import { defineConfig } from "vite"
 import path from "path";
 
-const PACKAGE_ROOT = path.resolve(__dirname, "..");
+const PACKAGE_ROOT = path.resolve(__dirname, "..", "src", "main");
 
 /**
  * @see https://vitejs.dev/config/
@@ -11,7 +11,8 @@ export default defineConfig({
   root: PACKAGE_ROOT,
   resolve: {
     alias: {
-      "scrypt": "js-scrypt"
+      "scrypt": "js-scrypt",
+      "@static": path.resolve(__dirname, "..", "static")
     },
   },
   build: {
@@ -21,7 +22,7 @@ export default defineConfig({
     assetsDir: ".",
     minify: process.env.MODE === "development" ? false : undefined, // undefined must set default value
     lib: {
-      entry: "src/main/index.js",
+      entry: "index.js",
       formats: ["cjs"],
     },
     rollupOptions: {
@@ -30,6 +31,16 @@ export default defineConfig({
         entryFileNames: "[name].cjs",
       },
     },
+    commonjsOptions: {
+      dynamicRequireTargets: [
+        "node_modules/sshpk/**/*.js"
+      ],
+      ignore: [
+        "pg-native" ,
+        "./native",
+        "fsevents"
+      ]
+    },
     emptyOutDir: true,
   },
-})
+});

@@ -7,7 +7,8 @@
  they will not be optimized, will not be included in your bundle, and will be delivered as a separate node module.
 */
 export const external = [
-  "@ganache/filecoin",
+  "electron",
+  "pg-native"
 ];
 
 export const builtins = [
