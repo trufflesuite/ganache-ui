@@ -6,7 +6,7 @@ const afterPack = async (context) => {
         return;
     }
     if (context.targets.length !== 1) {
-        throw new Error("Linux can only target 1 build at a time.");
+        throw new Error(`Linux can only target 1 build at a time; received ${context.targets.length} target requests.`);
     }
     const target = context.targets[0];
     if (target.name !== "appImage") {
