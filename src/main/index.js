@@ -219,7 +219,8 @@ app.on('ready', async () => {
     icon: getIconPath(),
     webPreferences: {
       nodeIntegration: true,
-      enableRemoteModule:true
+      contextIsolation: false,
+      enableRemoteModule: true
     }
   });
 
