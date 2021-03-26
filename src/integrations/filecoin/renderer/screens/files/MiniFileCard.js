@@ -9,8 +9,12 @@ import ProgressBar from "../../../../../renderer/components/progress-bar/Progres
 const dialog = remote.dialog;
 
 export class MiniFileCard extends PureComponent {
-  async saveFile(cid) {
-    const userChosenPath = await dialog.showSaveDialog(remote.getCurrentWindow());
+  async saveFile(cid, name) {
+    const options = {};
+    if (name) {
+      options.defaultPath = name;
+    }
+    const userChosenPath = await dialog.showSaveDialog(remote.getCurrentWindow(), options);
 
     if (userChosenPath && !userChosenPath.canceled) {
       const destination = userChosenPath.filePath;
@@ -47,7 +51,7 @@ export class MiniFileCard extends PureComponent {
           <div className="RowItem">
             <div className="Download">
               <OnlyIf test={!downloadInProgress}>
-                <button onClick={() => this.saveFile(file.cid) }>
+                <button onClick={() => this.saveFile(file.cid, file.name) }>
                   <span>DOWNLOAD</span>
                   <DownloadIcon />
                 </button>
