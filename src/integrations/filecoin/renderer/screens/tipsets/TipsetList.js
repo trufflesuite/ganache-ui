@@ -16,10 +16,10 @@ class TipsetList extends Component {
     if (
       prevProps.appshell.scrollPosition != this.props.appshell.scrollPosition
     ) {
-      if (prevProps.appshell.scrollPosition == "top" && !latestRequested) {
+      if (this.props.appshell.scrollPosition === "top" && !latestRequested) {
         this.props.dispatch(Tipsets.requestPreviousPage());
       } else if (
-        prevProps.appshell.scrollPosition == "bottom" &&
+        this.props.appshell.scrollPosition === "bottom" &&
         !earliestRequested
       ) {
         this.props.dispatch(Tipsets.requestNextPage());
@@ -27,19 +27,23 @@ class TipsetList extends Component {
       return;
     }
 
-    // No change in scroll position? If a new block has been added,
-    // request the previous page
-    if (prevProps.tipsets.inView.length == 0) {
-      return;
-    }
-
-    const latestTipsetInView = prevProps.tipsets.inView[0].Height;
-    if (
-      prevProps.appshell.scrollPosition == "top" &&
-      prevProps.core.latestTipset > latestTipsetInView &&
-      !latestRequested
-    ) {
-      this.props.dispatch(Tipsets.requestPreviousPage());
+    // No change in scroll position? If a new tipset has been added,
+    // request the previous page. Be sure not to try to rerequest
+    // if we already requested pages
+    if (!latestRequested) {
+      if (prevProps.tipsets.inView.length === 0) {
+        if (this.props.core.latestTipset > 0) {
+          this.props.dispatch(Tipsets.requestPreviousPage());
+        }
+      } else {
+        const latestTipsetInView = prevProps.tipsets.inView[0].Height;
+        if (
+          prevProps.appshell.scrollPosition === "top" &&
+          this.props.core.latestTipset > latestTipsetInView
+        ) {
+          this.props.dispatch(Tipsets.requestPreviousPage());
+        }
+      }
     }
   }
 

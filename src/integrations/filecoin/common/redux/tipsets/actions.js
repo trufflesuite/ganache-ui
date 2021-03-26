@@ -28,9 +28,9 @@ export const requestPage = function(startTipsetHeight, endTipsetHeight) {
 // The "next" page is the next set of blocks, from the last requested down to 0
 export const requestNextPage = function() {
   return function(dispatch, getState) {
-    var blocksInView = getState().filecoin.tipsets.inView;
-    var earliestBlockInView = blocksInView[blocksInView.length - 1].number;
-    dispatch(requestPage(earliestBlockInView - 1));
+    const tipsetsInView = getState().filecoin.tipsets.inView;
+    const earliestTipsetInView = tipsetsInView[tipsetsInView.length - 1].Height;
+    dispatch(requestPage(earliestTipsetInView - 1));
   };
 };
 

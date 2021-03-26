@@ -43,6 +43,10 @@ class ServerScreen extends Component {
   render() {
     const hasProviderOptions = Object.keys(this.props.core.options).length > 1;
     const defaults = FilecoinOptionsConfig.normalize({});
+
+    const ipfsPort = this.props.config.settings.workspace.server.chain.ipfsPort || (hasProviderOptions ? this.props.core.options.chain.ipfsPort : defaults.chain.ipfsPort);
+    const showLotusPortError = this.props.config.validationErrors["workspace.server.port"] && this.props.config.validationErrors["workspace.server.port"].includes(`${this.props.config.settings.workspace.server.port}`);
+    const showIpfsPortError = this.props.config.validationErrors["workspace.server.port"] && this.props.config.validationErrors["workspace.server.port"].includes(`${ipfsPort}`);
     return (
       <div>
         {this.props.config.validationErrors["workspace.server.chain"] && (
@@ -128,7 +132,7 @@ class ServerScreen extends Component {
                   Must be &gt; 1000 and &lt; 65535.
                 </p>
               )}
-              {this.props.config.validationErrors["workspace.server.port"] && (
+              {showLotusPortError && (
                 <p className="ValidationError">
                   {this.props.config.validationErrors["workspace.server.port"]}
                 </p>
@@ -201,9 +205,7 @@ class ServerScreen extends Component {
                 name="workspace.server.chain.ipfsPort"
                 type="text"
                 data-type="number"
-                value={this.cleanNumber(
-                  this.props.config.settings.workspace.server.chain.ipfsPort || (hasProviderOptions ? this.props.core.options.chain.ipfsPort : defaults.chain.ipfsPort)
-                )}
+                value={this.cleanNumber(ipfsPort)}
                 onChange={e => {
                   // this.props.appCheckPort(e.target.value)
                   this.validateChange(e);
@@ -215,9 +217,11 @@ class ServerScreen extends Component {
                   Must be &gt; 1000 and &lt; 65535.
                 </p>
               )}
-              {this.props.config.validationErrors["workspace.server.chain.ipfsPort"] && (
+              {showIpfsPortError && (
                 <p className="ValidationError">
-                  {this.props.config.validationErrors["workspace.server.chain.ipfsPort"]}
+                  {/* purposely reusing workspace.server.port so that the common
+                      ErrorHandler doesn't need to know about IPFS */}
+                  {this.props.config.validationErrors["workspace.server.port"]}
                 </p>
               )}
             </div>

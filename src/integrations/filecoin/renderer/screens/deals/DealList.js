@@ -15,12 +15,12 @@ class DealList extends Component {
     const latestRequested = prevProps.deals.requested[prevProps.core.latestDeal];
     const earliestRequested = prevProps.deals.requested[0];
     if (
-      prevProps.appshell.scrollPosition != this.props.appshell.scrollPosition
+      prevProps.appshell.scrollPosition !== this.props.appshell.scrollPosition
     ) {
-      if (prevProps.appshell.scrollPosition == "top" && !latestRequested) {
+      if (this.props.appshell.scrollPosition === "top" && !latestRequested) {
         this.props.dispatch(Deals.requestPreviousPage());
       } else if (
-        prevProps.appshell.scrollPosition == "bottom" &&
+        this.props.appshell.scrollPosition === "bottom" &&
         !earliestRequested
       ) {
         this.props.dispatch(Deals.requestNextPage());
@@ -28,19 +28,23 @@ class DealList extends Component {
       return;
     }
 
-    // No change in scroll position? If a new block has been added,
-    // request the previous page
-    if (prevProps.deals.inView.length == 0) {
-      return;
-    }
-
-    const latestDealInView = prevProps.deals.inView[0].DealID;
-    if (
-      prevProps.appshell.scrollPosition == "top" &&
-      prevProps.core.latestDeal > latestDealInView &&
-      !latestRequested
-    ) {
-      this.props.dispatch(Deals.requestPreviousPage());
+    // No change in scroll position? If a new deal has been added,
+    // request the previous page. Be sure not to try to rerequest
+    // if we already requested pages
+    if (!latestRequested) {
+      if (prevProps.deals.inView.length == 0) {
+        if (this.props.core.latestDeal > 0) {
+          this.props.dispatch(Deals.requestPreviousPage());
+        }
+      } else {
+        const latestDealInView = prevProps.deals.inView[0].DealID;
+        if (
+          prevProps.appshell.scrollPosition === "top" &&
+          this.props.core.latestDeal > latestDealInView
+        ) {
+          this.props.dispatch(Deals.requestPreviousPage());
+        }
+      }
     }
   }
 
