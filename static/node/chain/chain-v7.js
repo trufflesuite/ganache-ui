@@ -105,7 +105,12 @@ async function startServer(options) {
 
   server = ganacheLib.server(options);
 
-  await server.provider.blockchain.waitForReady();
+  try {
+    await server.listen(options.port, options.hostname);
+  } catch (err) {
+    process.send({ type: "start-error", data: {code: err.code, stack: err.stack, message: err.message} });
+    return;
+  }
 
   // We'll also log all methods that aren't marked internal by Ganache
   var oldSend = server.provider.send.bind(server.provider);
@@ -122,13 +127,6 @@ async function startServer(options) {
 
     oldSend(payload, callback);
   };
-
-  try {
-    await server.listen(options.port, options.hostname);
-  } catch (err) {
-    process.send({ type: "start-error", data: {code: err.code, stack: err.stack, message: err.message} });
-    return;
-  }
 
   dbLocation = server.provider.blockchain.dbDirectory;
 
