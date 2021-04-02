@@ -114,10 +114,11 @@ class Workspace {
       this.settings.set("runBootstrap", true);
     }
 
-    this.settings.set("randomizeMnemonicOnStart", false);
     if (this.flavor === "filecoin") {
-      this.settings.set("server.wallet.mnemonic", mnemonic);
+      this.settings.set("randomizeSeedOnStart", false);
+      this.settings.set("server.wallet.seed", mnemonic);
     } else {
+      this.settings.set("randomizeMnemonicOnStart", false);
       this.settings.set("server.mnemonic", mnemonic);
     }
   }

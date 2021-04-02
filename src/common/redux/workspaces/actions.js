@@ -69,7 +69,16 @@ export const openWorkspaceConfig = function(workspaceName, flavor) {
 export const SAVE_WORKSPACE = `${prefix}/SAVE_WORKSPACE`;
 export const saveWorkspace = function(name) {
   return function(dispatch, getState) {
-    const mnemonic = getState().core.mnemonic;
+    const state = getState();
+
+    const flavor = state.config.settings.workspace.flavor;
+
+    let mnemonic;
+    if (flavor === "filecoin") {
+      mnemonic = state.filecoin.core.seed;
+    } else {
+      mnemonic = state.core.mnemonic;
+    }
 
     dispatch({ type: SAVE_WORKSPACE, name, mnemonic: mnemonic });
 
