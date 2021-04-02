@@ -33,7 +33,7 @@ before_install:
 
     export CSC_KEYCHAIN=build.keychain;
 
-    node export-keys.js $encrypted_7777a4e0a460_key $encrypted_7777a4e0a460_iv $CSC_KEY_PASSWORD
+    node export-keys.js $encrypted_7777a4e0a460_key $encrypted_7777a4e0a460_iv $CSC_KEYCHAIN
 
     export KEYCHAIN_PASS=$RANDOM.$RANDOM.$RANDOM;
     security create-keychain -p $KEYCHAIN_PASS $CSC_KEYCHAIN;
