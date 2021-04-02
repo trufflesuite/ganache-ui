@@ -69,6 +69,13 @@ class IntegrationManager extends EventEmitter {
       workspace = this.workspaceManager.get(null);
     }
 
+    // Only do the quickstart quick save for Corda.
+    // Ethereum and Filecoin need the server to restart to
+    // make sure the db files get saved to the new location.
+    if (workspace.flavor !== "corda") {
+      await this.flavor.stopServer();
+    }
+
     workspace.saveAs(
       workspaceName,
       chaindataLocation,
@@ -77,7 +84,15 @@ class IntegrationManager extends EventEmitter {
       true
     );
 
+    if (workspace.flavor !== "corda") {
+      this.workspaceManager.bootstrap();
+    }
+
     await this.setWorkspace(workspaceName, workspace.flavor);
+
+    if (workspace.flavor !== "corda") {
+      await this.startServer();
+    }
 
     this.emit("server-started");
   }
