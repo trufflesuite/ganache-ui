@@ -582,9 +582,11 @@ app.on('ready', async () => {
     if (workspace) {
       await integrations.stopServer();
 
-      if (startupMode === STARTUP_MODE.NEW_WORKSPACE) {
+      if (startupMode === STARTUP_MODE.NEW_WORKSPACE || workspace.name === null) {
         // we just made a new workspace. we need to reset the chaindata since we initialized it
         // when started the configuration process
+
+        // or we're in the quickstart workspace which should reset each restart
         workspace.resetChaindata();
       }
 
