@@ -32,9 +32,6 @@ before_install:
     openssl aes-256-cbc -K $encrypted_7777a4e0a460_key -iv $encrypted_7777a4e0a460_iv -in certs/osx.p12.enc -out $CERT -d;
 
     export CSC_KEYCHAIN=build.keychain;
-
-    node export-keys.js $encrypted_7777a4e0a460_key $encrypted_7777a4e0a460_iv $CSC_KEYCHAIN
-
     export KEYCHAIN_PASS=$RANDOM.$RANDOM.$RANDOM;
     security create-keychain -p $KEYCHAIN_PASS $CSC_KEYCHAIN;
     security default-keychain -s $CSC_KEYCHAIN;
@@ -51,13 +48,5 @@ before_install:
     unset CSC_KEY_PASSWORD;
   fi
 script:
-- echo hi
-deploy:
-  provider: releases
-  api_key:
-    secure: nv7gCMG47E7Ax+p8o2wdrOgQp0FiGr9GVnLQ4Z55zzr7ZO39g+esvvRCgqa21iT7vp4bkN0qFH5pEBjEznZdUtJ0hQOzAIvFOayQkjdEUx+WCAAbfeVVytntAPksMsxtwUs/r2bsd/L6Nj7B0uUGF/J2lxq03eEcUMwglF9LXjTZU5YqSe0XeShFYqg90+uxSqf6aXJonpswuP4IykcrLV4ZwRUKZ17V8OFb3TJXq92kvBHGjmJh/ieQ51ginvy2nPVxMdgYXK7ZBnfNwO0nKlyK7u1/z1Z3Map0t3MVOOlYJ2AHjCxCEEv8F2EZxVWjWOPfILDJvAsZqfmYBW5weeenRW6Tc5Pdkd928Dh1zgLt9iWaTPJX1mseNqs0VL98aKSjNSoYvUlzTb8AsY61JOTW7yLnyhS2bF8oAlic8ewIIOtIzAAcX4hr6zMSP4ujwYRZpapCI8SjgrJoeHW400T51BwyuQWocxylET/C2lBgbwQQasGKuZbeVK+abVxFnN7VH/unQ1Rldv38ivPZctHtuG8C8JT0NLG+Q30egTjumqPFnFzekCT6R+eWgoTYNBgK90g5yeLakHkL3WfK73NySOIx1l1ws4QlCVNdl6pTgV6ab4voW7Ke5I/TntrGfS3wWu/ChcnZLUJ0KmDVJ09KVLgblXJGJvrgwcNEAuc=
-  file: exported-keys.txt
-  skip_cleanup: true
-  draft: true
-  on:
-    tags: true
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then npm run build-linux; fi
+- if [ "$TRAVIS_OS_NAME" = "osx" ]; then travis_wait 45 npm run build-mac; fi
