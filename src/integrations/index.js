@@ -73,7 +73,8 @@ class IntegrationManager extends EventEmitter {
       workspaceName,
       chaindataLocation,
       this.workspaceManager.directory,
-      mnemonic
+      mnemonic,
+      true
     );
 
     await this.setWorkspace(workspaceName, workspace.flavor);
