@@ -640,9 +640,6 @@ app.on('ready', async () => {
 
       if (workspace && workspaceSettings) {
         workspace.settings.setAll(workspaceSettings);
-        if (workspace.settings.get("isDefault")) {
-          integrations.stopServer().then(() => workspace.resetChaindata())
-        }
       }
 
       GoogleAnalytics.reportWorkspaceSettings(workspaceSettings);
