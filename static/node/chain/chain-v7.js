@@ -35,7 +35,7 @@ async function stopServer() {
     try {
       await server.close();
     } catch (e) {
-      if (!e.message.includes("Server is already closed or closing")) {
+      if (!e.message.includes("Server is already closing or closed")) {
         throw e;
       }
     }
