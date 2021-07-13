@@ -158,7 +158,7 @@ class ProjectsWatcher extends EventEmitter {
     // TODO: might be an easier way now
     let truffleDirectory = projectPath;
     if (
-      path.basename(truffleDirectory).match(/truffle(-config)?.js/) !== null
+      path.basename(truffleDirectory).match(/truffle(-config)?.[c]?js/) !== null
     ) {
       truffleDirectory = path.dirname(truffleDirectory);
     }

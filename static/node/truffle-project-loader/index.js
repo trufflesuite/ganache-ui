@@ -20,7 +20,7 @@ if (!fs.existsSync(projectFile)) {
     error: "project-does-not-exist",
   });
 } else if (
-  path.basename(projectFile).match(/^truffle(-config)?.js$/) === null
+  path.basename(projectFile).match(/^truffle(-config)?.[c]?js$/) === null
 ) {
   process.send({
     name,

@@ -31,8 +31,9 @@ class ContractsScreen extends Component {
               errorMessage = (
                 <span>
                   <strong>Your Truffle Project config is invalid.</strong> The
-                  file should be named either &quot;truffle.js&quot; or
-                  &quot;truffle-config.js&quot;.{" "}
+                  file should be named either &quot;truffle.js&quot;,
+                  &quot;truffle.cjs&quot;, &quot;truffle-config.js&quot; or
+                  &quot;truffle-config.cjs&quot;.{" "}
                   <Link className="settingsLink" to="/config">
                     Choose a valid configuration file.
                   </Link>
@@ -105,7 +106,4 @@ class ContractsScreen extends Component {
   }
 }
 
-export default connect(
-  ContractsScreen,
-  "workspaces",
-);
+export default connect(ContractsScreen, "workspaces");
