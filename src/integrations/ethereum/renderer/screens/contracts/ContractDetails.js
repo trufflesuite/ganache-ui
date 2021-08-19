@@ -83,7 +83,7 @@ class ContractDetails extends Component {
     );
 
     shell.openExternal(
-      `https://github.com/trufflesuite/ganache/issues/new?title=${title}&body=${body}`,
+      `https://github.com/trufflesuite/ganache-ui/issues/new?title=${title}&body=${body}`,
     );
   }
 

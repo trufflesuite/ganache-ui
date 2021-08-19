@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/trufflesuite/ganache/blob/develop/static/icons/png/128x128.png?raw=true")
+  <img src="https://github.com/trufflesuite/ganache-ui/blob/develop/static/icons/png/128x128.png?raw=true")
 </p>
 
 ## Ganache
@@ -7,12 +7,12 @@
 Ganache is your personal blockchain for Ethereum development. 
 
 <p align="center">
-  <img src="https://github.com/trufflesuite/ganache/blob/develop/.github/images/ganache_screenshot.jpg?raw=true"/>
+  <img src="https://github.com/trufflesuite/ganache-ui/blob/develop/.github/images/ganache_screenshot.jpg?raw=true"/>
 </p>
 
 ### Getting started
 
-You can download a self-contained prebuilt Ganache binary for your platform of choice using the "Download" button on the [Ganache](https://trufflesuite.com/ganache/) website, or from this repository's [releases](https://github.com/trufflesuite/ganache/releases) page.
+You can download a self-contained prebuilt Ganache binary for your platform of choice using the "Download" button on the [Ganache](https://trufflesuite.com/ganache/) website, or from this repository's [releases](https://github.com/trufflesuite/ganache-ui/releases) page.
 
 Ganache is also available as a command-line tool. If you prefer working on the command-line, check out [ganache-cli](https://github.com/trufflesuite/ganache-cli).
 

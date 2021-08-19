@@ -140,7 +140,7 @@ class UpdateModal extends Component {
             className="ctaButton"
             onClick={() => {
               shell.openExternal(
-                `https://github.com/trufflesuite/ganache/releases/v${
+                `https://github.com/trufflesuite/ganache-ui/releases/v${
                   this.props.autoUpdate.versionInfo.newVersion
                 }`,
               );
