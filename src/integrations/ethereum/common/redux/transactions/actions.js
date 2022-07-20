@@ -157,7 +157,6 @@ export const showTransaction = function(hash) {
       }
     }
 
-
     // I was going to use the blocks inView here by just dispatching `requestPage`
     //   from the blocks redux, but that gets cleared and doesnt work well, so I'm
     //   doing it the dirty and brute force way
@@ -193,8 +192,6 @@ export const showTransaction = function(hash) {
         });
       }
     }
-
-
     
     if (contract) {
       for (let j = 0; j < events.length; j++) {
