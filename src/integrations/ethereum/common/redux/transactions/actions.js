@@ -136,8 +136,8 @@ export const showTransaction = function(hash) {
       web3Instance,
     );
     let events = [];
-    let decodedData = null;
-
+    let decodedData;
+  
     let contract;
     let projectIndex;
     const state = getState();
@@ -156,6 +156,7 @@ export const showTransaction = function(hash) {
         break;
       }
     }
+
 
     // I was going to use the blocks inView here by just dispatching `requestPage`
     //   from the blocks redux, but that gets cleared and doesnt work well, so I'm
@@ -193,6 +194,8 @@ export const showTransaction = function(hash) {
       }
     }
 
+
+    
     if (contract) {
       for (let j = 0; j < events.length; j++) {
         events[j].decodedLog = await new Promise(resolve => {
@@ -209,21 +212,23 @@ export const showTransaction = function(hash) {
         });
       }
 
-      decodedData = await new Promise(resolve => {
-        // TODO: there's a better way to do this to not have to send `contract` and `contracts` every time
-        ipcRenderer.once(
-          GET_DECODED_TRANSACTION_INPUT,
-          (event, decodedData) => {
-            resolve(decodedData);
-          },
-        );
-        ipcRenderer.send(
-          GET_DECODED_TRANSACTION_INPUT,
-          contract,
-          state.workspaces.current.projects[projectIndex].contracts,
-          transaction,
-        );
-      });
+      if (transaction.input !== '0x') {
+        decodedData = await new Promise(resolve => {
+            //TODO: there's a better way to do this to not have to send `contract` and `contracts` every time
+            ipcRenderer.once(
+              GET_DECODED_TRANSACTION_INPUT,
+              (event, decodedData) => {
+                resolve(decodedData);
+              },
+            );
+            ipcRenderer.send(
+              GET_DECODED_TRANSACTION_INPUT,
+              contract,
+              state.workspaces.current.projects[projectIndex].contracts,
+              transaction,
+            );
+        });
+      }
     }
 
     dispatch({
