@@ -4,6 +4,8 @@
 
 ## Ganache
 
+[![GitPOAP Badge](https://public-api.gitpoap.io/v1/repo/trufflesuite/ganache-ui/badge)](https://www.gitpoap.io/gh/trufflesuite/ganache-ui)
+
 Ganache is your personal blockchain for Ethereum development. 
 
 <p align="center">
