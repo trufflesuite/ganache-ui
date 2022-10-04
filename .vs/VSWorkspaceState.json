@@ -1,0 +1,15 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\.github",
+    "\\build",
+    "\\integrations",
+    "\\integrations\\corda",
+    "\\integrations\\postgres",
+    "\\scripts",
+    "\\scripts\\build",
+    "\\webpack"
+  ],
+  "SelectedNode": "\\webpack",
+  "PreviewInSolutionExplorer": false
+}
