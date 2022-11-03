@@ -17,17 +17,14 @@ export function initAutoUpdates(settings, mainWindow) {
     autoUpdateService = new AutoUpdateService(options);
   }
 
-  autoUpdateService.on("checking-for-update", updateInfo => {
-    mainWindow.webContents.send(
-      AutoUpdate.UPDATE_CHECK_IN_PROGRESS,
-      updateInfo,
-    );
+  autoUpdateService.on("checking-for-update", () => {
+    mainWindow.webContents.send(AutoUpdate.UPDATE_CHECK_IN_PROGRESS);
   });
-  autoUpdateService.on("update-not-available", updateInfo => {
-    mainWindow.webContents.send(AutoUpdate.UPDATE_CHECK_COMPLETE, updateInfo);
+  autoUpdateService.on("update-not-available", () => {
+    mainWindow.webContents.send(AutoUpdate.UPDATE_CHECK_COMPLETE);
   });
   autoUpdateService.on("update-available", updateInfo => {
-    mainWindow.webContents.send(AutoUpdate.UPDATE_CHECK_COMPLETE, updateInfo);
+    mainWindow.webContents.send(AutoUpdate.UPDATE_CHECK_COMPLETE);
     mainWindow.webContents.send(AutoUpdate.UPDATE_AVAILABLE, updateInfo);
   });
   autoUpdateService.on("download-progress", progressInfo => {
