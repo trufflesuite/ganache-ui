@@ -4,7 +4,7 @@
 
 ## Ganache
 
-Ganache is your personal blockchain for Ethereum development. 
+Ganache is your personal blockchain for Ethereum development.
 
 <p align="center">
   <img src="https://github.com/trufflesuite/ganache-ui/blob/develop/.github/images/ganache_screenshot.jpg?raw=true"/>
@@ -34,7 +34,7 @@ If using Windows, you may need [windows-build-tools](https://www.npmjs.com/packa
 
 ### Building for All Platforms
 
-Each platform has an associated `npm run` configuration to help you build on each platform more easily. Because each platform has different (but similar) build processes, they require different configuration. Note that both Windows and Mac require certificates to sign the built packages; for security reasons these certs aren't uploaded to github, nor are their passwords saved in source control. 
+Each platform has an associated `npm run` configuration to help you build on each platform more easily. Because each platform has different (but similar) build processes, they require different configuration. Note that both Windows and Mac require certificates to sign the built packages; for security reasons these certs aren't uploaded to github, nor are their passwords saved in source control.
 
 #### On Windows:
 
@@ -56,7 +56,7 @@ Replace `...` in the command above with your certificate password.
 
 This will create a `.appx` file in `./out/make`.
 
-#### On Mac: 
+#### On Mac:
 
 Building on a Mac will create a standard Mac `.dmg` file.
 
@@ -66,9 +66,9 @@ Before building on a Mac, make sure you have Truffle's signing keys added to you
 $ npm run build-mac
 ```
 
-This will create a signed `.dmg` file in `./out/make`. 
+This will create a signed `.dmg` file in `./out/make`.
 
-#### On Linux: 
+#### On Linux:
 
 Bulding on Linux will create a `.AppImage` file, meant to run on many versions of Linux.
 
@@ -78,11 +78,11 @@ Linux requires no signing keys, so there's no set up. Simply run the following c
 $ npm run build-linux
 ```
 
-This will create a `.AppImage` file in `./out/make`. 
+This will create a `.AppImage` file in `./out/make`.
 
 ### Generating Icon Assets
 
-Asset generation generally only needs to happen once, or whenever the app's logo is updated. If you find you need to rebuild the assets, the following applications were used: 
+Asset generation generally only needs to happen once, or whenever the app's logo is updated. If you find you need to rebuild the assets, the following applications were used:
 
 Two tools were used:
 
@@ -112,6 +112,43 @@ Corda requires 4 "extras" that get downloaded at runtime.
 Corda and braid require Java's *JRE* `1.8`, aka `8`. We "release" 4 versions of JRE 1.8: Linux x64, Mac x64, Windows x32, and Windows x64. The Java releases are downloaded from https://adoptopenjdk.net/archive.html -- we use "OpenJDK 8 (LTS)" with "HotSpot". To redistribute these files you will need to unpack/unzip them, then zip them up again (make sure you are on Linux for the Linux release, as it needs its file permissions properly embedded within the zip). It is very important that you **ensure that all files are stored at the root of the zip**. You'll also want to rename the zip files in the following format: `OpenJDK8U-jre_{arch}_{os-name}_hotspot_{version}.zip`. You'll need to update the `version` in `src/common/extras/index.js` if it changes.
 
 Corda requires PostgreSQL 9.6. We "release" 4 versions of PostgreSQL 9.6: Linux x64, Mac x64, Windows x32, and Windows x64. These are downloaded from https://www.enterprisedb.com/downloads/postgres-postgresql-downloads.To redistribute these files you will need to unpack/unzip them, then zip them up again (make sure you are on Linux for the Linux release, as it needs its file permissions properly embedded within the zip). It is very important that you **ensure that all files are stored at the root of the zip**. You'll also want to rename the zip files in the following format: `postgresql-{version}-2-{os-name}-{arch}-binaries.zip`. You'll need to update the `version` in `src/common/extras/index.js` if it changes.
+
+### VS Code Debugging
+
+Below is a `.vscode/launch.json` configuration that will attach to both the **main** and **renderer** processes. You only need to run the **Launch Ganache UI** configuration; the renderer attach configuration will run automatically.
+
+``` jsonc
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Attach to Renderer Process",
+      "port": 9222,
+      "request": "attach",
+      "type": "pwa-chrome",
+      "webRoot": "${workspaceFolder:ganache}",
+      "sourceMaps": true,
+      "sourceMapPathOverrides": {
+        "webpack:///./*": "${webRoot}/*"
+      }
+    },
+    {
+      "name": "Launch Ganache UI",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder:ganache}",
+      "runtimeExecutable": "${workspaceFolder:ganache}/node_modules/.bin/electron-webpack",
+      "args": ["dev"],
+      "sourceMaps": true,
+      "serverReadyAction": {
+        "pattern": "Renderer debugger is listening on port ([0-9]+)",
+        "action": "startDebugging",
+        "name": "Attach to Renderer Process"
+      }
+    }
+  ]
+}
+```
 
 
 ### By Truffle

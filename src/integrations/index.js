@@ -1,6 +1,7 @@
 import path from "path";
 import ethereum from "./ethereum";
 import corda from "./corda";
+import filecoin from "./filecoin";
 import EventEmitter from "events";
 import WorkspaceManager from "../main/types/workspaces/WorkspaceManager";
 import extras from "../common/extras";
@@ -19,7 +20,8 @@ class IntegrationManager extends EventEmitter {
     this.ipc = ipc;
     this.integrations = {
       ethereum,
-      corda
+      corda,
+      filecoin
     };
     this.workspaceManager = new WorkspaceManager(userDataPath);
     this._listen();
@@ -67,14 +69,30 @@ class IntegrationManager extends EventEmitter {
       workspace = this.workspaceManager.get(null);
     }
 
+    // Only do the quickstart quick save for Corda.
+    // Ethereum and Filecoin need the server to restart to
+    // make sure the db files get saved to the new location.
+    if (workspace.flavor !== "corda") {
+      await this.flavor.stopServer();
+    }
+
     workspace.saveAs(
       workspaceName,
       chaindataLocation,
       this.workspaceManager.directory,
-      mnemonic
+      mnemonic,
+      true
     );
 
+    if (workspace.flavor !== "corda") {
+      this.workspaceManager.bootstrap();
+    }
+
     await this.setWorkspace(workspaceName, workspace.flavor);
+
+    if (workspace.flavor !== "corda") {
+      await this.startServer();
+    }
 
     this.emit("server-started");
   }
@@ -98,7 +116,7 @@ class IntegrationManager extends EventEmitter {
         await this.flavor.startServer(settings, this.workspace.workspaceDirectory);
         // just incase startServer mutates the settings (corda does), save them
         this.workspace.settings.setAll(settings);
-  
+
         this.emit("server-started");
         return true;
       } catch (e) {

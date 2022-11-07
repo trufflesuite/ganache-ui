@@ -1,0 +1,43 @@
+
+.FilecoinAccountsBanner {
+  display: flex;
+  background-color: var(--app-mnemonic-background-color);
+  font-size: 0.8em;
+  margin: 0;
+  border-bottom: 1px solid #aaa;
+
+  .Seed {
+    flex-grow: 1;
+  }
+
+  .Seed {
+    margin: 1rem;
+
+    h4 {
+      margin: 0 0 .3rem 0;
+    }
+
+    span {
+      font-family: "Fira Code Regular", monospace;
+      color: var(--text-color);
+      font-size: 0.9rem;
+    }
+
+    .WarningIndicator {
+      font-size: 0.8rem;
+      padding: 0 .125rem;
+      border: 2px solid transparent;
+      border-radius: .35rem;
+      color: white;
+      background: #DDD;
+      display: inline-block;
+      margin-left: .3rem;
+      font-weight: bold;
+      cursor: pointer;
+
+      &:hover {
+        background: #ebb67e;
+      }
+    }
+  }
+}

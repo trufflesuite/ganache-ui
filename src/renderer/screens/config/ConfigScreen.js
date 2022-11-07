@@ -15,8 +15,8 @@ import AboutScreen from "./ConfigScreens/AboutScreen";
 
 // ethereum screens
 import EthereumWorkspaceScreen from "../../../integrations/ethereum/renderer/screens/config/ConfigScreens/WorkspaceScreen";
-import ServerScreen from "../../../integrations/ethereum/renderer/screens/config/ConfigScreens/ServerScreen";
-import AccountsScreen from "../../../integrations/ethereum/renderer/screens/config/ConfigScreens/AccountsScreen";
+import EthereumServerScreen from "../../../integrations/ethereum/renderer/screens/config/ConfigScreens/ServerScreen";
+import EthereumAccountsScreen from "../../../integrations/ethereum/renderer/screens/config/ConfigScreens/AccountsScreen";
 import ChainScreen from "../../../integrations/ethereum/renderer/screens/config/ConfigScreens/ChainScreen";
 import AdvancedScreen from "../../../integrations/ethereum/renderer/screens/config/ConfigScreens/AdvancedScreen";
 
@@ -25,15 +25,22 @@ import CordaWorkspaceScreen from "../../../integrations/corda/renderer/screens/c
 import NodesScreen from "../../../integrations/corda/renderer/screens/config/ConfigScreens/NodesScreen";
 import CordaAdvancedScreen from "../../../integrations/corda/renderer/screens/config/ConfigScreens/AdvancedScreen";
 
+// filecoin screens
+import FilecoinWorkspaceScreen from "../../../integrations/filecoin/renderer/screens/config/ConfigScreens/WorkspaceScreen";
+import FilecoinServerScreen from "../../../integrations/filecoin/renderer/screens/config/ConfigScreens/ServerScreen";
+import FilecoinAccountsScreen from "../../../integrations/filecoin/renderer/screens/config/ConfigScreens/AccountsScreen";
+import FilecoinMinerScreen from "../../../integrations/filecoin/renderer/screens/config/ConfigScreens/MinerScreen";
+
 import RestartIcon from "../../icons/restart.svg";
 import EjectIcon from "../../icons/eject.svg";
 import SaveIcon from "../../icons/save-icon.svg";
+import StartIcon from "../../icons/start.svg";
 import OnlyIf from "../../components/only-if/OnlyIf";
 
 const ETHEREUM_TABS = [
   { name: "Workspace", subRoute: "workspace", component: EthereumWorkspaceScreen },
-  { name: "Server", subRoute: "server", component: ServerScreen },
-  { name: "Accounts & Keys", subRoute: "accounts-keys", component: AccountsScreen },
+  { name: "Server", subRoute: "server", component: EthereumServerScreen },
+  { name: "Accounts & Keys", subRoute: "accounts-keys", component: EthereumAccountsScreen },
   { name: "Chain", subRoute: "chain", component: ChainScreen },
   { name: "Advanced", subRoute: "advanced", component: AdvancedScreen }
 ];
@@ -43,6 +50,13 @@ const CORDA_TABS = [
   { name: "Nodes", subRoute: "corda/nodes", component: NodesScreen, data:{type: "nodes"} },
   { name: "Notaries", subRoute: "corda/notaries", component: NodesScreen, data:{type: "notaries"} },
   { name: "Advanced", subRoute: "corda/advanced", component: CordaAdvancedScreen }
+];
+
+const FILECOIN_TABS = [
+  { name: "Workspace", subRoute: "workspace", component: FilecoinWorkspaceScreen },
+  { name: "Server", subRoute: "server", component: FilecoinServerScreen },
+  { name: "Accounts & Keys", subRoute: "accounts-keys", component: FilecoinAccountsScreen },
+  { name: "Miner", subRoute: "miner", component: FilecoinMinerScreen },
 ];
 
 const TABS = [
@@ -55,12 +69,18 @@ class ConfigScreen extends PureComponent {
 
     let tabs;
     switch(props.config.settings.workspace.flavor){
-      case "ethereum":
+      case "ethereum": {
         tabs = ETHEREUM_TABS;
-      break;
-      case "corda":
+        break;
+      }
+      case "corda": {
         tabs = CORDA_TABS;
-      break;
+        break;
+      }
+      case "filecoin": {
+        tabs = FILECOIN_TABS;
+        break;
+      }
     }
     tabs = tabs.concat(TABS);
 
@@ -92,7 +112,7 @@ class ConfigScreen extends PureComponent {
     }
   };
 
-  restartServer = () => {
+  saveWorkspace = () => {
     this.props.dispatch(Config.clearAllSettingErrors());
     // eslint-disable-next-line react/no-direct-mutation-state
     this.state.config.validationErrors = {};
@@ -109,7 +129,12 @@ class ConfigScreen extends PureComponent {
         ),
       );
     }
-    this.props.dispatch(Core.requestServerRestart());
+
+    if (this.props.config.startupMode !== Config.STARTUP_MODE.EDIT_WORKSPACE) {
+      this.props.dispatch(Core.requestServerRestart());
+    } else {
+      this.props.dispatch(Core.showHomeScreen());
+    }
   };
 
   isDirty() {
@@ -198,6 +223,8 @@ class ConfigScreen extends PureComponent {
   };
 
   isCorda = () => this.state.config.settings.workspace.flavor === "corda";
+
+  isFilecoin = () => this.state.config.settings.workspace.flavor === "filecoin";
 
   removeWorkspaceProject = path => {
     const newProjects = this.state.config.settings.workspace.projects.filter(
@@ -369,7 +396,7 @@ class ConfigScreen extends PureComponent {
         dispatch: this.props.dispatch,
       },
     );
-    
+
     return (
       <main className="ConfigScreen">
         <div className="Tabs">
@@ -385,16 +412,24 @@ class ConfigScreen extends PureComponent {
               </button>
               <button
                 className="btn btn-primary"
-                onClick={this.restartServer}
+                onClick={this.saveWorkspace}
                 disabled={this.invalidConfig()}
               >
                 <OnlyIf
                   test={
-                    this.props.config.startupMode !== Config.STARTUP_MODE.NORMAL
+                    this.props.config.startupMode === Config.STARTUP_MODE.EDIT_WORKSPACE
                   }
                 >
                   <SaveIcon className="save-icon" /*size={18}*/ />
                   SAVE WORKSPACE
+                </OnlyIf>
+                <OnlyIf
+                  test={
+                    this.props.config.startupMode === Config.STARTUP_MODE.NEW_WORKSPACE
+                  }
+                >
+                  <StartIcon className="start-icon" /*size={18}*/ />
+                  START
                 </OnlyIf>
                 <OnlyIf
                   test={

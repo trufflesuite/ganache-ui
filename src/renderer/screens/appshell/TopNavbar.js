@@ -24,6 +24,8 @@ import BlockIcon from "../../icons/blocks.svg";
 import TxIcon from "../../icons/transactions.svg";
 import LogsIcon from "../../icons/console.svg";
 import ContractsIcon from "../../icons/contract-icon.svg";
+import DealsIcon from "../../icons/deals-icon.svg";
+import FilesIcon from "../../icons/file-icon.svg";
 import EventsIcon from "../../icons/events-icon.svg";
 
 import SettingsIcon from "../../icons/settings.svg";
@@ -111,7 +113,7 @@ class TopNavbar extends Component {
       } else if (value.toLowerCase() === "loader") {
         this.props.dispatch(push("/loader"));
       } else {
-        this.props.dispatch(Search.query(value));
+        this.props.dispatch(Search.query(value, this.props.config.settings.workspace.flavor));
       }
 
       this.setState({
@@ -149,9 +151,28 @@ class TopNavbar extends Component {
   }
 
   _renderMiningTime() {
-    if (this.props.config.settings.workspace.server.blockTime) {
+    const workspaceSettings = this.props.config.settings.workspace;
+
+    if (workspaceSettings.flavor === "filecoin") {
+      if (workspaceSettings.server.miner) {
+        // TODO: miner.mine should not be read from options but current state
+        // need to update once the api methods exist
+        const minerEnabled = this.props["filecoin.core"].minerEnabled !== null ? this.props["filecoin.core"].minerEnabled : workspaceSettings.server.miner.mine;
+        if (minerEnabled === false) {
+          return "Stopped";
+        } else if (workspaceSettings.server.miner.blockTime > 0) {
+          return `${
+            workspaceSettings.server.miner.blockTime
+          } SEC block time`;
+        }
+      }
+
+      return "Automining";
+    }
+
+    if (workspaceSettings.server.blockTime) {
       return `${
-        this.props.config.settings.workspace.server.blockTime
+        workspaceSettings.server.blockTime
       } SEC block time`;
     } else {
       return "Automining";
@@ -165,13 +186,21 @@ class TopNavbar extends Component {
     let children;
     const flavor = this.props.config.settings.workspace.flavor;
     switch (flavor) {
-      case "ethereum":
-          children = this._generateEthereumChildren();
-          break;
-      case "corda":
-          children = this._generateCordaChildren();
+      case "ethereum": {
+        children = this._generateEthereumChildren();
         break;
+      }
+      case "corda": {
+        children = this._generateCordaChildren();
+        break;
+      }
+      case "filecoin": {
+        children = this._generateFilecoinChildren();
+        break;
+      }
     }
+
+    const hasSearch = flavor === "ethereum" || flavor === "filecoin";
 
     return (
       <nav className="TopNavBar">
@@ -187,7 +216,7 @@ class TopNavbar extends Component {
             <OnlyIf test={isNewVersionAvailable}>
               <UpdateNotification />
             </OnlyIf>
-            { flavor === "ethereum" ? <><input
+            { hasSearch ? <><input
               type="text"
               placeholder={children.searchText}
               title={children.searchText}
@@ -229,6 +258,45 @@ class TopNavbar extends Component {
       </nav>
     );
   }
+
+  _generateFilecoinChildren() {
+    return {
+      menu: (<>
+        <NavLink to="/filecoin/accounts" activeClassName="Active">
+          <AccountIcon />
+          Accounts
+        </NavLink>
+        <NavLink to="/filecoin/tipsets" activeClassName="Active">
+          <BlockIcon />
+          Tipsets
+        </NavLink>
+        <NavLink to="/filecoin/messages" activeClassName="Active">
+          <TxIcon />
+          Messages
+        </NavLink>
+        <NavLink to="/filecoin/deals" activeClassName="Active">
+          <DealsIcon />
+          Deals
+        </NavLink>
+        <NavLink to="/filecoin/files" activeClassName="Active">
+          <FilesIcon />
+          Files
+        </NavLink>
+      </>),
+      searchText: "Search",
+      status: (<>
+        <StatusIndicator title="CURRENT TIPSET" value={this.props.filecoin.core.latestTipset} />
+        <StatusIndicator title="LOTUS SERVER" value={this.props.filecoin.lotus.lotusInstance && this.props.filecoin.lotus.lotusInstance.provider.provider.url} upper={false} />
+        <StatusIndicator title="IPFS SERVER" value={this.props.filecoin.core.ipfsUrl} upper={false} />
+          <StatusIndicator
+            title="MINING STATUS"
+            value={this._renderMiningTime()}
+          />
+      </>),
+      action: (<></>),
+    }
+  }
+
   _generateCordaChildren(){
     return {
       menu: (<>
@@ -359,6 +427,8 @@ class TopNavbar extends Component {
 
 export default connect(
   TopNavbar,
+  "filecoin.core",
   "workspaces",
-  "config"
+  "config",
+  "filecoin"
 );

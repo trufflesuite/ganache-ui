@@ -5,21 +5,34 @@ const oldDefaultMnemonic = "candy maple cake sugar pudding cream honey rich smoo
 
 const ethereumInitialSettings = require("./flavors/ethereum");
 const cordaInitialSettings = require("./flavors/corda");
+const filecoinInitialSettings = require("./flavors/filecoin");
 
 class WorkspaceSettings extends Settings {
   constructor(directory, chaindataDirectory, flavor = "ethereum") {
     let initialSettings;
     switch(flavor){
-      case "ethereum":
-          initialSettings = ethereumInitialSettings
-      break;
-      case "corda":
-          initialSettings = cordaInitialSettings
-      break;
-      default:
+      case "ethereum": {
+        initialSettings = ethereumInitialSettings;
+        break;
+      }
+      case "corda": {
+        initialSettings = cordaInitialSettings;
+        break;
+      }
+      case "filecoin": {
+        initialSettings = filecoinInitialSettings;
+        break;
+      }
+      default: {
         throw new Error("Invalid flavor: " + flavor);
+      }
     }
-    super(directory, merge({}, initialSettings, {flavor}));
+    super(directory, merge({}, initialSettings, {
+      flavor,
+      server: {
+        flavor
+      }
+    }));
 
     this.chaindataDirectory = chaindataDirectory;
 
@@ -61,11 +74,21 @@ class WorkspaceSettings extends Settings {
 
   insertDbPath(currentSettings) {
     if (this.chaindataDirectory) {
-      return merge({}, currentSettings, {
-        server: {
-          db_path: this.chaindataDirectory,
-        },
-      });
+      if (currentSettings.flavor === "ethereum") {
+        return merge({}, currentSettings, {
+          server: {
+            db_path: this.chaindataDirectory,
+          },
+        });
+      } else {
+        return merge({}, currentSettings, {
+          server: {
+            database: {
+              dbPath: this.chaindataDirectory,
+            }
+          },
+        });
+      }
     } else {
       return currentSettings;
     }

@@ -4,7 +4,6 @@ const { spawn } = require("promisify-child-process");
 import path from "path";
 import * as os from "os";
 import merge from "lodash.merge";
-import clonedeep from "lodash.clonedeep";
 import ethagen from "ethagen/wallet";
 import moniker from "moniker";
 import fixPath from "fix-path"
@@ -73,6 +72,12 @@ if (isDevMode) {
   // throw because the app version is "0.0".
   const version = require("../../package.json").version;
   app.getVersion = () => version;
+}
+
+// This allows us to debug the renderer process in VS Code
+// The `remote-debugging-port` is a chromium option
+if (isDevelopment) {
+  app.commandLine.appendSwitch("remote-debugging-port", "9222");
 }
 
 const USERDATA_PATH = app.getPath("userData");
@@ -150,12 +155,12 @@ function addLogLines(data, context = undefined) {
 }
 
 // create main BrowserWindow when electron is ready
-app.on('ready', () => {
+app.on('ready', async () => {
   const global = new GlobalSettings(path.join(USERDATA_PATH, "global"));
   const GoogleAnalytics = new GoogleAnalyticsService();
 
   const integrations = new IntegrationManager(USERDATA_PATH, ipcMain, isDevMode);
-  // allow interations to communicate with the mainWindow by emitting a 
+  // allow integrations to communicate with the mainWindow by emitting a
   // `"send"` event
   integrations.on("send", function(){
     if (mainWindow) {
@@ -169,7 +174,7 @@ app.on('ready', () => {
     mainWindow.webContents.send(SET_PROGRESS, message, minDuration);
     addLogLines(message + "\n");
   });
-  
+
   const workspaceManager = integrations.workspaceManager;
   let workspace;
   let startupMode = STARTUP_MODE.NORMAL;
@@ -196,13 +201,13 @@ app.on('ready', () => {
   Menu.setApplicationMenu(null)
 
   app.commandLine.appendSwitch("ignore-certificate-errors", "true");
-  
+
   app.on('certificate-error', (event, _webContents, _url, _error, _certificate, callback) => {
     // On certificate error we disable default behaviour (stop loading the page)
     // and we then say "it is all fine - true" to the callback
     event.preventDefault();
     callback(true);
-});
+  });
 
   mainWindow = new BrowserWindow({
     show: false,
@@ -214,12 +219,13 @@ app.on('ready', () => {
     icon: getIconPath(),
     webPreferences: {
       nodeIntegration: true,
-      enableRemoteModule:true
+      contextIsolation: false,
+      enableRemoteModule: true
     }
   });
 
   if (isDevelopment) {
-    mainWindow.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`)
+    mainWindow.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`);
   } else {
     mainWindow.loadURL(formatUrl({
       pathname: path.join(__dirname, "index.html"),
@@ -330,6 +336,15 @@ app.on('ready', () => {
     mainWindow.focus();
     mainWindow.setTitle("Ganache");
 
+    // This allows us to debug the renderer process in VS Code
+    // These are commands we send to the renderer process once it's
+    // up to enable the chromium debugger to attach to VS Code
+    if (isDevelopment) {
+      await mainWindow.webContents.debugger.attach("1.1");
+      await mainWindow.webContents.debugger.sendCommand("Debugger.enable");
+      console.log("Renderer debugger is listening on port 9222");
+    }
+
     // We need to wait until we have finished our migration before
     // getting and then sending our settings and workspaces...
     bootstrapPromise.then(() => {
@@ -438,21 +453,8 @@ app.on('ready', () => {
       // the projects should trigger the REQUEST_SERVER_RESTART
       // logic
       workspace.settings.set("projects", []);
-      const randomizeMnemonicOnStart = workspace.settings.get("randomizeMnemonicOnStart");
-      workspace.saveAs(
-        "Quickstart",
-        null,
-        workspaceManager.directory,
-        null,
-        true,
-      );
-      // this loads the default workspace
-      workspaceManager.bootstrap();
-      // saveAs overwrites "isDefault", so we need to put it back
-      workspace.settings.set("isDefault", true);
-      workspace.settings.set("randomizeMnemonicOnStart", randomizeMnemonicOnStart);
-      await integrations.setWorkspace("Quickstart", flavor);
-      workspace = integrations.workspace;
+
+      workspace.resetChaindata();
     } else {
       for (let i = 0; i < workspaceSettings.projects.length; i++) {
         projects.push(
@@ -581,9 +583,11 @@ app.on('ready', () => {
     if (workspace) {
       await integrations.stopServer();
 
-      if (startupMode === STARTUP_MODE.NEW_WORKSPACE) {
+      if (startupMode === STARTUP_MODE.NEW_WORKSPACE || workspace.name === null) {
         // we just made a new workspace. we need to reset the chaindata since we initialized it
         // when started the configuration process
+
+        // or we're in the quickstart workspace which should reset each restart
         workspace.resetChaindata();
       }
 
@@ -636,19 +640,6 @@ app.on('ready', () => {
       global.setAll(globalSettings);
 
       if (workspace && workspaceSettings) {
-        // if the current workspace is a "default workspace", make sure
-        // we update the original default workspace as well!
-        if (workspace.settings.get("isDefault")) {
-          const defaultWorkspace = workspaceManager.get(null, workspace.flavor);
-          const clonedSettings = clonedeep(workspaceSettings);
-          if (clonedSettings.server && clonedSettings.server.db_path) {
-            clonedSettings.server.db_path = defaultWorkspace.settings.get("server.db_path");
-          }
-          defaultWorkspace.settings.setAll(clonedSettings);
-          integrations.stopServer().then(() => workspace.resetChaindata())
-          
-        }
-        workspaceSettings.randomizeMnemonicOnStart = false;
         workspace.settings.setAll(workspaceSettings);
       }
 
