@@ -117,9 +117,7 @@ export function initCore(store) {
         }
         case STARTUP_MODE.NORMAL:
         default: {
-          if (workspaceSettings.flavor === "corda") {
-            store.dispatch(replace("/corda/nodes"));
-          } else if (workspaceSettings.flavor === "filecoin") {
+          if (workspaceSettings.flavor === "filecoin") {
             store.dispatch(replace("/filecoin/accounts"));
           } else {
             store.dispatch(replace("/accounts"));

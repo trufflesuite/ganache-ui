@@ -25,7 +25,7 @@
   ],
   "homepage": "https://github.com/trufflesuite/ganache#readme",
   "scripts": {
-    "dev": "electron-webpack dev",
+    "dev": "electron-webpack dev --inspect",
     "start": "npm run dev",
     "compile": "electron-webpack",
     "lint": "eslint .",

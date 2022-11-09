@@ -16,13 +16,14 @@ describe("Workspace Manager", () => {
     workspaceManager.bootstrap();
   });
 
-  it("loaded expected worksapces", async () => {
+  it("loaded expected workspaces", async () => {
     let expectedWorkspaces = {
       "Test 1:ethereum": false,
       "Test 2:ethereum": false,
     };
+    // todo: not sure whether this should be: expectedWorkspaces[null] = false; // default workspace
+    // see: https://github.com/trufflesuite/ganache-ui/commit/184f3fa554178767b10b13d410d4c66478c9e398
     expectedWorkspaces[null + ":ethereum"] = false; // default ethereum workspace
-    expectedWorkspaces[null + ":corda"] = false; // default corda workspace
     const expectedWorkspaceNames = Object.keys(expectedWorkspaces);
     const numExpectedWorkspaces = expectedWorkspaceNames.length;
 

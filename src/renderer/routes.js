@@ -5,14 +5,6 @@ import AppShell from "./screens/appshell/AppShell";
 import ConfigScreen from "./screens/config/ConfigScreen";
 import AccountsScreen from "../integrations/ethereum/renderer/screens/accounts/AccountsScreen";
 
-import CordaNodes from "../integrations/corda/renderer/screens/Nodes";
-import CordaNode from "../integrations/corda/renderer/screens/NodeDetails";
-import CordaTransactions from "../integrations/corda/renderer/screens/Transactions";
-import CordaTransaction from "../integrations/corda/renderer/screens/Transaction";
-import CordaShells from "../integrations/corda/renderer/screens/Shells";
-import CordaCordapps from "../integrations/corda/renderer/screens/Cordapps";
-import CordaCordapp from "../integrations/corda/renderer/screens/Cordapp";
-
 import BlocksScreen from "../integrations/ethereum/renderer/screens/blocks/BlocksScreen";
 import TransactionsScreen from "../integrations/ethereum/renderer/screens/transactions/TransactionsScreen";
 import LogsScreen from "./screens/logs/LogsScreen";
@@ -57,20 +49,7 @@ class FlavorRoutes extends Component {
         />
         <Route path="/notfound" component={NotFoundScreen} />
 
-        <Route path="/config/corda/:activeTab?" component={ConfigScreen} />
         <Route path="/config/:activeTab?" component={ConfigScreen} />
-
-        <Route exact path="/corda">
-          <Redirect to="/corda/nodes" />
-        </Route>
-        <Route exact path="/corda/nodes" component={CordaNodes} />
-        <Route path="/corda/nodes/:node" component={CordaNode} />
-        <Route exact path="/corda/cordapps" component={CordaCordapps} />
-        <Route path="/corda/cordapps/:cordapp" component={CordaCordapp} />
-        <Route exact path="/corda/shells" component={CordaShells} />
-        <Route path="/corda/shells/:context" component={CordaShells} />
-        <Route exact path="/corda/transactions" component={CordaTransactions} />
-        <Route path="/corda/transactions/:txhash" component={CordaTransaction} />
 
         <Route exact path="/filecoin">
           <Redirect to="/filecoin/accounts" />

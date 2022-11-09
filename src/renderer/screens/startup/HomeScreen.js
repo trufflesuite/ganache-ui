@@ -98,7 +98,6 @@ class HomeScreen extends Component {
     if (this.state.buttonState === buttonState) {
       return (<div ref={(node) => this.wrapperRef=node} className="homescreen-flavor-buttons">
         {this.createButton("Ethereum")}
-        {this.createButton("Corda")}
         {this.createButton("Filecoin")}
       </div>);
     } else {
@@ -245,7 +244,6 @@ class HomeScreen extends Component {
                     {workspaceButtons}
                   </div>
                 </div>
-                {this.state.flavor === "corda" ? <div style={{height:"0", overflow:"visible", color:"#aaa"}}><small><em>Note: Corda networks may utilize significant CPU and Memory during startup.</em></small></div> : ""}
               </section>
             </div>
             {/* <div className="LearnMore">{learnMore}</div> */}

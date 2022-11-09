@@ -10,8 +10,6 @@ import { combineReducers } from "redux";
 import { REQUEST_SERVER_RESTART } from "./core/actions";
 
 import AppShellReducer from "./appshell/reducers";
-import CordaShellReducer from "./cordashell/reducers";
-import CordaCoreReducer from "../../common/redux/corda-core/reducers";
 import ConfigReducer from "./config/reducers";
 import CoreReducer from "../../common/redux/core/reducers";
 import EthereumCoreReducer from "../../integrations/ethereum/common/redux/core/reducers";
@@ -25,15 +23,13 @@ import UpdateReducer from "./auto-update/reducers";
 import NetworkReducer from "./network/reducers";
 import WorkspacesReducer from "./workspaces/reducers";
 import EventsReducer from "../../integrations/ethereum/common/redux/events/reducers";
-import { connectRouter } from 'connected-react-router';
+import { connectRouter } from "connected-react-router";
 
 import FilecoinReducer from "../../integrations/filecoin/common/redux/reducer";
 
 export default (history) => {
   const appReducer = combineReducers({
     appshell: AppShellReducer,
-    cordacore: CordaCoreReducer,
-    cordashell: CordaShellReducer,
     config: ConfigReducer,
     core: function(state, action) {
       const ethState = EthereumCoreReducer(state, action);

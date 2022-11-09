@@ -4,8 +4,7 @@ import cloneDeep from "lodash.clonedeep";
 const initialState = {
   validationErrors: {}, // of the format {SETTING_NAME (i.e. hostname would be server.hostname): "error text"}
   settings: {},
-  startupMode: Config.STARTUP_MODE.NORMAL,
-  cordaNodeStatus: {}
+  startupMode: Config.STARTUP_MODE.NORMAL
 };
 
 export default function(state = initialState, action) {
@@ -15,18 +14,6 @@ export default function(state = initialState, action) {
       // Ignore state; we're overwriting the settings.
       nextState.settings.global = cloneDeep(action.global);
       nextState.settings.workspace = cloneDeep(action.workspace);
-      break;
-    case "NODE_STOPPED":
-      nextState.cordaNodeStatus[action.safeName] = "stopped";
-      break;
-    case "NODE_STARTED":
-      nextState.cordaNodeStatus[action.safeName] = "started";
-      break;
-    case "NODE_STARTING":
-      nextState.cordaNodeStatus[action.safeName] = "starting";
-      break;
-    case "VAULT_DATA":
-      nextState.updated = Date.now();
       break;
     case Config.SET_SETTING_ERROR:
       if (typeof nextState.validationErrors === "undefined") {
