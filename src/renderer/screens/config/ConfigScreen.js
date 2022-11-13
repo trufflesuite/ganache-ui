@@ -20,11 +20,6 @@ import EthereumAccountsScreen from "../../../integrations/ethereum/renderer/scre
 import ChainScreen from "../../../integrations/ethereum/renderer/screens/config/ConfigScreens/ChainScreen";
 import AdvancedScreen from "../../../integrations/ethereum/renderer/screens/config/ConfigScreens/AdvancedScreen";
 
-// corda screens
-import CordaWorkspaceScreen from "../../../integrations/corda/renderer/screens/config/ConfigScreens/WorkspaceScreen";
-import NodesScreen from "../../../integrations/corda/renderer/screens/config/ConfigScreens/NodesScreen";
-import CordaAdvancedScreen from "../../../integrations/corda/renderer/screens/config/ConfigScreens/AdvancedScreen";
-
 // filecoin screens
 import FilecoinWorkspaceScreen from "../../../integrations/filecoin/renderer/screens/config/ConfigScreens/WorkspaceScreen";
 import FilecoinServerScreen from "../../../integrations/filecoin/renderer/screens/config/ConfigScreens/ServerScreen";
@@ -43,13 +38,6 @@ const ETHEREUM_TABS = [
   { name: "Accounts & Keys", subRoute: "accounts-keys", component: EthereumAccountsScreen },
   { name: "Chain", subRoute: "chain", component: ChainScreen },
   { name: "Advanced", subRoute: "advanced", component: AdvancedScreen }
-];
-
-const CORDA_TABS = [
-  { name: "Workspace", subRoute: "corda/workspace", component: CordaWorkspaceScreen },
-  { name: "Nodes", subRoute: "corda/nodes", component: NodesScreen, data:{type: "nodes"} },
-  { name: "Notaries", subRoute: "corda/notaries", component: NodesScreen, data:{type: "notaries"} },
-  { name: "Advanced", subRoute: "corda/advanced", component: CordaAdvancedScreen }
 ];
 
 const FILECOIN_TABS = [
@@ -71,10 +59,6 @@ class ConfigScreen extends PureComponent {
     switch(props.config.settings.workspace.flavor){
       case "ethereum": {
         tabs = ETHEREUM_TABS;
-        break;
-      }
-      case "corda": {
-        tabs = CORDA_TABS;
         break;
       }
       case "filecoin": {
@@ -118,14 +102,10 @@ class ConfigScreen extends PureComponent {
     this.state.config.validationErrors = {};
 
     if (this.isDirty()) {
-      const workspace = this.isCorda() ?
-        Object.assign({}, this.state.config.settings.workspace, {runBootstrap: true}) :
-        this.state.config.settings.workspace;
-
       this.props.dispatch(
         Config.requestSaveSettings(
           this.state.config.settings.global,
-          workspace
+          this.state.config.settings.workspace
         ),
       );
     }
@@ -184,31 +164,11 @@ class ConfigScreen extends PureComponent {
     });
   };
 
-  updateCordaNodes = (path, remove = false) => {
-    const workspace = this.state.config.settings.workspace;
-    const nodes = [...workspace.nodes, ...workspace.notaries];
-    nodes.forEach(node => {
-      const projects = node.projects || [];
-      if (remove) {
-        const index = projects.indexOf(path);
-        if (index !== -1) {
-          projects.splice(index, 1);
-        }
-      } else {
-        projects.push(path);
-      }
-      node.projects = projects;
-    });
-  }
-
   addWorkspaceProject = path => {
     const update = (_path) => {
       const alreadyExists = this.state.config.settings.workspace.projects.includes(_path);
       if (!alreadyExists) {
         this.state.config.settings.workspace.projects.push(_path);
-      }
-      if (this.state.config.settings.workspace.flavor === "corda") {
-        this.updateCordaNodes(_path);
       }
     }
     if (Array.isArray(path)) {
@@ -216,13 +176,8 @@ class ConfigScreen extends PureComponent {
     } else {
       update(path);
     }
-    if (this.isCorda()) {
-      this.updateCordaNodes(path);
-    }
     this.forceUpdate();
   };
-
-  isCorda = () => this.state.config.settings.workspace.flavor === "corda";
 
   isFilecoin = () => this.state.config.settings.workspace.flavor === "filecoin";
 
@@ -232,9 +187,7 @@ class ConfigScreen extends PureComponent {
     );
     // eslint-disable-next-line react/no-direct-mutation-state
     this.state.config.settings.workspace.projects = newProjects;
-    if (this.isCorda()) {
-      this.updateCordaNodes(path, true);
-    }
+    
     this.forceUpdate();
   };
 

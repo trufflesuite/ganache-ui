@@ -1,6 +1,5 @@
 import path from "path";
 import ethereum from "./ethereum";
-import corda from "./corda";
 import filecoin from "./filecoin";
 import EventEmitter from "events";
 import WorkspaceManager from "../main/types/workspaces/WorkspaceManager";
@@ -20,7 +19,6 @@ class IntegrationManager extends EventEmitter {
     this.ipc = ipc;
     this.integrations = {
       ethereum,
-      corda,
       filecoin
     };
     this.workspaceManager = new WorkspaceManager(userDataPath);
@@ -69,13 +67,6 @@ class IntegrationManager extends EventEmitter {
       workspace = this.workspaceManager.get(null);
     }
 
-    // Only do the quickstart quick save for Corda.
-    // Ethereum and Filecoin need the server to restart to
-    // make sure the db files get saved to the new location.
-    if (workspace.flavor !== "corda") {
-      await this.flavor.stopServer();
-    }
-
     workspace.saveAs(
       workspaceName,
       chaindataLocation,
@@ -84,15 +75,7 @@ class IntegrationManager extends EventEmitter {
       true
     );
 
-    if (workspace.flavor !== "corda") {
-      this.workspaceManager.bootstrap();
-    }
-
     await this.setWorkspace(workspaceName, workspace.flavor);
-
-    if (workspace.flavor !== "corda") {
-      await this.startServer();
-    }
 
     this.emit("server-started");
   }
@@ -114,7 +97,8 @@ class IntegrationManager extends EventEmitter {
       const settings = this.workspace.settings.getAll();
       try {
         await this.flavor.startServer(settings, this.workspace.workspaceDirectory);
-        // just incase startServer mutates the settings (corda does), save them
+        // just incase startServer mutates the settings, save them
+        // todo: not sure whether we still need to do this?
         this.workspace.settings.setAll(settings);
 
         this.emit("server-started");

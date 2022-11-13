@@ -110,9 +110,6 @@ class Workspace {
 
     this.settings.set("name", name);
     this.settings.set("isDefault", false);
-    if (this.flavor === "corda") {
-      this.settings.set("runBootstrap", true);
-    }
 
     if (this.flavor === "filecoin") {
       this.settings.set("randomizeSeedOnStart", false);

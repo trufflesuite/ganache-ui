@@ -4,7 +4,6 @@ import merge from "lodash.merge";
 const oldDefaultMnemonic = "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat";
 
 const ethereumInitialSettings = require("./flavors/ethereum");
-const cordaInitialSettings = require("./flavors/corda");
 const filecoinInitialSettings = require("./flavors/filecoin");
 
 class WorkspaceSettings extends Settings {
@@ -13,10 +12,6 @@ class WorkspaceSettings extends Settings {
     switch(flavor){
       case "ethereum": {
         initialSettings = ethereumInitialSettings;
-        break;
-      }
-      case "corda": {
-        initialSettings = cordaInitialSettings;
         break;
       }
       case "filecoin": {

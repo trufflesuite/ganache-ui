@@ -1,18 +1,17 @@
 import React, { Component } from "react";
-import {
-  List,
-  AutoSizer,
-  CellMeasurer,
-} from "react-virtualized";
+import { List, AutoSizer, CellMeasurer } from "react-virtualized";
 import Row from "./Row";
 
 class LogsLazy extends Component {
   shouldComponentUpdate(nextProps) {
     const isDifferentContext = nextProps.context !== this.props.context;
-    if (isDifferentContext) { return true; }
+    if (isDifferentContext) {
+      return true;
+    }
 
     const isLineLengthDiff =
-      nextProps.logs[this.props.context].lines.length !== this.props.logs[this.props.context].lines.length;
+      nextProps.logs[this.props.context].lines.length !==
+      this.props.logs[this.props.context].lines.length;
 
     return isLineLengthDiff;
   }
@@ -25,7 +24,11 @@ class LogsLazy extends Component {
       rowIndex={index}
       parent={parent}
     >
-      <Row index={index} style={style} log={this.props.logs[this.props.context].lines[index]} />
+      <Row
+        index={index}
+        style={style}
+        log={this.props.logs[this.props.context].lines[index]}
+      />
     </CellMeasurer>
   );
 
@@ -33,7 +36,7 @@ class LogsLazy extends Component {
 
   render() {
     const { logs } = this.props;
-    
+
     return (
       <div className="LogContainer">
         <ul>

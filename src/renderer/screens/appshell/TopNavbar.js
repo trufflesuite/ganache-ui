@@ -190,10 +190,6 @@ class TopNavbar extends Component {
         children = this._generateEthereumChildren();
         break;
       }
-      case "corda": {
-        children = this._generateCordaChildren();
-        break;
-      }
       case "filecoin": {
         children = this._generateFilecoinChildren();
         break;
@@ -292,45 +288,6 @@ class TopNavbar extends Component {
             title="MINING STATUS"
             value={this._renderMiningTime()}
           />
-      </>),
-      action: (<></>),
-    }
-  }
-
-  _generateCordaChildren(){
-    return {
-      menu: (<>
-        <NavLink to="/corda/nodes" activeClassName="Active">
-          <BlockIcon />
-          Nodes
-        </NavLink>
-        <NavLink to="/corda/transactions" activeClassName="Active">
-          <TxIcon />
-          Transactions
-        </NavLink>
-        <NavLink to="/corda/cordapps" activeClassName="Active">
-          <ContractsIcon />
-          CorDapps
-        </NavLink>
-        <NavLink to="/corda/shells" activeClassName="Active">
-          <TxIcon />
-          Shells
-        </NavLink>
-      </>),
-      searchText: "Search",
-      status: (<>
-        <StatusIndicator
-            title="Total Nodes"
-            value={this.props.config.settings.workspace.nodes.length}
-        />
-        <StatusIndicator
-            title="Total Notaries"
-            value={this.props.config.settings.workspace.notaries.length}
-        />
-        <StatusIndicator
-            title="Total Projects"
-            value={this.props.config.settings.workspace.projects.length}
-        />
       </>),
       action: (<></>),
     }
