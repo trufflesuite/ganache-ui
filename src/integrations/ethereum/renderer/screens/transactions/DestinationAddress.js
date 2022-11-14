@@ -5,7 +5,7 @@ export default class DestinationAddress extends Component {
     const isContractCall =
       (this.props.receipt.hasOwnProperty("contractAddress") &&
         this.props.receipt.contractAddress !== null) ||
-      (this.props.tx.to && this.props.tx.input);
+      (this.props.tx.to && this.props.tx.input !== "0x");
 
     const isContractCreationCall =
       this.props.receipt.hasOwnProperty("contractAddress") &&
