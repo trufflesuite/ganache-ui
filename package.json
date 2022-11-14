@@ -41,6 +41,7 @@
     "postinstall": "cd static/node && npm ci --only=prod"
   },
   "dependencies": {
+    "14": "^3.1.6",
     "@exponent/electron-cookies": "^2.0.0",
     "@ganache/react-json-view": "^1.20.2",
     "atob": "2.1.2",
@@ -113,7 +114,7 @@
     "cache-loader": "4.1.0",
     "chokidar": "3.3.1",
     "cross-env": "^6.0.0",
-    "electron": "12.0.2",
+    "electron": "^12.0.2",
     "electron-builder": "22.10.5",
     "electron-fetch": "1.7.3",
     "electron-notarize": "1.0.0",
@@ -260,6 +261,6 @@
     }
   },
   "engines": {
-    "node": "12.13.1"
+    "node": "14.21.1"
   }
 }
