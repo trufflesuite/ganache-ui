@@ -22,7 +22,7 @@ Please open issues and pull requests for new features, questions, and bug fixes.
 
 Requirements:
 
-- `node v12.13.1`
+- `node v14.21.1`
 
 To get started:
 
