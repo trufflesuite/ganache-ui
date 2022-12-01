@@ -103,7 +103,6 @@ async function startServer(options) {
   }
 
   options.wallet = options.wallet || {};
-  options.wallet.totalAccounts = 1;
   server = ganacheLib.server(options);
 
   try {
