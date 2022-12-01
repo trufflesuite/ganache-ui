@@ -65,11 +65,19 @@ class WorkspaceManager {
           }
         }
         const flavor = settings.get("flavor");
+        if (flavor === "ethereum") {
+          if (settings.get("libVersion") === undefined) {
+            // if no libVersion is set for an ethereum workspace, then it's a legacy workspace
+            settings.set("libVersion", 2);
+          }
+        }
         return [new Workspace(name, this.directory, flavor)];
       });
     }
 
-    this.workspaces.push(new Workspace(null, this.directory, "ethereum"));
+    const ethereumQuickStart = new Workspace(null, this.directory, "ethereum");
+    ethereumQuickStart.settings.set("libVersion", 7);
+    this.workspaces.push(ethereumQuickStart);
     this.workspaces.push(new Workspace(null, this.directory, "filecoin"));
   }
 
@@ -83,7 +91,11 @@ class WorkspaceManager {
   getNonDefaultNames() {
     return this.workspaces
       .filter((workspace) => workspace.name !== null)
-      .map((workspace) => ({ name: workspace.name, flavor: workspace.flavor }));
+      .map((workspace) => ({
+        name: workspace.name,
+        flavor: workspace.flavor,
+        libVersion: workspace.settings.get("libVersion"),
+      }));
   }
 
   get(name, flavor = "ethereum") {

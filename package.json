@@ -5,7 +5,7 @@
   "description": "Personal Blockchain for Ethereum",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/trufflesuite/ganache.git"
+    "url": "git+https://github.com/trufflesuite/ganache-ui.git"
   },
   "author": {
     "name": "Truffle",
@@ -15,7 +15,7 @@
   "license": "MIT",
   "private": true,
   "bugs": {
-    "url": "https://github.com/trufflesuite/ganache/issues"
+    "url": "https://github.com/trufflesuite/ganache-ui/issues"
   },
   "keywords": [
     "ganache",
@@ -23,7 +23,7 @@
     "blockchain",
     "truffle"
   ],
-  "homepage": "https://github.com/trufflesuite/ganache#readme",
+  "homepage": "https://github.com/trufflesuite/ganache-ui#readme",
   "scripts": {
     "dev": "electron-webpack dev --inspect",
     "start": "npm run dev",
@@ -56,6 +56,7 @@
     "follow-redirects": "1.9.0",
     "fs-extra": "9.0.0",
     "ganache": "7.5.0",
+    "ganache-core": "^2.13.1",
     "get-port": "^5.0.0",
     "history": "4.10.1",
     "lodash.assign": "4.2.0",

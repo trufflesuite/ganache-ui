@@ -5,9 +5,7 @@ import EventEmitter from "events";
 import WorkspaceManager from "../main/types/workspaces/WorkspaceManager";
 import extras from "../common/extras";
 
-import {
-  SAVE_WORKSPACE
-} from "../common/redux/workspaces/actions";
+import { SAVE_WORKSPACE } from "../common/redux/workspaces/actions";
 
 class IntegrationManager extends EventEmitter {
   constructor(userDataPath, ipc, isDevMode = false) {
@@ -19,7 +17,7 @@ class IntegrationManager extends EventEmitter {
     this.ipc = ipc;
     this.integrations = {
       ethereum,
-      filecoin
+      filecoin,
     };
     this.workspaceManager = new WorkspaceManager(userDataPath);
     this._listen();
@@ -30,16 +28,25 @@ class IntegrationManager extends EventEmitter {
   }
 
   async setWorkspace(name, flavor) {
-    await this._setFlavor(flavor);
-    this.workspace = this.workspaceManager.get(name, flavor);
+    const desiredWorkspace = this.workspaceManager.get(name, flavor);
+    if (desiredWorkspace == undefined) {
+      throw new Error("Workspace not found");
+    }
+    await this._setFlavor(flavor, desiredWorkspace);
+    this.workspace = desiredWorkspace;
   }
 
-  async _setFlavor(flavor) {
+  async _setFlavor(flavor, workspace) {
     const integrations = this.integrations;
     if (Object.prototype.hasOwnProperty.call(integrations, flavor)) {
       if (this.flavor) {
         // We're *not* switching chains, so don't need to do anything.
-        if (this.flavor.name === flavor) return;
+        if (
+          this.flavor.name === flavor &&
+          this.flavor.chain.libVersion === this.workspace.settings.libVersion
+          //&& the workspace is the same one
+        )
+          return;
 
         // We're switching chains; invalid the previous workspace and then
         // shut down the old chain completely
@@ -47,12 +54,15 @@ class IntegrationManager extends EventEmitter {
         await this.stopChain();
       }
 
-      const integration = this.flavor = new integrations[flavor](this);
+      const integration = (this.flavor = new integrations[flavor](
+        this,
+        workspace
+      ));
       integration.name = flavor;
       integration.on("message", (...args) => {
         this.emit.apply(this, args);
       });
-      await this.startChain();
+      //await this.startChain();
     } else {
       throw new Error("Invalid flavor: " + flavor);
     }
@@ -62,7 +72,9 @@ class IntegrationManager extends EventEmitter {
     let workspace = this.workspace;
     let chaindataLocation = null;
     if (workspace) {
-      chaindataLocation = workspace.chaindataDirectory || (await this.flavor.chain.getDbLocation());
+      chaindataLocation =
+        workspace.chaindataDirectory ||
+        (await this.flavor.chain.getDbLocation());
     } else {
       workspace = this.workspaceManager.get(null);
     }
@@ -96,7 +108,10 @@ class IntegrationManager extends EventEmitter {
     if (this.flavor && this.workspace) {
       const settings = this.workspace.settings.getAll();
       try {
-        await this.flavor.startServer(settings, this.workspace.workspaceDirectory);
+        await this.flavor.startServer(
+          settings,
+          this.workspace.workspaceDirectory
+        );
         // just incase startServer mutates the settings, save them
         // todo: not sure whether we still need to do this?
         this.workspace.settings.setAll(settings);
