@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Scrollbars } from "react-custom-scrollbars";
-
+import Warning from "../../../renderer/icons/warning.svg";
+import ReactTooltip from "react-tooltip";
 import * as pkg from "../../../../package.json";
 
 import OnlyIf from "../../../renderer/components/only-if/OnlyIf";
@@ -166,8 +167,15 @@ class HomeScreen extends Component {
           <li key={workspaceInfo.name + workspaceInfo.flavor}>
             <button onClick={() => this.selectWorkspace(workspaceInfo)}>
               <span>
-                {workspaceInfo.name} ({workspaceInfo.flavor}
-                {workspaceInfo.libVersion === 2 ? " [legacy]" : ""})
+                {workspaceInfo.name} ({workspaceInfo.flavor})
+                {workspaceInfo.libVersion === 2 ? (
+                  <Warning
+                    data-tip="This workspace was made with an old version of Ganache.<br/> You'll need to create a new workspace to get the advantages of Ganache v7."
+                    data-multiline={true}
+                  />
+                ) : (
+                  ""
+                )}
               </span>
               <div
                 className="EditSettings"
@@ -289,6 +297,7 @@ class HomeScreen extends Component {
         >
           <UpdateModal />
         </OnlyIf>
+        <ReactTooltip />
       </React.Fragment>
     );
   }
