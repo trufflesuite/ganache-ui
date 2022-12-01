@@ -32,28 +32,14 @@ class IntegrationManager extends EventEmitter {
     if (desiredWorkspace == undefined) {
       throw new Error("Workspace not found");
     }
-    await this._setFlavor(flavor, desiredWorkspace);
-    this.workspace = desiredWorkspace;
+    this.workspace = null;
+    await this.stopChain();
+    this.startChainWithWorkspace(flavor, desiredWorkspace);
   }
 
-  async _setFlavor(flavor, workspace) {
+  async startChainWithWorkspace(flavor, workspace) {
     const integrations = this.integrations;
     if (Object.prototype.hasOwnProperty.call(integrations, flavor)) {
-      if (this.flavor) {
-        // We're *not* switching chains, so don't need to do anything.
-        if (
-          this.flavor.name === flavor &&
-          this.flavor.chain.libVersion === this.workspace.settings.libVersion
-          //&& the workspace is the same one
-        )
-          return;
-
-        // We're switching chains; invalid the previous workspace and then
-        // shut down the old chain completely
-        this.workspace = null;
-        await this.stopChain();
-      }
-
       const integration = (this.flavor = new integrations[flavor](
         this,
         workspace
@@ -62,7 +48,8 @@ class IntegrationManager extends EventEmitter {
       integration.on("message", (...args) => {
         this.emit.apply(this, args);
       });
-      //await this.startChain();
+      this.workspace = workspace;
+      await this.startChain();
     } else {
       throw new Error("Invalid flavor: " + flavor);
     }

@@ -1,18 +1,28 @@
 import Integrations from "../integrations";
 import TruffleIntegrationService from "./common/services/TruffleIntegrationService";
 import EthereumChainService from "./common/services/EthereumChainService";
-import { GET_CONTRACT_DETAILS, CONTRACT_EVENT, CONTRACT_TRANSACTION, PROJECT_UPDATED } from "./common/redux/workspaces/actions";
+import {
+  GET_CONTRACT_DETAILS,
+  CONTRACT_EVENT,
+  CONTRACT_TRANSACTION,
+  PROJECT_UPDATED,
+} from "./common/redux/workspaces/actions";
 import { SET_SYSTEM_ERROR } from "../../common/redux/core/actions";
 import { GET_DECODED_TRANSACTION_INPUT } from "./common/redux/transactions/actions";
-import { GET_DECODED_EVENT, SET_SUBSCRIBED_TOPICS } from "./common/redux/events/actions";
+import {
+  GET_DECODED_EVENT,
+  SET_SUBSCRIBED_TOPICS,
+} from "./common/redux/events/actions";
 import { SET_KEY_DATA } from "./common/redux/core/actions";
 
 class Ethereum extends Integrations {
-  constructor(integrationManager) {
+  constructor(integrationManager, workspace) {
     super(integrationManager);
 
-    this.projectIntegration = new TruffleIntegrationService(integrationManager.isDevMode);
-    this.chain = new EthereumChainService(integrationManager.config);
+    this.projectIntegration = new TruffleIntegrationService(
+      integrationManager.isDevMode
+    );
+    this.chain = new EthereumChainService(workspace, integrationManager.config);
 
     this._listen();
   }
@@ -27,23 +37,25 @@ class Ethereum extends Integrations {
         privateKeys: data.privateKeys,
         mnemonic: data.mnemonic,
         hdPath: data.hdPath,
-        fork_block_number: data.fork_block_number
+        fork_block_number: data.fork_block_number,
       });
 
       workspace.settings.handleNewMnemonic(data.mnemonic);
       workspace.settings.handleNewForkBlockNumber(data.fork_block_number);
-    })
+    });
 
     this.chain.on("message", this.emit.bind(this, "message"));
   }
 
-  _ipcListeners = []
-  onIpc(event, callback){
-    this._ipcListeners.push({event, callback});
+  _ipcListeners = [];
+  onIpc(event, callback) {
+    this._ipcListeners.push({ event, callback });
     return this.ipc.on(event, callback);
   }
   offIpc() {
-    this._ipcListeners.forEach(({event, callback}) => this.ipc.off(event, callback));
+    this._ipcListeners.forEach(({ event, callback }) =>
+      this.ipc.off(event, callback)
+    );
     this._ipcListeners = [];
   }
   async _listenToIPC() {
@@ -53,10 +65,10 @@ class Ethereum extends Integrations {
         const state = await this.projectIntegration.getContractState(
           contract,
           contracts,
-          block,
+          block
         );
         this.send(GET_CONTRACT_DETAILS, state);
-      },
+      }
     );
 
     this.onIpc("web3-provider", (event, url) => {
@@ -68,7 +80,7 @@ class Ethereum extends Integrations {
         const decodedLog = await this.projectIntegration.getDecodedEvent(
           contract,
           contracts,
-          log,
+          log
         );
         this.send(GET_DECODED_EVENT, decodedLog);
       } catch (e) {
@@ -85,25 +97,22 @@ class Ethereum extends Integrations {
           const decodedData = await this.projectIntegration.getDecodedTransaction(
             contract,
             contracts,
-            transaction,
+            transaction
           );
-          this.send(
-            GET_DECODED_TRANSACTION_INPUT,
-            decodedData,
-          );
+          this.send(GET_DECODED_TRANSACTION_INPUT, decodedData);
         } catch (e) {
           this.send(GET_DECODED_TRANSACTION_INPUT, {
             error: { stack: e.stack, messages: e.message },
           });
         }
-      },
+      }
     );
   }
 
   async _listenToTruffle() {
     console.log("listen to truffle");
     const projectIntegration = this.projectIntegration;
-    projectIntegration.on("error", async error => {
+    projectIntegration.on("error", async (error) => {
       await projectIntegration.stopWatching();
 
       if (this.chain.isServerStarted()) {
@@ -117,38 +126,35 @@ class Ethereum extends Integrations {
       }
     });
 
-    projectIntegration.on("project-details-update", async data => {
+    projectIntegration.on("project-details-update", async (data) => {
       this.send(PROJECT_UPDATED, data.project);
-      this.send(
-        SET_SUBSCRIBED_TOPICS,
-        data.subscribedTopics,
-      );
+      this.send(SET_SUBSCRIBED_TOPICS, data.subscribedTopics);
     });
 
-    projectIntegration.on("contract-transaction", data => {
+    projectIntegration.on("contract-transaction", (data) => {
       this.send(CONTRACT_TRANSACTION, data);
 
       this._integrationManager.workspace.contractCache.addTransaction(
         data.contractAddress,
-        data.transactionHash,
+        data.transactionHash
       );
     });
 
-    projectIntegration.on("contract-event", data => {
+    projectIntegration.on("contract-event", (data) => {
       this.send(CONTRACT_EVENT, data);
 
-      this._integrationManager.workspace.contractCache.addEvent(data.contractAddress, {
-        transactionHash: data.transactionHash,
-        logIndex: data.logIndex,
-      });
+      this._integrationManager.workspace.contractCache.addEvent(
+        data.contractAddress,
+        {
+          transactionHash: data.transactionHash,
+          logIndex: data.logIndex,
+        }
+      );
     });
   }
 
   async start() {
-    return Promise.all([
-      this.projectIntegration.start(),
-      this.chain.start()
-    ]);
+    return Promise.all([this.projectIntegration.start(), this.chain.start()]);
   }
 
   async startServer(workspaceSettings) {
@@ -159,7 +165,7 @@ class Ethereum extends Integrations {
     await this.stopServer();
     return Promise.all([
       this.chain.stop(),
-      this.projectIntegration.stopProcess()
+      this.projectIntegration.stopProcess(),
     ]);
   }
   async stopServer() {

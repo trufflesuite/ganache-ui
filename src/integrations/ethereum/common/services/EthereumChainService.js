@@ -16,7 +16,6 @@ const CHAIN_OPTIONS = {
     process.env.NODE_ENV === "development" ? ["--inspect=40895"] : undefined,
 };
 
-// todo: Figure out some sort of versioning schema for workspace["libVersion"]
 export default function getEthereumChainService(workspace, config) {
   const libVersion = workspace.settings.get("libVersion");
   const path = PATH_BY_LIBVERSION[libVersion];
