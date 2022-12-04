@@ -6,8 +6,8 @@ import * as os from "os";
 import merge from "lodash.merge";
 import ethagen from "ethagen/wallet";
 import moniker from "moniker";
-import fixPath from "fix-path"
-import { format as formatUrl } from 'url';
+import fixPath from "fix-path";
+import { format as formatUrl } from "url";
 import {
   app,
   BrowserWindow,
@@ -16,7 +16,7 @@ import {
   ipcMain,
   screen,
   clipboard,
-} from "electron"
+} from "electron";
 import { initAutoUpdates, getAutoUpdateService } from "./init/AutoUpdate.js";
 import {
   REQUEST_SERVER_RESTART,
@@ -48,21 +48,21 @@ import pojofyError from "../common/utils/pojofyError";
 import migration from "./init/migration.js";
 
 const isDevMode = process.execPath.match(/[\\/]electron/) !== null;
-const isDevelopment = process.env.NODE_ENV !== 'production';
+const isDevelopment = process.env.NODE_ENV !== "production";
 
 let mainWindow = null;
 
-process.on("uncaughtException", err => {
+process.on("uncaughtException", (err) => {
   if (mainWindow && err) {
     mainWindow.webContents.send(SET_SYSTEM_ERROR, err.stack || err);
   }
 });
 
-process.on("unhandledRejection", err => {
+process.on("unhandledRejection", (err) => {
   if (mainWindow && err) {
     mainWindow.webContents.send(SET_SYSTEM_ERROR, err.stack || err);
   }
-})
+});
 
 app.name = "Ganache";
 app.allowRendererProcessReuse = true;
@@ -93,32 +93,54 @@ if (process.platform === "win32") {
   // context.
   // eslint-disable-next-line no-console
   let userDataPromise = spawn("cmd.exe", ["/c", "mkdir", USERDATA_PATH])
-    .then(()=> {
-      return spawn("cmd.exe", ["/c", "mkdir", path.join(USERDATA_PATH, "extras")])
+    .then(() => {
+      return spawn("cmd.exe", [
+        "/c",
+        "mkdir",
+        path.join(USERDATA_PATH, "extras"),
+      ]);
     })
-    .then(()=> {
-      return spawn("cmd.exe", ["/c", "mkdir", path.join(USERDATA_PATH, "workspaces")])
+    .then(() => {
+      return spawn("cmd.exe", [
+        "/c",
+        "mkdir",
+        path.join(USERDATA_PATH, "workspaces"),
+      ]);
     })
-    .then(()=> {
-      return spawn("cmd.exe", ["/c", "mkdir", path.join(USERDATA_PATH, "default")])
+    .then(() => {
+      return spawn("cmd.exe", [
+        "/c",
+        "mkdir",
+        path.join(USERDATA_PATH, "default"),
+      ]);
     })
-    .then(()=> {
-      return spawn("cmd.exe", ["/c", "mkdir", path.join(USERDATA_PATH, "global")])
+    .then(() => {
+      return spawn("cmd.exe", [
+        "/c",
+        "mkdir",
+        path.join(USERDATA_PATH, "global"),
+      ]);
     })
-    .catch(e => { console.error(e) });
+    .catch((e) => {
+      console.error(e);
+    });
 
   // start a migration, if needed
-  migrationPromise = userDataPromise.then(() => migration.migrate(USERDATA_PATH));
-  migrationPromise.then(() => {
-    migration.uninstallOld();
-  }).catch(e => {
-    if (mainWindow) {
-      mainWindow.webContents.send(SET_SYSTEM_ERROR, e.stack || e);
-    } else {
-      // eslint-disable-next-line no-console
-      console.error(e);
-    }
-  });
+  migrationPromise = userDataPromise.then(() =>
+    migration.migrate(USERDATA_PATH)
+  );
+  migrationPromise
+    .then(() => {
+      migration.uninstallOld();
+    })
+    .catch((e) => {
+      if (mainWindow) {
+        mainWindow.webContents.send(SET_SYSTEM_ERROR, e.stack || e);
+      } else {
+        // eslint-disable-next-line no-console
+        console.error(e);
+      }
+    });
 } else {
   migrationPromise = Promise.resolve();
 
@@ -147,7 +169,11 @@ function addLogLines(data, context = undefined) {
   // `mainWindow` can be null/undefined here if the process is killed
   // (common when developing)
   if (mainWindow) {
-    mainWindow.webContents.send(ADD_LOG_LINES, data.toString().split(/\n/g), context);
+    mainWindow.webContents.send(
+      ADD_LOG_LINES,
+      data.toString().split(/\n/g),
+      context
+    );
   } else {
     // eslint-disable-next-line no-console
     console.error(data.toString());
@@ -155,14 +181,18 @@ function addLogLines(data, context = undefined) {
 }
 
 // create main BrowserWindow when electron is ready
-app.on('ready', async () => {
+app.on("ready", async () => {
   const global = new GlobalSettings(path.join(USERDATA_PATH, "global"));
   const GoogleAnalytics = new GoogleAnalyticsService();
 
-  const integrations = new IntegrationManager(USERDATA_PATH, ipcMain, isDevMode);
+  const integrations = new IntegrationManager(
+    USERDATA_PATH,
+    ipcMain,
+    isDevMode
+  );
   // allow integrations to communicate with the mainWindow by emitting a
   // `"send"` event
-  integrations.on("send", function(){
+  integrations.on("send", function() {
     if (mainWindow) {
       const webContents = mainWindow.webContents;
       if (webContents) {
@@ -181,14 +211,11 @@ app.on('ready', async () => {
 
   app.on(
     "window-all-closed",
-    async () => await performShutdownTasks(integrations),
+    async () => await performShutdownTasks(integrations)
   );
 
   // Mac: event emitted by closing app from dock
-  app.on(
-    "will-quit",
-    async () => await performShutdownTasks(integrations),
-  );
+  app.on("will-quit", async () => await performShutdownTasks(integrations));
 
   const width = screen.getPrimaryDisplay().bounds.width;
   const standardWidth = 1200;
@@ -198,16 +225,19 @@ app.on('ready', async () => {
   const appHeight = Math.min(800, (1 / standardAspectRation) * appWidth);
   appWidth = standardAspectRation * appHeight;
 
-  Menu.setApplicationMenu(null)
+  Menu.setApplicationMenu(null);
 
   app.commandLine.appendSwitch("ignore-certificate-errors", "true");
 
-  app.on('certificate-error', (event, _webContents, _url, _error, _certificate, callback) => {
-    // On certificate error we disable default behaviour (stop loading the page)
-    // and we then say "it is all fine - true" to the callback
-    event.preventDefault();
-    callback(true);
-  });
+  app.on(
+    "certificate-error",
+    (event, _webContents, _url, _error, _certificate, callback) => {
+      // On certificate error we disable default behaviour (stop loading the page)
+      // and we then say "it is all fine - true" to the callback
+      event.preventDefault();
+      callback(true);
+    }
+  );
 
   mainWindow = new BrowserWindow({
     show: false,
@@ -220,21 +250,25 @@ app.on('ready', async () => {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
-      enableRemoteModule: true
-    }
+      enableRemoteModule: true,
+    },
   });
 
   if (isDevelopment) {
-    mainWindow.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`);
+    mainWindow.loadURL(
+      `http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`
+    );
   } else {
-    mainWindow.loadURL(formatUrl({
-      pathname: path.join(__dirname, "index.html"),
-      protocol: 'file',
-      slashes: true
-    }));
+    mainWindow.loadURL(
+      formatUrl({
+        pathname: path.join(__dirname, "index.html"),
+        protocol: "file",
+        slashes: true,
+      })
+    );
   }
 
-  mainWindow.on("closed", () => mainWindow = null);
+  mainWindow.on("closed", () => (mainWindow = null));
 
   // we can't get our app settings until the migrate is complete...
   const bootstrapPromise = migrationPromise.then(() => {
@@ -243,8 +277,14 @@ app.on('ready', async () => {
   });
 
   // if a user clicks a link to an external webpage, open it in the user's browser, not our app
-  mainWindow.webContents.on("new-window", ensureExternalLinksAreOpenedInBrowser);
-  mainWindow.webContents.on("will-navigate",ensureExternalLinksAreOpenedInBrowser);
+  mainWindow.webContents.on(
+    "new-window",
+    ensureExternalLinksAreOpenedInBrowser
+  );
+  mainWindow.webContents.on(
+    "will-navigate",
+    ensureExternalLinksAreOpenedInBrowser
+  );
 
   // handle right click:
   mainWindow.webContents.on("context-menu", (_e, props) => {
@@ -308,8 +348,8 @@ app.on('ready', async () => {
         click: () => {
           shell.openExternal(
             `https://www.google.com/search?q=${encodeURIComponent(
-              printableText,
-            )}`,
+              printableText
+            )}`
           );
         },
       });
@@ -354,13 +394,13 @@ app.on('ready', async () => {
 
       mainWindow.webContents.send(
         SET_WORKSPACES,
-        workspaceManager.getNonDefaultNames(),
+        workspaceManager.getNonDefaultNames()
       );
 
       initAutoUpdates(globalSettings, mainWindow);
     });
 
-    integrations.on("start-error", err => {
+    integrations.on("start-error", (err) => {
       err.code = "CUSTOMERROR";
       err.key = "workspace.server.chain";
       err.value = err.message + "\n\n" + err.stack;
@@ -377,19 +417,19 @@ app.on('ready', async () => {
           SET_SERVER_STARTED,
           globalSettings,
           workspaceSettings,
-          startupMode,
+          startupMode
         );
         mainWindow.webContents.send(
           SET_SETTINGS,
           globalSettings,
-          workspaceSettings,
+          workspaceSettings
         );
       }
     });
 
     integrations.on("stdout", addLogLines);
     integrations.on("stderr", addLogLines);
-    integrations.on("error", async _error => {
+    integrations.on("error", async (_error) => {
       let error = pojofyError(_error);
       mainWindow.webContents.send(SET_SYSTEM_ERROR, error);
 
@@ -408,7 +448,7 @@ app.on('ready', async () => {
 
       mainWindow.webContents.send(
         SET_WORKSPACES,
-        workspaceManager.getNonDefaultNames(),
+        workspaceManager.getNonDefaultNames()
       );
     }
   });
@@ -423,7 +463,7 @@ app.on('ready', async () => {
 
     mainWindow.webContents.send(
       SET_WORKSPACES,
-      workspaceManager.getNonDefaultNames(),
+      workspaceManager.getNonDefaultNames()
     );
 
     mainWindow.webContents.send(SHOW_HOME_SCREEN);
@@ -440,7 +480,7 @@ app.on('ready', async () => {
     const workspaceSettings = workspace.settings.getAll();
     GoogleAnalytics.setup(
       global.get("googleAnalyticsTracking") && !isDevMode,
-      workspaceSettings.uuid,
+      workspaceSettings.uuid
     );
     GoogleAnalytics.reportGenericUserData();
     GoogleAnalytics.reportWorkspaceSettings(workspaceSettings);
@@ -460,8 +500,10 @@ app.on('ready', async () => {
         projects.push(
           await integrations.flavor.projectIntegration.getProjectDetails(
             workspaceSettings.projects[i],
-            workspaceSettings.server ? workspaceSettings.server.network_id : null,
-          ),
+            workspaceSettings.server
+              ? workspaceSettings.server.network_id
+              : null
+          )
         );
       }
     }
@@ -474,18 +516,18 @@ app.on('ready', async () => {
     mainWindow.webContents.send(
       SET_CURRENT_WORKSPACE,
       tempWorkspace,
-      workspace.contractCache.getAll(),
+      workspace.contractCache.getAll()
     );
 
     const globalSettings = global.getAll();
     mainWindow.webContents.send(
       SET_SETTINGS,
       globalSettings,
-      workspace.settings.getAll(),
+      workspace.settings.getAll()
     );
 
     startupMode = STARTUP_MODE.NORMAL;
-    if (await integrations.startServer()){
+    if (await integrations.startServer()) {
       // this sends the network interfaces to the renderer process for
       //  enumering in the config screen. it sends repeatedly
       continuouslySendNetworkInterfaces();
@@ -501,8 +543,13 @@ app.on('ready', async () => {
 
     global.set("last_flavor", flavor);
 
-    startupMode = workspaceName ? STARTUP_MODE.EDIT_WORKSPACE : STARTUP_MODE.NEW_WORKSPACE;
-    const defaultWorkspace = workspaceManager.get(workspaceName || null, flavor);
+    startupMode = workspaceName
+      ? STARTUP_MODE.EDIT_WORKSPACE
+      : STARTUP_MODE.NEW_WORKSPACE;
+    const defaultWorkspace = workspaceManager.get(
+      workspaceName || null,
+      flavor
+    );
     if (!workspaceName) {
       workspaceName = moniker.choose();
       const wallet = new ethagen({ entropyBits: 128 });
@@ -513,7 +560,7 @@ app.on('ready', async () => {
         null,
         workspaceManager.directory,
         wallet.mnemonic,
-        true,
+        true
       );
     } else {
       const workspaceSettings = defaultWorkspace.settings.getAll();
@@ -533,25 +580,22 @@ app.on('ready', async () => {
     mainWindow.webContents.send(
       SET_CURRENT_WORKSPACE,
       tempWorkspace,
-      workspace.contractCache.getAll(),
+      workspace.contractCache.getAll()
     );
 
-    if (flavor === "ethereum") {
-      await integrations.startChain();
-      if (!(await integrations.startServer())) {
-        return;
-      }
-    } else {
-      if (workspace) {
-        const globalSettings = global.getAll();
-        const workspaceSettings = workspace.settings.getAll();
-        mainWindow.webContents.send(
-          SET_SERVER_STARTED,
-          globalSettings,
-          workspaceSettings,
-          startupMode,
-        );
-      }
+    if (!(await integrations.startServer())) {
+      return;
+    }
+
+    if (workspace) {
+      const globalSettings = global.getAll();
+      const workspaceSettings = workspace.settings.getAll();
+      mainWindow.webContents.send(
+        SET_SERVER_STARTED,
+        globalSettings,
+        workspaceSettings,
+        startupMode
+      );
     }
 
     // this sends the network interfaces to the renderer process for
@@ -564,12 +608,12 @@ app.on('ready', async () => {
     mainWindow.webContents.send(
       SET_SETTINGS,
       globalSettings,
-      workspaceSettings,
+      workspaceSettings
     );
 
     mainWindow.webContents.send(
       SET_WORKSPACES,
-      workspaceManager.getNonDefaultNames(),
+      workspaceManager.getNonDefaultNames()
     );
   });
 
@@ -583,7 +627,10 @@ app.on('ready', async () => {
     if (workspace) {
       await integrations.stopServer();
 
-      if (startupMode === STARTUP_MODE.NEW_WORKSPACE || workspace.name === null) {
+      if (
+        startupMode === STARTUP_MODE.NEW_WORKSPACE ||
+        workspace.name === null
+      ) {
         // we just made a new workspace. we need to reset the chaindata since we initialized it
         // when started the configuration process
 
@@ -598,8 +645,10 @@ app.on('ready', async () => {
         projects.push(
           await integrations.flavor.projectIntegration.getProjectDetails(
             workspaceSettings.projects[i],
-            workspaceSettings.server ? workspaceSettings.server.network_id : null,
-          ),
+            workspaceSettings.server
+              ? workspaceSettings.server.network_id
+              : null
+          )
         );
       }
 
@@ -610,24 +659,24 @@ app.on('ready', async () => {
 
       mainWindow.webContents.send(
         SET_WORKSPACES,
-        workspaceManager.getNonDefaultNames(),
+        workspaceManager.getNonDefaultNames()
       );
       mainWindow.webContents.send(
         SET_CURRENT_WORKSPACE,
         tempWorkspace,
-        workspace.contractCache.getAll(),
+        workspace.contractCache.getAll()
       );
 
       const globalSettings = global.getAll();
       mainWindow.webContents.send(
         SET_SETTINGS,
         globalSettings,
-        workspaceSettings,
+        workspaceSettings
       );
 
       startupMode = STARTUP_MODE.NORMAL;
 
-      if (await integrations.startServer()){
+      if (await integrations.startServer()) {
         // send the interfaces again once on restart
         sendNetworkInterfaces();
       }
@@ -644,7 +693,7 @@ app.on('ready', async () => {
       }
 
       GoogleAnalytics.reportWorkspaceSettings(workspaceSettings);
-    },
+    }
   );
 });
 
