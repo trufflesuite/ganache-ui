@@ -13,6 +13,7 @@ module.exports = {
     unlocked_accounts: [],
     locked: false,
     vmErrorsOnRPCResponse: true,
+    connectToServer: true,
     logger: null,
     verbose: false,
     gasLimit: 6721975,

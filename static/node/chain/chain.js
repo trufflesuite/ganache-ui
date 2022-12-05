@@ -50,7 +50,13 @@ async function stopServer() {
 
 async function startServer(options) {
   await stopServer();
-  
+  if (options.connectToServer) {
+    process.send({ type: "server-started", data: {
+
+    } });
+    return
+  }
+
   let sanitizedOptions = Object.assign({}, options);
   delete sanitizedOptions.mnemonic;
 
