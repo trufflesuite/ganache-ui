@@ -21,9 +21,9 @@ class Workspace {
 
     // migrate to new contract cache location (in `chaindataDirectory):
     const oldLocation = path.join(this.workspaceDirectory, ContractCache.KEY);
-    if (fse.existsSync(oldLocation)) {
+    if (fse.existsSync(oldLocation)){
       const newLocation = path.join(this.chaindataDirectory, ContractCache.KEY);
-      fse.moveSync(oldLocation, newLocation, { overwrite: true });
+      fse.moveSync(oldLocation, newLocation, {overwrite: true});
     }
 
     this.contractCache = new ContractCache(this.chaindataDirectory);
@@ -36,7 +36,6 @@ class Workspace {
       configDirectory,
       this.flavor
     );
-
     this.basename = path.basename(this.workspaceDirectory);
     this.chaindataDirectory = this.generateChaindataDirectory();
   }
@@ -44,14 +43,10 @@ class Workspace {
   static getSanitizedName(name) {
     return name === null
       ? null
-      : name.replace(/\s/g, "-").replace(/[^a-zA-Z0-9\-_.]/g, "_") || "_";
+      : (name.replace(/\s/g, "-").replace(/[^a-zA-Z0-9\-_.]/g, "_") || "_");
   }
 
-  static generateDirectoryPath(
-    sanitizedName,
-    configDirectory,
-    flavor = "ethereum"
-  ) {
+  static generateDirectoryPath(sanitizedName, configDirectory, flavor = "ethereum") {
     if (sanitizedName === null) {
       if (flavor === "ethereum") {
         return path.join(configDirectory, "default");
@@ -92,24 +87,12 @@ class Workspace {
       this.settings.setDirectory(this.workspaceDirectory);
 
       // make sure contractCache is in the right location:
-      if (
-        chaindataDirectory &&
-        chaindataDirectory !== this.chaindataDirectory
-      ) {
+      if (chaindataDirectory && chaindataDirectory !== this.chaindataDirectory) {
         fse.copySync(chaindataDirectory, this.chaindataDirectory);
       }
-      const currentContractCachePath = path.join(
-        this.contractCache.storage.directory,
-        this.contractCache.storage.name
-      );
-      const desiredContractCachePath = path.join(
-        this.chaindataDirectory,
-        this.contractCache.storage.name
-      );
-      if (
-        currentContractCachePath !== desiredContractCachePath &&
-        fse.existsSync(currentContractCachePath)
-      ) {
+      const currentContractCachePath = path.join(this.contractCache.storage.directory, this.contractCache.storage.name);
+      const desiredContractCachePath = path.join(this.chaindataDirectory, this.contractCache.storage.name);
+      if (currentContractCachePath !== desiredContractCachePath && fse.existsSync(currentContractCachePath)) {
         fse.copySync(currentContractCachePath, desiredContractCachePath);
       }
 

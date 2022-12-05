@@ -1,8 +1,7 @@
 import Settings from "./Settings";
 import merge from "lodash.merge";
 
-const oldDefaultMnemonic =
-  "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat";
+const oldDefaultMnemonic = "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat";
 
 const ethereumInitialSettings = require("./flavors/ethereum");
 const filecoinInitialSettings = require("./flavors/filecoin");
@@ -10,7 +9,7 @@ const filecoinInitialSettings = require("./flavors/filecoin");
 class WorkspaceSettings extends Settings {
   constructor(directory, chaindataDirectory, flavor = "ethereum") {
     let initialSettings;
-    switch (flavor) {
+    switch(flavor){
       case "ethereum": {
         initialSettings = ethereumInitialSettings;
         break;
@@ -23,15 +22,12 @@ class WorkspaceSettings extends Settings {
         throw new Error("Invalid flavor: " + flavor);
       }
     }
-    super(
-      directory,
-      merge({}, initialSettings, {
-        flavor,
-        server: {
-          flavor,
-        },
-      })
-    );
+    super(directory, merge({}, initialSettings, {
+      flavor,
+      server: {
+        flavor
+      }
+    }));
 
     this.chaindataDirectory = chaindataDirectory;
 
@@ -41,7 +37,7 @@ class WorkspaceSettings extends Settings {
           gasLimit: initialSettings.server.gasLimit,
           gasPrice: initialSettings.server.gasPrice,
           hardfork: initialSettings.server.hardfork,
-        },
+        }
       };
     }
   }
@@ -84,7 +80,7 @@ class WorkspaceSettings extends Settings {
           server: {
             database: {
               dbPath: this.chaindataDirectory,
-            },
+            }
           },
         });
       }
@@ -98,10 +94,7 @@ const migrateMnemonicSettings = function(currentSettings) {
   // If we're migrating a settings file from before we used a persistent,
   // randomly generated mnemonic by default, randomizeMnemonic on start will
   // be undefined.
-  if (
-    currentSettings.randomizeMnemonicOnStart === undefined &&
-    currentSettings.server
-  ) {
+  if (currentSettings.randomizeMnemonicOnStart === undefined && currentSettings.server) {
     // Before we added the randomizeMnemonicOnStart flag, the absence of a
     // mnemonic meant that we wanted a random one one each run. We want to
     // preserve this preference.
