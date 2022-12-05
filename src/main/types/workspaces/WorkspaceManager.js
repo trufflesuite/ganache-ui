@@ -94,7 +94,7 @@ class WorkspaceManager {
       .map((workspace) => ({
         name: workspace.name,
         flavor: workspace.flavor,
-        libVersion: workspace.settings.get("libVersion"),
+        isLegacy: workspace.settings.get("libVersion") === 2,
       }));
   }
 
