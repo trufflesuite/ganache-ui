@@ -15,7 +15,7 @@
   "license": "MIT",
   "private": true,
   "bugs": {
-    "url": "https://github.com/trufflesuite/ganache/issues"
+    "url": "https://github.com/trufflesuite/ganache-ui/issues"
   },
   "keywords": [
     "ganache",

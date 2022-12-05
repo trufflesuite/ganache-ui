@@ -83,7 +83,7 @@ class UpdateModal extends Component {
     return (
       <p className="downloadSpeed">
         {sizeFormatter(
-          this.props.autoUpdate.downloadProgress.bytesPerSecond || 0,
+          this.props.autoUpdate.downloadProgress.bytesPerSecond || 0
         )}
         /s
       </p>
@@ -140,9 +140,7 @@ class UpdateModal extends Component {
             className="ctaButton"
             onClick={() => {
               shell.openExternal(
-                `https://github.com/trufflesuite/ganache/releases/v${
-                  this.props.autoUpdate.versionInfo.newVersion
-                }`,
+                `https://github.com/trufflesuite/ganache-ui/releases/v${this.props.autoUpdate.versionInfo.newVersion}`
               );
               // close the modal so they can go about their business
               this.props.dispatch(AutoUpdate.cancelUpdate());
@@ -183,7 +181,4 @@ class UpdateModal extends Component {
   }
 }
 
-export default connect(
-  UpdateModal,
-  "autoUpdate",
-);
+export default connect(UpdateModal, "autoUpdate");

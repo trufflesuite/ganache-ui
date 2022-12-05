@@ -9,7 +9,7 @@ import {
   openDefaultWorkspace,
   openNewWorkspaceConfig,
   openWorkspaceConfig,
-  deleteWorkspace
+  deleteWorkspace,
 } from "../../../common/redux/workspaces/actions";
 import UpdateNotification from "../auto-update/UpdateNotification";
 import ErrorModal from "../../components/modal/ErrorModal";
@@ -28,7 +28,9 @@ import SettingsIcon from "../../icons/settings.svg";
 class HomeScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = {flavor: this.props.config.settings.global.last_flavor || "ethereum"};
+    this.state = {
+      flavor: this.props.config.settings.global.last_flavor || "ethereum",
+    };
 
     this.handleFlavorChange = this.handleFlavorChange.bind(this);
     this.handleClickOutside = this.handleClickOutside.bind(this);
@@ -60,8 +62,10 @@ class HomeScreen extends Component {
       ModalDetails.types.WARNING,
       [
         {
-          click: modal => {
-            this.props.dispatch(deleteWorkspace(workspaceName, workspaceFlavor));
+          click: (modal) => {
+            this.props.dispatch(
+              deleteWorkspace(workspaceName, workspaceFlavor)
+            );
             modal.close();
           },
           value: "Remove",
@@ -71,7 +75,7 @@ class HomeScreen extends Component {
         },
       ],
       `Remove ${workspaceName} Workspace?`,
-      `Removing the ${workspaceName} workspace will delete its associated blockchain data, including any deployments, transactions, and event history. Your project source code will not be deleted.`,
+      `Removing the ${workspaceName} workspace will delete its associated blockchain data, including any deployments, transactions, and event history. Your project source code will not be deleted.`
     );
 
     this.props.dispatch(ModalDetails.actions.setModalError(modalDetails));
@@ -86,39 +90,61 @@ class HomeScreen extends Component {
   }
   handleFlavorChange(flavor, e) {
     e.preventDefault();
-    this.setState({flavor, buttonState: null});
+    this.setState({ flavor, buttonState: null });
   }
 
   createButton(flavor) {
     const lastFlavor = this.state.flavor;
     const lowered = flavor.toLowerCase();
-    return (<button onClick={this.handleFlavorChange.bind(this, lowered)} className={lastFlavor === lowered ? "homescreen-flavor-selected" : ""}>{flavor}</button>);
+    return (
+      <button
+        onClick={this.handleFlavorChange.bind(this, lowered)}
+        className={lastFlavor === lowered ? "homescreen-flavor-selected" : ""}
+      >
+        {flavor}
+      </button>
+    );
   }
   getButtons(buttonState) {
     if (this.state.buttonState === buttonState) {
-      return (<div ref={(node) => this.wrapperRef=node} className="homescreen-flavor-buttons">
-        {this.createButton("Ethereum")}
-        {this.createButton("Filecoin")}
-      </div>);
+      return (
+        <div
+          ref={(node) => (this.wrapperRef = node)}
+          className="homescreen-flavor-buttons"
+        >
+          {this.createButton("Ethereum")}
+          {this.createButton("Filecoin")}
+        </div>
+      );
     } else {
-      if (this.state.buttonState === null){
+      if (this.state.buttonState === null) {
         this.wrapperRef = null;
       }
     }
   }
-  getMenuButton(buttonState){
+  getMenuButton(buttonState) {
     const toggleButton = (e) => {
       e.preventDefault();
-      this.setState({buttonState: this.state.buttonState === buttonState ? null : buttonState});
+      this.setState({
+        buttonState:
+          this.state.buttonState === buttonState ? null : buttonState,
+      });
     };
-    return (<button className="homescreen-flavor-toggle-button" onClick={toggleButton}>▼</button>);
+    return (
+      <button
+        className="homescreen-flavor-toggle-button"
+        onClick={toggleButton}
+      >
+        ▼
+      </button>
+    );
   }
   handleClickOutside(event) {
-    if (this.wrapperRef){
+    if (this.wrapperRef) {
       if (!this.wrapperRef.contains(event.target)) {
         event.preventDefault();
         event.stopPropagation();
-        this.setState({buttonState: null});
+        this.setState({ buttonState: null });
       }
     }
   }
@@ -132,16 +158,21 @@ class HomeScreen extends Component {
 
   render() {
     let workspaces;
-    const hasWorkspaces = this.props.workspaces.info && this.props.workspaces.info.length;
+    const hasWorkspaces =
+      this.props.workspaces.info && this.props.workspaces.info.length;
     if (hasWorkspaces) {
-      workspaces = this.props.workspaces.info.map(workspaceInfo => {
+      workspaces = this.props.workspaces.info.map((workspaceInfo) => {
         return (
           <li key={workspaceInfo.name + workspaceInfo.flavor}>
-            <button onClick={()=>this.selectWorkspace(workspaceInfo)}>
-              <span>{workspaceInfo.name} ({workspaceInfo.flavor})</span>
+            <button onClick={() => this.selectWorkspace(workspaceInfo)}>
+              <span>
+                {workspaceInfo.name} ({workspaceInfo.flavor})
+              </span>
               <div
                 className="EditSettings"
-                onClick={(e) => this.handleEditWorkspaceSettings(workspaceInfo, e)}
+                onClick={(e) =>
+                  this.handleEditWorkspaceSettings(workspaceInfo, e)
+                }
               >
                 <SettingsIcon />
               </div>
@@ -171,7 +202,7 @@ class HomeScreen extends Component {
     );
     // const learnMore = (
     //   <p className="learnMoreText">
-    //     <a href="https://github.com/trufflesuite/ganache/releases/tag/v2.0.0">
+    //     <a href="https://github.com/trufflesuite/ganache-ui/releases/tag/v2.0.0">
     //       Learn more about the update to version 2!
     //     </a>
     //   </p>

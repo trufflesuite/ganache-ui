@@ -12,7 +12,7 @@ Ganache is your personal blockchain for Ethereum development.
 
 ### Getting started
 
-You can download a self-contained prebuilt Ganache binary for your platform of choice using the "Download" button on the [Ganache](https://trufflesuite.com/ganache/) website, or from this repository's [releases](https://github.com/trufflesuite/ganache/releases) page.
+You can download a self-contained prebuilt Ganache binary for your platform of choice using the "Download" button on the [Ganache](https://trufflesuite.com/ganache/) website, or from this repository's [releases](https://github.com/trufflesuite/ganache-ui/releases) page.
 
 Ganache is also available as a command-line tool. If you prefer working on the command-line, check out [ganache-cli](https://github.com/trufflesuite/ganache-cli).
 
@@ -27,8 +27,8 @@ Requirements:
 To get started:
 
 0. Clone this repo
-0. Run `npm install`
-0. Run `npm run dev`
+1. Run `npm install`
+2. Run `npm run dev`
 
 If using Windows, you may need [windows-build-tools](https://www.npmjs.com/package/windows-build-tools) installed first.
 
@@ -42,7 +42,7 @@ Building on Windows will create a `.appx` file for use with the Windows Store.
 
 Before building, create the `./certs` directory with the following files:
 
-* `./certs/cert.pfx` - Note a `.pfx` file is identical to a `.p12`. (Just change the extension if you've been given a `.p12`.)
+- `./certs/cert.pfx` - Note a `.pfx` file is identical to a `.p12`. (Just change the extension if you've been given a `.p12`.)
 
 In order to build on Windows, you must first ensure you have the [Windows 10 SDK](https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk) installed. If you have errors during the build process, ensure the package.json file's `windowsStoreConfig.windowsKit` points to your Windows 10 SDK directory. The one specified in the package.json file currently is what worked at the time this process was figured out; it may need to be updated periodically.
 
@@ -86,10 +86,10 @@ Asset generation generally only needs to happen once, or whenever the app's logo
 
 Two tools were used:
 
-* [electron-icon-maker](https://www.npmjs.com/package/electron-icon-maker)
-* [svg2uwptiles](https://www.npmjs.com/package/svg2uwptiles)
+- [electron-icon-maker](https://www.npmjs.com/package/electron-icon-maker)
+- [svg2uwptiles](https://www.npmjs.com/package/svg2uwptiles)
 
-`electron-icon-maker` generates assets for all platforms when using Electron's `squirrel` package, and these assets live in `./static/icons`. `svg2uwptiles` generates all assets needed for the Windows appx build, and those assets live in `./build/appx`. These locations *can* be changed in the future, but make sure to change the associated configuration pointing to these assets.
+`electron-icon-maker` generates assets for all platforms when using Electron's `squirrel` package, and these assets live in `./static/icons`. `svg2uwptiles` generates all assets needed for the Windows appx build, and those assets live in `./build/appx`. These locations _can_ be changed in the future, but make sure to change the associated configuration pointing to these assets.
 
 Note from the author: I found managing these assets manually -- especially the appx assets -- was a pain. If possible, try not to edit the assets themselves and use one of the generators above.
 
@@ -105,7 +105,7 @@ When "extras" change they should be uploaded to a new release, and a corresondin
 
 Below is a `.vscode/launch.json` configuration that will attach to both the **main** and **renderer** processes. You only need to run the **Launch Ganache UI** configuration; the renderer attach configuration will run automatically.
 
-``` jsonc
+```jsonc
 {
   "version": "0.2.0",
   "configurations": [
@@ -137,7 +137,6 @@ Below is a `.vscode/launch.json` configuration that will attach to both the **ma
   ]
 }
 ```
-
 
 ### By Truffle
 
