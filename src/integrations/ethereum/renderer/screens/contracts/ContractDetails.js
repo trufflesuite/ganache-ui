@@ -24,7 +24,7 @@ class ContractDetails extends Component {
       this.props.match.params.projectIndex
     ];
     const filteredContracts = project.contracts.filter(
-      (c) => c.address === this.props.match.params.contractAddress
+      c => c.address === this.props.match.params.contractAddress,
     );
     if (filteredContracts.length === 0) {
       // TODO: error
@@ -32,11 +32,11 @@ class ContractDetails extends Component {
     const contract = filteredContracts[0];
 
     this.state = { project, contract };
-
+  
     const contractCache = this.props.workspaces.current.contractCache;
     const cache = contractCache[this.state.contract.address];
     const transactions = cache.transactions.slice(
-      -Math.min(5, cache.transactions.length)
+      -Math.min(5, cache.transactions.length),
     );
     const events = cache.events.slice(-Math.min(5, cache.events.length));
 
@@ -47,7 +47,7 @@ class ContractDetails extends Component {
         block: "latest",
         transactions,
         events,
-      })
+      }),
     );
   }
 
@@ -75,21 +75,21 @@ class ContractDetails extends Component {
     const title = encodeURIComponent(
       `Decoding Error when running Ganache ${app.getVersion()} on ${
         process.platform
-      }`
+      }`,
     );
 
     const body = this.renderIssueBody(
-      sanitizeError(this.props.workspaces.current.shownContract.state.error)
+      sanitizeError(this.props.workspaces.current.shownContract.state.error),
     );
 
     shell.openExternal(
-      `https://github.com/trufflesuite/ganache-ui/issues/new?title=${title}&body=${body}`
+      `https://github.com/trufflesuite/ganache/issues/new?title=${title}&body=${body}`,
     );
   }
 
   render() {
     const events = this.props.workspaces.current.shownContract.shownEvents.map(
-      (event) => {
+      event => {
         return {
           name: event.decodedLog.name,
           contract: this.state.contract.contractName,
@@ -97,7 +97,7 @@ class ContractDetails extends Component {
           logIndex: event.logIndex,
           timestamp: event.log.timestamp,
         };
-      }
+      },
     );
 
     return (
@@ -213,4 +213,7 @@ class ContractDetails extends Component {
   }
 }
 
-export default connect(ContractDetails, "workspaces");
+export default connect(
+  ContractDetails,
+  "workspaces",
+);
