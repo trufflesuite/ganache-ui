@@ -583,10 +583,6 @@ app.on("ready", async () => {
       workspace.contractCache.getAll()
     );
 
-    if (!(await integrations.startServer())) {
-      return;
-    }
-
     if (workspace) {
       const globalSettings = global.getAll();
       const workspaceSettings = workspace.settings.getAll();
