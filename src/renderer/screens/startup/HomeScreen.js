@@ -170,7 +170,7 @@ class HomeScreen extends Component {
                 <OnlyIf test={workspaceInfo.isLegacy}>
                   <span className="popover-container">
                     <span className="popover">
-                      This workspace was made with an old version of Ganache.
+                      This workspace was created with an old version of Ganache.
                       <br />
                       Create a new workspace to get the advantages of Ganache
                       v7.

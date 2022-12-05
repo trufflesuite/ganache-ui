@@ -16,28 +16,18 @@ const CHAIN_OPTIONS = {
     process.env.NODE_ENV === "development" ? ["--inspect=40895"] : undefined,
 };
 
-export default function getEthereumChainService(workspace, config) {
-  const libVersion = workspace.settings.get("libVersion");
-  const path = PATH_BY_LIBVERSION[libVersion];
-
-  return new EthereumChainService(config, path, libVersion);
-}
-
-/* Note: as we build out features _only_ supported by Ganache v7, EthereumChainService could diverge 
-into two different implementations  */
-
 /**
  * Provides an API to Ganache for managing the blockchain, encapsulating the
  * concerns of managing and monitoring of the child blockchain process,
  * interpreting messages from that child process, and solving any data
  * representation mismatches between Ganache and the child process.
  */
-class EthereumChainService extends EventEmitter {
-  constructor(config, chainPath, libVersion) {
+export default class EthereumChainService extends EventEmitter {
+  constructor(workspace, config) {
     super();
     this.config = config;
-    this.chainPath = chainPath;
-    this.libVersion = libVersion;
+    const libVersion = workspace.settings.get("libVersion");
+    this.chainPath = PATH_BY_LIBVERSION[libVersion];
   }
 
   start() {

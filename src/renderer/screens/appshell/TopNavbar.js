@@ -245,7 +245,7 @@ class TopNavbar extends Component {
               >
                 <span className="popover-container">
                   <span className="popover popunder">
-                    This workspace was made with an old version of Ganache.
+                    This workspace was created with an old version of Ganache.
                     <br />
                     Create a new workspace to get the advantages of Ganache v7.
                   </span>
