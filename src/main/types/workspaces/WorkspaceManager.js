@@ -65,11 +65,9 @@ class WorkspaceManager {
           }
         }
         const flavor = settings.get("flavor");
-        if (flavor === "ethereum") {
-          if (settings.get("libVersion") === undefined) {
-            // if no libVersion is set for an ethereum workspace, then it's a legacy workspace
-            settings.set("libVersion", 2);
-          }
+        if (flavor === "ethereum" && settings.get("libVersion") === undefined) {
+          // if no libVersion is set for an ethereum workspace, then it's a legacy workspace
+          settings.set("libVersion", 2);
         }
         return [new Workspace(name, this.directory, flavor)];
       });
