@@ -83,7 +83,7 @@ class UpdateModal extends Component {
     return (
       <p className="downloadSpeed">
         {sizeFormatter(
-          this.props.autoUpdate.downloadProgress.bytesPerSecond || 0
+          this.props.autoUpdate.downloadProgress.bytesPerSecond || 0,
         )}
         /s
       </p>
@@ -181,4 +181,7 @@ class UpdateModal extends Component {
   }
 }
 
-export default connect(UpdateModal, "autoUpdate");
+export default connect(
+  UpdateModal,
+  "autoUpdate",
+);

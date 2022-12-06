@@ -73,7 +73,7 @@ class BugModal extends Component {
     let unsanitizedSystemError =
       this.props.systemError.stack || this.props.systemError;
     let sanitizedSystemError = "";
-
+    
     if (unsanitizedSystemError) {
       sanitizedSystemError = sanitizeError(unsanitizedSystemError);
     }
@@ -98,7 +98,7 @@ class BugModal extends Component {
                 const title = encodeURIComponent(
                   `System Error when running Ganache ${app.getVersion()} on ${
                     process.platform
-                  }`
+                  }`,
                 );
 
                 const body = this.renderIssueBody(sanitizedSystemError);
@@ -128,7 +128,7 @@ function _getLastNLogLines(maxLines, logs) {
   let firstLogTime = logs.lines[0].time.getTime();
   return logs.lines
     .slice(maxLines)
-    .map((v) => `T+${v.time.getTime() - firstLogTime}ms: ${v.line}`)
+    .map(v => `T+${v.time.getTime() - firstLogTime}ms: ${v.line}`)
     .join("\n");
 }
 
