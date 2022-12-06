@@ -9,8 +9,7 @@ import cloneDeep from "lodash.clonedeep";
 const CHAIN_PATH = path.join(__static, "node", "chain", "chain.filecoin.js");
 const CHAIN_OPTIONS = {
   stdio: ["pipe", "pipe", "pipe", "ipc"],
-  execArgv:
-    process.env.NODE_ENV === "development" ? ["--inspect=40895"] : undefined,
+  execArgv: process.env.NODE_ENV === "development" ? ["--inspect=40895"] : undefined
 };
 
 /**
@@ -29,13 +28,13 @@ class FilecoinChainService extends EventEmitter {
     if (this._child && this._child.connected) {
       this.emit("message", "start");
     } else {
-      const child = (this._child = fork(CHAIN_PATH, [], CHAIN_OPTIONS));
+      const child = this._child = fork(CHAIN_PATH, [], CHAIN_OPTIONS);
       child.on("message", (msg) => {
-        if (!msg || !msg.type) {
+        if (!msg || !msg.type){
           return;
         }
 
-        const { type, data } = msg || {};
+        const {type, data} = msg || {};
         switch (type) {
           case "process-started":
             this.emit("message", "start");
@@ -55,7 +54,7 @@ class FilecoinChainService extends EventEmitter {
         }
         this.emit("message", type, data);
       });
-      child.on("error", (error) => {
+      child.on("error", error => {
         this.emit("error", error);
         this.emit("message", "error", error);
       });
@@ -67,9 +66,7 @@ class FilecoinChainService extends EventEmitter {
 
   async startServer(settings) {
     if (this._child) {
-      const options = this._ganacheCoreOptionsFromGanacheSettingsObject(
-        settings
-      );
+      const options = this._ganacheCoreOptionsFromGanacheSettingsObject(settings);
       return new Promise((resolve, reject) => {
         const handleServerStarted = () => {
           this.removeListener("error", handleServerError);
@@ -93,10 +90,10 @@ class FilecoinChainService extends EventEmitter {
 
   stopServer() {
     if (this._child && this._child.connected) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         this.once("server-stopped", resolve);
         this._child.send({
-          type: "stop-server",
+          type: "stop-server"
         });
       });
     }
@@ -105,7 +102,7 @@ class FilecoinChainService extends EventEmitter {
   getDbLocation() {
     if (this._child) {
       if (this.isServerStarted()) {
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
           this.once("db-location", resolve);
           this._child.send({
             type: "get-db-location",
@@ -140,11 +137,7 @@ class FilecoinChainService extends EventEmitter {
     // clone to avoid mutating the settings object in case it's sent elsewhere
     let options = cloneDeep(settings.server);
 
-    if (
-      settings.randomizeSeedOnStart &&
-      options.wallet &&
-      options.wallet.seed
-    ) {
+    if (settings.randomizeSeedOnStart && options.wallet && options.wallet.seed) {
       delete options.wallet.seed;
     }
 
@@ -156,28 +149,25 @@ class FilecoinChainService extends EventEmitter {
   _exitHandler(code, signal) {
     this._child = null;
     if (code != null) {
-      this.emit(
-        "message",
+      this.emit("message",
         "error",
-        `Blockchain process exited prematurely with code '${code}', due to signal '${signal}'.`
+        `Blockchain process exited prematurely with code '${code}', due to signal '${signal}'.`,
       );
     } else {
-      this.emit(
-        "message",
+      this.emit("message",
         "error",
-        `Blockchain process exited prematurely due to signal '${signal}'.`
+        `Blockchain process exited prematurely due to signal '${signal}'.`,
       );
     }
   }
 
-  _stdHandler(stdio, data) {
+  _stdHandler (stdio, data) {
     // Remove all \r's and the final line ending
-    this.emit(
-      "message",
+    this.emit("message",
       stdio,
       data
         .toString()
-        // we don't care enough to handling carriage returns :-|
+         // we don't care enough to handling carriage returns :-|
         .replace(/\r/g, "")
     );
   }

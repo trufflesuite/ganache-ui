@@ -12,12 +12,12 @@ if (!process.send) {
 // remove the uncaughtException listener added by ganache-cli
 process.removeAllListeners("uncaughtException");
 
-process.on("unhandledRejection", (err) => {
+process.on("unhandledRejection", err => {
   //console.log('unhandled rejection:', err.stack || err)
   process.send({ type: "error", data: copyErrorFields(err) });
 });
 
-process.on("uncaughtException", (err) => {
+process.on("uncaughtException", err => {
   //console.log('uncaught exception:', err.stack || err)
   process.send({ type: "error", data: copyErrorFields(err) });
 });
@@ -33,13 +33,14 @@ async function stopServer() {
     return new Promise((resolve, reject) => {
       server.close((err) => {
         if (err) {
-          if (err.code === "ERR_SERVER_NOT_RUNNING") {
+          if (err.code === "ERR_SERVER_NOT_RUNNING"){
             process.send({ type: "server-stopped" });
             resolve();
           } else {
             reject(err);
           }
-        } else resolve();
+        }
+        else resolve();
       });
     });
   } else {
@@ -49,7 +50,6 @@ async function stopServer() {
 
 async function startServer(options) {
   await stopServer();
-
   let sanitizedOptions = Object.assign({}, options);
   delete sanitizedOptions.mnemonic;
 
@@ -61,7 +61,7 @@ async function startServer(options) {
       logging.generateLogFilePath(options.logDirectory);
 
       options.logger = {
-        log: (message) => {
+        log: message => {
           if (typeof message === "string") {
             logging.logToFile(message);
           }
@@ -74,7 +74,7 @@ async function startServer(options) {
       // space on the front. ¯\_(ツ)_/¯
 
       options.logger = {
-        log: (message) => {
+        log: message => {
           if (
             typeof message === "string" &&
             (options.verbose || message.indexOf(" ") == 0)
@@ -87,9 +87,7 @@ async function startServer(options) {
   }
 
   // log startup options without logging user's mnemonic
-  const startingMessage = `LEGACY GANACHE: Starting server with initial configuration: ${JSON.stringify(
-    sanitizedOptions
-  )}`;
+  const startingMessage = `Starting server with initial configuration: ${JSON.stringify(sanitizedOptions)}`;
   console.log(startingMessage);
   if (logToFile) {
     logging.logToFile(startingMessage);
@@ -115,10 +113,7 @@ async function startServer(options) {
 
   server.listen(options.port, options.hostname, (err, result) => {
     if (err) {
-      process.send({
-        type: "start-error",
-        data: { code: err.code, stack: err.stack, message: err.message },
-      });
+      process.send({ type: "start-error", data: {code: err.code, stack: err.stack, message: err.message} });
       return;
     }
 

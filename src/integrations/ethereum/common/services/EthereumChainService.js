@@ -12,8 +12,7 @@ const PATH_BY_LIBVERSION = {
 };
 const CHAIN_OPTIONS = {
   stdio: ["pipe", "pipe", "pipe", "ipc"],
-  execArgv:
-    process.env.NODE_ENV === "development" ? ["--inspect=40895"] : undefined,
+  execArgv: process.env.NODE_ENV === "development" ? ["--inspect=40895"] : undefined
 };
 
 /**
@@ -36,11 +35,11 @@ export default class EthereumChainService extends EventEmitter {
     } else {
       const child = (this._child = fork(this.chainPath, [], CHAIN_OPTIONS));
       child.on("message", (msg) => {
-        if (!msg || !msg.type) {
+        if (!msg || !msg.type){
           return;
         }
 
-        const { type, data } = msg || {};
+        const {type, data} = msg || {};
         switch (type) {
           case "process-started":
             this.emit("message", "start");
@@ -60,7 +59,7 @@ export default class EthereumChainService extends EventEmitter {
         }
         this.emit("message", type, data);
       });
-      child.on("error", (error) => {
+      child.on("error", error => {
         this.emit("error", error);
         this.emit("message", "error", error);
       });
@@ -72,9 +71,7 @@ export default class EthereumChainService extends EventEmitter {
 
   async startServer(settings) {
     if (this._child) {
-      const options = this._ganacheCoreOptionsFromGanacheSettingsObject(
-        settings
-      );
+      const options = this._ganacheCoreOptionsFromGanacheSettingsObject(settings);
       return new Promise((resolve, reject) => {
         const handleServerStarted = () => {
           this.removeListener("error", handleServerError);
@@ -98,10 +95,10 @@ export default class EthereumChainService extends EventEmitter {
 
   stopServer() {
     if (this._child && this._child.connected) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         this.once("server-stopped", resolve);
         this._child.send({
-          type: "stop-server",
+          type: "stop-server"
         });
       });
     }
@@ -110,7 +107,7 @@ export default class EthereumChainService extends EventEmitter {
   getDbLocation() {
     if (this._child) {
       if (this.isServerStarted()) {
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
           this.once("db-location", resolve);
           this._child.send({
             type: "get-db-location",
@@ -157,28 +154,25 @@ export default class EthereumChainService extends EventEmitter {
   _exitHandler(code, signal) {
     this._child = null;
     if (code != null) {
-      this.emit(
-        "message",
+      this.emit("message",
         "error",
-        `Blockchain process exited prematurely with code '${code}', due to signal '${signal}'.`
+        `Blockchain process exited prematurely with code '${code}', due to signal '${signal}'.`,
       );
     } else {
-      this.emit(
-        "message",
+      this.emit("message",
         "error",
-        `Blockchain process exited prematurely due to signal '${signal}'.`
+        `Blockchain process exited prematurely due to signal '${signal}'.`,
       );
     }
   }
 
-  _stdHandler(stdio, data) {
+  _stdHandler (stdio, data) {
     // Remove all \r's and the final line ending
-    this.emit(
-      "message",
+    this.emit("message",
       stdio,
       data
         .toString()
-        // we don't care enough to handling carriage returns :-|
+         // we don't care enough to handling carriage returns :-|
         .replace(/\r/g, "")
     );
   }

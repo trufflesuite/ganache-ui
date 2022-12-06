@@ -19,7 +19,6 @@ import OnlyIf from "../../components/only-if/OnlyIf";
 import StatusIndicator from "../../components/status-indicator/StatusIndicator";
 import UpdateNotification from "../auto-update/UpdateNotification";
 
-import Warning from "../../icons/warning.svg";
 import AccountIcon from "../../icons/account.svg";
 import BlockIcon from "../../icons/blocks.svg";
 import TxIcon from "../../icons/transactions.svg";
@@ -65,9 +64,7 @@ class TopNavbar extends Component {
   }
 
   _handleClearLogs() {
-    this.props.dispatch(
-      clearLogLines(this.props.match.params.context || "default")
-    );
+    this.props.dispatch(clearLogLines(this.props.match.params.context || "default"));
   }
 
   handleSearchChange(e) {
@@ -83,22 +80,22 @@ class TopNavbar extends Component {
       // Secret to show the error screen when we need it.
       if (value.toLowerCase() == "error") {
         this.props.dispatch(
-          setSystemError(new Error("You found a secret!"), true)
+          setSystemError(new Error("You found a secret!"), true),
         );
       } else if (value.toLowerCase() == "test-update") {
         this.props.dispatch(
           setUpdateAvailable(
             "9.9.9",
             "Release Name",
-            "This is a release note.\n\n**bold** _italic_ or is this *italic*? [trufflesuite/ganache-cli#417](https://github.com/trufflesuite/ganache-cli/issues/417)\n\nDo we scroll to get here?\n\nHow about here?"
-          )
+            "This is a release note.\n\n**bold** _italic_ or is this *italic*? [trufflesuite/ganache-cli#417](https://github.com/trufflesuite/ganache-cli/issues/417)\n\nDo we scroll to get here?\n\nHow about here?",
+          ),
         );
       } else if (value.toLowerCase() === "modal_error") {
         const modalDetails = new ModalDetails(
           ModalDetails.types.WARNING,
           [
             {
-              click: (modal) => {
+              click: modal => {
                 alert("removing...");
                 modal.close();
               },
@@ -109,16 +106,14 @@ class TopNavbar extends Component {
             },
           ],
           "Remove Project?",
-          "This project has contracts deployed; are you sure you want to remove it? Contract data, transactions, and events will no longer be decoded."
+          "This project has contracts deployed; are you sure you want to remove it? Contract data, transactions, and events will no longer be decoded.",
         );
 
         this.props.dispatch(ModalDetails.actions.setModalError(modalDetails));
       } else if (value.toLowerCase() === "loader") {
         this.props.dispatch(push("/loader"));
       } else {
-        this.props.dispatch(
-          Search.query(value, this.props.config.settings.workspace.flavor)
-        );
+        this.props.dispatch(Search.query(value, this.props.config.settings.workspace.flavor));
       }
 
       this.setState({
@@ -162,14 +157,13 @@ class TopNavbar extends Component {
       if (workspaceSettings.server.miner) {
         // TODO: miner.mine should not be read from options but current state
         // need to update once the api methods exist
-        const minerEnabled =
-          this.props["filecoin.core"].minerEnabled !== null
-            ? this.props["filecoin.core"].minerEnabled
-            : workspaceSettings.server.miner.mine;
+        const minerEnabled = this.props["filecoin.core"].minerEnabled !== null ? this.props["filecoin.core"].minerEnabled : workspaceSettings.server.miner.mine;
         if (minerEnabled === false) {
           return "Stopped";
         } else if (workspaceSettings.server.miner.blockTime > 0) {
-          return `${workspaceSettings.server.miner.blockTime} SEC block time`;
+          return `${
+            workspaceSettings.server.miner.blockTime
+          } SEC block time`;
         }
       }
 
@@ -177,7 +171,9 @@ class TopNavbar extends Component {
     }
 
     if (workspaceSettings.server.blockTime) {
-      return `${workspaceSettings.server.blockTime} SEC block time`;
+      return `${
+        workspaceSettings.server.blockTime
+      } SEC block time`;
     } else {
       return "Automining";
     }
@@ -216,51 +212,30 @@ class TopNavbar extends Component {
             <OnlyIf test={isNewVersionAvailable}>
               <UpdateNotification />
             </OnlyIf>
-            {hasSearch ? (
-              <>
-                <input
-                  type="text"
-                  placeholder={children.searchText}
-                  title={children.searchText}
-                  value={this.state.searchInput}
-                  onChange={this.handleSearchChange.bind(this)}
-                  onKeyPress={this.handleSearchKeyPress.bind(this)}
-                />
-                <SearchIcon />
-              </>
-            ) : (
-              ""
-            )}
+            { hasSearch ? <><input
+              type="text"
+              placeholder={children.searchText}
+              title={children.searchText}
+              value={this.state.searchInput}
+              onChange={this.handleSearchChange.bind(this)}
+              onKeyPress={this.handleSearchKeyPress.bind(this)}
+            />
+            <SearchIcon /></> : ""}
           </div>
         </main>
         <section className="StatusAndControls">
-          <div className="Status">{children.status}</div>
+          <div className="Status">
+            {children.status}
+          </div>
           <div className="Actions">
             <StatusIndicator
               title="WORKSPACE"
               value={this.props.config.settings.workspace.name}
-            >
-              <OnlyIf
-                test={this.props.config.settings.workspace.libVersion === 2}
-              >
-                <span className="popover-container">
-                  <span className="popover popunder">
-                    This workspace was created with an old version of Ganache.
-                    <br />
-                    Create a new workspace to take advantage of Ganache v7.
-                  </span>
-                  <Warning width="25px" height="25px" />
-                </span>
-              </OnlyIf>
-            </StatusIndicator>
+            />
             <OnlyIf test={this.props.config.settings.workspace.isDefault}>
-              <button onClick={this.handleSaveWorkspacePress.bind(this)}>
-                Save
-              </button>
+              <button onClick={this.handleSaveWorkspacePress.bind(this)}>Save</button>
             </OnlyIf>
-            <button onClick={this.handleWorkspacesPress.bind(this)}>
-              Switch
-            </button>
+            <button onClick={this.handleWorkspacesPress.bind(this)}>Switch</button>
             <NavLink to="/config">
               <button>
                 <div className="settingsIconWrapper">
@@ -282,61 +257,43 @@ class TopNavbar extends Component {
 
   _generateFilecoinChildren() {
     return {
-      menu: (
-        <>
-          <NavLink to="/filecoin/accounts" activeClassName="Active">
-            <AccountIcon />
-            Accounts
-          </NavLink>
-          <NavLink to="/filecoin/tipsets" activeClassName="Active">
-            <BlockIcon />
-            Tipsets
-          </NavLink>
-          <NavLink to="/filecoin/messages" activeClassName="Active">
-            <TxIcon />
-            Messages
-          </NavLink>
-          <NavLink to="/filecoin/deals" activeClassName="Active">
-            <DealsIcon />
-            Deals
-          </NavLink>
-          <NavLink to="/filecoin/files" activeClassName="Active">
-            <FilesIcon />
-            Files
-          </NavLink>
-        </>
-      ),
+      menu: (<>
+        <NavLink to="/filecoin/accounts" activeClassName="Active">
+          <AccountIcon />
+          Accounts
+        </NavLink>
+        <NavLink to="/filecoin/tipsets" activeClassName="Active">
+          <BlockIcon />
+          Tipsets
+        </NavLink>
+        <NavLink to="/filecoin/messages" activeClassName="Active">
+          <TxIcon />
+          Messages
+        </NavLink>
+        <NavLink to="/filecoin/deals" activeClassName="Active">
+          <DealsIcon />
+          Deals
+        </NavLink>
+        <NavLink to="/filecoin/files" activeClassName="Active">
+          <FilesIcon />
+          Files
+        </NavLink>
+      </>),
       searchText: "Search",
-      status: (
-        <>
-          <StatusIndicator
-            title="CURRENT TIPSET"
-            value={this.props.filecoin.core.latestTipset}
-          />
-          <StatusIndicator
-            title="LOTUS SERVER"
-            value={
-              this.props.filecoin.lotus.lotusInstance &&
-              this.props.filecoin.lotus.lotusInstance.provider.provider.url
-            }
-            upper={false}
-          />
-          <StatusIndicator
-            title="IPFS SERVER"
-            value={this.props.filecoin.core.ipfsUrl}
-            upper={false}
-          />
+      status: (<>
+        <StatusIndicator title="CURRENT TIPSET" value={this.props.filecoin.core.latestTipset} />
+        <StatusIndicator title="LOTUS SERVER" value={this.props.filecoin.lotus.lotusInstance && this.props.filecoin.lotus.lotusInstance.provider.provider.url} upper={false} />
+        <StatusIndicator title="IPFS SERVER" value={this.props.filecoin.core.ipfsUrl} upper={false} />
           <StatusIndicator
             title="MINING STATUS"
             value={this._renderMiningTime()}
           />
-        </>
-      ),
-      action: <></>,
-    };
+      </>),
+      action: (<></>),
+    }
   }
 
-  _generateEthereumChildren() {
+  _generateEthereumChildren(){
     const blockNumber = this.props.core.latestBlock;
     const gasPrice = this.props.core.gasPrice;
     const gasLimit = this.props.core.gasLimit;
@@ -346,11 +303,7 @@ class TopNavbar extends Component {
     const miningPaused = !isMining;
     const currentSnapshotId = snapshots.length;
     const showControls = false;
-    const contractsClassname = this.props.location.pathname.startsWith(
-      "/contracts"
-    )
-      ? "Active"
-      : "";
+    const contractsClassname = this.props.location.pathname.startsWith("/contracts") ? "Active" : "";
 
     return {
       menu: (
@@ -367,11 +320,7 @@ class TopNavbar extends Component {
             <TxIcon />
             Transactions
           </NavLink>
-          <NavLink
-            to="/contracts"
-            className={contractsClassname}
-            activeClassName="Active"
-          >
+          <NavLink to="/contracts" className={contractsClassname} activeClassName="Active">
             <ContractsIcon />
             Contracts
           </NavLink>
@@ -385,17 +334,13 @@ class TopNavbar extends Component {
       status: (
         <>
           <StatusIndicator title="CURRENT BLOCK" value={blockNumber} />
-          {this.props.config.settings.workspace.server.fork ? (
-            <StatusIndicator
+          { this.props.config.settings.workspace.server.fork ?
+            (<StatusIndicator
               title="FORK BLOCK"
               tooltip={this.props.config.settings.workspace.server.fork}
-              value={
-                this.props.config.settings.workspace.server.fork_block_number
-              }
-            />
-          ) : (
-            ""
-          )}
+              value={this.props.config.settings.workspace.server.fork_block_number}
+            />) : ""
+          }
           <StatusIndicator title="GAS PRICE" value={gasPrice} />
           <StatusIndicator title="GAS LIMIT" value={gasLimit} />
           <StatusIndicator title="HARDFORK" value={hardfork} />
@@ -405,7 +350,9 @@ class TopNavbar extends Component {
           />
           <StatusIndicator
             title="RPC SERVER"
-            value={`http://${this.props.config.settings.workspace.server.hostname}:${this.props.config.settings.workspace.server.port}`}
+            value={`http://${
+              this.props.config.settings.workspace.server.hostname
+            }:${this.props.config.settings.workspace.server.port}`}
           />
           <StatusIndicator
             title="MINING STATUS"
@@ -426,9 +373,11 @@ class TopNavbar extends Component {
               {currentSnapshotId + 1}
             </button>
           </OnlyIf>
-          <OnlyIf test={showControls}>{this._renderSnapshotControls()}</OnlyIf>
+          <OnlyIf test={showControls}>
+            {this._renderSnapshotControls()}
+          </OnlyIf>
         </>
-      ),
+      )
     };
   }
 }
