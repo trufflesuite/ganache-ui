@@ -35,6 +35,9 @@ jobs:
         # we need msbuild tools for the `bcrypto` module
         if: startsWith(matrix.os, 'windows-')
         uses: microsoft/setup-msbuild@v1.1
+      - uses: de-vri-es/setup-git-credentials@v2
+        with:
+          credentials: ${{secrets.PAT}}
       - run: npm ci
       - run: npm run test
         env:
