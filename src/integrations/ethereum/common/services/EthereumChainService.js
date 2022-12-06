@@ -6,7 +6,10 @@ import path from "path";
 import cloneDeep from "lodash.clonedeep";
 
 // https://github.com/electron/electron/blob/cd0aa4a956cb7a13cbe0e12029e6156c3e892924/docs/api/process.md#process-object
-const CHAIN_PATH = path.join(__static, "node", "chain", "chain.js");
+const PATH_BY_LIBVERSION = {
+  "2": path.join(__static, "node", "chain", "chain.ethereum.v2.js"),
+  "7": path.join(__static, "node", "chain", "chain.ethereum.js"),
+};
 const CHAIN_OPTIONS = {
   stdio: ["pipe", "pipe", "pipe", "ipc"],
   execArgv: process.env.NODE_ENV === "development" ? ["--inspect=40895"] : undefined
@@ -18,17 +21,19 @@ const CHAIN_OPTIONS = {
  * interpreting messages from that child process, and solving any data
  * representation mismatches between Ganache and the child process.
  */
-class EthereumChainService extends EventEmitter {
-  constructor(config) {
+export default class EthereumChainService extends EventEmitter {
+  constructor(workspace, config) {
     super();
     this.config = config;
+    const libVersion = workspace.settings.get("libVersion");
+    this.chainPath = PATH_BY_LIBVERSION[libVersion];
   }
 
   start() {
     if (this._child && this._child.connected) {
       this.emit("message", "start");
     } else {
-      const child = this._child = fork(CHAIN_PATH, [], CHAIN_OPTIONS);
+      const child = (this._child = fork(this.chainPath, [], CHAIN_OPTIONS));
       child.on("message", (msg) => {
         if (!msg || !msg.type){
           return;
@@ -172,5 +177,3 @@ class EthereumChainService extends EventEmitter {
     );
   }
 }
-
-export default EthereumChainService;

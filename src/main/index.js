@@ -16,7 +16,7 @@ import {
   ipcMain,
   screen,
   clipboard,
-} from "electron"
+} from "electron";
 import { initAutoUpdates, getAutoUpdateService } from "./init/AutoUpdate.js";
 import {
   REQUEST_SERVER_RESTART,
@@ -536,22 +536,19 @@ app.on('ready', async () => {
       workspace.contractCache.getAll(),
     );
 
-    if (flavor === "ethereum") {
-      await integrations.startChain();
-      if (!(await integrations.startServer())) {
-        return;
-      }
-    } else {
-      if (workspace) {
-        const globalSettings = global.getAll();
-        const workspaceSettings = workspace.settings.getAll();
-        mainWindow.webContents.send(
-          SET_SERVER_STARTED,
-          globalSettings,
-          workspaceSettings,
-          startupMode,
-        );
-      }
+    if (!(await integrations.startServer())) {
+      return;
+    }
+
+    if (workspace) {
+      const globalSettings = global.getAll();
+      const workspaceSettings = workspace.settings.getAll();
+      mainWindow.webContents.send(
+        SET_SERVER_STARTED,
+        globalSettings,
+        workspaceSettings,
+        startupMode,
+      );
     }
 
     // this sends the network interfaces to the renderer process for

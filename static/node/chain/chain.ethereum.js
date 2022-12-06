@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
-//var ganacheLib = require("../../../../ganache-core"); // for easy testing
-const ganacheLib = require("ganache-core");
+const ganacheLib = require("ganache");
 const logging = require("./logging");
 
 if (!process.send) {
@@ -12,12 +11,12 @@ if (!process.send) {
 // remove the uncaughtException listener added by ganache-cli
 process.removeAllListeners("uncaughtException");
 
-process.on("unhandledRejection", err => {
+process.on("unhandledRejection", (err) => {
   //console.log('unhandled rejection:', err.stack || err)
   process.send({ type: "error", data: copyErrorFields(err) });
 });
 
-process.on("uncaughtException", err => {
+process.on("uncaughtException", (err) => {
   //console.log('uncaught exception:', err.stack || err)
   process.send({ type: "error", data: copyErrorFields(err) });
 });
@@ -30,19 +29,14 @@ async function stopServer() {
   clearInterval(blockInterval);
 
   if (server) {
-    return new Promise((resolve, reject) => {
-      server.close((err) => {
-        if (err) {
-          if (err.code === "ERR_SERVER_NOT_RUNNING"){
-            process.send({ type: "server-stopped" });
-            resolve();
-          } else {
-            reject(err);
-          }
-        }
-        else resolve();
-      });
-    })
+    try {
+      await server.close();
+    } catch (e) {
+      if (!e.message.includes("Server is already closing or closed")) {
+        throw e;
+      }
+    }
+    process.send({ type: "server-stopped" });
   } else {
     process.send({ type: "server-stopped" });
   }
@@ -50,36 +44,48 @@ async function stopServer() {
 
 async function startServer(options) {
   await stopServer();
-  
+
   let sanitizedOptions = Object.assign({}, options);
-  delete sanitizedOptions.mnemonic;
+  if (sanitizedOptions.chain && sanitizedOptions.chain.mnemonic) {
+    delete sanitizedOptions.chain.mnemonic;
+  }
 
   const logToFile =
     options.logDirectory !== null && typeof options.logDirectory === "string";
 
-  if (typeof options.logger === "undefined") {
+  // Initialize option namespaces to prevent '<> of undefined'
+  // errors down the road
+  if (typeof options.chain === "undefined") {
+    options.chain = {};
+  }
+  if (typeof options.database === "undefined") {
+    options.database = {};
+  }
+  if (typeof options.logging === "undefined") {
+    options.logging = {};
+  }
+  if (typeof options.miner === "undefined") {
+    options.miner = {};
+  }
+  if (typeof options.wallet === "undefined") {
+    options.wallet = {};
+  }
+
+  if (typeof options.logging.logger === "undefined") {
     if (logToFile) {
       logging.generateLogFilePath(options.logDirectory);
 
-      options.logger = {
-        log: message => {
+      options.logging.logger = {
+        log: (message) => {
           if (typeof message === "string") {
             logging.logToFile(message);
           }
         },
       };
     } else {
-      // The TestRPC's logging system is archaic. We'd like more control
-      // over what's logged. For now, the really important stuff all has
-      // a space on the front of it. So let's only log the stuff with a
-      // space on the front. ¯\_(ツ)_/¯
-
-      options.logger = {
-        log: message => {
-          if (
-            typeof message === "string" &&
-            (options.verbose || message.indexOf(" ") == 0)
-          ) {
+      options.logging.logger = {
+        log: (message) => {
+          if (typeof message === "string") {
             console.log(message);
           }
         },
@@ -88,13 +94,26 @@ async function startServer(options) {
   }
 
   // log startup options without logging user's mnemonic
-  const startingMessage = `Starting server with initial configuration: ${JSON.stringify(sanitizedOptions)}`;
+  const startingMessage = `Starting server with initial configuration: ${JSON.stringify(
+    sanitizedOptions
+  )}`;
   console.log(startingMessage);
   if (logToFile) {
     logging.logToFile(startingMessage);
   }
 
+  options.wallet = options.wallet || {};
   server = ganacheLib.server(options);
+
+  try {
+    await server.listen(options.port, options.hostname);
+  } catch (err) {
+    process.send({
+      type: "start-error",
+      data: { code: err.code, stack: err.stack, message: err.message },
+    });
+    return;
+  }
 
   // We'll also log all methods that aren't marked internal by Ganache
   var oldSend = server.provider.send.bind(server.provider);
@@ -112,52 +131,34 @@ async function startServer(options) {
     oldSend(payload, callback);
   };
 
-  server.listen(options.port, options.hostname, (err, result) => {
-    if (err) {
-      process.send({ type: "start-error", data: {code: err.code, stack: err.stack, message: err.message} });
-      return;
-    }
+  const privateKeys = {};
 
-    const state = result ? result : server.provider.manager.state;
-    dbLocation = state.blockchain.data.directory;
+  const accounts = await server.provider.getInitialAccounts();
+  const addresses = Object.keys(accounts);
 
-    if (!state) {
-      process.send({
-        type: "start-error",
-        data: "Couldn't get a reference to TestRPC's StateManager.",
-      });
-      return;
-    }
-
-    const privateKeys = {};
-
-    const accounts = state.accounts;
-    const addresses = Object.keys(accounts);
-
-    addresses.forEach((address) => {
-      privateKeys[address] = accounts[address].secretKey.toString("hex");
-    });
-
-    const data = Object.assign({}, server.provider.options);
-
-    // delete anything which might've been in the ganache-core options object
-    // that we don't want to pass on to the main process
-    delete data.logger;
-    delete data.vm;
-    delete data.state;
-    delete data.trie;
-
-    // ensure certain fields are present for backward compatibility with old
-    // versions of ganache-core
-    data.hdPath = data.hdPath || state.wallet_hdpath;
-    data.mnemonic = data.mnemonic || state.mnemonic;
-    data.privateKeys = privateKeys;
-
-    process.send({ type: "server-started", data: data });
-
-    console.log("Ganache started successfully!");
-    console.log("Waiting for requests...");
+  addresses.forEach((address) => {
+    privateKeys[address] = accounts[address].secretKey;
   });
+
+  const ganacheOptions = server.provider.getOptions();
+
+  dbLocation = ganacheOptions.database.dbPath;
+
+  const { mnemonic, hdPath } = ganacheOptions.wallet;
+
+  // todo: what else do we need from options
+  const data = {
+    privateKeys,
+    addresses,
+    hdPath,
+    mnemonic,
+    dbLocation,
+  };
+
+  process.send({ type: "server-started", data: data });
+
+  console.log("Ganache started successfully!");
+  console.log("Waiting for requests...");
 
   server.on("close", () => {
     server = null;

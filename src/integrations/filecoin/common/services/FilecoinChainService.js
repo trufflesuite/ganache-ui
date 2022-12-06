@@ -6,7 +6,7 @@ import path from "path";
 import cloneDeep from "lodash.clonedeep";
 
 // https://github.com/electron/electron/blob/cd0aa4a956cb7a13cbe0e12029e6156c3e892924/docs/api/process.md#process-object
-const CHAIN_PATH = path.join(__static, "node", "chain", "chain-v7.js");
+const CHAIN_PATH = path.join(__static, "node", "chain", "chain.filecoin.js");
 const CHAIN_OPTIONS = {
   stdio: ["pipe", "pipe", "pipe", "ipc"],
   execArgv: process.env.NODE_ENV === "development" ? ["--inspect=40895"] : undefined

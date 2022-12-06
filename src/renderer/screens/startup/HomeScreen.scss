@@ -109,6 +109,14 @@
               list-style: none;
               padding: 1rem;
     
+              svg {
+                width: 1em;
+                height: 1em;
+                position: relative;
+                top: 0.125em;
+                margin-left: 0.25rem;
+              }
+
               button {
                 background-color: transparent;
                 margin-bottom: 1rem;

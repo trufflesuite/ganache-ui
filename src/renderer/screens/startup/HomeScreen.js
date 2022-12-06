@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Scrollbars } from "react-custom-scrollbars";
-
+import Warning from "../../../renderer/icons/warning.svg";
 import * as pkg from "../../../../package.json";
 
 import OnlyIf from "../../../renderer/components/only-if/OnlyIf";
@@ -137,8 +137,20 @@ class HomeScreen extends Component {
       workspaces = this.props.workspaces.info.map(workspaceInfo => {
         return (
           <li key={workspaceInfo.name + workspaceInfo.flavor}>
-            <button onClick={()=>this.selectWorkspace(workspaceInfo)}>
-              <span>{workspaceInfo.name} ({workspaceInfo.flavor})</span>
+            <button onClick={() => this.selectWorkspace(workspaceInfo)}>
+              <span>
+                {workspaceInfo.name} ({workspaceInfo.flavor})
+                <OnlyIf test={workspaceInfo.isLegacy}>
+                  <span className="popover-container">
+                    <span className="popover">
+                      This workspace was created with an old version of Ganache.
+                      <br />
+                      Create a new workspace to take advantage of Ganache v7.
+                    </span>
+                    <Warning />
+                  </span>
+                </OnlyIf>
+              </span>
               <div
                 className="EditSettings"
                 onClick={(e) => this.handleEditWorkspaceSettings(workspaceInfo, e)}
