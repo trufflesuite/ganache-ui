@@ -43,4 +43,9 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: binary
-          path: dist/[G|g]anache*.(AppImage|dmg|blockmap|zip|exe|appx|yml)
+          path: dist/*.AppImage
+            dist/*.dmg
+            dist/*.blockmap
+            dist/*.zip
+            dist/*.appx
+            dist/*.yml
