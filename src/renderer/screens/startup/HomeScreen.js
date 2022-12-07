@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Scrollbars } from "react-custom-scrollbars";
-import Warning from "../../../renderer/icons/warning.svg";
 import * as pkg from "../../../../package.json";
 
 import OnlyIf from "../../../renderer/components/only-if/OnlyIf";
@@ -24,6 +23,8 @@ import ChainIcon from "../../icons/chain.svg";
 import MenuIcon from "../../icons/list.svg";
 import TrashIcon from "../../icons/trash-icon.svg";
 import SettingsIcon from "../../icons/settings.svg";
+import WarningIcon from "../../../renderer/icons/warning.svg";
+import ReactTooltip from "react-tooltip";
 
 class HomeScreen extends Component {
   constructor(props) {
@@ -141,14 +142,10 @@ class HomeScreen extends Component {
               <span>
                 {workspaceInfo.name} ({workspaceInfo.flavor})
                 <OnlyIf test={workspaceInfo.isLegacy}>
-                  <span className="popover-container">
-                    <span className="popover">
-                      This workspace was created with an old version of Ganache.
-                      <br />
-                      Create a new workspace to take advantage of Ganache v7.
-                    </span>
-                    <Warning />
-                  </span>
+                  <WarningIcon data-tip="This workspace was created with an old version of Ganache.
+                    <br />
+                    Create a new workspace to take advantage of Ganache v7."
+                    data-multiline={true}/>
                 </OnlyIf>
               </span>
               <div
@@ -269,6 +266,7 @@ class HomeScreen extends Component {
         >
           <UpdateModal />
         </OnlyIf>
+        <ReactTooltip />
       </React.Fragment>
     );
   }
