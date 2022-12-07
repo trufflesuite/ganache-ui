@@ -36,8 +36,8 @@ jobs:
           FORCE_COLOR: 1
       - run: npm run build-linux
         if: ${{ matrix.os == 'ubuntu-18.04' }}
-      - run: npm run build-windows
-        if: ${{ matrix.os == 'windows-2019' }}
+      #- run: npm run build-windows
+      #  if: ${{ matrix.os == 'windows-2019' }}
       - run: npm run build-mac
         if: ${{ matrix.os == 'macos-11' }}
       - uses: actions/upload-artifact@v3
