@@ -1,8 +1,6 @@
-# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+name: Release
 
-name: Pull Requests
-
+# this should only run on release, but I'm triggering on pull_request so that I can test it
 on: [pull_request]
 
 jobs:
@@ -10,8 +8,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: [18.16.1]
-        os: [windows-2019, ubuntu-18.04, ubuntu-20.04, macos-11]
+        node: [14.21.1]
+        os: [windows-2019, ubuntu-18.04, macos-11]
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -34,6 +32,16 @@ jobs:
         with:
           credentials: ${{secrets.PAT}}
       - run: npm ci
-      - run: npm run test
         env:
           FORCE_COLOR: 1
+      - run: npm run build-linux
+        if: ${{ matrix.os == 'ubuntu-18.04' }}
+      - run: npm run build-win
+        if: ${{ matrix.os == 'windows-2019' }}
+      - run: npm run build-mac
+        if: ${{ matrix.os == 'macos-11' }}
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: binary
+          path: dist/Ganache*
