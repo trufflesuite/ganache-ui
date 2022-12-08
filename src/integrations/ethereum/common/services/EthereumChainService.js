@@ -78,10 +78,10 @@ export default class EthereumChainService extends EventEmitter {
           resolve();
         };
         const handleServerError = (e) => {
-          this.removeListener("server-started", handleServerStarted);
+          this.removeListener("server-started-data", handleServerStarted);
           reject(e);
         };
-        this.once("server-started", handleServerStarted);
+        this.once("server-started-data", handleServerStarted);
         this.once("error", handleServerError);
         this._child.send({
           type: "start-server",
