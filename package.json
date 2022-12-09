@@ -32,7 +32,7 @@
     "sign-mac": "codesign --deep --force --verbose --sign 'Developer ID Application: Timothy Coulter (58RKXWC272)' ./dist/*.dmg",
     "build-linux": "npm run compile && electron-builder --linux",
     "build-mac": "npm run compile && electron-builder --mac",
-    "build-windows": "npm run compile && cross-env CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --win",
+    "build-windows": "npm run compile && electron-builder --win",
     "test": "npm run test-mocha && npm run test-jest",
     "test-jest": "jest __tests__/.*.test.js",
     "test-mocha": "cross-env GANACHE_DEV_MODE=true ELECTRON_APP_PATH=./ mocha --require @babel/register --check-leaks 'test/mocha/**/*.test.js'",
