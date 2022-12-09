@@ -88,7 +88,7 @@ class TopNavbar extends Component {
           setUpdateAvailable(
             "9.9.9",
             "Release Name",
-            "This is a release note.\n\n**bold** _italic_ or is this *italic*? [trufflesuite/ganache#417](https://github.com/trufflesuite/ganache/issues/417)\n\nDo we scroll to get here?\n\nHow about here?",
+            "This is a release note.\n\n**bold** _italic_ or is this *italic*? [trufflesuite/ganache-ui#417](https://github.com/trufflesuite/ganache-ui/issues/417)\n\nDo we scroll to get here?\n\nHow about here?",
           ),
         );
       } else if (value.toLowerCase() === "modal_error") {
