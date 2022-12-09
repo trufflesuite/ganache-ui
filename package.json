@@ -177,7 +177,7 @@
       "pre-commit": "lint-staged"
     }
   },
-  "_build": {
+  "build": {
     "npmRebuild": false,
     "appId": "org.trufflesuite.ganache",
     "afterSign": "./scripts/build/afterSignHook.js",
