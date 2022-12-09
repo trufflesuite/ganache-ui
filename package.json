@@ -5,7 +5,7 @@
   "description": "Personal Blockchain for Ethereum",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/trufflesuite/ganache.git"
+    "url": "git+https://github.com/trufflesuite/ganache-ui.git"
   },
   "author": {
     "name": "Truffle",
