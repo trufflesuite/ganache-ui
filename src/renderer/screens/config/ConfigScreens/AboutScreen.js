@@ -17,7 +17,7 @@ class AccountsScreen extends Component {
             <a href="https://trufflesuite.com">Truffle</a>
             <br />
             Follow development and report issues on{" "}
-            <a href="https://github.com/trufflesuite/ganache">GitHub</a>
+            <a href="https://github.com/trufflesuite/ganache-ui">GitHub</a>
           </div>
         </div>
       </div>
