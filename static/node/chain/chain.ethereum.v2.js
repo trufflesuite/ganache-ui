@@ -19,6 +19,7 @@ process.on("unhandledRejection", err => {
 
 process.on("uncaughtException", err => {
   //console.log('uncaught exception:', err.stack || err)
+  // hilariously EADDRINUSE errors will get raised here
   process.send({ type: "error", data: copyErrorFields(err) });
 });
 

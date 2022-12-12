@@ -48,7 +48,7 @@ async function stopServer() {
 async function startServer(options) {
   await stopServer();
 
-  let sanitizedOptions = Object.assign({}, options);
+  const sanitizedOptions = Object.assign({}, options);
   if (sanitizedOptions.chain && sanitizedOptions.chain.mnemonic) {
     delete sanitizedOptions.chain.mnemonic;
   }
@@ -108,7 +108,16 @@ async function startServer(options) {
   try {
     await server.listen(options.port, options.hostname);
   } catch (err) {
-    process.send({ type: "start-error", data: {code: err.code, stack: err.stack, message: err.message} });
+    const { message, stack} = err;
+    let {code} = err;
+    // todo: we may be able to remove this check once https://github.com/trufflesuite/ganache/issues/4020 is resolved
+    if (code === undefined && message && message.indexOf("listen EADDRINUSE") === 0) {
+      code = "EADDRINUSE";
+    }
+
+    process.send({ type: "start-error", 
+      data: { code, stack, message },
+    });
     return;
   }
 
