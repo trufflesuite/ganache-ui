@@ -36,8 +36,8 @@ jobs:
           FORCE_COLOR: 1
       - run: npm run build-linux
         if: startsWith(matrix.os, 'ubuntu-')
-      #- run: npm run build-windows
-      #  if: startsWith(matrix.os, 'windows-')
+      - run: npm run build-windows
+        if: startsWith(matrix.os, 'windows-')
       - run: npm run build-mac
         if: startsWith(matrix.os, 'macos-')
       - uses: actions/upload-artifact@v3

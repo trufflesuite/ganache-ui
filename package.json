@@ -192,7 +192,6 @@
       "package.json"
     ],
     "win": {
-      "certificateSha1": "79989F27614B87B6527A53ACBE2276CEDEE902AE",
       "icon": "static/icons/win/icon.ico",
       "verifyUpdateCodeSignature": false,
       "target": [
