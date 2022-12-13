@@ -361,7 +361,9 @@ app.on('ready', async () => {
     });
 
     integrations.on("start-error", err => {
-      err.code = "CUSTOMERROR";
+      if (err.code === undefined) {
+        err.code = "CUSTOMERROR";
+      }
       err.key = "workspace.server.chain";
       err.value = err.message + "\n\n" + err.stack;
       err.tab = "server";
