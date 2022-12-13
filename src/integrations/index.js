@@ -71,11 +71,11 @@ class IntegrationManager extends EventEmitter {
       chaindataLocation,
       this.workspaceManager.directory,
       mnemonic,
-      true
+      // we persist this workspace in the /Quickstart directory, and will move
+      // it to the correct location in workspaceManager.enumerateWorkspaces()
+      false
     );
-
     await this.setWorkspace(workspaceName, workspace.flavor);
-
     this.emit("server-started");
   }
 
