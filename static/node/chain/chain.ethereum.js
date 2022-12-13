@@ -108,10 +108,10 @@ async function startServer(options) {
   try {
     await server.listen(options.port, options.hostname);
   } catch (err) {
-    const { message, stack} = err;
-    let {code} = err;
+    const { message, stack } = err;
+    let { code } = err;
     // todo: we may be able to remove this check once https://github.com/trufflesuite/ganache/issues/4020 is resolved
-    if (code === undefined && message && message.indexOf("listen EADDRINUSE") === 0) {
+    if (code === undefined && message && message.startsWith("listen EADDRINUSE")) {
       code = "EADDRINUSE";
     }
 
