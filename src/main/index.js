@@ -361,7 +361,9 @@ app.on('ready', async () => {
     });
 
     integrations.on("start-error", err => {
-      err.code = "CUSTOMERROR";
+      if (err.code === undefined) {
+        err.code = "CUSTOMERROR";
+      }
       err.key = "workspace.server.chain";
       err.value = err.message + "\n\n" + err.stack;
       err.tab = "server";
@@ -447,12 +449,29 @@ app.on('ready', async () => {
 
     let projects = [];
     if (workspace.name === null) {
+      const randomizeMnemonicOnStart = workspace.settings.get("randomizeMnemonicOnStart");
+      workspace.saveAs(
+        "Quickstart",
+        null,
+        workspaceManager.directory,
+        null,
+        true,
+      );
+      // this loads the default workspace
+      workspaceManager.bootstrap();
+      // saveAs overwrites these values, so we need to put them back
+      workspace.settings.set("isDefault", true);
+      workspace.settings.set("randomizeMnemonicOnStart", randomizeMnemonicOnStart);
+
       // default workspace shouldn't have pre-existing projects
       // this logic only should get called when the user presses
       // the default workspace button. the restart after loading
       // the projects should trigger the REQUEST_SERVER_RESTART
       // logic
       workspace.settings.set("projects", []);
+
+      await integrations.setWorkspace("Quickstart", flavor);
+      workspace = integrations.workspace;
 
       workspace.resetChaindata();
     } else {
