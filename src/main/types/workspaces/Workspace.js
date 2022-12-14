@@ -1,6 +1,5 @@
 import path from "path";
 import fse from "fs-extra";
-
 import WorkspaceSettings from "../settings/WorkspaceSettings";
 import ContractCache from "../../../integrations/ethereum/main/types/contracts/ContractCache";
 
@@ -54,7 +53,7 @@ class Workspace {
         return path.join(configDirectory, `default_${flavor}`);
       }
     } else {
-      return path.join(configDirectory, "workspaces", sanitizedName);
+      return path.join(configDirectory, "ui/workspaces", sanitizedName);
     }
   }
 

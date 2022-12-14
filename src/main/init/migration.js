@@ -1,9 +1,30 @@
 import { join } from "path";
-import { copy, pathExists as exists, readdir } from "fs-extra";
+import { copy, pathExists as exists, readdir, symlink, existsSync } from "fs-extra";
 import { exec } from "child_process";
 import * as pkg from "../../../package.json";
+import {readdirSync} from "fs";
 
 let migrate, uninstallOld;
+
+const linkLegacyWorkspaces = async (configRoot) => {
+  const legacyWorkspacesDirectory = join(configRoot, "workspaces");
+  const newWorkspacesDirectory = join(configRoot, "ui/workspaces");
+
+  if (existsSync(legacyWorkspacesDirectory)) {
+    const legacyWorkspaces = readdirSync(legacyWorkspacesDirectory, { withFileTypes: true });
+    const linkingWorkspaces = legacyWorkspaces.map(legacyWorkspace => {
+      const fullPath = join(legacyWorkspacesDirectory, legacyWorkspace.name);
+      const linkPath = join(newWorkspacesDirectory, legacyWorkspace.name);
+      if (legacyWorkspace.isDirectory && !existsSync(linkPath)) {
+        return symlink(fullPath, linkPath);
+      }
+    });
+
+    return Promise.all(linkingWorkspaces);
+  }
+};
+
+
 if (process.platform == "win32") {
   const APP_DATA = process.env.APPDATA;
   const COPY_SETTINGS = {
@@ -40,7 +61,7 @@ if (process.platform == "win32") {
     await Promise.all(promises);
   }
 
-  const getOldGanachePath = ()=>{
+  const getOldGanachePath = () => {
     return join(APP_DATA, "/../Local/Packages/Ganache_zh355ej5cj694/LocalCache/Roaming/Ganache");
   }
 
@@ -62,7 +83,8 @@ if (process.platform == "win32") {
     if (!(await ganacheExists())) return;
 
     const newGanacheVirtualized = join(APP_DATA, `/../Local/Packages/${pkg.build.appx.identityName}_5dg5pnz03psnj/LocalCache/Roaming/Ganache`);
-    return Promise.all([moveWorkspaces(oldGanache, newGanache), moveGlobalSettings(oldGanache, newGanache), moveWorkspaces(newGanacheVirtualized, newGanache), moveGlobalSettings(newGanacheVirtualized, newGanache)]);
+    await Promise.all([moveWorkspaces(oldGanache, newGanache), moveGlobalSettings(oldGanache, newGanache), moveWorkspaces(newGanacheVirtualized, newGanache), moveGlobalSettings(newGanacheVirtualized, newGanache)]);
+    return linkLegacyWorkspaces(newGanache);
   };
 
   uninstallOld = async () => {
@@ -79,10 +101,11 @@ if (process.platform == "win32") {
   }
 } else {
   const noop = () => Promise.resolve();
-  migrate = uninstallOld = noop;
+  migrate = linkLegacyWorkspaces;
+  uninstallOld = noop;
 }
 
 export default {
   migrate,
   uninstallOld
-};
+}
