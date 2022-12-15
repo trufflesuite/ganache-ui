@@ -31,8 +31,8 @@ const linkLegacyWorkspaces = async (configRoot) => {
     const linkingWorkspaces = legacyWorkspaces.map(async legacyWorkspace => {
       const fullPath = join(legacyWorkspacesDirectory, legacyWorkspace.name);
       const linkPath = join(newWorkspacesDirectory, legacyWorkspace.name);
-      if (legacyWorkspace.isDirectory && !await exists(linkPath)) {
-        return symlink(fullPath, linkPath);
+      if (legacyWorkspace.isDirectory() && !await exists(linkPath)) {
+        return symlink(fullPath, linkPath, "junction");
       }
     });
 
@@ -93,13 +93,13 @@ if (process.platform == "win32") {
    * workspace folder.
    */
   migrate = async (newGanache) => {
-    if (!APP_DATA) return;
-    const oldGanache = getOldGanachePath();
-    
-    if (!(await ganacheExists())) return;
+    if (APP_DATA && await ganacheExists()) {      
+      const oldGanache = getOldGanachePath();
+      
+      const newGanacheVirtualized = join(APP_DATA, `/../Local/Packages/${pkg.build.appx.identityName}_5dg5pnz03psnj/LocalCache/Roaming/Ganache`);
+      await Promise.all([moveWorkspaces(oldGanache, newGanache), moveGlobalSettings(oldGanache, newGanache), moveWorkspaces(newGanacheVirtualized, newGanache), moveGlobalSettings(newGanacheVirtualized, newGanache)]);
+    }
 
-    const newGanacheVirtualized = join(APP_DATA, `/../Local/Packages/${pkg.build.appx.identityName}_5dg5pnz03psnj/LocalCache/Roaming/Ganache`);
-    await Promise.all([moveWorkspaces(oldGanache, newGanache), moveGlobalSettings(oldGanache, newGanache), moveWorkspaces(newGanacheVirtualized, newGanache), moveGlobalSettings(newGanacheVirtualized, newGanache)]);
     return linkLegacyWorkspaces(newGanache);
   };
 
