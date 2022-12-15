@@ -120,8 +120,16 @@ class Workspace {
   }
 
   delete() {
+    let workspaceDirectory;
+    if (fse.lstatSync(this.workspaceDirectory).isSymbolicLink()) {
+      workspaceDirectory = fse.readlinkSync(this.workspaceDirectory);
+      fse.unlinkSync(this.workspaceDirectory);
+    } else {
+      workspaceDirectory = this.workspaceDirectory;
+    }
+
     try {
-      fse.removeSync(this.workspaceDirectory);
+      fse.removeSync(workspaceDirectory);
     } catch (e) {
       // TODO: couldn't delete the directory; probably don't have
       // permissions or some file is open somewhere. we probably
@@ -129,6 +137,9 @@ class Workspace {
       // a message to renderer process, display toast saying there
       // were issues, etc.). Don't really have time right now for
       // a solution here
+      // todo: if unlinking is successful, but removing the
+      // directory is not, the link will be recreated during the
+      // migration process next time the app is started.
     }
   }
 

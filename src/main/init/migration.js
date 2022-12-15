@@ -1,21 +1,37 @@
 import { join } from "path";
-import { copy, pathExists as exists, readdir, symlink, existsSync } from "fs-extra";
+import { copy, pathExists as exists } from "fs-extra";
 import { exec } from "child_process";
 import * as pkg from "../../../package.json";
-import {readdirSync} from "fs";
+import { readdir, symlink, mkdir } from "fs/promises";
 
 let migrate, uninstallOld;
 
+/*
+  When we introduced Ganache 7 for ethereum chains, we moved the workspaces to
+  Ganache/ui/workspaces. Previous versions of Ganache-UI would crash loading
+  these workspaces, so we link the legacy workspaces to the new workspaces
+  directory. This means that the old workspaces are available to both new and
+  old versions of Ganache-UI, but new workspaces are only available to new 
+  versions.
+  The intention is ot migrate all Ganache-UI data to the /Ganache/ui directory,
+  giving the user the option to move (and migrate the chaindata of) legacy
+  workspaces.
+  See: https://github.com/trufflesuite/ganache-ui/pull/5151
+*/
 const linkLegacyWorkspaces = async (configRoot) => {
   const legacyWorkspacesDirectory = join(configRoot, "workspaces");
   const newWorkspacesDirectory = join(configRoot, "ui/workspaces");
 
-  if (existsSync(legacyWorkspacesDirectory)) {
-    const legacyWorkspaces = readdirSync(legacyWorkspacesDirectory, { withFileTypes: true });
-    const linkingWorkspaces = legacyWorkspaces.map(legacyWorkspace => {
+  if (!await exists(newWorkspacesDirectory)) {
+    await mkdir(newWorkspacesDirectory, { recursive: true })
+  }
+
+  if (await exists(legacyWorkspacesDirectory)) {
+    const legacyWorkspaces = await readdir(legacyWorkspacesDirectory, { withFileTypes: true });
+    const linkingWorkspaces = legacyWorkspaces.map(async legacyWorkspace => {
       const fullPath = join(legacyWorkspacesDirectory, legacyWorkspace.name);
       const linkPath = join(newWorkspacesDirectory, legacyWorkspace.name);
-      if (legacyWorkspace.isDirectory && !existsSync(linkPath)) {
+      if (legacyWorkspace.isDirectory && !await exists(linkPath)) {
         return symlink(fullPath, linkPath);
       }
     });
