@@ -2,7 +2,7 @@ import { join } from "path";
 import { copy, pathExists as exists } from "fs-extra";
 import { exec } from "child_process";
 import * as pkg from "../../../package.json";
-import { readdir, symlink, mkdir } from "fs/promises";
+import { readdir, symlink, mkdir, readFile } from "fs/promises";
 
 let migrate, uninstallOld;
 
@@ -30,10 +30,20 @@ const linkLegacyWorkspaces = async (configRoot) => {
   if (await exists(legacyWorkspacesDirectory)) {
     const legacyWorkspaces = await readdir(legacyWorkspacesDirectory, { withFileTypes: true });
     const linkingWorkspaces = legacyWorkspaces.map(async legacyWorkspace => {
-      const fullPath = join(legacyWorkspacesDirectory, legacyWorkspace.name);
-      const linkPath = join(newWorkspacesDirectory, legacyWorkspace.name);
-      if (legacyWorkspace.isDirectory() && !await exists(linkPath)) {
-        return symlink(fullPath, linkPath, "junction");
+      try {
+        const fullPath = join(legacyWorkspacesDirectory, legacyWorkspace.name);
+
+        const settings = await readFile(join(fullPath, "Settings"));
+        const { flavor } = JSON.parse(settings);
+        if (flavor === "ethereum" || flavor === "filecoin") {
+          // silently ignore any workspaces that aren't of a supported flavor
+          const linkPath = join(newWorkspacesDirectory, legacyWorkspace.name);
+          if (legacyWorkspace.isDirectory() && !await exists(linkPath)) {
+            return symlink(fullPath, linkPath, "junction");
+          }
+        }
+      } catch {
+        // silently ignore any workspaces that fail to link
       }
     });
 
