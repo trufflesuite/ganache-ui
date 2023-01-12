@@ -97,7 +97,7 @@ if (process.platform === "win32") {
       return spawn("cmd.exe", ["/c", "mkdir", path.join(USERDATA_PATH, "extras")])
     })
     .then(()=> {
-      return spawn("cmd.exe", ["/c", "mkdir", path.join(USERDATA_PATH, "workspaces")])
+      return spawn("cmd.exe", ["/c", "mkdir", path.join(USERDATA_PATH, "ui/workspaces")])
     })
     .then(()=> {
       return spawn("cmd.exe", ["/c", "mkdir", path.join(USERDATA_PATH, "default")])
@@ -120,7 +120,7 @@ if (process.platform === "win32") {
     }
   });
 } else {
-  migrationPromise = Promise.resolve();
+  migrationPromise = migration.migrate(USERDATA_PATH);
 
   // https://github.com/sindresorhus/fix-path
   // GUI apps on macOS don't inherit the $PATH defined in your dotfiles (.bashrc/.bash_profile/.zshrc/etc)
