@@ -321,7 +321,7 @@ class ServerScreen extends Component {
               <div className="RowItem">
                 <p>
                   When transactions fail, throw an error. If disabled,
-                  transaction failures will only be detectable via the &quote;status&quote;
+                  transaction failures will only be detectable via the &quot;status&quot;
                   flag in the transaction receipt. Disabling this feature will
                   make Ganache handle transaction failures like other Ethereum
                   clients.
