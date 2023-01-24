@@ -29,10 +29,10 @@
     "start": "npm run dev",
     "compile": "electron-webpack",
     "lint": "eslint .",
-    "sign-mac": "codesign --deep --force --verbose --sign 'Developer ID Application: Timothy Coulter (58RKXWC272)' ./dist/*.dmg",
-    "build-linux": "npm run compile && electron-builder --linux --publish=onTagOrDraft",
-    "build-mac": "npm run compile && electron-builder --mac --publish=onTagOrDraft",
-    "build-windows": "npm run compile && electron-builder --win --publish=onTagOrDraft",
+    "sign-mac": "codesign --deep --force --verbose --sign 'Developer ID Application: ConsenSys AG (48XVW22RCG)' ./dist/*.dmg",
+    "build-linux": "npm run compile && electron-builder --linux",
+    "build-mac": "npm run compile && electron-builder --mac",
+    "build-windows": "npm run compile && electron-builder --win",
     "test": "npm run test-mocha && npm run test-jest",
     "test-jest": "jest __tests__/.*.test.js",
     "test-mocha": "cross-env GANACHE_DEV_MODE=true ELECTRON_APP_PATH=./ mocha --require @babel/register --check-leaks 'test/mocha/**/*.test.js'",
@@ -91,6 +91,7 @@
     "redux-logger": "^2.7.4",
     "redux-thunk": "^2.3.0",
     "safe-buffer": "^5.0.1",
+    "sass": "1.57.1",
     "semver-parser": "3.0.4",
     "shebang-loader": "^0.0.1",
     "source-map-support": "^0.5.13",
@@ -192,6 +193,7 @@
       "package.json"
     ],
     "win": {
+      "certificateSha1": "79989F27614B87B6527A53ACBE2276CEDEE902AE",
       "icon": "static/icons/win/icon.ico",
       "verifyUpdateCodeSignature": false,
       "target": [
