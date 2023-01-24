@@ -55,7 +55,7 @@
     "fix-path": "^2.1.0",
     "follow-redirects": "1.9.0",
     "fs-extra": "9.0.0",
-    "ganache": "7.5.0",
+    "ganache": "7.7.3",
     "ganache-core": "2.13.1",
     "get-port": "^5.0.0",
     "history": "4.10.1",
