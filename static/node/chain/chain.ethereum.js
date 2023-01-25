@@ -152,6 +152,7 @@ async function startServer(options) {
   dbLocation = ganacheOptions.database.dbPath;
 
   const { mnemonic, hdPath } = ganacheOptions.wallet;
+  const fork_block_number = ganacheOptions.fork?.blockNumber;
 
   // todo: what else do we need from options
   const data = {
@@ -159,6 +160,7 @@ async function startServer(options) {
     addresses,
     hdPath,
     mnemonic,
+    fork_block_number,
     dbLocation,
   };
 
