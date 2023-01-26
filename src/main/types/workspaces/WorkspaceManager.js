@@ -1,5 +1,6 @@
 import path from "path";
 import fse from "fs-extra";
+import { readdirSync } from "fs";
 import Workspace from "./Workspace";
 import WorkspaceSettings from "../settings/WorkspaceSettings";
 
@@ -9,21 +10,24 @@ class WorkspaceManager {
     this.workspaces = [];
   }
 
-  enumerateWorkspaces() {
-    const workspacesDirectory = path.join(this.directory, "workspaces");
+  enumerateWorkspaces() {  
+    const workspacesDirectory = path.join(this.directory, "ui/workspaces");
+
     if (fse.existsSync(workspacesDirectory)) {
-      this.workspaces = fse.readdirSync(workspacesDirectory).flatMap((file) => {
+      this.workspaces = readdirSync(workspacesDirectory, { withFileTypes: true }).flatMap((file) => {
         // if an osx user navigates to the workspaces directory osx will put a
         // .DS_Store folder there, ignore and delete these. If the file isn't
         // a directory, also delete it.
+        
         if (
-          file === ".DS_Store" ||
-          !fse.lstatSync(path.join(workspacesDirectory, file)).isDirectory()
+          file.name === ".DS_Store" ||
+          !file.isDirectory()
+          && !file.isSymbolicLink()
         ) {
           try {
             // remove files and folders that aren't allow in the workspaces
             // directory
-            fse.removeSync(path.join(workspacesDirectory, file));
+            fse.removeSync(path.join(workspacesDirectory, file.name));
           } catch {
             // ignore
           }
@@ -31,8 +35,8 @@ class WorkspaceManager {
         }
 
         let settings = new WorkspaceSettings(
-          path.join(workspacesDirectory, file),
-          path.join(workspacesDirectory, file, "chaindata")
+          path.join(workspacesDirectory, file.name),
+          path.join(workspacesDirectory, file.name, "chaindata")
         );
 
         const isQuickstart = settings.get("isDefault");
@@ -46,12 +50,12 @@ class WorkspaceManager {
 
         const name = settings.get("name");
         const sanitizedName = Workspace.getSanitizedName(name);
-        if (sanitizedName !== file) {
+        if (sanitizedName !== file.name) {
           // apparently the Settings file has a name that is not equal to the directory,
           //   we need to move the directory
           try {
             fse.moveSync(
-              path.join(workspacesDirectory, file),
+              path.join(workspacesDirectory, file.name),
               path.join(workspacesDirectory, sanitizedName)
             );
           } catch (e) {

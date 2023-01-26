@@ -1,9 +1,57 @@
 import { join } from "path";
-import { copy, pathExists as exists, readdir } from "fs-extra";
+import { copy, pathExists as exists } from "fs-extra";
 import { exec } from "child_process";
 import * as pkg from "../../../package.json";
+import { readdir, symlink, mkdir, readFile } from "fs/promises";
 
 let migrate, uninstallOld;
+
+/*
+  When we introduced Ganache 7 for ethereum chains, we moved the workspaces to
+  Ganache/ui/workspaces. Previous versions of Ganache-UI would crash loading
+  these workspaces, so we link the legacy workspaces to the new workspaces
+  directory. This means that the old workspaces are available to both new and
+  old versions of Ganache-UI, but new workspaces are only available to new 
+  versions.
+  The intention is to migrate all Ganache-UI data to the /Ganache/ui directory,
+
+  giving the user the option to move (and migrate the chaindata of) legacy
+  workspaces.
+  See: https://github.com/trufflesuite/ganache-ui/pull/5151
+*/
+const linkLegacyWorkspaces = async (configRoot) => {
+  const legacyWorkspacesDirectory = join(configRoot, "workspaces");
+  const newWorkspacesDirectory = join(configRoot, "ui/workspaces");
+
+  if (!await exists(newWorkspacesDirectory)) {
+    await mkdir(newWorkspacesDirectory, { recursive: true })
+  }
+
+  if (await exists(legacyWorkspacesDirectory)) {
+    const legacyWorkspaces = await readdir(legacyWorkspacesDirectory, { withFileTypes: true });
+    const linkingWorkspaces = legacyWorkspaces.map(async legacyWorkspace => {
+      try {
+        const fullPath = join(legacyWorkspacesDirectory, legacyWorkspace.name);
+
+        const settings = await readFile(join(fullPath, "Settings"));
+        const { flavor } = JSON.parse(settings);
+        if (flavor === "ethereum" || flavor === "filecoin") {
+          // silently ignore any workspaces that aren't of a supported flavor
+          const linkPath = join(newWorkspacesDirectory, legacyWorkspace.name);
+          if (legacyWorkspace.isDirectory() && !await exists(linkPath)) {
+            return symlink(fullPath, linkPath, "junction");
+          }
+        }
+      } catch {
+        // silently ignore any workspaces that fail to link
+      }
+    });
+
+    return Promise.all(linkingWorkspaces);
+  }
+};
+
+
 if (process.platform == "win32") {
   const APP_DATA = process.env.APPDATA;
   const COPY_SETTINGS = {
@@ -40,7 +88,7 @@ if (process.platform == "win32") {
     await Promise.all(promises);
   }
 
-  const getOldGanachePath = ()=>{
+  const getOldGanachePath = () => {
     return join(APP_DATA, "/../Local/Packages/Ganache_zh355ej5cj694/LocalCache/Roaming/Ganache");
   }
 
@@ -56,13 +104,14 @@ if (process.platform == "win32") {
    * workspace folder.
    */
   migrate = async (newGanache) => {
-    if (!APP_DATA) return;
-    const oldGanache = getOldGanachePath();
-    
-    if (!(await ganacheExists())) return;
+    if (APP_DATA && await ganacheExists()) {      
+      const oldGanache = getOldGanachePath();
+      
+      const newGanacheVirtualized = join(APP_DATA, `/../Local/Packages/${pkg.build.appx.identityName}_5dg5pnz03psnj/LocalCache/Roaming/Ganache`);
+      await Promise.all([moveWorkspaces(oldGanache, newGanache), moveGlobalSettings(oldGanache, newGanache), moveWorkspaces(newGanacheVirtualized, newGanache), moveGlobalSettings(newGanacheVirtualized, newGanache)]);
+    }
 
-    const newGanacheVirtualized = join(APP_DATA, `/../Local/Packages/${pkg.build.appx.identityName}_5dg5pnz03psnj/LocalCache/Roaming/Ganache`);
-    return Promise.all([moveWorkspaces(oldGanache, newGanache), moveGlobalSettings(oldGanache, newGanache), moveWorkspaces(newGanacheVirtualized, newGanache), moveGlobalSettings(newGanacheVirtualized, newGanache)]);
+    return linkLegacyWorkspaces(newGanache);
   };
 
   uninstallOld = async () => {
@@ -79,10 +128,11 @@ if (process.platform == "win32") {
   }
 } else {
   const noop = () => Promise.resolve();
-  migrate = uninstallOld = noop;
+  migrate = linkLegacyWorkspaces;
+  uninstallOld = noop;
 }
 
 export default {
   migrate,
   uninstallOld
-};
+}

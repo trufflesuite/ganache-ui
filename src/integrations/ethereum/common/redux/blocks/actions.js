@@ -13,10 +13,15 @@ export const clearBlocksInView = function() {
 };
 
 export const requestPage = function(startBlockNumber, endBlockNumber) {
-  endBlockNumber = endBlockNumber || 0;
   return function(dispatch, getState) {
     if (startBlockNumber == null) {
       startBlockNumber = getState().core.latestBlock;
+    }
+    if (endBlockNumber == null) {
+      const state = getState();
+      endBlockNumber = state.config.settings.workspace.server.fork
+        ? state.config.settings.workspace.server.fork_block_number + 1
+        : 0;
     }
 
     let earliestBlockToRequest = Math.max(

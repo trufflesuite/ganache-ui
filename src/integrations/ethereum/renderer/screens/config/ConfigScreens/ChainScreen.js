@@ -18,7 +18,7 @@ const VALIDATIONS = {
     canBeBlank: true,
   },
   "workspace.server.hardfork": {
-    allowedChars: /^(byzantium|constantinople|petersburg|istanbul|muirGlacier)$/,
+    allowedChars: /^(merge|grayGlacier|arrowGlacier|london|berlin|muirGlacier|istanbul|petersburg|constantinople|byzantium)$/,
     canBeBlank: false,
   },
 };
@@ -116,15 +116,20 @@ class ChainScreen extends Component {
                 }
                 changeFunction={this.validateChange.bind(this)}
               >
+                <option value="merge">Merge</option>
+                <option value="grayGlacier">Gray Glacier</option>
+                <option value="arrowGlacier">Arrow Glacier</option>
+                <option value="london">London</option>
+                <option value="berlin">Berlin</option>
+                <option value="muirGlacier">Muir Glacier</option>
+                <option value="istanbul">Istanbul</option>
                 <option value="petersburg">Petersburg</option>
                 <option value="constantinople">Constantinople</option>
                 <option value="byzantium">Byzantium</option>
-                <option value="istanbul">Istanbul</option>
-                <option value="muirGlacier">Muir Glacier</option>
               </StyledSelect>
             </div>
             <div className="RowItem">
-              <p>The hardfork to use. Default is Petersburg.</p>
+              <p>The hardfork to use. Default is Merge.</p>
             </div>
           </div>
         </section>
@@ -133,5 +138,4 @@ class ChainScreen extends Component {
     );
   }
 }
-
 export default ChainScreen;

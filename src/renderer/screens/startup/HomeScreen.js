@@ -29,7 +29,13 @@ import ReactTooltip from "react-tooltip";
 class HomeScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = {flavor: this.props.config.settings.global.last_flavor || "ethereum"};
+    const lastFlavor = this.props.config.settings.global.last_flavor;
+    const flavor =
+      lastFlavor === "ethereum" || lastFlavor === "filecoin"
+        ? lastFlavor
+        : "ethereum";
+
+    this.state = { flavor };
 
     this.handleFlavorChange = this.handleFlavorChange.bind(this);
     this.handleClickOutside = this.handleClickOutside.bind(this);
@@ -38,6 +44,7 @@ class HomeScreen extends Component {
   selectWorkspace(workspace) {
     this.props.dispatch(openWorkspace(workspace.name, workspace.flavor));
   }
+
   handleEditWorkspaceSettings(workspace, e) {
     const workspaceName = workspace.name;
     const workspaceFlavor = workspace.flavor;
