@@ -19,11 +19,17 @@ export const setSubscribedTopics = function(topics) {
 
 export const SET_LOADING = `${prefix}/SET_LOADING`;
 export const requestPage = function(startBlockNumber, endBlockNumber) {
-  endBlockNumber = endBlockNumber || 0;
   return async function(dispatch, getState) {
     if (startBlockNumber == null) {
       startBlockNumber = getState().core.latestBlock;
     }
+    if (endBlockNumber == null) {
+      const state = getState();
+      endBlockNumber = state.config.settings.workspace.server.fork
+        ? state.config.settings.workspace.server.fork_block_number + 1
+        : 0;
+    }
+
 
     let earliestBlockToRequest = Math.max(
       startBlockNumber - PAGE_SIZE,
