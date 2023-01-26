@@ -97,8 +97,7 @@ class IntegrationManager extends EventEmitter {
       try {
         await this.flavor.startServer(settings, this.workspace.workspaceDirectory);
         // just incase startServer mutates the settings, save them
-        // todo: not sure whether we still need to do this?
-        this.workspace.settings.setAll(settings);
+        this.workspace.settings.setAll(this.workspace.settings.getAll());
 
         this.emit("server-started");
         return true;
