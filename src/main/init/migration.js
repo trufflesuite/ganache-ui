@@ -13,15 +13,12 @@ let migrate, uninstallOld;
   directory. This means that the old workspaces are available to both new and
   old versions of Ganache-UI, but new workspaces are only available to new 
   versions.
-  The intention is to migrate all Ganache-UI data to the /Ganache/ui directory,
 
-  giving the user the option to move (and migrate the chaindata of) legacy
-  workspaces.
   See: https://github.com/trufflesuite/ganache-ui/pull/5151
 */
 const linkLegacyWorkspaces = async (configRoot) => {
-  const legacyWorkspacesDirectory = join(configRoot, "workspaces");
-  const newWorkspacesDirectory = join(configRoot, "ui/workspaces");
+  const legacyWorkspacesDirectory = join(configRoot, "../workspaces");
+  const newWorkspacesDirectory = join(configRoot, "workspaces");
 
   if (!await exists(newWorkspacesDirectory)) {
     await mkdir(newWorkspacesDirectory, { recursive: true })

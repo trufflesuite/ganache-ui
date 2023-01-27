@@ -11,7 +11,7 @@ class WorkspaceManager {
   }
 
   enumerateWorkspaces() {  
-    const workspacesDirectory = path.join(this.directory, "ui/workspaces");
+    const workspacesDirectory = path.join(this.directory, "workspaces");
 
     if (fse.existsSync(workspacesDirectory)) {
       this.workspaces = readdirSync(workspacesDirectory, { withFileTypes: true }).flatMap((file) => {

@@ -80,7 +80,7 @@ if (isDevelopment) {
   app.commandLine.appendSwitch("remote-debugging-port", "9222");
 }
 
-const USERDATA_PATH = app.getPath("userData");
+const USERDATA_PATH = path.join(app.getPath("userData"), "/ui");
 let migrationPromise;
 
 if (process.platform === "win32") {
@@ -97,7 +97,7 @@ if (process.platform === "win32") {
       return spawn("cmd.exe", ["/c", "mkdir", path.join(USERDATA_PATH, "extras")])
     })
     .then(()=> {
-      return spawn("cmd.exe", ["/c", "mkdir", path.join(USERDATA_PATH, "ui/workspaces")])
+      return spawn("cmd.exe", ["/c", "mkdir", path.join(USERDATA_PATH, "workspaces")])
     })
     .then(()=> {
       return spawn("cmd.exe", ["/c", "mkdir", path.join(USERDATA_PATH, "default")])
