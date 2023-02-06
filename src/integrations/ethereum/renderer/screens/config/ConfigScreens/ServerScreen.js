@@ -454,7 +454,7 @@ class ServerScreen extends Component {
                   />
                 </div> 
                 <div className="RowItem">
-                  <p>The URL of the block number to fork from, e.g., 56789</p>
+                  <p>The block number to fork from, e.g., 56789</p>
                 </div>
               </div> 
             </section>
