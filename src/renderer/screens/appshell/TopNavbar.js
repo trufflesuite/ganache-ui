@@ -19,11 +19,14 @@ import OnlyIf from "../../components/only-if/OnlyIf";
 import StatusIndicator from "../../components/status-indicator/StatusIndicator";
 import UpdateNotification from "../auto-update/UpdateNotification";
 
+import WarningIcon from "../../icons/warning.svg";
 import AccountIcon from "../../icons/account.svg";
 import BlockIcon from "../../icons/blocks.svg";
 import TxIcon from "../../icons/transactions.svg";
 import LogsIcon from "../../icons/console.svg";
 import ContractsIcon from "../../icons/contract-icon.svg";
+import DealsIcon from "../../icons/deals-icon.svg";
+import FilesIcon from "../../icons/file-icon.svg";
 import EventsIcon from "../../icons/events-icon.svg";
 
 import SettingsIcon from "../../icons/settings.svg";
@@ -85,7 +88,7 @@ class TopNavbar extends Component {
           setUpdateAvailable(
             "9.9.9",
             "Release Name",
-            "This is a release note.\n\n**bold** _italic_ or is this *italic*? [trufflesuite/ganache-cli#417](https://github.com/trufflesuite/ganache-cli/issues/417)\n\nDo we scroll to get here?\n\nHow about here?",
+            "This is a release note.\n\n**bold** _italic_ or is this *italic*? [trufflesuite/ganache-ui#417](https://github.com/trufflesuite/ganache-ui/issues/417)\n\nDo we scroll to get here?\n\nHow about here?",
           ),
         );
       } else if (value.toLowerCase() === "modal_error") {
@@ -111,7 +114,7 @@ class TopNavbar extends Component {
       } else if (value.toLowerCase() === "loader") {
         this.props.dispatch(push("/loader"));
       } else {
-        this.props.dispatch(Search.query(value));
+        this.props.dispatch(Search.query(value, this.props.config.settings.workspace.flavor));
       }
 
       this.setState({
@@ -149,9 +152,28 @@ class TopNavbar extends Component {
   }
 
   _renderMiningTime() {
-    if (this.props.config.settings.workspace.server.blockTime) {
+    const workspaceSettings = this.props.config.settings.workspace;
+
+    if (workspaceSettings.flavor === "filecoin") {
+      if (workspaceSettings.server.miner) {
+        // TODO: miner.mine should not be read from options but current state
+        // need to update once the api methods exist
+        const minerEnabled = this.props["filecoin.core"].minerEnabled !== null ? this.props["filecoin.core"].minerEnabled : workspaceSettings.server.miner.mine;
+        if (minerEnabled === false) {
+          return "Stopped";
+        } else if (workspaceSettings.server.miner.blockTime > 0) {
+          return `${
+            workspaceSettings.server.miner.blockTime
+          } SEC block time`;
+        }
+      }
+
+      return "Automining";
+    }
+
+    if (workspaceSettings.server.blockTime) {
       return `${
-        this.props.config.settings.workspace.server.blockTime
+        workspaceSettings.server.blockTime
       } SEC block time`;
     } else {
       return "Automining";
@@ -165,13 +187,17 @@ class TopNavbar extends Component {
     let children;
     const flavor = this.props.config.settings.workspace.flavor;
     switch (flavor) {
-      case "ethereum":
-          children = this._generateEthereumChildren();
-          break;
-      case "corda":
-          children = this._generateCordaChildren();
+      case "ethereum": {
+        children = this._generateEthereumChildren();
         break;
+      }
+      case "filecoin": {
+        children = this._generateFilecoinChildren();
+        break;
+      }
     }
+
+    const hasSearch = flavor === "ethereum" || flavor === "filecoin";
 
     return (
       <nav className="TopNavBar">
@@ -187,7 +213,7 @@ class TopNavbar extends Component {
             <OnlyIf test={isNewVersionAvailable}>
               <UpdateNotification />
             </OnlyIf>
-            { flavor === "ethereum" ? <><input
+            { hasSearch ? <><input
               type="text"
               placeholder={children.searchText}
               title={children.searchText}
@@ -206,7 +232,18 @@ class TopNavbar extends Component {
             <StatusIndicator
               title="WORKSPACE"
               value={this.props.config.settings.workspace.name}
-            />
+            >
+              <OnlyIf test={this.props.config.settings.workspace.libVersion === 2}>
+                <span className="popover-container">
+                  <span className="popover popunder">
+                    This workspace was created with an old version of Ganache.
+                    <br />
+                    Create a new workspace to take advantage of Ganache v7.
+                  </span>
+                  <WarningIcon width="25px" height="25px" />
+                </span>
+              </OnlyIf>
+            </StatusIndicator>
             <OnlyIf test={this.props.config.settings.workspace.isDefault}>
               <button onClick={this.handleSaveWorkspacePress.bind(this)}>Save</button>
             </OnlyIf>
@@ -229,40 +266,40 @@ class TopNavbar extends Component {
       </nav>
     );
   }
-  _generateCordaChildren(){
+
+  _generateFilecoinChildren() {
     return {
       menu: (<>
-        <NavLink to="/corda/nodes" activeClassName="Active">
+        <NavLink to="/filecoin/accounts" activeClassName="Active">
+          <AccountIcon />
+          Accounts
+        </NavLink>
+        <NavLink to="/filecoin/tipsets" activeClassName="Active">
           <BlockIcon />
-          Nodes
+          Tipsets
         </NavLink>
-        <NavLink to="/corda/transactions" activeClassName="Active">
+        <NavLink to="/filecoin/messages" activeClassName="Active">
           <TxIcon />
-          Transactions
+          Messages
         </NavLink>
-        <NavLink to="/corda/cordapps" activeClassName="Active">
-          <ContractsIcon />
-          CorDapps
+        <NavLink to="/filecoin/deals" activeClassName="Active">
+          <DealsIcon />
+          Deals
         </NavLink>
-        <NavLink to="/corda/shells" activeClassName="Active">
-          <TxIcon />
-          Shells
+        <NavLink to="/filecoin/files" activeClassName="Active">
+          <FilesIcon />
+          Files
         </NavLink>
       </>),
       searchText: "Search",
       status: (<>
-        <StatusIndicator
-            title="Total Nodes"
-            value={this.props.config.settings.workspace.nodes.length}
-        />
-        <StatusIndicator
-            title="Total Notaries"
-            value={this.props.config.settings.workspace.notaries.length}
-        />
-        <StatusIndicator
-            title="Total Projects"
-            value={this.props.config.settings.workspace.projects.length}
-        />
+        <StatusIndicator title="CURRENT TIPSET" value={this.props.filecoin.core.latestTipset} />
+        <StatusIndicator title="LOTUS SERVER" value={this.props.filecoin.lotus.lotusInstance && this.props.filecoin.lotus.lotusInstance.provider.provider.url} upper={false} />
+        <StatusIndicator title="IPFS SERVER" value={this.props.filecoin.core.ipfsUrl} upper={false} />
+          <StatusIndicator
+            title="MINING STATUS"
+            value={this._renderMiningTime()}
+          />
       </>),
       action: (<></>),
     }
@@ -359,6 +396,8 @@ class TopNavbar extends Component {
 
 export default connect(
   TopNavbar,
+  "filecoin.core",
   "workspaces",
-  "config"
+  "config",
+  "filecoin"
 );

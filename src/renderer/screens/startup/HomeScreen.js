@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Scrollbars } from "react-custom-scrollbars";
-
 import * as pkg from "../../../../package.json";
 
 import OnlyIf from "../../../renderer/components/only-if/OnlyIf";
@@ -24,11 +23,19 @@ import ChainIcon from "../../icons/chain.svg";
 import MenuIcon from "../../icons/list.svg";
 import TrashIcon from "../../icons/trash-icon.svg";
 import SettingsIcon from "../../icons/settings.svg";
+import WarningIcon from "../../../renderer/icons/warning.svg";
+import ReactTooltip from "react-tooltip";
 
 class HomeScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = {flavor: this.props.config.settings.global.last_flavor || "ethereum"};
+    const lastFlavor = this.props.config.settings.global.last_flavor;
+    const flavor =
+      lastFlavor === "ethereum" || lastFlavor === "filecoin"
+        ? lastFlavor
+        : "ethereum";
+
+    this.state = { flavor };
 
     this.handleFlavorChange = this.handleFlavorChange.bind(this);
     this.handleClickOutside = this.handleClickOutside.bind(this);
@@ -37,6 +44,7 @@ class HomeScreen extends Component {
   selectWorkspace(workspace) {
     this.props.dispatch(openWorkspace(workspace.name, workspace.flavor));
   }
+
   handleEditWorkspaceSettings(workspace, e) {
     const workspaceName = workspace.name;
     const workspaceFlavor = workspace.flavor;
@@ -94,11 +102,11 @@ class HomeScreen extends Component {
     const lowered = flavor.toLowerCase();
     return (<button onClick={this.handleFlavorChange.bind(this, lowered)} className={lastFlavor === lowered ? "homescreen-flavor-selected" : ""}>{flavor}</button>);
   }
-  getButtons(buttonState) {   
+  getButtons(buttonState) {
     if (this.state.buttonState === buttonState) {
       return (<div ref={(node) => this.wrapperRef=node} className="homescreen-flavor-buttons">
         {this.createButton("Ethereum")}
-        {this.createButton("Corda")}
+        {this.createButton("Filecoin")}
       </div>);
     } else {
       if (this.state.buttonState === null){
@@ -137,8 +145,16 @@ class HomeScreen extends Component {
       workspaces = this.props.workspaces.info.map(workspaceInfo => {
         return (
           <li key={workspaceInfo.name + workspaceInfo.flavor}>
-            <button onClick={()=>this.selectWorkspace(workspaceInfo)}>
-              <span>{workspaceInfo.name} ({workspaceInfo.flavor})</span>
+            <button onClick={() => this.selectWorkspace(workspaceInfo)}>
+              <span>
+                {workspaceInfo.name} ({workspaceInfo.flavor})
+                <OnlyIf test={workspaceInfo.isLegacy}>
+                  <WarningIcon data-tip="This workspace was created with an old version of Ganache.
+                    <br />
+                    Create a new workspace to take advantage of Ganache v7."
+                    data-multiline={true}/>
+                </OnlyIf>
+              </span>
               <div
                 className="EditSettings"
                 onClick={(e) => this.handleEditWorkspaceSettings(workspaceInfo, e)}
@@ -171,7 +187,7 @@ class HomeScreen extends Component {
     );
     // const learnMore = (
     //   <p className="learnMoreText">
-    //     <a href="https://github.com/trufflesuite/ganache/releases/tag/v2.0.0">
+    //     <a href="https://github.com/trufflesuite/ganache-ui/releases/tag/v2.0.0">
     //       Learn more about the update to version 2!
     //     </a>
     //   </p>
@@ -244,7 +260,6 @@ class HomeScreen extends Component {
                     {workspaceButtons}
                   </div>
                 </div>
-                {this.state.flavor === "corda" ? <div style={{height:"0", overflow:"visible", color:"#aaa"}}><small><em>Note: Corda networks may utilize significant CPU and Memory during startup.</em></small></div> : ""}
               </section>
             </div>
             {/* <div className="LearnMore">{learnMore}</div> */}
@@ -258,6 +273,7 @@ class HomeScreen extends Component {
         >
           <UpdateModal />
         </OnlyIf>
+        <ReactTooltip />
       </React.Fragment>
     );
   }

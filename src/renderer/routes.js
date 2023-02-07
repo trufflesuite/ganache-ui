@@ -5,14 +5,6 @@ import AppShell from "./screens/appshell/AppShell";
 import ConfigScreen from "./screens/config/ConfigScreen";
 import AccountsScreen from "../integrations/ethereum/renderer/screens/accounts/AccountsScreen";
 
-import CordaNodes from "../integrations/corda/renderer/screens/Nodes";
-import CordaNode from "../integrations/corda/renderer/screens/NodeDetails";
-import CordaTransactions from "../integrations/corda/renderer/screens/Transactions";
-import CordaTransaction from "../integrations/corda/renderer/screens/Transaction";
-import CordaShells from "../integrations/corda/renderer/screens/Shells";
-import CordaCordapps from "../integrations/corda/renderer/screens/Cordapps";
-import CordaCordapp from "../integrations/corda/renderer/screens/Cordapp";
-
 import BlocksScreen from "../integrations/ethereum/renderer/screens/blocks/BlocksScreen";
 import TransactionsScreen from "../integrations/ethereum/renderer/screens/transactions/TransactionsScreen";
 import LogsScreen from "./screens/logs/LogsScreen";
@@ -25,6 +17,13 @@ import HomeScreen from "./screens/startup/HomeScreen";
 import FirstRunScreen from "./screens/first-run/FirstRunScreen";
 import ContractsScreen from "../integrations/ethereum/renderer/screens/contracts/ContractsScreen";
 import LoaderScreen from "./screens/loader/LoaderScreen";
+
+import FilecoinAccountsScreen from "../integrations/filecoin/renderer/screens/accounts/AccountsScreen";
+import FilecoinTipsetsScreen from "../integrations/filecoin/renderer/screens/tipsets/TipsetsScreen";
+import FilecoinBlockCard from "../integrations/filecoin/renderer/screens/tipsets/BlockCard";
+import MessagesScreen from "../integrations/filecoin/renderer/screens/messages/MessagesScreen";
+import DealsScreen from "../integrations/filecoin/renderer/screens/deals/DealsScreen";
+import FilesScreen from "../integrations/filecoin/renderer/screens/files/FilesScreen";
 
 class FlavorRoutes extends Component {
   render() {
@@ -49,21 +48,20 @@ class FlavorRoutes extends Component {
           component={EventDetailsScreen}
         />
         <Route path="/notfound" component={NotFoundScreen} />
-        
-        <Route path="/config/corda/:activeTab?" component={ConfigScreen} />
+
         <Route path="/config/:activeTab?" component={ConfigScreen} />
 
-        <Route exact path="/corda">
-          <Redirect to="/corda/nodes" />
+        <Route exact path="/filecoin">
+          <Redirect to="/filecoin/accounts" />
         </Route>
-        <Route exact path="/corda/nodes" component={CordaNodes} />
-        <Route path="/corda/nodes/:node" component={CordaNode} />
-        <Route exact path="/corda/cordapps" component={CordaCordapps} />
-        <Route path="/corda/cordapps/:cordapp" component={CordaCordapp} />
-        <Route exact path="/corda/shells" component={CordaShells} />
-        <Route path="/corda/shells/:context" component={CordaShells} />
-        <Route exact path="/corda/transactions" component={CordaTransactions} />
-        <Route path="/corda/transactions/:txhash" component={CordaTransaction} />
+        <Route exact path="/filecoin/accounts" component={FilecoinAccountsScreen} />
+        <Route exact path="/filecoin/tipsets" component={FilecoinTipsetsScreen} />
+        <Route exact path="/filecoin/tipsets/:tipsetHeight" component={FilecoinTipsetsScreen} />
+        <Route exact path="/filecoin/tipsets/blocks/:blockCid" component={FilecoinBlockCard} />
+        <Route exact path="/filecoin/messages" component={MessagesScreen} />
+        <Route exact path="/filecoin/messages/:messageCid" component={MessagesScreen} />
+        <Route exact path="/filecoin/deals" component={DealsScreen} />
+        <Route exact path="/filecoin/files" component={FilesScreen} />
       </Switch>
     </AppShell>
   }

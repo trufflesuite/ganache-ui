@@ -4,7 +4,7 @@ import assert from "assert";
 import fs from "fs";
 import path from "path";
 import isEqual from "lodash.isequal";
-import ganacheLib from "ganache-core";
+import ganache from "ganache";
 import Web3 from "web3";
 
 describe("New Workspace", () => {
@@ -42,7 +42,7 @@ describe("New Workspace", () => {
 
   it("started and stopped ganache provider with no errors", done => {
     var web3 = new Web3();
-    web3.setProvider(ganacheLib.provider(workspace.settings.getAll()));
+    web3.setProvider(ganache.provider(workspace.settings.getAll()));
 
     web3.eth.getAccounts(function(err, result) {
       if (err) return done(err);
