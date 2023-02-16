@@ -85,25 +85,28 @@ if (process.platform == "win32") {
     await Promise.all(promises);
   }
 
-  const getOldGanachePath = () => {
-    return join(APP_DATA, "/../Local/Packages/Ganache_zh355ej5cj694/LocalCache/Roaming/Ganache");
+  const ganacheRelativeDataPathUntil_2_3_0 = "/../Local/Packages/Ganache_zh355ej5cj694/LocalCache/Roaming/Ganache";
+  const ganacheRelativeDataPathBetween_2_4_0__2_7_0 = "/../Local/Packages/GanacheUI_5dg5pnz03psnj";
+
+  const getOldGanacheDataPath = function (relativePath) {
+    return join(APP_DATA, relativePath);
   }
 
-  const ganacheExists = () => {
-    return exists(getOldGanachePath());
+  const ganacheExists = (relativePath) => {
+    const absolutePath = getOldGanacheDataPath(relativePath);
+    return exists(absolutePath);
   }
 
   /**
-   * When we switched from Consensys code signing certificates to Truffle code 
-   * signing certificates we had to change the name of our AppX application so 
-   * that Windows would let it install without conflict. This function will move 
-   * the old version's workspaces and global settings file over to the new 
-   * workspace folder.
+   * When we switched from Consensys code signing certificates to Truffle code
+   * signing certificates (v.2.3.0) we had to change the name of our AppX
+   * application so that Windows would let it install without conflict. This
+   * function will move the old version's workspaces and global settings file
+   * over to the new workspace folder.
    */
   migrate = async (newGanache) => {
-    if (APP_DATA && await ganacheExists()) {      
-      const oldGanache = getOldGanachePath();
-      
+    if (APP_DATA && await ganacheExists(ganacheRelativeDataPathUntil_2_3_0)) {
+      const oldGanache = getOldGanacheDataPath(ganacheRelativeDataPathUntil_2_3_0);
       const newGanacheVirtualized = join(APP_DATA, `/../Local/Packages/${pkg.build.appx.identityName}_5dg5pnz03psnj/LocalCache/Roaming/Ganache`);
       await Promise.all([moveWorkspaces(oldGanache, newGanache), moveGlobalSettings(oldGanache, newGanache), moveWorkspaces(newGanacheVirtualized, newGanache), moveGlobalSettings(newGanacheVirtualized, newGanache)]);
     }
@@ -112,16 +115,45 @@ if (process.platform == "win32") {
   };
 
   uninstallOld = async () => {
-    if (!(await ganacheExists())) return;
+    const removeGanachePromises = [];
 
-    return new Promise((resolve, reject) => {
-      try {
-        const proc = exec('powershell.exe Start-Process -Verb runAs powershell -argumentList \\"Get-AppxPackage Ganache | Remove-AppxPackage\\"');
-        proc.once("close", resolve);
-      } catch(e) {
-        reject(e);
-      }
-    });
+    if (ganacheExists(ganacheRelativeDataPathBetween_2_4_0__2_7_0)) {
+      // in GanacheUI 2.7 the publisher name was changed from `CN="Truffle
+      // Blockchain Group, Inc", O="Truffle Blockchain Group, Inc", L=Yakima,
+      // S=Washington, C=US.` to `CN=Consensys Software Inc., O=Consensys
+      // Software Inc., L=Brooklyn, S=New York, C=US`.
+      //
+      // Here we remove versions of GanacheUI >=2.4 and <2.7; (`Name GanacheUI`,
+      // with the old publisher name - we must filter by publisher as >= v2.7.0 
+      // has the same `Name`.
+      const removeGanacheUI_between_2_4_0__2_7_0 = new Promise((resolve, reject) => {
+        try {
+          // 
+          const proc = exec(`powershell.exe Start-Process -Verb runAs powershell -argumentList -- '\\"Get-AppxPackage -Name GanacheUI -Publisher ""*Truffle*"" | Remove-AppxPackage\\"'`);
+          proc.once("close", resolve);
+        } catch(e) {
+          reject(e);
+        }
+      });
+      removeGanachePromises.push(removeGanacheUI_between_2_4_0__2_7_0);
+    }
+
+    if (await ganacheExists(ganacheRelativeDataPathUntil_2_3_0)) {
+      // in GanacheUI 2.4 the application name was `Ganache`. It was renamed to
+      // `GanacheUI` to work around the change in publisher name. This removes
+      // versions of GanacheUI < 2.4 (Name=`Ganache`).
+      const removeGanache_pre_2_4 = new Promise((resolve, reject) => {
+        try {
+          const proc = exec('powershell.exe Start-Process -Verb runAs powershell -argumentList \\"Get-AppxPackage Ganache | Remove-AppxPackage\\"');
+          proc.once("close", resolve);
+        } catch(e) {
+          reject(e);
+        }
+      });
+      removeGanachePromises.push(removeGanache_pre_2_4);
+    }
+
+    return Promise.all(removeGanachePromises);
   }
 } else {
   const noop = () => Promise.resolve();
@@ -133,3 +165,5 @@ export default {
   migrate,
   uninstallOld
 }
+
+// 
