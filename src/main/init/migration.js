@@ -85,8 +85,8 @@ if (process.platform == "win32") {
     await Promise.all(promises);
   }
 
-  const ganacheRelativeDataPathUntil_2_3_0 = "/../Local/Packages/Ganache_zh355ej5cj694/LocalCache/Roaming/Ganache";
-  const ganacheRelativeDataPathBetween_2_4_0__2_7_0 = "/../Local/Packages/GanacheUI_5dg5pnz03psnj";
+  const ganacheRelativeDataPathBefore_2_3_0 = "/../Local/Packages/Ganache_zh355ej5cj694/LocalCache/Roaming/Ganache";
+  const ganacheRelativeDataPathBetween_2_3_0__2_7_0 = "/../Local/Packages/GanacheUI_5dg5pnz03psnj";
 
   const getOldGanacheDataPath = function (relativePath) {
     return join(APP_DATA, relativePath);
@@ -105,8 +105,8 @@ if (process.platform == "win32") {
    * over to the new workspace folder.
    */
   migrate = async (newGanache) => {
-    if (APP_DATA && await ganacheExists(ganacheRelativeDataPathUntil_2_3_0)) {
-      const oldGanache = getOldGanacheDataPath(ganacheRelativeDataPathUntil_2_3_0);
+    if (APP_DATA && await ganacheExists(ganacheRelativeDataPathBefore_2_3_0)) {
+      const oldGanache = getOldGanacheDataPath(ganacheRelativeDataPathBefore_2_3_0);
       const newGanacheVirtualized = join(APP_DATA, `/../Local/Packages/${pkg.build.appx.identityName}_5dg5pnz03psnj/LocalCache/Roaming/Ganache`);
       await Promise.all([moveWorkspaces(oldGanache, newGanache), moveGlobalSettings(oldGanache, newGanache), moveWorkspaces(newGanacheVirtualized, newGanache), moveGlobalSettings(newGanacheVirtualized, newGanache)]);
     }
@@ -117,16 +117,16 @@ if (process.platform == "win32") {
   uninstallOld = async () => {
     const removeGanachePromises = [];
 
-    if (ganacheExists(ganacheRelativeDataPathBetween_2_4_0__2_7_0)) {
+    if (ganacheExists(ganacheRelativeDataPathBetween_2_3_0__2_7_0)) {
       // in GanacheUI 2.7 the publisher name was changed from `CN="Truffle
       // Blockchain Group, Inc", O="Truffle Blockchain Group, Inc", L=Yakima,
       // S=Washington, C=US.` to `CN=Consensys Software Inc., O=Consensys
       // Software Inc., L=Brooklyn, S=New York, C=US`.
       //
-      // Here we remove versions of GanacheUI >=2.4 and <2.7; (`Name GanacheUI`,
+      // Here we remove versions of GanacheUI >=2.3 and <2.7; (`Name GanacheUI`,
       // with the old publisher name - we must filter by publisher as >= v2.7.0 
       // has the same `Name`.
-      const removeGanacheUI_between_2_4_0__2_7_0 = new Promise((resolve, reject) => {
+      const removeGanacheUI_between_2_3_0__2_7_0 = new Promise((resolve, reject) => {
         try {
           // 
           const proc = exec(`powershell.exe Start-Process -Verb runAs powershell -argumentList -- '\\"Get-AppxPackage -Name GanacheUI -Publisher ""*Truffle*"" | Remove-AppxPackage\\"'`);
@@ -135,14 +135,14 @@ if (process.platform == "win32") {
           reject(e);
         }
       });
-      removeGanachePromises.push(removeGanacheUI_between_2_4_0__2_7_0);
+      removeGanachePromises.push(removeGanacheUI_between_2_3_0__2_7_0);
     }
 
-    if (await ganacheExists(ganacheRelativeDataPathUntil_2_3_0)) {
-      // in GanacheUI 2.4 the application name was `Ganache`. It was renamed to
-      // `GanacheUI` to work around the change in publisher name. This removes
-      // versions of GanacheUI < 2.4 (Name=`Ganache`).
-      const removeGanache_pre_2_4 = new Promise((resolve, reject) => {
+    if (await ganacheExists(ganacheRelativeDataPathBefore_2_3_0)) {
+      // Previous to GanacheUI 2.3.0 the application name was `Ganache`. It was
+      // renamed to `GanacheUI` to work around the change in publisher name.
+      // This removes versions of GanacheUI < 2.3.0 (Name=`Ganache`).
+      const removeGanache_before_2_3 = new Promise((resolve, reject) => {
         try {
           const proc = exec('powershell.exe Start-Process -Verb runAs powershell -argumentList \\"Get-AppxPackage Ganache | Remove-AppxPackage\\"');
           proc.once("close", resolve);
@@ -150,7 +150,7 @@ if (process.platform == "win32") {
           reject(e);
         }
       });
-      removeGanachePromises.push(removeGanache_pre_2_4);
+      removeGanachePromises.push(removeGanache_before_2_3);
     }
 
     return Promise.all(removeGanachePromises);
