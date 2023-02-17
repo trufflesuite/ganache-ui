@@ -86,7 +86,6 @@ if (process.platform == "win32") {
   }
 
   const ganacheRelativeDataPathBefore_2_3_0 = "/../Local/Packages/Ganache_zh355ej5cj694/LocalCache/Roaming/Ganache";
-  const ganacheRelativeDataPathBetween_2_3_0__2_7_0 = "/../Local/Packages/GanacheUI_5dg5pnz03psnj";
 
   const getOldGanacheDataPath = function (relativePath) {
     return join(APP_DATA, relativePath);
@@ -114,47 +113,64 @@ if (process.platform == "win32") {
     return linkLegacyWorkspaces(newGanache);
   };
 
-  uninstallOld = async () => {
-    const removeGanachePromises = [];
-
-    if (ganacheExists(ganacheRelativeDataPathBetween_2_3_0__2_7_0)) {
-      // in GanacheUI 2.7 the publisher name was changed from `CN="Truffle
-      // Blockchain Group, Inc", O="Truffle Blockchain Group, Inc", L=Yakima,
-      // S=Washington, C=US.` to `CN=Consensys Software Inc., O=Consensys
-      // Software Inc., L=Brooklyn, S=New York, C=US`.
-      //
-      // Here we remove versions of GanacheUI >=2.3 and <2.7; (`Name GanacheUI`,
-      // with the old publisher name - we must filter by publisher as >= v2.7.0 
-      // has the same `Name`.
-      const removeGanacheUI_between_2_3_0__2_7_0 = new Promise((resolve, reject) => {
-        try {
-          // 
-          const proc = exec(`powershell.exe Start-Process -Verb runAs powershell -argumentList -- '\\"Get-AppxPackage -Name GanacheUI -Publisher ""*Truffle*"" | Remove-AppxPackage\\"'`);
-          proc.once("close", resolve);
-        } catch(e) {
-          reject(e);
+  const uninstallOldGanache = async (pattern) => {
+    const isInstalled = await new Promise((resolve, reject) => {
+      exec(`powershell.exe Get-AppxPackage ${pattern}`, (error, stdout) => {
+        if (error) {
+          return reject(error);
         }
-      });
-      removeGanachePromises.push(removeGanacheUI_between_2_3_0__2_7_0);
-    }
 
-    if (await ganacheExists(ganacheRelativeDataPathBefore_2_3_0)) {
-      // Previous to GanacheUI 2.3.0 the application name was `Ganache`. It was
-      // renamed to `GanacheUI` to work around the change in publisher name.
-      // This removes versions of GanacheUI < 2.3.0 (Name=`Ganache`).
-      const removeGanache_before_2_3 = new Promise((resolve, reject) => {
-        try {
-          const proc = exec('powershell.exe Start-Process -Verb runAs powershell -argumentList \\"Get-AppxPackage Ganache | Remove-AppxPackage\\"');
-          proc.once("close", resolve);
-        } catch(e) {
-          reject(e);
-        }
-      });
-      removeGanachePromises.push(removeGanache_before_2_3);
-    }
+        // The output should be an empty string if no package matches, but to
+        // guard against changes, let's just check that the `Name` label exists.
+        const isMatch = stdout.indexOf("Name") != -1;
 
-    return Promise.all(removeGanachePromises);
+        resolve(isMatch);
+      });
+    });
+
+    if (isInstalled) {
+      await new Promise((resolve, reject) => { 
+        const proc = exec(`powershell.exe Start-Process -Verb runAs powershell -argumentList '\\"Get-AppxPackage ${pattern} | Remove-AppxPackage\\"'`);
+
+        proc.on('close', (code) => {
+          if (code === 0) {
+            resolve();
+          } else {
+            reject(new Error(`Attempting to uninstall old versions failed.\nExited with code ${code}`));
+          }
+        })
+        .on("error", (err) => reject(err));
+      });
+    }
+  };
+
+  uninstallOld = () => {
+    // In Ganache 2.3.0 the signing certificate was changed from `CN="Truffle
+    // Blockchain Group, Inc", O="Truffle Blockchain Group, Inc", L=Yakima,
+    // S=Washington, C=US.` to `CN=Consensys Software Inc., O=Consensys Software
+    // Inc., L=Brooklyn, S=New York, C=US`. As a workaround, the application
+    // name was changed to `GanacheUI` (allowing the two versions to be
+    // installed in parallel).
+
+    // In Ganache 2.7.0 the signing certificate was changed again to
+    // "CN=Consensys Software Inc., O=Consensys Software Inc., L=Brooklyn, S=New
+    // York, C=US". The application name was _not_ changed - Windows 11 supports
+    // installing both in parallel, and previous versions will give a reasonably
+    // helpful message.
+    
+    // In order to target versions < 2.3.0, we can simply filter by `-Name
+    // Ganache`.
+    
+    // In order to target versions >= 2.3.0 < 2.7.0, must filter by `-Name
+    // GanacheUI` and `Publisher` (as >= 2.7.0 will match the `-Name GanacheUI`
+    // filter).
+
+    return Promise.all([
+      uninstallOldGanache('-Name Ganache'),
+      uninstallOldGanache('-Name GanacheUI -Publisher *Truffle*')
+    ]);
   }
+
 } else {
   const noop = () => Promise.resolve();
   migrate = linkLegacyWorkspaces;
@@ -165,5 +181,3 @@ export default {
   migrate,
   uninstallOld
 }
-
-// 
