@@ -1,11 +1,11 @@
 {
-  "name": "ganache",
+  "name": "@ganache/ui",
   "productName": "Ganache",
-  "version": "2.5.4",
+  "version": "2.7.0-beta",
   "description": "Personal Blockchain for Ethereum",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/trufflesuite/ganache.git"
+    "url": "git+https://github.com/trufflesuite/ganache-ui.git"
   },
   "author": {
     "name": "Truffle",
@@ -15,7 +15,7 @@
   "license": "MIT",
   "private": true,
   "bugs": {
-    "url": "https://github.com/trufflesuite/ganache/issues"
+    "url": "https://github.com/trufflesuite/ganache-ui/issues"
   },
   "keywords": [
     "ganache",
@@ -25,7 +25,7 @@
   ],
   "homepage": "https://github.com/trufflesuite/ganache#readme",
   "scripts": {
-    "dev": "electron-webpack dev",
+    "dev": "electron-webpack dev --inspect",
     "start": "npm run dev",
     "compile": "electron-webpack",
     "lint": "eslint .",
@@ -41,19 +41,22 @@
     "postinstall": "cd static/node && npm ci --only=prod"
   },
   "dependencies": {
+    "14": "^3.1.6",
     "@exponent/electron-cookies": "^2.0.0",
     "@ganache/react-json-view": "^1.20.2",
     "atob": "2.1.2",
     "bs58": "4.0.1",
     "btoa": "1.2.1",
     "connected-react-router": "6.6.1",
-    "electron-log": "^3.0.7",
+    "electron-log": "^4.3.2",
     "ethagen": "0.1.2",
     "ethereumjs-units": "^0.2.0",
     "filesize": "^3.6.1",
     "fix-path": "^2.1.0",
     "follow-redirects": "1.9.0",
     "fs-extra": "9.0.0",
+    "ganache": "7.7.3",
+    "ganache-core": "2.13.1",
     "get-port": "^5.0.0",
     "history": "4.10.1",
     "lodash.assign": "4.2.0",
@@ -67,7 +70,7 @@
     "node-fetch": "2.6.0",
     "node-localstorage": "^2.1.6",
     "node-ssh": "7.0.0",
-    "pg": "7.14.0",
+    "pg": "8.6.0",
     "pluralize": "^5.0.0",
     "promisify-child-process": "^3.1.3",
     "react": "16.5.2",
@@ -82,6 +85,7 @@
     "react-router": "5.1.2",
     "react-router-dom": "5.1.2",
     "react-syntax-highlighter": "11.0.2",
+    "react-tooltip": "4.5.1",
     "react-virtualized": "^9.21.0",
     "redux": "4.0.4",
     "redux-logger": "^2.7.4",
@@ -101,36 +105,42 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-private-methods": "^7.12.13",
     "@babel/preset-env": "^7.6.2",
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.0.0",
+    "@filecoin-shipyard/lotus-client-provider-browser": "0.0.14",
+    "@filecoin-shipyard/lotus-client-rpc": "0.2.0",
+    "@ganache/filecoin": "0.6.0",
+    "@ganache/filecoin-options": "0.1.3",
     "babel-eslint": "10.0.3",
     "cache-loader": "4.1.0",
     "chokidar": "3.3.1",
     "cross-env": "^6.0.0",
-    "electron": "8.2.1",
-    "electron-builder": "22.4.1",
-    "electron-notarize": "0.3.0",
-    "electron-updater": "4.2.0",
-    "electron-webpack": "^2.7.4",
+    "electron": "^12.0.2",
+    "electron-builder": "23.6.0",
+    "electron-fetch": "1.7.3",
+    "electron-notarize": "1.0.0",
+    "electron-updater": "4.3.8",
+    "electron-webpack": "^2.8.2",
     "eslint": "^6.3.0",
     "eslint-config-prettier": "^6.3.0",
     "eslint-plugin-jest": "^22.17.0",
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-react": "^7.14.3",
     "eslint-plugin-react-hooks": "^2.1.0",
-    "ganache-core": "2.13.1",
-    "html-loader": "1.0.0-alpha.0",
+    "html-loader": "^1.3.2",
     "husky": "^3.0.5",
+    "ipfs-http-client": "^49.0.2",
     "jest": "^24.9.0",
     "js-scrypt": "^0.2.0",
     "lint-staged": "^9.2.5",
-    "node-sass": "^4.13.1",
+    "sass": "1.57.1",
     "prettier": "^1.18.2",
     "react-svg-loader": "^3.0.3",
-    "sass-loader": "^8.0.0",
+    "sass-loader": "10.1.1",
     "temp": "0.9.1",
-    "webpack": "4.41.4"
+    "webpack": "^4.46.0"
   },
   "electronWebpack": {
     "main": {
@@ -142,7 +152,8 @@
   },
   "babel": {
     "plugins": [
-      "@babel/plugin-proposal-class-properties"
+      "@babel/plugin-proposal-class-properties",
+      "@babel/plugin-proposal-private-methods"
     ],
     "presets": [
       [
@@ -177,7 +188,7 @@
       "package.json"
     ],
     "win": {
-      "certificateSha1": "14E886EF4F6AA9CFC5752D8FA34FB142DA4DEF44",
+      "certificateSha1": "79989F27614B87B6527A53ACBE2276CEDEE902AE",
       "icon": "static/icons/win/icon.ico",
       "verifyUpdateCodeSignature": false,
       "target": [
@@ -197,7 +208,7 @@
     },
     "appx": {
       "identityName": "GanacheUI",
-      "publisher": "CN=\"Truffle Blockchain Group, Inc\", O=\"Truffle Blockchain Group, Inc\", L=Yakima, S=Washington, C=US",
+      "publisher": "CN=Consensys Software Inc., O=Consensys Software Inc., L=Brooklyn, S=New York, C=US",
       "publisherDisplayName": "Truffle",
       "backgroundColor": "#34262A",
       "artifactName": "Ganache-${version}-${os}-${arch}.${ext}"
@@ -251,6 +262,6 @@
     }
   },
   "engines": {
-    "node": "12.13.1"
+    "node": "14.21.1"
   }
 }

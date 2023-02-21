@@ -104,7 +104,7 @@ class BugModal extends Component {
                 const body = this.renderIssueBody(sanitizedSystemError);
 
                 shell.openExternal(
-                  `https://github.com/trufflesuite/ganache/issues/new?title=${title}&body=${body}`,
+                  `https://github.com/trufflesuite/ganache-ui/issues/new?title=${title}&body=${body}`
                 );
               }}
             >

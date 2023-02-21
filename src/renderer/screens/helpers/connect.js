@@ -8,16 +8,27 @@ export default function(component, ...reducers) {
   let connector = connect(
     state => {
       var props = {};
-      reducers.forEach(name => {
-        var value = state[name];
-
-        if (!value) {
-          throw new Error(
-            `Tried connecting '${component.name}' to unknown state: ${name}`,
-          );
+      reducers.forEach(reducer => {
+        let name = reducer;
+        let propName = reducer;
+        if (Array.isArray(reducer)) {
+          name = reducer[0];
+          propName = reducer[1];
         }
 
-        props[name] = value;
+        const reducerTree = name.split(".");
+        let value = state;
+        for (let i = 0; i < reducerTree.length; i++) {
+          value = value[reducerTree[i]];
+
+          if (!value) {
+            throw new Error(
+              `Tried connecting '${component.name}' to unknown state: ${name}`,
+            );
+          }
+        }
+
+        props[propName] = value;
       });
 
       return props;

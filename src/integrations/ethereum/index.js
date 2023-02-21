@@ -8,11 +8,11 @@ import { GET_DECODED_EVENT, SET_SUBSCRIBED_TOPICS } from "./common/redux/events/
 import { SET_KEY_DATA } from "./common/redux/core/actions";
 
 class Ethereum extends Integrations {
-  constructor(integrationManager) {
+  constructor(integrationManager, workspace) {
     super(integrationManager);
 
     this.projectIntegration = new TruffleIntegrationService(integrationManager.isDevMode);
-    this.chain = new EthereumChainService(integrationManager.config);
+    this.chain = new EthereumChainService(workspace, integrationManager.config);
 
     this._listen();
   }
@@ -20,8 +20,8 @@ class Ethereum extends Integrations {
   async _listen() {
     this._listenToIPC();
     this._listenToTruffle();
-    
-    this.chain.on("server-started", (data) => {
+
+    this.chain.on("server-started-data", (data) => {
       const workspace = this._integrationManager.workspace;
       this.send(SET_KEY_DATA, {
         privateKeys: data.privateKeys,
@@ -32,7 +32,7 @@ class Ethereum extends Integrations {
 
       workspace.settings.handleNewMnemonic(data.mnemonic);
       workspace.settings.handleNewForkBlockNumber(data.fork_block_number);
-    })
+    });
 
     this.chain.on("message", this.emit.bind(this, "message"));
   }

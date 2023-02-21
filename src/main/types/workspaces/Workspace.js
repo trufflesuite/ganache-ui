@@ -1,6 +1,5 @@
 import path from "path";
 import fse from "fs-extra";
-
 import WorkspaceSettings from "../settings/WorkspaceSettings";
 import ContractCache from "../../../integrations/ethereum/main/types/contracts/ContractCache";
 
@@ -80,7 +79,7 @@ class Workspace {
 
   saveAs(name, chaindataDirectory, configDirectory, mnemonic, updateLocations) {
     this.name = name;
-    
+
     if (updateLocations) {
       this.init(configDirectory);
       this.bootstrapDirectory();
@@ -95,25 +94,42 @@ class Workspace {
       if (currentContractCachePath !== desiredContractCachePath && fse.existsSync(currentContractCachePath)) {
         fse.copySync(currentContractCachePath, desiredContractCachePath);
       }
-      
+
       this.contractCache.setDirectory(this.chaindataDirectory);
       this.contractCache.setAll(this.contractCache.getAll());
     }
-    
+
     this.settings.chaindataDirectory = this.chaindataDirectory;
-    this.settings.set("server.db_path", this.chaindataDirectory);
+
+    if (this.flavor === "filecoin") {
+      this.settings.set("server.database.dbPath", this.chaindataDirectory);
+    } else {
+      this.settings.set("server.db_path", this.chaindataDirectory);
+    }
+
     this.settings.set("name", name);
     this.settings.set("isDefault", false);
-    if (this.flavor === "corda") {
-      this.settings.set("runBootstrap", true);
+
+    if (this.flavor === "filecoin") {
+      this.settings.set("randomizeSeedOnStart", false);
+      this.settings.set("server.wallet.seed", mnemonic);
+    } else {
+      this.settings.set("randomizeMnemonicOnStart", false);
+      this.settings.set("server.mnemonic", mnemonic);
     }
-    this.settings.set("randomizeMnemonicOnStart", false);
-    this.settings.set("server.mnemonic", mnemonic);
   }
 
   delete() {
+    let workspaceDirectory;
+    if (fse.lstatSync(this.workspaceDirectory).isSymbolicLink()) {
+      workspaceDirectory = fse.readlinkSync(this.workspaceDirectory);
+      fse.unlinkSync(this.workspaceDirectory);
+    } else {
+      workspaceDirectory = this.workspaceDirectory;
+    }
+
     try {
-      fse.removeSync(this.workspaceDirectory);
+      fse.removeSync(workspaceDirectory);
     } catch (e) {
       // TODO: couldn't delete the directory; probably don't have
       // permissions or some file is open somewhere. we probably
@@ -121,6 +137,9 @@ class Workspace {
       // a message to renderer process, display toast saying there
       // were issues, etc.). Don't really have time right now for
       // a solution here
+      // todo: if unlinking is successful, but removing the
+      // directory is not, the link will be recreated during the
+      // migration process next time the app is started.
     }
   }
 

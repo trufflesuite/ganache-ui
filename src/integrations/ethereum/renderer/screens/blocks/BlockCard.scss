@@ -58,4 +58,10 @@
   .HasTxs {
     border-color: var(--primary-color);
   }
+
+  .TransactionList {
+    .Waiting {
+      margin-top: 10rem;
+    }
+  }
 }

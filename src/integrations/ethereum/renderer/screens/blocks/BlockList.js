@@ -17,10 +17,10 @@ class BlockList extends Component {
     if (
       prevProps.appshell.scrollPosition != this.props.appshell.scrollPosition
     ) {
-      if (prevProps.appshell.scrollPosition == "top" && !latestRequested) {
+      if (this.props.appshell.scrollPosition == "top" && !latestRequested) {
         this.props.dispatch(Blocks.requestPreviousPage());
       } else if (
-        prevProps.appshell.scrollPosition == "bottom" &&
+        this.props.appshell.scrollPosition == "bottom" &&
         !earliestRequested
       ) {
         this.props.dispatch(Blocks.requestNextPage());
