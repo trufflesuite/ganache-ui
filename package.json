@@ -118,7 +118,7 @@
     "chokidar": "3.3.1",
     "cross-env": "^6.0.0",
     "electron": "^12.0.2",
-    "electron-builder": "22.10.5",
+    "electron-builder": "23.6.0",
     "electron-fetch": "1.7.3",
     "electron-notarize": "1.0.0",
     "electron-updater": "4.3.8",
@@ -135,10 +135,10 @@
     "jest": "^24.9.0",
     "js-scrypt": "^0.2.0",
     "lint-staged": "^9.2.5",
-    "node-sass": "^4.13.1",
+    "sass": "1.57.1",
     "prettier": "^1.18.2",
     "react-svg-loader": "^3.0.3",
-    "sass-loader": "^8.0.0",
+    "sass-loader": "10.1.1",
     "temp": "0.9.1",
     "webpack": "^4.46.0"
   },
@@ -188,7 +188,7 @@
       "package.json"
     ],
     "win": {
-      "certificateSha1": "14E886EF4F6AA9CFC5752D8FA34FB142DA4DEF44",
+      "certificateSha1": "79989F27614B87B6527A53ACBE2276CEDEE902AE",
       "icon": "static/icons/win/icon.ico",
       "verifyUpdateCodeSignature": false,
       "target": [
@@ -208,7 +208,7 @@
     },
     "appx": {
       "identityName": "GanacheUI",
-      "publisher": "CN=\"Truffle Blockchain Group, Inc\", O=\"Truffle Blockchain Group, Inc\", L=Yakima, S=Washington, C=US",
+      "publisher": "CN=Consensys Software Inc., O=Consensys Software Inc., L=Brooklyn, S=New York, C=US",
       "publisherDisplayName": "Truffle",
       "backgroundColor": "#34262A",
       "artifactName": "Ganache-${version}-${os}-${arch}.${ext}"

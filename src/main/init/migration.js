@@ -85,25 +85,27 @@ if (process.platform == "win32") {
     await Promise.all(promises);
   }
 
-  const getOldGanachePath = () => {
-    return join(APP_DATA, "/../Local/Packages/Ganache_zh355ej5cj694/LocalCache/Roaming/Ganache");
+  const ganacheRelativeDataPathBefore_2_3_0 = "/../Local/Packages/Ganache_zh355ej5cj694/LocalCache/Roaming/Ganache";
+
+  const getOldGanacheDataPath = function (relativePath) {
+    return join(APP_DATA, relativePath);
   }
 
-  const ganacheExists = () => {
-    return exists(getOldGanachePath());
+  const ganacheExists = (relativePath) => {
+    const absolutePath = getOldGanacheDataPath(relativePath);
+    return exists(absolutePath);
   }
 
   /**
-   * When we switched from Consensys code signing certificates to Truffle code 
-   * signing certificates we had to change the name of our AppX application so 
-   * that Windows would let it install without conflict. This function will move 
-   * the old version's workspaces and global settings file over to the new 
-   * workspace folder.
+   * When we switched from Consensys code signing certificates to Truffle code
+   * signing certificates (v.2.3.0) we had to change the name of our AppX
+   * application so that Windows would let it install without conflict. This
+   * function will move the old version's workspaces and global settings file
+   * over to the new workspace folder.
    */
   migrate = async (newGanache) => {
-    if (APP_DATA && await ganacheExists()) {      
-      const oldGanache = getOldGanachePath();
-      
+    if (APP_DATA && await ganacheExists(ganacheRelativeDataPathBefore_2_3_0)) {
+      const oldGanache = getOldGanacheDataPath(ganacheRelativeDataPathBefore_2_3_0);
       const newGanacheVirtualized = join(APP_DATA, `/../Local/Packages/${pkg.build.appx.identityName}_5dg5pnz03psnj/LocalCache/Roaming/Ganache`);
       await Promise.all([moveWorkspaces(oldGanache, newGanache), moveGlobalSettings(oldGanache, newGanache), moveWorkspaces(newGanacheVirtualized, newGanache), moveGlobalSettings(newGanacheVirtualized, newGanache)]);
     }
@@ -111,18 +113,64 @@ if (process.platform == "win32") {
     return linkLegacyWorkspaces(newGanache);
   };
 
-  uninstallOld = async () => {
-    if (!(await ganacheExists())) return;
+  const uninstallOldGanache = async (pattern) => {
+    const isInstalled = await new Promise((resolve, reject) => {
+      exec(`powershell.exe Get-AppxPackage ${pattern}`, (error, stdout) => {
+        if (error) {
+          return reject(error);
+        }
 
-    return new Promise((resolve, reject) => {
-      try {
-        const proc = exec('powershell.exe Start-Process -Verb runAs powershell -argumentList \\"Get-AppxPackage Ganache | Remove-AppxPackage\\"');
-        proc.once("close", resolve);
-      } catch(e) {
-        reject(e);
-      }
+        // The output should be an empty string if no package matches, but to
+        // guard against changes, let's just check that the `Name` label exists.
+        const isMatch = stdout.indexOf("Name") != -1;
+
+        resolve(isMatch);
+      });
     });
+
+    if (isInstalled) {
+      await new Promise((resolve, reject) => { 
+        const proc = exec(`powershell.exe Start-Process -Verb runAs powershell -argumentList '\\"Get-AppxPackage ${pattern} | Remove-AppxPackage\\"'`);
+
+        proc.on('close', (code) => {
+          if (code === 0) {
+            resolve();
+          } else {
+            reject(new Error(`Attempting to uninstall old versions failed.\nExited with code ${code}`));
+          }
+        })
+        .on("error", (err) => reject(err));
+      });
+    }
+  };
+
+  uninstallOld = () => {
+    // In Ganache 2.3.0 the signing certificate was changed from `CN="Truffle
+    // Blockchain Group, Inc", O="Truffle Blockchain Group, Inc", L=Yakima,
+    // S=Washington, C=US.` to `CN=Consensys Software Inc., O=Consensys Software
+    // Inc., L=Brooklyn, S=New York, C=US`. As a workaround, the application
+    // name was changed to `GanacheUI` (allowing the two versions to be
+    // installed in parallel).
+
+    // In Ganache 2.7.0 the signing certificate was changed again to
+    // "CN=Consensys Software Inc., O=Consensys Software Inc., L=Brooklyn, S=New
+    // York, C=US". The application name was _not_ changed - Windows 11 supports
+    // installing both in parallel, and previous versions will give a reasonably
+    // helpful message.
+    
+    // In order to target versions < 2.3.0, we can simply filter by `-Name
+    // Ganache`.
+    
+    // In order to target versions >= 2.3.0 < 2.7.0, must filter by `-Name
+    // GanacheUI` and `Publisher` (as >= 2.7.0 will match the `-Name GanacheUI`
+    // filter).
+
+    return Promise.all([
+      uninstallOldGanache('-Name Ganache'),
+      uninstallOldGanache('-Name GanacheUI -Publisher *Truffle*')
+    ]);
   }
+
 } else {
   const noop = () => Promise.resolve();
   migrate = linkLegacyWorkspaces;
