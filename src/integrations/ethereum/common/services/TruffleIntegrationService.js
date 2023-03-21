@@ -165,10 +165,12 @@ class TruffleIntegrationService extends EventEmitter {
     return new Promise((resolve, reject) => {
       if (this.child !== null && this.child.connected) {
         this.once("decode-event-response", data => {
-          if (typeof data === "object") {
-            resolve(data);
+          if (data && data.error) {
+            reject(data.error);
           } else {
-            reject(data);
+            // data may be `undefined`, in which case the raw event will be displayed
+            // see https://github.com/trufflesuite/ganache-ui/issues/5296 for details
+            resolve(data);
           }
         });
         this.child.send({
