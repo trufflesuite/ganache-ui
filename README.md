@@ -80,7 +80,7 @@ This will create a signed `.dmg` file in `./out/make`.
 
 #### On Linux:
 
-Bulding on Linux will create a `.AppImage` file, meant to run on many versions of Linux.
+Building on Linux will create a `.AppImage` file, meant to run on many versions of Linux.
 
 Linux requires no signing keys, so there's no set up. Simply run the following command:
 
@@ -105,11 +105,11 @@ Note from the author: I found managing these assets manually -- especially the a
 
 ### Flavored Development
 
-"Extras" aren't stored here in this repository fordue to file size issues, licensing issues, or both.
+"Extras" aren't stored here in this repository due to file size issues, licensing issues, or both.
 
 Non-ethereum "flavored" Ganache extras are uploaded to releases here: https://github.com/trufflesuite/ganache-flavors/releases
 
-When "extras" change they should be uploaded to a new release, and a corresonding Ganache release that targets the new ganache-flavors release (see `common/extras/index.js` for what you'dd need to update)
+When "extras" change they should be uploaded to a new release, and a corresponding Ganache release that targets the new ganache-flavors release (see `common/extras/index.js` for what you'd need to update)
 
 ### VS Code Debugging
 
