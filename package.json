@@ -1,7 +1,7 @@
 {
   "name": "@ganache/ui",
   "productName": "Ganache",
-  "version": "2.7.0",
+  "version": "2.7.1",
   "description": "Personal Blockchain for Ethereum",
   "repository": {
     "type": "git",
