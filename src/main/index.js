@@ -93,16 +93,16 @@ if (process.platform === "win32") {
   // context.
   // eslint-disable-next-line no-console
   let userDataPromise = spawn("cmd.exe", ["/c", "mkdir", USERDATA_PATH])
-    .then(()=> {
+    .then(() => {
       return spawn("cmd.exe", ["/c", "mkdir", path.join(USERDATA_PATH, "extras")])
     })
-    .then(()=> {
+    .then(() => {
       return spawn("cmd.exe", ["/c", "mkdir", path.join(USERDATA_PATH, "workspaces")])
     })
-    .then(()=> {
+    .then(() => {
       return spawn("cmd.exe", ["/c", "mkdir", path.join(USERDATA_PATH, "default")])
     })
-    .then(()=> {
+    .then(() => {
       return spawn("cmd.exe", ["/c", "mkdir", path.join(USERDATA_PATH, "global")])
     })
     .catch(e => { console.error(e) });
@@ -162,7 +162,7 @@ app.on('ready', async () => {
   const integrations = new IntegrationManager(USERDATA_PATH, ipcMain, isDevMode);
   // allow integrations to communicate with the mainWindow by emitting a
   // `"send"` event
-  integrations.on("send", function(){
+  integrations.on("send", function () {
     if (mainWindow) {
       const webContents = mainWindow.webContents;
       if (webContents) {
@@ -170,7 +170,7 @@ app.on('ready', async () => {
       }
     }
   });
-  integrations.on("progress", function(message, minDuration = null) {
+  integrations.on("progress", function (message, minDuration = null) {
     mainWindow.webContents.send(SET_PROGRESS, message, minDuration);
     addLogLines(message + "\n");
   });
@@ -209,7 +209,11 @@ app.on('ready', async () => {
     callback(true);
   });
 
+  require('@electron/remote/main').initialize();
+
+
   mainWindow = new BrowserWindow({
+    enableRemoteModule: true,
     show: false,
     minWidth: 950,
     minHeight: 670,
@@ -223,6 +227,7 @@ app.on('ready', async () => {
       enableRemoteModule: true
     }
   });
+  require("@electron/remote/main").enable(mainWindow.webContents)
 
   if (isDevelopment) {
     mainWindow.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`);
@@ -244,7 +249,7 @@ app.on('ready', async () => {
 
   // if a user clicks a link to an external webpage, open it in the user's browser, not our app
   mainWindow.webContents.on("new-window", ensureExternalLinksAreOpenedInBrowser);
-  mainWindow.webContents.on("will-navigate",ensureExternalLinksAreOpenedInBrowser);
+  mainWindow.webContents.on("will-navigate", ensureExternalLinksAreOpenedInBrowser);
 
   // handle right click:
   mainWindow.webContents.on("context-menu", (_e, props) => {
@@ -504,7 +509,7 @@ app.on('ready', async () => {
     );
 
     startupMode = STARTUP_MODE.NORMAL;
-    if (await integrations.startServer()){
+    if (await integrations.startServer()) {
       // this sends the network interfaces to the renderer process for
       //  enumering in the config screen. it sends repeatedly
       continuouslySendNetworkInterfaces();
@@ -639,7 +644,7 @@ app.on('ready', async () => {
 
       startupMode = STARTUP_MODE.NORMAL;
 
-      if (await integrations.startServer()){
+      if (await integrations.startServer()) {
         // send the interfaces again once on restart
         sendNetworkInterfaces();
       }

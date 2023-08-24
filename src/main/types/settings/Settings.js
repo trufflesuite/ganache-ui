@@ -1,7 +1,7 @@
 import merge from "lodash.merge";
 import assign from "lodash.assign";
 import JsonStorage from "../json/JsonStorage";
-import UUID from "uuid";
+const UUID = require("uuid");
 
 class Settings {
   constructor(directory, initialSettings) {
@@ -88,7 +88,7 @@ class Settings {
   }
 }
 
-const removeNullSettings = function(options) {
+const removeNullSettings = function (options) {
   // get rid of nulls first, because apparently typeof null === object :-(
   if (typeof options === "undefined" || options === null) {
     return undefined;
@@ -116,7 +116,7 @@ const removeNullSettings = function(options) {
     }
 };
 
-const _removeNullSettingsFromObject = function(obj) {
+const _removeNullSettingsFromObject = function (obj) {
   let result = {};
   for (let key of Object.keys(obj)) {
     let value = removeNullSettings(obj[key]);
@@ -127,7 +127,7 @@ const _removeNullSettingsFromObject = function(obj) {
   return result;
 };
 
-const _removeNullSettingsFromArray = function(arr) {
+const _removeNullSettingsFromArray = function (arr) {
   let result = [];
 
   for (let initialValue of arr) {
