@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-const { dialog } = require("electron");
+const { dialog } = require("@electron/remote");
 
 // Single value FilePicker. Needs adjustment to support multi-file picking (or new component)
 
