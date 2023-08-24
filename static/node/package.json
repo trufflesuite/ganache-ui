@@ -6,7 +6,7 @@
     "electron": "26.1.0",
     "electron-fetch": "1.7.3",
     "fs-extra": "9.0.0",
-    "ganache": "7.7.3",
+    "ganache": "7.9.1",
     "ganache-core": "2.13.1",
     "lodash.clonedeep": "4.5.0",
     "lodash.merge": "4.6.2",
