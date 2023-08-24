@@ -1,0 +1,114 @@
+diff --git a/node_modules/webpack/lib/Compilation.js b/node_modules/webpack/lib/Compilation.js
+index 6329174..591c698 100644
+--- a/node_modules/webpack/lib/Compilation.js
++++ b/node_modules/webpack/lib/Compilation.js
+@@ -1036,13 +1036,13 @@ class Compilation extends Tapable {
+ 
+ 		const errorAndCallback = this.bail
+ 			? err => {
+-					callback(err);
+-			  }
++				callback(err);
++			}
+ 			: err => {
+-					err.dependencies = [dependency];
+-					this.errors.push(err);
+-					callback();
+-			  };
++				err.dependencies = [dependency];
++				this.errors.push(err);
++				callback();
++			};
+ 
+ 		if (
+ 			typeof dependency !== "object" ||
+@@ -1314,7 +1314,7 @@ class Compilation extends Tapable {
+ 		}
+ 		buildChunkGraph(
+ 			this,
+-			/** @type {Entrypoint[]} */ (this.chunkGroups.slice())
++			/** @type {Entrypoint[]} */(this.chunkGroups.slice())
+ 		);
+ 		this.sortModules(this.modules);
+ 		this.hooks.afterChunks.call(this.chunks);
+@@ -2158,7 +2158,7 @@ class Compilation extends Tapable {
+ 						} else {
+ 							throw new Error(
+ 								`Conflict: Multiple chunks emit assets to the same filename ${file}` +
+-									` (chunks ${alreadyWritten.chunk.id} and ${chunk.id})`
++								` (chunks ${alreadyWritten.chunk.id} and ${chunk.id})`
+ 							);
+ 						}
+ 					}
+@@ -2198,6 +2198,7 @@ class Compilation extends Tapable {
+ 					});
+ 				}
+ 			} catch (err) {
++				throw err;
+ 				this.errors.push(
+ 					new ChunkRenderError(chunk, file || filenameTemplate, err)
+ 				);
+@@ -2288,7 +2289,7 @@ Compilation.prototype.applyPlugins = util.deprecate(
+ 	 * @returns {void}
+ 	 * @this {Compilation}
+ 	 */
+-	function(name, ...args) {
++	function (name, ...args) {
+ 		this.hooks[
+ 			name.replace(/[- ]([a-z])/g, match => match[1].toUpperCase())
+ 		].call(...args);
+@@ -2305,7 +2306,7 @@ Object.defineProperty(Compilation.prototype, "moduleTemplate", {
+ 		 * @this {Compilation}
+ 		 * @returns {TODO} module template
+ 		 */
+-		function() {
++		function () {
+ 			return this.moduleTemplates.javascript;
+ 		},
+ 		"Compilation.moduleTemplate: Use Compilation.moduleTemplates.javascript instead"
+@@ -2317,7 +2318,7 @@ Object.defineProperty(Compilation.prototype, "moduleTemplate", {
+ 		 * @this {Compilation}
+ 		 * @returns {void}
+ 		 */
+-		function(value) {
++		function (value) {
+ 			this.moduleTemplates.javascript = value;
+ 		},
+ 		"Compilation.moduleTemplate: Use Compilation.moduleTemplates.javascript instead."
+diff --git a/node_modules/webpack/lib/ModuleFilenameHelpers.js b/node_modules/webpack/lib/ModuleFilenameHelpers.js
+index bd0742b..de1d5d8 100644
+--- a/node_modules/webpack/lib/ModuleFilenameHelpers.js
++++ b/node_modules/webpack/lib/ModuleFilenameHelpers.js
+@@ -42,7 +42,7 @@ const getBefore = (str, token) => {
+ };
+ 
+ const getHash = str => {
+-	const hash = createHash("md4");
++	const hash = createHash("sha256");
+ 	hash.update(str);
+ 	const digest = /** @type {string} */ (hash.digest("hex"));
+ 	return digest.substr(0, 4);
+@@ -64,8 +64,8 @@ ModuleFilenameHelpers.createFilename = (module, options, requestShortener) => {
+ 		typeof options === "object"
+ 			? options
+ 			: {
+-					moduleFilenameTemplate: options
+-			  }
++				moduleFilenameTemplate: options
++			}
+ 	);
+ 
+ 	let absoluteResourcePath;
+diff --git a/node_modules/webpack/lib/NamedModulesPlugin.js b/node_modules/webpack/lib/NamedModulesPlugin.js
+index 2d84aaf..fe35290 100644
+--- a/node_modules/webpack/lib/NamedModulesPlugin.js
++++ b/node_modules/webpack/lib/NamedModulesPlugin.js
+@@ -8,7 +8,7 @@ const createHash = require("./util/createHash");
+ const RequestShortener = require("./RequestShortener");
+ 
+ const getHash = str => {
+-	const hash = createHash("md4");
++	const hash = createHash("sha256");
+ 	hash.update(str);
+ 	const digest = /** @type {string} */ (hash.digest("hex"));
+ 	return digest.substr(0, 4);
