@@ -52,7 +52,7 @@ function makeReduxWeb3Provider(url, dispatch, getState) {
     // if the workspace was closed in the middle of a response
     // just don't resolve
     if (!provider.getState().web3.web3Instance) {
-      throw new Error("No workspace");
+      return null;
     }
 
     if (err) throw err;
