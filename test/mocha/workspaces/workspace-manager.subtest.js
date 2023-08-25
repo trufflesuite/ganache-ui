@@ -8,7 +8,7 @@ describe("Workspace Manager", () => {
 
   before(async () => {
     workspaceManager = new WorkspaceManager(
-      path.resolve(__dirname, "test-workspaces")
+      path.resolve(__dirname, "test-workspaces", "ui")
     );
   });
 
@@ -29,10 +29,10 @@ describe("Workspace Manager", () => {
     assert(
       workspaceManager.workspaces.length === numExpectedWorkspaces,
       "Expected " +
-        numExpectedWorkspaces +
-        " workspaces, found " +
-        workspaceManager.workspaces.length +
-        " instead."
+      numExpectedWorkspaces +
+      " workspaces, found " +
+      workspaceManager.workspaces.length +
+      " instead."
     );
 
     for (let i = 0; i < workspaceManager.workspaces.length; i++) {
