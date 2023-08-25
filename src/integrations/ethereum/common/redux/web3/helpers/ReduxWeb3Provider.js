@@ -61,7 +61,7 @@ function makeReduxWeb3Provider(url, dispatch, getState) {
   }
 
   return provider;
-};
+}
 
 const prefix = "PROVIDER";
 
