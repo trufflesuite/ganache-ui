@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@ganache/filecoin": "0.1.5",
+    "@ganache/filecoin": "0.9.1",
     "@truffle/config": "1.2.17",
     "@truffle/decoder": "3.0.16",
     "electron": "^26.1.0",
