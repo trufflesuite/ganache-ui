@@ -16,7 +16,7 @@ const initialState = {
   transactions: [],
 };
 
-export default function(state = initialState, action) {
+export default function (state = initialState, action) {
   let accountBalances;
   let accountNonces;
   switch (action.type) {
@@ -76,7 +76,7 @@ export default function(state = initialState, action) {
 
     case Core.SET_BLOCK_NUMBER:
       return Object.assign({}, state, {
-        latestBlock: action.number,
+        latestBlock: Number(action.number),
       });
 
     default:

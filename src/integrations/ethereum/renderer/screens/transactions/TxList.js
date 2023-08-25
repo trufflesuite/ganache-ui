@@ -9,6 +9,7 @@ class TxList extends Component {
   render() {
     var content;
     if (this.props.transactions.length > 0) {
+      const txSet = new Set();
       content = this.props.transactions.map(tx => {
         let contractName = null;
         if (tx.to) {
@@ -29,6 +30,10 @@ class TxList extends Component {
             }
           }
         }
+
+        if (txSet.has(tx.hash)) return null;
+        txSet.add(tx.hash);
+
         return (
           <MiniTxCard
             tx={tx}

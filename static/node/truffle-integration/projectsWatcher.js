@@ -1,7 +1,5 @@
 const { encodeEventSignature } = require("web3-eth-abi");
-const Web3 = require("web3");
-const HttpProvider = require("web3-providers-http");
-const WsProvider = require("web3-providers-ws");
+const { Web3 } = require("web3");
 const EventEmitter = require("events");
 const path = require("path");
 const { URL } = require("url");
@@ -37,9 +35,13 @@ class ProjectsWatcher extends EventEmitter {
     let scheme = parsedURL.protocol.toLowerCase();
 
     if (scheme === "ws:" || scheme === "wss:") {
-      this.web3 = new Web3(new WsProvider(url));
+      this.web3 = new Web3(new Web3.providers.WebsocketProvider(url, {}, {
+        delay: 500,
+        autoReconnect: true,
+        maxAttempts: 10,
+      }));
     } else {
-      this.web3 = new Web3(new HttpProvider(url));
+      this.web3 = new Web3(new Web3.providers.HttpProvider(url));
     }
 
     this.blockHeaderSubscription = this.web3.eth.subscribe(

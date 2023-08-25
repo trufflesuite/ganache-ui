@@ -42,7 +42,7 @@ const DecodedEventDetails = ({ event }) => {
             <div className="Label">BLOCK TIME</div>
             <div className="Value">
               <Moment unix format="YYYY-MM-DD HH:mm:ss">
-                {timestamp}
+                {Number(timestamp)}
               </Moment>
             </div>
           </div>

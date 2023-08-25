@@ -21,5 +21,7 @@ module.exports = {
     fork: null,
     fork_block_number: null
   },
+  useRemoteServer: false,
+  remoteServer: "",
   projects: [],
 }
