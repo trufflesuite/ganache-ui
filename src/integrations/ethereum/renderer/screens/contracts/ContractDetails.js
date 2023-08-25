@@ -1,5 +1,5 @@
 import { shell } from "electron";
-const { app } = require("electron").remote;
+const { app } = require("@electron/remote");
 
 import jsonTheme from "../../../../../common/utils/jsonTheme";
 import ReactJson from "@ganache/react-json-view";
@@ -32,7 +32,7 @@ class ContractDetails extends Component {
     const contract = filteredContracts[0];
 
     this.state = { project, contract };
-  
+
     const contractCache = this.props.workspaces.current.contractCache;
     const cache = contractCache[this.state.contract.address];
     const transactions = cache.transactions.slice(
@@ -73,8 +73,7 @@ class ContractDetails extends Component {
 
   reportDecodingError() {
     const title = encodeURIComponent(
-      `Decoding Error when running Ganache ${app.getVersion()} on ${
-        process.platform
+      `Decoding Error when running Ganache ${app.getVersion()} on ${process.platform
       }`,
     );
 

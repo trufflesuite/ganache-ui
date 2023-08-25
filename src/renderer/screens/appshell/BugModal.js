@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { shell } from "electron";
-const { app } = require("electron").remote;
+const { app } = require("@electron/remote");
 
 import connect from "../helpers/connect";
 import { sanitizeError, sanitizePaths } from "../helpers/sanitize.js";
@@ -73,7 +73,7 @@ class BugModal extends Component {
     let unsanitizedSystemError =
       this.props.systemError.stack || this.props.systemError;
     let sanitizedSystemError = "";
-    
+
     if (unsanitizedSystemError) {
       sanitizedSystemError = sanitizeError(unsanitizedSystemError);
     }
@@ -96,8 +96,7 @@ class BugModal extends Component {
             <button
               onClick={() => {
                 const title = encodeURIComponent(
-                  `System Error when running Ganache ${app.getVersion()} on ${
-                    process.platform
+                  `System Error when running Ganache ${app.getVersion()} on ${process.platform
                   }`,
                 );
 

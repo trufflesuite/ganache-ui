@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import { remote } from "electron";
+const remote = require("@electron/remote");
 import DownloadIcon from "../../../../../renderer/icons/download.svg";
 import connect from "../../../../../renderer/screens/helpers/connect";
 import * as Files from "../../../common/redux/files/actions";
@@ -51,7 +51,7 @@ export class MiniFileCard extends PureComponent {
           <div className="RowItem">
             <div className="Download">
               <OnlyIf test={!downloadInProgress}>
-                <button onClick={() => this.saveFile(file.cid, file.name) }>
+                <button onClick={() => this.saveFile(file.cid, file.name)}>
                   <span>DOWNLOAD</span>
                   <DownloadIcon />
                 </button>
@@ -63,7 +63,7 @@ export class MiniFileCard extends PureComponent {
                 <ProgressBar percent={Math.floor((file.download.progress || 0) * 100)} />
               </OnlyIf>
               <OnlyIf test={downloadInProgress && !file.download.complete && file.download.error}>
-                <button className="Error"disabled={true}>
+                <button className="Error" disabled={true}>
                   <span>ERROR</span>
                 </button>
               </OnlyIf>

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-const { dialog } = require('electron').remote;
+const { dialog } = require("@electron/remote");
 
 // Single value FilePicker. Needs adjustment to support multi-file picking (or new component)
 
@@ -28,7 +28,7 @@ class FilePicker extends Component {
     if (this.pickerButton) {
       if (this.props.directoriesOnly) {
         dialog.showOpenDialog({
-            properties: ['openDirectory']
+          properties: ['openDirectory']
         }).then(result => {
           const value = result.filePaths && result.filePaths.length > 0 ? result.filePaths[0] : this.props.defaultValue;
           this.props.onChangeFunction(value, {
@@ -50,8 +50,8 @@ class FilePicker extends Component {
 
   changePicker = e => {
     const value = this.pickerButton.files.length > 0
-        ? this.pickerButton.files[0].path
-        : this.props.defaultValue;
+      ? this.pickerButton.files[0].path
+      : this.props.defaultValue;
 
     this.props.onChangeFunction(value, e);
 

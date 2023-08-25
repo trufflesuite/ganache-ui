@@ -1,4 +1,4 @@
-const { app } = require("electron").remote;
+const { app } = require("@electron/remote");
 
 // return a sanitized error string from an Error object or string which contains an error message
 export function sanitizeError(errorUnsanitized) {

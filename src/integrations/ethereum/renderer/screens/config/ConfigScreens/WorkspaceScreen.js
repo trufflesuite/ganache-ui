@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { remote } from "electron";
+const remote = require("@electron/remote");
 import path from "path";
 import ModalDetails from "../../../../../../renderer/components/modal/ModalDetails";
 import SyntaxHighlighter from "react-syntax-highlighter";

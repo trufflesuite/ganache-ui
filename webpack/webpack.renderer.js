@@ -8,7 +8,7 @@ const babelLoader = {
   }
 };
 
-module.exports = function(config) {
+module.exports = function (config) {
   const rootDir = path.resolve(__dirname, "../");
   const srcDir = path.resolve(rootDir, "src")
   const rules = config.module.rules;
@@ -72,6 +72,7 @@ module.exports = function(config) {
 
   config.resolve.symlinks = false;
   config.output.pathinfo = false;
+  config.output.hashFunction = "sha256";
 
   return config;
 };
