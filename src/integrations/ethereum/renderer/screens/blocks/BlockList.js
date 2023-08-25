@@ -12,7 +12,7 @@ class BlockList extends Component {
   componentDidUpdate(prevProps) {
     // If the scroll position changed...
     const latestRequested =
-    prevProps.blocks.requested[prevProps.core.latestBlock];
+      prevProps.blocks.requested[prevProps.core.latestBlock];
     const earliestRequested = prevProps.blocks.requested[0];
     if (
       prevProps.appshell.scrollPosition != this.props.appshell.scrollPosition
@@ -34,7 +34,7 @@ class BlockList extends Component {
       return;
     }
 
-    var latestBlockInView = prevProps.blocks.inView[0].number;
+    var latestBlockInView = Number(prevProps.blocks.inView[0].number);
     if (
       prevProps.appshell.scrollPosition == "top" &&
       prevProps.core.latestBlock > latestBlockInView &&
@@ -50,10 +50,10 @@ class BlockList extends Component {
         {this.props.blocks.inView.map(block => {
           return (
             <MiniBlockCard
-              key={`block-${block.number}`}
+              key={`block-${Number(block.number)}`}
               block={block}
               transactionCount={
-                this.props.blocks.inViewTransactionCounts[block.number]
+                this.props.blocks.inViewTransactionCounts[Number(block.number)]
               }
             />
           );

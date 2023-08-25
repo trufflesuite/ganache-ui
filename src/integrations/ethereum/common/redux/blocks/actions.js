@@ -8,12 +8,18 @@ const prefix = "BLOCKS";
 const PAGE_SIZE = 15;
 
 export const CLEAR_BLOCKS_IN_VIEW = `${prefix}/CLEAR_BLOCKS_IN_VIEW`;
-export const clearBlocksInView = function() {
+export const clearBlocksInView = function () {
   return { type: CLEAR_BLOCKS_IN_VIEW, blocks: [] };
 };
 
-export const requestPage = function(startBlockNumber, endBlockNumber) {
-  return function(dispatch, getState) {
+/**
+ *
+ * @param {number} startBlockNumber
+ * @param {number} endBlockNumber
+ * @returns {function(dispatch, getState): Promise<void>}
+ */
+export const requestPage = function (startBlockNumber, endBlockNumber) {
+  return function (dispatch, getState) {
     if (startBlockNumber == null) {
       startBlockNumber = getState().core.latestBlock;
     }
@@ -33,23 +39,23 @@ export const requestPage = function(startBlockNumber, endBlockNumber) {
 };
 
 // The "next" page is the next set of blocks, from the last requested down to 0
-export const requestNextPage = function() {
-  return function(dispatch, getState) {
+export const requestNextPage = function () {
+  return function (dispatch, getState) {
     var blocksInView = getState().blocks.inView;
-    var earliestBlockInView = blocksInView[blocksInView.length - 1].number;
+    var earliestBlockInView = Number(blocksInView[blocksInView.length - 1].number);
     dispatch(requestPage(earliestBlockInView - 1));
   };
 };
 
-export const requestPreviousPage = function() {
-  return function(dispatch, getState) {
+export const requestPreviousPage = function () {
+  return function (dispatch, getState) {
     var blocksInView = getState().blocks.inView;
 
     if (blocksInView.length == 0) {
       return dispatch(requestPage(getState().core.latestBlock));
     }
 
-    var latestBlockInView = blocksInView[0].number;
+    var latestBlockInView = Number(blocksInView[0].number);
     var latestBlock = getState().core.latestBlock;
 
     var startBlock = Math.min(latestBlock, latestBlockInView + PAGE_SIZE);
@@ -62,8 +68,8 @@ export const requestPreviousPage = function() {
 export const SET_BLOCKS_REQUESTED = `${prefix}/SET_BLOCKS_REQUESTED`;
 export const ADD_BLOCKS_TO_VIEW = `${prefix}/ADD_BLOCKS_TO_VIEW`;
 
-export const addBlocksToView = function(startBlockNumber, endBlockNumber) {
-  return async function(dispatch, getState) {
+export const addBlocksToView = function (startBlockNumber, endBlockNumber) {
+  return async function (dispatch, getState) {
     const state = getState();
     const requested = state.blocks.requested;
     const web3Instance = state.web3.web3Instance;
@@ -91,7 +97,7 @@ export const addBlocksToView = function(startBlockNumber, endBlockNumber) {
   };
 };
 
-const getBlock = async function(number, web3Instance) {
+const getBlock = async function (number, web3Instance) {
   // Now actually request it
   let block = await web3Request("getBlock", [number, false], web3Instance);
   let transactionCount = await web3Request(
@@ -104,8 +110,8 @@ const getBlock = async function(number, web3Instance) {
 };
 
 export const SET_CURRENT_BLOCK_SHOWN = `${prefix}/SET_CURRENT_BLOCK_SHOWN`;
-export const showBlock = function(number) {
-  return async function(dispatch, getState) {
+export const showBlock = function (number) {
+  return async function (dispatch, getState) {
     let block = await web3ActionCreator(dispatch, getState, "getBlock", [
       number,
       true,
@@ -126,6 +132,6 @@ export const showBlock = function(number) {
     dispatch({ type: SET_CURRENT_BLOCK_SHOWN, block });
   };
 };
-export const clearBlockShown = function() {
+export const clearBlockShown = function () {
   return { type: SET_CURRENT_BLOCK_SHOWN, block: null };
 };

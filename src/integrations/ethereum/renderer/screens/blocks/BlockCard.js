@@ -36,7 +36,7 @@ class BlockCard extends Component {
           </button>
 
           <div className="BlockNumber">
-            <h1>BLOCK {block.number}</h1>
+            <h1>BLOCK {Number(block.number)}</h1>
           </div>
         </header>
 
@@ -44,19 +44,19 @@ class BlockCard extends Component {
           <div className="HeaderSecondaryInfo">
             <div>
               <div className="Label">GAS USED</div>
-              <div className="Value">{block.gasUsed}</div>
+              <div className="Value">{Number(block.gasUsed)}</div>
             </div>
 
             <div>
               <div className="Label">GAS LIMIT</div>
-              <div className="Value">{block.gasLimit}</div>
+              <div className="Value">{Number(block.gasLimit)}</div>
             </div>
 
             <div>
               <div className="Label">MINED ON</div>
               <div className="Value">
                 <Moment unix format="YYYY-MM-DD HH:mm:ss">
-                  {block.timestamp}
+                  {Number(block.timestamp)}
                 </Moment>
               </div>
             </div>

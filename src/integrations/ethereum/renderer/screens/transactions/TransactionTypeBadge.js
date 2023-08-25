@@ -28,5 +28,9 @@ export default class TransactionTypeBadge extends Component {
         </div>
       );
     }
+
+    return (
+      <div className="TransactionTypeBadge UnknownBadge">UNKNOWN</div>
+    );
   }
 }
