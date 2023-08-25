@@ -59,7 +59,7 @@ export default class MiniTxCard extends Component {
               <div className="RowItem">
                 <div className="GasUsed">
                   <div className="Label">GAS USED</div>
-                  <div className="Value">{receipt.gasUsed}</div>
+                  <div className="Value">{Number(receipt.gasUsed)}</div>
                 </div>
               </div>
 

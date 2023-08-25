@@ -40,7 +40,7 @@ class TxCard extends Component {
 
     const hasDecodedInfo =
       typeof this.props.transactions.currentTransactionContract !==
-        "undefined" &&
+      "undefined" &&
       typeof this.props.transactions.currentTransactionData !== "undefined";
 
     let events = this.props.transactions.currentTransactionEvents.map(event => {
@@ -122,7 +122,7 @@ class TxCard extends Component {
             </div>
             <div>
               <div className="Label">GAS USED</div>
-              <div className="Value">{receipt.gasUsed}</div>
+              <div className="Value">{Number(receipt.gasUsed)}</div>
             </div>
 
             <div>
@@ -132,7 +132,7 @@ class TxCard extends Component {
 
             <div>
               <div className="Label">GAS LIMIT</div>
-              <div className="Value">{tx.gas}</div>
+              <div className="Value">{Number(tx.gas)}</div>
             </div>
 
             {/* <div>
@@ -146,7 +146,7 @@ class TxCard extends Component {
 
             <div>
               <div className="Label">MINED IN BLOCK</div>
-              <div className="Value">{receipt.blockNumber}</div>
+              <div className="Value">{Number(receipt.blockNumber)}</div>
             </div>
           </section>
           <main>

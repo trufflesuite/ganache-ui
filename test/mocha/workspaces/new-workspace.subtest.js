@@ -5,7 +5,7 @@ import fs from "fs";
 import path from "path";
 import isEqual from "lodash.isequal";
 import ganache from "ganache";
-import Web3 from "web3";
+import { Web3 } from "web3";
 
 describe("New Workspace", () => {
   let configDirectory = "/";
@@ -44,7 +44,7 @@ describe("New Workspace", () => {
     var web3 = new Web3();
     web3.setProvider(ganache.provider(workspace.settings.getAll()));
 
-    web3.eth.getAccounts(function(err, result) {
+    web3.eth.getAccounts(function (err, result) {
       if (err) return done(err);
       assert(
         result.length,

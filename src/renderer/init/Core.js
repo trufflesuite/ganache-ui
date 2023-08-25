@@ -69,7 +69,7 @@ export function initCore(store) {
           "0.0.0.0",
           "localhost",
         );
-        const url = `ws://${hostname}:${workspaceSettings.server.port}`;
+        const url = workspaceSettings.useRemoteServer ? workspaceSettings.remoteServer.replace(/^http(s)?/i, "ws$1") : `ws://${hostname}:${workspaceSettings.server.port}`;
 
         ipcRenderer.send("web3-provider", url);
         store.dispatch(setRPCProviderUrl(url));

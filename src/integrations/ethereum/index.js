@@ -1,6 +1,7 @@
 import Integrations from "../integrations";
 import TruffleIntegrationService from "./common/services/TruffleIntegrationService";
 import EthereumChainService from "./common/services/EthereumChainService";
+import RemoteEthereumChainService from "./common/services/RemoteEthereumChainService";
 import { GET_CONTRACT_DETAILS, CONTRACT_EVENT, CONTRACT_TRANSACTION, PROJECT_UPDATED } from "./common/redux/workspaces/actions";
 import { SET_SYSTEM_ERROR } from "../../common/redux/core/actions";
 import { GET_DECODED_TRANSACTION_INPUT } from "./common/redux/transactions/actions";
@@ -12,7 +13,11 @@ class Ethereum extends Integrations {
     super(integrationManager);
 
     this.projectIntegration = new TruffleIntegrationService(integrationManager.isDevMode);
-    this.chain = new EthereumChainService(workspace, integrationManager.config);
+    if (workspace.settings.get("useRemoteServer")) {
+      this.chain = new RemoteEthereumChainService(workspace, integrationManager.config);
+    } else {
+      this.chain = new EthereumChainService(workspace, integrationManager.config);
+    }
 
     this._listen();
   }
@@ -38,12 +43,12 @@ class Ethereum extends Integrations {
   }
 
   _ipcListeners = []
-  onIpc(event, callback){
-    this._ipcListeners.push({event, callback});
+  onIpc(event, callback) {
+    this._ipcListeners.push({ event, callback });
     return this.ipc.on(event, callback);
   }
   offIpc() {
-    this._ipcListeners.forEach(({event, callback}) => this.ipc.off(event, callback));
+    this._ipcListeners.forEach(({ event, callback }) => this.ipc.off(event, callback));
     this._ipcListeners = [];
   }
   async _listenToIPC() {

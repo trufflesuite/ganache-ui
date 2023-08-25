@@ -1,33 +1,30 @@
-import WsProvider from "web3-providers-ws";
-import HttpProvider from "web3-providers-http";
+import { WebSocketProvider } from "web3-providers-ws";
+import { HttpProvider } from "web3-providers-http";
 import * as RequestCache from "../../request-cache/actions";
-import EventEmitter from "events";
 
-class ReduxWeb3Provider extends EventEmitter {
-  constructor(url, dispatch, getState) {
-    super();
+function makeReduxWeb3Provider(url, dispatch, getState) {
+  let parsedURL = new URL(url);
+  let scheme = parsedURL.protocol.toLowerCase();
+  let provider
 
-    let parsedURL = new URL(url);
-    let scheme = parsedURL.protocol.toLowerCase();
-
-    if (scheme === "ws:" || scheme === "wss:") {
-      this.provider = new WsProvider(url);
-      this.provider.on("data", this.emit.bind(this, "data"));
-    } else {
-      this.provider = new HttpProvider(url);
-      delete this.on;
-      delete this.once;
-    }
-    this.dispatch = dispatch;
-    this.getState = getState;
+  if (scheme === "ws:" || scheme === "wss:") {
+    provider = new WebSocketProvider(url, {}, {
+      delay: 500,
+      autoReconnect: true,
+      maxAttempts: 10,
+    });
+  } else {
+    provider = new HttpProvider(url);
   }
+  provider.dispatch = dispatch;
+  provider.getState = getState;
 
-  send(payload, callback) {
-    var cached = RequestCache.checkCache(payload, this.getState);
+  const originalRequest = provider.request.bind(provider);
+  provider.request = async (payload) => {
+    var cached = RequestCache.checkCache(payload, provider.getState);
 
     if (cached) {
-      callback(null, cached);
-      return;
+      return cached;
     }
 
     // Mark payload as an internal request
@@ -35,26 +32,36 @@ class ReduxWeb3Provider extends EventEmitter {
     // See chain.js.
     payload.internal = true;
 
-    this.dispatch(RPCRequestStarted(payload));
+    provider.dispatch(RPCRequestStarted(payload));
 
-    this.provider.send(payload, (err, response) => {
-      if (err || response.error) {
-        this.dispatch(RPCRequestFailed(payload, response, err));
-      } else {
-        this.dispatch(RequestCache.cacheRequest(payload, response));
-        this.dispatch(RPCRequestSucceeded(payload, response.result));
-      }
+    let response;
+    let err;
+    try {
+      response = await originalRequest(payload);
+    } catch (e) {
+      err = e;
+    }
 
-      // if the workspace was closed in the middle of a response
-      // just don't resolve
-      if (!this.getState().web3.web3Instance) {
-        return callback(new Error("No workspace"));
-      }
+    if (err || response.error) {
+      provider.dispatch(RPCRequestFailed(payload, response, err));
+    } else {
+      provider.dispatch(RequestCache.cacheRequest(payload, response));
+      provider.dispatch(RPCRequestSucceeded(payload, response.result));
+    }
 
-      callback(err, response);
-    });
+    // if the workspace was closed in the middle of a response
+    // just don't resolve
+    if (!provider.getState().web3.web3Instance) {
+      throw new Error("No workspace");
+    }
+
+    if (err) throw err;
+
+    return response;
   }
-}
+
+  return provider;
+};
 
 const prefix = "PROVIDER";
 
@@ -74,4 +81,4 @@ export function RPCRequestSucceeded(payload, result) {
   return { type: RPC_REQUEST_SUCCEEDED, payload, result };
 }
 
-export default ReduxWeb3Provider;
+export default makeReduxWeb3Provider;

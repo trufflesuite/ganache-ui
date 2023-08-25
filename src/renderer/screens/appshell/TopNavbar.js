@@ -162,9 +162,8 @@ class TopNavbar extends Component {
         if (minerEnabled === false) {
           return "Stopped";
         } else if (workspaceSettings.server.miner.blockTime > 0) {
-          return `${
-            workspaceSettings.server.miner.blockTime
-          } SEC block time`;
+          return `${workspaceSettings.server.miner.blockTime
+            } SEC block time`;
         }
       }
 
@@ -172,9 +171,8 @@ class TopNavbar extends Component {
     }
 
     if (workspaceSettings.server.blockTime) {
-      return `${
-        workspaceSettings.server.blockTime
-      } SEC block time`;
+      return `${workspaceSettings.server.blockTime
+        } SEC block time`;
     } else {
       return "Automining";
     }
@@ -213,7 +211,7 @@ class TopNavbar extends Component {
             <OnlyIf test={isNewVersionAvailable}>
               <UpdateNotification />
             </OnlyIf>
-            { hasSearch ? <><input
+            {hasSearch ? <><input
               type="text"
               placeholder={children.searchText}
               title={children.searchText}
@@ -221,7 +219,7 @@ class TopNavbar extends Component {
               onChange={this.handleSearchChange.bind(this)}
               onKeyPress={this.handleSearchKeyPress.bind(this)}
             />
-            <SearchIcon /></> : ""}
+              <SearchIcon /></> : ""}
           </div>
         </main>
         <section className="StatusAndControls">
@@ -296,16 +294,16 @@ class TopNavbar extends Component {
         <StatusIndicator title="CURRENT TIPSET" value={this.props.filecoin.core.latestTipset} />
         <StatusIndicator title="LOTUS SERVER" value={this.props.filecoin.lotus.lotusInstance && this.props.filecoin.lotus.lotusInstance.provider.provider.url} upper={false} />
         <StatusIndicator title="IPFS SERVER" value={this.props.filecoin.core.ipfsUrl} upper={false} />
-          <StatusIndicator
-            title="MINING STATUS"
-            value={this._renderMiningTime()}
-          />
+        <StatusIndicator
+          title="MINING STATUS"
+          value={this._renderMiningTime()}
+        />
       </>),
       action: (<></>),
     }
   }
 
-  _generateEthereumChildren(){
+  _generateEthereumChildren() {
     const blockNumber = this.props.core.latestBlock;
     const gasPrice = this.props.core.gasPrice;
     const gasLimit = this.props.core.gasLimit;
@@ -346,7 +344,7 @@ class TopNavbar extends Component {
       status: (
         <>
           <StatusIndicator title="CURRENT BLOCK" value={blockNumber} />
-          { this.props.config.settings.workspace.server.fork ?
+          {this.props.config.settings.workspace.server.fork ?
             (<StatusIndicator
               title="FORK BLOCK"
               tooltip={this.props.config.settings.workspace.server.fork}
@@ -360,12 +358,19 @@ class TopNavbar extends Component {
             title="NETWORK ID"
             value={this.props.config.settings.workspace.server.network_id}
           />
-          <StatusIndicator
-            title="RPC SERVER"
-            value={`http://${
-              this.props.config.settings.workspace.server.hostname
-            }:${this.props.config.settings.workspace.server.port}`}
-          />
+          <OnlyIf test={this.props.config.settings.workspace.useRemoteServer === true}>
+            <StatusIndicator
+              title="RPC SERVER"
+              value={this.props.config.settings.workspace.remoteServer}
+            />
+          </OnlyIf>
+          <OnlyIf test={this.props.config.settings.workspace.useRemoteServer !== true}>
+            <StatusIndicator
+              title="RPC SERVER"
+              value={`http://${this.props.config.settings.workspace.server.hostname
+                }:${this.props.config.settings.workspace.server.port}`}
+            />
+          </OnlyIf>
           <StatusIndicator
             title="MINING STATUS"
             value={miningPaused ? "STOPPED" : this._renderMiningTime()}

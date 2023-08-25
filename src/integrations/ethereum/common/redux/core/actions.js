@@ -2,6 +2,7 @@ import {
   web3ActionCreator,
 } from "../web3/helpers/Web3ActionCreator";
 import { getAccounts } from "../accounts/actions";
+import { ContractOnceRequiresCallbackError } from "web3";
 
 const prefix = "CORE";
 
@@ -11,8 +12,8 @@ export function setKeyData(mnemonic, hdPath, privateKeys) {
 }
 
 export const SET_GAS_PRICE = `${prefix}/SET_GAS_PRICE`;
-export const getGasPrice = function() {
-  return async function(dispatch, getState) {
+export const getGasPrice = function () {
+  return async function (dispatch, getState) {
     let gasPrice = await web3ActionCreator(dispatch, getState, "getGasPrice");
     var currentPrice = getState().core.gasPrice;
     gasPrice = gasPrice.toString(10);
@@ -24,8 +25,8 @@ export const getGasPrice = function() {
 };
 
 export const SET_GAS_LIMIT = `${prefix}/SET_GAS_LIMIT`;
-export const getGasLimit = function() {
-  return async function(dispatch, getState) {
+export const getGasLimit = function () {
+  return async function (dispatch, getState) {
     let block = await web3ActionCreator(dispatch, getState, "getBlock", [
       "latest",
     ]);
@@ -39,8 +40,8 @@ export const getGasLimit = function() {
   };
 };
 
-export const setBlockNumberToLatest = function() {
-  return async function(dispatch, getState) {
+export const setBlockNumberToLatest = function () {
+  return async function (dispatch, getState) {
     const blockNumber = await web3ActionCreator(
       dispatch,
       getState,
@@ -54,8 +55,8 @@ export const setBlockNumberToLatest = function() {
 };
 
 export const SET_BLOCK_NUMBER = `${prefix}/SET_BLOCK_NUMBER`;
-export const setBlockNumber = function(number) {
-  return function(dispatch) {
+export const setBlockNumber = function (number) {
+  return function (dispatch) {
     dispatch({ type: SET_BLOCK_NUMBER, number });
 
     // Refresh our accounts if the block changed.
@@ -64,20 +65,20 @@ export const setBlockNumber = function(number) {
 };
 
 export const GET_BLOCK_SUBSCRIPTION = `${prefix}/GET_BLOCK_SUBSCRIPTION`;
-export const getBlockSubscription = function() {
-  return async function(dispatch, getState) {
+export const getBlockSubscription = function () {
+  return async function (dispatch, getState) {
     let subscription = await web3ActionCreator(
       dispatch,
       getState,
       "subscribe",
-      ["newBlockHeaders"],
+      ["newHeads"],
     );
 
     subscription.on("data", blockHeader => {
       let currentBlockNumber = getState().core.latestBlock;
 
-      if (blockHeader.number != currentBlockNumber) {
-        dispatch(setBlockNumber(blockHeader.number));
+      if (Number(blockHeader.number) != currentBlockNumber) {
+        dispatch(setBlockNumber(Number(blockHeader.number)));
       }
     });
   };

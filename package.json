@@ -97,9 +97,9 @@
     "truffle": "5.1.20",
     "universal-analytics": "^0.4.13",
     "unzip-stream": "0.3.0",
-    "web3": "1.2.6",
-    "web3-providers-http": "1.2.6",
-    "web3-providers-ws": "1.2.6",
+    "web3": "4.1.1",
+    "web3-providers-http": "4.0.5",
+    "web3-providers-ws": "4.0.5",
     "xterm": "^4.4.0",
     "xterm-addon-fit": "^0.3.0"
   },

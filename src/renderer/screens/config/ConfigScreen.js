@@ -56,7 +56,7 @@ class ConfigScreen extends PureComponent {
     super(props);
 
     let tabs;
-    switch(props.config.settings.workspace.flavor){
+    switch (props.config.settings.workspace.flavor) {
       case "ethereum": {
         tabs = ETHEREUM_TABS;
         break;
@@ -142,9 +142,8 @@ class ConfigScreen extends PureComponent {
 
   _renderTabHeader = () => {
     return this.state.TABS.map((tab, index) => {
-      let className = `TabItem ${
-        this.state.activeIndex == index ? "ActiveTab" : ""
-      }`;
+      let className = `TabItem ${this.state.activeIndex == index ? "ActiveTab" : ""
+        }`;
 
       return (
         <div
@@ -187,7 +186,7 @@ class ConfigScreen extends PureComponent {
     );
     // eslint-disable-next-line react/no-direct-mutation-state
     this.state.config.settings.workspace.projects = newProjects;
-    
+
     this.forceUpdate();
   };
 
@@ -219,6 +218,10 @@ class ConfigScreen extends PureComponent {
       switch (target.attributes["data-type"].value) {
         case "number": {
           value = parseFloat(target.value);
+          break;
+        }
+        case "boolean": {
+          value = target.value === "true";
           break;
         }
       }

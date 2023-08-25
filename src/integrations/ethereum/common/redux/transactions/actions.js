@@ -11,13 +11,13 @@ const prefix = "TRANSACTIONS";
 const PAGE_SIZE = 10;
 
 export const CLEAR_TRANSACTIONS_IN_VIEW = `${prefix}/CLEAR_TRANSACTIONS_IN_VIEW`;
-export const clearTransactionsInView = function() {
+export const clearTransactionsInView = function () {
   return { type: CLEAR_TRANSACTIONS_IN_VIEW, transactions: [] };
 };
 
 export const SET_LOADING = `${prefix}/SET_LOADING`;
-export const requestPage = function(startBlockNumber, endBlockNumber) {
-  return function(dispatch, getState) {
+export const requestPage = function (startBlockNumber, endBlockNumber) {
+  return function (dispatch, getState) {
     if (startBlockNumber == null) {
       startBlockNumber = getState().core.latestBlock;
     }
@@ -27,6 +27,7 @@ export const requestPage = function(startBlockNumber, endBlockNumber) {
         ? state.config.settings.workspace.server.fork_block_number + 1
         : 0;
     }
+
 
     let earliestBlockRequested = Math.max(
       startBlockNumber - PAGE_SIZE,
@@ -39,16 +40,16 @@ export const requestPage = function(startBlockNumber, endBlockNumber) {
 };
 
 // The "next" page is the next set of blocks, from the last requested down to 0
-export const requestNextPage = function() {
-  return function(dispatch, getState) {
+export const requestNextPage = function () {
+  return function (dispatch, getState) {
     var blocksRequested = Object.keys(getState().transactions.blocksRequested);
     var earliestBlockRequested = Math.min.apply(Math, blocksRequested);
     dispatch(requestPage(earliestBlockRequested - 1));
   };
 };
 
-export const requestPreviousPage = function() {
-  return function(dispatch, getState) {
+export const requestPreviousPage = function () {
+  return function (dispatch, getState) {
     var blocksRequested = Object.keys(getState().transactions.blocksRequested);
 
     if (blocksRequested.length == 0) {
@@ -66,7 +67,7 @@ export const requestPreviousPage = function() {
 };
 
 export const ADD_RECEIPTS = `${prefix}/ADD_RECEIPTS`;
-export const getReceipts = async function(transactions, web3Instance) {
+export const getReceipts = async function (transactions, web3Instance) {
   return await Promise.all(
     transactions.map(tx => {
       return web3Request("getTransactionReceipt", [tx.hash], web3Instance);
@@ -76,11 +77,11 @@ export const getReceipts = async function(transactions, web3Instance) {
 
 export const SET_BLOCK_REQUESTED = `${prefix}/SET_BLOCK_REQUESTED`;
 export const ADD_TRANSACTIONS_TO_VIEW = `${prefix}/ADD_TRANSACTIONS_TO_VIEW`;
-export const getTransactionsForBlocks = function(
+export const getTransactionsForBlocks = function (
   startBlockNumber,
   endBlockNumber,
 ) {
-  return async function(dispatch, getState) {
+  return async function (dispatch, getState) {
     dispatch({
       type: SET_LOADING,
       loading: true,
@@ -88,8 +89,6 @@ export const getTransactionsForBlocks = function(
 
     const state = getState();
     let web3Instance = state.web3.web3Instance;
-    let receipts = [];
-    let transactions = [];
     for (let number = endBlockNumber; number >= startBlockNumber; number--) {
       let requested = state.transactions.blocksRequested;
 
@@ -105,21 +104,20 @@ export const getTransactionsForBlocks = function(
       // Now request the block and receipts for all its transactions
       let block = await web3Request("getBlock", [number, true], web3Instance);
 
-      if (block.transactions.length == 0) {
+      if (!block.transactions || block.transactions.length == 0) {
         continue;
       }
 
-      receipts = receipts.concat(
-        await getReceipts(block.transactions, web3Instance),
-      );
-      transactions = transactions.concat(block.transactions);
-    }
-
-    if (receipts.length > 0) {
-      dispatch({ type: ADD_RECEIPTS, receipts });
-    }
-    if (transactions.length > 0) {
-      dispatch({ type: ADD_TRANSACTIONS_TO_VIEW, transactions });
+      const receipts =
+        await getReceipts(block.transactions, web3Instance)
+        ;
+      const transactions = block.transactions;
+      if (receipts.length > 0) {
+        dispatch({ type: ADD_RECEIPTS, receipts });
+      }
+      if (transactions.length > 0) {
+        dispatch({ type: ADD_TRANSACTIONS_TO_VIEW, transactions });
+      }
     }
 
     dispatch({
@@ -131,8 +129,8 @@ export const getTransactionsForBlocks = function(
 
 export const GET_DECODED_TRANSACTION_INPUT = `${prefix}/GET_DECODED_TRANSACTION_INPUT`;
 export const SET_CURRENT_TRANSACTION_SHOWN = `${prefix}/SET_CURRENT_TRANSACTION_SHOWN`;
-export const showTransaction = function(hash) {
-  return async function(dispatch, getState) {
+export const showTransaction = function (hash) {
+  return async function (dispatch, getState) {
     let web3Instance = getState().web3.web3Instance;
     let transaction = await web3Request("getTransaction", [hash], web3Instance);
     let receipt = await web3Request(
@@ -241,7 +239,7 @@ export const showTransaction = function(hash) {
     });
   };
 };
-export const clearTransactionShown = function() {
+export const clearTransactionShown = function () {
   return {
     type: SET_CURRENT_TRANSACTION_SHOWN,
     transaction: null,

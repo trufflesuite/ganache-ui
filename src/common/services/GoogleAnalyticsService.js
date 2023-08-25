@@ -108,7 +108,7 @@ class GoogleAnalyticsService {
               hostname = "public";
             }
           }
-          
+
           const config = {
             hostname,
             port: workspaceSettings.server.port,
@@ -126,6 +126,8 @@ class GoogleAnalyticsService {
             hardfork: workspaceSettings.server.hardfork,
             fork: workspaceSettings.server.fork,
             fork_block_number: workspaceSettings.server.fork_block_number,
+            useRemoteServer: workspaceSettings.useRemoteServer || false,
+            remoteServer: workspaceSettings.remoteServer || "",
           };
 
           this.user.set("cd1", config.hostname);
@@ -141,6 +143,7 @@ class GoogleAnalyticsService {
           this.user.set("cd11", config.hardfork);
           this.user.set("cd12", config.fork);
           this.user.set("cd13", config.fork_block_number);
+          this.user.set("cd14", config.remoteServer);
         }
       }
     }
