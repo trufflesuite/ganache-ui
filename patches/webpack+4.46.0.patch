@@ -112,3 +112,80 @@ index 2d84aaf..fe35290 100644
  	hash.update(str);
  	const digest = /** @type {string} */ (hash.digest("hex"));
  	return digest.substr(0, 4);
+diff --git a/node_modules/webpack/lib/SourceMapDevToolPlugin.js b/node_modules/webpack/lib/SourceMapDevToolPlugin.js
+index 3018eb2..cc5d891 100644
+--- a/node_modules/webpack/lib/SourceMapDevToolPlugin.js
++++ b/node_modules/webpack/lib/SourceMapDevToolPlugin.js
+@@ -167,7 +167,7 @@ class SourceMapDevToolPlugin {
+ 					const reportProgress =
+ 						context && context.reportProgress
+ 							? context.reportProgress
+-							: () => {};
++							: () => { };
+ 
+ 					const files = [];
+ 					for (const chunk of chunks) {
+@@ -346,7 +346,7 @@ class SourceMapDevToolPlugin {
+ 									: filename,
+ 								query,
+ 								basename: basename(filename),
+-								contentHash: createHash("md4")
++								contentHash: createHash("sha256")
+ 									.update(sourceMapString)
+ 									.digest("hex")
+ 							};
+@@ -357,8 +357,8 @@ class SourceMapDevToolPlugin {
+ 							const sourceMapUrl = options.publicPath
+ 								? options.publicPath + sourceMapFile.replace(/\\/g, "/")
+ 								: path
+-										.relative(path.dirname(file), sourceMapFile)
+-										.replace(/\\/g, "/");
++									.relative(path.dirname(file), sourceMapFile)
++									.replace(/\\/g, "/");
+ 							/**
+ 							 * Add source map url to compilation asset, if {@link currentSourceMappingURLComment} presented
+ 							 */
+diff --git a/node_modules/webpack/lib/optimize/ConcatenatedModule.js b/node_modules/webpack/lib/optimize/ConcatenatedModule.js
+index df4d216..70008b6 100644
+--- a/node_modules/webpack/lib/optimize/ConcatenatedModule.js
++++ b/node_modules/webpack/lib/optimize/ConcatenatedModule.js
+@@ -173,8 +173,7 @@ const getFinalName = (
+ 						`Circular reexports ${Array.from(
+ 							alreadyVisited,
+ 							e =>
+-								`"${e.module.readableIdentifier(requestShortener)}".${
+-									e.exportName
++								`"${e.module.readableIdentifier(requestShortener)}".${e.exportName
+ 								}`
+ 						).join(
+ 							" --> "
+@@ -560,7 +559,7 @@ class ConcatenatedModule extends Module {
+ 				orderedConcatenationListIdentifiers += " ";
+ 			}
+ 		}
+-		const hash = createHash("md4");
++		const hash = createHash("sha256");
+ 		hash.update(orderedConcatenationListIdentifiers);
+ 		return this.rootModule.identifier() + " " + hash.digest("hex");
+ 	}
+@@ -1384,9 +1383,8 @@ class HarmonyImportSpecifierDependencyConcatenatedTemplate {
+ 		if (dep._id === null) {
+ 			content = `__WEBPACK_MODULE_REFERENCE__${info.index}_ns${strictFlag}__`;
+ 		} else if (dep.namespaceObjectAsContext) {
+-			content = `__WEBPACK_MODULE_REFERENCE__${
+-				info.index
+-			}_ns${strictFlag}__[${JSON.stringify(dep._id)}]`;
++			content = `__WEBPACK_MODULE_REFERENCE__${info.index
++				}_ns${strictFlag}__[${JSON.stringify(dep._id)}]`;
+ 		} else {
+ 			const exportData = Buffer.from(dep._id, "utf-8").toString("hex");
+ 			content = `__WEBPACK_MODULE_REFERENCE__${info.index}_${exportData}${callFlag}${strictFlag}__`;
+@@ -1471,7 +1469,7 @@ class HarmonyExportExpressionDependencyConcatenatedTemplate {
+ }
+ 
+ class NullTemplate {
+-	apply() {}
++	apply() { }
+ }
+ 
+ module.exports = ConcatenatedModule;
