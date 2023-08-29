@@ -31,15 +31,22 @@ jobs:
       - uses: de-vri-es/setup-git-credentials@v2
         with:
           credentials: ${{secrets.PAT}}
+      - if: startsWith(matrix.os, 'windows-')
+        run: |
+          [Convert]::FromBase64String('${{ secrets.WINDOWS_CODE_SIGNING_PFX_BASE_64 }}') > certs/cert.pfx;
+          Import-PfxCertificate -Password (ConvertTo-SecureString '${{ secrets.WINDOWS_CODE_SIGNING_PFX_PASSWORD }}' -AsPlainText -Force) -FilePath certs/cert.pfx -CertStoreLocation Cert:\CurrentUser\My > $null;
       - run: npm ci
         env:
           FORCE_COLOR: 1
-      - run: npm run build-linux
-        if: startsWith(matrix.os, 'ubuntu-')
-      - run: npm run build-windows
-        if: startsWith(matrix.os, 'windows-')
-      - run: npm run build-mac
-        if: startsWith(matrix.os, 'macos-')
+      - if: startsWith(matrix.os, 'ubuntu-')
+        run: npm run build-linux
+      - if: startsWith(matrix.os, 'windows-')
+        run: |
+          [Convert]::FromBase64String('${{ secrets.WINDOWS_CODE_SIGNING_PFX_BASE_64 }}') > certs/cert.pfx;
+          Import-PfxCertificate -Password (ConvertTo-SecureString '${{ secrets.WINDOWS_CODE_SIGNING_PFX_PASSWORD }}' -AsPlainText -Force) -FilePath certs/cert.pfx -CertStoreLocation Cert:\CurrentUser\My > $null;
+          npm run build-windows;
+      - if: startsWith(matrix.os, 'macos-')
+        run: npm run build-mac
       - uses: actions/upload-artifact@v3
         with:
           name: Release
