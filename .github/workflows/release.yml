@@ -33,7 +33,8 @@ jobs:
           credentials: ${{secrets.PAT}}
       - if: startsWith(matrix.os, 'windows-')
         run: |
-          [Convert]::FromBase64String('${{ secrets.WINDOWS_CODE_SIGNING_PFX_BASE_64 }}') | Out-File -FilePath .\cert.pfx;
+          $bytes = [Convert]::FromBase64String('${{ secrets.WINDOWS_CODE_SIGNING_PFX_BASE_64 }}');
+          Add-Content -Path '.\cert.pfx' -Value $bytes -Encoding Byte;
           Import-PfxCertificate -Password (ConvertTo-SecureString '${{ secrets.WINDOWS_CODE_SIGNING_PFX_PASSWORD }}' -AsPlainText -Force) -FilePath .\cert.pfx -CertStoreLocation Cert:\CurrentUser\My > $null;
       - run: npm ci
         env:
