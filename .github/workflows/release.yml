@@ -10,7 +10,8 @@ jobs:
       matrix:
         node: [18.16.1]
         os: [
-          # windows-2019, ubuntu-20.04, macos-11
+          # windows-2019, ubuntu-20.04,
+          macos-11
           ]
 
     runs-on: ${{ matrix.os }}
