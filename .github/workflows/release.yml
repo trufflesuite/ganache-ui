@@ -9,7 +9,9 @@ jobs:
       fail-fast: false
       matrix:
         node: [18.16.1]
-        os: [windows-2019, ubuntu-20.04, macos-11]
+        os: [
+          # windows-2019, ubuntu-20.04, macos-11
+          ]
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -46,9 +48,25 @@ jobs:
         env:
           CSC_FOR_PULL_REQUEST: true
       - if: startsWith(matrix.os, 'macos-')
-        run: npm run build-mac
+        run: |
+          echo "Configuring keychain..."
+          export CERT=osx.p12
+          export NOTARIZE=true
+          base64 -d <<< "${{ secrets.APPLE_CERTIFICATE_P12_BASE64 }}" > $CERT
+          export CSC_KEYCHAIN=build.keychain
+          export KEYCHAIN_PASS=$RANDOM.$RANDOM.$RANDOM
+          security create-keychain -p $KEYCHAIN_PASS $CSC_KEYCHAIN
+          security default-keychain -s $CSC_KEYCHAIN
+          security unlock-keychain -p $KEYCHAIN_PASS $CSC_KEYCHAIN
+          security import $CERT -k $CSC_KEYCHAIN -P "${{ secrets.APPLE_CERTIFICATE_P12_PASSWORD }}"" -T /usr/bin/codesign
+          security set-keychain-settings $CSC_KEYCHAIN
+          echo "Setting key partition list"
+          security set-key-partition-list -S "apple-tool:,apple:,codesign:" -s -k $KEYCHAIN_PASS $CSC_KEYCHAIN
+          npm run build-mac
         env:
           CSC_FOR_PULL_REQUEST: true
+          appleId: ${{ secrets.APPLEID }}
+          appleIdPassword: ${{ secrets.APPLEIDPASSWORD }}
       - uses: actions/upload-artifact@v3
         with:
           name: Release
