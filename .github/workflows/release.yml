@@ -44,8 +44,12 @@ jobs:
       - if: startsWith(matrix.os, 'windows-')
         run: |
           npm run build-windows;
+        env:
+          PUBLISH_FOR_PULL_REQUEST: true
       - if: startsWith(matrix.os, 'macos-')
         run: npm run build-mac
+        env:
+          PUBLISH_FOR_PULL_REQUEST: true
       - uses: actions/upload-artifact@v3
         with:
           name: Release
