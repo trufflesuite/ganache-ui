@@ -121,7 +121,7 @@
     "chokidar": "3.3.1",
     "cross-env": "^6.0.0",
     "electron": "^26.1.0",
-    "electron-builder": "23.6.0",
+    "electron-builder": "24.6.3",
     "electron-fetch": "1.7.3",
     "electron-notarize": "1.0.0",
     "electron-updater": "4.3.8",

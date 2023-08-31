@@ -42,13 +42,16 @@ jobs:
       - run: npm ci
         env:
           FORCE_COLOR: 1
-      - if: startsWith(matrix.os, 'ubuntu-')
+      - name: Build for Linux
+        if: startsWith(matrix.os, 'ubuntu-')
         run: npm run build-linux
-      - if: startsWith(matrix.os, 'windows-')
+      - name: Build for Windows
+        if: startsWith(matrix.os, 'windows-')
         run: npm run build-windows;
         env:
           CSC_FOR_PULL_REQUEST: true
-      - if: startsWith(matrix.os, 'macos-')
+      - name: Build for Mac
+        if: startsWith(matrix.os, 'macos-')
         run: |
           echo "Configuring keychain..."
           export CERT=osx.p12
@@ -62,7 +65,7 @@ jobs:
           security import $CERT -k $CSC_KEYCHAIN -P "${{ secrets.APPLE_CERTIFICATE_P12_PASSWORD }}" -T /usr/bin/codesign
           security set-keychain-settings $CSC_KEYCHAIN
           echo "Setting key partition list"
-          security set-key-partition-list -S "apple-tool:,apple:,codesign:" -s -k $KEYCHAIN_PASS $CSC_KEYCHAIN
+          security set-key-partition-list -S "apple-tool:,apple:,codesign:" -s -k $KEYCHAIN_PASS $CSC_KEYCHAIN >/dev/null 2>&1
           npm run build-mac
         env:
           CSC_FOR_PULL_REQUEST: true

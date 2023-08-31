@@ -3,7 +3,7 @@ index 6329174..591c698 100644
 --- a/node_modules/webpack/lib/Compilation.js
 +++ b/node_modules/webpack/lib/Compilation.js
 @@ -1036,13 +1036,13 @@ class Compilation extends Tapable {
- 
+
  		const errorAndCallback = this.bail
  			? err => {
 -					callback(err);
@@ -19,7 +19,7 @@ index 6329174..591c698 100644
 +				this.errors.push(err);
 +				callback();
 +			};
- 
+
  		if (
  			typeof dependency !== "object" ||
 @@ -1314,7 +1314,7 @@ class Compilation extends Tapable {
@@ -44,7 +44,7 @@ index 6329174..591c698 100644
  					});
  				}
  			} catch (err) {
-+				throw err;
++
  				this.errors.push(
  					new ChunkRenderError(chunk, file || filenameTemplate, err)
  				);
@@ -81,7 +81,7 @@ index bd0742b..de1d5d8 100644
 +++ b/node_modules/webpack/lib/ModuleFilenameHelpers.js
 @@ -42,7 +42,7 @@ const getBefore = (str, token) => {
  };
- 
+
  const getHash = str => {
 -	const hash = createHash("md4");
 +	const hash = createHash("sha256");
@@ -97,7 +97,7 @@ index bd0742b..de1d5d8 100644
 +				moduleFilenameTemplate: options
 +			}
  	);
- 
+
  	let absoluteResourcePath;
 diff --git a/node_modules/webpack/lib/NamedModulesPlugin.js b/node_modules/webpack/lib/NamedModulesPlugin.js
 index 2d84aaf..fe35290 100644
@@ -105,7 +105,7 @@ index 2d84aaf..fe35290 100644
 +++ b/node_modules/webpack/lib/NamedModulesPlugin.js
 @@ -8,7 +8,7 @@ const createHash = require("./util/createHash");
  const RequestShortener = require("./RequestShortener");
- 
+
  const getHash = str => {
 -	const hash = createHash("md4");
 +	const hash = createHash("sha256");
@@ -122,7 +122,7 @@ index 3018eb2..cc5d891 100644
  							? context.reportProgress
 -							: () => {};
 +							: () => { };
- 
+
  					const files = [];
  					for (const chunk of chunks) {
 @@ -346,7 +346,7 @@ class SourceMapDevToolPlugin {
@@ -182,10 +182,10 @@ index df4d216..70008b6 100644
  			content = `__WEBPACK_MODULE_REFERENCE__${info.index}_${exportData}${callFlag}${strictFlag}__`;
 @@ -1471,7 +1469,7 @@ class HarmonyExportExpressionDependencyConcatenatedTemplate {
  }
- 
+
  class NullTemplate {
 -	apply() {}
 +	apply() { }
  }
- 
+
  module.exports = ConcatenatedModule;
