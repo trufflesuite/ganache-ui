@@ -123,7 +123,7 @@
     "electron": "^26.1.0",
     "electron-builder": "24.6.3",
     "electron-fetch": "1.7.3",
-    "electron-notarize": "1.0.0",
+    "@electron/notarize": "2.1.0",
     "electron-updater": "4.3.8",
     "electron-webpack": "^2.8.2",
     "eslint": "^6.3.0",

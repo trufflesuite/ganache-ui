@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const electron_notarize = require('electron-notarize');
+const electron_notarize = require('@electron/notarize');
 const pkg = require("../../package.json");
 
 module.exports = async function (params) {
@@ -28,8 +28,10 @@ module.exports = async function (params) {
 
     try {
         await electron_notarize.notarize({
+            tool: "notarytool",
             appBundleId: appId,
             appPath: appPath,
+            appleTeamId: process.env.appleTeamId,
             appleId: process.env.appleId,
             appleIdPassword: process.env.appleIdPassword
         });
