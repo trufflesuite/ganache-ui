@@ -79,4 +79,3 @@ jobs:
             dist/*.zip
             dist/*.appx
             dist/*.yml
-            dist/mac/*.app
