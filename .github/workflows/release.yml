@@ -63,6 +63,7 @@ jobs:
           security set-keychain-settings $CSC_KEYCHAIN
           echo "Setting key partition list"
           security set-key-partition-list -S "apple-tool:,apple:,codesign:" -s -k $KEYCHAIN_PASS $CSC_KEYCHAIN >/dev/null 2>&1
+          export DEBUG=electron-notarize:*
           npm run build-mac
         env:
           CSC_FOR_PULL_REQUEST: true
