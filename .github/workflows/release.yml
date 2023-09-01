@@ -69,6 +69,7 @@ jobs:
           export DEBUG=electron-notarize:*
           npm run build-mac
         env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
           PUBLISH_FOR_PULL_REQUEST: true
           CSC_FOR_PULL_REQUEST: true
           appleTeamId: ${{ secrets.APPLETEAMID }}
