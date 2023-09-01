@@ -43,11 +43,13 @@ jobs:
         if: startsWith(matrix.os, 'ubuntu-')
         run: npm run build-linux
         env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
           PUBLISH_FOR_PULL_REQUEST: true
       - name: Build for Windows
         if: startsWith(matrix.os, 'windows-')
         run: npm run build-windows;
         env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
           CSC_FOR_PULL_REQUEST: true
           PUBLISH_FOR_PULL_REQUEST: true
       - name: Build for Mac
