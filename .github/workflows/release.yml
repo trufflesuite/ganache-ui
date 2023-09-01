@@ -42,11 +42,14 @@ jobs:
       - name: Build for Linux
         if: startsWith(matrix.os, 'ubuntu-')
         run: npm run build-linux
+        env:
+          PUBLISH_FOR_PULL_REQUEST: true
       - name: Build for Windows
         if: startsWith(matrix.os, 'windows-')
         run: npm run build-windows;
         env:
           CSC_FOR_PULL_REQUEST: true
+          PUBLISH_FOR_PULL_REQUEST: true
       - name: Build for Mac
         if: startsWith(matrix.os, 'macos-')
         run: |
@@ -66,6 +69,7 @@ jobs:
           export DEBUG=electron-notarize:*
           npm run build-mac
         env:
+          PUBLISH_FOR_PULL_REQUEST: true
           CSC_FOR_PULL_REQUEST: true
           appleTeamId: ${{ secrets.APPLETEAMID }}
           appleId: ${{ secrets.APPLEID }}
