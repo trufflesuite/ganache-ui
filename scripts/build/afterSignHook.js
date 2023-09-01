@@ -31,7 +31,7 @@ module.exports = async function (params) {
             tool: "notarytool",
             appBundleId: appId,
             appPath: appPath,
-            appleTeamId: process.env.appleTeamId,
+            teamId: process.env.appleTeamId,
             appleId: process.env.appleId,
             appleIdPassword: process.env.appleIdPassword
         });
