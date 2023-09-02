@@ -185,7 +185,6 @@
   "build": {
     "npmRebuild": false,
     "appId": "org.trufflesuite.ganache",
-    "afterSign": "./scripts/build/afterSignHook.js",
     "afterPack": "./scripts/build/afterPack.js",
     "files": [
       "src/**/*",
@@ -228,7 +227,10 @@
       "icon": "static/icons/mac/icon.icns",
       "hardenedRuntime": true,
       "entitlements": "./build/dmg/entitlements.mac.inherit.plist",
-      "category": "public.app-category.developer-tools"
+      "category": "public.app-category.developer-tools",
+      "notarize": {
+        "teamId": "48XVW22RCG"
+      }
     },
     "dmg": {
       "background": "build/dmg/background.tiff",

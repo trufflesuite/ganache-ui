@@ -74,9 +74,8 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           PUBLISH_FOR_PULL_REQUEST: true
           CSC_FOR_PULL_REQUEST: true
-          appleTeamId: ${{ secrets.APPLETEAMID }}
-          appleId: ${{ secrets.APPLEID }}
-          appleIdPassword: ${{ secrets.APPLEIDPASSWORD }}
+          APPLE_ID: ${{ secrets.APPLEID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLEIDPASSWORD }}
       - uses: actions/upload-artifact@v3
         with:
           name: Release
