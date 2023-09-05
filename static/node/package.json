@@ -1,3 +1,16 @@
 {
-  "dependencies": {}
+  "dependencies": {
+    "@truffle/config": "1.2.17",
+    "@truffle/decoder": "3.0.16",
+    "fs-extra": "9.0.0",
+    "ganache": "7.9.1",
+    "ganache-core": "2.13.1",
+    "lodash.clonedeep": "4.5.0",
+    "lodash.merge": "4.6.2",
+    "lodash.padstart": "4.6.1",
+    "temp": "0.9.1",
+    "web3-eth-abi": "1.2.6",
+    "web3-providers-http": "1.2.6",
+    "web3-providers-ws": "1.2.6"
+  }
 }
