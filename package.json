@@ -38,7 +38,7 @@
     "test-mocha": "cross-env GANACHE_DEV_MODE=true ELECTRON_APP_PATH=./ mocha --require @babel/register --check-leaks 'test/mocha/**/*.test.js'",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "postinstall": "patch-package && cd static/node && npm ci --only=prod"
+    "postinstall": "patch-package && cd static/node && npm ci --only=prod --omit=dev"
   },
   "dependencies": {
     "14": "^3.1.6",
