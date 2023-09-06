@@ -189,6 +189,7 @@
     "files": [
       "src/**/*",
       "node_modules/**/*",
+      "static/node/**/*",
       "package.json"
     ],
     "win": {
