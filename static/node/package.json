@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "@truffle/config": "1.2.17"
+    "@truffle/config": "1.2.17",
+    "@truffle/decoder": "3.0.16"
   }
 }
