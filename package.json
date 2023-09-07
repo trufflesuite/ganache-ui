@@ -189,8 +189,10 @@
     "files": [
       "src/**/*",
       "node_modules/**/*",
-      "static/node/**/*",
       "package.json"
+    ],
+    "extraResources": [
+      "static/node/**/*"
     ],
     "win": {
       "certificateSha1": "79989F27614B87B6527A53ACBE2276CEDEE902AE",
@@ -227,7 +229,9 @@
     "mac": {
       "icon": "static/icons/mac/icon.icns",
       "hardenedRuntime": true,
+      "sign": false,
       "entitlements": "./build/dmg/entitlements.mac.inherit.plist",
+      "entitlementsInherit": "./build/dmg/entitlements.mac.inherit.plist",
       "category": "public.app-category.developer-tools",
       "notarize": {
         "teamId": "48XVW22RCG"
