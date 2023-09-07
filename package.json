@@ -229,7 +229,6 @@
     "mac": {
       "icon": "static/icons/mac/icon.icns",
       "hardenedRuntime": true,
-      "sign": false,
       "entitlements": "./build/dmg/entitlements.mac.inherit.plist",
       "entitlementsInherit": "./build/dmg/entitlements.mac.inherit.plist",
       "category": "public.app-category.developer-tools",
@@ -255,7 +254,7 @@
         }
       ],
       "format": "ULFO",
-      "sign": true,
+      "sign": false,
       "artifactName": "Ganache-${version}-${os}.${ext}"
     },
     "linux": {
