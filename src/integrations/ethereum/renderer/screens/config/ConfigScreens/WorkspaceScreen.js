@@ -7,11 +7,11 @@ import SyntaxHighlighter from "react-syntax-highlighter";
 class WorkspaceScreen extends Component {
   state = { selectedIdx: null };
 
-  validateChange = e => {
+  validateChange = (e) => {
     this.props.validateChange(e, {});
   };
 
-  handleProjectClick = idx => () => {
+  handleProjectClick = (idx) => () => {
     this.setState({
       selectedIdx: this.state.selectedIdx === idx ? null : idx,
     });
@@ -20,30 +20,30 @@ class WorkspaceScreen extends Component {
   handleAddProjectClick = async () => {
     const pathArray = await remote.dialog.showOpenDialog({
       properties: ["openFile"],
-      filters: [{ name: "Truffle Config File", extensions: ["js"] }],
+      filters: [{ name: "Truffle Config File", extensions: ["js", "cjs"] }],
     });
 
     if (
       pathArray &&
       pathArray.filePaths.length > 0 &&
-      path.basename(pathArray.filePaths[0]).match(/^truffle(-config)?.js$/)
+      path.basename(pathArray.filePaths[0]).match(/^truffle(-config)?.[c]?js$/)
     ) {
       this.props.addWorkspaceProject(pathArray.filePaths[0]);
       this.setState({ selectedIdx: null });
     }
   };
 
-  removeProject = projectPath => {
+  removeProject = (projectPath) => {
     this.props.removeWorkspaceProject(projectPath);
     this.setState({ selectedIdx: null });
   };
 
-  verifyRemoveProject = projectPath => {
+  verifyRemoveProject = (projectPath) => {
     const modalDetails = new ModalDetails(
       ModalDetails.types.WARNING,
       [
         {
-          click: modal => {
+          click: (modal) => {
             this.removeProject(projectPath);
             modal.close();
           },
@@ -54,7 +54,7 @@ class WorkspaceScreen extends Component {
         },
       ],
       "Remove Project?",
-      "This project has contracts deployed; are you sure you want to remove it? Contract data, transactions, and events will no longer be decoded.",
+      "This project has contracts deployed; are you sure you want to remove it? Contract data, transactions, and events will no longer be decoded."
     );
 
     this.props.dispatch(ModalDetails.actions.setModalError(modalDetails));
@@ -67,7 +67,7 @@ class WorkspaceScreen extends Component {
 
     let projectHasDeployedContracts = false;
 
-    let project = this.props.workspaces.current.projects.filter(project => {
+    let project = this.props.workspaces.current.projects.filter((project) => {
       return path.dirname(projectPath) === project.configFile;
     });
 
@@ -83,7 +83,7 @@ class WorkspaceScreen extends Component {
                 contract.address.length > 0)
             );
           },
-          false,
+          false
         );
       }
     }
@@ -140,7 +140,9 @@ class WorkspaceScreen extends Component {
                     {showErrorDetails && (
                       <div className="ValidationDetails">
                         <SyntaxHighlighter language="bash">
-                          {validationErrors.stack.map(line => line.toString())}
+                          {validationErrors.stack.map((line) =>
+                            line.toString()
+                          )}
                         </SyntaxHighlighter>
                       </div>
                     )}
@@ -183,7 +185,8 @@ class WorkspaceScreen extends Component {
             <div className="RowItem">
               <p>
                 Link Truffle projects to this workspace by adding their
-                truffle-config.js or truffle.js file to this workspace.
+                truffle-config.js, truffle-config.cjs, truffle.js or truffle.cjs
+                file to this workspace.
               </p>
               <br />
               <p>
