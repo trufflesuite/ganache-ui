@@ -24,6 +24,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
+      - name: Downgrade npm to 8.16.0 # see https://github.com/electron-userland/electron-builder/issues/7755#issuecomment-1744147677
+        run: npm install -g npm@8.16.0
       - name: Add msbuild to PATH
         # we need msbuild tools for the `bcrypto` module
         if: startsWith(matrix.os, 'windows-')
