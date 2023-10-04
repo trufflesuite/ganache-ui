@@ -1,0 +1,91 @@
+name: Release
+
+# this should only run on release, but I'm triggering on pull_request so that I can test it
+on: [pull_request]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [18.16.1]
+        os: [windows-2019, ubuntu-20.04, macos-12]
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.11.0
+        with:
+          access_token: ${{ github.token }}
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Use Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Downgrade npm to 8.16.0 # see https://github.com/electron-userland/electron-builder/issues/7755#issuecomment-1744147677
+        if: startsWith(matrix.os, 'macos-')
+        run: npm install -g npm@8.16.0
+      - name: Add msbuild to PATH
+        # we need msbuild tools for the `bcrypto` module
+        if: startsWith(matrix.os, 'windows-')
+        uses: microsoft/setup-msbuild@v1.1
+      - uses: de-vri-es/setup-git-credentials@v2
+        with:
+          credentials: ${{secrets.PAT}}
+      - if: startsWith(matrix.os, 'windows-')
+        run: |
+          $bytes = [Convert]::FromBase64String('${{ secrets.WINDOWS_CODE_SIGNING_PFX_BASE_64 }}');
+          Add-Content -Path '.\cert.pfx' -Value $bytes -AsByteStream;
+          Import-PfxCertificate -Password (ConvertTo-SecureString '${{ secrets.WINDOWS_CODE_SIGNING_PFX_PASSWORD }}' -AsPlainText -Force) -FilePath .\cert.pfx -CertStoreLocation Cert:\CurrentUser\My > $null;
+      - run: npm ci
+        env:
+          FORCE_COLOR: 1
+      - name: Build for Linux
+        if: startsWith(matrix.os, 'ubuntu-')
+        run: npm run build-linux
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          PUBLISH_FOR_PULL_REQUEST: true
+      - name: Build for Windows
+        if: startsWith(matrix.os, 'windows-')
+        run: npm run build-windows;
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          CSC_FOR_PULL_REQUEST: true
+          PUBLISH_FOR_PULL_REQUEST: true
+      - name: Build for Mac
+        if: startsWith(matrix.os, 'macos-')
+        run: |
+          echo "Configuring keychain..."
+          export CERT=osx.p12
+          export NOTARIZE=true
+          base64 -d <<< "${{ secrets.APPLE_CERTIFICATE_P12_BASE64 }}" > $CERT
+          export CSC_KEYCHAIN=build.keychain
+          export KEYCHAIN_PASS=$RANDOM.$RANDOM.$RANDOM
+          security create-keychain -p $KEYCHAIN_PASS $CSC_KEYCHAIN
+          security default-keychain -s $CSC_KEYCHAIN
+          security unlock-keychain -p $KEYCHAIN_PASS $CSC_KEYCHAIN
+          security import $CERT -k $CSC_KEYCHAIN -P "${{ secrets.APPLE_CERTIFICATE_P12_PASSWORD }}" -T /usr/bin/codesign
+          security set-keychain-settings $CSC_KEYCHAIN
+          echo "Setting key partition list"
+          security set-key-partition-list -S "apple-tool:,apple:,codesign:" -s -k $KEYCHAIN_PASS $CSC_KEYCHAIN >/dev/null 2>&1
+          export DEBUG=electron-notarize:*
+          npm run build-mac
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          PUBLISH_FOR_PULL_REQUEST: true
+          CSC_FOR_PULL_REQUEST: true
+          APPLE_ID: ${{ secrets.APPLEID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLEIDPASSWORD }}
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Release
+          path: |
+            dist/*.AppImage
+            dist/*.dmg
+            dist/*.blockmap
+            dist/*.zip
+            dist/*.appx
+            dist/*.yml

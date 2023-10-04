@@ -1,7 +1,7 @@
 {
   "name": "@ganache/ui",
   "productName": "Ganache",
-  "version": "2.7.1-beta",
+  "version": "2.7.2",
   "description": "Personal Blockchain for Ethereum",
   "repository": {
     "type": "git",
@@ -29,7 +29,7 @@
     "start": "npm run dev",
     "compile": "electron-webpack",
     "lint": "eslint .",
-    "sign-mac": "codesign --deep --force --verbose --sign 'Developer ID Application: Timothy Coulter (58RKXWC272)' ./dist/*.dmg",
+    "sign-mac": "codesign --deep --force --verbose --sign 'Developer ID Application: ConsenSys AG (48XVW22RCG)' ./dist/*.dmg",
     "build-linux": "npm run compile && electron-builder --linux",
     "build-mac": "npm run compile && electron-builder --mac",
     "build-windows": "npm run compile && electron-builder --win",
@@ -38,7 +38,7 @@
     "test-mocha": "cross-env GANACHE_DEV_MODE=true ELECTRON_APP_PATH=./ mocha --require @babel/register --check-leaks 'test/mocha/**/*.test.js'",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "postinstall": "patch-package && cd static/node && npm ci --only=prod"
+    "postinstall": "patch-package && cd static/node && npm ci --only=prod --omit=dev"
   },
   "dependencies": {
     "14": "^3.1.6",
@@ -91,6 +91,7 @@
     "redux-logger": "^2.7.4",
     "redux-thunk": "^2.3.0",
     "safe-buffer": "^5.0.1",
+    "sass": "1.57.1",
     "semver-parser": "3.0.4",
     "shebang-loader": "^0.0.1",
     "source-map-support": "^0.5.13",
@@ -120,9 +121,9 @@
     "chokidar": "3.3.1",
     "cross-env": "^6.0.0",
     "electron": "^26.1.0",
-    "electron-builder": "23.6.0",
+    "electron-builder": "24.6.3",
     "electron-fetch": "1.7.3",
-    "electron-notarize": "1.0.0",
+    "@electron/notarize": "2.1.0",
     "electron-updater": "4.3.8",
     "electron-webpack": "^2.8.2",
     "eslint": "^6.3.0",
@@ -184,7 +185,6 @@
   "build": {
     "npmRebuild": false,
     "appId": "org.trufflesuite.ganache",
-    "afterSign": "./scripts/build/afterSignHook.js",
     "afterPack": "./scripts/build/afterPack.js",
     "files": [
       "src/**/*",
@@ -227,7 +227,11 @@
       "icon": "static/icons/mac/icon.icns",
       "hardenedRuntime": true,
       "entitlements": "./build/dmg/entitlements.mac.inherit.plist",
-      "category": "public.app-category.developer-tools"
+      "entitlementsInherit": "./build/dmg/entitlements.mac.inherit.plist",
+      "category": "public.app-category.developer-tools",
+      "notarize": {
+        "teamId": "48XVW22RCG"
+      }
     },
     "dmg": {
       "background": "build/dmg/background.tiff",
@@ -247,7 +251,7 @@
         }
       ],
       "format": "ULFO",
-      "sign": true,
+      "sign": false,
       "artifactName": "Ganache-${version}-${os}.${ext}"
     },
     "linux": {

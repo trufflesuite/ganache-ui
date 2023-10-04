@@ -1,0 +1,39 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Pull Requests
+
+on: [pull_request]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [18.16.1]
+        os: [windows-2019, ubuntu-20.04, macos-11]
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.11.0
+        with:
+          access_token: ${{ github.token }}
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Use Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Add msbuild to PATH
+        # we need msbuild tools for the `bcrypto` module
+        if: startsWith(matrix.os, 'windows-')
+        uses: microsoft/setup-msbuild@v1.1
+      - uses: de-vri-es/setup-git-credentials@v2
+        with:
+          credentials: ${{secrets.PAT}}
+      - run: npm ci
+      - run: npm run test
+        env:
+          FORCE_COLOR: 1
