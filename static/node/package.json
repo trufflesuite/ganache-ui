@@ -1,7 +1,7 @@
 {
     "dependencies": {
         "@truffle/config": "1.2.17",
-        "@truffle/decoder": "3.0.16",
+        "@truffle/decoder": "6.1.5",
         "fs-extra": "9.0.0",
         "ganache-core": "2.13.1",
         "lodash.clonedeep": "4.5.0",
