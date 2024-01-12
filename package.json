@@ -52,7 +52,7 @@
     "ethereumjs-units": "^0.2.0",
     "filesize": "^3.6.1",
     "fix-path": "^2.1.0",
-    "follow-redirects": "1.15.4",
+    "follow-redirects": "1.15.5",
     "fs-extra": "9.0.0",
     "get-port": "^5.0.0",
     "history": "4.10.1",
