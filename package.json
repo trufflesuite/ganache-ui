@@ -90,7 +90,7 @@
     "semver-parser": "3.0.4",
     "shebang-loader": "^0.0.1",
     "source-map-support": "^0.5.13",
-    "truffle": "5.1.20",
+    "truffle": "5.11.5",
     "universal-analytics": "^0.4.13",
     "unzip-stream": "0.3.0",
     "web3": "1.2.6",
