@@ -7,7 +7,7 @@
         "lodash.clonedeep": "4.5.0",
         "lodash.merge": "4.6.2",
         "lodash.padstart": "4.6.1",
-        "temp": "0.9.1",
+        "temp": "0.9.4",
         "web3-eth-abi": "1.10.3",
         "web3-providers-http": "1.2.6",
         "web3-providers-ws": "1.2.6"
