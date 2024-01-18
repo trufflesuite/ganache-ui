@@ -3,7 +3,7 @@
     "@ganache/filecoin": "0.9.2",
     "@truffle/config": "1.2.17",
     "@truffle/decoder": "6.1.5",
-    "electron": "^26.2.4",
+    "electron": "^26.3.0",
     "electron-fetch": "1.7.3",
     "fs-extra": "9.0.0",
     "ganache": "7.9.1",
