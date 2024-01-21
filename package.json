@@ -46,7 +46,7 @@
     "atob": "2.1.2",
     "bs58": "4.0.1",
     "btoa": "1.2.1",
-    "connected-react-router": "6.6.1",
+    "connected-react-router": "6.9.3",
     "electron-log": "^3.0.7",
     "ethagen": "0.1.3",
     "ethereumjs-units": "^0.2.0",
