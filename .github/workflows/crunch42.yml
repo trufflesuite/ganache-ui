@@ -42,7 +42,7 @@ jobs:
       security-events: write # for 42Crunch/api-security-audit-action to upload results to Github Code Scanning
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: 42Crunch REST API Static Security Testing
         uses: 42Crunch/api-security-audit-action@8f3291aee67d774baf12330d1bfe86af2c861a06
