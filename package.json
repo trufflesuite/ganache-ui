@@ -110,7 +110,7 @@
     "cross-env": "^6.0.0",
     "electron": "28.2.0",
     "electron-builder": "24.9.1",
-    "electron-notarize": "0.3.0",
+    "electron-notarize": "1.2.2",
     "electron-updater": "4.6.5",
     "electron-webpack": "^2.7.4",
     "eslint": "^6.3.0",
