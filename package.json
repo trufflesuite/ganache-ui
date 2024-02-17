@@ -97,7 +97,7 @@
     "web3-providers-http": "1.10.3",
     "web3-providers-ws": "1.10.4",
     "xterm": "^4.4.0",
-    "xterm-addon-fit": "^0.3.0"
+    "xterm-addon-fit": "^0.8.0"
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.5.5",
