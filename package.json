@@ -130,7 +130,7 @@
     "react-svg-loader": "^3.0.3",
     "sass-loader": "^14.0.0",
     "temp": "0.9.4",
-    "webpack": "4.47.0"
+    "webpack": "5.90.2"
   },
   "electronWebpack": {
     "main": {
