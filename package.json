@@ -128,7 +128,7 @@
     "node-sass": "^7.0.0",
     "prettier": "^1.18.2",
     "react-svg-loader": "^3.0.3",
-    "sass-loader": "^8.0.0",
+    "sass-loader": "^14.0.0",
     "temp": "0.9.4",
     "webpack": "4.47.0"
   },
