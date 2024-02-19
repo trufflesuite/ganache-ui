@@ -65,7 +65,7 @@
     "moment-timezone": "^0.5.44",
     "moniker": "^0.1.2",
     "node-fetch": "3.3.2",
-    "node-localstorage": "^2.1.6",
+    "node-localstorage": "^3.0.0",
     "node-ssh": "7.0.1",
     "pg": "7.18.2",
     "pluralize": "^5.0.0",
