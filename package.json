@@ -124,7 +124,7 @@
     "husky": "^9.0.0",
     "jest": "^29.7.0",
     "js-scrypt": "^0.2.0",
-    "lint-staged": "^9.2.5",
+    "lint-staged": "^15.0.0",
     "node-sass": "^7.0.0",
     "prettier": "^3.0.0",
     "react-svg-loader": "^3.0.3",
