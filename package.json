@@ -126,7 +126,7 @@
     "js-scrypt": "^0.2.0",
     "lint-staged": "^9.2.5",
     "node-sass": "^7.0.0",
-    "prettier": "^1.18.2",
+    "prettier": "^3.0.0",
     "react-svg-loader": "^3.0.3",
     "sass-loader": "^14.0.0",
     "temp": "0.9.4",
