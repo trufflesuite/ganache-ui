@@ -54,7 +54,7 @@
     "fix-path": "^2.1.0",
     "follow-redirects": "1.15.5",
     "fs-extra": "11.2.0",
-    "get-port": "^5.0.0",
+    "get-port": "^7.0.0",
     "history": "4.10.1",
     "lodash.assign": "4.2.0",
     "lodash.clonedeep": "^4.5.0",
