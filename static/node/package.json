@@ -8,8 +8,8 @@
         "lodash.merge": "4.6.2",
         "lodash.padstart": "4.6.1",
         "temp": "0.9.4",
-        "web3-eth-abi": "1.10.4",
+        "web3-eth-abi": "4.2.0",
         "web3-providers-http": "4.1.0",
-        "web3-providers-ws": "1.10.4"
+        "web3-providers-ws": "4.0.7"
     }
 }
