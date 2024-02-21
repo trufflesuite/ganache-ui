@@ -93,7 +93,7 @@
     "truffle": "5.11.5",
     "universal-analytics": "^0.5.0",
     "unzip-stream": "0.3.1",
-    "web3": "1.10.4",
+    "web3": "4.5.0",
     "web3-providers-http": "4.1.0",
     "web3-providers-ws": "1.10.4",
     "xterm": "^5.0.0",
