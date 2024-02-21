@@ -83,7 +83,7 @@
     "react-router-dom": "5.3.4",
     "react-syntax-highlighter": "11.0.3",
     "react-virtualized": "^9.21.0",
-    "redux": "4.2.1",
+    "redux": "5.0.1",
     "redux-logger": "^2.7.4",
     "redux-thunk": "^2.3.0",
     "safe-buffer": "^5.0.1",
