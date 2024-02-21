@@ -94,7 +94,7 @@
     "universal-analytics": "^0.5.0",
     "unzip-stream": "0.3.1",
     "web3": "1.10.4",
-    "web3-providers-http": "1.10.4",
+    "web3-providers-http": "4.1.0",
     "web3-providers-ws": "1.10.4",
     "xterm": "^4.4.0",
     "xterm-addon-fit": "^0.8.0"
