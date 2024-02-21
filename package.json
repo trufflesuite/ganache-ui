@@ -111,7 +111,7 @@
     "electron": "29.0.0",
     "electron-builder": "24.9.1",
     "electron-notarize": "1.2.2",
-    "electron-updater": "6.1.7",
+    "electron-updater": "6.1.8",
     "electron-webpack": "^2.7.4",
     "eslint": "^8.0.0",
     "eslint-config-prettier": "^9.0.0",
