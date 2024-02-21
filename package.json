@@ -85,7 +85,7 @@
     "react-virtualized": "^9.21.0",
     "redux": "5.0.1",
     "redux-logger": "^3.0.0",
-    "redux-thunk": "^2.3.0",
+    "redux-thunk": "^3.0.0",
     "safe-buffer": "^5.0.1",
     "semver-parser": "3.1.1",
     "shebang-loader": "^0.0.1",
