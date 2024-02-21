@@ -95,7 +95,7 @@
     "unzip-stream": "0.3.1",
     "web3": "4.5.0",
     "web3-providers-http": "4.1.0",
-    "web3-providers-ws": "1.10.4",
+    "web3-providers-ws": "4.0.7",
     "xterm": "^5.0.0",
     "xterm-addon-fit": "^0.8.0"
   },
