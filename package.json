@@ -76,7 +76,7 @@
     "react-graph-vis": "1.0.7",
     "react-hot-loader": "4.13.1",
     "react-md-spinner": "^1.0.0",
-    "react-moment": "^0.9.0",
+    "react-moment": "^1.0.0",
     "react-redux": "9.1.0",
     "react-render-html": "^0.6.0",
     "react-router": "5.3.4",
