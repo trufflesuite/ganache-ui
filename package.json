@@ -68,7 +68,7 @@
     "node-localstorage": "^3.0.0",
     "node-ssh": "13.1.0",
     "pg": "8.11.3",
-    "pluralize": "^5.0.0",
+    "pluralize": "^8.0.0",
     "promisify-child-process": "^4.0.0",
     "react": "18.2.0",
     "react-custom-scrollbars": "^4.2.1",
